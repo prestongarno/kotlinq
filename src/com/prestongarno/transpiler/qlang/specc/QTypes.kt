@@ -1,15 +1,8 @@
 package com.prestongarno.transpiler.qlang.specc
 
+import com.prestongarno.transpiler.RootToken
 import com.prestongarno.transpiler.qlang.specc.Scalar.*
-import javax.lang.model.type.PrimitiveType
 import kotlin.reflect.KClass
-
-fun main(args : Array<String>) {
-	val nullableString = QString("MyString")
-	val nonNullableString = QString("OtherString", "defaultValue")
-	nonNullableString.nullable = true
-	println("$nullableString\n$nonNullableString")
-}
 
 /**
  * The base class for all components of the compilation
