@@ -4369,4 +4369,3 @@ type UserEdge {
     node: User
 }
 
-scalar X509Certificate
