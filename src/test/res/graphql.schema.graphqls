@@ -2575,7 +2575,6 @@ type PullRequestTimelineConnection {
 
     totalCount: Int!
 }
-
 union PullRequestTimelineItem = Commit | CommitCommentThread | PullRequestReview | PullRequestReviewThread | PullRequestReviewComment | IssueComment | ClosedEvent | ReopenedEvent | SubscribedEvent | UnsubscribedEvent | MergedEvent | ReferencedEvent | AssignedEvent | UnassignedEvent | LabeledEvent | UnlabeledEvent | MilestonedEvent | DemilestonedEvent | RenamedTitleEvent | LockedEvent | UnlockedEvent | DeployedEvent | HeadRefDeletedEvent | HeadRefRestoredEvent | HeadRefForcePushedEvent | BaseRefForcePushedEvent | ReviewRequestedEvent | ReviewRequestRemovedEvent | ReviewDismissedEvent
 
 type PullRequestTimelineItemEdge {
@@ -2839,7 +2838,7 @@ type ReferencedEvent implements Node {
 
 union ReferencedSubject = Issue | PullRequest
 
-type Release implements Node, UniformResourceLocatable {
+type Release implements ode, UniformResourceLocatable {
     description: String
     id: ID!
 

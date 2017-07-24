@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ad2ce0c-9cb3-47df-b744-359d5d8b5a4a" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/prestongarno/example/graphql.schema.graphqls" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/prestongarno/transpiler/QCompilationUnit.kt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/prestongarno/transpiler/qlang/specc/QTypes.kt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/prestongarno/example/graphql.schema.graphqls" afterPath="$PROJECT_DIR$/src/com/prestongarno/example/graphql.schema.graphqls" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt" afterPath="$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt" afterPath="$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,13 +17,60 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/ktq$com_prestongarno_transpiler_MapperKt.coverage" NAME="com.prestongarno.transpiler.MapperKt Coverage Results" MODIFIED="1500878958561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/ktq$MemberDeclarationParseTests.coverage" NAME="MemberDeclarationParseTests Coverage Results" MODIFIED="1500878975996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.prestongarno.transpiler.tests.parsing.statements.*</FILTER>
+    </SUITE>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="QLParser.kt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt">
+      <file leaf-file-name="MemberDeclarationParseTests.kt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/MemberDeclarationParseTests.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+            <state relative-caret-position="350">
+              <caret line="20" column="36" lean-forward="false" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+              <folding>
+                <element signature="e#62#224#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Mapper.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/Mapper.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1088">
+              <caret line="163" column="4" lean-forward="false" selection-start-line="163" selection-start-column="4" selection-end-line="163" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QTypes.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/qlang/specc/QTypes.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="414">
+              <caret line="39" column="129" lean-forward="false" selection-start-line="39" selection-start-column="129" selection-end-line="39" selection-end-column="129" />
+              <folding>
+                <element signature="n#!!doc;n#QType#0" expanded="false" />
+                <element signature="n#!!block;n#toString#0;n#!!block;n#QType#0" expanded="false" />
+                <element signature="n#!!block;n#toString#0;n#!!block;n#QScalarSymbol#0" expanded="false" />
+                <element signature="n#!!doc;n#QCollectionType#0" expanded="false" />
+                <element signature="n#!!doc;n#QDefinedType#0" expanded="false" />
+                <element signature="n#!!block;n#QDefinedType#0" expanded="false" />
+                <element signature="n#!!doc;n#QTypeDef#0" expanded="false" />
+                <element signature="n#!!block;n#QTypeDef#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GraphQlParseTest.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/GraphQlParseTest.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="72">
+              <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -32,6 +81,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Kotlin Object" />
+        <option value="Class" />
         <option value="Kotlin File" />
       </list>
     </option>
@@ -50,10 +101,21 @@
         <option value="$PROJECT_DIR$/graphql.config.json" />
         <option value="$PROJECT_DIR$/graphql.schema.json" />
         <option value="$PROJECT_DIR$/src/com/prestongarno/transpiler/QCompilationUnit.kt" />
+        <option value="$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt" />
+        <option value="$PROJECT_DIR$/src/com/prestongarno/example/graphql.schema.graphqls" />
         <option value="$PROJECT_DIR$/src/com/prestongarno/transpiler/qlang/specc/QTypes.kt" />
         <option value="$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt" />
-        <option value="$PROJECT_DIR$/src/com/prestongarno/example/graphql.schema.graphqls" />
-        <option value="$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt" />
+        <option value="$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/Tokens.kt" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/QLBaseParserTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/QLBaseParserTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/GraphQlParseTest.kt" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/GraphQlParseTest.kt" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/StatementParserTests.kt" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/DeclarationParserTests.kt" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/MemberDeclarationParserTests.kt" />
+        <option value="$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/Mapper.kt" />
+        <option value="$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/qlang/specc/QTypes.kt" />
+        <option value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/MemberDeclarationParseTests.kt" />
       </list>
     </option>
   </component>
@@ -86,8 +148,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -104,21 +165,68 @@
               <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
               <item name="ktq" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="prestongarno" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
               <item name="ktq" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="prestongarno" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
               <item name="ktq" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="prestongarno" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="transpiler" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ktq" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="transpiler" type="462c0819:PsiDirectoryNode" />
+              <item name="specc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ktq" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ktq" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ktq" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="parsing" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ktq" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="parsing" type="462c0819:PsiDirectoryNode" />
+              <item name="statements" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ktq" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="res" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ktq" type="b2602c69:ProjectViewProjectNode" />
@@ -128,21 +236,28 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="PackagesPane" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="nodejs_interpreter_path" value="/usr/bin/node" />
-    <property name="last.edited.regexp" value="" />
+    <property name="last.edited.regexp" value="fffffffffffffffffff " />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing" />
   </component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.prestongarno.transpiler" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/res" />
+      <recent name="$PROJECT_DIR$/src/main/java" />
       <recent name="$PROJECT_DIR$/src/com/prestongarno/example" />
       <recent name="$PROJECT_DIR$" />
     </key>
@@ -159,7 +274,107 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Kotlin.com.prestongarno.transpiler.QLParserKt">
+  <component name="RunManager" selected="JUnit.MemberDeclarationParseTests">
+    <configuration name="MemberDeclarationParseTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.prestongarno.transpiler.tests.parsing.statements.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="ktq" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.prestongarno.transpiler.tests.parsing.statements" />
+      <option name="MAIN_CLASS_NAME" value="com.prestongarno.transpiler.tests.parsing.statements.MemberDeclarationParseTests" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
+    <configuration name="MemberDeclarationParseTests.customSingleTypeReturn" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.prestongarno.transpiler.tests.parsing.statements.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="ktq" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.prestongarno.transpiler.tests.parsing.statements" />
+      <option name="MAIN_CLASS_NAME" value="com.prestongarno.transpiler.tests.parsing.statements.MemberDeclarationParseTests" />
+      <option name="METHOD_NAME" value="customSingleTypeReturn" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
+    <configuration name="MemberDeclarationParseTests.intStatementWithArgs" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.prestongarno.transpiler.tests.parsing.statements.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="ktq" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.prestongarno.transpiler.tests.parsing.statements" />
+      <option name="MAIN_CLASS_NAME" value="com.prestongarno.transpiler.tests.parsing.statements.MemberDeclarationParseTests" />
+      <option name="METHOD_NAME" value="intStatementWithArgs" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
+    <configuration name="MemberDeclarationParseTests.intStatementWithArgsReturningCollection" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.prestongarno.transpiler.tests.parsing.statements.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="ktq" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.prestongarno.transpiler.tests.parsing.statements" />
+      <option name="MAIN_CLASS_NAME" value="com.prestongarno.transpiler.tests.parsing.statements.MemberDeclarationParseTests" />
+      <option name="METHOD_NAME" value="intStatementWithArgsReturningCollection" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
     <configuration name="Unnamed" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="" />
@@ -254,9 +469,9 @@
       <properties />
       <listeners />
     </configuration>
-    <configuration name="com.prestongarno.transpiler.QLParserKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
+    <configuration name="com.prestongarno.transpiler.MapperKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" value="com.prestongarno.transpiler.QLParserKt" />
+      <option name="MAIN_CLASS_NAME" value="com.prestongarno.transpiler.MapperKt" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" />
@@ -266,27 +481,21 @@
       <module name="ktq" />
       <envs />
     </configuration>
-    <configuration name="com.prestongarno.transpiler.qlang.specc.QTypesKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" value="com.prestongarno.transpiler.qlang.specc.QTypesKt" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="ktq" />
-      <envs />
-    </configuration>
-    <list size="3">
+    <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Application.Unnamed" />
-      <item index="1" class="java.lang.String" itemvalue="Kotlin.com.prestongarno.transpiler.qlang.specc.QTypesKt" />
-      <item index="2" class="java.lang.String" itemvalue="Kotlin.com.prestongarno.transpiler.QLParserKt" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests.intStatementWithArgs" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests.intStatementWithArgsReturningCollection" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests.customSingleTypeReturn" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests" />
+      <item index="5" class="java.lang.String" itemvalue="Kotlin.com.prestongarno.transpiler.MapperKt" />
     </list>
     <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Kotlin.com.prestongarno.transpiler.QLParserKt" />
-        <item index="1" class="java.lang.String" itemvalue="Kotlin.com.prestongarno.transpiler.qlang.specc.QTypesKt" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests" />
+        <item index="1" class="java.lang.String" itemvalue="Kotlin.com.prestongarno.transpiler.MapperKt" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests.customSingleTypeReturn" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests.intStatementWithArgsReturningCollection" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.MemberDeclarationParseTests.intStatementWithArgs" />
       </list>
     </recent_temporary>
   </component>
@@ -302,28 +511,62 @@
       <updated>1500623050240</updated>
       <workItem from="1500623052803" duration="329000" />
       <workItem from="1500623396922" duration="7446000" />
-      <workItem from="1500667163461" duration="19417000" />
+      <workItem from="1500667163461" duration="19655000" />
+      <workItem from="1500753568075" duration="36043000" />
+      <workItem from="1500873531978" duration="5461000" />
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="MemberDeclarationParseTests - 2017.07.24 at 02h 47m 15s.xml">
+      <configuration name="MemberDeclarationParseTests" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests - 2017.07.24 at 02h 49m 36s.xml">
+      <configuration name="MemberDeclarationParseTests" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_customSingleTypeReturn - 2017.07.24 at 02h 46m 49s.xml">
+      <configuration name="MemberDeclarationParseTests.customSingleTypeReturn" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_customSingleTypeReturn - 2017.07.24 at 02h 47m 01s.xml">
+      <configuration name="MemberDeclarationParseTests.customSingleTypeReturn" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_intStatementWithArgsReturningCollection - 2017.07.24 at 02h 43m 35s.xml">
+      <configuration name="MemberDeclarationParseTests.intStatementWithArgsReturningCollection" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_intStatementWithArgsReturningCollection - 2017.07.24 at 02h 44m 03s.xml">
+      <configuration name="MemberDeclarationParseTests.intStatementWithArgsReturningCollection" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_intStatementWithArgsReturningCollection - 2017.07.24 at 02h 44m 39s.xml">
+      <configuration name="MemberDeclarationParseTests.intStatementWithArgsReturningCollection" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_intStatementWithArgsReturningCollection - 2017.07.24 at 02h 45m 01s.xml">
+      <configuration name="MemberDeclarationParseTests.intStatementWithArgsReturningCollection" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_intStatementWithArgsReturningCollection - 2017.07.24 at 02h 45m 16s.xml">
+      <configuration name="MemberDeclarationParseTests.intStatementWithArgsReturningCollection" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MemberDeclarationParseTests_intStatementWithArgsReturningCollection - 2017.07.24 at 02h 45m 26s.xml">
+      <configuration name="MemberDeclarationParseTests.intStatementWithArgsReturningCollection" configurationId="JUnit" />
+    </history-entry>
+  </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27192000" />
+    <option name="totallyTimeSpent" value="68934000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1978" y="0" width="1872" height="1080" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27198365" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="40" y="564" width="1555" height="386" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1206544" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="40" y="564" width="1555" height="386" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="GraphQL" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="GraphQL" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="true" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="980" y="24" width="940" height="1056" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="980" y="24" width="940" height="1008" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959402" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -334,7 +577,7 @@
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="true" show_stripe_button="true" weight="0.3997955" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="40" y="24" width="1400" height="1056" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="true" weight="0.3997955" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="232" y="345" width="1400" height="1008" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -353,22 +596,62 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt</url>
-          <line>44</line>
+          <url>file://$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt</url>
+          <line>165</line>
           <properties />
-          <option name="timeStamp" value="15" />
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/MemberDeclarationParseTests.kt</url>
+          <line>23</line>
+          <properties />
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/MemberDeclarationParseTests.kt</url>
+          <line>41</line>
+          <properties />
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/MemberDeclarationParseTests.kt</url>
+          <line>50</line>
+          <properties />
+          <option name="timeStamp" value="45" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="24" />
+      <option name="time" value="47" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt">
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/qlang/specc/QTypes.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1458">
+          <caret line="81" column="97" lean-forward="false" selection-start-line="81" selection-start-column="97" selection-end-line="81" selection-end-column="97" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -384,7 +667,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -400,7 +682,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -408,9 +689,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding>
-            <element signature="e#49#178#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -426,7 +705,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -462,42 +740,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QCompilationUnit.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/qlang/specc/QTypes.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding>
-            <element signature="e#49#178#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/example/graphql.schema.graphqls">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="3894" column="5" lean-forward="false" selection-start-line="3894" selection-start-column="5" selection-end-line="3894" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding>
-            <element signature="e#37#159#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///usr/lib/jvm/java-8-openjdk/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
@@ -506,20 +748,188 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QCompilationUnit.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="68" lean-forward="false" selection-start-line="11" selection-start-column="68" selection-end-line="11" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/example/graphql.schema.graphqls">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="2840" column="24" lean-forward="false" selection-start-line="2840" selection-start-column="24" selection-end-line="2840" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/QLParser.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        <state relative-caret-position="468">
+          <caret line="66" column="8" lean-forward="false" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/qlang/specc/QTypes.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1008">
+          <caret line="81" column="97" lean-forward="false" selection-start-line="81" selection-start-column="97" selection-end-line="81" selection-end-column="97" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/prestongarno/transpiler/Tokens.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="141" column="52" lean-forward="false" selection-start-line="141" selection-start-column="52" selection-end-line="141" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/QCompilationUnit.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="64" lean-forward="false" selection-start-line="7" selection-start-column="64" selection-end-line="7" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/QLBaseParserTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="8" lean-forward="false" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/QLParser.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="67" column="84" lean-forward="false" selection-start-line="67" selection-start-column="84" selection-end-line="67" selection-end-column="84" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/qlang/specc/QTypes.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="39" column="129" lean-forward="false" selection-start-line="39" selection-start-column="129" selection-end-line="39" selection-end-column="129" />
+          <folding>
+            <element signature="n#!!doc;n#QType#0" expanded="false" />
+            <element signature="n#!!block;n#toString#0;n#!!block;n#QType#0" expanded="false" />
+            <element signature="n#!!block;n#toString#0;n#!!block;n#QScalarSymbol#0" expanded="false" />
+            <element signature="n#!!doc;n#QCollectionType#0" expanded="false" />
+            <element signature="n#!!doc;n#QDefinedType#0" expanded="false" />
+            <element signature="n#!!block;n#QDefinedType#0" expanded="false" />
+            <element signature="n#!!doc;n#QTypeDef#0" expanded="false" />
+            <element signature="n#!!block;n#QTypeDef#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/prestongarno/transpiler/Mapper.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1088">
+          <caret line="163" column="4" lean-forward="false" selection-start-line="163" selection-start-column="4" selection-end-line="163" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/GraphQlParseTest.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="27" lean-forward="false" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/prestongarno/transpiler/tests/parsing/statements/MemberDeclarationParseTests.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="20" column="36" lean-forward="false" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+          <folding>
+            <element signature="e#62#224#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>ktq</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>KotlinJavaRuntime</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
