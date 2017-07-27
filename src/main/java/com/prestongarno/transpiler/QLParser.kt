@@ -1,6 +1,7 @@
 package com.prestongarno.transpiler
 
-import com.prestongarno.transpiler.RootType.*
+import com.prestongarno.transpiler.qlang.specc.RootType
+import com.prestongarno.transpiler.qlang.specc.RootType.*
 import java.io.File
 import java.io.InputStream
 import java.util.*
@@ -20,12 +21,12 @@ class QLParser {
 			.map { f -> parse(f.inputStream()) }
 			.toList()
 
-	private fun parse(ioStream: InputStream): QCompilationUnit {
+	fun parse(ioStream: InputStream): QCompilationUnit {
 
 		val rawTypes = EnumSet.allOf(RootType::class.java).toList().stream()
-				.collect(Collectors.toMap( identity<RootType>(),
+				.collect(Collectors.toMap(identity<RootType>(),
 						Function<RootType, MutableList<Pair<String, List<String>>>>
-				{ LinkedList<Pair<String, List<String>>>() }))
+						{ LinkedList<Pair<String, List<String>>>() }))
 
 		val scanner: Scanner = Scanner(ioStream, "UTF-8")
 		val scopeEntry = Pattern.compile("\\s*?\\{\\s*?", Pattern.MULTILINE)
@@ -46,9 +47,10 @@ class QLParser {
 			} else if (kind == SCALAR) {
 				rawTypes[SCALAR]!!.add(0, Pair(scanner.useDelimiter(nextSpace).next().trim(), Collections.emptyList()))
 			} else if (kind == UNKNOWN) {
-				// log and keep going
+
 				val line = scanner.nextLine()
 				val errorBlock: String
+
 				if (line.contains("\\|")) {
 					errorBlock = line
 				} else {
@@ -56,46 +58,96 @@ class QLParser {
 				}
 				rawTypes[UNKNOWN]!!.add(0, Pair(errorBlock, Collections.emptyList()))
 			} else {
-				val name = scanner.useDelimiter(scopeEntry).next()
-				val block = scanner.useDelimiter(scopeExit).next().substring(1).trim()
-				val statements = block.split(Regex("\\s*[,|\n]\\s*")).stream()
-						.filter({ t -> t != "{" })
-						.map({ t -> t.replace(Regex("\\s*"), "").replace(Regex("[}{]"), "").trim() }).toList()
-				rawTypes[kind]!!.add(0, Pair(name, statements))
+				val name = scanner.useDelimiter(scopeEntry).next().trim()
+				var target = scanner.useDelimiter(scopeExit).next().trim().substring(1)
+				val compile = Pattern.compile("\\(([^)]+)\\)", Pattern.MULTILINE)
+				var matcher = compile.matcher(target)
+				val groupCount = matcher.groupCount()
+				var indexer: Int = target.indexOf('(')
+				while (indexer > 0) {
+					val endIndex = target.indexOf(')', indexer)
+					target = target.replaceRange(indexer, endIndex + 1, target.substring(indexer, endIndex + 1)
+							.replace("([^(])\n+".toRegex(), "\$1,")
+							.replace("\\s+".toRegex(), ""))
+					indexer = target.indexOf('(', indexer + 1)
+				}
+				//target = target.replace("<,", "(").replace(">", ")")
+				val split = target.split(Regex("\n+")).filter { s -> s.isNotEmpty().and(s.isNotBlank()) }
+						.map { s -> s.replace(Regex("@.*$"), "").trim() } //TODO -> handle directives in statement parser
+				rawTypes[kind]!!.add(0, Pair(name, split))
 			}
 			scanner.useDelimiter(nextCharacter).next()
 		}
-		rawTypes.forEach({ entry -> entry.value.forEach({ pair -> println(pair) }) })
+		//rawTypes.forEach({ entry -> entry.value.forEach({ pair -> println(pair) }) })
 
 		if (rawTypes[UNKNOWN]!!.size > 0) {
-
+			// todo log errors and exit
 		}
 
-		val types = rawTypes[RootType.TYPE]!!.asIterable().toList()
-		val interfaces = rawTypes[RootType.INTERFACE]!!.asIterable().toList()
-		val unions = rawTypes[RootType.UNION]!!.asIterable().toList()
-		val scalars = rawTypes[RootType.SCALAR]!!.asIterable().toList()
-		val enums = rawTypes[RootType.ENUM]!!.asIterable().toList()
+		val types = rawTypes[TYPE]!!.asIterable().toList()
+		val interfaces = rawTypes[INTERFACE]!!.asIterable().toList()
+		val unions = rawTypes[UNION]!!.asIterable().toList()
+		val scalars = rawTypes[SCALAR]!!.asIterable().toList()
+		val enums = rawTypes[ENUM]!!.asIterable().toList()
 		return QCompilationUnit(types, interfaces, unions, scalars, enums)
-	}
-
-	companion object {
-		fun main(args: Array<String>) {
-			QLParser().parse(File("/home/preston/AndroidStudioProjects/ktq/src/com/prestongarno/example/graphql.schema.graphqls").inputStream())
-			QLParser().parse(("type MyDefinition {hello: String        \n}\n  " +
-					"interface SchemaInterface{ age: Int        \n      definition: MyDefinition} \n" +
-					"enum Switcher { KIND, OF,WAY}  ").byteInputStream())
-		}
 	}
 }
 
+object Lexer {
+
+	var NAME = Regex("[a-zA-Z_]+")
+	var TYPE = Regex("\\[?[a-zA-Z_]+!?\\]?!?")
+	var INPUT = Regex("[a-zA-Z_]+\\s*?:\\s*?[a-zA-Z_]+[,[\\n]+]")
+	var INPUT_DEF_VALUE = Regex("=\\s*[a-zA-Z0-9_\"]+[,[\\n]+]")
+	//====== Sub-Type declaration types ======//
+	var LIST = Regex("\\[[a-zA-Z_]+!?]")
+	var NON_NULL = Regex("\\[?[a-zA-Z_]+!]?")
+
+	/** Regex to match entire field (input) **/
+	var INPUT_FIELD = Regex("($NAME)\\([$INPUT|$INPUT_DEF_VALUE]+\\)[\\s\n]*:[\\s\n]*($TYPE)", RegexOption.MULTILINE)
+	var FIELD = Regex("($NAME)\\s*:\\s*($TYPE)")
 
 
+	fun readFields(block: String): List<Field> {
+		val inputFields = INPUT_FIELD.findAll(block).map { result -> result.groups }.map { group ->
+			Field(group[1]!!.value,
+					FIELD.findAll("\\(([^)].*)".toRegex().find(group[0]!!.value)!!.value).map { result -> result.value }.map { str ->
+						val indexOf = str.indexOf("=")
+						val defaultVal = if (indexOf < 0) "" else str.substring(indexOf + 1, str.length).trim()
+						val splitIndex = str.indexOf(":")
+						InputArgument(str.substring(0, splitIndex),
+								str.substring(splitIndex + 1, if (indexOf < 0) str.length else str.length).trim(),
+								defaultVal)
+					}.toList(),
+					group[2]!!.value.replace("[\\[\\]!]".toRegex(), ""),
+					LIST.matches(group[2]!!.value),
+					NON_NULL.containsMatchIn(group[2]!!.value))
+		}.toList()
+		val blockMinusInputFields = block.replace(INPUT_FIELD, "")
+		val basicFields = FIELD.findAll(blockMinusInputFields).map { result -> result.groups }.map { group ->
+			Field(group[1]!!.value,
+					Collections.emptyList(),
+					group[2]!!.value.replace("[\\[\\]!]".toRegex(), ""),
+					LIST.matches(group[2]!!.value),
+					NON_NULL.containsMatchIn(group[2]!!.value))
+		}.toList()
+		val shouldBeEmpty = blockMinusInputFields.replace(FIELD, "").replace("[{}\n]".toRegex(), "").trim()
+		assert(shouldBeEmpty.isEmpty())
+		return inputFields.plus(basicFields)
+	}
+
+}
+
+val testFields = listOf<String>("login: String!", "resourcePath: URI!", "url: URI!")
+val test = "{\n avatarUrl(\nsize: Int): URI!\nlogin: String!\nresourcePath: URI!\nurl: URI!\n}"
+
+data class Field(val symbol: String, val inputArgs: List<InputArgument>, val type: String, val isList: Boolean, val isNullable: Boolean)
+data class InputArgument(val name: String, val type: String, val defaultValue: String)
 
 
-
-
-
+fun main(array: Array<String>) {
+	Lexer.readFields(test).forEach { r -> println(r) }
+}
 
 
 

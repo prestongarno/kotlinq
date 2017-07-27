@@ -1,11 +1,9 @@
 package com.prestongarno.transpiler.tests.parsing.statements
 
-import com.prestongarno.transpiler.TypeIrMapper
 import com.prestongarno.transpiler.qlang.specc.*
-import com.prestongarno.transpiler.tests.parsing.GraphQlParseTest
 
-class MemberDeclarationParseTests : GraphQlParseTest() {
-
+//class MemberDeclarationParseTests : GraphQlParseTest() {}
+/*
 	@org.junit.Test
 	fun primitiveStringNoArgs() {
 		val symbol = TypeIrMapper.createSymbol("myVariableDeclaration: String", "TestSuite")
@@ -59,4 +57,29 @@ class MemberDeclarationParseTests : GraphQlParseTest() {
 		assert(symbol.type is QUnknownType)
 	}
 
-}
+	@org.junit.Test
+	fun multipleInputArgsValid() {
+		val symbol = TypeIrMapper.createSymbol("myVar(intVal: Int, stringVal: String, customVal: OtherCustomType): CustomType", "TestSuite")
+		println(symbol)
+		assert(symbol.type is QUnknownType)
+		assert(symbol.type.name == "CustomType")
+		assert(symbol.args.size == 3)
+		assert(symbol.args[0] is QIntSymbol)
+		assert(symbol.args[0].type is QScalarType)
+		assert(symbol.args[1] is QStringSymbol)
+		assert(symbol.args[1].type is QScalarType)
+		assert(symbol.args[2].type is QUnknownType)
+		assert(symbol.args[2].type.name == "OtherCustomType")
+	}*/
+
+
+
+
+
+
+
+
+
+
+
+

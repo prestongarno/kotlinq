@@ -13,7 +13,7 @@ abstract class QType(val name: String) {
 	var description: String = ""
 
 	override fun toString(): String {
-		return "$name of type ${this::class.simpleName}"
+		return "'$name' (${this::class.simpleName})"
 	}
 }
 
@@ -58,7 +58,7 @@ sealed class QScalarSymbol<out V>(name: String, val scalarType: Scalar, args: Li
 			: this(name, scalarType, args, defValue, false)
 
 	override fun toString(): String {
-		return "Q${scalarType.token} :: '$name' :: Default Value='$defValue', arguments=$args"
+		return "Q${scalarType.token}::$name::Default='$defValue'::args=${args.joinToString("\n\t", "")}"
 	}
 }
 
@@ -77,7 +77,7 @@ class QCustomScalar<out T : Any>(name: String, args: List<QSymbol>, defValue: T)
 // Symbol/field types
 abstract class QSymbol(name: String, var type: QType, val args: List<QSymbol>, val nullable: Boolean = true) : QType(name) {
 	override fun toString(): String {
-		return "${this::class.simpleName}(type=$type, args=$args, nullable=$nullable)"
+		return "${this::class.simpleName}(type=$type, args=${args.joinToString("\n\t", "")}, nullable=$nullable)"
 	}
 }
 
@@ -103,12 +103,15 @@ abstract class QDefinedType(name: String) : QType(name) {
 /** Nullable QInterfaceDef pointer allowed for resolving types after creating IR objects
  */
 class QTypeDef(name: String, val interfaces: List<QDefinedType>, val fields: List<QSymbol>) : QDefinedType(name) {
-	override fun toString(): String = "QTypeDef(interfaces=$interfaces, fields=$fields)"
+	override fun toString(): String {
+		return "QDefinedType:: \"$name\"\n  --interfaces::\n\t\t${interfaces.joinToString("\n\t\t")}\n" +
+				"  --fields::\n\t\t${fields.joinToString("\n\t\t")}"
+	}
 }
 
 class QUnknownType(name: String) : QDefinedType(name)
 
-class QInterfaceDef(name: String) : QDefinedType(name)
+class QInterfaceDef(name: String, val fields: List<QDefinedType>) : QDefinedType(name)
 
 class QUnionTypeDef(name: String, val possibleTypes: List<QTypeDef>) : QDefinedType(name)
 

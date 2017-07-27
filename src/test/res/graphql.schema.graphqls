@@ -1586,61 +1586,33 @@ type MovedColumnsInProjectEvent implements Node {
 
 type Mutation {
     acceptTopicSuggestion(input: AcceptTopicSuggestionInput!): AcceptTopicSuggestionPayload
-
     addComment(input: AddCommentInput!): AddCommentPayload
-
     addProjectCard(input: AddProjectCardInput!): AddProjectCardPayload
-
     addProjectColumn(input: AddProjectColumnInput!): AddProjectColumnPayload
-
     addPullRequestReview(input: AddPullRequestReviewInput!): AddPullRequestReviewPayload
-
     addPullRequestReviewComment(input: AddPullRequestReviewCommentInput!): AddPullRequestReviewCommentPayload
-
     addReaction(input: AddReactionInput!): AddReactionPayload
-
     addStar(input: AddStarInput!): AddStarPayload
-
     createProject(input: CreateProjectInput!): CreateProjectPayload
-
     declineTopicSuggestion(input: DeclineTopicSuggestionInput!): DeclineTopicSuggestionPayload
-
     deleteProject(input: DeleteProjectInput!): DeleteProjectPayload
-
     deleteProjectCard(input: DeleteProjectCardInput!): DeleteProjectCardPayload
-
     deleteProjectColumn(input: DeleteProjectColumnInput!): DeleteProjectColumnPayload
-
     deletePullRequestReview(input: DeletePullRequestReviewInput!): DeletePullRequestReviewPayload
-
     dismissPullRequestReview(input: DismissPullRequestReviewInput!): DismissPullRequestReviewPayload
-
     moveProjectCard(input: MoveProjectCardInput!): MoveProjectCardPayload
-
     moveProjectColumn(input: MoveProjectColumnInput!): MoveProjectColumnPayload
-
     removeOutsideCollaborator(input: RemoveOutsideCollaboratorInput!): RemoveOutsideCollaboratorPayload
-
     removeReaction(input: RemoveReactionInput!): RemoveReactionPayload
-
     removeStar(input: RemoveStarInput!): RemoveStarPayload
-
     requestReviews(input: RequestReviewsInput!): RequestReviewsPayload
-
     submitPullRequestReview(input: SubmitPullRequestReviewInput!): SubmitPullRequestReviewPayload
-
     updateProject(input: UpdateProjectInput!): UpdateProjectPayload
-
     updateProjectCard(input: UpdateProjectCardInput!): UpdateProjectCardPayload
-
     updateProjectColumn(input: UpdateProjectColumnInput!): UpdateProjectColumnPayload
-
     updatePullRequestReview(input: UpdatePullRequestReviewInput!): UpdatePullRequestReviewPayload
-
     updatePullRequestReviewComment(input: UpdatePullRequestReviewCommentInput!): UpdatePullRequestReviewCommentPayload
-
     updateSubscription(input: UpdateSubscriptionInput!): UpdateSubscriptionPayload
-
     updateTopics(input: UpdateTopicsInput!): UpdateTopicsPayload
 }
 
