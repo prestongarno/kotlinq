@@ -1,76 +1,239 @@
 package com.prestongarno.transpiler.tests.parsing
 
-import com.prestongarno.transpiler.Field
-import com.prestongarno.transpiler.Lexer
+import com.prestongarno.transpiler.QLParser
 import org.junit.Test
-import java.util.*
 
 class GithubApiTest {
 	@Test
 	fun schemaTest() {
 		val file = this::class.java.classLoader.getResource("graphql.schema.graphqls")
 
-		val input = Scanner(file.openStream()).useDelimiter("\\A").next()
+		val content = QLParser().parse(file.openStream()).content
+		content.forEach { t -> println("$t\n") }
+		println("Parsing created a total of [${content.size}] types")
+
+/*		val input = Scanner(file.openStream()).useDelimiter("\\A").next()
 		val regex = Regex("\\{(.*?)}", RegexOption.DOT_MATCHES_ALL)
-		regex.findAll(input).forEach { result -> Lexer.readFields(result.value).forEach{ t -> println(t) }  }
-		Lexer.readFields("acceptTopicSuggestion(input: AcceptTopicSuggestionInput!): AcceptTopicSuggestionPayload\n" +
+		regex.findAll(input).map { result -> QLexer.baseFields(result.value)}.flatMap { list -> list.iterator().asSequence() }
+				.forEach { field -> println(field) }*/
+		val wtf = "type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {\n" +
+				"    avatarUrl(\n" +
+				"    size: Int): URI!\n" +
 				"\n" +
-				"    addComment(input: AddCommentInput!): AddCommentPayload\n" +
+				"    bio: String\n" +
 				"\n" +
-				"    addProjectCard(input: AddProjectCardInput!): AddProjectCardPayload\n" +
+				"    bioHTML: HTML!\n" +
 				"\n" +
-				"    addProjectColumn(input: AddProjectColumnInput!): AddProjectColumnPayload\n" +
+				"    company: String\n" +
 				"\n" +
-				"    addPullRequestReview(input: AddPullRequestReviewInput!): AddPullRequestReviewPayload\n" +
+				"    companyHTML: HTML!\n" +
 				"\n" +
-				"    addPullRequestReviewComment(input: AddPullRequestReviewCommentInput!): AddPullRequestReviewCommentPayload\n" +
+				"    contributedRepositories(\n" +
+				"    first: Int\n" +
 				"\n" +
-				"    addReaction(input: AddReactionInput!): AddReactionPayload\n" +
+				"    after: String\n" +
 				"\n" +
-				"    addStar(input: AddStarInput!): AddStarPayload\n" +
+				"    last: Int\n" +
 				"\n" +
-				"    createProject(input: CreateProjectInput!): CreateProjectPayload\n" +
+				"    before: String\n" +
 				"\n" +
-				"    declineTopicSuggestion(input: DeclineTopicSuggestionInput!): DeclineTopicSuggestionPayload\n" +
+				"    privacy: RepositoryPrivacy\n" +
 				"\n" +
-				"    deleteProject(input: DeleteProjectInput!): DeleteProjectPayload\n" +
+				"    orderBy: RepositoryOrder\n" +
 				"\n" +
-				"    deleteProjectCard(input: DeleteProjectCardInput!): DeleteProjectCardPayload\n" +
+				"    affiliations: [RepositoryAffiliation]\n" +
 				"\n" +
-				"    deleteProjectColumn(input: DeleteProjectColumnInput!): DeleteProjectColumnPayload\n" +
+				"    isLocked: Boolean): RepositoryConnection!\n" +
 				"\n" +
-				"    deletePullRequestReview(input: DeletePullRequestReviewInput!): DeletePullRequestReviewPayload\n" +
+				"    createdAt: DateTime!\n" +
 				"\n" +
-				"    dismissPullRequestReview(input: DismissPullRequestReviewInput!): DismissPullRequestReviewPayload\n" +
+				"    databaseId: Int @deprecated(reason: \"Exposed database IDs will eventually be removed in favor of global Relay IDs.\")\n" +
 				"\n" +
-				"    moveProjectCard(input: MoveProjectCardInput!): MoveProjectCardPayload\n" +
+				"    email: String!\n" +
 				"\n" +
-				"    moveProjectColumn(input: MoveProjectColumnInput!): MoveProjectColumnPayload\n" +
+				"    followers(\n" +
+				"    first: Int\n" +
 				"\n" +
-				"    removeOutsideCollaborator(input: RemoveOutsideCollaboratorInput!): RemoveOutsideCollaboratorPayload\n" +
+				"    after: String\n" +
 				"\n" +
-				"    removeReaction(input: RemoveReactionInput!): RemoveReactionPayload\n" +
+				"    last: Int\n" +
 				"\n" +
-				"    removeStar(input: RemoveStarInput!): RemoveStarPayload\n" +
+				"    before: String): FollowerConnection!\n" +
 				"\n" +
-				"    requestReviews(input: RequestReviewsInput!): RequestReviewsPayload\n" +
+				"    following(\n" +
+				"    first: Int\n" +
 				"\n" +
-				"    submitPullRequestReview(input: SubmitPullRequestReviewInput!): SubmitPullRequestReviewPayload\n" +
+				"    after: String\n" +
 				"\n" +
-				"    updateProject(input: UpdateProjectInput!): UpdateProjectPayload\n" +
+				"    last: Int\n" +
 				"\n" +
-				"    updateProjectCard(input: UpdateProjectCardInput!): UpdateProjectCardPayload\n" +
+				"    before: String): FollowingConnection!\n" +
 				"\n" +
-				"    updateProjectColumn(input: UpdateProjectColumnInput!): UpdateProjectColumnPayload\n" +
+				"    gist(\n" +
+				"    name: String!): Gist\n" +
 				"\n" +
-				"    updatePullRequestReview(input: UpdatePullRequestReviewInput!): UpdatePullRequestReviewPayload\n" +
+				"    gists(\n" +
+				"    first: Int\n" +
 				"\n" +
-				"    updatePullRequestReviewComment(input: UpdatePullRequestReviewCommentInput!): UpdatePullRequestReviewCommentPayload\n" +
+				"    after: String\n" +
 				"\n" +
-				"    updateSubscription(input: UpdateSubscriptionInput!): UpdateSubscriptionPayload\n" +
+				"    last: Int\n" +
 				"\n" +
-				"    updateTopics(input: UpdateTopicsInput!): UpdateTopicsPayload" +
-				"").forEachIndexed { index, field -> println("$field   $index") }
+				"    before: String\n" +
+				"\n" +
+				"    privacy: GistPrivacy): GistConnection!\n" +
+				"    id: ID!\n" +
+				"\n" +
+				"    isBountyHunter: Boolean!\n" +
+				"\n" +
+				"    isCampusExpert: Boolean!\n" +
+				"\n" +
+				"    isDeveloperProgramMember: Boolean!\n" +
+				"\n" +
+				"    isEmployee: Boolean!\n" +
+				"\n" +
+				"    isHireable: Boolean!\n" +
+				"\n" +
+				"    isInvoiced: Boolean!\n" +
+				"\n" +
+				"    isSiteAdmin: Boolean!\n" +
+				"\n" +
+				"    isViewer: Boolean!\n" +
+				"\n" +
+				"    issues(\n" +
+				"    first: Int\n" +
+				"\n" +
+				"    after: String\n" +
+				"\n" +
+				"    last: Int\n" +
+				"\n" +
+				"    before: String\n" +
+				"\n" +
+				"    labels: [String!]\n" +
+				"\n" +
+				"    orderBy: IssueOrder\n" +
+				"\n" +
+				"    states: [IssueState!]): IssueConnection!\n" +
+				"\n" +
+				"    location: String\n" +
+				"\n" +
+				"    login: String!\n" +
+				"\n" +
+				"    name: String\n" +
+				"\n" +
+				"    organization(\n" +
+				"    login: String!): Organization\n" +
+				"\n" +
+				"    organizations(\n" +
+				"    first: Int\n" +
+				"\n" +
+				"    after: String\n" +
+				"\n" +
+				"    last: Int\n" +
+				"\n" +
+				"    before: String): OrganizationConnection!\n" +
+				"\n" +
+				"    pinnedRepositories(\n" +
+				"    first: Int\n" +
+				"\n" +
+				"    after: String\n" +
+				"\n" +
+				"    last: Int\n" +
+				"\n" +
+				"    before: String\n" +
+				"\n" +
+				"    privacy: RepositoryPrivacy\n" +
+				"\n" +
+				"    orderBy: RepositoryOrder\n" +
+				"\n" +
+				"    affiliations: [RepositoryAffiliation]\n" +
+				"\n" +
+				"    isLocked: Boolean): RepositoryConnection!\n" +
+				"\n" +
+				"    pullRequests(\n" +
+				"    first: Int\n" +
+				"\n" +
+				"    after: String\n" +
+				"\n" +
+				"    last: Int\n" +
+				"\n" +
+				"    before: String\n" +
+				"\n" +
+				"    states: [PullRequestState!]\n" +
+				"\n" +
+				"    labels: [String!]\n" +
+				"\n" +
+				"    headRefName: String\n" +
+				"\n" +
+				"    baseRefName: String\n" +
+				"\n" +
+				"    orderBy: IssueOrder): PullRequestConnection!\n" +
+				"\n" +
+				"    repositories(\n" +
+				"    first: Int\n" +
+				"\n" +
+				"    after: String\n" +
+				"\n" +
+				"    last: Int\n" +
+				"\n" +
+				"    before: String\n" +
+				"\n" +
+				"    privacy: RepositoryPrivacy\n" +
+				"\n" +
+				"    orderBy: RepositoryOrder\n" +
+				"\n" +
+				"    affiliations: [RepositoryAffiliation]\n" +
+				"\n" +
+				"    isLocked: Boolean\n" +
+				"\n" +
+				"    isFork: Boolean): RepositoryConnection!\n" +
+				"\n" +
+				"    repository(\n" +
+				"    name: String!): Repository\n" +
+				"\n" +
+				"    resourcePath: URI!\n" +
+				"\n" +
+				"    starredRepositories(\n" +
+				"    first: Int\n" +
+				"\n" +
+				"    after: String\n" +
+				"\n" +
+				"    last: Int\n" +
+				"\n" +
+				"    before: String\n" +
+				"\n" +
+				"    ownedByViewer: Boolean\n" +
+				"\n" +
+				"    orderBy: StarOrder): StarredRepositoryConnection!\n" +
+				"\n" +
+				"    updatedAt: DateTime! @deprecated(reason: \"General type updated timestamps will eventually be replaced by other field specific timestamps.\")\n" +
+				"\n" +
+				"    url: URI!\n" +
+				"\n" +
+				"    viewerCanFollow: Boolean!\n" +
+				"\n" +
+				"    viewerIsFollowing: Boolean!\n" +
+				"\n" +
+				"    watching(\n" +
+				"    first: Int\n" +
+				"\n" +
+				"    after: String\n" +
+				"\n" +
+				"    last: Int\n" +
+				"\n" +
+				"    before: String\n" +
+				"\n" +
+				"    privacy: RepositoryPrivacy\n" +
+				"\n" +
+				"    orderBy: RepositoryOrder\n" +
+				"\n" +
+				"    affiliations: [RepositoryAffiliation]\n" +
+				"\n" +
+				"    isLocked: Boolean): RepositoryConnection!\n" +
+				"\n" +
+				"    websiteUrl: URI\n" +
+				"}"
+		QLParser().parse(wtf.byteInputStream())
 	}
 }
 

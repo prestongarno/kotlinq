@@ -49,10 +49,10 @@ enum class Scalar(val token: String) {
 	}
 }
 
-class QScalarType(typeEnum: Scalar) : QType(typeEnum.token)
+class QScalarType(val typeEnum: Scalar, name: String) : QType(name)
 
 sealed class QScalarSymbol<out V>(name: String, val scalarType: Scalar, args: List<QSymbol>, val defValue: V, nullable: Boolean)
-	: QSymbol(name, QScalarType(scalarType), args, nullable) {
+	: QSymbol(name, QScalarType(scalarType, scalarType.token), args, nullable) {
 
 	constructor(name: String, scalarType: Scalar, args: List<QSymbol>, defValue: V)
 			: this(name, scalarType, args, defValue, false)
@@ -81,14 +81,11 @@ abstract class QSymbol(name: String, var type: QType, val args: List<QSymbol>, v
 	}
 }
 
-/** Type used for fields to represent a List/Collection of objects or primitives as fields in a type instance
- */
-//TODO fix variable shadowing here
-class QCollectionType(val wrap: QSymbol) : QSymbol(wrap.name, QListWrapper(wrap.name, wrap.type), wrap.args, wrap.nullable)
 
-class QListWrapper(name: String, val wrappedType: QType) : QType(name)
-
-class QField(name: String, type: QType, args: List<QSymbol>, nullable: Boolean) : QSymbol(name, type, args, nullable)
+class QField(name: String, type: QType, args: List<QSymbol>, val isList: Boolean, nullable: Boolean) : QSymbol(name, type, args, nullable) {
+	override fun toString(): String = "'$name' || type=$type || List? $isList || Nullable? $nullable " +
+			if (args.isNotEmpty()) "\n\t\t\targs = ${args.joinToString(",\n\t\t\t\t")}" else ""
+}
 
 //========================================//
 // Type definitions
@@ -111,8 +108,10 @@ class QTypeDef(name: String, val interfaces: List<QDefinedType>, val fields: Lis
 
 class QUnknownType(name: String) : QDefinedType(name)
 
-class QInterfaceDef(name: String, val fields: List<QDefinedType>) : QDefinedType(name)
+class QInterfaceDef(name: String, val fields: List<QSymbol>) : QDefinedType(name)
 
-class QUnionTypeDef(name: String, val possibleTypes: List<QTypeDef>) : QDefinedType(name)
+class QUnionTypeDef(name: String, val possibleTypes: List<QDefinedType>) : QDefinedType(name)
 
 class QEnumDef(name: String, val options: List<String>) : QDefinedType(name)
+
+class QInputType(name: String, val fields: List<QSymbol>) : QDefinedType(name)
