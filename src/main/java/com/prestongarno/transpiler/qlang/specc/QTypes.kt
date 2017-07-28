@@ -82,9 +82,16 @@ abstract class QSymbol(name: String, var type: QType, val args: List<QSymbol>, v
 }
 
 
-class QField(name: String, type: QType, args: List<QSymbol>, val isList: Boolean, nullable: Boolean) : QSymbol(name, type, args, nullable) {
-	override fun toString(): String = "'$name' || type=$type || List? $isList || Nullable? $nullable " +
+class QField(name: String, type: QType, args: List<QFieldInputArg>, val directive: QDirectiveSymbol, val isList: Boolean, nullable: Boolean)
+	: QSymbol(name, type, args, nullable) {
+	override fun toString(): String = "'$name' - type $type - List? $isList || Nullable? $nullable " +
 			if (args.isNotEmpty()) "\n\t\t\targs = ${args.joinToString(",\n\t\t\t\t")}" else ""
+}
+
+class QFieldInputArg(name: String, type: QType, val defaultValue : String = "", val isList: Boolean, nullable: Boolean)
+	: QSymbol(name, type, Collections.emptyList(), nullable) {
+	override fun toString(): String = "Arg : $name -- type $type -- isList? $isList -- nullable? $nullable" +
+			"${if(defaultValue.isNotBlank()) " -- default val = '$defaultValue'" else ""}"
 }
 
 //========================================//
@@ -115,3 +122,7 @@ class QUnionTypeDef(name: String, val possibleTypes: List<QDefinedType>) : QDefi
 class QEnumDef(name: String, val options: List<String>) : QDefinedType(name)
 
 class QInputType(name: String, val fields: List<QSymbol>) : QDefinedType(name)
+
+class QDirectiveType(name: String, val arg: String): QDefinedType(name)
+
+class QDirectiveSymbol(type: QDefinedType, val value: String) : QSymbol("DIRECTIVE", type, Collections.emptyList())

@@ -1,38 +1,62 @@
 package com.prestongarno.transpiler
 
 import java.util.*
-import java.util.regex.Pattern
 
 object QLexer {
 
-	var NAME = Regex("[a-zA-Z_][a-zA-Z0-9_]+")
-	var TYPE = Regex("\\[?[a-zA-Z_][a-zA-Z0-9_]+!?\\]?!?")
-	var INPUT = Regex("($NAME)(\\s*:\\s*)($TYPE)(?:\\s*=\\s*)?(.*?)?")
-	//====== Sub-Type declaration types ======//
-	var LIST = Regex("\\[[a-zA-Z_]+!?]")
-	var NON_NULL = Regex("\\[?[a-zA-Z_]+!]?")
+	var NAME = Regex("([a-zA-Z0-9_]+)(\\((.*?)\\))?\\s*:")
+	var TYPE = Regex("([a-zA-Z0-9_]+)")
+	var INPUT = Regex("$TYPE\\s*:\\s*(\\[?($TYPE!?)\\]?)\\s*=?\\s*?(.*?)")
+	var LIST = Regex("\\[$TYPE!?]")
+	var NON_NULL = Regex("\\[?$TYPE((!\\])|(\\]!)|!)")
 
 	/** Regex to match entire field (input) **/
-	var INPUT_FIELD = Regex("($NAME)\\((.*?)\\):\\s*?($TYPE)", RegexOption.DOT_MATCHES_ALL)
-	var FIELD = Regex("($NAME)(\\s*:\\s*)($TYPE)")
-	val DIRECTIVE = Regex("@[a-zA-Z0-9_]*\\(.*?\\)")
+	val DIRECTIVE = Regex("@([a-zA-Z0-9_]*?)\\((.*?)\\)")
+	var INPUT_FIELD = Regex("^$NAME\\s*(\\[?($TYPE!?)\\]?)(?:\\s*)?($DIRECTIVE)?")
+	var PAR = Regex("\\((.*?)\\)", RegexOption.DOT_MATCHES_ALL)
+	val NEWLINESPACES = Regex("[\\s\\t]*\\n[\\s\\t]*", RegexOption.MULTILINE)
+	val INPUT_SPLIT = ",+".toRegex()
 
-	fun baseFields(block: String): List<Field> = baseFields(block, INPUT_FIELD) + baseFields(block.replace(INPUT_FIELD, ""), FIELD)
 
-	private fun baseFields(block: String, whichRegex: Regex): List<Field> {
-		val fields = whichRegex.findAll(block.replace(DIRECTIVE, "")).map { result -> result.groups }.map { group ->
-			Field(group[1]!!.value,
-					if (group[2] != null && whichRegex == INPUT_FIELD) {
-						baseFields(group[2]!!.value.trim(), INPUT)
-					} else Collections.emptyList(),
-					group[3]!!.value.replace("[\\[\\]!]".toRegex(), ""),
-					LIST.matches(group[3]!!.value),
-					!NON_NULL.containsMatchIn(group[3]!!.value))
+	fun baseFields(block: String): List<Field> {
+		var input = block
+		PAR.findAll(block).forEach { result -> input = input.replace(result.value, result.value.replace(NEWLINESPACES, ",")) }
+		input = input.replace(NEWLINESPACES, "\n").trim()
+
+		val fields = INPUT_FIELD.findAll(input).map { result -> result.groups }.map { group ->
+			val name = group[1]!!.value // TODO need more syntax checking?
+			val type = group[6]!!.value
+			val args = if (group[2] != null) {
+				group[3]!!.value.trim().split(INPUT_SPLIT).filter { s -> s.isNotBlank() }.map { str -> inputField(str) }
+			} else Collections.emptyList()
+			val directive = if (group[7] == null) Pair("", "") else Pair(group[8]!!.value, group[9]!!.value)
+			val isList = LIST.matches(group[4]!!.value)
+			val nullable = !NON_NULL.containsMatchIn(group[5]!!.value)
+			if(isList)
+				checkBracketsForList(group[5]!!.value)
+			Field(name, args, type, directive, isList, nullable)
 		}.toList()
-		val shouldBeEmpty = block.replace(DIRECTIVE, "").replace(INPUT_FIELD, "").replace(FIELD, "").replace("[@\n]".toRegex(), "").trim()
-		assert(shouldBeEmpty.isEmpty())//TODO take directives into account
 		return fields
 	}
+
+
+	private fun inputField(input: String): FieldInputArg { // TODO pass type name for logging
+		val match = INPUT.matchEntire(input)?.groupValues
+		if (match == null) throw IllegalArgumentException("Bad input field declaration: $input")
+		if (match.size != 6) throw Error("Bad regex parsing input field -> expected capture count was 6 but was ${match.size}")
+		val name = match[1]
+		val type = match[4]
+		val defaultValue = if (match[5] == null) "" else match[5].trim()
+		val isList = LIST.matches(match[2])
+		val isNullable = !NON_NULL.matches(match[3])
+		if (isList)
+			checkBracketsForList(match[2])
+		return FieldInputArg(name, type, defaultValue, isList, isNullable)
+	}
+
+	private inline fun checkBracketsForList(type: String) =
+			if (type.startsWith("[") || type.endsWith("]")) throw IllegalArgumentException("Unclosed bracket: '$type'") else 1
+
 
 	fun enumFields(block: String): List<String> = NAME.findAll(block).map { result -> result.groups }
 			.map { col -> col[0]!!.value }.toList()
@@ -41,9 +65,15 @@ object QLexer {
 
 }
 
-data class Field(val symbol: String, val inputArgs: List<Field>, val type: String, val isList: Boolean, val isNullable: Boolean) {
+data class Field(val symbol: String, val inputArgs: List<FieldInputArg>, val type: String, val directive: Pair<String, String>, val isList: Boolean, val isNullable: Boolean) {
 	override fun toString(): String {
-		return "$symbol || args => ${inputArgs.joinToString(", ")} || type:\t$type || isList=$isList || isNullable=$isNullable)"
+		return "Field: $symbol  || type:\t$type || isList=$isList || isNullable=$isNullable || directive=$directive " +
+				if (inputArgs.isNotEmpty()) inputArgs.joinToString("", "\n\t arg -> \t", ",") else ""
 	}
+}
+
+data class FieldInputArg(val symbol: String, val type: String, val defaultValue: String, val isList: Boolean, val isNullable: Boolean) {
+	override fun toString(): String = "arg: '$symbol' type='$type' isList? $isList -- Nullable? $isNullable" +
+			if (defaultValue.isNotBlank()) " -- default value = '$defaultValue'" else ""
 }
 

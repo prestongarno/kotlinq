@@ -1,85 +1,121 @@
 package com.prestongarno.transpiler.tests.parsing.statements
 
+import com.prestongarno.transpiler.QLexer
 import com.prestongarno.transpiler.qlang.specc.*
+import org.junit.Test
+import java.util.*
 
-//class MemberDeclarationParseTests : GraphQlParseTest() {}
-/*
-	@org.junit.Test
-	fun primitiveStringNoArgs() {
-		val symbol = TypeIrMapper.createSymbol("myVariableDeclaration: String", "TestSuite")
-		assert(symbol.nullable)
-		assert(symbol.args.isEmpty())
-		assert(symbol.type is QScalarType)
+class MemberDeclarationParseTests {
+
+	@Test
+	fun fieldParsingTestAllOptions() {
+
+		val rawField = "foofield(limitTo: Int = 10): [Int!] @foo(bar)"
+
+		QLexer.baseFields(rawField).forEach { field ->
+			assert(field.symbol == "foofield"
+					&& field.type == "Int"
+					&& field.inputArgs.size == 1
+					&& field.inputArgs[0]!!.symbol == "limitTo"
+					&& field.inputArgs[0]!!.type == "Int"
+					&& !field.inputArgs[0]!!.isList
+					&& field.inputArgs[0]!!.isNullable
+					&& field.directive.first == "foo"
+					&& field.directive.second == "bar"
+					&& field.isList
+					&& !field.isNullable)
+			println(field)
+		}
+
 	}
 
-	@org.junit.Test
-	fun primitiveStringNoArgsNotNullable() {
-		val symbol = TypeIrMapper.createSymbol("myVar: String!", "TestSuite")
-		assert(!symbol.nullable)
-		assert(symbol.args.isEmpty())
-		assert(symbol.type is QScalarType)
-		assert(symbol is QStringSymbol)
-		assert(symbol.name == "myVar")
+	@Test
+	fun fieldBasic() {
+
+		val rawField = "foofield: String"
+
+		QLexer.baseFields(rawField).forEach { field ->
+			assert(field.symbol == "foofield"
+					&& field.type == "String"
+					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
+					&& !field.isList
+					&& field.isNullable)
+			println(field)
+		}
+
 	}
 
-	@org.junit.Test
-	fun primitiveIntNoArgsNotNullable() {
-		val symbol = TypeIrMapper.createSymbol("myVar: Int", "TestSuite")
-		assert(!symbol.nullable)
-		assert(symbol.args.isEmpty())
-		assert(symbol.type is QScalarType)
-		assert(symbol is QIntSymbol)
-		assert(symbol.name == "myVar")
+	@Test
+	fun fieldListNullable() {
+
+		val rawField = "foofield: [Object]"
+
+		QLexer.baseFields(rawField).forEach { field ->
+			assert(field.symbol == "foofield"
+					&& field.type == "Object"
+					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
+					&& field.isList
+					&& field.isNullable)
+			println(field)
+		}
+
 	}
 
-	@org.junit.Test
-	fun intStatementWithArgs() {
-		val symbol = TypeIrMapper.createSymbol("myVar(maxLength: Int): String", "TestSuite")
-		assert(!symbol.args.isEmpty())
-		assert(symbol.args[0].type is QScalarType)
-		assert(symbol.name == "myVar")
+	@Test
+	fun fieldListNonNullable() {
+
+		val rawField = "foofield: [Object!]"
+
+		QLexer.baseFields(rawField).forEach { field ->
+			assert(field.symbol == "foofield"
+					&& field.type == "Object"
+					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
+					&& field.isList
+					&& !field.isNullable)
+			println(field)
+		}
+
 	}
 
-	@org.junit.Test
-	fun intStatementWithArgsReturningCollection() {
-		val symbol = TypeIrMapper.createSymbol("myVar(maxLength: Int): [String]", "TestSuite")
-		println(symbol)
-		assert(!symbol.args.isEmpty())
-		assert(symbol is QCollectionType)
-		assert(symbol.type is QListWrapper)
-		assert(( symbol.type as QListWrapper ).wrappedType.name == "String")
+	@Test
+	fun fieldListWithDirective() {
+
+		val rawField = "foofield: [Object] @directive(\"foo @*^%$@^&%$#@}{\")"
+
+		QLexer.baseFields(rawField).forEach { field ->
+			println(field)
+			assert(field.symbol == "foofield"
+					&& field.type == "Object"
+					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
+					&& field.isList
+					&& field.isNullable
+					&& field.directive.first == "directive"
+					&& field.directive.second == "\"foo @*^%$@^&%$#@}{\"")
+		}
+
 	}
 
-	@org.junit.Test
-	fun customSingleTypeReturn() {
-		val symbol = TypeIrMapper.createSymbol("myVar: CustomType", "TestSuite")
-		println(symbol)
-		assert(symbol.type is QUnknownType)
+	@Test
+	fun fieldInputWithDirective() {
+
+		val rawField = "\n\t    foofield(\n\tquery: String!): [Object] @directive(\"foo: @*^%$@^&%$#@}{\")"
+
+		val baseFields = QLexer.baseFields(rawField)
+		baseFields.forEach { field ->
+			println(field)
+			assert(field.symbol == "foofield"
+					&& field.type == "Object"
+					&& field.inputArgs.size == 1
+					&& field.inputArgs[0]!!.symbol == "query"
+					&& field.inputArgs[0]!!.type == "String"
+					&& !field.inputArgs[0]!!.isList
+					&& !field.inputArgs[0]!!.isNullable
+					&& field.isList
+					&& field.isNullable
+					&& field.directive.first == "directive"
+					&& field.directive.second == "\"foo: @*^%$@^&%$#@}{\"")
+		}
+		assert(baseFields.size == 1)
+
 	}
-
-	@org.junit.Test
-	fun multipleInputArgsValid() {
-		val symbol = TypeIrMapper.createSymbol("myVar(intVal: Int, stringVal: String, customVal: OtherCustomType): CustomType", "TestSuite")
-		println(symbol)
-		assert(symbol.type is QUnknownType)
-		assert(symbol.type.name == "CustomType")
-		assert(symbol.args.size == 3)
-		assert(symbol.args[0] is QIntSymbol)
-		assert(symbol.args[0].type is QScalarType)
-		assert(symbol.args[1] is QStringSymbol)
-		assert(symbol.args[1].type is QScalarType)
-		assert(symbol.args[2].type is QUnknownType)
-		assert(symbol.args[2].type.name == "OtherCustomType")
-	}*/
-
-
-
-
-
-
-
-
-
-
-
-
+}
