@@ -118,4 +118,40 @@ class MemberDeclarationParseTests {
 		assert(baseFields.size == 1)
 
 	}
+
+	@Test
+	fun multipleFields() {
+
+		val rawField = "\n\t    foofield(\n\tquery: String!): [Object] @directive(\"foo: @*^%$@^&%$#@}{\")" +
+				"\n\t    fooFieldTwo(\n   \t   queryTwo: [Object!] = null): Int @directiveTwo(fooTwo: \"bars\")"
+
+		val baseFields = QLexer.baseFields(rawField)
+
+		baseFields.forEach { field -> println(field) }
+		assert(baseFields.size == 2)
+
+		assert(baseFields[0].symbol == "foofield"
+				&& baseFields[0].type == "Object"
+				&& baseFields[0].inputArgs.size == 1
+				&& baseFields[0].inputArgs[0]!!.symbol == "query"
+				&& baseFields[0].inputArgs[0]!!.type == "String"
+				&& !baseFields[0].inputArgs[0]!!.isList
+				&& !baseFields[0].inputArgs[0]!!.isNullable
+				&& baseFields[0].isList
+				&& baseFields[0].isNullable
+				&& baseFields[0].directive.first == "directive"
+				&& baseFields[0].directive.second == "\"foo: @*^%$@^&%$#@}{\"")
+
+		assert(baseFields[1].symbol == "fooFieldTwo"
+				&& baseFields[1].type == "Int"
+				&& baseFields[1].inputArgs.size == 1
+				&& baseFields[1].inputArgs[0]!!.symbol == "queryTwo"
+				&& baseFields[1].inputArgs[0]!!.type == "Object"
+				&& baseFields[1].inputArgs[0]!!.isList
+				&& !baseFields[1].inputArgs[0]!!.isNullable
+				&& !baseFields[1].isList
+				&& baseFields[1].isNullable
+				&& baseFields[1].directive.first == "directiveTwo"
+				&& baseFields[1].directive.second == "fooTwo: \"bars\"")
+	}
 }

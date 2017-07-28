@@ -30,8 +30,6 @@ class QLParser {
 
 			val name = scanner.next().trim()
 
-			println(name)
-
 			when (typeKind) {
 				UNKNOWN -> throw IllegalArgumentException("Unknown type declaration \"$declType\"")
 				UNION -> {

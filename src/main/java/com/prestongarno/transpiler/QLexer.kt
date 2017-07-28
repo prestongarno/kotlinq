@@ -6,13 +6,13 @@ object QLexer {
 
 	var NAME = Regex("([a-zA-Z0-9_]+)(\\((.*?)\\))?\\s*:")
 	var TYPE = Regex("([a-zA-Z0-9_]+)")
-	var INPUT = Regex("$TYPE\\s*:\\s*(\\[?($TYPE!?)\\]?)\\s*=?\\s*?(.*?)")
+	var INPUT = Regex("$TYPE\\s*:\\s*(\\[?($TYPE!?)\\]?!?)(\\s*?=\\s*?(.*?))?")
 	var LIST = Regex("\\[$TYPE!?]")
 	var NON_NULL = Regex("\\[?$TYPE((!\\])|(\\]!)|!)")
 
 	/** Regex to match entire field (input) **/
 	val DIRECTIVE = Regex("@([a-zA-Z0-9_]*?)\\((.*?)\\)")
-	var INPUT_FIELD = Regex("^$NAME\\s*(\\[?($TYPE!?)\\]?)(?:\\s*)?($DIRECTIVE)?")
+	var INPUT_FIELD = Regex("$NAME\\s*(\\[?($TYPE!?)\\]?)(?:\\s*)?($DIRECTIVE)?")
 	var PAR = Regex("\\((.*?)\\)", RegexOption.DOT_MATCHES_ALL)
 	val NEWLINESPACES = Regex("[\\s\\t]*\\n[\\s\\t]*", RegexOption.MULTILINE)
 	val INPUT_SPLIT = ",+".toRegex()
@@ -33,7 +33,7 @@ object QLexer {
 			val isList = LIST.matches(group[4]!!.value)
 			val nullable = !NON_NULL.containsMatchIn(group[5]!!.value)
 			if(isList)
-				checkBracketsForList(group[5]!!.value)
+				checkBracketsForList(group[4]!!.value)
 			Field(name, args, type, directive, isList, nullable)
 		}.toList()
 		return fields
@@ -41,12 +41,13 @@ object QLexer {
 
 
 	private fun inputField(input: String): FieldInputArg { // TODO pass type name for logging
-		val match = INPUT.matchEntire(input)?.groupValues
-		if (match == null) throw IllegalArgumentException("Bad input field declaration: $input")
-		if (match.size != 6) throw Error("Bad regex parsing input field -> expected capture count was 6 but was ${match.size}")
+		val match = INPUT.matchEntire(input)?.groupValues ?: throw IllegalArgumentException("Bad input field declaration: $input")
+		if (match.size != 7) throw Error("Bad regex parsing input field -> expected capture count was 6 but was ${match.size}")
 		val name = match[1]
 		val type = match[4]
-		val defaultValue = if (match[5] == null) "" else match[5].trim()
+		var defaultValue = match[5].trim()
+		if(defaultValue.isNotBlank() && defaultValue.startsWith("="))
+			defaultValue = defaultValue.substring(1).trim() // why .*? captures '=' behind it?
 		val isList = LIST.matches(match[2])
 		val isNullable = !NON_NULL.matches(match[3])
 		if (isList)
@@ -55,7 +56,7 @@ object QLexer {
 	}
 
 	private inline fun checkBracketsForList(type: String) =
-			if (type.startsWith("[") || type.endsWith("]")) throw IllegalArgumentException("Unclosed bracket: '$type'") else 1
+			if (!type.startsWith("[") || !type.endsWith("]")) throw IllegalArgumentException("Unclosed bracket: '$type'") else 1
 
 
 	fun enumFields(block: String): List<String> = NAME.findAll(block).map { result -> result.groups }
