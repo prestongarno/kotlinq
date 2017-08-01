@@ -3,6 +3,7 @@ package com.prestongarno.transpiler.qlang.spec
 import java.util.*
 import java.util.function.Function
 import java.util.stream.Collectors
+import kotlin.reflect.KClass
 
 /**
  * The base class for all components of the compilation
@@ -51,17 +52,17 @@ enum class Scalar(val token: String) {
 	}
 }
 
-sealed class QScalarType(name: String) : QDefinedType(name)
+sealed class QScalarType(name: String, val clazz: KClass<*>) : QDefinedType(name)
 
-class QCustomScalarType(name: String) : QScalarType(name)
+class QCustomScalarType(name: String) : QScalarType(name, Int::class)
 
-class QInt(defValue: Int = 0) : QScalarType("Int")
+class QInt(defValue: Int = 0) : QScalarType("Int", Int::class)
 
-class QFloat(defValue: Float = 0f) : QScalarType("Float")
+class QFloat(defValue: Float = 0f) : QScalarType("Float", Float::class)
 
-class QBool(defValue: Boolean = false) : QScalarType("Boolean")
+class QBool(defValue: Boolean = false) : QScalarType("Boolean", Boolean::class)
 
-class QString(defValue: String = "") : QScalarType("String")
+class QString(defValue: String = "") : QScalarType("String", String::class)
 
 /** Symbol/field types */
 abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val nullable: Boolean = true) : QType(name)

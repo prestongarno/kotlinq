@@ -2587,47 +2587,27 @@ type Query {
 
     codesOfConduct: [CodeOfConduct]
 
-    node(
-    id: ID!): Node
+    node(id: ID!): Node
 
-    nodes(
-    ids: [ID!]!): [Node]!
+    nodes(ids: [ID!]!): [Node]!
 
-    organization(
-    login: String!): Organization
+    organization(login: String!): Organization
 
     rateLimit: RateLimit
 
     relay: Query!
 
-    repository(
-    owner: String!
+    repository(owner: String!, name: String!): Repository
 
-    name: String!): Repository
+    repositoryOwner(login: String!): RepositoryOwner
 
-    repositoryOwner(
-    login: String!): RepositoryOwner
+    resource(url: URI!): UniformResourceLocatable
 
-    resource(
-    url: URI!): UniformResourceLocatable
+    search(first: Int, after: String, last: Int, before: String, query: String!, type: SearchType!): SearchResultItemConnection!
 
-    search( first: Int
+    topic(name: String!): Topic
 
-    after: String
-
-    last: Int
-
-    before: String
-
-    query: String!
-
-    type: SearchType!): SearchResultItemConnection!
-
-    topic(
-    name: String!): Topic
-
-    user(
-    login: String!): User
+    user(login: String!): User
 
     viewer: User!
 }

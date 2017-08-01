@@ -27,7 +27,7 @@ object QLexer {
 			val name = group[1]!!.value // TODO need more syntax checking?
 			val type = group[6]!!.value
 			val args = if (group[2] != null) {
-				group[3]!!.value.trim().split(INPUT_SPLIT).filter { s -> s.isNotBlank() }.map { str -> inputField(str) }
+				group[3]!!.value.trim().split(INPUT_SPLIT).filter { s -> s.isNotBlank() }.map { str -> inputField(str.trim()) }
 			} else Collections.emptyList()
 			val directive = if (group[7] == null) Pair("", "") else Pair(group[8]!!.value, group[9]!!.value)
 			val isList = LIST.matches(group[4]!!.value)
@@ -40,7 +40,7 @@ object QLexer {
 	}
 
 
-	private fun inputField(input: String): FieldInputArg { // TODO pass type name for logging
+	private fun inputField(input: String): FieldInputArg {
 		val match = INPUT.matchEntire(input)?.groupValues ?: throw IllegalArgumentException("Bad input field declaration: $input")
 		if (match.size != 7) throw Error("Bad regex parsing input field -> expected capture count was 6 but was ${match.size}")
 		val name = match[1]

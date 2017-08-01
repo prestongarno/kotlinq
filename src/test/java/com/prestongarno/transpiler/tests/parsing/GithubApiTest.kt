@@ -13,7 +13,8 @@ class GithubApiTest {
 	@Test
 	fun schemaTest() {
 		val file = this::class.java.classLoader.getResource("graphql.schema.graphqls")
-		val content = QCompiler().compile(File(file.path))
+		val qCompiler = QCompiler()
+		val content = qCompiler.compile(File(file.path))
 		content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(!(t is QUnknownType)) } }
 		content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(!(field.type is QUnknownType)) }}
 		content.types.forEach { type ->
@@ -26,6 +27,7 @@ class GithubApiTest {
 				field.args.forEach { arg -> assert(!(arg.type is QUnknownType)) }
 			}
 		}
+		qCompiler.generateKotlinTypes(content, "Query", "Mutation")
 	}
 
 	@Test

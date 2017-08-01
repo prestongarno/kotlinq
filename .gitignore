@@ -1,4 +1,6 @@
-.iml
+*.iml
+*.iws
+*.ipr
 lib/
 lib/*
 out/
@@ -6,5 +8,4 @@ out/*
 .idea
 .xml
 .gradle/
-build.gradle
 build/
