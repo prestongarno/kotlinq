@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects-ktq.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects-ktq.iml" />
       <module fileurl="file://$PROJECT_DIR$/ktq.iml" filepath="$PROJECT_DIR$/ktq.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ktq_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ktq_main.iml" group="ktq" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ktq_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ktq_test.iml" group="ktq" />
     </modules>
   </component>
 </project>

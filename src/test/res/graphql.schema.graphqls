@@ -1080,6 +1080,8 @@ type HeadRefRestoredEvent implements Node {
     pullRequest: PullRequest!
 }
 
+scalar ID
+
 type Issue implements Node, Assignable, Closable, Comment, Updatable, UpdatableComment, Labelable, Lockable, Reactable, RepositoryNode, Subscribable, UniformResourceLocatable {
     assignees(
     first: Int
@@ -2810,7 +2812,7 @@ type ReferencedEvent implements Node {
 
 union ReferencedSubject = Issue | PullRequest
 
-type Release implements ode, UniformResourceLocatable {
+type Release implements Node, UniformResourceLocatable {
     description: String
     id: ID!
 
@@ -4340,3 +4342,4 @@ type UserEdge {
     node: User
 }
 
+scalar X509Certificate

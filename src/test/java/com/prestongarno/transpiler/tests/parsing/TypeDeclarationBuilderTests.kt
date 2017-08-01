@@ -1,10 +1,6 @@
 package com.prestongarno.transpiler.tests.parsing
 
-import com.prestongarno.transpiler.qlang.specc.QTypeDef
-import com.prestongarno.transpiler.qlang.specc.QUnknownType
-import com.prestongarno.transpiler.qlang.specc.RootType
 import org.junit.Test
-import kotlin.test.assertFailsWith
 
 class TypeDeclarationBuilderTests {
 	@Test
