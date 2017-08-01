@@ -1,8 +1,10 @@
 .iml
-out
+lib/
+lib/*
+out/
+out/*
 .idea
 .xml
-
 .gradle/
 build.gradle
 build/
