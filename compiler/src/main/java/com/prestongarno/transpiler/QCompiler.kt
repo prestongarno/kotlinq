@@ -14,8 +14,7 @@ class QCompiler {
 	}
 
 	fun generateKotlinTypes(comp: QCompilationUnit, rootQuery: String, rootMutation: String, rootPackageName: String = "com.prestongarno.ktq") : List<String> {
-		val sortedAll:
-		val queryType = comp.find(rootQuery) as QDefinedType?: throw IllegalArgumentException("Root query type was specified as $rootQuery but was not declared in schema")
+		val queryType = comp.find(rootQuery)?: throw IllegalArgumentException("Root query type was specified as $rootQuery but was not declared in schema")
 		val mutationType = comp.find(rootMutation) as QDefinedType?:
 				throw IllegalArgumentException("Root mutation type was specified as $rootMutation but was not declared in schema")
 		val ktBuilder = KotlinFile.builder("com.prestongarno.ktq", "QTypes")
@@ -24,26 +23,4 @@ class QCompiler {
 		return listOf("none")
 	}
 
-	/** Extension method for binary searching all types for attributing all fields
-	 */
-	fun Array<QDefinedType>.find(key: String): QDefinedType? {
-		// if scalar type get the predefined ones in Scalar companion object
-		val match = Scalar.match(key)
-		if (match != Scalar.UNKNOWN) return Scalar.getType(match)
-
-		var low = 0
-		var high = size - 1
-		var mid: Int
-		while (low <= high) {
-			mid = (low + high).ushr(1)
-			val cmp = this[mid].name.compareTo(key);
-			if (cmp < 0)
-				low = mid + 1;
-			else if (cmp > 0)
-				high = mid - 1;
-			else
-				return this[mid]; // key found
-		}
-		return null
-	}
 }
