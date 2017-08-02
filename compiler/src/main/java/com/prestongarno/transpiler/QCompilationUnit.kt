@@ -23,7 +23,7 @@ class QCompilationUnit(val types: List<QTypeDef>,
 	/** Extension method for binary searching all types for attributing all fields
 	 */
 	private fun Array<QDefinedType>.find(key: String): QDefinedType? {
-		// if scalar type get the predefined ones in Scalar companion object
+		// if scalar type getFromMap the predefined ones in Scalar companion object
 		val match = Scalar.match(key)
 		if (match != Scalar.UNKNOWN) return Scalar.getType(match)
 
