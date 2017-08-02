@@ -1,4 +1,5 @@
 *.iml
+.iml
 *.iws
 *.ipr
 lib/
@@ -9,3 +10,8 @@ out/*
 .xml
 .gradle/
 build/
+compiler/build
+compiler/.gradle
+compiler/*.iml
+compiler/*.xml
+compiler/*.iws

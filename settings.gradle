@@ -1,1 +1,5 @@
 rootProject.name = 'ktq'
+
+include 'compiler'
+include 'runtime'
+

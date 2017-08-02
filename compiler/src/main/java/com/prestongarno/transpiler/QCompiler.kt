@@ -14,14 +14,12 @@ class QCompiler {
 	}
 
 	fun generateKotlinTypes(comp: QCompilationUnit, rootQuery: String, rootMutation: String, rootPackageName: String = "com.prestongarno.ktq") : List<String> {
-		val sortedAll: Array<QDefinedType> = comp.getAll().stream().sorted(compareBy { t: QDefinedType -> t.name }).toList().toTypedArray()
-		val queryType = sortedAll.find(rootQuery) as QDefinedType?:
-				throw IllegalArgumentException("Root query type was specified as $rootQuery but was not declared in schema")
-		val mutationType = sortedAll.find(rootMutation) as QDefinedType?:
+		val sortedAll:
+		val queryType = comp.find(rootQuery) as QDefinedType?: throw IllegalArgumentException("Root query type was specified as $rootQuery but was not declared in schema")
+		val mutationType = comp.find(rootMutation) as QDefinedType?:
 				throw IllegalArgumentException("Root mutation type was specified as $rootMutation but was not declared in schema")
-		val typeBuilder = QTypeBuilder()
 		val ktBuilder = KotlinFile.builder("com.prestongarno.ktq", "QTypes")
-		comp.types.map { t -> ktBuilder.addType(typeBuilder.createType(t)) }
+		comp.types.map { t -> ktBuilder.addType(QTypeBuilder.createType(t)) }
 		ktBuilder.build().writeTo(System.out)
 		return listOf("none")
 	}

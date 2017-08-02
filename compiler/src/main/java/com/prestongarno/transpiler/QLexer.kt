@@ -59,7 +59,7 @@ object QLexer {
 			if (!type.startsWith("[") || !type.endsWith("]")) throw IllegalArgumentException("Unclosed bracket: '$type'") else 1
 
 
-	fun enumFields(block: String): List<String> = NAME.findAll(block).map { result -> result.groups }
+	fun enumFields(block: String): List<String> = TYPE.findAll(block).map { result -> result.groups }
 			.map { col -> col[0]!!.value }.toList()
 
 	fun unionFields(block: String): List<String> = block.split("|").map { s -> s.trim() }.filter { s -> s.isNotEmpty() }

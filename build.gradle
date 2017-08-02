@@ -8,49 +8,30 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-plugins {
-    id 'java'
-    id 'idea'
-}
-apply plugin: 'kotlin'
 
 
-repositories {
-    mavenCentral()
-}
+subprojects {
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile 'com.squareup:kotlinpoet:0.3.0'
-    testCompile 'junit:junit:4.12'
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+    repositories {
+        mavenCentral()
     }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-        }
-        resources {
-            srcDirs = ['src/main/res']
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+        testCompile 'junit:junit:4.12'
+        testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    }
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
         }
     }
-    test {
-        java {
-            srcDirs = ['src/test/java']
-        }
-        resources {
-            srcDirs = ['src/test/res']
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
         }
     }
+
 }
