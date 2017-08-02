@@ -5,11 +5,12 @@ import kotlin.reflect.KProperty
 /**
  * The root class for all types, trying to simplify the delegates process
  */
-open class QueryData constructor(internal val map: Map<String, Any?> = HashMap(10)) {
+open class QueryData constructor(internal var map: Map<String, Any?> = HashMap(10)) {
 
-	protected fun notDeclaredErr(property: String = ""): Throwable =
-			UnsupportedOperationException("Property $property not declared/not declared correctly in concrete query/mutation type")
-
+	/**
+	 * TODO -> use Provided Delegates to check type info + property name information as explained
+	 * todo     @Link https://kotlinlang.org/docs/reference/delegated-properties.html#providing-a-delegate-since-11
+	 */
 	companion object {
 		/** global/static instance for delegating simple primitive properties to getFromMap top-level method */
 		val primitives: PropertyMapper = PropertyMapper()
@@ -18,7 +19,21 @@ open class QueryData constructor(internal val map: Map<String, Any?> = HashMap(1
 		fun <T: QueryData> nested() = ObjectsMapper<T>()
 
 		fun <T: Any> collection() = ListMapper<T>()
+
+		val stub: SchemaStub = SchemaStub()
+
+		//fun <T: Any> stub(): SchemaStub = stub
 	}
+}
+
+/** TODO: remove or restructure for testing manually */
+fun set(obj: QueryData, map: Map<String, Any?>) {
+	obj.map = map
+}
+
+class SchemaStub internal constructor() {
+	@Suppress("UNCHECKED_CAST") inline operator fun <R: Any> getValue(inst: QueryData, property: KProperty<*>): R =
+			throw UnsupportedOperationException("not implemented")
 }
 
 class ListMapper<T: Any> internal constructor() {

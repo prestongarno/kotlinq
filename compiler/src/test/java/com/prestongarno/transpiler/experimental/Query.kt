@@ -1,6 +1,8 @@
 package com.prestongarno.transpiler.experimental
 
+import com.prestongarno.ktq.runtime.Payload
 import com.prestongarno.ktq.runtime.QueryData
+import com.prestongarno.ktq.runtime.annotations.WithArgs
 import java.util.*
 
 /**
@@ -34,15 +36,15 @@ class Query<E>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = 
  *   - Fields requiring arguments (not shown below) will probably require abstract method/iface
  *      to generically get all arguments for a field before querying
  */
-open class SearchResultItemConnection : QueryData() {
-	 open val codeCount: Int by lazy { throw notDeclaredErr() }
-	 open val issueCount: Int by lazy { throw notDeclaredErr() }
-	 open val repositoryCount: Int by lazy { throw notDeclaredErr() }
-	 open val userCount: Int by lazy { throw notDeclaredErr() }
-	 open val wikiCount: Int by lazy { throw notDeclaredErr() }
-	 open val pageInfo: PageInfo by lazy { throw notDeclaredErr() }
-	 open val edges: List<out SearchResultItemEdge> by lazy { throw notDeclaredErr() }
-	 open val nodes: List<out SearchResultItem> by lazy { throw notDeclaredErr() }
+abstract class SearchResultItemConnection : QueryData() {
+	open val codeCount: Int by stub
+	open val issueCount: Int by stub
+	open val repositoryCount: Int by stub
+	open val userCount: Int by stub
+	open val wikiCount: Int by stub
+	open val pageInfo: PageInfo by stub
+	open val edges: List<out SearchResultItemEdge> by stub
+	open val nodes: List<out SearchResultItem> by stub
 }
 
 /**
@@ -52,13 +54,25 @@ open class SearchResultItemConnection : QueryData() {
  *   - delegates are simply a wrapper around the standard kotlin "by map" delegate,
  *       but adding a subclass type argument for mimicking contravariance
  *   - Seems like the simplest solution without a long list of generics and "outs" and "ins" at class signature
+ *   TODO: Input arguments/parameters for fields while maintaining type safety. Probably easiest to:
+ *     -> tag fields requiring input args with an annotation (e.g. "@InputArg(out ArgBundle::class)")
+ *     -> generate simple inner class, constructor with required params, builder methods for optional args
+ *     -> delegate object parameter add optional/overloaded parameter to pass "ArgBundle" to
+ *         |-> Extremely convenient, not only easy to check with anno proc, but delegate method can directly check the
+ *         |    input argument annotation against value at runtime
  */
 class FragmentedQuery : SearchResultItemConnection() {
-	 override val codeCount: Int by primitives
-	 override val issueCount: Int by primitives
-	 override val edges by collection<SubFragment>()
-	 override val nodes by collection<SubSearchItem>()
-	 override val pageInfo by nested<CustomPageInfo>()
+	override val codeCount: Int by primitives
+	override val issueCount: Int by primitives
+	override val edges by collection<SubFragment>()
+	@WithArgs(NodePayload::class) // <- todo move this to the "generated" type definition
+	override val nodes by collection<SubSearchItem>(/**TODO Add optional parameter here to hack on query/mutation args*/)
+	override val pageInfo by nested<CustomPageInfo>()
+
+	class NodePayload(val limitTo: Int): Payload {
+		override fun get(): List<Pair<String, String>> = TODO()
+	}
+
 }
 
 class SubSearchItem : SearchResultItem()
