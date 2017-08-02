@@ -15,10 +15,8 @@ class QCompilationUnit(val types: List<QTypeDef>,
                        val enums: List<QEnumDef>,
                        val unions: List<QUnionTypeDef>) {
 
-	val all: Array<QDefinedType> by lazy {
-		(types + ifaces + inputs + scalar + enums + unions).stream()
-				.sorted(compareBy { t: QDefinedType -> t.name }).toList().toTypedArray()
-	}
+	val all: Array<QDefinedType> = (types + ifaces + inputs + scalar + enums + unions).stream() .sorted(compareBy { it.name }).toList().toTypedArray()
+			get
 
 	fun find(key: String) = all.find(key)
 

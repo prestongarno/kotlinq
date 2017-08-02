@@ -2,7 +2,6 @@ package com.prestongarno.transpiler.tests.parsing
 
 import com.prestongarno.transpiler.QCompiler
 import com.prestongarno.transpiler.QLParser
-import com.prestongarno.transpiler.kotlin.spec.QueryTypeBuilder
 import com.prestongarno.transpiler.kotlin.spec.createEnums
 import com.prestongarno.transpiler.qlang.spec.*
 import org.junit.Test
@@ -18,18 +17,18 @@ class GithubApiTest {
 		val qCompiler = QCompiler()
 		val content = qCompiler.compile(File(file.path))
 		content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(!(t is QUnknownType)) } }
-		content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(!(field.type is QUnknownType)) }}
+		content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(!(field.type is QUnknownType)) } }
 		content.types.forEach { type ->
-			//if(type.name == "Query") QueryTypeBuilder.buildRootQueryClass(type).writeTo(System.out) TODO -> start here, recursion outward to all types needed to be built
+			//if(type.name == "Query") QueryTypeBuilder.buildRootQueryClass(type).writeTo(System.out)
 			type.interfaces.forEach { iface -> assert(!(iface is QUnknownType)) }
 		}
-		content.getAll().filter { t -> t is QStatefulType }.map { t -> t as QStatefulType}.forEach { type ->
-			type.fields.forEach {
+		/**content.all.toList().filter { it is QStatefulType }.map { it as QStatefulType }.forEach { TODO -> why is the compiler failing on this???
+			it.fields.forEach {
 				field ->
 				assert(!(field.type is QUnknownType))
-				field.args.forEach { arg -> assert(!(arg.type is QUnknownType)) }
+				field.args.forEach { assert(!(it.type is QUnknownType)) }
 			}
-		}
+		}*/
 		//qCompiler.generateKotlinTypes(content, "Query", "Mutation")
 		createEnums(content.enums).forEach { println(it) }
 	}

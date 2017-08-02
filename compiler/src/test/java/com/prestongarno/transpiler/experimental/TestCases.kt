@@ -1,18 +1,20 @@
 package com.prestongarno.transpiler.experimental
 
-import com.prestongarno.transpiler.experimental.Query.builder.search
-import com.prestongarno.transpiler.experimental.SearchType.USER
-import com.prestongarno.transpiler.qlang.spec.QTypeDef
-import com.prestongarno.transpiler.qlang.spec.Scalar
 import org.junit.Test
-import java.util.*
 
 class TestCases {
 	@Test
 	fun testQueryAndGet() {
+		val testMap = mapOf<String, Any>(Pair("codeCount", 1000000),
+				Pair("issueCount", 3535353),
+				Pair("edges", listOf(SubFragment())),
+				Pair("nodes", listOf(SubSearchItem())),
+				Pair("pageInfo", CustomPageInfo()))
+		val result = FragmentedQuery(testMap)
+		assert(result.codeCount == 1000000)
+		assert(result.issueCount == 3535353)
+		assert(result.edges.size == 1)
+		assert(result.nodes.size == 1)
 	}
-
 }
-
-class SubClazz : SearchResultItemEdge()
 

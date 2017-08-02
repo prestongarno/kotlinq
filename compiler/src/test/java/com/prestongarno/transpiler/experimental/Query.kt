@@ -2,7 +2,6 @@ package com.prestongarno.transpiler.experimental
 
 import com.prestongarno.ktq.runtime.QueryData
 import java.util.*
-import kotlin.reflect.KProperty
 
 /**
  * Sample setup for what should be built for easiest/most dynamic queries and fragmented queries
@@ -25,32 +24,33 @@ class Query<E>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = 
 
 }
 
-abstract class SearchResultItemConnection(map: Map<String, Any> = HashMap(9)) : QueryData(map) {
-	protected open val codeCount: Int by map
-	protected open val issueCount: Int by map
-	//protected open val pageInfo: I by map
-	protected open val repositoryCount: Int by map
-	protected open val userCount: Int by map
-	protected open val wikiCount: Int by map
+open class SearchResultItemConnection(testMap: Map<String, Any>) : QueryData(testMap) {
+	 open val codeCount: Int by lazy { throw notDeclaredErr() }
+	 open val issueCount: Int by lazy { throw notDeclaredErr() }
+	 open val repositoryCount: Int by lazy { throw notDeclaredErr() }
+	 open val userCount: Int by lazy { throw notDeclaredErr() }
+	 open val wikiCount: Int by lazy { throw notDeclaredErr() }
+	 open val pageInfo: PageInfo by lazy { throw notDeclaredErr() }
+	 open val edges: List<out SearchResultItemEdge> by lazy { throw notDeclaredErr() }
+	 open val nodes: List<out SearchResultItem> by lazy { throw notDeclaredErr() }
 
-	@Suppress("UNCHECKED_CAST") operator fun <R: Any> List<R>.getValue(inst: QueryData, prop: KProperty<*>): List<R> = map.get(prop.name) as List<R>
+	 fun <T : SearchResultItemEdge> edges(): List<T> = get<List<T>>("edges")
+	 fun <T : SearchResultItem> nodes(): List<T> = get<List<T>>("nodes")
 
-	@Suppress("UNCHECKED_CAST") fun <T: SearchResultItemEdge> edges(): List<T> = map.get("edges") as List<T>
-
-	@Suppress("UNCHECKED_CAST") fun <T: SearchResultItem> nodes(): List<T> = map.get("nodes") as List<T>
-
-	@Suppress("UNCHECKED_CAST") fun <T: PageInfo> pageInfo(): T = map.get("pageInfo") as T
+	@Suppress("UNCHECKED_CAST") protected fun <T : PageInfo> pageInfo(): (T) = get<PageInfo>("pageInfo") as T
 
 }
 
-class FragmentedQuery: SearchResultItemConnection() {
-	override val codeCount: Int by super.mapper
-	val edges by super.edges<SubFragment>()
-	val nodes by super.nodes<SubSearchItem>()
+class FragmentedQuery(testMap: Map<String, Any>) : SearchResultItemConnection(testMap) {
+	 override val codeCount: Int by primitives
+	 override val issueCount: Int by primitives
+	 override val edges by super.edges<SubFragment>()
+	 override val nodes by super.nodes<SubSearchItem>()
+	 override val pageInfo by super.pageInfo<CustomPageInfo>()
 }
 
-class SubSearchItem: SearchResultItem()
-class SubFragment: SearchResultItemEdge()
+class SubSearchItem : SearchResultItem()
+class SubFragment : SearchResultItemEdge()
 
 class Search<out E : SearchResultItemConnection> internal constructor(val query: String, val type: SearchType, val handler: Query<out E>) {
 
@@ -102,6 +102,9 @@ enum class SearchType {
 
 open class SearchResultItemEdge
 
-class PageInfo
+open class PageInfo : QueryData()
 
 open class SearchResultItem
+
+class CustomPageInfo : PageInfo()
+
