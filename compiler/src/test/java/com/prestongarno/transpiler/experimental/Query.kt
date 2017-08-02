@@ -25,7 +25,6 @@ class Query<E>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = 
 
 }
 
-
 abstract class SearchResultItemConnection<out T: SearchResultItemEdge, out K: SearchResultItem, out I: PageInfo>(map: Map<String, Any> = HashMap(9)) : QueryData(map) {
 	open protected val codeCount: Int by map
 	open protected val edges: List<T> by map
