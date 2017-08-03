@@ -22,7 +22,7 @@ class GithubApiTest {
 			//if(type.name == "Query") QueryTypeBuilder.buildRootQueryClass(type).writeTo(System.out)
 			type.interfaces.forEach { iface -> assert(!(iface is QUnknownType)) }
 		}
-		/**content.all.toList().filter { it is QStatefulType }.map { it as QStatefulType }.forEach { TODO -> why is the compiler failing on this???
+		/**content.all.toList().filter { it is QStatefulType }.payloadMap { it as QStatefulType }.forEach { TODO -> why is the compiler failing on this???
 			it.fields.forEach {
 				field ->
 				assert(!(field.type is QUnknownType))

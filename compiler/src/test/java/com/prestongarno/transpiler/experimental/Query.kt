@@ -1,19 +1,19 @@
 package com.prestongarno.transpiler.experimental
 
-import com.prestongarno.ktq.runtime.Payload
-import com.prestongarno.ktq.runtime.QueryData
-import com.prestongarno.ktq.runtime.annotations.WithArgs
+import com.prestongarno.ktq.runtime.ArgBuilder
+import com.prestongarno.ktq.runtime.GraphType
+import com.prestongarno.ktq.runtime.SchemaStub
 import java.util.*
 
 /**
  * Sample setup for what should be built for easiest/most dynamic queries and fragmented queries
  */
 
-class Query<E>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = { i, m -> }) {
+class Query<E: GraphType>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = { i, m -> }) {
 
 	companion object builder {
 
-		val queue = LinkedList<Any>()
+		val queue = LinkedList<Any>() // caching is for tryhards
 
 		fun exec(): Nothing = TODO()
 
@@ -26,6 +26,7 @@ class Query<E>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = 
 
 }
 
+
 /**
  * Example class generated from the GraphQl schema:
  *   - Each field is a lazy-eval failure on access by default
@@ -33,51 +34,58 @@ class Query<E>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = 
  *   - Using properties, because methods/interfaces/builders just dont make sense
  *   - Bounded type parameters on all types and restrict to use QueryData companion object
  *       field/method to be able to get delegate properties
- *   - Fields requiring arguments (not shown below) will probably require abstract method/iface
- *      to generically get all arguments for a field before querying
+ *   - Delegate properties used in order to store the arguments for fields internally & check types at object creation
+ *   - Possible to even allow an anonymous closure this way
  */
-abstract class SearchResultItemConnection : QueryData() {
-	open val codeCount: Int by stub
-	open val issueCount: Int by stub
-	open val repositoryCount: Int by stub
-	open val userCount: Int by stub
-	open val wikiCount: Int by stub
-	open val pageInfo: PageInfo by stub
-	open val edges: List<out SearchResultItemEdge> by stub
-	open val nodes: List<out SearchResultItem> by stub
+abstract class SearchResultItemConnection : GraphType() {
+	protected open val edges: List<SearchResultItemEdge> by lazy { throw SchemaStub() }
+	protected open val codeCount: Int by lazy { throw SchemaStub() }
+	protected open val issueCount: Int by lazy { throw SchemaStub() }
+	protected open val repositoryCount: Int by lazy { throw SchemaStub() }
+	protected open val userCount: Int by lazy { throw SchemaStub() }
+	protected open val wikiCount: Int by lazy { throw SchemaStub() }
+	protected open val pageInfo: PageInfo by lazy { throw SchemaStub() }
+	protected open val nodes: List<SearchResultItem> by lazy { throw SchemaStub() }
+
+	// need to create a class which builds the required payload? or a function?
+	class NodesBuilder(val builder: ArgBuilder = ArgBuilder.create()): ArgBuilder by builder {
+		fun limitTo(value: Int): NodesBuilder { addArg("limitTo", value); return this; }
+		fun first(value: Int): NodesBuilder { addArg("first", value); return this; }
+	}
+}
+
+class FragmentedQuery() : SearchResultItemConnection() {
+	override public val codeCount: Int by primitives()
+	override public val issueCount: Int by primitives()
+	override public val edges by collection<SubFragment>()
+	override public val pageInfo by nested<CustomPageInfo>()
+
+	override public val nodes by NodesBuilder()
+			.first(30)
+			.limitTo(5)
+			.buildFor(this)
+			.collection<SubSearchItem>()
 }
 
 /**
  * Sample sub-class of a SearchResultItemConnection
  *   - may even want to make open superclass fields "protected open"
- *   - Fields are either primitives, another QueryData subclass, or list of any of <-
- *   - delegates are simply a wrapper around the standard kotlin "by map" delegate,
+ *   - Fields are either primitives, another QueryData subclass, or list of any of <-()
+ *   - delegates are simply a wrapper around the standard kotlin "by payloadMap" delegate,
  *       but adding a subclass type argument for mimicking contravariance
  *   - Seems like the simplest solution without a long list of generics and "outs" and "ins" at class signature
  *   TODO: Input arguments/parameters for fields while maintaining type safety. Probably easiest to:
- *     -> tag fields requiring input args with an annotation (e.g. "@InputArg(out ArgBundle::class)")
- *     -> generate simple inner class, constructor with required params, builder methods for optional args
- *     -> delegate object parameter add optional/overloaded parameter to pass "ArgBundle" to
+ *     -> tag fields requiring input args with an annotation (e.g. "@InputArg(out Bundle::class)")
+ *     -> generate simple inner class, constructor with required params, ArgBuilder methods for optional args
+ *     -> delegate object parameter add optional/overloaded parameter to pass "Bundle" to
  *         |-> Extremely convenient, not only easy to check with anno proc, but delegate method can directly check the
  *         |    input argument annotation against value at runtime
  */
-class FragmentedQuery : SearchResultItemConnection() {
-	override val codeCount: Int by primitives
-	override val issueCount: Int by primitives
-	override val edges by collection<SubFragment>()
-	@WithArgs(NodePayload::class) // <- todo move this to the "generated" type definition
-	override val nodes by collection<SubSearchItem>(/**TODO Add optional parameter here to hack on query/mutation args*/)
-	override val pageInfo by nested<CustomPageInfo>()
-
-	class NodePayload(val limitTo: Int): Payload {
-		override fun get(): List<Pair<String, String>> = TODO()
-	}
-
-}
 
 class SubSearchItem : SearchResultItem()
 class SubFragment : SearchResultItemEdge()
 
+// simpler method above, probably don't even need this
 class Search<out E : SearchResultItemConnection> internal constructor(val query: String, val type: SearchType, val handler: Query<out E>) {
 
 	private var first: Int = Int.MIN_VALUE
@@ -128,9 +136,8 @@ enum class SearchType {
 
 open class SearchResultItemEdge
 
-open class PageInfo : QueryData()
+open class PageInfo : GraphType()
 
-open class SearchResultItem
+open class SearchResultItem: GraphType()
 
 class CustomPageInfo : PageInfo()
-

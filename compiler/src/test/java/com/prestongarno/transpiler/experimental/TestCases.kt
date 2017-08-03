@@ -16,10 +16,23 @@ class TestCases {
 
 		val result = FragmentedQuery()
 		set(result, testMap)
+		println(result)
 		assert(result.codeCount == 1000000)
 		assert(result.issueCount == 3535353)
 		assert(result.edges.size == 1)
 		assert(result.nodes.size == 1)
 	}
+
+	@Test
+	fun tetsPayloadInputArgsQuery() {
+		val testMap = mapOf(Pair("nodes", listOf(SubSearchItem())))
+
+		val result = FragmentedQuery()
+		set(result, testMap)
+		assert(result.nodes.size == 1)
+	}
 }
 
+fun anonQuery(f: () -> Unit) : SearchResultItemConnection = object : SearchResultItemConnection() {
+	override public val repositoryCount: Int by super.primitives()
+}
