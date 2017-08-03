@@ -2,7 +2,6 @@ package com.prestongarno.transpiler.tests.parsing
 
 import com.prestongarno.transpiler.QCompiler
 import com.prestongarno.transpiler.QLParser
-import com.prestongarno.transpiler.kotlin.spec.createEnums
 import com.prestongarno.transpiler.qlang.spec.*
 import org.junit.Test
 import java.io.File
@@ -19,18 +18,21 @@ class GithubApiTest {
 		content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(!(t is QUnknownType)) } }
 		content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(!(field.type is QUnknownType)) } }
 		content.types.forEach { type ->
-			//if(type.name == "Query") QueryTypeBuilder.buildRootQueryClass(type).writeTo(System.out)
 			type.interfaces.forEach { iface -> assert(!(iface is QUnknownType)) }
 		}
-		/**content.all.toList().filter { it is QStatefulType }.payloadMap { it as QStatefulType }.forEach { TODO -> why is the compiler failing on this???
-			it.fields.forEach {
-				field ->
-				assert(!(field.type is QUnknownType))
-				field.args.forEach { assert(!(it.type is QUnknownType)) }
+
+		qCompiler.generateKotlinTypes(content)
+
+		// Why the actual **** is this not compiling?
+		val allF: List<QDefinedType> = content.all.toList()
+		val whatTheFuckIsTypeInference: List<QStatefulType> = allF.filter { fuck: QDefinedType -> fuck is QStatefulType }.map { fuckk: QDefinedType -> fuckk as QStatefulType }
+		whatTheFuckIsTypeInference.map { f: QStatefulType ->
+			f.fields.forEach {
+				fuckU: QSymbol ->
+				assert(!(fuckU.type is QUnknownType))
+				fuckU.args.forEach { fuck -> assert(!(fuck.type is QUnknownType)) }
 			}
-		}*/
-		//qCompiler.generateKotlinTypes(content, "Query", "Mutation")
-		createEnums(content.enums).forEach { println(it) }
+		}
 	}
 
 	@Test

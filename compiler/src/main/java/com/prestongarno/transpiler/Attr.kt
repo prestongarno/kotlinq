@@ -55,7 +55,7 @@ object Attr {
 
 	private fun attrFieldTypes(types: List<QStatefulType>, comp: QCompilationUnit): QCompilationUnit {
 		val all = comp.enums + comp.types + comp.unions + comp.ifaces + comp.scalar + comp.inputs
-		//sortedAll.forEach { t -> println(t.name) }
+		comp.all.forEach { t -> println(t.name) }
 		types.forEach { type ->
 			type.fields.forEach { field ->
 				val fieldType = comp.find(field.type.name) ?:

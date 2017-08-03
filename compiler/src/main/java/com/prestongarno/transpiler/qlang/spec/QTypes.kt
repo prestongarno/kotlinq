@@ -65,14 +65,14 @@ class QBool(defValue: Boolean = false) : QScalarType("Boolean", Boolean::class)
 class QString(defValue: String = "") : QScalarType("String", String::class)
 
 /** Symbol/field types */
-abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val nullable: Boolean = true) : QType(name)
+abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val isList: Boolean = false, val nullable: Boolean = true) : QType(name)
 
 
-class QField(name: String, type: QDefinedType, args: List<QFieldInputArg>, val directive: QDirectiveSymbol, val isList: Boolean, nullable: Boolean)
-	: QSymbol(name, type, args, nullable)
+class QField(name: String, type: QDefinedType, args: List<QFieldInputArg>, val directive: QDirectiveSymbol, isList: Boolean, nullable: Boolean)
+	: QSymbol(name, type, args, isList, nullable)
 
-class QFieldInputArg(name: String, type: QDefinedType, val defaultValue : String = "", val isList: Boolean, nullable: Boolean)
-	: QSymbol(name, type, Collections.emptyList(), nullable)
+class QFieldInputArg(name: String, type: QDefinedType, val defaultValue : String = "", isList: Boolean, nullable: Boolean)
+	: QSymbol(name, type, Collections.emptyList(), isList, nullable)
 
 
 /**

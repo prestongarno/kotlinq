@@ -14,7 +14,6 @@ object QueryTypeBuilder {
 		val onError = LambdaTypeName.get(null, listOf(INT.topLevelClassName(), ClassName.invoke("java.lang", "String")), UNIT)
 
 		val companionObject = TypeSpec.companionObjectBuilder()
-		companionObject.addFunctions(qType.fields.map{ f -> createQueryFun(f) })
 
 		return file.addType(TypeSpec.classBuilder(qType.name)
 				.addTypeVariable(typeVariable)
@@ -25,12 +24,6 @@ object QueryTypeBuilder {
 								.build()).build())
 						.build()).companionObject(companionObject.build())
 				.build()).build()
-	}
-
-	fun createQueryFun(field: QSymbol): FunSpec {
-		val builder = FunSpec.builder(field.name)
-		val returnType = QTypeBuilder.createQueryDataType(field.type as QTypeDef)
-		TODO()
 	}
 }
 

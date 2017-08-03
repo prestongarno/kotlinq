@@ -46,7 +46,7 @@ abstract class SearchResultItemConnection : GraphType() {
 	protected open val nodes: List<SearchResultItem> by lazy { throw SchemaStub() }
 
 	// delegate creation is single-threaded so it's safe to put args into a queue and pair with delegate/property when created
-	class NodesBuilder(val builder: ArgBuilder = ArgBuilder.create()): ArgBuilder by builder {
+	class NodesBuilder(private val builder: ArgBuilder = ArgBuilder.create()): ArgBuilder by builder {
 		fun limitTo(value: Int): NodesBuilder { addArg("limitTo", value); return this; }
 		fun first(value: Int): NodesBuilder { addArg("first", value); return this; }
 	}
@@ -72,12 +72,6 @@ class FragmentedQuery() : SearchResultItemConnection() {
  *   - delegates are simply a wrapper around the standard kotlin "by payloadMap" delegate,
  *       but adding a subclass type argument for mimicking contravariance
  *   - Seems like the simplest solution without a long list of generics and "outs" and "ins" at class signature
- *   TODO: Input arguments/parameters for fields while maintaining type safety. Probably easiest to:
- *     -> tag fields requiring input args with an annotation (e.g. "@InputArg(out Bundle::class)")
- *     -> generate simple inner class, constructor with required params, ArgBuilder methods for optional args
- *     -> delegate object parameter add optional/overloaded parameter to pass "Bundle" to
- *         |-> Extremely convenient, not only easy to check with anno proc, but delegate method can directly check the
- *         |    input argument annotation against value at runtime
  */
 
 class SubSearchItem : SearchResultItem()

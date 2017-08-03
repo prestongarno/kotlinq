@@ -1,7 +1,7 @@
 package com.prestongarno.transpiler
 
 import com.prestongarno.transpiler.qlang.spec.*
-import kotlin.streams.toList
+import java.util.*
 
 /**
  * Contains instance variables of Lists of different kinds of GraphQL schema declarations, each one with a field
@@ -15,8 +15,16 @@ class QCompilationUnit(val types: List<QTypeDef>,
                        val enums: List<QEnumDef>,
                        val unions: List<QUnionTypeDef>) {
 
-	val all: Array<QDefinedType> = (types + ifaces + inputs + scalar + enums + unions).stream() .sorted(compareBy { it.name }).toList().toTypedArray()
-			get
+	private fun <T : QDefinedType> addAllStuff(vararg foo: List<out T>): List<QDefinedType> {
+		var doingGymnasticsForThis = LinkedList<QDefinedType>()
+		for (f in foo) {
+			doingGymnasticsForThis.addAll(f)
+		}
+		Collections.sort(doingGymnasticsForThis, kotlin.Comparator { o1, o2 -> o1.name.compareTo(o2.name) })
+		return doingGymnasticsForThis
+	}
+
+	val all: Array<QDefinedType> = addAllStuff(types, ifaces, unions, inputs, scalar, unions, enums).toTypedArray()
 
 	fun find(key: String) = all.find(key)
 
