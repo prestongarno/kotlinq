@@ -4,9 +4,9 @@ import com.prestongarno.transpiler.qlang.spec.*
 import kotlin.streams.toList
 
 /**
- * Contains instance variables of Lists of different kinds of GraphQL schema declarations, each one with a nested
- * list of Strings for which each entry represents a declaration within a type declaration (primitive value, nested
- * type, or nested list of types
+ * Contains instance variables of Lists of different kinds of GraphQL schema declarations, each one with a field
+ * list of Strings for which each entry represents a declaration within a type declaration (primitive value, field
+ * type, or field list of types
  */
 class QCompilationUnit(val types: List<QTypeDef>,
                        val ifaces: List<QInterfaceDef>,

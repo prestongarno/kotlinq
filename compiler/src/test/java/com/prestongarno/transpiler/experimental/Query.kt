@@ -1,8 +1,6 @@
 package com.prestongarno.transpiler.experimental
 
-import com.prestongarno.ktq.runtime.ArgBuilder
-import com.prestongarno.ktq.runtime.GraphType
-import com.prestongarno.ktq.runtime.SchemaStub
+import com.prestongarno.ktq.runtime.*
 import java.util.*
 
 /**
@@ -47,7 +45,7 @@ abstract class SearchResultItemConnection : GraphType() {
 	protected open val pageInfo: PageInfo by lazy { throw SchemaStub() }
 	protected open val nodes: List<SearchResultItem> by lazy { throw SchemaStub() }
 
-	// need to create a class which builds the required payload? or a function?
+	// delegate creation is single-threaded so it's safe to put args into a queue and pair with delegate/property when created
 	class NodesBuilder(val builder: ArgBuilder = ArgBuilder.create()): ArgBuilder by builder {
 		fun limitTo(value: Int): NodesBuilder { addArg("limitTo", value); return this; }
 		fun first(value: Int): NodesBuilder { addArg("first", value); return this; }
@@ -55,22 +53,22 @@ abstract class SearchResultItemConnection : GraphType() {
 }
 
 class FragmentedQuery() : SearchResultItemConnection() {
-	override public val codeCount: Int by primitives()
-	override public val issueCount: Int by primitives()
+	override public val codeCount by field<Int>()
+	override public val issueCount by field<Int>()
+	override public val pageInfo by field<CustomPageInfo>()
 	override public val edges by collection<SubFragment>()
-	override public val pageInfo by nested<CustomPageInfo>()
 
 	override public val nodes by NodesBuilder()
 			.first(30)
 			.limitTo(5)
-			.buildFor(this)
+			.build(this)
 			.collection<SubSearchItem>()
 }
 
 /**
  * Sample sub-class of a SearchResultItemConnection
  *   - may even want to make open superclass fields "protected open"
- *   - Fields are either primitives, another QueryData subclass, or list of any of <-()
+ *   - Fields are either PropertyMapper, another QueryData subclass, or list of any of <-()
  *   - delegates are simply a wrapper around the standard kotlin "by payloadMap" delegate,
  *       but adding a subclass type argument for mimicking contravariance
  *   - Seems like the simplest solution without a long list of generics and "outs" and "ins" at class signature

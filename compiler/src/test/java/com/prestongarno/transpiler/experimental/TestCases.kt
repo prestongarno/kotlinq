@@ -16,7 +16,6 @@ class TestCases {
 
 		val result = FragmentedQuery()
 		set(result, testMap)
-		println(result)
 		assert(result.codeCount == 1000000)
 		assert(result.issueCount == 3535353)
 		assert(result.edges.size == 1)
@@ -33,6 +32,3 @@ class TestCases {
 	}
 }
 
-fun anonQuery(f: () -> Unit) : SearchResultItemConnection = object : SearchResultItemConnection() {
-	override public val repositoryCount: Int by super.primitives()
-}

@@ -29,3 +29,5 @@ sourceSets {
         }
     }
 }
+buildscript {
+}
