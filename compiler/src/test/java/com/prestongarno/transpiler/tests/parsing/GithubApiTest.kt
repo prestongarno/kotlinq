@@ -21,18 +21,20 @@ class GithubApiTest {
 			type.interfaces.forEach { iface -> assert(!(iface is QUnknownType)) }
 		}
 
-		qCompiler.generateKotlinTypes(content)
-
 		// Why the actual **** is this not compiling?
 		val allF: List<QDefinedType> = content.all.toList()
-		val whatTheFuckIsTypeInference: List<QStatefulType> = allF.filter { fuck: QDefinedType -> fuck is QStatefulType }.map { fuckk: QDefinedType -> fuckk as QStatefulType }
-		whatTheFuckIsTypeInference.map { f: QStatefulType ->
+		val whatTheFIsTypeInference: List<QStatefulType> = allF.filter { foo: QDefinedType -> foo is QStatefulType }.map { fook: QDefinedType -> fook as QStatefulType }
+		whatTheFIsTypeInference.map { f: QStatefulType ->
 			f.fields.forEach {
-				fuckU: QSymbol ->
-				assert(!(fuckU.type is QUnknownType))
-				fuckU.args.forEach { fuck -> assert(!(fuck.type is QUnknownType)) }
+				fooU: QSymbol ->
+				assert(!(fooU.type is QUnknownType))
+				fooU.args.forEach { foo -> assert(!(foo.type is QUnknownType)) }
 			}
 		}
+
+		qCompiler.generateKotlinTypes(content,
+				"com.prestongarno.transpiler.experimental.generated",
+				"/Users/admin/IdeaProjects/ktq/compiler/src/test/java")
 	}
 
 	@Test

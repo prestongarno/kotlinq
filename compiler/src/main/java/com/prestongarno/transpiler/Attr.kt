@@ -31,7 +31,7 @@ object Attr {
 			t.interfaces.forEach { iface ->
 				val attrIf = ifaceMap.get(iface.name) ?: throw IllegalArgumentException("No interface definition " +
 						"'${iface.name}' found (declared on type ${t.name})")
-				attrInterfaces.add(0, attrIf as QInterfaceDef)
+				attrInterfaces.add(0, attrIf)
 				attrIf.fields.forEach { field ->
 					fields.get(field.name) ?:
 							throw IllegalArgumentException("Type '${t.name}' implements ${attrIf.name} " +
@@ -55,7 +55,7 @@ object Attr {
 
 	private fun attrFieldTypes(types: List<QStatefulType>, comp: QCompilationUnit): QCompilationUnit {
 		val all = comp.enums + comp.types + comp.unions + comp.ifaces + comp.scalar + comp.inputs
-		comp.all.forEach { t -> println(t.name) }
+
 		types.forEach { type ->
 			type.fields.forEach { field ->
 				val fieldType = comp.find(field.type.name) ?:

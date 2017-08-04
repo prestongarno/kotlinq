@@ -1,6 +1,7 @@
 package com.prestongarno.transpiler.experimental
 
 import com.prestongarno.ktq.runtime.*
+import com.prestongarno.transpiler.experimental.generated.*
 import java.util.*
 
 /**
@@ -46,7 +47,7 @@ abstract class SearchResultItemConnection : GraphType() {
 	protected open val nodes: List<SearchResultItem> by lazy { throw SchemaStub() }
 
 	// delegate creation is single-threaded so it's safe to put args into a queue and pair with delegate/property when created
-	class NodesBuilder(private val builder: ArgBuilder = ArgBuilder.create()): ArgBuilder by builder {
+	class NodesBuilder(builder: ArgBuilder = ArgBuilder.create()): ArgBuilder by builder {
 		fun limitTo(value: Int): NodesBuilder { addArg("limitTo", value); return this; }
 		fun first(value: Int): NodesBuilder { addArg("first", value); return this; }
 	}
@@ -63,6 +64,16 @@ class FragmentedQuery() : SearchResultItemConnection() {
 			.limitTo(5)
 			.build(this)
 			.collection<SubSearchItem>()
+}
+
+class BasicUserInfo: User() {
+	override public val name by field<String>()
+	override public val bio by field<String>()
+	override public val company by field<String>()
+	//override val repositories by collection<Repository>()
+}
+
+fun scratch() {
 }
 
 /**

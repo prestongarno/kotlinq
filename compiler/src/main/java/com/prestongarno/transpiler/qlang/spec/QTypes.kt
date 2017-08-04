@@ -98,4 +98,8 @@ class QInputType(name: String, fields: List<QSymbol>) : QStatefulType(name, fiel
 
 class QDirectiveType(name: String, val arg: String): QDefinedType(name)
 
-class QDirectiveSymbol(type: QDefinedType, val value: String) : QSymbol("DIRECTIVE", type, Collections.emptyList())
+class QDirectiveSymbol(type: QDefinedType, val value: String) : QSymbol("DIRECTIVE", type, Collections.emptyList()) {
+	companion object {
+		val default = QDirectiveSymbol(QUnknownType(""), "")
+	}
+}

@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
  * The root class for all types, trying to simplify the delegates process
  */
 
-open class GraphType {
+open class GraphType() {
 
 	internal var values: Map<String, Any?>? = null
 	internal var payLoads: MutableMap<KProperty<*>, Payload> = HashMap()
@@ -17,6 +17,7 @@ open class GraphType {
 
 	fun <T : Any> collection() = ListMapper<T>()
 
+	class SchemaStub : Throwable("not declared")
 }
 
 internal class Payload : ArgBuilder {
@@ -81,7 +82,6 @@ class PropertyMapper<out T : Any> internal constructor() {
 	}
 }
 
-class SchemaStub : Throwable("not declared")
 
 
 
