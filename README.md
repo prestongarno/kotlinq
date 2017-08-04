@@ -8,11 +8,20 @@ The idea behind this is the concept that if you're going to be heavily relying o
 
 ```
 class BasicUserInfo: User() {
-	override val name by field<String>()
-	override val bio by field<String>()
-	override val company by field<String>()
-	override val repositories by collection<Repository>()
+	override public val name by field<String>()
+	override public val bio by field<String>()
+	override public val company by field<String>()
+	override public val repositories by collection<Repository>()
 }
+```
+It even allows for complex arguments/inputs for selection/querying/mutating by generating builders. A field with arguments can be expressed like so:
+
+```
+	override public val nodes by NodesBuilder()
+			.first(30)
+			.limitTo(5)
+			.build(this)
+			.collection<SubSearchItem>()
 ```
 
 \*The runtime support is still a work in progress
