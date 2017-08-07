@@ -17,3 +17,4 @@ compiler/*.xml
 compiler/*.iws
 graphql.config.json
 graphql.schema.json
+.DS_Store
