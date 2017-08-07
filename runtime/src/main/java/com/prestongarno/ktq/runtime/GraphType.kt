@@ -18,7 +18,6 @@ open class GraphType() {
 	fun <T : Any> collection() = ListMapper<T>()
 
 	class SchemaStub : Throwable("not declared")
-
 }
 
 internal class Payload : ArgBuilder {
@@ -56,29 +55,38 @@ interface ArgBuilder {
 	}
 }
 
-class ListMapper<out T : Any> internal constructor() {
-	@Suppress("UNCHECKED_CAST") operator fun <R : GraphType> getValue(inst: R, prop: KProperty<*>): List<T> {
-		if (ArgBuilder.last != null) {
-			inst.payLoads.put(prop, ArgBuilder.last!!)
-			ArgBuilder.last = null
-		}
-		return inst.values?.get(prop.name) as List<T>? ?: emptyList<T>()
+class ListMapper<out T: Any> internal constructor() {
+	operator fun provideDelegate(inst: GraphType, prop: KProperty<*>): GraphListProperty<T> {
+		return GraphListProperty<T>()
 	}
 }
 
 class PropertyMapper<out T : Any> internal constructor() {
 	operator fun provideDelegate(inst: GraphType, prop: KProperty<*>): ReadOnlyProperty<GraphType, T> {
-        println("PropertyMapper :: provideDelegate")
+        println("PropertyMapper :: provideDelegate '${prop.name}'")
         return GraphReadOnlyProperty<T>()
     }
 }
 
 class GraphReadOnlyProperty<T>: ReadOnlyProperty<GraphType, T> {
-	init {
-		println("Initialized ${this::class.simpleName}")
-	}
+	@Suppress("UNCHECKED_CAST")
 	override fun getValue(thisRef: GraphType, property: KProperty<*>): T {
-		throw UnsupportedOperationException("Not Supported")
+		if (ArgBuilder.last != null) {
+			thisRef.payLoads.put(property, ArgBuilder.last!!)
+			ArgBuilder.last = null
+		}
+		return thisRef.values?.get(property.name) as T? ?:
+				throw NullPointerException("No such ${property.name} in ${thisRef::class.qualifiedName}")
 	}
 }
 
+class GraphListProperty<out T: Any>: ReadOnlyProperty<GraphType, List<T>> {
+	@Suppress("UNCHECKED_CAST")
+	override fun getValue(thisRef: GraphType, property: KProperty<*>): List<T> {
+		if (ArgBuilder.last != null) {
+			thisRef.payLoads.put(property, ArgBuilder.last!!)
+			ArgBuilder.last = null
+		}
+		return thisRef.values?.get(property.name) as List<T>? ?: emptyList<T>()
+	}
+}

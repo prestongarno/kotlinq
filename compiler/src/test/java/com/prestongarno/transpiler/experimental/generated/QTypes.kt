@@ -874,6 +874,8 @@ abstract class TreeEntry : GraphType() {
 
   protected open val name: String by lazy { throw SchemaStub() }
 
+  protected open val obj: GitObject by lazy { throw SchemaStub() }
+
   protected open val oid: GitObjectID by lazy { throw SchemaStub() }
 
   protected open val repository: Repository by lazy { throw SchemaStub() }
@@ -1387,6 +1389,8 @@ abstract class Repository : GraphType() {
   protected open val name: String by lazy { throw SchemaStub() }
 
   protected open val nameWithOwner: String by lazy { throw SchemaStub() }
+
+  protected open val obj: GitObject by lazy { throw SchemaStub() }
 
   protected open val owner: RepositoryOwner by lazy { throw SchemaStub() }
 
