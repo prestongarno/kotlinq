@@ -1,6 +1,7 @@
 package com.prestongarno.ktq.runtime
 
 import kotlin.collections.HashMap
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
@@ -10,14 +11,14 @@ import kotlin.reflect.KProperty
 open class GraphType() {
 
 	internal var values: Map<String, Any?>? = null
-	internal var payLoads: MutableMap<KProperty<*>, Payload> = HashMap()
+	internal var payLoads: MutableMap<KProperty<*>, Payload> = HashMap<KProperty<*>, Payload>()
 
-	/** Restricts fields in subtypes using QueryData delegates to be of the lower bounds `T` */
 	fun <T : Any> field() = PropertyMapper<T>()
 
 	fun <T : Any> collection() = ListMapper<T>()
 
 	class SchemaStub : Throwable("not declared")
+
 }
 
 internal class Payload : ArgBuilder {
@@ -55,43 +56,29 @@ interface ArgBuilder {
 	}
 }
 
-fun set(obj: GraphType, map: Map<String, Any?>) {
-	obj.values = map
-}
-
 class ListMapper<out T : Any> internal constructor() {
 	@Suppress("UNCHECKED_CAST") operator fun <R : GraphType> getValue(inst: R, prop: KProperty<*>): List<T> {
-
-		if(ArgBuilder.last != null) {
+		if (ArgBuilder.last != null) {
 			inst.payLoads.put(prop, ArgBuilder.last!!)
 			ArgBuilder.last = null
 		}
-
 		return inst.values?.get(prop.name) as List<T>? ?: emptyList<T>()
 	}
 }
 
 class PropertyMapper<out T : Any> internal constructor() {
-	@Suppress("UNCHECKED_CAST") operator fun getValue(inst: GraphType, prop: KProperty<*>): T {
-
-		if(ArgBuilder.last != null) {
-			inst.payLoads.put(prop, ArgBuilder.last!!)
-			ArgBuilder.last = null
-		}
-		return inst.values?.get(prop.name) as T? ?: throw NullPointerException("No such ${prop.name} in type ${inst::class}")
-	}
+	operator fun provideDelegate(inst: GraphType, prop: KProperty<*>): ReadOnlyProperty<GraphType, T> {
+        println("PropertyMapper :: provideDelegate")
+        return GraphReadOnlyProperty<T>()
+    }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+class GraphReadOnlyProperty<T>: ReadOnlyProperty<GraphType, T> {
+	init {
+		println("Initialized ${this::class.simpleName}")
+	}
+	override fun getValue(thisRef: GraphType, property: KProperty<*>): T {
+		throw UnsupportedOperationException("Not Supported")
+	}
+}
 

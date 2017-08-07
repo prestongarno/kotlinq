@@ -12,6 +12,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'com.squareup:kotlinpoet:0.3.0'
+    compile project(':runtime')
 }
 
 sourceSets {
