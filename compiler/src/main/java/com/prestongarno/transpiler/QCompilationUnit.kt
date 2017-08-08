@@ -15,16 +15,26 @@ class QCompilationUnit(val types: List<QTypeDef>,
                        val enums: List<QEnumDef>,
                        val unions: List<QUnionTypeDef>) {
 
-	private fun <T : QDefinedType> addAllStuff(vararg foo: List<out T>): List<QDefinedType> {
-		var doingGymnasticsForThis = LinkedList<QDefinedType>()
-		for (f in foo) {
-			doingGymnasticsForThis.addAll(f)
-		}
-		Collections.sort(doingGymnasticsForThis, kotlin.Comparator { o1, o2 -> o1.name.compareTo(o2.name) })
-		return doingGymnasticsForThis
+	private fun <T : QDefinedType> addAllStuff(vararg foo: List<T>): List<QDefinedType> {
+		val whyThis = LinkedList<QDefinedType>()
+		for (f in foo)
+			whyThis.addAll(f)
+		Collections.sort(whyThis, kotlin.Comparator { o1, o2 -> o1.name.compareTo(o2.name) })
+		return whyThis
 	}
 
 	val all: Array<QDefinedType> = addAllStuff(types, ifaces, unions, inputs, scalar, unions, enums).toTypedArray()
+
+	val stateful: List<QStatefulType> by lazy { LinkedList<QStatefulType>()
+			.addAllAnd(types)
+			.addAllAnd(ifaces)
+			.addAllAnd(inputs)
+	}
+
+	private fun <T: Any> MutableList<T>.addAllAnd(values: Collection<T>): MutableList<T> {
+		this.addAll(0, values)
+		return this
+	}
 
 	fun find(key: String) = all.find(key)
 

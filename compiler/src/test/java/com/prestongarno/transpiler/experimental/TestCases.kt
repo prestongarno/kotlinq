@@ -15,5 +15,6 @@ class TestCases {
 	@Test
 	fun sampleCreateBasicUserInfo() {
 		val instance = BasicUserInfo()
+		println(instance)
 	}
 }

@@ -1080,8 +1080,6 @@ type HeadRefRestoredEvent implements Node {
     pullRequest: PullRequest!
 }
 
-scalar ID
-
 type Issue implements Node, Assignable, Closable, Comment, Updatable, UpdatableComment, Labelable, Lockable, Reactable, RepositoryNode, Subscribable, UniformResourceLocatable {
     assignees(
     first: Int
