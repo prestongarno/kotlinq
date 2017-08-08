@@ -56,14 +56,16 @@ interface ArgBuilder {
 }
 
 class ListMapper<out T: Any> internal constructor() {
-	operator fun provideDelegate(inst: GraphType, prop: KProperty<*>): GraphListProperty<T> {
+	operator fun provideDelegate(inst: GraphType, property: KProperty<*>): GraphListProperty<T> {
+		println("ListMapper :: provideDelegate")
+		println("TypeParameters='${property.typeParameters}'")
 		return GraphListProperty<T>()
 	}
 }
 
 class PropertyMapper<out T : Any> internal constructor() {
 	operator fun provideDelegate(inst: GraphType, prop: KProperty<*>): ReadOnlyProperty<GraphType, T> {
-        println("PropertyMapper :: provideDelegate '${prop.name}'")
+        println("PropertyMapper :: provideDelegate '${prop.name}', type? ${prop.returnType}")
         return GraphReadOnlyProperty<T>()
     }
 }
@@ -87,6 +89,7 @@ class GraphListProperty<out T: Any>: ReadOnlyProperty<GraphType, List<T>> {
 			thisRef.payLoads.put(property, ArgBuilder.last!!)
 			ArgBuilder.last = null
 		}
+
 		return thisRef.values?.get(property.name) as List<T>? ?: emptyList<T>()
 	}
 }

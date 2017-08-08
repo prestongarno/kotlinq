@@ -10,21 +10,28 @@ class BasicUserInfo(): User() {
 }
 
 class BasicRepoConnection: RepositoryConnection() {
-	public override val nodes by collection<Repository>()
+	public override val nodes by collection<Repo>()
 }
 
-class CommitSelection: Commit() {
-	public override val comments by CommentsArgs()
-			.first(100)
-			.build(this)
-			.field<CommitCommentConnection>()
+class Repo : Repository() {
+	override val name by field<String>()
+	override val description by field<String>()
+	override val forks by field<RepoCount>()
+	override val stargazers by field<StarCount>()
 
-	object anon: CommitCommentConnection() {
-		override val nodes by collection<CommentCommitSelection>()
+	class RepoCount: RepositoryConnection() {
+		override val totalCount by field<Int>()
+	}
+	class StarCount : StargazerConnection() {
+		override val totalCount by field<Int>()
+		override val nodes by collection<UserAvatar>()
 	}
 }
 
-class CommentCommitSelection: CommitComment() {
-	public override val author by field<Actor>()
-	public override val body by field<String>()
+class UserAvatar : User() {
+	override val avatarUrl by AvatarUrlArgs()
+			.size(100)
+			.build(this)
+			.field<URI>()
 }
+
