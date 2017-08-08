@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 /**
  * The base class for all components of the compilation
  */
-abstract class QType(val name: String) {
+abstract class QType(var name: String) {
 
 	var description: String = ""
 
@@ -30,10 +30,7 @@ enum class Scalar(val token: String) {
 	companion object matcher {
 		private val values: Map<String, Scalar>
 
-		init {
-			values = Arrays.stream(enumValues<Scalar>()).collect(Collectors.toMap(Function<Scalar, String> { t -> t.token },
-					Function<Scalar, Scalar> { t -> t }))
-		}
+		init { values = Arrays.stream(enumValues<Scalar>()).collect(Collectors.toMap({ t -> t.token }, { t -> t })) }
 
 		fun match(keyword: String): Scalar = values[keyword] ?: UNKNOWN
 
@@ -42,13 +39,14 @@ enum class Scalar(val token: String) {
 			FLOAT -> floatType
 			BOOL -> boolType
 			STRING -> stringType
-			else -> throw IllegalArgumentException("No such scalar type")
+			UNKNOWN -> customType
 		}
 
 		private val intType = QInt();
 		private val floatType = QFloat();
 		private val boolType = QBool();
 		private val stringType = QString();
+		private val customType = QCustomScalar();
 	}
 }
 
@@ -63,6 +61,8 @@ class QFloat(defValue: Float = 0f) : QScalarType("Float", Float::class)
 class QBool(defValue: Boolean = false) : QScalarType("Boolean", Boolean::class)
 
 class QString(defValue: String = "") : QScalarType("String", String::class)
+
+class QCustomScalar(defValue: String = "") : QScalarType("Scalar", String::class)
 
 /** Symbol/field types */
 abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val isList: Boolean = false, val nullable: Boolean = true) : QType(name)
@@ -92,7 +92,7 @@ class QInterfaceDef(name: String, fields: List<QSymbol>) : QStatefulType(name, f
 
 class QUnionTypeDef(name: String, var possibleTypes: List<QDefinedType>) : QDefinedType(name)
 
-class QEnumDef(name: String, val options: List<String>) : QDefinedType(name)
+class QEnumDef(name: String, var options: List<String>) : QDefinedType(name)
 
 class QInputType(name: String, fields: List<QSymbol>) : QStatefulType(name, fields)
 

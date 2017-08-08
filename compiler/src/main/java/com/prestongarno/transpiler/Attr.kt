@@ -1,10 +1,9 @@
 package com.prestongarno.transpiler
 
-import com.prestongarno.transpiler.QCompilationUnit
 import com.prestongarno.transpiler.qlang.spec.*
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.streams.toList
+import kotlin.collections.HashSet
 
 object Attr {
 
@@ -12,6 +11,7 @@ object Attr {
 		verifyTypeInterfaceImplementation(comp.types, comp.ifaces)
 		var unit = attrUnionTypes(comp.unions, comp)
 		unit = attrFieldTypes(comp.types + comp.ifaces + comp.inputs, comp)
+		unit = validateNames(unit)
 		return unit
 	}
 
@@ -69,4 +69,56 @@ object Attr {
 		}
 		return comp
 	}
+
+	private fun validateNames(comp: QCompilationUnit): QCompilationUnit {
+		comp.all.map {
+			if (KEYWORDS.contains(it.name))
+				it.name = "${it.name}Def"
+		}
+		comp.stateful.map {
+			it.fields.map { f ->
+				if (KEYWORDS.contains(f.name))
+					f.name = "${f.name}Val"
+			}
+		}
+		comp.enums.map {
+			it.options = it.options.map { it.toUpperCase() }
+		}
+		return comp
+	}
+
+	internal val KEYWORDS: HashSet<String> = hashSetOf(
+			"package",
+			"as",
+			"typealias",
+			"class",
+			"this",
+			"super",
+			"val",
+			"var",
+			"fun",
+			"for",
+			"null",
+			"true",
+			"false",
+			"is",
+			"in",
+			"throw",
+			"return",
+			"break",
+			"continue",
+			"object",
+			"if",
+			"try",
+			"else",
+			"while",
+			"do",
+			"when",
+			"interface",
+			"yield",
+			"typeof",
+			"yield",
+			"typeof"
+	);
 }
+
