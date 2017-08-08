@@ -1,11 +1,11 @@
-package com.prestongarno.transpiler.experimental.generated
+package com.prestongarno.ktq.runtime
 
 import com.prestongarno.ktq.runtime.ArgBuilder
 import com.prestongarno.ktq.runtime.GraphType
 import com.prestongarno.ktq.runtime.GraphType.SchemaStub
 import kotlin.collections.List
 
-enum class TopicSuggestionDeclineReason {
+enum class TopicSuggestionDeclineReason : QEnum {
   NOT_RELEVANT,
 
   TOO_SPECIFIC,
@@ -15,23 +15,23 @@ enum class TopicSuggestionDeclineReason {
   TOO_GENERAL
 }
 
-enum class TeamRole {
+enum class TeamRole : QEnum {
   ADMIN,
 
   MEMBER
 }
 
-enum class TeamPrivacy {
+enum class TeamPrivacy : QEnum {
   SECRET,
 
   VISIBLE
 }
 
-enum class TeamOrderField {
+enum class TeamOrderField : QEnum {
   NAME
 }
 
-enum class SubscriptionState {
+enum class SubscriptionState : QEnum {
   UNSUBSCRIBED,
 
   SUBSCRIBED,
@@ -39,7 +39,7 @@ enum class SubscriptionState {
   IGNORED
 }
 
-enum class StatusState {
+enum class StatusState : QEnum {
   EXPECTED,
 
   ERROR,
@@ -51,11 +51,11 @@ enum class StatusState {
   SUCCESS
 }
 
-enum class StarOrderField {
+enum class StarOrderField : QEnum {
   STARRED_AT
 }
 
-enum class SearchType {
+enum class SearchType : QEnum {
   ISSUE,
 
   REPOSITORY,
@@ -63,13 +63,13 @@ enum class SearchType {
   USER
 }
 
-enum class RepositoryPrivacy {
+enum class RepositoryPrivacy : QEnum {
   PUBLIC,
 
   PRIVATE
 }
 
-enum class RepositoryOrderField {
+enum class RepositoryOrderField : QEnum {
   CREATED_AT,
 
   UPDATED_AT,
@@ -81,7 +81,7 @@ enum class RepositoryOrderField {
   STARGAZERS
 }
 
-enum class RepositoryLockReason {
+enum class RepositoryLockReason : QEnum {
   MOVING,
 
   BILLING,
@@ -91,13 +91,13 @@ enum class RepositoryLockReason {
   MIGRATING
 }
 
-enum class RepositoryCollaboratorAffiliation {
+enum class RepositoryCollaboratorAffiliation : QEnum {
   ALL,
 
   OUTSIDE
 }
 
-enum class RepositoryAffiliation {
+enum class RepositoryAffiliation : QEnum {
   OWNER,
 
   COLLABORATOR,
@@ -105,11 +105,11 @@ enum class RepositoryAffiliation {
   ORGANIZATION_MEMBER
 }
 
-enum class ReactionOrderField {
+enum class ReactionOrderField : QEnum {
   CREATED_AT
 }
 
-enum class ReactionContent {
+enum class ReactionContent : QEnum {
   THUMBS_UP,
 
   THUMBS_DOWN,
@@ -123,7 +123,7 @@ enum class ReactionContent {
   HEART
 }
 
-enum class PullRequestState {
+enum class PullRequestState : QEnum {
   OPEN,
 
   CLOSED,
@@ -131,7 +131,7 @@ enum class PullRequestState {
   MERGED
 }
 
-enum class PullRequestReviewState {
+enum class PullRequestReviewState : QEnum {
   PENDING,
 
   COMMENTED,
@@ -143,7 +143,7 @@ enum class PullRequestReviewState {
   DISMISSED
 }
 
-enum class PullRequestReviewEvent {
+enum class PullRequestReviewEvent : QEnum {
   COMMENT,
 
   APPROVE,
@@ -153,7 +153,7 @@ enum class PullRequestReviewEvent {
   DISMISS
 }
 
-enum class PullRequestPubSubTopic {
+enum class PullRequestPubSubTopic : QEnum {
   UPDATED,
 
   MARKASREAD,
@@ -161,13 +161,13 @@ enum class PullRequestPubSubTopic {
   HEAD_REF
 }
 
-enum class ProjectState {
+enum class ProjectState : QEnum {
   OPEN,
 
   CLOSED
 }
 
-enum class ProjectOrderField {
+enum class ProjectOrderField : QEnum {
   CREATED_AT,
 
   UPDATED_AT,
@@ -175,7 +175,7 @@ enum class ProjectOrderField {
   NAME
 }
 
-enum class ProjectCardState {
+enum class ProjectCardState : QEnum {
   CONTENT_ONLY,
 
   NOTE_ONLY,
@@ -183,7 +183,7 @@ enum class ProjectCardState {
   REDACTED
 }
 
-enum class OrganizationInvitationRole {
+enum class OrganizationInvitationRole : QEnum {
   DIRECT_MEMBER,
 
   ADMIN,
@@ -193,19 +193,19 @@ enum class OrganizationInvitationRole {
   REINSTATE
 }
 
-enum class OrderDirection {
+enum class OrderDirection : QEnum {
   ASC,
 
   DESC
 }
 
-enum class MilestoneState {
+enum class MilestoneState : QEnum {
   OPEN,
 
   CLOSED
 }
 
-enum class MergeableState {
+enum class MergeableState : QEnum {
   MERGEABLE,
 
   CONFLICTING,
@@ -213,23 +213,23 @@ enum class MergeableState {
   UNKNOWN
 }
 
-enum class LanguageOrderField {
+enum class LanguageOrderField : QEnum {
   SIZE
 }
 
-enum class IssueState {
+enum class IssueState : QEnum {
   OPEN,
 
   CLOSED
 }
 
-enum class IssuePubSubTopic {
+enum class IssuePubSubTopic : QEnum {
   UPDATED,
 
   MARKASREAD
 }
 
-enum class IssueOrderField {
+enum class IssueOrderField : QEnum {
   CREATED_AT,
 
   UPDATED_AT,
@@ -237,7 +237,7 @@ enum class IssueOrderField {
   COMMENTS
 }
 
-enum class GitSignatureState {
+enum class GitSignatureState : QEnum {
   VALID,
 
   INVALID,
@@ -265,7 +265,7 @@ enum class GitSignatureState {
   EXPIRED_KEY
 }
 
-enum class GistPrivacy {
+enum class GistPrivacy : QEnum {
   PUBLIC,
 
   SECRET,
@@ -273,7 +273,7 @@ enum class GistPrivacy {
   ALL
 }
 
-enum class DeploymentStatusState {
+enum class DeploymentStatusState : QEnum {
   PENDING,
 
   SUCCESS,
@@ -285,7 +285,7 @@ enum class DeploymentStatusState {
   ERROR
 }
 
-enum class DeploymentState {
+enum class DeploymentState : QEnum {
   ABANDONED,
 
   ACTIVE,
@@ -301,7 +301,7 @@ enum class DeploymentState {
   PENDING
 }
 
-enum class DefaultRepositoryPermissionField {
+enum class DefaultRepositoryPermissionField : QEnum {
   READ,
 
   WRITE,
@@ -309,7 +309,7 @@ enum class DefaultRepositoryPermissionField {
   ADMIN
 }
 
-enum class CommentCannotUpdateReason {
+enum class CommentCannotUpdateReason : QEnum {
   INSUFFICIENT_ACCESS,
 
   LOCKED,
@@ -321,7 +321,7 @@ enum class CommentCannotUpdateReason {
   VERIFIED_EMAIL_REQUIRED
 }
 
-enum class CommentAuthorAssociation {
+enum class CommentAuthorAssociation : QEnum {
   MEMBER,
 
   OWNER,
@@ -378,7 +378,7 @@ abstract class User : GraphType() {
 
   protected open val gists: GistConnection by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isBountyHunter: Boolean by lazy { throw SchemaStub() }
 
@@ -816,7 +816,7 @@ abstract class UnsubscribedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val subscribable: Subscribable by lazy { throw SchemaStub() }
 }
@@ -826,7 +826,7 @@ abstract class UnlockedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val lockable: Lockable by lazy { throw SchemaStub() }
 }
@@ -836,7 +836,7 @@ abstract class UnlabeledEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val label: Label by lazy { throw SchemaStub() }
 
@@ -864,7 +864,7 @@ abstract class UnassignedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val user: User by lazy { throw SchemaStub() }
 }
@@ -874,7 +874,7 @@ abstract class TreeEntry : GraphType() {
 
   protected open val name: String by lazy { throw SchemaStub() }
 
-  protected open val obj: GitObject by lazy { throw SchemaStub() }
+  protected open val objectVal: GitObject by lazy { throw SchemaStub() }
 
   protected open val oid: GitObjectID by lazy { throw SchemaStub() }
 
@@ -892,7 +892,7 @@ abstract class Tree : GraphType() {
 
   protected open val entries: List<TreeEntry> by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val oid: GitObjectID by lazy { throw SchemaStub() }
 
@@ -900,7 +900,7 @@ abstract class Tree : GraphType() {
 }
 
 abstract class Topic : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -930,7 +930,7 @@ abstract class Team : GraphType() {
 
   protected open val editTeamUrl: URI by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val invitations: OrganizationInvitationConnection by lazy { throw SchemaStub() }
 
@@ -972,7 +972,7 @@ abstract class Tag : GraphType() {
 
   protected open val commitUrl: URI by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val message: String by lazy { throw SchemaStub() }
 
@@ -1000,7 +1000,7 @@ abstract class SubscribedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val subscribable: Subscribable by lazy { throw SchemaStub() }
 }
@@ -1022,7 +1022,7 @@ abstract class StatusContext : GraphType() {
 
   protected open val description: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val state: StatusState by lazy { throw SchemaStub() }
 
@@ -1036,7 +1036,7 @@ abstract class Status : GraphType() {
 
   protected open val contexts: List<StatusContext> by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val state: StatusState by lazy { throw SchemaStub() }
 
@@ -1126,7 +1126,7 @@ abstract class ReviewRequestedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -1138,7 +1138,7 @@ abstract class ReviewRequestRemovedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -1164,7 +1164,7 @@ abstract class ReviewRequestConnection : GraphType() {
 abstract class ReviewRequest : GraphType() {
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -1178,7 +1178,7 @@ abstract class ReviewDismissedEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val message: String by lazy { throw SchemaStub() }
 
@@ -1216,7 +1216,7 @@ abstract class ReviewDismissalAllowanceConnection : GraphType() {
 abstract class ReviewDismissalAllowance : GraphType() {
   protected open val actor: ReviewDismissalAllowanceActor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val protectedBranch: ProtectedBranch by lazy { throw SchemaStub() }
 }
@@ -1246,7 +1246,7 @@ abstract class RepositoryTopicConnection : GraphType() {
 }
 
 abstract class RepositoryTopic : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val resourcePath: URI by lazy { throw SchemaStub() }
 
@@ -1298,7 +1298,7 @@ abstract class RepositoryInvitationRepository : GraphType() {
 }
 
 abstract class RepositoryInvitation : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val invitee: User by lazy { throw SchemaStub() }
 
@@ -1352,7 +1352,7 @@ abstract class Repository : GraphType() {
 
   protected open val homepageUrl: URI by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isFork: Boolean by lazy { throw SchemaStub() }
 
@@ -1390,7 +1390,7 @@ abstract class Repository : GraphType() {
 
   protected open val nameWithOwner: String by lazy { throw SchemaStub() }
 
-  protected open val obj: GitObject by lazy { throw SchemaStub() }
+  protected open val objectVal: GitObject by lazy { throw SchemaStub() }
 
   protected open val owner: RepositoryOwner by lazy { throw SchemaStub() }
 
@@ -1644,12 +1644,12 @@ abstract class Repository : GraphType() {
     }
   }
 
-  class ObjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun oid(value: GitObjectID): ObjectArgs {
+  class ObjectValArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
+    fun oid(value: GitObjectID): ObjectValArgs {
        addArg("oid", value); return this;
     }
 
-    fun expression(value: String): ObjectArgs {
+    fun expression(value: String): ObjectValArgs {
        addArg("expression", value); return this;
     }
   }
@@ -1868,7 +1868,7 @@ abstract class ReopenedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class RenamedTitleEvent : GraphType() {
@@ -1878,7 +1878,7 @@ abstract class RenamedTitleEvent : GraphType() {
 
   protected open val currentTitle: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val previousTitle: String by lazy { throw SchemaStub() }
 
@@ -1892,7 +1892,7 @@ abstract class RemovedFromProjectEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class RemoveStarPayload : GraphType() {
@@ -1948,7 +1948,7 @@ abstract class ReleaseAssetConnection : GraphType() {
 }
 
 abstract class ReleaseAsset : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -1960,7 +1960,7 @@ abstract class ReleaseAsset : GraphType() {
 abstract class Release : GraphType() {
   protected open val description: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -2026,7 +2026,7 @@ abstract class ReferencedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isCrossReference: Boolean by lazy { throw SchemaStub() }
 
@@ -2056,7 +2056,7 @@ abstract class RefConnection : GraphType() {
 abstract class Ref : GraphType() {
   protected open val associatedPullRequests: PullRequestConnection by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -2144,7 +2144,7 @@ abstract class Reaction : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val user: User by lazy { throw SchemaStub() }
 }
@@ -2213,13 +2213,13 @@ abstract class Query : GraphType() {
   }
 
   class NodeArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun id(value: ID): NodeArgs {
+    fun id(value: String): NodeArgs {
        addArg("id", value); return this;
     }
   }
 
   class NodesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun ids(value: ID): NodesArgs {
+    fun ids(value: String): NodesArgs {
        addArg("ids", value); return this;
     }
   }
@@ -2310,7 +2310,7 @@ abstract class PushAllowanceConnection : GraphType() {
 abstract class PushAllowance : GraphType() {
   protected open val actor: PushAllowanceActor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val protectedBranch: ProtectedBranch by lazy { throw SchemaStub() }
 }
@@ -2334,7 +2334,7 @@ abstract class PullRequestTimelineConnection : GraphType() {
 abstract class PullRequestReviewThread : GraphType() {
   protected open val comments: PullRequestReviewCommentConnection by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -2414,7 +2414,7 @@ abstract class PullRequestReviewComment : GraphType() {
 
   protected open val editor: Actor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val lastEditedAt: DateTime by lazy { throw SchemaStub() }
 
@@ -2504,7 +2504,7 @@ abstract class PullRequestReview : GraphType() {
 
   protected open val editor: Actor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val lastEditedAt: DateTime by lazy { throw SchemaStub() }
 
@@ -2586,7 +2586,7 @@ abstract class PullRequestCommitConnection : GraphType() {
 abstract class PullRequestCommit : GraphType() {
   protected open val commit: Commit by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -2634,7 +2634,7 @@ abstract class PullRequest : GraphType() {
 
   protected open val headRepositoryOwner: RepositoryOwner by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isCrossRepository: Boolean by lazy { throw SchemaStub() }
 
@@ -2910,7 +2910,7 @@ abstract class ProtectedBranch : GraphType() {
 
   protected open val hasStrictRequiredStatusChecks: Boolean by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isAdminEnforced: Boolean by lazy { throw SchemaStub() }
 
@@ -3000,7 +3000,7 @@ abstract class ProjectColumn : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -3054,7 +3054,7 @@ abstract class ProjectCard : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val note: String by lazy { throw SchemaStub() }
 
@@ -3086,7 +3086,7 @@ abstract class Project : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -3152,7 +3152,7 @@ abstract class OrganizationInvitationConnection : GraphType() {
 abstract class OrganizationInvitation : GraphType() {
   protected open val email: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val invitee: User by lazy { throw SchemaStub() }
 
@@ -3166,7 +3166,7 @@ abstract class OrganizationIdentityProvider : GraphType() {
 
   protected open val externalIdentities: ExternalIdentityConnection by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val idpCertificate: X509Certificate by lazy { throw SchemaStub() }
 
@@ -3218,7 +3218,7 @@ abstract class Organization : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isInvoiced: Boolean by lazy { throw SchemaStub() }
 
@@ -3700,7 +3700,7 @@ abstract class MovedColumnsInProjectEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class MoveProjectColumnPayload : GraphType() {
@@ -3720,7 +3720,7 @@ abstract class MilestonedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val milestoneTitle: String by lazy { throw SchemaStub() }
 
@@ -3750,7 +3750,7 @@ abstract class Milestone : GraphType() {
 
   protected open val dueOn: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val number: Int by lazy { throw SchemaStub() }
 
@@ -3772,7 +3772,7 @@ abstract class MergedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val mergeRef: Ref by lazy { throw SchemaStub() }
 
@@ -3792,7 +3792,7 @@ abstract class MentionedEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class LockedEvent : GraphType() {
@@ -3800,7 +3800,7 @@ abstract class LockedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val lockable: Lockable by lazy { throw SchemaStub() }
 }
@@ -3828,7 +3828,7 @@ abstract class LanguageConnection : GraphType() {
 abstract class Language : GraphType() {
   protected open val color: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 }
@@ -3838,7 +3838,7 @@ abstract class LabeledEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val label: Label by lazy { throw SchemaStub() }
 
@@ -3864,7 +3864,7 @@ abstract class LabelConnection : GraphType() {
 abstract class Label : GraphType() {
   protected open val color: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val issues: IssueConnection by lazy { throw SchemaStub() }
 
@@ -3990,7 +3990,7 @@ abstract class IssueComment : GraphType() {
 
   protected open val editor: Actor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val issue: Issue by lazy { throw SchemaStub() }
 
@@ -4068,7 +4068,7 @@ abstract class Issue : GraphType() {
 
   protected open val editor: Actor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val labels: LabelConnection by lazy { throw SchemaStub() }
 
@@ -4240,7 +4240,7 @@ abstract class HeadRefRestoredEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 }
@@ -4254,7 +4254,7 @@ abstract class HeadRefForcePushedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -4270,7 +4270,7 @@ abstract class HeadRefDeletedEvent : GraphType() {
 
   protected open val headRefName: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 }
@@ -4356,7 +4356,7 @@ abstract class GistComment : GraphType() {
 
   protected open val editor: Actor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val lastEditedAt: DateTime by lazy { throw SchemaStub() }
 
@@ -4380,7 +4380,7 @@ abstract class Gist : GraphType() {
 
   protected open val description: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isPublic: Boolean by lazy { throw SchemaStub() }
 
@@ -4482,7 +4482,7 @@ abstract class ExternalIdentityConnection : GraphType() {
 abstract class ExternalIdentity : GraphType() {
   protected open val guid: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val organizationInvitation: OrganizationInvitation by lazy { throw SchemaStub() }
 
@@ -4524,7 +4524,7 @@ abstract class DeploymentStatus : GraphType() {
 
   protected open val environmentUrl: URI by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val logUrl: URI by lazy { throw SchemaStub() }
 
@@ -4556,7 +4556,7 @@ abstract class Deployment : GraphType() {
 
   protected open val environment: String by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val latestStatus: DeploymentStatus by lazy { throw SchemaStub() }
 
@@ -4594,7 +4594,7 @@ abstract class DeployedEvent : GraphType() {
 
   protected open val deployment: Deployment by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -4606,7 +4606,7 @@ abstract class DemilestonedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val milestoneTitle: String by lazy { throw SchemaStub() }
 
@@ -4628,7 +4628,7 @@ abstract class DeleteProjectPayload : GraphType() {
 abstract class DeleteProjectColumnPayload : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val deletedColumnId: ID by lazy { throw SchemaStub() }
+  protected open val deletedColumnId: String by lazy { throw SchemaStub() }
 
   protected open val project: Project by lazy { throw SchemaStub() }
 }
@@ -4638,7 +4638,7 @@ abstract class DeleteProjectCardPayload : GraphType() {
 
   protected open val column: ProjectColumn by lazy { throw SchemaStub() }
 
-  protected open val deletedCardId: ID by lazy { throw SchemaStub() }
+  protected open val deletedCardId: String by lazy { throw SchemaStub() }
 }
 
 abstract class DeclineTopicSuggestionPayload : GraphType() {
@@ -4660,7 +4660,7 @@ abstract class ConvertedNoteToIssueEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class CommitHistoryConnection : GraphType() {
@@ -4682,7 +4682,7 @@ abstract class CommitCommentThread : GraphType() {
 
   protected open val commit: Commit by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val path: String by lazy { throw SchemaStub() }
 
@@ -4744,7 +4744,7 @@ abstract class CommitComment : GraphType() {
 
   protected open val editor: Actor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val lastEditedAt: DateTime by lazy { throw SchemaStub() }
 
@@ -4822,7 +4822,7 @@ abstract class Commit : GraphType() {
 
   protected open val history: CommitHistoryConnection by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val message: String by lazy { throw SchemaStub() }
 
@@ -4922,7 +4922,7 @@ abstract class CommentDeletedEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class CodeOfConduct : GraphType() {
@@ -4944,7 +4944,7 @@ abstract class ClosedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class Bot : GraphType() {
@@ -4952,7 +4952,7 @@ abstract class Bot : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val login: String by lazy { throw SchemaStub() }
 
@@ -4976,7 +4976,7 @@ abstract class Blob : GraphType() {
 
   protected open val commitUrl: URI by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val isBinary: Boolean by lazy { throw SchemaStub() }
 
@@ -5012,7 +5012,7 @@ abstract class BaseRefForcePushedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val pullRequest: PullRequest by lazy { throw SchemaStub() }
 
@@ -5026,7 +5026,7 @@ abstract class BaseRefChangedEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class AssignedEvent : GraphType() {
@@ -5036,7 +5036,7 @@ abstract class AssignedEvent : GraphType() {
 
   protected open val createdAt: DateTime by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val user: User by lazy { throw SchemaStub() }
 }
@@ -5048,7 +5048,7 @@ abstract class AddedToProjectEvent : GraphType() {
 
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class AddStarPayload : GraphType() {
@@ -5134,7 +5134,7 @@ abstract class Subscribable : GraphType() {
 }
 
 abstract class Starrable : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val stargazers: StargazerConnection by lazy { throw SchemaStub() }
 
@@ -5166,7 +5166,7 @@ abstract class Starrable : GraphType() {
 abstract class RepositoryOwner : GraphType() {
   protected open val avatarUrl: URI by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val login: String by lazy { throw SchemaStub() }
 
@@ -5314,7 +5314,7 @@ abstract class RepositoryInfo : GraphType() {
 abstract class Reactable : GraphType() {
   protected open val databaseId: Int by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val reactionGroups: List<ReactionGroup> by lazy { throw SchemaStub() }
 
@@ -5350,7 +5350,7 @@ abstract class Reactable : GraphType() {
 }
 
 abstract class ProjectOwner : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val project: Project by lazy { throw SchemaStub() }
 
@@ -5400,7 +5400,7 @@ abstract class ProjectOwner : GraphType() {
 }
 
 abstract class Node : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 }
 
 abstract class Lockable : GraphType() {
@@ -5450,7 +5450,7 @@ abstract class GitObject : GraphType() {
 
   protected open val commitUrl: URI by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val oid: GitObjectID by lazy { throw SchemaStub() }
 
@@ -5476,7 +5476,7 @@ abstract class Comment : GraphType() {
 
   protected open val editor: Actor by lazy { throw SchemaStub() }
 
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val lastEditedAt: DateTime by lazy { throw SchemaStub() }
 
@@ -5678,37 +5678,33 @@ abstract class IssueOrPullRequest : GraphType() {
 }
 
 abstract class X509Certificate : GraphType() {
-  protected open val value: Int by lazy { throw SchemaStub() }
+  protected open val value: Any by lazy { throw SchemaStub() }
 }
 
 abstract class URI : GraphType() {
-  protected open val value: Int by lazy { throw SchemaStub() }
-}
-
-abstract class ID : GraphType() {
-  protected open val value: Int by lazy { throw SchemaStub() }
+  protected open val value: Any by lazy { throw SchemaStub() }
 }
 
 abstract class HTML : GraphType() {
-  protected open val value: Int by lazy { throw SchemaStub() }
+  protected open val value: Any by lazy { throw SchemaStub() }
 }
 
 abstract class GitTimestamp : GraphType() {
-  protected open val value: Int by lazy { throw SchemaStub() }
+  protected open val value: Any by lazy { throw SchemaStub() }
 }
 
 abstract class GitObjectID : GraphType() {
-  protected open val value: Int by lazy { throw SchemaStub() }
+  protected open val value: Any by lazy { throw SchemaStub() }
 }
 
 abstract class DateTime : GraphType() {
-  protected open val value: Int by lazy { throw SchemaStub() }
+  protected open val value: Any by lazy { throw SchemaStub() }
 }
 
 abstract class UpdateTopicsInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val repositoryId: ID by lazy { throw SchemaStub() }
+  protected open val repositoryId: String by lazy { throw SchemaStub() }
 
   protected open val topicNames: List<String> by lazy { throw SchemaStub() }
 }
@@ -5716,7 +5712,7 @@ abstract class UpdateTopicsInput : GraphType() {
 abstract class UpdateSubscriptionInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val subscribableId: ID by lazy { throw SchemaStub() }
+  protected open val subscribableId: String by lazy { throw SchemaStub() }
 
   protected open val state: SubscriptionState by lazy { throw SchemaStub() }
 }
@@ -5724,7 +5720,7 @@ abstract class UpdateSubscriptionInput : GraphType() {
 abstract class UpdatePullRequestReviewInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestReviewId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
 
   protected open val body: String by lazy { throw SchemaStub() }
 }
@@ -5732,7 +5728,7 @@ abstract class UpdatePullRequestReviewInput : GraphType() {
 abstract class UpdatePullRequestReviewCommentInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestReviewCommentId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestReviewCommentId: String by lazy { throw SchemaStub() }
 
   protected open val body: String by lazy { throw SchemaStub() }
 }
@@ -5740,7 +5736,7 @@ abstract class UpdatePullRequestReviewCommentInput : GraphType() {
 abstract class UpdateProjectInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val projectId: ID by lazy { throw SchemaStub() }
+  protected open val projectId: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -5752,7 +5748,7 @@ abstract class UpdateProjectInput : GraphType() {
 abstract class UpdateProjectColumnInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val projectColumnId: ID by lazy { throw SchemaStub() }
+  protected open val projectColumnId: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 }
@@ -5760,7 +5756,7 @@ abstract class UpdateProjectColumnInput : GraphType() {
 abstract class UpdateProjectCardInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val projectCardId: ID by lazy { throw SchemaStub() }
+  protected open val projectCardId: String by lazy { throw SchemaStub() }
 
   protected open val note: String by lazy { throw SchemaStub() }
 }
@@ -5774,7 +5770,7 @@ abstract class TeamOrder : GraphType() {
 abstract class SubmitPullRequestReviewInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestReviewId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
 
   protected open val event: PullRequestReviewEvent by lazy { throw SchemaStub() }
 
@@ -5790,11 +5786,11 @@ abstract class StarOrder : GraphType() {
 abstract class RequestReviewsInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestId: String by lazy { throw SchemaStub() }
 
-  protected open val userIds: List<ID> by lazy { throw SchemaStub() }
+  protected open val userIds: List<String> by lazy { throw SchemaStub() }
 
-  protected open val teamIds: List<ID> by lazy { throw SchemaStub() }
+  protected open val teamIds: List<String> by lazy { throw SchemaStub() }
 
   protected open val union: Boolean by lazy { throw SchemaStub() }
 }
@@ -5808,13 +5804,13 @@ abstract class RepositoryOrder : GraphType() {
 abstract class RemoveStarInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val starrableId: ID by lazy { throw SchemaStub() }
+  protected open val starrableId: String by lazy { throw SchemaStub() }
 }
 
 abstract class RemoveReactionInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val subjectId: ID by lazy { throw SchemaStub() }
+  protected open val subjectId: String by lazy { throw SchemaStub() }
 
   protected open val content: ReactionContent by lazy { throw SchemaStub() }
 }
@@ -5822,9 +5818,9 @@ abstract class RemoveReactionInput : GraphType() {
 abstract class RemoveOutsideCollaboratorInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val userId: ID by lazy { throw SchemaStub() }
+  protected open val userId: String by lazy { throw SchemaStub() }
 
-  protected open val organizationId: ID by lazy { throw SchemaStub() }
+  protected open val organizationId: String by lazy { throw SchemaStub() }
 }
 
 abstract class ReactionOrder : GraphType() {
@@ -5842,19 +5838,19 @@ abstract class ProjectOrder : GraphType() {
 abstract class MoveProjectColumnInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val columnId: ID by lazy { throw SchemaStub() }
+  protected open val columnId: String by lazy { throw SchemaStub() }
 
-  protected open val afterColumnId: ID by lazy { throw SchemaStub() }
+  protected open val afterColumnId: String by lazy { throw SchemaStub() }
 }
 
 abstract class MoveProjectCardInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val cardId: ID by lazy { throw SchemaStub() }
+  protected open val cardId: String by lazy { throw SchemaStub() }
 
-  protected open val columnId: ID by lazy { throw SchemaStub() }
+  protected open val columnId: String by lazy { throw SchemaStub() }
 
-  protected open val afterCardId: ID by lazy { throw SchemaStub() }
+  protected open val afterCardId: String by lazy { throw SchemaStub() }
 }
 
 abstract class LanguageOrder : GraphType() {
@@ -5880,7 +5876,7 @@ abstract class DraftPullRequestReviewComment : GraphType() {
 abstract class DismissPullRequestReviewInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestReviewId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
 
   protected open val message: String by lazy { throw SchemaStub() }
 }
@@ -5888,31 +5884,31 @@ abstract class DismissPullRequestReviewInput : GraphType() {
 abstract class DeletePullRequestReviewInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestReviewId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
 }
 
 abstract class DeleteProjectInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val projectId: ID by lazy { throw SchemaStub() }
+  protected open val projectId: String by lazy { throw SchemaStub() }
 }
 
 abstract class DeleteProjectColumnInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val columnId: ID by lazy { throw SchemaStub() }
+  protected open val columnId: String by lazy { throw SchemaStub() }
 }
 
 abstract class DeleteProjectCardInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val cardId: ID by lazy { throw SchemaStub() }
+  protected open val cardId: String by lazy { throw SchemaStub() }
 }
 
 abstract class DeclineTopicSuggestionInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val repositoryId: ID by lazy { throw SchemaStub() }
+  protected open val repositoryId: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -5922,7 +5918,7 @@ abstract class DeclineTopicSuggestionInput : GraphType() {
 abstract class CreateProjectInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val ownerId: ID by lazy { throw SchemaStub() }
+  protected open val ownerId: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 
@@ -5930,7 +5926,7 @@ abstract class CreateProjectInput : GraphType() {
 }
 
 abstract class CommitAuthor : GraphType() {
-  protected open val id: ID by lazy { throw SchemaStub() }
+  protected open val id: String by lazy { throw SchemaStub() }
 
   protected open val emails: List<String> by lazy { throw SchemaStub() }
 }
@@ -5938,13 +5934,13 @@ abstract class CommitAuthor : GraphType() {
 abstract class AddStarInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val starrableId: ID by lazy { throw SchemaStub() }
+  protected open val starrableId: String by lazy { throw SchemaStub() }
 }
 
 abstract class AddReactionInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val subjectId: ID by lazy { throw SchemaStub() }
+  protected open val subjectId: String by lazy { throw SchemaStub() }
 
   protected open val content: ReactionContent by lazy { throw SchemaStub() }
 }
@@ -5952,7 +5948,7 @@ abstract class AddReactionInput : GraphType() {
 abstract class AddPullRequestReviewInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestId: String by lazy { throw SchemaStub() }
 
   protected open val commitOID: GitObjectID by lazy { throw SchemaStub() }
 
@@ -5966,7 +5962,7 @@ abstract class AddPullRequestReviewInput : GraphType() {
 abstract class AddPullRequestReviewCommentInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val pullRequestReviewId: ID by lazy { throw SchemaStub() }
+  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
 
   protected open val commitOID: GitObjectID by lazy { throw SchemaStub() }
 
@@ -5976,13 +5972,13 @@ abstract class AddPullRequestReviewCommentInput : GraphType() {
 
   protected open val position: Int by lazy { throw SchemaStub() }
 
-  protected open val inReplyTo: ID by lazy { throw SchemaStub() }
+  protected open val inReplyTo: String by lazy { throw SchemaStub() }
 }
 
 abstract class AddProjectColumnInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val projectId: ID by lazy { throw SchemaStub() }
+  protected open val projectId: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 }
@@ -5990,9 +5986,9 @@ abstract class AddProjectColumnInput : GraphType() {
 abstract class AddProjectCardInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val projectColumnId: ID by lazy { throw SchemaStub() }
+  protected open val projectColumnId: String by lazy { throw SchemaStub() }
 
-  protected open val contentId: ID by lazy { throw SchemaStub() }
+  protected open val contentId: String by lazy { throw SchemaStub() }
 
   protected open val note: String by lazy { throw SchemaStub() }
 }
@@ -6000,7 +5996,7 @@ abstract class AddProjectCardInput : GraphType() {
 abstract class AddCommentInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val subjectId: ID by lazy { throw SchemaStub() }
+  protected open val subjectId: String by lazy { throw SchemaStub() }
 
   protected open val body: String by lazy { throw SchemaStub() }
 }
@@ -6008,7 +6004,7 @@ abstract class AddCommentInput : GraphType() {
 abstract class AcceptTopicSuggestionInput : GraphType() {
   protected open val clientMutationId: String by lazy { throw SchemaStub() }
 
-  protected open val repositoryId: ID by lazy { throw SchemaStub() }
+  protected open val repositoryId: String by lazy { throw SchemaStub() }
 
   protected open val name: String by lazy { throw SchemaStub() }
 }

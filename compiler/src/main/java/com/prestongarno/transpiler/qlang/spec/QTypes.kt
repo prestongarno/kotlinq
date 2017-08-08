@@ -25,7 +25,6 @@ enum class Scalar(val token: String) {
 	FLOAT("Float"),
 	BOOL("Boolean"),
 	STRING("String"),
-	ID("ID"),
 	UNKNOWN("");
 
 	companion object matcher {
@@ -40,7 +39,6 @@ enum class Scalar(val token: String) {
 			FLOAT -> floatType
 			BOOL -> boolType
 			STRING -> stringType
-			ID -> stringType
 			UNKNOWN -> customType
 		}
 
