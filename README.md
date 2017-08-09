@@ -15,7 +15,7 @@ ktq {
 ```
 Where `schema` is the URI or File which the transpiler will parse in order to generate the type hierarchy, and `destination` as the descriptor for the generated kotlin file in the module/subproject defined in `targetModule`
 
-#### base api
+## base api
 
 Allowing for a strict selection of subfields from a type while both supporting type-safe queries and also null safety that kotlin provides is challenging. The generated classes from the GraphQL schema types, interfaces, and unions are represented as <i>abstract classes containing all declared fields of their base type, with `protected` access modifier</i>
 
@@ -51,7 +51,7 @@ Root types subclass `GraphType`, which provides provides utility methods to supp
  
 A concrete `User` type example shows how to specify that you want to request <i>only</i> the exposed fields as part of a query or mutation response message.
 
-#### custom scalars
+## custom scalars
 
 Fields which are of a custom scalar type are of type `CustomScalar` by default, an interface mapping to your desired type by use of the `GraphType` utility methods:
 
@@ -84,7 +84,7 @@ class WithDateFieldImpl : GraphType() {
 }
 ```
 
-#### nested types
+## nested types
 
 This works just like above except you need to use declare the field by this delegate:
 
@@ -92,7 +92,7 @@ This works just like above except you need to use declare the field by this dele
 
 where the parameter of `GraphType#field` is `() -> T`  -- which ensures the correct lower bounds, allows for constructor arguments/dependency injectors, etc
 
-#### input on graphql fields
+## input on graphql fields
 
 Any input arguments declared in the schema are represented as builder classes, and allow for a flexible combination for querying/mutation. A field with arguments can be expressed like so:
 
@@ -111,10 +111,10 @@ Any input arguments declared in the schema are represented as builder classes, a
 ```
 Some types in this example are missing, but the builder configures the arguments for the field at the time the delegate is created, and then after `.build()` it returns this instance from which the field type can be specified ( in this case `repositories` : `RepoConnection` )
 
-### collections
+## collections
 Functions exactly like nested types, but instead fields should be delegated to the `list( init: () -> T )` utility method
 
-### queries and mutations 
+## queries and mutations 
 The queries from classes like shown above are generated on-the-fly and submitted, providing a `Query<Result>` for a callback. Example query generated from the above class:
 
 <sup>* syntax errors: the payload generation is still in progress </sup>
