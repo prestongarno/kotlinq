@@ -1,11 +1,7 @@
 package com.prestongarno.ktq.runtime
 
-import com.prestongarno.ktq.runtime.delegates.GraphProvider
-import com.prestongarno.ktq.runtime.delegates.QDelegate
-import com.prestongarno.ktq.runtime.delegates.QScalarDelegate
-import com.prestongarno.ktq.runtime.delegates.checkArgsBuilder
+import com.prestongarno.ktq.runtime.delegates.*
 import kotlin.collections.ArrayList
-import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
@@ -31,7 +27,7 @@ import kotlin.reflect.KProperty
 open class GraphType {
 
 	open val SchemaTypeName: String by lazy {
-		this::class.qualifiedName?: this::class.supertypes.get(0).javaClass.name
+		this::class.qualifiedName ?: this::class.supertypes.get(0).javaClass.name
 	} //TODO :: Need to generate the type name in code generation
 
 	/** This is the result of the query : Holds the values */
@@ -52,18 +48,20 @@ open class GraphType {
 
 	companion object {
 		/** Maps this field to a nested GraphType object
-		 * @param of : A function which returns an instance of type of which this field is
+		 * @param of : A function which returns an instance of the type
 		 */
-		fun <T : GraphType> field(of: () -> T): QDelegate<T> = GraphProvider.bind<T>(of)
+		fun <T : GraphType> field(of: () -> T): GraphProvider<T> = DummyGraphProvider(of, DumbDummy())
+
+		internal class DumbDummy : GraphType()
 
 		/** Maps this field to a list of nested GraphType object
 		 * @param of : A function which returns an instance of type of which this field is
 		 */
 		/** Maps this field to an integer value */
-		//fun <T : GraphType> list(of: () -> T): ListMapper<T> = GraphListMapper<T>(of)
+		//fun <T : GraphType> list(of: () -> T): QDelegate<List<T>> = GraphProvider.bindList(of)
 
 		/** Maps this field to an integer value */
-		fun int(): QDelegate<Int> = QDelegate.intMapper
+		fun int() = QDelegate.intMapper
 
 		/** Maps this field to an float value */
 		fun float() = QDelegate.floatMapper
@@ -82,15 +80,28 @@ open class GraphType {
 		 * TODO figure out a flexible way to support mapping to custom types
 		 * @param the function which maps the raw data value (represented as a String) to type T
 		 */
-		fun <T : Any> scalarMapper(converter: (String) -> T): QDelegate<T> = TODO()
+		fun <T : Any> scalarMapper(adapter: (String) -> T):
+				QDelegate<T> = QDummyDelegate<T>(adapter)
 
 		/** Maps this scalar field to a List of items of type T,
 		 * @param the function which maps the raw data value (represented as a String) to type T
 		 */
 		//fun <T : Any> scalarListMapper(converter: (String) -> T): ListMapper<T> = ScalarListMapper<T>(converter)
+		@Suppress("UNCHECKED_CAST")
+		operator fun <T : GraphType> GraphProvider<T>.provideDelegate(thisRef: GraphType, property: KProperty<*>): GraphProvider<T> {
+
+			println("Property ::>> ${property.name}")
+
+			val bundle: ArgBuilder = checkArgsBuilder()
+			val result = GraphProvider<T>(this.init, property.name, thisRef.SchemaTypeName, bundle, thisRef)
+			thisRef.fields.add(result)
+			return result
+		}
 
 		@Suppress("UNCHECKED_CAST")
 		operator fun <T> QDelegate<T>.provideDelegate(thisRef: GraphType, property: KProperty<*>): QScalarDelegate<T> {
+
+			println("Property :: ${property.name}")
 
 			val bundle: ArgBuilder = checkArgsBuilder()
 			val returnType = property.returnType.classifier ?:
@@ -101,7 +112,8 @@ open class GraphType {
 				String::class -> QScalarDelegate({ it }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
 				Float::class -> QScalarDelegate({ it.toFloat() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
 				Boolean::class -> QScalarDelegate({ it.toBoolean() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
-				else -> throw IllegalArgumentException("Expected a type scalar but got a $returnType")
+				else  -> QScalarDelegate((this as QDummyDelegate<T>).adapter, property.name, thisRef.SchemaTypeName, bundle, thisRef)
+				//else -> throw IllegalArgumentException("Expected a type scalar but got a $returnType")
 			}
 			thisRef.fields.add(result)
 			return result

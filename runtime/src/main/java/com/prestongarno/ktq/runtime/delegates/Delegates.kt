@@ -13,28 +13,32 @@ interface QDelegate<T> {
 
 	@Suppress("UNCHECKED_CAST")
 	fun getValue(thisRef: GraphType, property: KProperty<*>): T =
-		thisRef.values?.get(property.name) as T ?: throw Error()
+			thisRef.values?.get(property.name) as T ?: throw Error()
 
 	companion object {
-		internal val intMapper: QDelegate<Int> = QDummyDelegate<Int>()
-		internal val stringMapper: QDelegate<String> = QDummyDelegate<String>()
-		internal val boolMapper: QDelegate<Boolean> = QDummyDelegate<Boolean>()
-		internal val floatMapper: QDelegate<Float> = QDummyDelegate<Float>()
+		internal val intMapper: QDelegate<Int> = QDummyDelegate<Int>({ it.toInt() })
+		internal val stringMapper: QDelegate<String> = QDummyDelegate<String>({ it })
+		internal val boolMapper: QDelegate<Boolean> = QDummyDelegate<Boolean>({ it.toBoolean() })
+		internal val floatMapper: QDelegate<Float> = QDummyDelegate<Float>({ it.toFloat() })
 	}
 
 }
 
-object GraphProvider {
-	fun <T : GraphType> bind(init: () -> T): QDelegate<T> = object : QDelegate<T> {
-		override var fieldName: String by Delegates.notNull()
-		override var schemaType: String by Delegates.notNull()
-		override var payload: ArgBuilder by Delegates.notNull()
-		override val thisRef: GraphType by Delegates.notNull()
+open class GraphProvider<T : GraphType>(val init: () -> T,
+                                        override val fieldName: String,
+                                        override val schemaType: String,
+                                        override val payload: ArgBuilder,
+                                        override val thisRef: GraphType) : QDelegate<T> {
 
-		private val value by lazy { init.invoke() }
+	private val value by lazy { init.invoke() }
 
-		override fun getValue(thisRef: GraphType, property: KProperty<*>): T = value
+	override operator fun getValue(thisRef: GraphType, property: KProperty<*>): T = value
+
+	companion object {
+		internal fun <T : GraphType> dummy(of: () -> T, thisRef: GraphType):
+				GraphProvider<T> = DummyGraphProvider(of, thisRef)
 	}
+
 }
 
 
@@ -46,7 +50,7 @@ class QScalarDelegate<T> internal constructor(var mapper: (String) -> T,
 
 	override operator fun getValue(thisRef: GraphType, property: KProperty<*>): T {
 		val get = thisRef.values?.get(fieldName) ?:
-				throw NullPointerException("either property was accessed before it was supposed to of there was an error on the inside")
+				throw NullPointerException("either property '${property.name}' was accessed before it was supposed to of there was an error on the inside")
 		return mapper.invoke(get as String)
 	}
 
@@ -66,9 +70,26 @@ internal fun checkArgsBuilder(): ArgBuilder {
  * method returns the correct instance once it has the property/type/instance information for the field/object
  * todo how to get rid of this?
  */
-class QDummyDelegate<T> internal constructor() : QDelegate<T> {
+internal class QDummyDelegate<T>(val adapter: (String) -> T) : QDelegate<T> {
 	override val fieldName: String by Delegates.notNull()
 	override val schemaType: String by Delegates.notNull()
 	override val payload: ArgBuilder by Delegates.notNull()
 	override val thisRef: GraphType by Delegates.notNull()
+}
+
+
+/**
+ * TODO how to stop using dummy instances to save type information at compile time
+ * even though they don't really do anything
+ */
+internal class DummyGraphProvider<T : GraphType>(var of: () -> T, thisRef: GraphType)
+	: GraphProvider<T>({ of.invoke() }, "", "", ArgBuilder.empty, thisRef) {
+	override var fieldName: String = ""
+		get() = throw GraphType.SchemaStub()
+	override var schemaType: String = ""
+		get() = throw GraphType.SchemaStub()
+	override var payload: ArgBuilder = ArgBuilder.empty
+		get() = throw GraphType.SchemaStub()
+	override var thisRef: GraphType = thisRef
+		get() = throw GraphType.SchemaStub()
 }

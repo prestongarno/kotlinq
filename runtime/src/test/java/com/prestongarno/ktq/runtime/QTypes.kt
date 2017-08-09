@@ -5671,33 +5671,33 @@ abstract class IssueTimelineItem : GraphType() {
   protected open val unlockedevent: List<UnlockedEvent> by lazy { throw SchemaStub() }
 }
 
-abstract class IssueOrPullRequest : GraphType() {
+abstract class IssueOrPullRequest : CustomScalar() {
   protected open val issue: List<Issue> by lazy { throw SchemaStub() }
 
   protected open val pullrequest: List<PullRequest> by lazy { throw SchemaStub() }
 }
 
-abstract class X509Certificate : GraphType() {
+abstract class X509Certificate : CustomScalar() {
   protected open val value: Any by lazy { throw SchemaStub() }
 }
 
-abstract class URI : GraphType() {
+abstract class URI : CustomScalar() {
   protected open val value: Any by lazy { throw SchemaStub() }
 }
 
-abstract class HTML : GraphType() {
+abstract class HTML : CustomScalar() {
   protected open val value: Any by lazy { throw SchemaStub() }
 }
 
-abstract class GitTimestamp : GraphType() {
+abstract class GitTimestamp : CustomScalar() {
   protected open val value: Any by lazy { throw SchemaStub() }
 }
 
-abstract class GitObjectID : GraphType() {
+abstract class GitObjectID : CustomScalar() {
   protected open val value: Any by lazy { throw SchemaStub() }
 }
 
-abstract class DateTime : GraphType() {
+abstract class DateTime : CustomScalar() {
   protected open val value: Any by lazy { throw SchemaStub() }
 }
 

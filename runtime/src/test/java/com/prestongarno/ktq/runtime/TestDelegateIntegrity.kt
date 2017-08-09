@@ -1,6 +1,8 @@
 package com.prestongarno.ktq.runtime
 
 import org.junit.Test
+import java.time.Instant
+import java.util.*
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -29,23 +31,40 @@ class TestDelegateIntegrity {
 		assertTrue(foo.name == "TestObject"
 				&& foo.description == "This is a description od a test object"
 				&& !foo.isFork)
-		for( i in 1..100) println(SelectFromRepository())
+	}
+
+	@Test
+	fun testNestedObjectTypes() {
+		val message = QueryFooBar()
+		println(message)
+		message.values = mapOf(
+				Pair("name", "foobarType"),
+				Pair("bio", "My foo bio"),
+				Pair("updatedAt", "DateTime { April 24, 1995 } "),
+				Pair("created", "DateTime { April 24, 1995 } "),
+				Pair("id", "314159286"),
+				Pair("repositories", "RepositoryConnection { totalCount = 100 }")
+		)
+		println(message)
+		println(message.id)
+		println(message.createdAt.value)
+		TODO("Need to make mapping from raw string values in the map to GraphTypes & Custom scalar types")
 	}
 }
 
-/*class QueryFooBar : User() {
+class QueryFooBar : User() {
 	public override val name by string()
 	public override val bio by string()
 	override val updatedAt by field { DateTimeConvert() }
 	public override val createdAt by field { DateTimeConvert() }
-	public override val id by scalarMapper { it }
+	public override val id by string()
 
 	public override val repositories by RepositoryOwner.RepositoriesArgs()
 			.affiliations(listOf(RepositoryAffiliation.OWNER, RepositoryAffiliation.COLLABORATOR))
-			.orderBy(object : RepositoryOrder() {
+			/*.orderBy(object : RepositoryOrder() { //TODO: allow anonymous classes for flexibility
 				override val field by exact(RepositoryOrderField.CREATED_AT)
 				override val direction by exact(OrderDirection.ASC)
-			})
+			})*/
 			.first(100)
 			.privacy(RepositoryPrivacy.PUBLIC)
 			.build()
@@ -53,11 +72,11 @@ class TestDelegateIntegrity {
 }
 
 class RepoConnection : RepositoryConnection() {
-	public override val nodes by list { SelectFromRepository() }
+	//public override val nodes by list { SelectFromRepository() }
 	public override val totalCount by int()
 }
 
 
 class DateTimeConvert : DateTime() {
-	override val value by scalarMapper { it }
-}*/
+	public override val value by scalarMapper { Date.from(Instant.EPOCH) }
+}
