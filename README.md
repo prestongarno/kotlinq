@@ -38,7 +38,7 @@ abstract class User : GraphType() {
 ```
 
 If schema types were represented as a data class, things would get messy with nulls or worse - because at runtime you'd have to keep track of which queries resulted in which instances to avoid `NullPointerException`s
-The class above allows subclasses to <b>explicitly expose</b> the fields in the schema type definitions, which allows for safe collections/bounded type parameters*. 
+The class above allows implementations to <b>explicitly expose</b> the fields in the schema type definitions, which allows for safe collections/bounded type parameters*. 
 Root types subclass `GraphType`, which provides provides utility methods to supply delegates for fields.
 
 <sup>*unless you include logic in implementations beyone dependency injection, in which case you probable have worse problems in your code, I think</sup>
@@ -115,10 +115,14 @@ Some types in this example are missing, but the builder configures the arguments
 Functions exactly like nested types, but instead fields should be delegated to the `list( init: () -> T )` utility method
 
 ### queries and mutations 
-The queries from classes like shown above are generated on-the-fly and submitted, providing a `Query<E : Result>` callback handle in order to be notified of the results. Example query generated from a test case:
+The queries from classes like shown above are generated on-the-fly and submitted, providing a `Query<Result>` for a callback. Example query generated from the above class:
+
+<sup>* syntax errors: the payload generation is still in progress </sup>
 
 ```
-    QueryFooBar {
+  {
+    getUser(
+      QueryFooBar {
         name
         repositories(
             affiliations: [ OWNER, COLLABORATOR ],
@@ -130,6 +134,7 @@ The queries from classes like shown above are generated on-the-fly and submitted
             first: 100
         )
     }
+  }
 ```
 
 \* NOTE: this is experimental and at the time of writing is <b>not</b> tested thoroughly enough to be trusted as anything reliable
