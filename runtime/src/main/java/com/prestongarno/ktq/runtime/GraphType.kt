@@ -1,16 +1,12 @@
 package com.prestongarno.ktq.runtime
 
-import com.prestongarno.ktq.runtime.delegates.DelegateProvider
 import com.prestongarno.ktq.runtime.delegates.GraphProvider
 import com.prestongarno.ktq.runtime.delegates.QDelegate
-import java.util.*
+import com.prestongarno.ktq.runtime.delegates.QScalarDelegate
+import com.prestongarno.ktq.runtime.delegates.checkArgsBuilder
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.properties.Delegates
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.superclasses
 
 /**
  * The root type of all GraphQL objects
@@ -34,23 +30,20 @@ import kotlin.reflect.full.superclasses
  */
 open class GraphType {
 
-	open val SchemaTypeName: String by lazy { throw SchemaStub() }
+	open val SchemaTypeName: String by lazy {
+		this::class.qualifiedName?: this::class.supertypes.get(0).javaClass.name
+	} //TODO :: Need to generate the type name in code generation
 
 	/** This is the result of the query : Holds the values */
 	internal var values: Map<String, Any?>? = null
 
-	val foo: QDelegate<Int> by int<Int>(clazz = Int::class)
-
-	internal val fields : MutableList<QDelegate<*>> = ArrayList(5)
-
-	internal fun setValues(values: Map<String, Any?>): GraphType {
-		this.values = values; return this; }
+	internal val fields: MutableList<QDelegate<*>> = ArrayList(5)
 
 	/** @return a string representation of this object in GraphQL format able to be sent as a query/mutation
 	 */
 	internal fun toPayload(): String = TODO()
 
-	override fun toString(): String = TODO()
+	override fun toString(): String = "${this::class.qualifiedName} :: \n\tvalues::\t$values\n\tfields::\t$fields"
 
 	/** Throwable set as default delegate value for all fields on
 	 * auto-generated GraphQL schema types, ensures that models explicitly declare their fields & types
@@ -70,89 +63,50 @@ open class GraphType {
 		//fun <T : GraphType> list(of: () -> T): ListMapper<T> = GraphListMapper<T>(of)
 
 		/** Maps this field to an integer value */
-		fun <T: Int> int(clazz: KClass<T>): DelegateProvider<Int, QDelegate<Int>> = QDelegate.int<QDelegate<Int>>(Int::class) as DelegateProvider<Int, QDelegate<Int>>
+		fun int(): QDelegate<Int> = QDelegate.intMapper
 
 		/** Maps this field to an float value */
-		//fun float() = QDelegate.float()
+		fun float() = QDelegate.floatMapper
 
 		/** Maps this field to an boolean value */
-		//fun bool() = QDelegate.bool()
+		fun bool() = QDelegate.boolMapper
 
 		/** Maps this field to an string value */
-		//fun string(): DelegateProvider = QDelegate.string()
+		fun string(): QDelegate<String> = QDelegate.stringMapper
 
-		/** Maps this field to an ID type
-		 * This cooresponds to the `ID` Scalar type defined in the GraphQL specification
+		/** Maps this scalar field to a raw String type
 		 */
-		//fun ID() = PropertyMapper.idMapper
-
-		/** Maps this scalar field to a String type
-		 */
-		//fun scalar() = QDelegate.string()
+		fun scalar() = QDelegate.stringMapper
 
 		/** Maps this scalar field to a type T,
+		 * TODO figure out a flexible way to support mapping to custom types
 		 * @param the function which maps the raw data value (represented as a String) to type T
 		 */
-		//fun <T : Any> scalarMapper(converter: (String) -> T): <T> = ScalarMapper<T>(converter)
+		fun <T : Any> scalarMapper(converter: (String) -> T): QDelegate<T> = TODO()
 
 		/** Maps this scalar field to a List of items of type T,
 		 * @param the function which maps the raw data value (represented as a String) to type T
 		 */
 		//fun <T : Any> scalarListMapper(converter: (String) -> T): ListMapper<T> = ScalarListMapper<T>(converter)
 
-	}
+		@Suppress("UNCHECKED_CAST")
+		operator fun <T> QDelegate<T>.provideDelegate(thisRef: GraphType, property: KProperty<*>): QScalarDelegate<T> {
 
-}
+			val bundle: ArgBuilder = checkArgsBuilder()
+			val returnType = property.returnType.classifier ?:
+					throw IllegalArgumentException("property '${property.name}'.returnType.classifier? was null")
 
-internal class Payload() : ArgBuilder {
-
-	constructor(vararg arguments: Pair<String, Any>) : this() {
-		arguments.map { values.put(it.first, it.second) }
-	}
-
-	val values: MutableMap<in String, Any> = HashMap()
-
-	override fun addArg(name: String, value: Any): ArgBuilder {
-		values.put(name, value)
-		return this
-	}
-
-	override fun build() = GraphType.Companion
-
-	override fun toString(): String = TODO()
-
-	private fun formatAs(value: Any): String {
-		return when (value) {
-			is Int, is Boolean, Float -> "$value"
-			is String -> "\"$value\""
-			is GraphType -> { TODO() }
-			is Enum<*> -> value.name
-			is List<*> -> value
-					.map { formatAs(it ?: "") }
-					.filter { it.isNotBlank() }
-					.joinToString(", ", "[ ", " ]")
-			else -> throw UnsupportedOperationException()
-		}
-	}
-}
-
-interface ArgBuilder {
-
-	fun addArg(name: String, value: Any): ArgBuilder
-
-	fun build(): GraphType.Companion
-
-	companion object {
-		fun create(): ArgBuilder {
-			val payload = Payload()
-			last = payload
-			return payload
+			val result = when (returnType) { // TODO reuse these objects to avoid creating new instances for each GraphType
+				Int::class -> QScalarDelegate({ it.toInt() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				String::class -> QScalarDelegate({ it }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				Float::class -> QScalarDelegate({ it.toFloat() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				Boolean::class -> QScalarDelegate({ it.toBoolean() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				else -> throw IllegalArgumentException("Expected a type scalar but got a $returnType")
+			}
+			thisRef.fields.add(result)
+			return result
 		}
 
-		/** Nullable field needed for delegates to link a payload with a property*/
-		internal var last: Payload? = null
-		val empty: ArgBuilder by lazy { Payload() }
 	}
+
 }
-
-
