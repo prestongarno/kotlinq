@@ -42,7 +42,7 @@ The class above allows implementations to <b>explicitly expose</b> the fields in
 Root types subclass `GraphType`, which provides provides utility methods to supply delegates for fields.
 
 <sup>*unless you include logic in implementations beyone dependency injection, in which case you probable have worse problems in your code, I think</sup>
- 
+
  ```
  class BasicUser : User() {
    public override val name by string()
