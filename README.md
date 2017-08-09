@@ -40,6 +40,8 @@ GraphQL is powerful because it allows specific subsets of data to be requested f
 If schema types were represented as a data class, things would get messy with nulls or worse - because at runtime you'd have to keep track of which queries resulted in which instances to avoid `NullPointerException`s
 The class above allows subclasses to <b>explicitly expose</b> the fields in the schema type definitions, which allows for safe collections/bounded type parameters*. 
 Root types subclass `GraphType`, which provides provides utility methods to supply delegates for fields.
+
+
 ####<sup>*unless you include logic in implementations beyone dependency injection, in which case you probable have worse problems in your code, I think</sup>
  
  ```
