@@ -1,9 +1,97 @@
 
-# ktq
+# ktq<sup>*</sup>
 
-A kotlin type generator and runtime library for GraphQL schema definitions
+A kotlin type generator GraphQL schema definitions and runtime library for interacting with endpoints
 
-The idea behind this is the concept that if a project extensively uses a graphql API, why not forget client-side ORM/model errors by essentially wrapping the entire graphql API and including it in the project? Kotlin's delegates and other constructs are used to allow for expression of a graphql "selection" of fields from a database type by exposing the generated supertype property in a class.
+### compiler
+The `compiler` module acts as a code generation library. This (soon) will be isolated as a Gradle plugin which will allow for configuration from gradle build scripts and run as a task like:
+
+```
+ktq {
+    schema = flatDir { '/path/to/graphql/schema/definition' }
+    targetModule = ':graphql-models'
+    destination = 'com.prestongarno.example.GraphQl'
+}
+```
+Where `schema` is the URI or File which the transpiler will parse in order to generate the type hierarchy, and `destination` as the descriptor for the generated kotlin file in the module/subproject defined in `targetModule`
+
+#### base api
+
+Allowing for a strict selection of subfields from a type while both supporting type-safe queries and also null safety that kotlin provides is challenging. The generated classes from the GraphQL schema types, interfaces, and unions are represented as <i>abstract classes containing all declared fields of their base type, with `protected` access modifier</i>
+
+To illustrate the reasoning for using a class-based inheritance model, consider the following GraphQL schema definition:
+
+```
+type User {
+  name: String!
+  email: String
+}
+```
+
+which when targeted will allow the compiler to generate the following class:
+
+```
+abstract class User : GraphType() {
+  protected open val name: String by lazy { throw SchemaStub() }
+  protected open val email: String? by lazy { throw SchemaStub() }
+}
+```
+GraphQL is powerful because it allows specific subsets of data to be requested from within the type hierarchy in the schema. 
+If schema types were represented as a data class, things would get messy with nulls or worse - because at runtime you'd have to keep track of which queries resulted in which instances to avoid `NullPointerException`s
+The class above allows subclasses to <b>explicitly expose</b> the fields in the schema type definitions, which allows for safe collections/bounded type parameters*. 
+Root types subclass `GraphType`, which provides provides utility methods to supply delegates for fields.
+####<sup>*unless you include logic in implementations beyone dependency injection, in which case you probable have worse problems in your code, I think</sup>
+ 
+ ```
+ class BasicUser : User() {
+   public override val name by string()
+ }
+ ```
+ 
+A concrete `User` type example shows how to specify that you want to request <i>only</i> the exposed fields as part of a query or mutation response message.
+
+#### custom scalars
+
+Fields which are of a custom scalar type are of type `CustomScalar` by default, an interface mapping to your desired type by use of the `GraphType` utility methods:
+
+```
+scalar DateTime
+
+type SomeModelWithDateField {
+  dateCreated : DateTime
+}
+
+```
+
+generates kotlin types (a simplified version):
+
+```
+class DateTime<T: Any> : CustomScalar<T> {
+  val value: T by lazy { adapter().invoke( rawData ) }
+}
+
+class SomeModelWithDateField : GraphType() {
+  protected open val dateCreated : DateTime<Any> by lazy { throw SchemaStub() }
+}
+```
+
+which can be implemented, for example to map to `java.util.Date` type like this:
+
+```
+class WithDateFieldImpl : GraphType() {
+      public override val dateCreated by scalar<Date> { Date.of(Instant.exact(it)) }
+}
+```
+
+#### nested types
+
+This works just like above except you need to use declare the field by this delegate:
+
+`public override val sample by field({ Type(args) })` 
+
+where the parameter of `GraphType#field` is `() -> T`  -- which ensures the correct lower bounds, allows for constructor arguments/dependency injectors, etc
+
+#### input on graphql fields
 
 Any input arguments declared in the schema are represented as builder classes, and allow for a flexible combination for querying/mutation. A field with arguments can be expressed like so:
 
@@ -12,45 +100,19 @@ Any input arguments declared in the schema are represented as builder classes, a
     
         public override val name by string()
         
-        public override val bio by string()
-        
-        public override val createdAt by field { DateTimeConvert() }
-        
-        public override val id by scalarMapper { it }
-        
-
         public override val repositories by RepositoriesArgs()
                 .affiliations(listOf( OWNER, COLLABORATOR ))
-                .orderBy(object : RepositoryOrder() {
-                    override val field by exact(CREATED_AT)
-                    override val direction by exact(ASC)
-                })
+                .orderBy(object : RepositoryOrder(field = CREATED_AT, order = ASCENDING)
                 .first(100)
                 .privacy(PUBLIC)
-                .build()
-                .field { RepoConnection() }
+                .build().field { RepoConnection() }
     }
-
-
-    class RepoConnection : RepositoryConnection() {
-        public override val nodes by list { SelectFromRepository() }
-        public override val totalCount by int()
-    }
-    
-
-    class SelectFromRepository : Repository() {
-        public override val name by string()
-        public override val description by string()
-        public override val id by scalar()
-        public override val isFork by bool()
-    }
-    
-    
-    class DateTimeConvert : DateTime() {
-        override val value by scalarMapper { it }
-    }
-    
 ```
+Some types in this example are missing, but the builder configures the arguments for the field at the time the delegate is created, and then after `.build()` it returns this instance from which the field type can be specified ( in this case `repositories` : `RepoConnection` )
+
+### collections of any of the above
+
+Works exactly like nested types, but instead fields should be delegated to the `list` utility method
 
 The queries from classes like shown above are generated on-the-fly and submitted, providing a `Query<E : Result>` callback handle in order to be notified of the results. Example query generated from a test case:
 
@@ -72,4 +134,5 @@ The queries from classes like shown above are generated on-the-fly and submitted
         )
     }
 ```
-Delegates are very useful for a use case like dynamic queries/objects, the goal is to be able to allow for concise expression of queries, and also to maintain the null safety which kotlin provides. It's possible with the use of metadata on the QL schema, otherwise there will most likely need to be a 1:1 relationship between queries -> concrete classes.
+
+\* NOTE: this is experimental and at the time of writing is <b>not</b> tested thoroughly enough to be trusted as anything reliable
