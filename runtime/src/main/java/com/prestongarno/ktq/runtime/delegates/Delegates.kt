@@ -33,12 +33,6 @@ open class GraphProvider<T : GraphType>(val init: () -> T,
 	val value by lazy { init.invoke() }
 
 	override operator fun getValue(thisRef: GraphType, property: KProperty<*>): T = value
-
-	companion object {
-		internal fun <T : GraphType> dummy(of: () -> T, thisRef: GraphType):
-				GraphProvider<T> = DummyGraphProvider(of, thisRef)
-	}
-
 }
 
 
@@ -49,6 +43,7 @@ class QScalarDelegate<T> internal constructor(var mapper: (String) -> T,
                                               override var thisRef: GraphType) : QDelegate<T> {
 
 	override operator fun getValue(thisRef: GraphType, property: KProperty<*>): T {
+		println("Accessing Property -> ${property.name} ::")
 		val get = thisRef.values?.get(fieldName) ?:
 				throw NullPointerException("either property '${property.name}' was accessed before it was supposed to of there was an error on the inside")
 		return mapper.invoke(get.toString())
