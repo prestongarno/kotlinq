@@ -1,11 +1,8 @@
 package com.prestongarno.ktq.runtime
 
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.properties.Delegates
-import kotlin.properties.ReadOnlyProperty
+import com.prestongarno.ktq.runtime.delegates.*
+import kotlin.collections.ArrayList
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.superclasses
 
 /**
  * The root type of all GraphQL objects
@@ -29,43 +26,20 @@ import kotlin.reflect.full.superclasses
  */
 open class GraphType {
 
-	open val SchemaTypeName: String by lazy { throw SchemaStub() }
+	open val SchemaTypeName: String by lazy {
+		this::class.qualifiedName ?: this::class.supertypes.get(0).javaClass.name
+	} //TODO :: Need to generate the type name in code generation
 
 	/** This is the result of the query : Holds the values */
 	internal var values: Map<String, Any?>? = null
 
-	internal fun setValues(values: Map<String, Any?>): GraphType {
-		this.values = values; return this; }
-
-	/** This map holds information about payloads (arguments) which are mapped to a specific field */
-	internal var payLoads: MutableMap<String, Payload> = HashMap()
-
-	/** This list holds info about which fields to include in the GraphQL query */
-	internal val primitiveFields: MutableList<GraphFieldProperty<*>> = LinkedList()
-
-	/** This list holds info about which fields to include in the GraphQL query */
-	internal val primitiveListFields: MutableList<GraphListProperty<*>> = LinkedList()
-
-	/** This list holds info about which fields to include in the GraphQL query */
-	internal val scalarFields: MutableList<ScalarProperty<*>> = LinkedList()
-
-	/** This list holds info about which fields to include in the GraphQL query */
-	internal val scalarListFields: MutableList<ScalarList<*>> = LinkedList()
-
-	/** This list holds info about which GraphTypes (i.e. nested objects) to include in the GraphQL query */
-	internal val objectFields: MutableList<GraphMapper<GraphType>> = LinkedList()
-
-	internal val provided: MutableList<ExactImpl<Any>> = LinkedList()
+	internal val fields: MutableList<QDelegate<*>> = ArrayList(5)
 
 	/** @return a string representation of this object in GraphQL format able to be sent as a query/mutation
 	 */
-	internal fun toPayload(indentLevel: Int = GraphType.TAB_COUNT): String {
-		GraphType.TAB_COUNT = indentLevel
-		return Jsonify.createPayload(this)
-	}
+	internal fun toPayload(): String = TODO()
 
-	override fun toString(): String =
-			if (values == null) Jsonify.createPayload(this) else Jsonify.toJson(this)
+	override fun toString(): String = "${this::class.qualifiedName} :: \n\tvalues::\t$values\n\tfields::\t$fields"
 
 	/** Throwable set as default delegate value for all fields on
 	 * auto-generated GraphQL schema types, ensures that models explicitly declare their fields & types
@@ -74,258 +48,77 @@ open class GraphType {
 
 	companion object {
 		/** Maps this field to a nested GraphType object
-		 * @param of : A function which returns an instance of type of which this field is
+		 * @param of : A function which returns an instance of the type
 		 */
-		fun <T : GraphType> field(of: () -> T): PropertyMapper<T> = GraphPropertyMapper<T>(of)
+		fun <T : GraphType> field(of: () -> T): GraphProvider<T> = DummyGraphProvider(of, DumbDummy())
+
+		internal class DumbDummy : GraphType()
 
 		/** Maps this field to a list of nested GraphType object
 		 * @param of : A function which returns an instance of type of which this field is
 		 */
 		/** Maps this field to an integer value */
-		fun <T : GraphType> list(of: () -> T): ListMapper<T> = GraphListMapper<T>(of)
+		//fun <T : GraphType> list(of: () -> T): QDelegate<List<T>> = GraphProvider.bindList(of)
 
 		/** Maps this field to an integer value */
-		fun int() = PropertyMapper.intMapper
+		fun int() = QDelegate.intMapper
 
 		/** Maps this field to an float value */
-		fun float() = PropertyMapper.floatMapper
+		fun float() = QDelegate.floatMapper
 
 		/** Maps this field to an boolean value */
-		fun bool() = PropertyMapper.boolMapper
+		fun bool() = QDelegate.boolMapper
 
 		/** Maps this field to an string value */
-		fun string() = PropertyMapper.stringMapper
+		fun string(): QDelegate<String> = QDelegate.stringMapper
 
-		/** Maps this field to an ID type
-		 * This cooresponds to the `ID` Scalar type defined in the GraphQL specification
+		/** Maps this scalar field to a raw String type
 		 */
-		//fun ID() = PropertyMapper.idMapper
-
-		/** Maps this scalar field to a String type
-		 */
-		fun scalar() = PropertyMapper.stringMapper
+		fun scalar() = QDelegate.stringMapper
 
 		/** Maps this scalar field to a type T,
+		 * TODO figure out a flexible way to support mapping to custom types
 		 * @param the function which maps the raw data value (represented as a String) to type T
 		 */
-		fun <T : Any> scalarMapper(converter: (String) -> T): PropertyMapper<T> = ScalarMapper<T>(converter)
+		fun <T : Any> scalarMapper(adapter: (String) -> T):
+				QDelegate<T> = QDummyDelegate<T>(adapter)
 
 		/** Maps this scalar field to a List of items of type T,
 		 * @param the function which maps the raw data value (represented as a String) to type T
 		 */
-		fun <T : Any> scalarListMapper(converter: (String) -> T): ListMapper<T> = ScalarListMapper<T>(converter)
+		//fun <T : Any> scalarListMapper(converter: (String) -> T): ListMapper<T> = ScalarListMapper<T>(converter)
+		@Suppress("UNCHECKED_CAST")
+		operator fun <T : GraphType> GraphProvider<T>.provideDelegate(thisRef: GraphType, property: KProperty<*>): GraphProvider<T> {
 
-		/** Maps this field to a list of integer values */
-		fun intList() = ListMapper.intListMapper
+			println("Property ::>> ${property.name}")
 
-		/** Maps this field to a list of float values */
-		fun floatList() = ListMapper.floatListMapper
-
-		/** Maps this field to a list of boolean values */
-		fun boolList() = ListMapper.boolListMapper
-
-		/** Maps this field to a list of string values */
-		fun stringList() = ListMapper.stringListMapper
-
-		fun <T : QEnum> exact(value: T): Mapper<T> = ExactImpl(value)
-		var TAB_COUNT: Int = 1
-
-	}
-
-}
-
-interface Mapper<out T> {
-	operator fun provideDelegate(inst: GraphType, property: KProperty<*>): ReadOnlyProperty<GraphType, T>
-}
-
-internal class ExactImpl<out T : Any>(val value: T) : Mapper<T> {
-
-	var name by Delegates.notNull<String>()
-
-	val mapper: ReadOnlyProperty<GraphType, T> by lazy {
-		object : ReadOnlyProperty<GraphType, T> {
-			override operator fun getValue(thisRef: GraphType, property: KProperty<*>): T = value
+			val bundle: ArgBuilder = checkArgsBuilder()
+			val result = GraphProvider<T>(this.init, property.name, thisRef.SchemaTypeName, bundle, thisRef)
+			thisRef.fields.add(result)
+			return result
 		}
-	}
 
-	override operator fun provideDelegate(inst: GraphType, property: KProperty<*>): ReadOnlyProperty<GraphType, T> {
-		name = property.name
-		inst.provided.add(0, this)
-		return mapper
-	}
-}
+		@Suppress("UNCHECKED_CAST")
+		operator fun <T> QDelegate<T>.provideDelegate(thisRef: GraphType, property: KProperty<*>): QScalarDelegate<T> {
 
-internal class Payload() : ArgBuilder {
+			println("Property :: ${property.name}")
 
-	constructor(vararg arguments: Pair<String, Any>) : this() {
-		arguments.map { values.put(it.first, it.second) }
-	}
+			val bundle: ArgBuilder = checkArgsBuilder()
+			val returnType = property.returnType.classifier ?:
+					throw IllegalArgumentException("property '${property.name}'.returnType.classifier? was null")
 
-	val values: MutableMap<in String, Any> = HashMap()
-
-	override fun addArg(name: String, value: Any): ArgBuilder {
-		values.put(name, value)
-		return this
-	}
-
-	override fun build() = GraphType.Companion
-
-	override fun toString(): String = if (values.isNotEmpty())
-		"(\n${"\t".repeat(GraphType.TAB_COUNT)}${values.entries.map { arg ->
-			"${arg.key}: ${formatAs(arg.value)}"
-		}.joinToString(",\n${"\t".repeat(GraphType.TAB_COUNT)}")}\n${"\t".repeat(GraphType.TAB_COUNT - 1)})" else ""
-
-	private fun formatAs(value: Any): String {
-		return when (value) {
-			is Int, is Boolean, Float -> "$value"
-			is String -> "\"$value\""
-			is GraphType -> {
-				val indent = GraphType.TAB_COUNT
-				GraphType.TAB_COUNT += 1
-				val res = value.toString()
-				GraphType.TAB_COUNT -= 1; res
+			val result = when (returnType) { // TODO reuse these objects to avoid creating new instances for each GraphType
+				Int::class -> QScalarDelegate({ it.toInt() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				String::class -> QScalarDelegate({ it }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				Float::class -> QScalarDelegate({ it.toFloat() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				Boolean::class -> QScalarDelegate({ it.toBoolean() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
+				else  -> QScalarDelegate((this as QDummyDelegate<T>).adapter, property.name, thisRef.SchemaTypeName, bundle, thisRef)
+				//else -> throw IllegalArgumentException("Expected a type scalar but got a $returnType")
 			}
-			is Enum<*> -> value.name
-			is List<*> -> value
-					.map { formatAs(it ?: "") }
-					.filter { it.isNotBlank() }
-					.joinToString(", ", "[ ", " ]")
-			else -> throw UnsupportedOperationException()
-		}
-	}
-}
-
-interface ArgBuilder {
-
-	fun addArg(name: String, value: Any): ArgBuilder
-
-	fun build(): GraphType.Companion
-
-	companion object {
-		fun create(): ArgBuilder {
-			val payload = Payload()
-			last = payload
-			return payload
+			thisRef.fields.add(result)
+			return result
 		}
 
-		/** Nullable field needed for delegates to link a payload with a property*/
-		internal var last: Payload? = null
 	}
+
 }
-
-internal interface GraphMapper<out T : GraphType> {
-	fun create(): T
-	fun isList(): Boolean
-	fun getName(): String
-}
-
-internal fun jsonToPairMap(data: String): Map<String, Any?> = TODO()
-
-internal class GraphListMapper<T : GraphType>(val of: () -> T) : ListMapper<T>(FieldType.OBJECT),
-		GraphMapper<T>,
-		ReadOnlyProperty<GraphType, List<T>> {
-
-	override fun create(): T = of.invoke()
-	override fun isList(): Boolean = true
-	override fun getName(): String = fieldName!! // delegate will be created before property access
-	private var fieldName: String? = null
-	private var thisRef: GraphType? = null // Enclosing object
-
-	@Suppress("UNCHECKED_CAST")
-	val value: List<T> by lazy {
-		(thisRef?.values?.get(fieldName) as List<String>)
-				.map { create().setValues(jsonToPairMap(it)) as T }
-	}
-
-	override operator fun provideDelegate(inst: GraphType, property: KProperty<*>): ReadOnlyProperty<GraphType, List<T>> {
-		inst.objectFields.add(this)
-		thisRef = inst
-		fieldName = property.name
-		if (ArgBuilder.last != null) {
-			inst.payLoads.put(property.name, ArgBuilder.last!!)
-			ArgBuilder.last = null
-		}
-		return this
-	}
-
-	override fun getValue(thisRef: GraphType, property: KProperty<*>): List<T> = value
-
-	override fun toString(): String {
-		return "GraphListMapper(of=$of, name=$fieldName)"
-	}
-}
-
-internal open class GraphPropertyMapper<out T : GraphType>(val of: () -> T) :
-		PropertyMapper<T>(FieldType.OBJECT),
-		GraphMapper<T>,
-		ReadOnlyProperty<GraphType, T> {
-
-	override fun create(): T = of.invoke()
-	override fun isList(): Boolean = false
-	override fun getName(): String = fieldName!! // delegate will be created before property access
-	private var thisRef: GraphType? = null // Enclosing object
-	private var fieldName: String? = null
-
-	@Suppress("UNCHECKED_CAST")
-	val value: T by lazy { create().setValues(jsonToPairMap((thisRef?.values?.get(fieldName) as String))) as T }
-
-	override operator fun provideDelegate(inst: GraphType, property: KProperty<*>): ReadOnlyProperty<GraphType, T> {
-		fieldName = property.name
-		thisRef = inst
-		inst.objectFields.add(this)
-		if (ArgBuilder.last != null) {
-			inst.payLoads.put(property.name, ArgBuilder.last!!)
-			ArgBuilder.last = null
-		}
-		return this
-	}
-
-	override fun getValue(thisRef: GraphType, property: KProperty<*>): T = value
-
-	override fun toString(): String {
-		return "GraphPropertyMapper(of=$of, name=$fieldName)"
-	}
-}
-
-
-internal object Jsonify {
-	fun createPayload(obj: GraphType): String {
-		val indentLevel = GraphType.TAB_COUNT
-		GraphType.TAB_COUNT += 1
-		val primFields = obj.primitiveFields.map { printPayload(it.name, obj) }.joinToString(indentLevel).trim()
-		val primListFields = obj.primitiveListFields.map { printPayload(it.name, obj) }.joinToString(indentLevel).trim()
-		val scalarFields = obj.scalarFields.map { printPayload(it.name, obj) }.joinToString(indentLevel).trim()
-		val scalarList = obj.scalarListFields.map { printPayload(it.name, obj) }.joinToString(indentLevel).trim()
-		val nested = obj.objectFields.map { printPayload(it.getName(), obj) }.joinToString(indentLevel).trim()
-		val provided = obj.provided.map { printPayload(it.name, obj) + "= ${it.value.toString()}" }.joinToString(indentLevel).trim()
-
-		val clazzName = obj::class.simpleName ?: "$"
-		val pretty = listOf(primFields, primListFields, scalarFields, scalarList, nested, provided).reversed()
-				.reduce { next, acc -> if (next.trim().isNotBlank()) "$acc\n${"\t".repeat(indentLevel)}${next.trim()}" else acc } +
-				"\n" + "\t".repeat(indentLevel - 1) + "}"
-
-		GraphType.TAB_COUNT = indentLevel
-		return ("${if (clazzName.contains('$')) obj::class::superclasses.get()[0].simpleName else clazzName} " +
-				"{\n${"\t".repeat(indentLevel)}" + pretty)
-				.replace("(\n\\s*?\n)+".toRegex(), "\n")
-	}
-
-	private fun List<String>.joinToString(indentLevel: Int): String = filter { it.trim().isNotBlank() }
-			.map { it.trim() }
-			.joinToString("\n" + ("\t".repeat(indentLevel)))
-
-	private fun printPayload(name: String, obj: GraphType, value: GraphType? = null): String {
-		val indent = GraphType.TAB_COUNT
-		val payload = obj.payLoads.get(name)
-		val res = if (payload != null) payload.toString() else ""
-		GraphType.TAB_COUNT = indent
-		val toPayload = value?.toPayload()
-		return "$name$res ${toPayload?.padStart(1, ':') ?: ""}"
-	}
-
-	fun toJson(obj: GraphType): String = TODO()
-}
-
-
-
-
