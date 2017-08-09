@@ -41,10 +41,18 @@ class TestDelegateIntegrity {
 				Pair("name", "foobarType"),
 				Pair("bio", "My foo bio"),
 				Pair("updatedAt", "DateTime { April 24, 1995 } "),
-				Pair("created", "DateTime { April 24, 1995 } "),
+				Pair("createdAt", "DateTime { April 24, 1995 } "),
 				Pair("id", "314159286"),
 				Pair("repositories", "RepositoryConnection { totalCount = 100 }")
 		)
+		assertTrue(message.values?.size == 6)
+		assertTrue(message.values?.size == message.fields.size)
+		assertNotNull(message.fields.filter { it.fieldName == "name" })
+		assertNotNull(message.fields.filter { it.fieldName == "bio" })
+		assertNotNull(message.fields.filter { it.fieldName == "updatedAt" })
+		assertNotNull(message.fields.filter { it.fieldName == "createdAt" })
+		assertNotNull(message.fields.filter { it.fieldName == "id" })
+		assertNotNull(message.fields.filter { it.fieldName == "repositories" })
 		println(message)
 		println(message.id)
 		println(message.createdAt.value)

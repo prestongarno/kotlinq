@@ -32,9 +32,9 @@ class GithubApiTest {
 			}
 		}
 
-		qCompiler.generateKotlinTypes(content,
-				"com.prestongarno.transpiler.experimental.generated",
-				"/Users/admin/IdeaProjects/ktq/compiler/src/test/java")
+		qCompiler.generateKotlinTypes(content)
+/*				"com.prestongarno.transpiler.experimental.generated",
+				"/Users/admin/IdeaProjects/ktq/compiler/src/test/java")*/
 	}
 
 	@Test

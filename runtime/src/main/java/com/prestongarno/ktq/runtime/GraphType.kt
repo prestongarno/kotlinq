@@ -31,9 +31,9 @@ open class GraphType {
 	} //TODO :: Need to generate the type name in code generation
 
 	/** This is the result of the query : Holds the values */
-	internal var values: Map<String, Any?>? = null
+	/*notsointernal*/ var values: Map<String, Any?>? = null
 
-	internal val fields: MutableList<QDelegate<*>> = ArrayList(5)
+	/*notsointernal*/ val fields: MutableList<QDelegate<*>> = ArrayList(5)
 
 	/** @return a string representation of this object in GraphQL format able to be sent as a query/mutation
 	 */
@@ -80,8 +80,7 @@ open class GraphType {
 		 * TODO figure out a flexible way to support mapping to custom types
 		 * @param the function which maps the raw data value (represented as a String) to type T
 		 */
-		fun <T : Any> scalarMapper(adapter: (String) -> T):
-				QDelegate<T> = QDummyDelegate<T>(adapter)
+		fun <T : Any> scalarMapper(adapter: (String) -> T): QDelegate<T> = QDummyDelegate<T>(adapter)
 
 		/** Maps this scalar field to a List of items of type T,
 		 * @param the function which maps the raw data value (represented as a String) to type T
@@ -89,9 +88,6 @@ open class GraphType {
 		//fun <T : Any> scalarListMapper(converter: (String) -> T): ListMapper<T> = ScalarListMapper<T>(converter)
 		@Suppress("UNCHECKED_CAST")
 		operator fun <T : GraphType> GraphProvider<T>.provideDelegate(thisRef: GraphType, property: KProperty<*>): GraphProvider<T> {
-
-			println("Property ::>> ${property.name}")
-
 			val bundle: ArgBuilder = checkArgsBuilder()
 			val result = GraphProvider<T>(this.init, property.name, thisRef.SchemaTypeName, bundle, thisRef)
 			thisRef.fields.add(result)
@@ -100,9 +96,6 @@ open class GraphType {
 
 		@Suppress("UNCHECKED_CAST")
 		operator fun <T> QDelegate<T>.provideDelegate(thisRef: GraphType, property: KProperty<*>): QScalarDelegate<T> {
-
-			println("Property :: ${property.name}")
-
 			val bundle: ArgBuilder = checkArgsBuilder()
 			val returnType = property.returnType.classifier ?:
 					throw IllegalArgumentException("property '${property.name}'.returnType.classifier? was null")
@@ -113,7 +106,6 @@ open class GraphType {
 				Float::class -> QScalarDelegate({ it.toFloat() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
 				Boolean::class -> QScalarDelegate({ it.toBoolean() }, property.name, thisRef.SchemaTypeName, bundle, thisRef) as QScalarDelegate<T>
 				else  -> QScalarDelegate((this as QDummyDelegate<T>).adapter, property.name, thisRef.SchemaTypeName, bundle, thisRef)
-				//else -> throw IllegalArgumentException("Expected a type scalar but got a $returnType")
 			}
 			thisRef.fields.add(result)
 			return result
