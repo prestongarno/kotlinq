@@ -16,6 +16,7 @@ subprojects {
     apply plugin: 'kotlin'
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -23,6 +24,7 @@ subprojects {
         compile "org.jetbrains.kotlin:kotlin-reflect"
         testCompile 'junit:junit:4.12'
         testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+        compile 'com.beust:klaxon:0.31'
     }
     compileKotlin {
         kotlinOptions {
