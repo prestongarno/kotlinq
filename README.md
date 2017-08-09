@@ -1,7 +1,7 @@
 
 # ktq<sup>*</sup>
 
-A kotlin type generator GraphQL schema definitions and runtime library for interacting with endpoints
+An experimental kotlin type generator for GraphQL schema definitions and runtime library for interacting with endpoints
 
 ### compiler
 The `compiler` module acts as a code generation library. This (soon) will be isolated as a Gradle plugin which will allow for configuration from gradle build scripts and run as a task like:
