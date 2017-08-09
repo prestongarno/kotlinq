@@ -19,7 +19,7 @@ Where `schema` is the URI or File which the transpiler will parse in order to ge
 
 Allowing for a strict selection of subfields from a type while both supporting type-safe queries and also null safety that kotlin provides is challenging. The generated classes from the GraphQL schema types, interfaces, and unions are represented as <i>abstract classes containing all declared fields of their base type, with `protected` access modifier</i>
 
-To illustrate the reasoning for using a class-based inheritance model, consider the following GraphQL schema definition:
+Using a class inheritance model, consider the following GraphQL schema definition:
 
 ```
 type User {
@@ -36,11 +36,12 @@ abstract class User : GraphType() {
   protected open val email: String? by lazy { throw SchemaStub() }
 }
 ```
-GraphQL is powerful because it allows specific subsets of data to be requested from within the type hierarchy in the schema. 
+
 If schema types were represented as a data class, things would get messy with nulls or worse - because at runtime you'd have to keep track of which queries resulted in which instances to avoid `NullPointerException`s
 The class above allows subclasses to <b>explicitly expose</b> the fields in the schema type definitions, which allows for safe collections/bounded type parameters*. 
 Root types subclass `GraphType`, which provides provides utility methods to supply delegates for fields.
-####<sup>*unless you include logic in implementations beyone dependency injection, in which case you probable have worse problems in your code, I think</sup>
+
+<sup>*unless you include logic in implementations beyone dependency injection, in which case you probable have worse problems in your code, I think</sup>
  
  ```
  class BasicUser : User() {
@@ -110,19 +111,15 @@ Any input arguments declared in the schema are represented as builder classes, a
 ```
 Some types in this example are missing, but the builder configures the arguments for the field at the time the delegate is created, and then after `.build()` it returns this instance from which the field type can be specified ( in this case `repositories` : `RepoConnection` )
 
-### collections of any of the above
+### collections
+Functions exactly like nested types, but instead fields should be delegated to the `list( init: () -> T )` utility method
 
-Works exactly like nested types, but instead fields should be delegated to the `list` utility method
-
+### queries and mutations 
 The queries from classes like shown above are generated on-the-fly and submitted, providing a `Query<E : Result>` callback handle in order to be notified of the results. Example query generated from a test case:
 
 ```
     QueryFooBar {
         name
-        bio
-        id
-        updatedAt
-        createdAt
         repositories(
             affiliations: [ OWNER, COLLABORATOR ],
             orderBy: RepositoryOrder {
