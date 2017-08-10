@@ -1,11 +1,9 @@
 package com.prestongarno.ktq.runtime
 
-import com.prestongarno.ktq.runtime.ArgBuilder
-import com.prestongarno.ktq.runtime.GraphType
 import com.prestongarno.ktq.runtime.GraphType.SchemaStub
 import kotlin.collections.List
 
-enum class TopicSuggestionDeclineReason : QEnum {
+enum class TopicSuggestionDeclineReason {
   NOT_RELEVANT,
 
   TOO_SPECIFIC,
@@ -15,23 +13,23 @@ enum class TopicSuggestionDeclineReason : QEnum {
   TOO_GENERAL
 }
 
-enum class TeamRole : QEnum {
+enum class TeamRole {
   ADMIN,
 
   MEMBER
 }
 
-enum class TeamPrivacy : QEnum {
+enum class TeamPrivacy {
   SECRET,
 
   VISIBLE
 }
 
-enum class TeamOrderField : QEnum {
+enum class TeamOrderField {
   NAME
 }
 
-enum class SubscriptionState : QEnum {
+enum class SubscriptionState {
   UNSUBSCRIBED,
 
   SUBSCRIBED,
@@ -39,7 +37,7 @@ enum class SubscriptionState : QEnum {
   IGNORED
 }
 
-enum class StatusState : QEnum {
+enum class StatusState {
   EXPECTED,
 
   ERROR,
@@ -51,11 +49,11 @@ enum class StatusState : QEnum {
   SUCCESS
 }
 
-enum class StarOrderField : QEnum {
+enum class StarOrderField {
   STARRED_AT
 }
 
-enum class SearchType : QEnum {
+enum class SearchType {
   ISSUE,
 
   REPOSITORY,
@@ -63,13 +61,13 @@ enum class SearchType : QEnum {
   USER
 }
 
-enum class RepositoryPrivacy : QEnum {
+enum class RepositoryPrivacy {
   PUBLIC,
 
   PRIVATE
 }
 
-enum class RepositoryOrderField : QEnum {
+enum class RepositoryOrderField {
   CREATED_AT,
 
   UPDATED_AT,
@@ -81,7 +79,7 @@ enum class RepositoryOrderField : QEnum {
   STARGAZERS
 }
 
-enum class RepositoryLockReason : QEnum {
+enum class RepositoryLockReason {
   MOVING,
 
   BILLING,
@@ -91,13 +89,13 @@ enum class RepositoryLockReason : QEnum {
   MIGRATING
 }
 
-enum class RepositoryCollaboratorAffiliation : QEnum {
+enum class RepositoryCollaboratorAffiliation {
   ALL,
 
   OUTSIDE
 }
 
-enum class RepositoryAffiliation : QEnum {
+enum class RepositoryAffiliation {
   OWNER,
 
   COLLABORATOR,
@@ -105,11 +103,11 @@ enum class RepositoryAffiliation : QEnum {
   ORGANIZATION_MEMBER
 }
 
-enum class ReactionOrderField : QEnum {
+enum class ReactionOrderField {
   CREATED_AT
 }
 
-enum class ReactionContent : QEnum {
+enum class ReactionContent {
   THUMBS_UP,
 
   THUMBS_DOWN,
@@ -123,7 +121,7 @@ enum class ReactionContent : QEnum {
   HEART
 }
 
-enum class PullRequestState : QEnum {
+enum class PullRequestState {
   OPEN,
 
   CLOSED,
@@ -131,7 +129,7 @@ enum class PullRequestState : QEnum {
   MERGED
 }
 
-enum class PullRequestReviewState : QEnum {
+enum class PullRequestReviewState {
   PENDING,
 
   COMMENTED,
@@ -143,7 +141,7 @@ enum class PullRequestReviewState : QEnum {
   DISMISSED
 }
 
-enum class PullRequestReviewEvent : QEnum {
+enum class PullRequestReviewEvent {
   COMMENT,
 
   APPROVE,
@@ -153,7 +151,7 @@ enum class PullRequestReviewEvent : QEnum {
   DISMISS
 }
 
-enum class PullRequestPubSubTopic : QEnum {
+enum class PullRequestPubSubTopic {
   UPDATED,
 
   MARKASREAD,
@@ -161,13 +159,13 @@ enum class PullRequestPubSubTopic : QEnum {
   HEAD_REF
 }
 
-enum class ProjectState : QEnum {
+enum class ProjectState {
   OPEN,
 
   CLOSED
 }
 
-enum class ProjectOrderField : QEnum {
+enum class ProjectOrderField {
   CREATED_AT,
 
   UPDATED_AT,
@@ -175,7 +173,7 @@ enum class ProjectOrderField : QEnum {
   NAME
 }
 
-enum class ProjectCardState : QEnum {
+enum class ProjectCardState {
   CONTENT_ONLY,
 
   NOTE_ONLY,
@@ -183,7 +181,7 @@ enum class ProjectCardState : QEnum {
   REDACTED
 }
 
-enum class OrganizationInvitationRole : QEnum {
+enum class OrganizationInvitationRole {
   DIRECT_MEMBER,
 
   ADMIN,
@@ -193,19 +191,19 @@ enum class OrganizationInvitationRole : QEnum {
   REINSTATE
 }
 
-enum class OrderDirection : QEnum {
+enum class OrderDirection {
   ASC,
 
   DESC
 }
 
-enum class MilestoneState : QEnum {
+enum class MilestoneState {
   OPEN,
 
   CLOSED
 }
 
-enum class MergeableState : QEnum {
+enum class MergeableState {
   MERGEABLE,
 
   CONFLICTING,
@@ -213,23 +211,23 @@ enum class MergeableState : QEnum {
   UNKNOWN
 }
 
-enum class LanguageOrderField : QEnum {
+enum class LanguageOrderField {
   SIZE
 }
 
-enum class IssueState : QEnum {
+enum class IssueState {
   OPEN,
 
   CLOSED
 }
 
-enum class IssuePubSubTopic : QEnum {
+enum class IssuePubSubTopic {
   UPDATED,
 
   MARKASREAD
 }
 
-enum class IssueOrderField : QEnum {
+enum class IssueOrderField {
   CREATED_AT,
 
   UPDATED_AT,
@@ -237,7 +235,7 @@ enum class IssueOrderField : QEnum {
   COMMENTS
 }
 
-enum class GitSignatureState : QEnum {
+enum class GitSignatureState {
   VALID,
 
   INVALID,
@@ -265,7 +263,7 @@ enum class GitSignatureState : QEnum {
   EXPIRED_KEY
 }
 
-enum class GistPrivacy : QEnum {
+enum class GistPrivacy {
   PUBLIC,
 
   SECRET,
@@ -273,7 +271,7 @@ enum class GistPrivacy : QEnum {
   ALL
 }
 
-enum class DeploymentStatusState : QEnum {
+enum class DeploymentStatusState {
   PENDING,
 
   SUCCESS,
@@ -285,7 +283,7 @@ enum class DeploymentStatusState : QEnum {
   ERROR
 }
 
-enum class DeploymentState : QEnum {
+enum class DeploymentState {
   ABANDONED,
 
   ACTIVE,
@@ -301,7 +299,7 @@ enum class DeploymentState : QEnum {
   PENDING
 }
 
-enum class DefaultRepositoryPermissionField : QEnum {
+enum class DefaultRepositoryPermissionField {
   READ,
 
   WRITE,
@@ -309,7 +307,7 @@ enum class DefaultRepositoryPermissionField : QEnum {
   ADMIN
 }
 
-enum class CommentCannotUpdateReason : QEnum {
+enum class CommentCannotUpdateReason {
   INSUFFICIENT_ACCESS,
 
   LOCKED,
@@ -321,7 +319,7 @@ enum class CommentCannotUpdateReason : QEnum {
   VERIFIED_EMAIL_REQUIRED
 }
 
-enum class CommentAuthorAssociation : QEnum {
+enum class CommentAuthorAssociation {
   MEMBER,
 
   OWNER,
@@ -5671,340 +5669,361 @@ abstract class IssueTimelineItem : GraphType() {
   protected open val unlockedevent: List<UnlockedEvent> by lazy { throw SchemaStub() }
 }
 
-abstract class IssueOrPullRequest : CustomScalar() {
+abstract class IssueOrPullRequest : GraphType() {
   protected open val issue: List<Issue> by lazy { throw SchemaStub() }
 
   protected open val pullrequest: List<PullRequest> by lazy { throw SchemaStub() }
 }
 
-abstract class X509Certificate : CustomScalar() {
-  protected open val value: Any by lazy { throw SchemaStub() }
+abstract class X509Certificate : GraphType() {
+  protected open val value: CustomScalar by lazy { throw SchemaStub() }
 }
 
-abstract class URI : CustomScalar() {
-  protected open val value: Any by lazy { throw SchemaStub() }
+abstract class URI : GraphType() {
+  protected open val value: CustomScalar by lazy { throw SchemaStub() }
 }
 
-abstract class HTML : CustomScalar() {
-  protected open val value: Any by lazy { throw SchemaStub() }
+abstract class HTML : GraphType() {
+  protected open val value: CustomScalar by lazy { throw SchemaStub() }
 }
 
-abstract class GitTimestamp : CustomScalar() {
-  protected open val value: Any by lazy { throw SchemaStub() }
+abstract class GitTimestamp : GraphType() {
+  protected open val value: CustomScalar by lazy { throw SchemaStub() }
 }
 
-abstract class GitObjectID : CustomScalar() {
-  protected open val value: Any by lazy { throw SchemaStub() }
+abstract class GitObjectID : GraphType() {
+  protected open val value: CustomScalar by lazy { throw SchemaStub() }
 }
 
-abstract class DateTime : CustomScalar() {
-  protected open val value: Any by lazy { throw SchemaStub() }
+abstract class DateTime : GraphType() {
+  protected open val value: CustomScalar by lazy { throw SchemaStub() }
 }
 
-abstract class UpdateTopicsInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class UpdateTopicsInput(val repositoryId: String, val topicNames: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val repositoryId: String by lazy { throw SchemaStub() }
-
-  protected open val topicNames: List<String> by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class UpdateSubscriptionInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class UpdateSubscriptionInput(val subscribableId: String,
+    val state: SubscriptionState) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val subscribableId: String by lazy { throw SchemaStub() }
-
-  protected open val state: SubscriptionState by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class UpdatePullRequestReviewInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class UpdatePullRequestReviewInput(val pullRequestReviewId: String,
+    val body: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
-
-  protected open val body: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class UpdatePullRequestReviewCommentInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class UpdatePullRequestReviewCommentInput(val pullRequestReviewCommentId: String,
+    val body: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestReviewCommentId: String by lazy { throw SchemaStub() }
-
-  protected open val body: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class UpdateProjectInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class UpdateProjectInput(val projectId: String, val name: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val projectId: String by lazy { throw SchemaStub() }
+  var body: String? = null
 
-  protected open val name: String by lazy { throw SchemaStub() }
+  var state: ProjectState? = null
 
-  protected open val body: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 
-  protected open val state: ProjectState by lazy { throw SchemaStub() }
+  fun body(value: String) {
+    apply { body = value }}
+
+  fun state(value: ProjectState) {
+    apply { state = value }}
 }
 
-abstract class UpdateProjectColumnInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class UpdateProjectColumnInput(val projectColumnId: String, val name: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val projectColumnId: String by lazy { throw SchemaStub() }
-
-  protected open val name: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class UpdateProjectCardInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class UpdateProjectCardInput(val projectCardId: String, val note: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val projectCardId: String by lazy { throw SchemaStub() }
-
-  protected open val note: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class TeamOrder : GraphType() {
-  protected open val field: TeamOrderField by lazy { throw SchemaStub() }
-
-  protected open val direction: OrderDirection by lazy { throw SchemaStub() }
+data class TeamOrder(val field: TeamOrderField, val direction: OrderDirection) : QInput {
 }
 
-abstract class SubmitPullRequestReviewInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class SubmitPullRequestReviewInput(val pullRequestReviewId: String,
+    val event: PullRequestReviewEvent) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
+  var body: String? = null
 
-  protected open val event: PullRequestReviewEvent by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 
-  protected open val body: String by lazy { throw SchemaStub() }
+  fun body(value: String) {
+    apply { body = value }}
 }
 
-abstract class StarOrder : GraphType() {
-  protected open val field: StarOrderField by lazy { throw SchemaStub() }
-
-  protected open val direction: OrderDirection by lazy { throw SchemaStub() }
+data class StarOrder(val field: StarOrderField, val direction: OrderDirection) : QInput {
 }
 
-abstract class RequestReviewsInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class RequestReviewsInput(val pullRequestId: String, val userIds: String,
+    val teamIds: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestId: String by lazy { throw SchemaStub() }
+  var union: Boolean? = null
 
-  protected open val userIds: List<String> by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 
-  protected open val teamIds: List<String> by lazy { throw SchemaStub() }
-
-  protected open val union: Boolean by lazy { throw SchemaStub() }
+  fun union(value: Boolean) {
+    apply { union = value }}
 }
 
-abstract class RepositoryOrder : GraphType() {
-  protected open val field: RepositoryOrderField by lazy { throw SchemaStub() }
-
-  protected open val direction: OrderDirection by lazy { throw SchemaStub() }
+data class RepositoryOrder(val field: RepositoryOrderField,
+    val direction: OrderDirection) : QInput {
 }
 
-abstract class RemoveStarInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class RemoveStarInput(val starrableId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val starrableId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class RemoveReactionInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class RemoveReactionInput(val subjectId: String, val content: ReactionContent) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val subjectId: String by lazy { throw SchemaStub() }
-
-  protected open val content: ReactionContent by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class RemoveOutsideCollaboratorInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class RemoveOutsideCollaboratorInput(val userId: String, val organizationId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val userId: String by lazy { throw SchemaStub() }
-
-  protected open val organizationId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class ReactionOrder : GraphType() {
-  protected open val field: ReactionOrderField by lazy { throw SchemaStub() }
-
-  protected open val direction: OrderDirection by lazy { throw SchemaStub() }
+data class ReactionOrder(val field: ReactionOrderField, val direction: OrderDirection) : QInput {
 }
 
-abstract class ProjectOrder : GraphType() {
-  protected open val field: ProjectOrderField by lazy { throw SchemaStub() }
-
-  protected open val direction: OrderDirection by lazy { throw SchemaStub() }
+data class ProjectOrder(val field: ProjectOrderField, val direction: OrderDirection) : QInput {
 }
 
-abstract class MoveProjectColumnInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class MoveProjectColumnInput(val columnId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val columnId: String by lazy { throw SchemaStub() }
+  var afterColumnId: String? = null
 
-  protected open val afterColumnId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
+
+  fun afterColumnId(value: String) {
+    apply { afterColumnId = value }}
 }
 
-abstract class MoveProjectCardInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class MoveProjectCardInput(val cardId: String, val columnId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val cardId: String by lazy { throw SchemaStub() }
+  var afterCardId: String? = null
 
-  protected open val columnId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 
-  protected open val afterCardId: String by lazy { throw SchemaStub() }
+  fun afterCardId(value: String) {
+    apply { afterCardId = value }}
 }
 
-abstract class LanguageOrder : GraphType() {
-  protected open val field: LanguageOrderField by lazy { throw SchemaStub() }
-
-  protected open val direction: OrderDirection by lazy { throw SchemaStub() }
+data class LanguageOrder(val field: LanguageOrderField, val direction: OrderDirection) : QInput {
 }
 
-abstract class IssueOrder : GraphType() {
-  protected open val field: IssueOrderField by lazy { throw SchemaStub() }
-
-  protected open val direction: OrderDirection by lazy { throw SchemaStub() }
+data class IssueOrder(val field: IssueOrderField, val direction: OrderDirection) : QInput {
 }
 
-abstract class DraftPullRequestReviewComment : GraphType() {
-  protected open val path: String by lazy { throw SchemaStub() }
-
-  protected open val position: Int by lazy { throw SchemaStub() }
-
-  protected open val body: String by lazy { throw SchemaStub() }
+data class DraftPullRequestReviewComment(val path: String, val position: Int,
+    val body: String) : QInput {
 }
 
-abstract class DismissPullRequestReviewInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class DismissPullRequestReviewInput(val pullRequestReviewId: String,
+    val message: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
-
-  protected open val message: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class DeletePullRequestReviewInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class DeletePullRequestReviewInput(val pullRequestReviewId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class DeleteProjectInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class DeleteProjectInput(val projectId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val projectId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class DeleteProjectColumnInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class DeleteProjectColumnInput(val columnId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val columnId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class DeleteProjectCardInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class DeleteProjectCardInput(val cardId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val cardId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class DeclineTopicSuggestionInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class DeclineTopicSuggestionInput(val repositoryId: String, val name: String,
+    val reason: TopicSuggestionDeclineReason) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val repositoryId: String by lazy { throw SchemaStub() }
-
-  protected open val name: String by lazy { throw SchemaStub() }
-
-  protected open val reason: TopicSuggestionDeclineReason by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class CreateProjectInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class CreateProjectInput(val ownerId: String, val name: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val ownerId: String by lazy { throw SchemaStub() }
+  var body: String? = null
 
-  protected open val name: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 
-  protected open val body: String by lazy { throw SchemaStub() }
+  fun body(value: String) {
+    apply { body = value }}
 }
 
-abstract class CommitAuthor : GraphType() {
-  protected open val id: String by lazy { throw SchemaStub() }
+data class CommitAuthor(val emails: String) : QInput {
+  var id: String? = null
 
-  protected open val emails: List<String> by lazy { throw SchemaStub() }
+  fun id(value: String) {
+    apply { id = value }}
 }
 
-abstract class AddStarInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AddStarInput(val starrableId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val starrableId: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class AddReactionInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AddReactionInput(val subjectId: String, val content: ReactionContent) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val subjectId: String by lazy { throw SchemaStub() }
-
-  protected open val content: ReactionContent by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class AddPullRequestReviewInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AddPullRequestReviewInput(val pullRequestId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestId: String by lazy { throw SchemaStub() }
+  var commitOID: GitObjectID? = null
 
-  protected open val commitOID: GitObjectID by lazy { throw SchemaStub() }
+  var body: String? = null
 
-  protected open val body: String by lazy { throw SchemaStub() }
+  var event: PullRequestReviewEvent? = null
 
-  protected open val event: PullRequestReviewEvent by lazy { throw SchemaStub() }
+  var comments: DraftPullRequestReviewComment? = null
 
-  protected open val comments: List<DraftPullRequestReviewComment> by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
+
+  fun commitOID(value: GitObjectID) {
+    apply { commitOID = value }}
+
+  fun body(value: String) {
+    apply { body = value }}
+
+  fun event(value: PullRequestReviewEvent) {
+    apply { event = value }}
+
+  fun comments(value: DraftPullRequestReviewComment) {
+    apply { comments = value }}
 }
 
-abstract class AddPullRequestReviewCommentInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AddPullRequestReviewCommentInput(val pullRequestReviewId: String,
+    val body: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val pullRequestReviewId: String by lazy { throw SchemaStub() }
+  var commitOID: GitObjectID? = null
 
-  protected open val commitOID: GitObjectID by lazy { throw SchemaStub() }
+  var path: String? = null
 
-  protected open val body: String by lazy { throw SchemaStub() }
+  var position: Int? = null
 
-  protected open val path: String by lazy { throw SchemaStub() }
+  var inReplyTo: String? = null
 
-  protected open val position: Int by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 
-  protected open val inReplyTo: String by lazy { throw SchemaStub() }
+  fun commitOID(value: GitObjectID) {
+    apply { commitOID = value }}
+
+  fun path(value: String) {
+    apply { path = value }}
+
+  fun position(value: Int) {
+    apply { position = value }}
+
+  fun inReplyTo(value: String) {
+    apply { inReplyTo = value }}
 }
 
-abstract class AddProjectColumnInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AddProjectColumnInput(val projectId: String, val name: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val projectId: String by lazy { throw SchemaStub() }
-
-  protected open val name: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class AddProjectCardInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AddProjectCardInput(val projectColumnId: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val projectColumnId: String by lazy { throw SchemaStub() }
+  var contentId: String? = null
 
-  protected open val contentId: String by lazy { throw SchemaStub() }
+  var note: String? = null
 
-  protected open val note: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
+
+  fun contentId(value: String) {
+    apply { contentId = value }}
+
+  fun note(value: String) {
+    apply { note = value }}
 }
 
-abstract class AddCommentInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AddCommentInput(val subjectId: String, val body: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val subjectId: String by lazy { throw SchemaStub() }
-
-  protected open val body: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }
 
-abstract class AcceptTopicSuggestionInput : GraphType() {
-  protected open val clientMutationId: String by lazy { throw SchemaStub() }
+data class AcceptTopicSuggestionInput(val repositoryId: String, val name: String) : QInput {
+  var clientMutationId: String? = null
 
-  protected open val repositoryId: String by lazy { throw SchemaStub() }
-
-  protected open val name: String by lazy { throw SchemaStub() }
+  fun clientMutationId(value: String) {
+    apply { clientMutationId = value }}
 }

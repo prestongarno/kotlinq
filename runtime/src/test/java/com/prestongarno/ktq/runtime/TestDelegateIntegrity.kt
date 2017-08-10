@@ -55,7 +55,7 @@ class TestDelegateIntegrity {
 		assertNotNull(message.fields.filter { it.fieldName == "repositories" })
 		println(message)
 		println(message.id)
-		println(message.createdAt.value)
+		//println(message.createdAt.value)
 		TODO("Need to make mapping from raw string values in the map to GraphTypes & Custom scalar types")
 	}
 }
@@ -86,5 +86,5 @@ class RepoConnection : RepositoryConnection() {
 
 
 class DateTimeConvert : DateTime() {
-	public override val value by scalarMapper { Date.from(Instant.EPOCH) }
+	//public override val value by scalarMapper { Date.from(Instant.EPOCH) }
 }

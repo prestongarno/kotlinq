@@ -25,8 +25,7 @@ object Attr {
 
 		types.forEach { t ->
 			val attrInterfaces: LinkedList<QInterfaceDef> = LinkedList()
-			val fields = HashMap<String, QSymbol>(t.fields.size + 4, 0.99f)
-			t.fields.forEach { sym -> fields.put(sym.name, sym) }
+			val fields = t.fields.map { sym -> Pair(sym.name, sym) }.toMap()
 
 			t.interfaces.forEach { iface ->
 				val attrIf = ifaceMap.get(iface.name) ?: throw IllegalArgumentException("No interface definition " +
