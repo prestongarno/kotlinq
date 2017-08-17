@@ -24,7 +24,7 @@ import kotlin.reflect.KProperty
  *
  * TODO: Probably should abstract a bit from having separate logic for scalars, raw primitives, and nested objects
  */
-open class GraphType {
+open class GraphType
 
 	open val SchemaTypeName: String by lazy {
 		this::class.qualifiedName ?: this::class.supertypes.get(0).javaClass.name
