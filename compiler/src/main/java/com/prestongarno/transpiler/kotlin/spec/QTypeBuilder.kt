@@ -35,7 +35,7 @@ class QTypeBuilder(val packageName: String) {
 						.build())
 				.addSuperinterface(ClassName.invoke("", "ArgBuilder_by_builder"))
 
-		args.map { createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName) }
+		args.map { ceateBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName) }
 				.forEach { argBuilderSpec.addFun(it) }
 		return argBuilderSpec.build()
 	}

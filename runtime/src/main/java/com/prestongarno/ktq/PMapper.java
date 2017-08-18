@@ -43,12 +43,6 @@ class PMapper<T> extends Mapper<T> implements Stub<T> {
 		return "PMapper :: " + super.toString();
 	}
 
-	@NotNull
-	@Override
-	public <T1 extends QType, U> Stub<U> mapDirect(@NotNull Function1<? super T1, ? extends Stub<U>> function) {
-		throw new IllegalStateException("null");
-	}
-
 }
 
 

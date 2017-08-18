@@ -15,10 +15,11 @@ internal object Tracker {
 			values = LinkedHashMap()
 			global.put(inst, values)
 		}
+    if(property.value != null && property.property == null) {
+      //values.put(property, LinkedList<Pair<>>)
+    }
 		values.put(property, value)
 	}
-
-	fun notifyNested(provided: QType) : Nothing = TODO()
 
 	fun onResult(inst: QType, raw: String) {
 		println("On Result received: $raw")
