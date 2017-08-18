@@ -7,7 +7,7 @@ object ScalarBuilder {
 	fun toType(from: QScalarType) = QTypeDef(from.name,
 			emptyList(),
 			listOf(QField("value",
-					Scalar.getType(Scalar.UNKNOWN),
+					Scalar.getType(Scalar.STRING),
 					emptyList(),
 					QDirectiveSymbol.default,
 					false,

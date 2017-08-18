@@ -13,7 +13,6 @@ class QCompiler {
 
 	fun generateKotlinTypes(comp: QCompilationUnit, rootPackageName: String = "com.prestongarno.ktq", outputPath: String? = null) {
 		val ktBuilder = KotlinFile.builder(rootPackageName, "QTypes")
-				.addStaticImport(QType::class, "SchemaStub")
 		createEnums(comp.enums).map { ktBuilder.addType(it) }
 
 		val typeBuilder = QTypeBuilder(rootPackageName)
@@ -30,7 +29,7 @@ class QCompiler {
 
 		// TODO open issue or request in kotlinpoet for creating delegated/forwarding types
 		val result = ktBuilder.build().toString().replace("ArgBuilder_by_builder", "ArgBuilder by builder")
-				.replace(": GraphType", ": GraphType()")
+				.replace("> \\{\n.*stub<(.*)>\\(\\)}".toRegex(), "> = stub<$1>()")
 				.replace(" = null", "? = null")
 		if (outputPath != null) File("$outputPath/${rootPackageName.replace(".","/")}/QTypes.kt").printWriter().use { out -> out.write(result) }
 	}
