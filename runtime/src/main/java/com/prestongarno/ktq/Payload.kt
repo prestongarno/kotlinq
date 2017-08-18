@@ -10,6 +10,7 @@ internal class Payload() : ArgBuilder {
 
 	override fun addArg(name: String, value: Any): ArgBuilder {
 		values.put(name, value)
+    println(values)
 		return this
 	}
 
@@ -21,7 +22,7 @@ internal class Payload() : ArgBuilder {
 		return when (value) {
 			is Int, is Boolean, Float -> "$value"
 			is String -> "\"$value\""
-			is QType -> { TODO() }
+			is QInput -> value.toPayloadString()
 			is Enum<*> -> value.name
 			is List<*> -> value
 					.map { formatAs(it ?: "") }
@@ -40,6 +41,7 @@ interface ArgBuilder {
 
 	companion object {
 		fun create(): ArgBuilder {
+      println("Creating input args! for:: ${this::class}")
 			val payload = Payload()
 			last = payload
 			return payload
