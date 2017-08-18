@@ -1,7 +1,7 @@
 package com.prestongarno.transpiler.kotlin.spec
 
-import com.prestongarno.ktq.runtime.ArgBuilder
-import com.prestongarno.ktq.runtime.GraphType
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.QType
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
 
@@ -9,7 +9,7 @@ class QTypeBuilder(val packageName: String) {
 
 	fun createType(qType: QStatefulType, packageName: String = "com.prestongarno.ktq"): TypeSpec {
 		val builder = TypeSpec.classBuilder(ClassName.invoke(packageName, qType.name))
-				.superclass(GraphType::class)
+				.superclass(QType::class)
 				.addModifiers(KModifier.ABSTRACT)
 		qType.fields.map { buildPropertySpec(it as QField) }
 				.forEach { builder.addProperty(it) }

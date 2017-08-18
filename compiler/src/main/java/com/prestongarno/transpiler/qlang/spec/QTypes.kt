@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 /**
  * The base class for all components of the compilation
  */
-abstract class QType(var name: String) {
+abstract class QSchemaType(var name: String) {
 
 	var description: String = ""
 
@@ -67,7 +67,7 @@ class QString(val defValue: String = "") : QScalarType("String", String::class)
 class QCustomScalar(defValue: String = "") : QScalarType("Scalar", String::class)
 
 /** Symbol/field types */
-abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val isList: Boolean = false, val nullable: Boolean = true) : QType(name)
+abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val isList: Boolean = false, val nullable: Boolean = true) : QSchemaType(name)
 
 
 class QField(name: String, type: QDefinedType, args: List<QFieldInputArg>, val directive: QDirectiveSymbol, isList: Boolean, nullable: Boolean)
@@ -80,7 +80,7 @@ class QFieldInputArg(name: String, type: QDefinedType, val defaultValue : String
 /**
  * Base class for all "types" defined by the schema
  */
-abstract class QDefinedType(name: String) : QType(name)
+abstract class QDefinedType(name: String) : QSchemaType(name)
 
 abstract class QStatefulType(name: String, val fields: List<QSymbol>) : QDefinedType(name)
 

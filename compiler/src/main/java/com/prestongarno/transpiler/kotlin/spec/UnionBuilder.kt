@@ -1,6 +1,5 @@
 package com.prestongarno.transpiler.kotlin.spec
 
-import com.prestongarno.ktq.runtime.GraphType
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
 

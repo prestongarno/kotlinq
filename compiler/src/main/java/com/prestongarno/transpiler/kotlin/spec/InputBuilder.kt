@@ -1,8 +1,7 @@
 package com.prestongarno.transpiler.kotlin.spec
 
-import com.prestongarno.ktq.runtime.QInput
+import com.prestongarno.ktq.QInput
 import com.prestongarno.transpiler.qlang.spec.QInputType
-import com.prestongarno.transpiler.qlang.spec.QScalarType
 import com.prestongarno.transpiler.qlang.spec.QSymbol
 import com.prestongarno.transpiler.qlang.spec.QTypeDef
 import com.squareup.kotlinpoet.*

@@ -1,4 +1,4 @@
-package com.prestongarno.ktq.runtime
+package com.prestongarno.ktq
 
 internal class Payload() : ArgBuilder {
 
@@ -13,7 +13,7 @@ internal class Payload() : ArgBuilder {
 		return this
 	}
 
-	override fun build() = GraphType.Companion
+	override fun <T: QType> build(of: T): T = of
 
 	override fun toString(): String = TODO()
 
@@ -21,7 +21,7 @@ internal class Payload() : ArgBuilder {
 		return when (value) {
 			is Int, is Boolean, Float -> "$value"
 			is String -> "\"$value\""
-			is GraphType -> { TODO() }
+			is QType -> { TODO() }
 			is Enum<*> -> value.name
 			is List<*> -> value
 					.map { formatAs(it ?: "") }
@@ -36,7 +36,7 @@ interface ArgBuilder {
 
 	fun addArg(name: String, value: Any): ArgBuilder
 
-	fun build(): GraphType.Companion
+	fun <T: QType> build(of: T): T
 
 	companion object {
 		fun create(): ArgBuilder {
@@ -50,5 +50,4 @@ interface ArgBuilder {
 		val empty: ArgBuilder by lazy { Payload() }
 	}
 }
-
 

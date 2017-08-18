@@ -1,6 +1,6 @@
 package com.prestongarno.transpiler
 
-import com.prestongarno.ktq.runtime.GraphType
+import com.prestongarno.ktq.QType
 import com.prestongarno.transpiler.kotlin.spec.*
 import com.squareup.kotlinpoet.KotlinFile
 import java.io.File
@@ -13,7 +13,7 @@ class QCompiler {
 
 	fun generateKotlinTypes(comp: QCompilationUnit, rootPackageName: String = "com.prestongarno.ktq", outputPath: String? = null) {
 		val ktBuilder = KotlinFile.builder(rootPackageName, "QTypes")
-				.addStaticImport(GraphType::class, "SchemaStub")
+				.addStaticImport(QType::class, "SchemaStub")
 		createEnums(comp.enums).map { ktBuilder.addType(it) }
 
 		val typeBuilder = QTypeBuilder(rootPackageName)
