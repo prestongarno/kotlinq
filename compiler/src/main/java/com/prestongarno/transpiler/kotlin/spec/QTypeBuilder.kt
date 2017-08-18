@@ -1,28 +1,27 @@
 package com.prestongarno.transpiler.kotlin.spec
 
-import com.prestongarno.ktq.runtime.ArgBuilder
-import com.prestongarno.ktq.runtime.GraphType
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.QType
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
 
 class QTypeBuilder(val packageName: String) {
 
 	fun createType(qType: QStatefulType, packageName: String = "com.prestongarno.ktq"): TypeSpec {
-		val builder = TypeSpec.classBuilder(ClassName.invoke(packageName, qType.name))
-				.superclass(GraphType::class)
-				.addModifiers(KModifier.ABSTRACT)
-		qType.fields.map { buildPropertySpec(it as QField) }
-				.forEach { builder.addProperty(it) }
+		val builder = TypeSpec.interfaceBuilder(qType.name)
+				.addSuperinterface(QType::class)
+		qType.fields.map { buildPropertySpec(it as QField) }.also { builder.addFunctions(it) }
 		qType.fields.filter { it.args.isNotEmpty() }
 				.map { createPayloadClasses(it.args.map { it as QFieldInputArg }, it as QField) }
 				.forEach { builder.addType(it) }
 		return builder.build()
 	}
 
-	fun buildPropertySpec(field: QField): PropertySpec =
-			PropertySpec.builder(field.name, determineTypeName(field))
-					.delegate("lazy { throw SchemaStub() }")
-					.addModifiers(KModifier.OPEN, KModifier.PROTECTED)
+	fun buildPropertySpec(field: QField): FunSpec =
+			FunSpec.builder(field.name)
+					.returns(ParameterizedTypeName
+									 .get(ClassName.bestGuess("Stub"), ClassName.bestGuess(determineTypeName(field).toString())))
+					.addCode("stub<${determineTypeName(field)}>()")
 					.build()
 
 	fun createPayloadClasses(args: List<QFieldInputArg>, field: QField): TypeSpec {
@@ -52,11 +51,11 @@ class QTypeBuilder(val packageName: String) {
 	fun determineTypeName(f: QSymbol): TypeName {
 		var result: TypeName
 		if (f is QScalarType)
-			result = ClassName.bestGuess((f as QScalarType).clazz.qualifiedName!!)
+			result = ClassName.bestGuess((f as QScalarType).clazz.simpleName!!)
 		else
-			result = ClassName.invoke(packageName, f.type.name)
+			result = ClassName.bestGuess(f.type.name.split(".").last())
 
-		if (f.isList) result = ParameterizedTypeName.get(ClassName.invoke("kotlin.collections", "List"), result)
+		//if (f.isList) result = ParameterizedTypeName.get(ClassName.bestGuess("List"), result)
 		return result
 	}
 

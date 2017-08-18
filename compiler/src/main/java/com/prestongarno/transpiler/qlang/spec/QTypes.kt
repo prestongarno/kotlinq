@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 /**
  * The base class for all components of the compilation
  */
-abstract class QType(var name: String) {
+abstract class QSchemaType(var name: String) {
 
 	var description: String = ""
 
@@ -25,6 +25,7 @@ enum class Scalar(val token: String) {
 	FLOAT("Float"),
 	BOOL("Boolean"),
 	STRING("String"),
+	ID("ID"),
 	UNKNOWN("");
 
 	companion object matcher {
@@ -39,6 +40,7 @@ enum class Scalar(val token: String) {
 			FLOAT -> floatType
 			BOOL -> boolType
 			STRING -> stringType
+			Scalar.ID -> stringType
 			UNKNOWN -> customType
 		}
 
@@ -52,20 +54,20 @@ enum class Scalar(val token: String) {
 
 sealed class QScalarType(name: String, val clazz: KClass<*>) : QDefinedType(name)
 
-class QCustomScalarType(name: String) : QScalarType(name, Int::class)
+class QCustomScalarType(name: String) : QScalarType(name, String::class)
 
-class QInt(defValue: Int = 0) : QScalarType("Int", Int::class)
+class QInt(val defValue: Int = 0) : QScalarType("Int", Int::class)
 
-class QFloat(defValue: Float = 0f) : QScalarType("Float", Float::class)
+class QFloat(val defValue: Float = 0f) : QScalarType("Float", Float::class)
 
-class QBool(defValue: Boolean = false) : QScalarType("Boolean", Boolean::class)
+class QBool(val defValue: Boolean = false) : QScalarType("Boolean", Boolean::class)
 
-class QString(defValue: String = "") : QScalarType("String", String::class)
+class QString(val defValue: String = "") : QScalarType("String", String::class)
 
 class QCustomScalar(defValue: String = "") : QScalarType("Scalar", String::class)
 
 /** Symbol/field types */
-abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val isList: Boolean = false, val nullable: Boolean = true) : QType(name)
+abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val isList: Boolean = false, val nullable: Boolean = true) : QSchemaType(name)
 
 
 class QField(name: String, type: QDefinedType, args: List<QFieldInputArg>, val directive: QDirectiveSymbol, isList: Boolean, nullable: Boolean)
@@ -78,7 +80,7 @@ class QFieldInputArg(name: String, type: QDefinedType, val defaultValue : String
 /**
  * Base class for all "types" defined by the schema
  */
-abstract class QDefinedType(name: String) : QType(name)
+abstract class QDefinedType(name: String) : QSchemaType(name)
 
 abstract class QStatefulType(name: String, val fields: List<QSymbol>) : QDefinedType(name)
 

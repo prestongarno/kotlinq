@@ -16,7 +16,7 @@ class QLParser {
 
 	fun parse(ioStream: InputStream): QCompilationUnit {
 
-		val all = LinkedList<QType>()
+		val all = LinkedList<QSchemaType>()
 
 		val scanner = Scanner(ioStream)
 
