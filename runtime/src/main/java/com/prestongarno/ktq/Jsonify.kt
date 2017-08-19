@@ -21,8 +21,8 @@ internal object Jsonify {
 								 recursiveMap<QType>(
 										 entry.value as QType,
 										 Tracker.global.get(entry.value as QType) ?: HashMap<Mapper<*>, Any?>(0, 0f),
-										 split[entry.key.property.name] as Map<String, Any?>? ?: emptyMap<String, Any?>()))
-				else     -> Pair(entry.key, split.get(entry.key.property.name))
+										 split[entry.key.property?.name] as Map<String, Any?>? ?: emptyMap<String, Any?>()))
+				else     -> Pair(entry.key, split.get(entry.key.property?.name))
 			}
 		}.forEach { fields.put(it.first, it.second) }
 		return instance

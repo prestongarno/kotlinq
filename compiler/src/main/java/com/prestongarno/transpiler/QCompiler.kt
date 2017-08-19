@@ -29,7 +29,7 @@ class QCompiler {
 
 		// TODO open issue or request in kotlinpoet for creating delegated/forwarding types
 		val result = ktBuilder.build().toString().replace("ArgBuilder_by_builder", "ArgBuilder by builder")
-				.replace("> \\{\n.*stub<(.*)>\\(\\)}".toRegex(), "> = stub<$1>()")
+				.replace("> \\{\n.*stub\\((.*)\\)\n.*}".toRegex(), "> = stub($1)")
 				.replace(" = null", "? = null")
 		if (outputPath != null) File("$outputPath/${rootPackageName.replace(".","/")}/QTypes.kt").printWriter().use { out -> out.write(result) }
 	}

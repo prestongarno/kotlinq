@@ -1,13 +1,14 @@
 package com.prestongarno.ktq
 
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 /**
  * This class stores all of the information about types
  * and which ones are delegating their properties to the superinterface
  */
 internal object Tracker {
-	internal val global : MutableMap<QType, MutableMap<Mapper<*>, Any?>> = WeakHashMap()
+	internal val global : MutableMap<QType, LinkedHashMap<Mapper<*>, Any?>> = WeakHashMap()
 
 	fun <T> putProperty(inst: QType, property: Mapper<*>, value: T? = null) {
 		var values = global.get(inst)
@@ -15,11 +16,9 @@ internal object Tracker {
 			values = LinkedHashMap()
 			global.put(inst, values)
 		}
-    if(property.value != null && property.property == null) {
-      //values.put(property, LinkedList<Pair<>>)
-    }
 		values.put(property, value)
 	}
+
 
 	fun onResult(inst: QType, raw: String) {
 		println("On Result received: $raw")

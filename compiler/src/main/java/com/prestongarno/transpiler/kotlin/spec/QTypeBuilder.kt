@@ -5,6 +5,14 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
 
+/* EXAMPLE:::
+interface Employee : Person {
+  fun salary() = stub<BigInteger>()
+  fun <T : Person> boss(init: () -> T) = stub(init)
+  fun <U> boss(of: KCallable<Stub<U>>) = stub<Person, U>("boss", of)
+}
+*/
+
 class QTypeBuilder(val packageName: String) {
 
 	fun createType(qType: QStatefulType, packageName: String = "com.prestongarno.ktq"): TypeSpec {
@@ -21,7 +29,9 @@ class QTypeBuilder(val packageName: String) {
 			FunSpec.builder(field.name)
 					.returns(ParameterizedTypeName
 									 .get(ClassName.bestGuess("Stub"), ClassName.bestGuess(determineTypeName(field).toString())))
-					.addCode("stub<${determineTypeName(field)}>()")
+					.addCode(CodeBlock.builder()
+							.addStatement("stub(\"${field.name}\")")
+							.build())
 					.build()
 
 	fun createPayloadClasses(args: List<QFieldInputArg>, field: QField): TypeSpec {
@@ -35,7 +45,7 @@ class QTypeBuilder(val packageName: String) {
 						.build())
 				.addSuperinterface(ClassName.invoke("", "ArgBuilder_by_builder"))
 
-		args.map { ceateBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName) }
+		args.map { createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName) }
 				.forEach { argBuilderSpec.addFun(it) }
 		return argBuilderSpec.build()
 	}
