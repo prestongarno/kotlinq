@@ -2,47 +2,32 @@ package com.prestongarno.ktq
 
 import org.jetbrains.annotations.Nullable
 import kotlin.reflect.*
-import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.superclasses
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "USELESS_CAST")
 interface QType {
-  fun <T> stub(name: String): Stub<T> = PrimitiveStubAdapter<T>(name, this) as Stub<T>
 
-  fun <T> nullableStub(name: String) = NullablePrimitiveStubAdapter<@Nullable T>(name, this) as NullableStub<@Nullable T>
+  fun <T> stub() = PrimitiveStubAdapter<T>(this) as Stub<T>
 
-  fun <T : QType> stub(name: String, of: () -> T) : Stub<T> {
-    return StubAdapter(name, of, this) as Stub<T>
-  }
+  fun <T> nullableStub() = NullablePrimitiveStubAdapter<@Nullable T>(this) as NullableStub<@Nullable T>
 
-  fun <T : QType> nullableStub(name: String, of: () -> T) = NullStubAdapter(name, of, this) as NullableStub<T>
+  fun <T : QType> stub(of: () -> T) = StubAdapter(of, this) as Stub<T>
 
-  fun <T: QType> nop(of: () -> T) : T {
-    val invoke = of.invoke()
-    return invoke
-  }
+  fun <T : QType> nullableStub(of: () -> T) = NullStubAdapter(of, this) as NullableStub<T>
 
-  companion object {
-    inline fun <reified T: QType> none(inst: QType, type: T) : T {
-      return type
-    }
-  }
+  fun <T: QType, U> stub(name: String, mapper: KCallable<Stub<U>>) : Stub<U>
+      = EmptyStubAdapter<U>(name, mapper, this) as Stub<U>
+
+  fun <T: QType, U> nullableStub(name: String, mapper: KCallable<Stub<U>>) : NullableStub<U>
+      = EmptyNullStubAdapter<U>(name, mapper, this) as NullableStub<U>
 }
 
 interface Stub<T> {
-
-  fun <U> mapDirect(of: (T) -> Stub<U>) : Stub<U>
-
   operator fun getValue(inst: QType, property: KProperty<*>): T
 
   operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<T>
 }
 
 interface NullableStub<T> {
-
-  fun <U> mapDirect(of: (T) -> NullableStub<U>): NullableStub<U>
-
   operator fun getValue(inst: QType, property: KProperty<*>): T?
 
   operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T>

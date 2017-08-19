@@ -5,6 +5,14 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
 
+/* EXAMPLE:::
+interface Employee : Person {
+  fun salary() = stub<BigInteger>()
+  fun <T : Person> boss(init: () -> T) = stub(init)
+  fun <U> boss(of: KCallable<Stub<U>>) = stub<Person, U>("boss", of)
+}
+*/
+
 class QTypeBuilder(val packageName: String) {
 
 	fun createType(qType: QStatefulType, packageName: String = "com.prestongarno.ktq"): TypeSpec {

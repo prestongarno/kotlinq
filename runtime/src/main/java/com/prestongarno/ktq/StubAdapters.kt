@@ -1,39 +1,23 @@
 package com.prestongarno.ktq
 
+import kotlin.reflect.KCallable
+import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.superclasses
-import kotlin.reflect.jvm.reflect
 
-internal class StubAdapter<T: QType> internal constructor(val fieldName: String, private val init: () -> T, inst: QType)
-	: Mapper<T>(init.invoke(), null), Stub<T> {
-
-  init {
-    Tracker.putProperty(inst, this, this.value)
-  }
-
-  override fun <U> mapDirect(of: (T) -> Stub<U>): Stub<U> {
-    return of.invoke(this.value!!)
-  }
+internal open class StubAdapter<T : QType> (init: () -> T?, inst: QType)
+  : Mapper<T>(inst, init.invoke(), null), Stub<T> {
 
   override operator fun getValue(inst: QType, property: KProperty<*>): T = this.value
+      ?: throw IllegalStateException("Expected non-null value for '${property.name}', but was null")
 
-	override operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
+  override operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
     this.property = property
-		return this
-	}
+    return this
+  }
 }
 
-internal class NullStubAdapter<T> internal constructor(val fieldName: String, private val init: () -> T, inst: QType)
-  : Mapper<T>(init.invoke(), null), NullableStub<T> {
-
-  init {
-    Tracker.putProperty(inst, this, this.value)
-  }
-
-  override fun <U> mapDirect(of: (T) -> NullableStub<U>): NullableStub<U> {
-    return of.invoke(this.value!!)
-  }
+internal open class NullStubAdapter<T> constructor(private val init: () -> T, inst: QType)
+  : Mapper<T>(inst, init.invoke(), null), NullableStub<T> {
 
   override fun getValue(inst: QType, property: KProperty<*>): T? {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -42,44 +26,53 @@ internal class NullStubAdapter<T> internal constructor(val fieldName: String, pr
   override operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
     this.property = property
     return this
-	}
+  }
 }
 
-internal class PrimitiveStubAdapter<T>(val fieldName: String, inst: QType) : Mapper<T>(null), Stub<T> {
-
-  init {
-    Tracker.putProperty(inst, this, this.value)
-  }
+internal class PrimitiveStubAdapter<T>(inst: QType) : Mapper<T>(inst), Stub<T> {
 
   override operator fun getValue(inst: QType, property: KProperty<*>): T = this.value
+      ?: throw IllegalStateException("Expected non-null value for '${property.name}', but was null")
 
-  override fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
-    this.property = property
-    return this
-  }
+  override fun <R : QType> provideDelegate(inst: R, property: KProperty<*>)
+      : Stub<T> = apply { this.property = property }
+}
 
-  override fun <U> mapDirect(of: (T) -> Stub<U>): Stub<U> {
-    TODO("not supported") //To change body of created functions use File | Settings | File Templates.
-  }
+internal class NullablePrimitiveStubAdapter<T>(inst: QType) : Mapper<T>(inst), NullableStub<T> {
+
+  override fun getValue(inst: QType, property: KProperty<*>): T? = this.value
+
+  override fun <R : QType> provideDelegate(inst: R, property: KProperty<*>)
+      : NullableStub<T> = apply { this.property = property }
 
 }
 
-internal class NullablePrimitiveStubAdapter<T>(val fieldName: String, inst: QType) : Mapper<T>(null), NullableStub<T> {
 
-  init {
-    Tracker.putProperty(inst, this, this.value)
-  }
+internal class EmptyStubAdapter<U>(val fieldName: String, val call: KCallable<Stub<U>>, inst: QType)
+  : Mapper<U>(inst), Stub<U> {
 
-  override fun getValue(inst: QType, property: KProperty<*>): T = this.value
+  init { println("${inst::class.simpleName} ::mapping:: ${fieldName} -> ${call.name}") }
 
-  override fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
-    this.property = property
-    Tracker.putProperty(inst, this, this.value)
-    return this
-  }
+  override fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<U> = apply { this.property = property }
 
-  override fun <U> mapDirect(of: (T) -> NullableStub<U>): NullableStub<U> {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
+  override operator fun getValue(inst: QType, property: KProperty<*>): U = TODO()//this.value
+      //?: throw IllegalStateException("Expected non-null value for '${property.name}', but was null")
+
+  override fun toString(): String = "EmptyStubAdapter for fields '$fieldName' of the type $call"
 
 }
+
+internal class EmptyNullStubAdapter<U>(val fieldName: String, val call: KCallable<Stub<U>>, inst: QType)
+  : Mapper<U>(inst), NullableStub<U> {
+
+  init { println("${inst::class.simpleName} ::mapping:: ${fieldName} -> ${call.name}") }
+
+  override fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<U> = apply { this.property = property }
+
+  override operator fun getValue(inst: QType, property: KProperty<*>): U? = TODO()//this.value
+  //?: throw IllegalStateException("Expected non-null value for '${property.name}', but was null")
+
+  override fun toString(): String = "EmptyStubAdapter for fields '$fieldName' of the type $call"
+
+}
+
