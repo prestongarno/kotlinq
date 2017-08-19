@@ -21,7 +21,9 @@ class QTypeBuilder(val packageName: String) {
 			FunSpec.builder(field.name)
 					.returns(ParameterizedTypeName
 									 .get(ClassName.bestGuess("Stub"), ClassName.bestGuess(determineTypeName(field).toString())))
-					.addCode("stub<${determineTypeName(field)}>()")
+					.addCode(CodeBlock.builder()
+							.addStatement("stub(\"${field.name}\")")
+							.build())
 					.build()
 
 	fun createPayloadClasses(args: List<QFieldInputArg>, field: QField): TypeSpec {
@@ -35,7 +37,7 @@ class QTypeBuilder(val packageName: String) {
 						.build())
 				.addSuperinterface(ClassName.invoke("", "ArgBuilder_by_builder"))
 
-		args.map { ceateBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName) }
+		args.map { createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName) }
 				.forEach { argBuilderSpec.addFun(it) }
 		return argBuilderSpec.build()
 	}

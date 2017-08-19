@@ -331,101 +331,101 @@ enum class CommentAuthorAssociation {
 }
 
 interface UserEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<User> = stub<User>()
+  fun node(): Stub<User> = stub("node")
 }
 
 interface UserConnection : QType {
-  fun edges(): Stub<UserEdge> = stub<UserEdge>()
+  fun edges(): Stub<UserEdge> = stub("edges")
 
-  fun nodes(): Stub<User> = stub<User>()
+  fun nodes(): Stub<User> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface User : QType {
-  fun avatarUrl(): Stub<URI> = stub<URI>()
+  fun avatarUrl(): Stub<URI> = stub("avatarUrl")
 
-  fun bio(): Stub<String> = stub<String>()
+  fun bio(): Stub<String> = stub("bio")
 
-  fun bioHTML(): Stub<HTML> = stub<HTML>()
+  fun bioHTML(): Stub<HTML> = stub("bioHTML")
 
-  fun company(): Stub<String> = stub<String>()
+  fun company(): Stub<String> = stub("company")
 
-  fun companyHTML(): Stub<HTML> = stub<HTML>()
+  fun companyHTML(): Stub<HTML> = stub("companyHTML")
 
-  fun contributedRepositories(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun contributedRepositories(): Stub<RepositoryConnection> = stub("contributedRepositories")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun email(): Stub<String> = stub<String>()
+  fun email(): Stub<String> = stub("email")
 
-  fun followers(): Stub<FollowerConnection> = stub<FollowerConnection>()
+  fun followers(): Stub<FollowerConnection> = stub("followers")
 
-  fun following(): Stub<FollowingConnection> = stub<FollowingConnection>()
+  fun following(): Stub<FollowingConnection> = stub("following")
 
-  fun gist(): Stub<Gist> = stub<Gist>()
+  fun gist(): Stub<Gist> = stub("gist")
 
-  fun gists(): Stub<GistConnection> = stub<GistConnection>()
+  fun gists(): Stub<GistConnection> = stub("gists")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isBountyHunter(): Stub<Boolean> = stub<Boolean>()
+  fun isBountyHunter(): Stub<Boolean> = stub("isBountyHunter")
 
-  fun isCampusExpert(): Stub<Boolean> = stub<Boolean>()
+  fun isCampusExpert(): Stub<Boolean> = stub("isCampusExpert")
 
-  fun isDeveloperProgramMember(): Stub<Boolean> = stub<Boolean>()
+  fun isDeveloperProgramMember(): Stub<Boolean> = stub("isDeveloperProgramMember")
 
-  fun isEmployee(): Stub<Boolean> = stub<Boolean>()
+  fun isEmployee(): Stub<Boolean> = stub("isEmployee")
 
-  fun isHireable(): Stub<Boolean> = stub<Boolean>()
+  fun isHireable(): Stub<Boolean> = stub("isHireable")
 
-  fun isInvoiced(): Stub<Boolean> = stub<Boolean>()
+  fun isInvoiced(): Stub<Boolean> = stub("isInvoiced")
 
-  fun isSiteAdmin(): Stub<Boolean> = stub<Boolean>()
+  fun isSiteAdmin(): Stub<Boolean> = stub("isSiteAdmin")
 
-  fun isViewer(): Stub<Boolean> = stub<Boolean>()
+  fun isViewer(): Stub<Boolean> = stub("isViewer")
 
-  fun issues(): Stub<IssueConnection> = stub<IssueConnection>()
+  fun issues(): Stub<IssueConnection> = stub("issues")
 
-  fun location(): Stub<String> = stub<String>()
+  fun location(): Stub<String> = stub("location")
 
-  fun login(): Stub<String> = stub<String>()
+  fun login(): Stub<String> = stub("login")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun organization(): Stub<Organization> = stub<Organization>()
+  fun organization(): Stub<Organization> = stub("organization")
 
-  fun organizations(): Stub<OrganizationConnection> = stub<OrganizationConnection>()
+  fun organizations(): Stub<OrganizationConnection> = stub("organizations")
 
-  fun pinnedRepositories(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun pinnedRepositories(): Stub<RepositoryConnection> = stub("pinnedRepositories")
 
-  fun pullRequests(): Stub<PullRequestConnection> = stub<PullRequestConnection>()
+  fun pullRequests(): Stub<PullRequestConnection> = stub("pullRequests")
 
-  fun repositories(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun repositories(): Stub<RepositoryConnection> = stub("repositories")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun starredRepositories(): Stub<StarredRepositoryConnection> = stub<StarredRepositoryConnection>()
+  fun starredRepositories(): Stub<StarredRepositoryConnection> = stub("starredRepositories")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanFollow(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanFollow(): Stub<Boolean> = stub("viewerCanFollow")
 
-  fun viewerIsFollowing(): Stub<Boolean> = stub<Boolean>()
+  fun viewerIsFollowing(): Stub<Boolean> = stub("viewerIsFollowing")
 
-  fun watching(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun watching(): Stub<RepositoryConnection> = stub("watching")
 
-  fun websiteUrl(): Stub<URI> = stub<URI>()
+  fun websiteUrl(): Stub<URI> = stub("websiteUrl")
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun size(value: Int): AvatarUrlArgs {
@@ -763,183 +763,183 @@ interface User : QType {
 }
 
 interface UpdateTopicsPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun invalidTopicNames(): Stub<String> = stub<String>()
+  fun invalidTopicNames(): Stub<String> = stub("invalidTopicNames")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 }
 
 interface UpdateSubscriptionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun subscribable(): Stub<Subscribable> = stub<Subscribable>()
+  fun subscribable(): Stub<Subscribable> = stub("subscribable")
 }
 
 interface UpdatePullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun pullRequestReview(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun pullRequestReview(): Stub<PullRequestReview> = stub("pullRequestReview")
 }
 
 interface UpdatePullRequestReviewCommentPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun pullRequestReviewComment(): Stub<PullRequestReviewComment> = stub<PullRequestReviewComment>()
+  fun pullRequestReviewComment(): Stub<PullRequestReviewComment> = stub("pullRequestReviewComment")
 }
 
 interface UpdateProjectPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 }
 
 interface UpdateProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun projectColumn(): Stub<ProjectColumn> = stub<ProjectColumn>()
+  fun projectColumn(): Stub<ProjectColumn> = stub("projectColumn")
 }
 
 interface UpdateProjectCardPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun projectCard(): Stub<ProjectCard> = stub<ProjectCard>()
+  fun projectCard(): Stub<ProjectCard> = stub("projectCard")
 }
 
 interface UnsubscribedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun subscribable(): Stub<Subscribable> = stub<Subscribable>()
+  fun subscribable(): Stub<Subscribable> = stub("subscribable")
 }
 
 interface UnlockedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun lockable(): Stub<Lockable> = stub<Lockable>()
+  fun lockable(): Stub<Lockable> = stub("lockable")
 }
 
 interface UnlabeledEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun label(): Stub<Label> = stub<Label>()
+  fun label(): Stub<Label> = stub("label")
 
-  fun labelable(): Stub<Labelable> = stub<Labelable>()
+  fun labelable(): Stub<Labelable> = stub("labelable")
 }
 
 interface UnknownSignature : QType {
-  fun email(): Stub<String> = stub<String>()
+  fun email(): Stub<String> = stub("email")
 
-  fun isValid(): Stub<Boolean> = stub<Boolean>()
+  fun isValid(): Stub<Boolean> = stub("isValid")
 
-  fun payload(): Stub<String> = stub<String>()
+  fun payload(): Stub<String> = stub("payload")
 
-  fun signature(): Stub<String> = stub<String>()
+  fun signature(): Stub<String> = stub("signature")
 
-  fun signer(): Stub<User> = stub<User>()
+  fun signer(): Stub<User> = stub("signer")
 
-  fun state(): Stub<GitSignatureState> = stub<GitSignatureState>()
+  fun state(): Stub<GitSignatureState> = stub("state")
 }
 
 interface UnassignedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun assignable(): Stub<Assignable> = stub<Assignable>()
+  fun assignable(): Stub<Assignable> = stub("assignable")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 }
 
 interface TreeEntry : QType {
-  fun mode(): Stub<Int> = stub<Int>()
+  fun mode(): Stub<Int> = stub("mode")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun objectVal(): Stub<GitObject> = stub<GitObject>()
+  fun objectVal(): Stub<GitObject> = stub("objectVal")
 
-  fun oid(): Stub<GitObjectID> = stub<GitObjectID>()
+  fun oid(): Stub<GitObjectID> = stub("oid")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun type(): Stub<String> = stub<String>()
+  fun type(): Stub<String> = stub("type")
 }
 
 interface Tree : QType {
-  fun abbreviatedOid(): Stub<String> = stub<String>()
+  fun abbreviatedOid(): Stub<String> = stub("abbreviatedOid")
 
-  fun commitResourcePath(): Stub<URI> = stub<URI>()
+  fun commitResourcePath(): Stub<URI> = stub("commitResourcePath")
 
-  fun commitUrl(): Stub<URI> = stub<URI>()
+  fun commitUrl(): Stub<URI> = stub("commitUrl")
 
-  fun entries(): Stub<TreeEntry> = stub<TreeEntry>()
+  fun entries(): Stub<TreeEntry> = stub("entries")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun oid(): Stub<GitObjectID> = stub<GitObjectID>()
+  fun oid(): Stub<GitObjectID> = stub("oid")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 }
 
 interface Topic : QType {
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun relatedTopics(): Stub<Topic> = stub<Topic>()
+  fun relatedTopics(): Stub<Topic> = stub("relatedTopics")
 }
 
 interface TeamEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Team> = stub<Team>()
+  fun node(): Stub<Team> = stub("node")
 }
 
 interface TeamConnection : QType {
-  fun edges(): Stub<TeamEdge> = stub<TeamEdge>()
+  fun edges(): Stub<TeamEdge> = stub("edges")
 
-  fun nodes(): Stub<Team> = stub<Team>()
+  fun nodes(): Stub<Team> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface Team : QType {
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun editTeamResourcePath(): Stub<URI> = stub<URI>()
+  fun editTeamResourcePath(): Stub<URI> = stub("editTeamResourcePath")
 
-  fun editTeamUrl(): Stub<URI> = stub<URI>()
+  fun editTeamUrl(): Stub<URI> = stub("editTeamUrl")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun invitations(): Stub<OrganizationInvitationConnection> = stub<OrganizationInvitationConnection>()
+  fun invitations(): Stub<OrganizationInvitationConnection> = stub("invitations")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun organization(): Stub<Organization> = stub<Organization>()
+  fun organization(): Stub<Organization> = stub("organization")
 
-  fun privacy(): Stub<TeamPrivacy> = stub<TeamPrivacy>()
+  fun privacy(): Stub<TeamPrivacy> = stub("privacy")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun slug(): Stub<String> = stub<String>()
+  fun slug(): Stub<String> = stub("slug")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
   class InvitationsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): InvitationsArgs {
@@ -961,79 +961,79 @@ interface Team : QType {
 }
 
 interface Tag : QType {
-  fun abbreviatedOid(): Stub<String> = stub<String>()
+  fun abbreviatedOid(): Stub<String> = stub("abbreviatedOid")
 
-  fun commitResourcePath(): Stub<URI> = stub<URI>()
+  fun commitResourcePath(): Stub<URI> = stub("commitResourcePath")
 
-  fun commitUrl(): Stub<URI> = stub<URI>()
+  fun commitUrl(): Stub<URI> = stub("commitUrl")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun message(): Stub<String> = stub<String>()
+  fun message(): Stub<String> = stub("message")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun oid(): Stub<GitObjectID> = stub<GitObjectID>()
+  fun oid(): Stub<GitObjectID> = stub("oid")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun tagger(): Stub<GitActor> = stub<GitActor>()
+  fun tagger(): Stub<GitActor> = stub("tagger")
 
-  fun target(): Stub<GitObject> = stub<GitObject>()
+  fun target(): Stub<GitObject> = stub("target")
 }
 
 interface SuggestedReviewer : QType {
-  fun isAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun isAuthor(): Stub<Boolean> = stub("isAuthor")
 
-  fun isCommenter(): Stub<Boolean> = stub<Boolean>()
+  fun isCommenter(): Stub<Boolean> = stub("isCommenter")
 
-  fun reviewer(): Stub<User> = stub<User>()
+  fun reviewer(): Stub<User> = stub("reviewer")
 }
 
 interface SubscribedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun subscribable(): Stub<Subscribable> = stub<Subscribable>()
+  fun subscribable(): Stub<Subscribable> = stub("subscribable")
 }
 
 interface SubmitPullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun pullRequestReview(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun pullRequestReview(): Stub<PullRequestReview> = stub("pullRequestReview")
 }
 
 interface StatusContext : QType {
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun context(): Stub<String> = stub<String>()
+  fun context(): Stub<String> = stub("context")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun creator(): Stub<Actor> = stub<Actor>()
+  fun creator(): Stub<Actor> = stub("creator")
 
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun state(): Stub<StatusState> = stub<StatusState>()
+  fun state(): Stub<StatusState> = stub("state")
 
-  fun targetUrl(): Stub<URI> = stub<URI>()
+  fun targetUrl(): Stub<URI> = stub("targetUrl")
 }
 
 interface Status : QType {
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun context(): Stub<StatusContext> = stub<StatusContext>()
+  fun context(): Stub<StatusContext> = stub("context")
 
-  fun contexts(): Stub<StatusContext> = stub<StatusContext>()
+  fun contexts(): Stub<StatusContext> = stub("contexts")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun state(): Stub<StatusState> = stub<StatusState>()
+  fun state(): Stub<StatusState> = stub("state")
 
   class ContextArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun name(value: String): ContextArgs {
@@ -1043,401 +1043,401 @@ interface Status : QType {
 }
 
 interface StarredRepositoryEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Repository> = stub<Repository>()
+  fun node(): Stub<Repository> = stub("node")
 
-  fun starredAt(): Stub<DateTime> = stub<DateTime>()
+  fun starredAt(): Stub<DateTime> = stub("starredAt")
 }
 
 interface StarredRepositoryConnection : QType {
-  fun edges(): Stub<StarredRepositoryEdge> = stub<StarredRepositoryEdge>()
+  fun edges(): Stub<StarredRepositoryEdge> = stub("edges")
 
-  fun nodes(): Stub<Repository> = stub<Repository>()
+  fun nodes(): Stub<Repository> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface StargazerEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<User> = stub<User>()
+  fun node(): Stub<User> = stub("node")
 
-  fun starredAt(): Stub<DateTime> = stub<DateTime>()
+  fun starredAt(): Stub<DateTime> = stub("starredAt")
 }
 
 interface StargazerConnection : QType {
-  fun edges(): Stub<StargazerEdge> = stub<StargazerEdge>()
+  fun edges(): Stub<StargazerEdge> = stub("edges")
 
-  fun nodes(): Stub<User> = stub<User>()
+  fun nodes(): Stub<User> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface SmimeSignature : QType {
-  fun email(): Stub<String> = stub<String>()
+  fun email(): Stub<String> = stub("email")
 
-  fun isValid(): Stub<Boolean> = stub<Boolean>()
+  fun isValid(): Stub<Boolean> = stub("isValid")
 
-  fun payload(): Stub<String> = stub<String>()
+  fun payload(): Stub<String> = stub("payload")
 
-  fun signature(): Stub<String> = stub<String>()
+  fun signature(): Stub<String> = stub("signature")
 
-  fun signer(): Stub<User> = stub<User>()
+  fun signer(): Stub<User> = stub("signer")
 
-  fun state(): Stub<GitSignatureState> = stub<GitSignatureState>()
+  fun state(): Stub<GitSignatureState> = stub("state")
 }
 
 interface SearchResultItemEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<SearchResultItem> = stub<SearchResultItem>()
+  fun node(): Stub<SearchResultItem> = stub("node")
 }
 
 interface SearchResultItemConnection : QType {
-  fun codeCount(): Stub<Int> = stub<Int>()
+  fun codeCount(): Stub<Int> = stub("codeCount")
 
-  fun edges(): Stub<SearchResultItemEdge> = stub<SearchResultItemEdge>()
+  fun edges(): Stub<SearchResultItemEdge> = stub("edges")
 
-  fun issueCount(): Stub<Int> = stub<Int>()
+  fun issueCount(): Stub<Int> = stub("issueCount")
 
-  fun nodes(): Stub<SearchResultItem> = stub<SearchResultItem>()
+  fun nodes(): Stub<SearchResultItem> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun repositoryCount(): Stub<Int> = stub<Int>()
+  fun repositoryCount(): Stub<Int> = stub("repositoryCount")
 
-  fun userCount(): Stub<Int> = stub<Int>()
+  fun userCount(): Stub<Int> = stub("userCount")
 
-  fun wikiCount(): Stub<Int> = stub<Int>()
+  fun wikiCount(): Stub<Int> = stub("wikiCount")
 }
 
 interface ReviewRequestedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun subject(): Stub<User> = stub<User>()
+  fun subject(): Stub<User> = stub("subject")
 }
 
 interface ReviewRequestRemovedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun subject(): Stub<User> = stub<User>()
+  fun subject(): Stub<User> = stub("subject")
 }
 
 interface ReviewRequestEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<ReviewRequest> = stub<ReviewRequest>()
+  fun node(): Stub<ReviewRequest> = stub("node")
 }
 
 interface ReviewRequestConnection : QType {
-  fun edges(): Stub<ReviewRequestEdge> = stub<ReviewRequestEdge>()
+  fun edges(): Stub<ReviewRequestEdge> = stub("edges")
 
-  fun nodes(): Stub<ReviewRequest> = stub<ReviewRequest>()
+  fun nodes(): Stub<ReviewRequest> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ReviewRequest : QType {
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun reviewer(): Stub<User> = stub<User>()
+  fun reviewer(): Stub<User> = stub("reviewer")
 }
 
 interface ReviewDismissedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun message(): Stub<String> = stub<String>()
+  fun message(): Stub<String> = stub("message")
 
-  fun messageHtml(): Stub<HTML> = stub<HTML>()
+  fun messageHtml(): Stub<HTML> = stub("messageHtml")
 
-  fun previousReviewState(): Stub<PullRequestReviewState> = stub<PullRequestReviewState>()
+  fun previousReviewState(): Stub<PullRequestReviewState> = stub("previousReviewState")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun pullRequestCommit(): Stub<PullRequestCommit> = stub<PullRequestCommit>()
+  fun pullRequestCommit(): Stub<PullRequestCommit> = stub("pullRequestCommit")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun review(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun review(): Stub<PullRequestReview> = stub("review")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface ReviewDismissalAllowanceEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<ReviewDismissalAllowance> = stub<ReviewDismissalAllowance>()
+  fun node(): Stub<ReviewDismissalAllowance> = stub("node")
 }
 
 interface ReviewDismissalAllowanceConnection : QType {
-  fun edges(): Stub<ReviewDismissalAllowanceEdge> = stub<ReviewDismissalAllowanceEdge>()
+  fun edges(): Stub<ReviewDismissalAllowanceEdge> = stub("edges")
 
-  fun nodes(): Stub<ReviewDismissalAllowance> = stub<ReviewDismissalAllowance>()
+  fun nodes(): Stub<ReviewDismissalAllowance> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ReviewDismissalAllowance : QType {
-  fun actor(): Stub<ReviewDismissalAllowanceActor> = stub<ReviewDismissalAllowanceActor>()
+  fun actor(): Stub<ReviewDismissalAllowanceActor> = stub("actor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun protectedBranch(): Stub<ProtectedBranch> = stub<ProtectedBranch>()
+  fun protectedBranch(): Stub<ProtectedBranch> = stub("protectedBranch")
 }
 
 interface RequestReviewsPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun requestedReviewersEdge(): Stub<UserEdge> = stub<UserEdge>()
+  fun requestedReviewersEdge(): Stub<UserEdge> = stub("requestedReviewersEdge")
 }
 
 interface RepositoryTopicEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<RepositoryTopic> = stub<RepositoryTopic>()
+  fun node(): Stub<RepositoryTopic> = stub("node")
 }
 
 interface RepositoryTopicConnection : QType {
-  fun edges(): Stub<RepositoryTopicEdge> = stub<RepositoryTopicEdge>()
+  fun edges(): Stub<RepositoryTopicEdge> = stub("edges")
 
-  fun nodes(): Stub<RepositoryTopic> = stub<RepositoryTopic>()
+  fun nodes(): Stub<RepositoryTopic> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface RepositoryTopic : QType {
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun topic(): Stub<Topic> = stub<Topic>()
+  fun topic(): Stub<Topic> = stub("topic")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface RepositoryInvitationRepository : QType {
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun descriptionHTML(): Stub<HTML> = stub<HTML>()
+  fun descriptionHTML(): Stub<HTML> = stub("descriptionHTML")
 
-  fun hasIssuesEnabled(): Stub<Boolean> = stub<Boolean>()
+  fun hasIssuesEnabled(): Stub<Boolean> = stub("hasIssuesEnabled")
 
-  fun hasWikiEnabled(): Stub<Boolean> = stub<Boolean>()
+  fun hasWikiEnabled(): Stub<Boolean> = stub("hasWikiEnabled")
 
-  fun homepageUrl(): Stub<URI> = stub<URI>()
+  fun homepageUrl(): Stub<URI> = stub("homepageUrl")
 
-  fun isFork(): Stub<Boolean> = stub<Boolean>()
+  fun isFork(): Stub<Boolean> = stub("isFork")
 
-  fun isLocked(): Stub<Boolean> = stub<Boolean>()
+  fun isLocked(): Stub<Boolean> = stub("isLocked")
 
-  fun isMirror(): Stub<Boolean> = stub<Boolean>()
+  fun isMirror(): Stub<Boolean> = stub("isMirror")
 
-  fun isPrivate(): Stub<Boolean> = stub<Boolean>()
+  fun isPrivate(): Stub<Boolean> = stub("isPrivate")
 
-  fun license(): Stub<String> = stub<String>()
+  fun license(): Stub<String> = stub("license")
 
-  fun lockReason(): Stub<RepositoryLockReason> = stub<RepositoryLockReason>()
+  fun lockReason(): Stub<RepositoryLockReason> = stub("lockReason")
 
-  fun mirrorUrl(): Stub<URI> = stub<URI>()
+  fun mirrorUrl(): Stub<URI> = stub("mirrorUrl")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun nameWithOwner(): Stub<String> = stub<String>()
+  fun nameWithOwner(): Stub<String> = stub("nameWithOwner")
 
-  fun owner(): Stub<RepositoryOwner> = stub<RepositoryOwner>()
+  fun owner(): Stub<RepositoryOwner> = stub("owner")
 
-  fun pushedAt(): Stub<DateTime> = stub<DateTime>()
+  fun pushedAt(): Stub<DateTime> = stub("pushedAt")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface RepositoryInvitation : QType {
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun invitee(): Stub<User> = stub<User>()
+  fun invitee(): Stub<User> = stub("invitee")
 
-  fun inviter(): Stub<User> = stub<User>()
+  fun inviter(): Stub<User> = stub("inviter")
 
-  fun repository(): Stub<RepositoryInvitationRepository> = stub<RepositoryInvitationRepository>()
+  fun repository(): Stub<RepositoryInvitationRepository> = stub("repository")
 }
 
 interface RepositoryEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Repository> = stub<Repository>()
+  fun node(): Stub<Repository> = stub("node")
 }
 
 interface RepositoryConnection : QType {
-  fun edges(): Stub<RepositoryEdge> = stub<RepositoryEdge>()
+  fun edges(): Stub<RepositoryEdge> = stub("edges")
 
-  fun nodes(): Stub<Repository> = stub<Repository>()
+  fun nodes(): Stub<Repository> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 
-  fun totalDiskUsage(): Stub<Int> = stub<Int>()
+  fun totalDiskUsage(): Stub<Int> = stub("totalDiskUsage")
 }
 
 interface Repository : QType {
-  fun codeOfConduct(): Stub<CodeOfConduct> = stub<CodeOfConduct>()
+  fun codeOfConduct(): Stub<CodeOfConduct> = stub("codeOfConduct")
 
-  fun commitComments(): Stub<CommitCommentConnection> = stub<CommitCommentConnection>()
+  fun commitComments(): Stub<CommitCommentConnection> = stub("commitComments")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun defaultBranchRef(): Stub<Ref> = stub<Ref>()
+  fun defaultBranchRef(): Stub<Ref> = stub("defaultBranchRef")
 
-  fun deployments(): Stub<DeploymentConnection> = stub<DeploymentConnection>()
+  fun deployments(): Stub<DeploymentConnection> = stub("deployments")
 
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun descriptionHTML(): Stub<HTML> = stub<HTML>()
+  fun descriptionHTML(): Stub<HTML> = stub("descriptionHTML")
 
-  fun diskUsage(): Stub<Int> = stub<Int>()
+  fun diskUsage(): Stub<Int> = stub("diskUsage")
 
-  fun forks(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun forks(): Stub<RepositoryConnection> = stub("forks")
 
-  fun hasIssuesEnabled(): Stub<Boolean> = stub<Boolean>()
+  fun hasIssuesEnabled(): Stub<Boolean> = stub("hasIssuesEnabled")
 
-  fun hasWikiEnabled(): Stub<Boolean> = stub<Boolean>()
+  fun hasWikiEnabled(): Stub<Boolean> = stub("hasWikiEnabled")
 
-  fun homepageUrl(): Stub<URI> = stub<URI>()
+  fun homepageUrl(): Stub<URI> = stub("homepageUrl")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isFork(): Stub<Boolean> = stub<Boolean>()
+  fun isFork(): Stub<Boolean> = stub("isFork")
 
-  fun isLocked(): Stub<Boolean> = stub<Boolean>()
+  fun isLocked(): Stub<Boolean> = stub("isLocked")
 
-  fun isMirror(): Stub<Boolean> = stub<Boolean>()
+  fun isMirror(): Stub<Boolean> = stub("isMirror")
 
-  fun isPrivate(): Stub<Boolean> = stub<Boolean>()
+  fun isPrivate(): Stub<Boolean> = stub("isPrivate")
 
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun issueOrPullRequest(): Stub<IssueOrPullRequest> = stub<IssueOrPullRequest>()
+  fun issueOrPullRequest(): Stub<IssueOrPullRequest> = stub("issueOrPullRequest")
 
-  fun issues(): Stub<IssueConnection> = stub<IssueConnection>()
+  fun issues(): Stub<IssueConnection> = stub("issues")
 
-  fun label(): Stub<Label> = stub<Label>()
+  fun label(): Stub<Label> = stub("label")
 
-  fun labels(): Stub<LabelConnection> = stub<LabelConnection>()
+  fun labels(): Stub<LabelConnection> = stub("labels")
 
-  fun languages(): Stub<LanguageConnection> = stub<LanguageConnection>()
+  fun languages(): Stub<LanguageConnection> = stub("languages")
 
-  fun license(): Stub<String> = stub<String>()
+  fun license(): Stub<String> = stub("license")
 
-  fun lockReason(): Stub<RepositoryLockReason> = stub<RepositoryLockReason>()
+  fun lockReason(): Stub<RepositoryLockReason> = stub("lockReason")
 
-  fun mentionableUsers(): Stub<UserConnection> = stub<UserConnection>()
+  fun mentionableUsers(): Stub<UserConnection> = stub("mentionableUsers")
 
-  fun milestone(): Stub<Milestone> = stub<Milestone>()
+  fun milestone(): Stub<Milestone> = stub("milestone")
 
-  fun milestones(): Stub<MilestoneConnection> = stub<MilestoneConnection>()
+  fun milestones(): Stub<MilestoneConnection> = stub("milestones")
 
-  fun mirrorUrl(): Stub<URI> = stub<URI>()
+  fun mirrorUrl(): Stub<URI> = stub("mirrorUrl")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun nameWithOwner(): Stub<String> = stub<String>()
+  fun nameWithOwner(): Stub<String> = stub("nameWithOwner")
 
-  fun objectVal(): Stub<GitObject> = stub<GitObject>()
+  fun objectVal(): Stub<GitObject> = stub("objectVal")
 
-  fun owner(): Stub<RepositoryOwner> = stub<RepositoryOwner>()
+  fun owner(): Stub<RepositoryOwner> = stub("owner")
 
-  fun parent(): Stub<Repository> = stub<Repository>()
+  fun parent(): Stub<Repository> = stub("parent")
 
-  fun primaryLanguage(): Stub<Language> = stub<Language>()
+  fun primaryLanguage(): Stub<Language> = stub("primaryLanguage")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 
-  fun projects(): Stub<ProjectConnection> = stub<ProjectConnection>()
+  fun projects(): Stub<ProjectConnection> = stub("projects")
 
-  fun projectsResourcePath(): Stub<URI> = stub<URI>()
+  fun projectsResourcePath(): Stub<URI> = stub("projectsResourcePath")
 
-  fun projectsUrl(): Stub<URI> = stub<URI>()
+  fun projectsUrl(): Stub<URI> = stub("projectsUrl")
 
-  fun protectedBranches(): Stub<ProtectedBranchConnection> = stub<ProtectedBranchConnection>()
+  fun protectedBranches(): Stub<ProtectedBranchConnection> = stub("protectedBranches")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun pullRequests(): Stub<PullRequestConnection> = stub<PullRequestConnection>()
+  fun pullRequests(): Stub<PullRequestConnection> = stub("pullRequests")
 
-  fun pushedAt(): Stub<DateTime> = stub<DateTime>()
+  fun pushedAt(): Stub<DateTime> = stub("pushedAt")
 
-  fun ref(): Stub<Ref> = stub<Ref>()
+  fun ref(): Stub<Ref> = stub("ref")
 
-  fun refs(): Stub<RefConnection> = stub<RefConnection>()
+  fun refs(): Stub<RefConnection> = stub("refs")
 
-  fun releases(): Stub<ReleaseConnection> = stub<ReleaseConnection>()
+  fun releases(): Stub<ReleaseConnection> = stub("releases")
 
-  fun repositoryTopics(): Stub<RepositoryTopicConnection> = stub<RepositoryTopicConnection>()
+  fun repositoryTopics(): Stub<RepositoryTopicConnection> = stub("repositoryTopics")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun stargazers(): Stub<StargazerConnection> = stub<StargazerConnection>()
+  fun stargazers(): Stub<StargazerConnection> = stub("stargazers")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanAdminister(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanAdminister(): Stub<Boolean> = stub("viewerCanAdminister")
 
-  fun viewerCanCreateProjects(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanCreateProjects(): Stub<Boolean> = stub("viewerCanCreateProjects")
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanSubscribe(): Stub<Boolean> = stub("viewerCanSubscribe")
 
-  fun viewerCanUpdateTopics(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdateTopics(): Stub<Boolean> = stub("viewerCanUpdateTopics")
 
-  fun viewerHasStarred(): Stub<Boolean> = stub<Boolean>()
+  fun viewerHasStarred(): Stub<Boolean> = stub("viewerHasStarred")
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub<SubscriptionState>()
+  fun viewerSubscription(): Stub<SubscriptionState> = stub("viewerSubscription")
 
-  fun watchers(): Stub<UserConnection> = stub<UserConnection>()
+  fun watchers(): Stub<UserConnection> = stub("watchers")
 
   class CommitCommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): CommitCommentsArgs {
@@ -1857,119 +1857,119 @@ interface Repository : QType {
 }
 
 interface ReopenedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun closable(): Stub<Closable> = stub<Closable>()
+  fun closable(): Stub<Closable> = stub("closable")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface RenamedTitleEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun currentTitle(): Stub<String> = stub<String>()
+  fun currentTitle(): Stub<String> = stub("currentTitle")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun previousTitle(): Stub<String> = stub<String>()
+  fun previousTitle(): Stub<String> = stub("previousTitle")
 
-  fun subject(): Stub<RenamedTitleSubject> = stub<RenamedTitleSubject>()
+  fun subject(): Stub<RenamedTitleSubject> = stub("subject")
 }
 
 interface RemovedFromProjectEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface RemoveStarPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun starrable(): Stub<Starrable> = stub<Starrable>()
+  fun starrable(): Stub<Starrable> = stub("starrable")
 }
 
 interface RemoveReactionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun reaction(): Stub<Reaction> = stub<Reaction>()
+  fun reaction(): Stub<Reaction> = stub("reaction")
 
-  fun subject(): Stub<Reactable> = stub<Reactable>()
+  fun subject(): Stub<Reactable> = stub("subject")
 }
 
 interface RemoveOutsideCollaboratorPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun removedUser(): Stub<User> = stub<User>()
+  fun removedUser(): Stub<User> = stub("removedUser")
 }
 
 interface ReleaseEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Release> = stub<Release>()
+  fun node(): Stub<Release> = stub("node")
 }
 
 interface ReleaseConnection : QType {
-  fun edges(): Stub<ReleaseEdge> = stub<ReleaseEdge>()
+  fun edges(): Stub<ReleaseEdge> = stub("edges")
 
-  fun nodes(): Stub<Release> = stub<Release>()
+  fun nodes(): Stub<Release> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ReleaseAssetEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<ReleaseAsset> = stub<ReleaseAsset>()
+  fun node(): Stub<ReleaseAsset> = stub("node")
 }
 
 interface ReleaseAssetConnection : QType {
-  fun edges(): Stub<ReleaseAssetEdge> = stub<ReleaseAssetEdge>()
+  fun edges(): Stub<ReleaseAssetEdge> = stub("edges")
 
-  fun nodes(): Stub<ReleaseAsset> = stub<ReleaseAsset>()
+  fun nodes(): Stub<ReleaseAsset> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ReleaseAsset : QType {
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun release(): Stub<Release> = stub<Release>()
+  fun release(): Stub<Release> = stub("release")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface Release : QType {
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun releaseAsset(): Stub<ReleaseAssetConnection> = stub<ReleaseAssetConnection>()
+  fun releaseAsset(): Stub<ReleaseAssetConnection> = stub("releaseAsset")
 
-  fun releaseAssets(): Stub<ReleaseAssetConnection> = stub<ReleaseAssetConnection>()
+  fun releaseAssets(): Stub<ReleaseAssetConnection> = stub("releaseAssets")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun tag(): Stub<Ref> = stub<Ref>()
+  fun tag(): Stub<Ref> = stub("tag")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
   class ReleaseAssetArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): ReleaseAssetArgs {
@@ -2013,53 +2013,53 @@ interface Release : QType {
 }
 
 interface ReferencedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun commitRepository(): Stub<Repository> = stub<Repository>()
+  fun commitRepository(): Stub<Repository> = stub("commitRepository")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isCrossReference(): Stub<Boolean> = stub<Boolean>()
+  fun isCrossReference(): Stub<Boolean> = stub("isCrossReference")
 
-  fun isCrossRepository(): Stub<Boolean> = stub<Boolean>()
+  fun isCrossRepository(): Stub<Boolean> = stub("isCrossRepository")
 
-  fun isDirectReference(): Stub<Boolean> = stub<Boolean>()
+  fun isDirectReference(): Stub<Boolean> = stub("isDirectReference")
 
-  fun subject(): Stub<ReferencedSubject> = stub<ReferencedSubject>()
+  fun subject(): Stub<ReferencedSubject> = stub("subject")
 }
 
 interface RefEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Ref> = stub<Ref>()
+  fun node(): Stub<Ref> = stub("node")
 }
 
 interface RefConnection : QType {
-  fun edges(): Stub<RefEdge> = stub<RefEdge>()
+  fun edges(): Stub<RefEdge> = stub("edges")
 
-  fun nodes(): Stub<Ref> = stub<Ref>()
+  fun nodes(): Stub<Ref> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface Ref : QType {
-  fun associatedPullRequests(): Stub<PullRequestConnection> = stub<PullRequestConnection>()
+  fun associatedPullRequests(): Stub<PullRequestConnection> = stub("associatedPullRequests")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun prefix(): Stub<String> = stub<String>()
+  fun prefix(): Stub<String> = stub("prefix")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun target(): Stub<GitObject> = stub<GitObject>()
+  fun target(): Stub<GitObject> = stub("target")
 
   class AssociatedPullRequestsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): AssociatedPullRequestsArgs {
@@ -2085,15 +2085,15 @@ interface Ref : QType {
 }
 
 interface ReactionGroup : QType {
-  fun content(): Stub<ReactionContent> = stub<ReactionContent>()
+  fun content(): Stub<ReactionContent> = stub("content")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun subject(): Stub<Reactable> = stub<Reactable>()
+  fun subject(): Stub<Reactable> = stub("subject")
 
-  fun users(): Stub<ReactingUserConnection> = stub<ReactingUserConnection>()
+  fun users(): Stub<ReactingUserConnection> = stub("users")
 
-  fun viewerHasReacted(): Stub<Boolean> = stub<Boolean>()
+  fun viewerHasReacted(): Stub<Boolean> = stub("viewerHasReacted")
 
   class UsersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): UsersArgs {
@@ -2115,91 +2115,91 @@ interface ReactionGroup : QType {
 }
 
 interface ReactionEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Reaction> = stub<Reaction>()
+  fun node(): Stub<Reaction> = stub("node")
 }
 
 interface ReactionConnection : QType {
-  fun edges(): Stub<ReactionEdge> = stub<ReactionEdge>()
+  fun edges(): Stub<ReactionEdge> = stub("edges")
 
-  fun nodes(): Stub<Reaction> = stub<Reaction>()
+  fun nodes(): Stub<Reaction> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 
-  fun viewerHasReacted(): Stub<Boolean> = stub<Boolean>()
+  fun viewerHasReacted(): Stub<Boolean> = stub("viewerHasReacted")
 }
 
 interface Reaction : QType {
-  fun content(): Stub<ReactionContent> = stub<ReactionContent>()
+  fun content(): Stub<ReactionContent> = stub("content")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 }
 
 interface ReactingUserEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<User> = stub<User>()
+  fun node(): Stub<User> = stub("node")
 
-  fun reactedAt(): Stub<DateTime> = stub<DateTime>()
+  fun reactedAt(): Stub<DateTime> = stub("reactedAt")
 }
 
 interface ReactingUserConnection : QType {
-  fun edges(): Stub<ReactingUserEdge> = stub<ReactingUserEdge>()
+  fun edges(): Stub<ReactingUserEdge> = stub("edges")
 
-  fun nodes(): Stub<User> = stub<User>()
+  fun nodes(): Stub<User> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface RateLimit : QType {
-  fun cost(): Stub<Int> = stub<Int>()
+  fun cost(): Stub<Int> = stub("cost")
 
-  fun limit(): Stub<Int> = stub<Int>()
+  fun limit(): Stub<Int> = stub("limit")
 
-  fun remaining(): Stub<Int> = stub<Int>()
+  fun remaining(): Stub<Int> = stub("remaining")
 
-  fun resetAt(): Stub<DateTime> = stub<DateTime>()
+  fun resetAt(): Stub<DateTime> = stub("resetAt")
 }
 
 interface Query : QType {
-  fun codeOfConduct(): Stub<CodeOfConduct> = stub<CodeOfConduct>()
+  fun codeOfConduct(): Stub<CodeOfConduct> = stub("codeOfConduct")
 
-  fun codesOfConduct(): Stub<CodeOfConduct> = stub<CodeOfConduct>()
+  fun codesOfConduct(): Stub<CodeOfConduct> = stub("codesOfConduct")
 
-  fun node(): Stub<Node> = stub<Node>()
+  fun node(): Stub<Node> = stub("node")
 
-  fun nodes(): Stub<Node> = stub<Node>()
+  fun nodes(): Stub<Node> = stub("nodes")
 
-  fun organization(): Stub<Organization> = stub<Organization>()
+  fun organization(): Stub<Organization> = stub("organization")
 
-  fun rateLimit(): Stub<RateLimit> = stub<RateLimit>()
+  fun rateLimit(): Stub<RateLimit> = stub("rateLimit")
 
-  fun relay(): Stub<Query> = stub<Query>()
+  fun relay(): Stub<Query> = stub("relay")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun repositoryOwner(): Stub<RepositoryOwner> = stub<RepositoryOwner>()
+  fun repositoryOwner(): Stub<RepositoryOwner> = stub("repositoryOwner")
 
-  fun resource(): Stub<UniformResourceLocatable> = stub<UniformResourceLocatable>()
+  fun resource(): Stub<UniformResourceLocatable> = stub("resource")
 
-  fun search(): Stub<SearchResultItemConnection> = stub<SearchResultItemConnection>()
+  fun search(): Stub<SearchResultItemConnection> = stub("search")
 
-  fun topic(): Stub<Topic> = stub<Topic>()
+  fun topic(): Stub<Topic> = stub("topic")
 
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 
-  fun viewer(): Stub<User> = stub<User>()
+  fun viewer(): Stub<User> = stub("viewer")
 
   class CodeOfConductArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun key(value: String): CodeOfConductArgs {
@@ -2287,51 +2287,51 @@ interface Query : QType {
 }
 
 interface PushAllowanceEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<PushAllowance> = stub<PushAllowance>()
+  fun node(): Stub<PushAllowance> = stub("node")
 }
 
 interface PushAllowanceConnection : QType {
-  fun edges(): Stub<PushAllowanceEdge> = stub<PushAllowanceEdge>()
+  fun edges(): Stub<PushAllowanceEdge> = stub("edges")
 
-  fun nodes(): Stub<PushAllowance> = stub<PushAllowance>()
+  fun nodes(): Stub<PushAllowance> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface PushAllowance : QType {
-  fun actor(): Stub<PushAllowanceActor> = stub<PushAllowanceActor>()
+  fun actor(): Stub<PushAllowanceActor> = stub("actor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun protectedBranch(): Stub<ProtectedBranch> = stub<ProtectedBranch>()
+  fun protectedBranch(): Stub<ProtectedBranch> = stub("protectedBranch")
 }
 
 interface PullRequestTimelineItemEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<PullRequestTimelineItem> = stub<PullRequestTimelineItem>()
+  fun node(): Stub<PullRequestTimelineItem> = stub("node")
 }
 
 interface PullRequestTimelineConnection : QType {
-  fun edges(): Stub<PullRequestTimelineItemEdge> = stub<PullRequestTimelineItemEdge>()
+  fun edges(): Stub<PullRequestTimelineItemEdge> = stub("edges")
 
-  fun nodes(): Stub<PullRequestTimelineItem> = stub<PullRequestTimelineItem>()
+  fun nodes(): Stub<PullRequestTimelineItem> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface PullRequestReviewThread : QType {
-  fun comments(): Stub<PullRequestReviewCommentConnection> = stub<PullRequestReviewCommentConnection>()
+  fun comments(): Stub<PullRequestReviewCommentConnection> = stub("comments")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): CommentsArgs {
@@ -2353,101 +2353,101 @@ interface PullRequestReviewThread : QType {
 }
 
 interface PullRequestReviewEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun node(): Stub<PullRequestReview> = stub("node")
 }
 
 interface PullRequestReviewConnection : QType {
-  fun edges(): Stub<PullRequestReviewEdge> = stub<PullRequestReviewEdge>()
+  fun edges(): Stub<PullRequestReviewEdge> = stub("edges")
 
-  fun nodes(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun nodes(): Stub<PullRequestReview> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface PullRequestReviewCommentEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<PullRequestReviewComment> = stub<PullRequestReviewComment>()
+  fun node(): Stub<PullRequestReviewComment> = stub("node")
 }
 
 interface PullRequestReviewCommentConnection : QType {
-  fun edges(): Stub<PullRequestReviewCommentEdge> = stub<PullRequestReviewCommentEdge>()
+  fun edges(): Stub<PullRequestReviewCommentEdge> = stub("edges")
 
-  fun nodes(): Stub<PullRequestReviewComment> = stub<PullRequestReviewComment>()
+  fun nodes(): Stub<PullRequestReviewComment> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface PullRequestReviewComment : QType {
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun bodyText(): Stub<String> = stub<String>()
+  fun bodyText(): Stub<String> = stub("bodyText")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun diffHunk(): Stub<String> = stub<String>()
+  fun diffHunk(): Stub<String> = stub("diffHunk")
 
-  fun draftedAt(): Stub<DateTime> = stub<DateTime>()
+  fun draftedAt(): Stub<DateTime> = stub("draftedAt")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun originalCommit(): Stub<Commit> = stub<Commit>()
+  fun originalCommit(): Stub<Commit> = stub("originalCommit")
 
-  fun originalPosition(): Stub<Int> = stub<Int>()
+  fun originalPosition(): Stub<Int> = stub("originalPosition")
 
-  fun path(): Stub<String> = stub<String>()
+  fun path(): Stub<String> = stub("path")
 
-  fun position(): Stub<Int> = stub<Int>()
+  fun position(): Stub<Int> = stub("position")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun pullRequestReview(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun pullRequestReview(): Stub<PullRequestReview> = stub("pullRequestReview")
 
-  fun reactionGroups(): Stub<ReactionGroup> = stub<ReactionGroup>()
+  fun reactionGroups(): Stub<ReactionGroup> = stub("reactionGroups")
 
-  fun reactions(): Stub<ReactionConnection> = stub<ReactionConnection>()
+  fun reactions(): Stub<ReactionConnection> = stub("reactions")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanDelete(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanDelete(): Stub<Boolean> = stub("viewerCanDelete")
 
-  fun viewerCanReact(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanReact(): Stub<Boolean> = stub("viewerCanReact")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): ReactionsArgs {
@@ -2477,55 +2477,55 @@ interface PullRequestReviewComment : QType {
 }
 
 interface PullRequestReview : QType {
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun bodyText(): Stub<String> = stub<String>()
+  fun bodyText(): Stub<String> = stub("bodyText")
 
-  fun comments(): Stub<PullRequestReviewCommentConnection> = stub<PullRequestReviewCommentConnection>()
+  fun comments(): Stub<PullRequestReviewCommentConnection> = stub("comments")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun state(): Stub<PullRequestReviewState> = stub<PullRequestReviewState>()
+  fun state(): Stub<PullRequestReviewState> = stub("state")
 
-  fun submittedAt(): Stub<DateTime> = stub<DateTime>()
+  fun submittedAt(): Stub<DateTime> = stub("submittedAt")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanDelete(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanDelete(): Stub<Boolean> = stub("viewerCanDelete")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): CommentsArgs {
@@ -2547,153 +2547,153 @@ interface PullRequestReview : QType {
 }
 
 interface PullRequestEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<PullRequest> = stub<PullRequest>()
+  fun node(): Stub<PullRequest> = stub("node")
 }
 
 interface PullRequestConnection : QType {
-  fun edges(): Stub<PullRequestEdge> = stub<PullRequestEdge>()
+  fun edges(): Stub<PullRequestEdge> = stub("edges")
 
-  fun nodes(): Stub<PullRequest> = stub<PullRequest>()
+  fun nodes(): Stub<PullRequest> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface PullRequestCommitEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<PullRequestCommit> = stub<PullRequestCommit>()
+  fun node(): Stub<PullRequestCommit> = stub("node")
 }
 
 interface PullRequestCommitConnection : QType {
-  fun edges(): Stub<PullRequestCommitEdge> = stub<PullRequestCommitEdge>()
+  fun edges(): Stub<PullRequestCommitEdge> = stub("edges")
 
-  fun nodes(): Stub<PullRequestCommit> = stub<PullRequestCommit>()
+  fun nodes(): Stub<PullRequestCommit> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface PullRequestCommit : QType {
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface PullRequest : QType {
-  fun assignees(): Stub<UserConnection> = stub<UserConnection>()
+  fun assignees(): Stub<UserConnection> = stub("assignees")
 
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun baseRef(): Stub<Ref> = stub<Ref>()
+  fun baseRef(): Stub<Ref> = stub("baseRef")
 
-  fun baseRefName(): Stub<String> = stub<String>()
+  fun baseRefName(): Stub<String> = stub("baseRefName")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun bodyText(): Stub<String> = stub<String>()
+  fun bodyText(): Stub<String> = stub("bodyText")
 
-  fun closed(): Stub<Boolean> = stub<Boolean>()
+  fun closed(): Stub<Boolean> = stub("closed")
 
-  fun comments(): Stub<IssueCommentConnection> = stub<IssueCommentConnection>()
+  fun comments(): Stub<IssueCommentConnection> = stub("comments")
 
-  fun commits(): Stub<PullRequestCommitConnection> = stub<PullRequestCommitConnection>()
+  fun commits(): Stub<PullRequestCommitConnection> = stub("commits")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun headRef(): Stub<Ref> = stub<Ref>()
+  fun headRef(): Stub<Ref> = stub("headRef")
 
-  fun headRefName(): Stub<String> = stub<String>()
+  fun headRefName(): Stub<String> = stub("headRefName")
 
-  fun headRepository(): Stub<Repository> = stub<Repository>()
+  fun headRepository(): Stub<Repository> = stub("headRepository")
 
-  fun headRepositoryOwner(): Stub<RepositoryOwner> = stub<RepositoryOwner>()
+  fun headRepositoryOwner(): Stub<RepositoryOwner> = stub("headRepositoryOwner")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isCrossRepository(): Stub<Boolean> = stub<Boolean>()
+  fun isCrossRepository(): Stub<Boolean> = stub("isCrossRepository")
 
-  fun labels(): Stub<LabelConnection> = stub<LabelConnection>()
+  fun labels(): Stub<LabelConnection> = stub("labels")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun locked(): Stub<Boolean> = stub<Boolean>()
+  fun locked(): Stub<Boolean> = stub("locked")
 
-  fun mergeCommit(): Stub<Commit> = stub<Commit>()
+  fun mergeCommit(): Stub<Commit> = stub("mergeCommit")
 
-  fun mergeable(): Stub<MergeableState> = stub<MergeableState>()
+  fun mergeable(): Stub<MergeableState> = stub("mergeable")
 
-  fun merged(): Stub<Boolean> = stub<Boolean>()
+  fun merged(): Stub<Boolean> = stub("merged")
 
-  fun mergedAt(): Stub<DateTime> = stub<DateTime>()
+  fun mergedAt(): Stub<DateTime> = stub("mergedAt")
 
-  fun number(): Stub<Int> = stub<Int>()
+  fun number(): Stub<Int> = stub("number")
 
-  fun participants(): Stub<UserConnection> = stub<UserConnection>()
+  fun participants(): Stub<UserConnection> = stub("participants")
 
-  fun potentialMergeCommit(): Stub<Commit> = stub<Commit>()
+  fun potentialMergeCommit(): Stub<Commit> = stub("potentialMergeCommit")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun reactionGroups(): Stub<ReactionGroup> = stub<ReactionGroup>()
+  fun reactionGroups(): Stub<ReactionGroup> = stub("reactionGroups")
 
-  fun reactions(): Stub<ReactionConnection> = stub<ReactionConnection>()
+  fun reactions(): Stub<ReactionConnection> = stub("reactions")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun revertResourcePath(): Stub<URI> = stub<URI>()
+  fun revertResourcePath(): Stub<URI> = stub("revertResourcePath")
 
-  fun revertUrl(): Stub<URI> = stub<URI>()
+  fun revertUrl(): Stub<URI> = stub("revertUrl")
 
-  fun reviewRequests(): Stub<ReviewRequestConnection> = stub<ReviewRequestConnection>()
+  fun reviewRequests(): Stub<ReviewRequestConnection> = stub("reviewRequests")
 
-  fun reviews(): Stub<PullRequestReviewConnection> = stub<PullRequestReviewConnection>()
+  fun reviews(): Stub<PullRequestReviewConnection> = stub("reviews")
 
-  fun state(): Stub<PullRequestState> = stub<PullRequestState>()
+  fun state(): Stub<PullRequestState> = stub("state")
 
-  fun suggestedReviewers(): Stub<SuggestedReviewer> = stub<SuggestedReviewer>()
+  fun suggestedReviewers(): Stub<SuggestedReviewer> = stub("suggestedReviewers")
 
-  fun timeline(): Stub<PullRequestTimelineConnection> = stub<PullRequestTimelineConnection>()
+  fun timeline(): Stub<PullRequestTimelineConnection> = stub("timeline")
 
-  fun title(): Stub<String> = stub<String>()
+  fun title(): Stub<String> = stub("title")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanReact(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanReact(): Stub<Boolean> = stub("viewerCanReact")
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanSubscribe(): Stub<Boolean> = stub("viewerCanSubscribe")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub<SubscriptionState>()
+  fun viewerSubscription(): Stub<SubscriptionState> = stub("viewerSubscription")
 
   class AssigneesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): AssigneesArgs {
@@ -2875,49 +2875,49 @@ interface PullRequest : QType {
 }
 
 interface ProtectedBranchEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<ProtectedBranch> = stub<ProtectedBranch>()
+  fun node(): Stub<ProtectedBranch> = stub("node")
 }
 
 interface ProtectedBranchConnection : QType {
-  fun edges(): Stub<ProtectedBranchEdge> = stub<ProtectedBranchEdge>()
+  fun edges(): Stub<ProtectedBranchEdge> = stub("edges")
 
-  fun nodes(): Stub<ProtectedBranch> = stub<ProtectedBranch>()
+  fun nodes(): Stub<ProtectedBranch> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ProtectedBranch : QType {
-  fun creator(): Stub<Actor> = stub<Actor>()
+  fun creator(): Stub<Actor> = stub("creator")
 
-  fun hasDismissableStaleReviews(): Stub<Boolean> = stub<Boolean>()
+  fun hasDismissableStaleReviews(): Stub<Boolean> = stub("hasDismissableStaleReviews")
 
-  fun hasRequiredReviews(): Stub<Boolean> = stub<Boolean>()
+  fun hasRequiredReviews(): Stub<Boolean> = stub("hasRequiredReviews")
 
-  fun hasRequiredStatusChecks(): Stub<Boolean> = stub<Boolean>()
+  fun hasRequiredStatusChecks(): Stub<Boolean> = stub("hasRequiredStatusChecks")
 
-  fun hasRestrictedPushes(): Stub<Boolean> = stub<Boolean>()
+  fun hasRestrictedPushes(): Stub<Boolean> = stub("hasRestrictedPushes")
 
-  fun hasRestrictedReviewDismissals(): Stub<Boolean> = stub<Boolean>()
+  fun hasRestrictedReviewDismissals(): Stub<Boolean> = stub("hasRestrictedReviewDismissals")
 
-  fun hasStrictRequiredStatusChecks(): Stub<Boolean> = stub<Boolean>()
+  fun hasStrictRequiredStatusChecks(): Stub<Boolean> = stub("hasStrictRequiredStatusChecks")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isAdminEnforced(): Stub<Boolean> = stub<Boolean>()
+  fun isAdminEnforced(): Stub<Boolean> = stub("isAdminEnforced")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun pushAllowances(): Stub<PushAllowanceConnection> = stub<PushAllowanceConnection>()
+  fun pushAllowances(): Stub<PushAllowanceConnection> = stub("pushAllowances")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun requiredStatusCheckContexts(): Stub<String> = stub<String>()
+  fun requiredStatusCheckContexts(): Stub<String> = stub("requiredStatusCheckContexts")
 
-  fun reviewDismissalAllowances(): Stub<ReviewDismissalAllowanceConnection> = stub<ReviewDismissalAllowanceConnection>()
+  fun reviewDismissalAllowances(): Stub<ReviewDismissalAllowanceConnection> = stub("reviewDismissalAllowances")
 
   class PushAllowancesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): PushAllowancesArgs {
@@ -2957,51 +2957,51 @@ interface ProtectedBranch : QType {
 }
 
 interface ProjectEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Project> = stub<Project>()
+  fun node(): Stub<Project> = stub("node")
 }
 
 interface ProjectConnection : QType {
-  fun edges(): Stub<ProjectEdge> = stub<ProjectEdge>()
+  fun edges(): Stub<ProjectEdge> = stub("edges")
 
-  fun nodes(): Stub<Project> = stub<Project>()
+  fun nodes(): Stub<Project> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ProjectColumnEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<ProjectColumn> = stub<ProjectColumn>()
+  fun node(): Stub<ProjectColumn> = stub("node")
 }
 
 interface ProjectColumnConnection : QType {
-  fun edges(): Stub<ProjectColumnEdge> = stub<ProjectColumnEdge>()
+  fun edges(): Stub<ProjectColumnEdge> = stub("edges")
 
-  fun nodes(): Stub<ProjectColumn> = stub<ProjectColumn>()
+  fun nodes(): Stub<ProjectColumn> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ProjectColumn : QType {
-  fun cards(): Stub<ProjectCardConnection> = stub<ProjectCardConnection>()
+  fun cards(): Stub<ProjectCardConnection> = stub("cards")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
   class CardsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): CardsArgs {
@@ -3023,81 +3023,81 @@ interface ProjectColumn : QType {
 }
 
 interface ProjectCardEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<ProjectCard> = stub<ProjectCard>()
+  fun node(): Stub<ProjectCard> = stub("node")
 }
 
 interface ProjectCardConnection : QType {
-  fun edges(): Stub<ProjectCardEdge> = stub<ProjectCardEdge>()
+  fun edges(): Stub<ProjectCardEdge> = stub("edges")
 
-  fun nodes(): Stub<ProjectCard> = stub<ProjectCard>()
+  fun nodes(): Stub<ProjectCard> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ProjectCard : QType {
-  fun column(): Stub<ProjectColumn> = stub<ProjectColumn>()
+  fun column(): Stub<ProjectColumn> = stub("column")
 
-  fun content(): Stub<ProjectCardItem> = stub<ProjectCardItem>()
+  fun content(): Stub<ProjectCardItem> = stub("content")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun creator(): Stub<Actor> = stub<Actor>()
+  fun creator(): Stub<Actor> = stub("creator")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun note(): Stub<String> = stub<String>()
+  fun note(): Stub<String> = stub("note")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 
-  fun projectColumn(): Stub<ProjectColumn> = stub<ProjectColumn>()
+  fun projectColumn(): Stub<ProjectColumn> = stub("projectColumn")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun state(): Stub<ProjectCardState> = stub<ProjectCardState>()
+  fun state(): Stub<ProjectCardState> = stub("state")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface Project : QType {
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun closedAt(): Stub<DateTime> = stub<DateTime>()
+  fun closedAt(): Stub<DateTime> = stub("closedAt")
 
-  fun columns(): Stub<ProjectColumnConnection> = stub<ProjectColumnConnection>()
+  fun columns(): Stub<ProjectColumnConnection> = stub("columns")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun creator(): Stub<Actor> = stub<Actor>()
+  fun creator(): Stub<Actor> = stub("creator")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun number(): Stub<Int> = stub<Int>()
+  fun number(): Stub<Int> = stub("number")
 
-  fun owner(): Stub<ProjectOwner> = stub<ProjectOwner>()
+  fun owner(): Stub<ProjectOwner> = stub("owner")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun state(): Stub<ProjectState> = stub<ProjectState>()
+  fun state(): Stub<ProjectState> = stub("state")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
   class ColumnsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): ColumnsArgs {
@@ -3119,59 +3119,59 @@ interface Project : QType {
 }
 
 interface PageInfo : QType {
-  fun endCursor(): Stub<String> = stub<String>()
+  fun endCursor(): Stub<String> = stub("endCursor")
 
-  fun hasNextPage(): Stub<Boolean> = stub<Boolean>()
+  fun hasNextPage(): Stub<Boolean> = stub("hasNextPage")
 
-  fun hasPreviousPage(): Stub<Boolean> = stub<Boolean>()
+  fun hasPreviousPage(): Stub<Boolean> = stub("hasPreviousPage")
 
-  fun startCursor(): Stub<String> = stub<String>()
+  fun startCursor(): Stub<String> = stub("startCursor")
 }
 
 interface OrganizationInvitationEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<OrganizationInvitation> = stub<OrganizationInvitation>()
+  fun node(): Stub<OrganizationInvitation> = stub("node")
 }
 
 interface OrganizationInvitationConnection : QType {
-  fun edges(): Stub<OrganizationInvitationEdge> = stub<OrganizationInvitationEdge>()
+  fun edges(): Stub<OrganizationInvitationEdge> = stub("edges")
 
-  fun nodes(): Stub<OrganizationInvitation> = stub<OrganizationInvitation>()
+  fun nodes(): Stub<OrganizationInvitation> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface OrganizationInvitation : QType {
-  fun email(): Stub<String> = stub<String>()
+  fun email(): Stub<String> = stub("email")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun invitee(): Stub<User> = stub<User>()
+  fun invitee(): Stub<User> = stub("invitee")
 
-  fun inviter(): Stub<User> = stub<User>()
+  fun inviter(): Stub<User> = stub("inviter")
 
-  fun role(): Stub<OrganizationInvitationRole> = stub<OrganizationInvitationRole>()
+  fun role(): Stub<OrganizationInvitationRole> = stub("role")
 }
 
 interface OrganizationIdentityProvider : QType {
-  fun digestMethod(): Stub<URI> = stub<URI>()
+  fun digestMethod(): Stub<URI> = stub("digestMethod")
 
-  fun externalIdentities(): Stub<ExternalIdentityConnection> = stub<ExternalIdentityConnection>()
+  fun externalIdentities(): Stub<ExternalIdentityConnection> = stub("externalIdentities")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun idpCertificate(): Stub<X509Certificate> = stub<X509Certificate>()
+  fun idpCertificate(): Stub<X509Certificate> = stub("idpCertificate")
 
-  fun issuer(): Stub<String> = stub<String>()
+  fun issuer(): Stub<String> = stub("issuer")
 
-  fun organization(): Stub<Organization> = stub<Organization>()
+  fun organization(): Stub<Organization> = stub("organization")
 
-  fun signatureMethod(): Stub<URI> = stub<URI>()
+  fun signatureMethod(): Stub<URI> = stub("signatureMethod")
 
-  fun ssoUrl(): Stub<URI> = stub<URI>()
+  fun ssoUrl(): Stub<URI> = stub("ssoUrl")
 
   class ExternalIdentitiesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): ExternalIdentitiesArgs {
@@ -3193,79 +3193,79 @@ interface OrganizationIdentityProvider : QType {
 }
 
 interface OrganizationEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Organization> = stub<Organization>()
+  fun node(): Stub<Organization> = stub("node")
 }
 
 interface OrganizationConnection : QType {
-  fun edges(): Stub<OrganizationEdge> = stub<OrganizationEdge>()
+  fun edges(): Stub<OrganizationEdge> = stub("edges")
 
-  fun nodes(): Stub<Organization> = stub<Organization>()
+  fun nodes(): Stub<Organization> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface Organization : QType {
-  fun avatarUrl(): Stub<URI> = stub<URI>()
+  fun avatarUrl(): Stub<URI> = stub("avatarUrl")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isInvoiced(): Stub<Boolean> = stub<Boolean>()
+  fun isInvoiced(): Stub<Boolean> = stub("isInvoiced")
 
-  fun login(): Stub<String> = stub<String>()
+  fun login(): Stub<String> = stub("login")
 
-  fun members(): Stub<UserConnection> = stub<UserConnection>()
+  fun members(): Stub<UserConnection> = stub("members")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun newTeamResourcePath(): Stub<URI> = stub<URI>()
+  fun newTeamResourcePath(): Stub<URI> = stub("newTeamResourcePath")
 
-  fun newTeamUrl(): Stub<URI> = stub<URI>()
+  fun newTeamUrl(): Stub<URI> = stub("newTeamUrl")
 
-  fun organizationBillingEmail(): Stub<String> = stub<String>()
+  fun organizationBillingEmail(): Stub<String> = stub("organizationBillingEmail")
 
-  fun pinnedRepositories(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun pinnedRepositories(): Stub<RepositoryConnection> = stub("pinnedRepositories")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 
-  fun projects(): Stub<ProjectConnection> = stub<ProjectConnection>()
+  fun projects(): Stub<ProjectConnection> = stub("projects")
 
-  fun projectsResourcePath(): Stub<URI> = stub<URI>()
+  fun projectsResourcePath(): Stub<URI> = stub("projectsResourcePath")
 
-  fun projectsUrl(): Stub<URI> = stub<URI>()
+  fun projectsUrl(): Stub<URI> = stub("projectsUrl")
 
-  fun repositories(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun repositories(): Stub<RepositoryConnection> = stub("repositories")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun samlIdentityProvider(): Stub<OrganizationIdentityProvider> = stub<OrganizationIdentityProvider>()
+  fun samlIdentityProvider(): Stub<OrganizationIdentityProvider> = stub("samlIdentityProvider")
 
-  fun team(): Stub<Team> = stub<Team>()
+  fun team(): Stub<Team> = stub("team")
 
-  fun teams(): Stub<TeamConnection> = stub<TeamConnection>()
+  fun teams(): Stub<TeamConnection> = stub("teams")
 
-  fun teamsResourcePath(): Stub<URI> = stub<URI>()
+  fun teamsResourcePath(): Stub<URI> = stub("teamsResourcePath")
 
-  fun teamsUrl(): Stub<URI> = stub<URI>()
+  fun teamsUrl(): Stub<URI> = stub("teamsUrl")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanAdminister(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanAdminister(): Stub<Boolean> = stub("viewerCanAdminister")
 
-  fun viewerCanCreateProjects(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanCreateProjects(): Stub<Boolean> = stub("viewerCanCreateProjects")
 
-  fun viewerCanCreateRepositories(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanCreateRepositories(): Stub<Boolean> = stub("viewerCanCreateRepositories")
 
-  fun viewerCanCreateTeams(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanCreateTeams(): Stub<Boolean> = stub("viewerCanCreateTeams")
 
-  fun viewerIsAMember(): Stub<Boolean> = stub<Boolean>()
+  fun viewerIsAMember(): Stub<Boolean> = stub("viewerIsAMember")
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun size(value: Int): AvatarUrlArgs {
@@ -3455,63 +3455,63 @@ interface Organization : QType {
 }
 
 interface Mutation : QType {
-  fun acceptTopicSuggestion(): Stub<AcceptTopicSuggestionPayload> = stub<AcceptTopicSuggestionPayload>()
+  fun acceptTopicSuggestion(): Stub<AcceptTopicSuggestionPayload> = stub("acceptTopicSuggestion")
 
-  fun addComment(): Stub<AddCommentPayload> = stub<AddCommentPayload>()
+  fun addComment(): Stub<AddCommentPayload> = stub("addComment")
 
-  fun addProjectCard(): Stub<AddProjectCardPayload> = stub<AddProjectCardPayload>()
+  fun addProjectCard(): Stub<AddProjectCardPayload> = stub("addProjectCard")
 
-  fun addProjectColumn(): Stub<AddProjectColumnPayload> = stub<AddProjectColumnPayload>()
+  fun addProjectColumn(): Stub<AddProjectColumnPayload> = stub("addProjectColumn")
 
-  fun addPullRequestReview(): Stub<AddPullRequestReviewPayload> = stub<AddPullRequestReviewPayload>()
+  fun addPullRequestReview(): Stub<AddPullRequestReviewPayload> = stub("addPullRequestReview")
 
-  fun addPullRequestReviewComment(): Stub<AddPullRequestReviewCommentPayload> = stub<AddPullRequestReviewCommentPayload>()
+  fun addPullRequestReviewComment(): Stub<AddPullRequestReviewCommentPayload> = stub("addPullRequestReviewComment")
 
-  fun addReaction(): Stub<AddReactionPayload> = stub<AddReactionPayload>()
+  fun addReaction(): Stub<AddReactionPayload> = stub("addReaction")
 
-  fun addStar(): Stub<AddStarPayload> = stub<AddStarPayload>()
+  fun addStar(): Stub<AddStarPayload> = stub("addStar")
 
-  fun createProject(): Stub<CreateProjectPayload> = stub<CreateProjectPayload>()
+  fun createProject(): Stub<CreateProjectPayload> = stub("createProject")
 
-  fun declineTopicSuggestion(): Stub<DeclineTopicSuggestionPayload> = stub<DeclineTopicSuggestionPayload>()
+  fun declineTopicSuggestion(): Stub<DeclineTopicSuggestionPayload> = stub("declineTopicSuggestion")
 
-  fun deleteProject(): Stub<DeleteProjectPayload> = stub<DeleteProjectPayload>()
+  fun deleteProject(): Stub<DeleteProjectPayload> = stub("deleteProject")
 
-  fun deleteProjectCard(): Stub<DeleteProjectCardPayload> = stub<DeleteProjectCardPayload>()
+  fun deleteProjectCard(): Stub<DeleteProjectCardPayload> = stub("deleteProjectCard")
 
-  fun deleteProjectColumn(): Stub<DeleteProjectColumnPayload> = stub<DeleteProjectColumnPayload>()
+  fun deleteProjectColumn(): Stub<DeleteProjectColumnPayload> = stub("deleteProjectColumn")
 
-  fun deletePullRequestReview(): Stub<DeletePullRequestReviewPayload> = stub<DeletePullRequestReviewPayload>()
+  fun deletePullRequestReview(): Stub<DeletePullRequestReviewPayload> = stub("deletePullRequestReview")
 
-  fun dismissPullRequestReview(): Stub<DismissPullRequestReviewPayload> = stub<DismissPullRequestReviewPayload>()
+  fun dismissPullRequestReview(): Stub<DismissPullRequestReviewPayload> = stub("dismissPullRequestReview")
 
-  fun moveProjectCard(): Stub<MoveProjectCardPayload> = stub<MoveProjectCardPayload>()
+  fun moveProjectCard(): Stub<MoveProjectCardPayload> = stub("moveProjectCard")
 
-  fun moveProjectColumn(): Stub<MoveProjectColumnPayload> = stub<MoveProjectColumnPayload>()
+  fun moveProjectColumn(): Stub<MoveProjectColumnPayload> = stub("moveProjectColumn")
 
-  fun removeOutsideCollaborator(): Stub<RemoveOutsideCollaboratorPayload> = stub<RemoveOutsideCollaboratorPayload>()
+  fun removeOutsideCollaborator(): Stub<RemoveOutsideCollaboratorPayload> = stub("removeOutsideCollaborator")
 
-  fun removeReaction(): Stub<RemoveReactionPayload> = stub<RemoveReactionPayload>()
+  fun removeReaction(): Stub<RemoveReactionPayload> = stub("removeReaction")
 
-  fun removeStar(): Stub<RemoveStarPayload> = stub<RemoveStarPayload>()
+  fun removeStar(): Stub<RemoveStarPayload> = stub("removeStar")
 
-  fun requestReviews(): Stub<RequestReviewsPayload> = stub<RequestReviewsPayload>()
+  fun requestReviews(): Stub<RequestReviewsPayload> = stub("requestReviews")
 
-  fun submitPullRequestReview(): Stub<SubmitPullRequestReviewPayload> = stub<SubmitPullRequestReviewPayload>()
+  fun submitPullRequestReview(): Stub<SubmitPullRequestReviewPayload> = stub("submitPullRequestReview")
 
-  fun updateProject(): Stub<UpdateProjectPayload> = stub<UpdateProjectPayload>()
+  fun updateProject(): Stub<UpdateProjectPayload> = stub("updateProject")
 
-  fun updateProjectCard(): Stub<UpdateProjectCardPayload> = stub<UpdateProjectCardPayload>()
+  fun updateProjectCard(): Stub<UpdateProjectCardPayload> = stub("updateProjectCard")
 
-  fun updateProjectColumn(): Stub<UpdateProjectColumnPayload> = stub<UpdateProjectColumnPayload>()
+  fun updateProjectColumn(): Stub<UpdateProjectColumnPayload> = stub("updateProjectColumn")
 
-  fun updatePullRequestReview(): Stub<UpdatePullRequestReviewPayload> = stub<UpdatePullRequestReviewPayload>()
+  fun updatePullRequestReview(): Stub<UpdatePullRequestReviewPayload> = stub("updatePullRequestReview")
 
-  fun updatePullRequestReviewComment(): Stub<UpdatePullRequestReviewCommentPayload> = stub<UpdatePullRequestReviewCommentPayload>()
+  fun updatePullRequestReviewComment(): Stub<UpdatePullRequestReviewCommentPayload> = stub("updatePullRequestReviewComment")
 
-  fun updateSubscription(): Stub<UpdateSubscriptionPayload> = stub<UpdateSubscriptionPayload>()
+  fun updateSubscription(): Stub<UpdateSubscriptionPayload> = stub("updateSubscription")
 
-  fun updateTopics(): Stub<UpdateTopicsPayload> = stub<UpdateTopicsPayload>()
+  fun updateTopics(): Stub<UpdateTopicsPayload> = stub("updateTopics")
 
   class AcceptTopicSuggestionArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun input(value: AcceptTopicSuggestionInput): AcceptTopicSuggestionArgs {
@@ -3689,185 +3689,185 @@ interface Mutation : QType {
 }
 
 interface MovedColumnsInProjectEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface MoveProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun columnEdge(): Stub<ProjectColumnEdge> = stub<ProjectColumnEdge>()
+  fun columnEdge(): Stub<ProjectColumnEdge> = stub("columnEdge")
 }
 
 interface MoveProjectCardPayload : QType {
-  fun cardEdge(): Stub<ProjectCardEdge> = stub<ProjectCardEdge>()
+  fun cardEdge(): Stub<ProjectCardEdge> = stub("cardEdge")
 
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 }
 
 interface MilestonedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun milestoneTitle(): Stub<String> = stub<String>()
+  fun milestoneTitle(): Stub<String> = stub("milestoneTitle")
 
-  fun subject(): Stub<MilestoneItem> = stub<MilestoneItem>()
+  fun subject(): Stub<MilestoneItem> = stub("subject")
 }
 
 interface MilestoneEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Milestone> = stub<Milestone>()
+  fun node(): Stub<Milestone> = stub("node")
 }
 
 interface MilestoneConnection : QType {
-  fun edges(): Stub<MilestoneEdge> = stub<MilestoneEdge>()
+  fun edges(): Stub<MilestoneEdge> = stub("edges")
 
-  fun nodes(): Stub<Milestone> = stub<Milestone>()
+  fun nodes(): Stub<Milestone> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface Milestone : QType {
-  fun creator(): Stub<Actor> = stub<Actor>()
+  fun creator(): Stub<Actor> = stub("creator")
 
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun dueOn(): Stub<DateTime> = stub<DateTime>()
+  fun dueOn(): Stub<DateTime> = stub("dueOn")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun number(): Stub<Int> = stub<Int>()
+  fun number(): Stub<Int> = stub("number")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun state(): Stub<MilestoneState> = stub<MilestoneState>()
+  fun state(): Stub<MilestoneState> = stub("state")
 
-  fun title(): Stub<String> = stub<String>()
+  fun title(): Stub<String> = stub("title")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface MergedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun mergeRef(): Stub<Ref> = stub<Ref>()
+  fun mergeRef(): Stub<Ref> = stub("mergeRef")
 
-  fun mergeRefName(): Stub<String> = stub<String>()
+  fun mergeRefName(): Stub<String> = stub("mergeRefName")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface MentionedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface LockedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun lockable(): Stub<Lockable> = stub<Lockable>()
+  fun lockable(): Stub<Lockable> = stub("lockable")
 }
 
 interface LanguageEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Language> = stub<Language>()
+  fun node(): Stub<Language> = stub("node")
 
-  fun size(): Stub<Int> = stub<Int>()
+  fun size(): Stub<Int> = stub("size")
 }
 
 interface LanguageConnection : QType {
-  fun edges(): Stub<LanguageEdge> = stub<LanguageEdge>()
+  fun edges(): Stub<LanguageEdge> = stub("edges")
 
-  fun nodes(): Stub<Language> = stub<Language>()
+  fun nodes(): Stub<Language> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 
-  fun totalSize(): Stub<Int> = stub<Int>()
+  fun totalSize(): Stub<Int> = stub("totalSize")
 }
 
 interface Language : QType {
-  fun color(): Stub<String> = stub<String>()
+  fun color(): Stub<String> = stub("color")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 }
 
 interface LabeledEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun label(): Stub<Label> = stub<Label>()
+  fun label(): Stub<Label> = stub("label")
 
-  fun labelable(): Stub<Labelable> = stub<Labelable>()
+  fun labelable(): Stub<Labelable> = stub("labelable")
 }
 
 interface LabelEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Label> = stub<Label>()
+  fun node(): Stub<Label> = stub("node")
 }
 
 interface LabelConnection : QType {
-  fun edges(): Stub<LabelEdge> = stub<LabelEdge>()
+  fun edges(): Stub<LabelEdge> = stub("edges")
 
-  fun nodes(): Stub<Label> = stub<Label>()
+  fun nodes(): Stub<Label> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface Label : QType {
-  fun color(): Stub<String> = stub<String>()
+  fun color(): Stub<String> = stub("color")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun issues(): Stub<IssueConnection> = stub<IssueConnection>()
+  fun issues(): Stub<IssueConnection> = stub("issues")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun pullRequests(): Stub<PullRequestConnection> = stub<PullRequestConnection>()
+  fun pullRequests(): Stub<PullRequestConnection> = stub("pullRequests")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
   class IssuesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): IssuesArgs {
@@ -3919,97 +3919,97 @@ interface Label : QType {
 }
 
 interface IssueTimelineItemEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<IssueTimelineItem> = stub<IssueTimelineItem>()
+  fun node(): Stub<IssueTimelineItem> = stub("node")
 }
 
 interface IssueTimelineConnection : QType {
-  fun edges(): Stub<IssueTimelineItemEdge> = stub<IssueTimelineItemEdge>()
+  fun edges(): Stub<IssueTimelineItemEdge> = stub("edges")
 
-  fun nodes(): Stub<IssueTimelineItem> = stub<IssueTimelineItem>()
+  fun nodes(): Stub<IssueTimelineItem> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface IssueEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Issue> = stub<Issue>()
+  fun node(): Stub<Issue> = stub("node")
 }
 
 interface IssueConnection : QType {
-  fun edges(): Stub<IssueEdge> = stub<IssueEdge>()
+  fun edges(): Stub<IssueEdge> = stub("edges")
 
-  fun nodes(): Stub<Issue> = stub<Issue>()
+  fun nodes(): Stub<Issue> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface IssueCommentEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<IssueComment> = stub<IssueComment>()
+  fun node(): Stub<IssueComment> = stub("node")
 }
 
 interface IssueCommentConnection : QType {
-  fun edges(): Stub<IssueCommentEdge> = stub<IssueCommentEdge>()
+  fun edges(): Stub<IssueCommentEdge> = stub("edges")
 
-  fun nodes(): Stub<IssueComment> = stub<IssueComment>()
+  fun nodes(): Stub<IssueComment> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface IssueComment : QType {
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun bodyText(): Stub<String> = stub<String>()
+  fun bodyText(): Stub<String> = stub("bodyText")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun reactionGroups(): Stub<ReactionGroup> = stub<ReactionGroup>()
+  fun reactionGroups(): Stub<ReactionGroup> = stub("reactionGroups")
 
-  fun reactions(): Stub<ReactionConnection> = stub<ReactionConnection>()
+  fun reactions(): Stub<ReactionConnection> = stub("reactions")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun viewerCanDelete(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanDelete(): Stub<Boolean> = stub("viewerCanDelete")
 
-  fun viewerCanReact(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanReact(): Stub<Boolean> = stub("viewerCanReact")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): ReactionsArgs {
@@ -4039,75 +4039,75 @@ interface IssueComment : QType {
 }
 
 interface Issue : QType {
-  fun assignees(): Stub<UserConnection> = stub<UserConnection>()
+  fun assignees(): Stub<UserConnection> = stub("assignees")
 
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun bodyText(): Stub<String> = stub<String>()
+  fun bodyText(): Stub<String> = stub("bodyText")
 
-  fun closed(): Stub<Boolean> = stub<Boolean>()
+  fun closed(): Stub<Boolean> = stub("closed")
 
-  fun comments(): Stub<IssueCommentConnection> = stub<IssueCommentConnection>()
+  fun comments(): Stub<IssueCommentConnection> = stub("comments")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun labels(): Stub<LabelConnection> = stub<LabelConnection>()
+  fun labels(): Stub<LabelConnection> = stub("labels")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun locked(): Stub<Boolean> = stub<Boolean>()
+  fun locked(): Stub<Boolean> = stub("locked")
 
-  fun milestone(): Stub<Milestone> = stub<Milestone>()
+  fun milestone(): Stub<Milestone> = stub("milestone")
 
-  fun number(): Stub<Int> = stub<Int>()
+  fun number(): Stub<Int> = stub("number")
 
-  fun participants(): Stub<UserConnection> = stub<UserConnection>()
+  fun participants(): Stub<UserConnection> = stub("participants")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun reactionGroups(): Stub<ReactionGroup> = stub<ReactionGroup>()
+  fun reactionGroups(): Stub<ReactionGroup> = stub("reactionGroups")
 
-  fun reactions(): Stub<ReactionConnection> = stub<ReactionConnection>()
+  fun reactions(): Stub<ReactionConnection> = stub("reactions")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun state(): Stub<IssueState> = stub<IssueState>()
+  fun state(): Stub<IssueState> = stub("state")
 
-  fun timeline(): Stub<IssueTimelineConnection> = stub<IssueTimelineConnection>()
+  fun timeline(): Stub<IssueTimelineConnection> = stub("timeline")
 
-  fun title(): Stub<String> = stub<String>()
+  fun title(): Stub<String> = stub("title")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanReact(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanReact(): Stub<Boolean> = stub("viewerCanReact")
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanSubscribe(): Stub<Boolean> = stub("viewerCanSubscribe")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub<SubscriptionState>()
+  fun viewerSubscription(): Stub<SubscriptionState> = stub("viewerSubscription")
 
   class AssigneesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): AssigneesArgs {
@@ -4231,71 +4231,71 @@ interface Issue : QType {
 }
 
 interface HeadRefRestoredEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 }
 
 interface HeadRefForcePushedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun afterCommit(): Stub<Commit> = stub<Commit>()
+  fun afterCommit(): Stub<Commit> = stub("afterCommit")
 
-  fun beforeCommit(): Stub<Commit> = stub<Commit>()
+  fun beforeCommit(): Stub<Commit> = stub("beforeCommit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun ref(): Stub<Ref> = stub<Ref>()
+  fun ref(): Stub<Ref> = stub("ref")
 }
 
 interface HeadRefDeletedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun headRef(): Stub<Ref> = stub<Ref>()
+  fun headRef(): Stub<Ref> = stub("headRef")
 
-  fun headRefName(): Stub<String> = stub<String>()
+  fun headRefName(): Stub<String> = stub("headRefName")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 }
 
 interface GpgSignature : QType {
-  fun email(): Stub<String> = stub<String>()
+  fun email(): Stub<String> = stub("email")
 
-  fun isValid(): Stub<Boolean> = stub<Boolean>()
+  fun isValid(): Stub<Boolean> = stub("isValid")
 
-  fun keyId(): Stub<String> = stub<String>()
+  fun keyId(): Stub<String> = stub("keyId")
 
-  fun payload(): Stub<String> = stub<String>()
+  fun payload(): Stub<String> = stub("payload")
 
-  fun signature(): Stub<String> = stub<String>()
+  fun signature(): Stub<String> = stub("signature")
 
-  fun signer(): Stub<User> = stub<User>()
+  fun signer(): Stub<User> = stub("signer")
 
-  fun state(): Stub<GitSignatureState> = stub<GitSignatureState>()
+  fun state(): Stub<GitSignatureState> = stub("state")
 }
 
 interface GitActor : QType {
-  fun avatarUrl(): Stub<URI> = stub<URI>()
+  fun avatarUrl(): Stub<URI> = stub("avatarUrl")
 
-  fun date(): Stub<GitTimestamp> = stub<GitTimestamp>()
+  fun date(): Stub<GitTimestamp> = stub("date")
 
-  fun email(): Stub<String> = stub<String>()
+  fun email(): Stub<String> = stub("email")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun size(value: Int): AvatarUrlArgs {
@@ -4305,89 +4305,89 @@ interface GitActor : QType {
 }
 
 interface GistEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Gist> = stub<Gist>()
+  fun node(): Stub<Gist> = stub("node")
 }
 
 interface GistConnection : QType {
-  fun edges(): Stub<GistEdge> = stub<GistEdge>()
+  fun edges(): Stub<GistEdge> = stub("edges")
 
-  fun nodes(): Stub<Gist> = stub<Gist>()
+  fun nodes(): Stub<Gist> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface GistCommentEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<GistComment> = stub<GistComment>()
+  fun node(): Stub<GistComment> = stub("node")
 }
 
 interface GistCommentConnection : QType {
-  fun edges(): Stub<GistCommentEdge> = stub<GistCommentEdge>()
+  fun edges(): Stub<GistCommentEdge> = stub("edges")
 
-  fun nodes(): Stub<GistComment> = stub<GistComment>()
+  fun nodes(): Stub<GistComment> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface GistComment : QType {
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun viewerCanDelete(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanDelete(): Stub<Boolean> = stub("viewerCanDelete")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 }
 
 interface Gist : QType {
-  fun comments(): Stub<GistCommentConnection> = stub<GistCommentConnection>()
+  fun comments(): Stub<GistCommentConnection> = stub("comments")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isPublic(): Stub<Boolean> = stub<Boolean>()
+  fun isPublic(): Stub<Boolean> = stub("isPublic")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun owner(): Stub<RepositoryOwner> = stub<RepositoryOwner>()
+  fun owner(): Stub<RepositoryOwner> = stub("owner")
 
-  fun stargazers(): Stub<StargazerConnection> = stub<StargazerConnection>()
+  fun stargazers(): Stub<StargazerConnection> = stub("stargazers")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun viewerHasStarred(): Stub<Boolean> = stub<Boolean>()
+  fun viewerHasStarred(): Stub<Boolean> = stub("viewerHasStarred")
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): CommentsArgs {
@@ -4431,135 +4431,135 @@ interface Gist : QType {
 }
 
 interface FollowingConnection : QType {
-  fun edges(): Stub<UserEdge> = stub<UserEdge>()
+  fun edges(): Stub<UserEdge> = stub("edges")
 
-  fun nodes(): Stub<User> = stub<User>()
+  fun nodes(): Stub<User> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface FollowerConnection : QType {
-  fun edges(): Stub<UserEdge> = stub<UserEdge>()
+  fun edges(): Stub<UserEdge> = stub("edges")
 
-  fun nodes(): Stub<User> = stub<User>()
+  fun nodes(): Stub<User> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ExternalIdentityScimAttributes : QType {
-  fun username(): Stub<String> = stub<String>()
+  fun username(): Stub<String> = stub("username")
 }
 
 interface ExternalIdentitySamlAttributes : QType {
-  fun nameId(): Stub<String> = stub<String>()
+  fun nameId(): Stub<String> = stub("nameId")
 }
 
 interface ExternalIdentityEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<ExternalIdentity> = stub<ExternalIdentity>()
+  fun node(): Stub<ExternalIdentity> = stub("node")
 }
 
 interface ExternalIdentityConnection : QType {
-  fun edges(): Stub<ExternalIdentityEdge> = stub<ExternalIdentityEdge>()
+  fun edges(): Stub<ExternalIdentityEdge> = stub("edges")
 
-  fun nodes(): Stub<ExternalIdentity> = stub<ExternalIdentity>()
+  fun nodes(): Stub<ExternalIdentity> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface ExternalIdentity : QType {
-  fun guid(): Stub<String> = stub<String>()
+  fun guid(): Stub<String> = stub("guid")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun organizationInvitation(): Stub<OrganizationInvitation> = stub<OrganizationInvitation>()
+  fun organizationInvitation(): Stub<OrganizationInvitation> = stub("organizationInvitation")
 
-  fun samlIdentity(): Stub<ExternalIdentitySamlAttributes> = stub<ExternalIdentitySamlAttributes>()
+  fun samlIdentity(): Stub<ExternalIdentitySamlAttributes> = stub("samlIdentity")
 
-  fun scimIdentity(): Stub<ExternalIdentityScimAttributes> = stub<ExternalIdentityScimAttributes>()
+  fun scimIdentity(): Stub<ExternalIdentityScimAttributes> = stub("scimIdentity")
 
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 }
 
 interface DismissPullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun pullRequestReview(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun pullRequestReview(): Stub<PullRequestReview> = stub("pullRequestReview")
 }
 
 interface DeploymentStatusEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<DeploymentStatus> = stub<DeploymentStatus>()
+  fun node(): Stub<DeploymentStatus> = stub("node")
 }
 
 interface DeploymentStatusConnection : QType {
-  fun edges(): Stub<DeploymentStatusEdge> = stub<DeploymentStatusEdge>()
+  fun edges(): Stub<DeploymentStatusEdge> = stub("edges")
 
-  fun nodes(): Stub<DeploymentStatus> = stub<DeploymentStatus>()
+  fun nodes(): Stub<DeploymentStatus> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface DeploymentStatus : QType {
-  fun creator(): Stub<Actor> = stub<Actor>()
+  fun creator(): Stub<Actor> = stub("creator")
 
-  fun deployment(): Stub<Deployment> = stub<Deployment>()
+  fun deployment(): Stub<Deployment> = stub("deployment")
 
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun environmentUrl(): Stub<URI> = stub<URI>()
+  fun environmentUrl(): Stub<URI> = stub("environmentUrl")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun logUrl(): Stub<URI> = stub<URI>()
+  fun logUrl(): Stub<URI> = stub("logUrl")
 
-  fun state(): Stub<DeploymentStatusState> = stub<DeploymentStatusState>()
+  fun state(): Stub<DeploymentStatusState> = stub("state")
 }
 
 interface DeploymentEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Deployment> = stub<Deployment>()
+  fun node(): Stub<Deployment> = stub("node")
 }
 
 interface DeploymentConnection : QType {
-  fun edges(): Stub<DeploymentEdge> = stub<DeploymentEdge>()
+  fun edges(): Stub<DeploymentEdge> = stub("edges")
 
-  fun nodes(): Stub<Deployment> = stub<Deployment>()
+  fun nodes(): Stub<Deployment> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface Deployment : QType {
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun creator(): Stub<Actor> = stub<Actor>()
+  fun creator(): Stub<Actor> = stub("creator")
 
-  fun environment(): Stub<String> = stub<String>()
+  fun environment(): Stub<String> = stub("environment")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun latestStatus(): Stub<DeploymentStatus> = stub<DeploymentStatus>()
+  fun latestStatus(): Stub<DeploymentStatus> = stub("latestStatus")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun state(): Stub<DeploymentState> = stub<DeploymentState>()
+  fun state(): Stub<DeploymentState> = stub("state")
 
-  fun statuses(): Stub<DeploymentStatusConnection> = stub<DeploymentStatusConnection>()
+  fun statuses(): Stub<DeploymentStatusConnection> = stub("statuses")
 
   class StatusesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): StatusesArgs {
@@ -4581,109 +4581,109 @@ interface Deployment : QType {
 }
 
 interface DeployedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun deployment(): Stub<Deployment> = stub<Deployment>()
+  fun deployment(): Stub<Deployment> = stub("deployment")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun ref(): Stub<Ref> = stub<Ref>()
+  fun ref(): Stub<Ref> = stub("ref")
 }
 
 interface DemilestonedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun milestoneTitle(): Stub<String> = stub<String>()
+  fun milestoneTitle(): Stub<String> = stub("milestoneTitle")
 
-  fun subject(): Stub<MilestoneItem> = stub<MilestoneItem>()
+  fun subject(): Stub<MilestoneItem> = stub("subject")
 }
 
 interface DeletePullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun pullRequestReview(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun pullRequestReview(): Stub<PullRequestReview> = stub("pullRequestReview")
 }
 
 interface DeleteProjectPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun owner(): Stub<ProjectOwner> = stub<ProjectOwner>()
+  fun owner(): Stub<ProjectOwner> = stub("owner")
 }
 
 interface DeleteProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun deletedColumnId(): Stub<String> = stub<String>()
+  fun deletedColumnId(): Stub<String> = stub("deletedColumnId")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 }
 
 interface DeleteProjectCardPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun column(): Stub<ProjectColumn> = stub<ProjectColumn>()
+  fun column(): Stub<ProjectColumn> = stub("column")
 
-  fun deletedCardId(): Stub<String> = stub<String>()
+  fun deletedCardId(): Stub<String> = stub("deletedCardId")
 }
 
 interface DeclineTopicSuggestionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun topic(): Stub<Topic> = stub<Topic>()
+  fun topic(): Stub<Topic> = stub("topic")
 }
 
 interface CreateProjectPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 }
 
 interface ConvertedNoteToIssueEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface CommitHistoryConnection : QType {
-  fun edges(): Stub<CommitEdge> = stub<CommitEdge>()
+  fun edges(): Stub<CommitEdge> = stub("edges")
 
-  fun nodes(): Stub<Commit> = stub<Commit>()
+  fun nodes(): Stub<Commit> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 }
 
 interface CommitEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<Commit> = stub<Commit>()
+  fun node(): Stub<Commit> = stub("node")
 }
 
 interface CommitCommentThread : QType {
-  fun comments(): Stub<CommitCommentConnection> = stub<CommitCommentConnection>()
+  fun comments(): Stub<CommitCommentConnection> = stub("comments")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun path(): Stub<String> = stub<String>()
+  fun path(): Stub<String> = stub("path")
 
-  fun position(): Stub<Int> = stub<Int>()
+  fun position(): Stub<Int> = stub("position")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): CommentsArgs {
@@ -4705,67 +4705,67 @@ interface CommitCommentThread : QType {
 }
 
 interface CommitCommentEdge : QType {
-  fun cursor(): Stub<String> = stub<String>()
+  fun cursor(): Stub<String> = stub("cursor")
 
-  fun node(): Stub<CommitComment> = stub<CommitComment>()
+  fun node(): Stub<CommitComment> = stub("node")
 }
 
 interface CommitCommentConnection : QType {
-  fun edges(): Stub<CommitCommentEdge> = stub<CommitCommentEdge>()
+  fun edges(): Stub<CommitCommentEdge> = stub("edges")
 
-  fun nodes(): Stub<CommitComment> = stub<CommitComment>()
+  fun nodes(): Stub<CommitComment> = stub("nodes")
 
-  fun pageInfo(): Stub<PageInfo> = stub<PageInfo>()
+  fun pageInfo(): Stub<PageInfo> = stub("pageInfo")
 
-  fun totalCount(): Stub<Int> = stub<Int>()
+  fun totalCount(): Stub<Int> = stub("totalCount")
 }
 
 interface CommitComment : QType {
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun path(): Stub<String> = stub<String>()
+  fun path(): Stub<String> = stub("path")
 
-  fun position(): Stub<Int> = stub<Int>()
+  fun position(): Stub<Int> = stub("position")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun reactionGroups(): Stub<ReactionGroup> = stub<ReactionGroup>()
+  fun reactionGroups(): Stub<ReactionGroup> = stub("reactionGroups")
 
-  fun reactions(): Stub<ReactionConnection> = stub<ReactionConnection>()
+  fun reactions(): Stub<ReactionConnection> = stub("reactions")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun viewerCanDelete(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanDelete(): Stub<Boolean> = stub("viewerCanDelete")
 
-  fun viewerCanReact(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanReact(): Stub<Boolean> = stub("viewerCanReact")
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): ReactionsArgs {
@@ -4795,61 +4795,61 @@ interface CommitComment : QType {
 }
 
 interface Commit : QType {
-  fun abbreviatedOid(): Stub<String> = stub<String>()
+  fun abbreviatedOid(): Stub<String> = stub("abbreviatedOid")
 
-  fun author(): Stub<GitActor> = stub<GitActor>()
+  fun author(): Stub<GitActor> = stub("author")
 
-  fun authoredByCommitter(): Stub<Boolean> = stub<Boolean>()
+  fun authoredByCommitter(): Stub<Boolean> = stub("authoredByCommitter")
 
-  fun blame(): Stub<Blame> = stub<Blame>()
+  fun blame(): Stub<Blame> = stub("blame")
 
-  fun comments(): Stub<CommitCommentConnection> = stub<CommitCommentConnection>()
+  fun comments(): Stub<CommitCommentConnection> = stub("comments")
 
-  fun commitResourcePath(): Stub<URI> = stub<URI>()
+  fun commitResourcePath(): Stub<URI> = stub("commitResourcePath")
 
-  fun commitUrl(): Stub<URI> = stub<URI>()
+  fun commitUrl(): Stub<URI> = stub("commitUrl")
 
-  fun committedDate(): Stub<DateTime> = stub<DateTime>()
+  fun committedDate(): Stub<DateTime> = stub("committedDate")
 
-  fun committedViaWeb(): Stub<Boolean> = stub<Boolean>()
+  fun committedViaWeb(): Stub<Boolean> = stub("committedViaWeb")
 
-  fun committer(): Stub<GitActor> = stub<GitActor>()
+  fun committer(): Stub<GitActor> = stub("committer")
 
-  fun history(): Stub<CommitHistoryConnection> = stub<CommitHistoryConnection>()
+  fun history(): Stub<CommitHistoryConnection> = stub("history")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun message(): Stub<String> = stub<String>()
+  fun message(): Stub<String> = stub("message")
 
-  fun messageBody(): Stub<String> = stub<String>()
+  fun messageBody(): Stub<String> = stub("messageBody")
 
-  fun messageBodyHTML(): Stub<HTML> = stub<HTML>()
+  fun messageBodyHTML(): Stub<HTML> = stub("messageBodyHTML")
 
-  fun messageHeadline(): Stub<String> = stub<String>()
+  fun messageHeadline(): Stub<String> = stub("messageHeadline")
 
-  fun messageHeadlineHTML(): Stub<HTML> = stub<HTML>()
+  fun messageHeadlineHTML(): Stub<HTML> = stub("messageHeadlineHTML")
 
-  fun oid(): Stub<GitObjectID> = stub<GitObjectID>()
+  fun oid(): Stub<GitObjectID> = stub("oid")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun signature(): Stub<GitSignature> = stub<GitSignature>()
+  fun signature(): Stub<GitSignature> = stub("signature")
 
-  fun status(): Stub<Status> = stub<Status>()
+  fun status(): Stub<Status> = stub("status")
 
-  fun tree(): Stub<Tree> = stub<Tree>()
+  fun tree(): Stub<Tree> = stub("tree")
 
-  fun treeResourcePath(): Stub<URI> = stub<URI>()
+  fun treeResourcePath(): Stub<URI> = stub("treeResourcePath")
 
-  fun treeUrl(): Stub<URI> = stub<URI>()
+  fun treeUrl(): Stub<URI> = stub("treeUrl")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanSubscribe(): Stub<Boolean> = stub("viewerCanSubscribe")
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub<SubscriptionState>()
+  fun viewerSubscription(): Stub<SubscriptionState> = stub("viewerSubscription")
 
   class BlameArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun path(value: String): BlameArgs {
@@ -4911,49 +4911,49 @@ interface Commit : QType {
 }
 
 interface CommentDeletedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface CodeOfConduct : QType {
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun key(): Stub<String> = stub<String>()
+  fun key(): Stub<String> = stub("key")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface ClosedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun closable(): Stub<Closable> = stub<Closable>()
+  fun closable(): Stub<Closable> = stub("closable")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface Bot : QType {
-  fun avatarUrl(): Stub<URI> = stub<URI>()
+  fun avatarUrl(): Stub<URI> = stub("avatarUrl")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun login(): Stub<String> = stub<String>()
+  fun login(): Stub<String> = stub("login")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun size(value: Int): AvatarUrlArgs {
@@ -4963,177 +4963,177 @@ interface Bot : QType {
 }
 
 interface Blob : QType {
-  fun abbreviatedOid(): Stub<String> = stub<String>()
+  fun abbreviatedOid(): Stub<String> = stub("abbreviatedOid")
 
-  fun byteSize(): Stub<Int> = stub<Int>()
+  fun byteSize(): Stub<Int> = stub("byteSize")
 
-  fun commitResourcePath(): Stub<URI> = stub<URI>()
+  fun commitResourcePath(): Stub<URI> = stub("commitResourcePath")
 
-  fun commitUrl(): Stub<URI> = stub<URI>()
+  fun commitUrl(): Stub<URI> = stub("commitUrl")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun isBinary(): Stub<Boolean> = stub<Boolean>()
+  fun isBinary(): Stub<Boolean> = stub("isBinary")
 
-  fun isTruncated(): Stub<Boolean> = stub<Boolean>()
+  fun isTruncated(): Stub<Boolean> = stub("isTruncated")
 
-  fun oid(): Stub<GitObjectID> = stub<GitObjectID>()
+  fun oid(): Stub<GitObjectID> = stub("oid")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun text(): Stub<String> = stub<String>()
+  fun text(): Stub<String> = stub("text")
 }
 
 interface BlameRange : QType {
-  fun age(): Stub<Int> = stub<Int>()
+  fun age(): Stub<Int> = stub("age")
 
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun endingLine(): Stub<Int> = stub<Int>()
+  fun endingLine(): Stub<Int> = stub("endingLine")
 
-  fun startingLine(): Stub<Int> = stub<Int>()
+  fun startingLine(): Stub<Int> = stub("startingLine")
 }
 
 interface Blame : QType {
-  fun ranges(): Stub<BlameRange> = stub<BlameRange>()
+  fun ranges(): Stub<BlameRange> = stub("ranges")
 }
 
 interface BaseRefForcePushedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun afterCommit(): Stub<Commit> = stub<Commit>()
+  fun afterCommit(): Stub<Commit> = stub("afterCommit")
 
-  fun beforeCommit(): Stub<Commit> = stub<Commit>()
+  fun beforeCommit(): Stub<Commit> = stub("beforeCommit")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun pullRequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullRequest(): Stub<PullRequest> = stub("pullRequest")
 
-  fun ref(): Stub<Ref> = stub<Ref>()
+  fun ref(): Stub<Ref> = stub("ref")
 }
 
 interface BaseRefChangedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface AssignedEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun assignable(): Stub<Assignable> = stub<Assignable>()
+  fun assignable(): Stub<Assignable> = stub("assignable")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 }
 
 interface AddedToProjectEvent : QType {
-  fun actor(): Stub<Actor> = stub<Actor>()
+  fun actor(): Stub<Actor> = stub("actor")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface AddStarPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun starrable(): Stub<Starrable> = stub<Starrable>()
+  fun starrable(): Stub<Starrable> = stub("starrable")
 }
 
 interface AddReactionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun reaction(): Stub<Reaction> = stub<Reaction>()
+  fun reaction(): Stub<Reaction> = stub("reaction")
 
-  fun subject(): Stub<Reactable> = stub<Reactable>()
+  fun subject(): Stub<Reactable> = stub("subject")
 }
 
 interface AddPullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun pullRequestReview(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun pullRequestReview(): Stub<PullRequestReview> = stub("pullRequestReview")
 
-  fun reviewEdge(): Stub<PullRequestReviewEdge> = stub<PullRequestReviewEdge>()
+  fun reviewEdge(): Stub<PullRequestReviewEdge> = stub("reviewEdge")
 }
 
 interface AddPullRequestReviewCommentPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun comment(): Stub<PullRequestReviewComment> = stub<PullRequestReviewComment>()
+  fun comment(): Stub<PullRequestReviewComment> = stub("comment")
 
-  fun commentEdge(): Stub<PullRequestReviewCommentEdge> = stub<PullRequestReviewCommentEdge>()
+  fun commentEdge(): Stub<PullRequestReviewCommentEdge> = stub("commentEdge")
 }
 
 interface AddProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun columnEdge(): Stub<ProjectColumnEdge> = stub<ProjectColumnEdge>()
+  fun columnEdge(): Stub<ProjectColumnEdge> = stub("columnEdge")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 }
 
 interface AddProjectCardPayload : QType {
-  fun cardEdge(): Stub<ProjectCardEdge> = stub<ProjectCardEdge>()
+  fun cardEdge(): Stub<ProjectCardEdge> = stub("cardEdge")
 
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun projectColumn(): Stub<Project> = stub<Project>()
+  fun projectColumn(): Stub<Project> = stub("projectColumn")
 }
 
 interface AddCommentPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun commentEdge(): Stub<IssueCommentEdge> = stub<IssueCommentEdge>()
+  fun commentEdge(): Stub<IssueCommentEdge> = stub("commentEdge")
 
-  fun subject(): Stub<Node> = stub<Node>()
+  fun subject(): Stub<Node> = stub("subject")
 
-  fun timelineEdge(): Stub<IssueTimelineItemEdge> = stub<IssueTimelineItemEdge>()
+  fun timelineEdge(): Stub<IssueTimelineItemEdge> = stub("timelineEdge")
 }
 
 interface AcceptTopicSuggestionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub<String>()
+  fun clientMutationId(): Stub<String> = stub("clientMutationId")
 
-  fun topic(): Stub<Topic> = stub<Topic>()
+  fun topic(): Stub<Topic> = stub("topic")
 }
 
 interface UpdatableComment : QType {
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub<CommentCannotUpdateReason>()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub("viewerCannotUpdateReasons")
 }
 
 interface Updatable : QType {
-  fun viewerCanUpdate(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanUpdate(): Stub<Boolean> = stub("viewerCanUpdate")
 }
 
 interface UniformResourceLocatable : QType {
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface Subscribable : QType {
-  fun viewerCanSubscribe(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanSubscribe(): Stub<Boolean> = stub("viewerCanSubscribe")
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub<SubscriptionState>()
+  fun viewerSubscription(): Stub<SubscriptionState> = stub("viewerSubscription")
 }
 
 interface Starrable : QType {
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun stargazers(): Stub<StargazerConnection> = stub<StargazerConnection>()
+  fun stargazers(): Stub<StargazerConnection> = stub("stargazers")
 
-  fun viewerHasStarred(): Stub<Boolean> = stub<Boolean>()
+  fun viewerHasStarred(): Stub<Boolean> = stub("viewerHasStarred")
 
   class StargazersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): StargazersArgs {
@@ -5159,21 +5159,21 @@ interface Starrable : QType {
 }
 
 interface RepositoryOwner : QType {
-  fun avatarUrl(): Stub<URI> = stub<URI>()
+  fun avatarUrl(): Stub<URI> = stub("avatarUrl")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun login(): Stub<String> = stub<String>()
+  fun login(): Stub<String> = stub("login")
 
-  fun pinnedRepositories(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun pinnedRepositories(): Stub<RepositoryConnection> = stub("pinnedRepositories")
 
-  fun repositories(): Stub<RepositoryConnection> = stub<RepositoryConnection>()
+  fun repositories(): Stub<RepositoryConnection> = stub("repositories")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun size(value: Int): AvatarUrlArgs {
@@ -5261,61 +5261,61 @@ interface RepositoryOwner : QType {
 }
 
 interface RepositoryNode : QType {
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 }
 
 interface RepositoryInfo : QType {
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun description(): Stub<String> = stub<String>()
+  fun description(): Stub<String> = stub("description")
 
-  fun descriptionHTML(): Stub<HTML> = stub<HTML>()
+  fun descriptionHTML(): Stub<HTML> = stub("descriptionHTML")
 
-  fun hasIssuesEnabled(): Stub<Boolean> = stub<Boolean>()
+  fun hasIssuesEnabled(): Stub<Boolean> = stub("hasIssuesEnabled")
 
-  fun hasWikiEnabled(): Stub<Boolean> = stub<Boolean>()
+  fun hasWikiEnabled(): Stub<Boolean> = stub("hasWikiEnabled")
 
-  fun homepageUrl(): Stub<URI> = stub<URI>()
+  fun homepageUrl(): Stub<URI> = stub("homepageUrl")
 
-  fun isFork(): Stub<Boolean> = stub<Boolean>()
+  fun isFork(): Stub<Boolean> = stub("isFork")
 
-  fun isLocked(): Stub<Boolean> = stub<Boolean>()
+  fun isLocked(): Stub<Boolean> = stub("isLocked")
 
-  fun isMirror(): Stub<Boolean> = stub<Boolean>()
+  fun isMirror(): Stub<Boolean> = stub("isMirror")
 
-  fun isPrivate(): Stub<Boolean> = stub<Boolean>()
+  fun isPrivate(): Stub<Boolean> = stub("isPrivate")
 
-  fun license(): Stub<String> = stub<String>()
+  fun license(): Stub<String> = stub("license")
 
-  fun lockReason(): Stub<RepositoryLockReason> = stub<RepositoryLockReason>()
+  fun lockReason(): Stub<RepositoryLockReason> = stub("lockReason")
 
-  fun mirrorUrl(): Stub<URI> = stub<URI>()
+  fun mirrorUrl(): Stub<URI> = stub("mirrorUrl")
 
-  fun name(): Stub<String> = stub<String>()
+  fun name(): Stub<String> = stub("name")
 
-  fun nameWithOwner(): Stub<String> = stub<String>()
+  fun nameWithOwner(): Stub<String> = stub("nameWithOwner")
 
-  fun owner(): Stub<RepositoryOwner> = stub<RepositoryOwner>()
+  fun owner(): Stub<RepositoryOwner> = stub("owner")
 
-  fun pushedAt(): Stub<DateTime> = stub<DateTime>()
+  fun pushedAt(): Stub<DateTime> = stub("pushedAt")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 }
 
 interface Reactable : QType {
-  fun databaseId(): Stub<Int> = stub<Int>()
+  fun databaseId(): Stub<Int> = stub("databaseId")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun reactionGroups(): Stub<ReactionGroup> = stub<ReactionGroup>()
+  fun reactionGroups(): Stub<ReactionGroup> = stub("reactionGroups")
 
-  fun reactions(): Stub<ReactionConnection> = stub<ReactionConnection>()
+  fun reactions(): Stub<ReactionConnection> = stub("reactions")
 
-  fun viewerCanReact(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanReact(): Stub<Boolean> = stub("viewerCanReact")
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): ReactionsArgs {
@@ -5345,17 +5345,17 @@ interface Reactable : QType {
 }
 
 interface ProjectOwner : QType {
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun project(): Stub<Project> = stub<Project>()
+  fun project(): Stub<Project> = stub("project")
 
-  fun projects(): Stub<ProjectConnection> = stub<ProjectConnection>()
+  fun projects(): Stub<ProjectConnection> = stub("projects")
 
-  fun projectsResourcePath(): Stub<URI> = stub<URI>()
+  fun projectsResourcePath(): Stub<URI> = stub("projectsResourcePath")
 
-  fun projectsUrl(): Stub<URI> = stub<URI>()
+  fun projectsUrl(): Stub<URI> = stub("projectsUrl")
 
-  fun viewerCanCreateProjects(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanCreateProjects(): Stub<Boolean> = stub("viewerCanCreateProjects")
 
   class ProjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun number(value: Int): ProjectArgs {
@@ -5395,15 +5395,15 @@ interface ProjectOwner : QType {
 }
 
 interface Node : QType {
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 }
 
 interface Lockable : QType {
-  fun locked(): Stub<Boolean> = stub<Boolean>()
+  fun locked(): Stub<Boolean> = stub("locked")
 }
 
 interface Labelable : QType {
-  fun labels(): Stub<LabelConnection> = stub<LabelConnection>()
+  fun labels(): Stub<LabelConnection> = stub("labels")
 
   class LabelsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): LabelsArgs {
@@ -5425,69 +5425,69 @@ interface Labelable : QType {
 }
 
 interface GitSignature : QType {
-  fun email(): Stub<String> = stub<String>()
+  fun email(): Stub<String> = stub("email")
 
-  fun isValid(): Stub<Boolean> = stub<Boolean>()
+  fun isValid(): Stub<Boolean> = stub("isValid")
 
-  fun payload(): Stub<String> = stub<String>()
+  fun payload(): Stub<String> = stub("payload")
 
-  fun signature(): Stub<String> = stub<String>()
+  fun signature(): Stub<String> = stub("signature")
 
-  fun signer(): Stub<User> = stub<User>()
+  fun signer(): Stub<User> = stub("signer")
 
-  fun state(): Stub<GitSignatureState> = stub<GitSignatureState>()
+  fun state(): Stub<GitSignatureState> = stub("state")
 }
 
 interface GitObject : QType {
-  fun abbreviatedOid(): Stub<String> = stub<String>()
+  fun abbreviatedOid(): Stub<String> = stub("abbreviatedOid")
 
-  fun commitResourcePath(): Stub<URI> = stub<URI>()
+  fun commitResourcePath(): Stub<URI> = stub("commitResourcePath")
 
-  fun commitUrl(): Stub<URI> = stub<URI>()
+  fun commitUrl(): Stub<URI> = stub("commitUrl")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun oid(): Stub<GitObjectID> = stub<GitObjectID>()
+  fun oid(): Stub<GitObjectID> = stub("oid")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 }
 
 interface Deletable : QType {
-  fun viewerCanDelete(): Stub<Boolean> = stub<Boolean>()
+  fun viewerCanDelete(): Stub<Boolean> = stub("viewerCanDelete")
 }
 
 interface Comment : QType {
-  fun author(): Stub<Actor> = stub<Actor>()
+  fun author(): Stub<Actor> = stub("author")
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub<CommentAuthorAssociation>()
+  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub("authorAssociation")
 
-  fun body(): Stub<String> = stub<String>()
+  fun body(): Stub<String> = stub("body")
 
-  fun bodyHTML(): Stub<HTML> = stub<HTML>()
+  fun bodyHTML(): Stub<HTML> = stub("bodyHTML")
 
-  fun createdAt(): Stub<DateTime> = stub<DateTime>()
+  fun createdAt(): Stub<DateTime> = stub("createdAt")
 
-  fun createdViaEmail(): Stub<Boolean> = stub<Boolean>()
+  fun createdViaEmail(): Stub<Boolean> = stub("createdViaEmail")
 
-  fun editor(): Stub<Actor> = stub<Actor>()
+  fun editor(): Stub<Actor> = stub("editor")
 
-  fun id(): Stub<String> = stub<String>()
+  fun id(): Stub<String> = stub("id")
 
-  fun lastEditedAt(): Stub<DateTime> = stub<DateTime>()
+  fun lastEditedAt(): Stub<DateTime> = stub("lastEditedAt")
 
-  fun publishedAt(): Stub<DateTime> = stub<DateTime>()
+  fun publishedAt(): Stub<DateTime> = stub("publishedAt")
 
-  fun updatedAt(): Stub<DateTime> = stub<DateTime>()
+  fun updatedAt(): Stub<DateTime> = stub("updatedAt")
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub<Boolean>()
+  fun viewerDidAuthor(): Stub<Boolean> = stub("viewerDidAuthor")
 }
 
 interface Closable : QType {
-  fun closed(): Stub<Boolean> = stub<Boolean>()
+  fun closed(): Stub<Boolean> = stub("closed")
 }
 
 interface Assignable : QType {
-  fun assignees(): Stub<UserConnection> = stub<UserConnection>()
+  fun assignees(): Stub<UserConnection> = stub("assignees")
 
   class AssigneesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun first(value: Int): AssigneesArgs {
@@ -5509,13 +5509,13 @@ interface Assignable : QType {
 }
 
 interface Actor : QType {
-  fun avatarUrl(): Stub<URI> = stub<URI>()
+  fun avatarUrl(): Stub<URI> = stub("avatarUrl")
 
-  fun login(): Stub<String> = stub<String>()
+  fun login(): Stub<String> = stub("login")
 
-  fun resourcePath(): Stub<URI> = stub<URI>()
+  fun resourcePath(): Stub<URI> = stub("resourcePath")
 
-  fun url(): Stub<URI> = stub<URI>()
+  fun url(): Stub<URI> = stub("url")
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
     fun size(value: Int): AvatarUrlArgs {
@@ -5525,175 +5525,175 @@ interface Actor : QType {
 }
 
 interface SearchResultItem : QType {
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun pullrequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullrequest(): Stub<PullRequest> = stub("pullrequest")
 
-  fun repository(): Stub<Repository> = stub<Repository>()
+  fun repository(): Stub<Repository> = stub("repository")
 
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 
-  fun organization(): Stub<Organization> = stub<Organization>()
+  fun organization(): Stub<Organization> = stub("organization")
 }
 
 interface ReviewDismissalAllowanceActor : QType {
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 
-  fun team(): Stub<Team> = stub<Team>()
+  fun team(): Stub<Team> = stub("team")
 }
 
 interface RenamedTitleSubject : QType {
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun pullrequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullrequest(): Stub<PullRequest> = stub("pullrequest")
 }
 
 interface ReferencedSubject : QType {
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun pullrequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullrequest(): Stub<PullRequest> = stub("pullrequest")
 }
 
 interface PushAllowanceActor : QType {
-  fun user(): Stub<User> = stub<User>()
+  fun user(): Stub<User> = stub("user")
 
-  fun team(): Stub<Team> = stub<Team>()
+  fun team(): Stub<Team> = stub("team")
 }
 
 interface PullRequestTimelineItem : QType {
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun commitcommentthread(): Stub<CommitCommentThread> = stub<CommitCommentThread>()
+  fun commitcommentthread(): Stub<CommitCommentThread> = stub("commitcommentthread")
 
-  fun pullrequestreview(): Stub<PullRequestReview> = stub<PullRequestReview>()
+  fun pullrequestreview(): Stub<PullRequestReview> = stub("pullrequestreview")
 
-  fun pullrequestreviewthread(): Stub<PullRequestReviewThread> = stub<PullRequestReviewThread>()
+  fun pullrequestreviewthread(): Stub<PullRequestReviewThread> = stub("pullrequestreviewthread")
 
-  fun pullrequestreviewcomment(): Stub<PullRequestReviewComment> = stub<PullRequestReviewComment>()
+  fun pullrequestreviewcomment(): Stub<PullRequestReviewComment> = stub("pullrequestreviewcomment")
 
-  fun issuecomment(): Stub<IssueComment> = stub<IssueComment>()
+  fun issuecomment(): Stub<IssueComment> = stub("issuecomment")
 
-  fun closedevent(): Stub<ClosedEvent> = stub<ClosedEvent>()
+  fun closedevent(): Stub<ClosedEvent> = stub("closedevent")
 
-  fun reopenedevent(): Stub<ReopenedEvent> = stub<ReopenedEvent>()
+  fun reopenedevent(): Stub<ReopenedEvent> = stub("reopenedevent")
 
-  fun subscribedevent(): Stub<SubscribedEvent> = stub<SubscribedEvent>()
+  fun subscribedevent(): Stub<SubscribedEvent> = stub("subscribedevent")
 
-  fun unsubscribedevent(): Stub<UnsubscribedEvent> = stub<UnsubscribedEvent>()
+  fun unsubscribedevent(): Stub<UnsubscribedEvent> = stub("unsubscribedevent")
 
-  fun mergedevent(): Stub<MergedEvent> = stub<MergedEvent>()
+  fun mergedevent(): Stub<MergedEvent> = stub("mergedevent")
 
-  fun referencedevent(): Stub<ReferencedEvent> = stub<ReferencedEvent>()
+  fun referencedevent(): Stub<ReferencedEvent> = stub("referencedevent")
 
-  fun assignedevent(): Stub<AssignedEvent> = stub<AssignedEvent>()
+  fun assignedevent(): Stub<AssignedEvent> = stub("assignedevent")
 
-  fun unassignedevent(): Stub<UnassignedEvent> = stub<UnassignedEvent>()
+  fun unassignedevent(): Stub<UnassignedEvent> = stub("unassignedevent")
 
-  fun labeledevent(): Stub<LabeledEvent> = stub<LabeledEvent>()
+  fun labeledevent(): Stub<LabeledEvent> = stub("labeledevent")
 
-  fun unlabeledevent(): Stub<UnlabeledEvent> = stub<UnlabeledEvent>()
+  fun unlabeledevent(): Stub<UnlabeledEvent> = stub("unlabeledevent")
 
-  fun milestonedevent(): Stub<MilestonedEvent> = stub<MilestonedEvent>()
+  fun milestonedevent(): Stub<MilestonedEvent> = stub("milestonedevent")
 
-  fun demilestonedevent(): Stub<DemilestonedEvent> = stub<DemilestonedEvent>()
+  fun demilestonedevent(): Stub<DemilestonedEvent> = stub("demilestonedevent")
 
-  fun renamedtitleevent(): Stub<RenamedTitleEvent> = stub<RenamedTitleEvent>()
+  fun renamedtitleevent(): Stub<RenamedTitleEvent> = stub("renamedtitleevent")
 
-  fun lockedevent(): Stub<LockedEvent> = stub<LockedEvent>()
+  fun lockedevent(): Stub<LockedEvent> = stub("lockedevent")
 
-  fun unlockedevent(): Stub<UnlockedEvent> = stub<UnlockedEvent>()
+  fun unlockedevent(): Stub<UnlockedEvent> = stub("unlockedevent")
 
-  fun deployedevent(): Stub<DeployedEvent> = stub<DeployedEvent>()
+  fun deployedevent(): Stub<DeployedEvent> = stub("deployedevent")
 
-  fun headrefdeletedevent(): Stub<HeadRefDeletedEvent> = stub<HeadRefDeletedEvent>()
+  fun headrefdeletedevent(): Stub<HeadRefDeletedEvent> = stub("headrefdeletedevent")
 
-  fun headrefrestoredevent(): Stub<HeadRefRestoredEvent> = stub<HeadRefRestoredEvent>()
+  fun headrefrestoredevent(): Stub<HeadRefRestoredEvent> = stub("headrefrestoredevent")
 
-  fun headrefforcepushedevent(): Stub<HeadRefForcePushedEvent> = stub<HeadRefForcePushedEvent>()
+  fun headrefforcepushedevent(): Stub<HeadRefForcePushedEvent> = stub("headrefforcepushedevent")
 
-  fun baserefforcepushedevent(): Stub<BaseRefForcePushedEvent> = stub<BaseRefForcePushedEvent>()
+  fun baserefforcepushedevent(): Stub<BaseRefForcePushedEvent> = stub("baserefforcepushedevent")
 
-  fun reviewrequestedevent(): Stub<ReviewRequestedEvent> = stub<ReviewRequestedEvent>()
+  fun reviewrequestedevent(): Stub<ReviewRequestedEvent> = stub("reviewrequestedevent")
 
-  fun reviewrequestremovedevent(): Stub<ReviewRequestRemovedEvent> = stub<ReviewRequestRemovedEvent>()
+  fun reviewrequestremovedevent(): Stub<ReviewRequestRemovedEvent> = stub("reviewrequestremovedevent")
 
-  fun reviewdismissedevent(): Stub<ReviewDismissedEvent> = stub<ReviewDismissedEvent>()
+  fun reviewdismissedevent(): Stub<ReviewDismissedEvent> = stub("reviewdismissedevent")
 }
 
 interface ProjectCardItem : QType {
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun pullrequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullrequest(): Stub<PullRequest> = stub("pullrequest")
 }
 
 interface MilestoneItem : QType {
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun pullrequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullrequest(): Stub<PullRequest> = stub("pullrequest")
 }
 
 interface IssueTimelineItem : QType {
-  fun commit(): Stub<Commit> = stub<Commit>()
+  fun commit(): Stub<Commit> = stub("commit")
 
-  fun issuecomment(): Stub<IssueComment> = stub<IssueComment>()
+  fun issuecomment(): Stub<IssueComment> = stub("issuecomment")
 
-  fun closedevent(): Stub<ClosedEvent> = stub<ClosedEvent>()
+  fun closedevent(): Stub<ClosedEvent> = stub("closedevent")
 
-  fun reopenedevent(): Stub<ReopenedEvent> = stub<ReopenedEvent>()
+  fun reopenedevent(): Stub<ReopenedEvent> = stub("reopenedevent")
 
-  fun subscribedevent(): Stub<SubscribedEvent> = stub<SubscribedEvent>()
+  fun subscribedevent(): Stub<SubscribedEvent> = stub("subscribedevent")
 
-  fun unsubscribedevent(): Stub<UnsubscribedEvent> = stub<UnsubscribedEvent>()
+  fun unsubscribedevent(): Stub<UnsubscribedEvent> = stub("unsubscribedevent")
 
-  fun referencedevent(): Stub<ReferencedEvent> = stub<ReferencedEvent>()
+  fun referencedevent(): Stub<ReferencedEvent> = stub("referencedevent")
 
-  fun assignedevent(): Stub<AssignedEvent> = stub<AssignedEvent>()
+  fun assignedevent(): Stub<AssignedEvent> = stub("assignedevent")
 
-  fun unassignedevent(): Stub<UnassignedEvent> = stub<UnassignedEvent>()
+  fun unassignedevent(): Stub<UnassignedEvent> = stub("unassignedevent")
 
-  fun labeledevent(): Stub<LabeledEvent> = stub<LabeledEvent>()
+  fun labeledevent(): Stub<LabeledEvent> = stub("labeledevent")
 
-  fun unlabeledevent(): Stub<UnlabeledEvent> = stub<UnlabeledEvent>()
+  fun unlabeledevent(): Stub<UnlabeledEvent> = stub("unlabeledevent")
 
-  fun milestonedevent(): Stub<MilestonedEvent> = stub<MilestonedEvent>()
+  fun milestonedevent(): Stub<MilestonedEvent> = stub("milestonedevent")
 
-  fun demilestonedevent(): Stub<DemilestonedEvent> = stub<DemilestonedEvent>()
+  fun demilestonedevent(): Stub<DemilestonedEvent> = stub("demilestonedevent")
 
-  fun renamedtitleevent(): Stub<RenamedTitleEvent> = stub<RenamedTitleEvent>()
+  fun renamedtitleevent(): Stub<RenamedTitleEvent> = stub("renamedtitleevent")
 
-  fun lockedevent(): Stub<LockedEvent> = stub<LockedEvent>()
+  fun lockedevent(): Stub<LockedEvent> = stub("lockedevent")
 
-  fun unlockedevent(): Stub<UnlockedEvent> = stub<UnlockedEvent>()
+  fun unlockedevent(): Stub<UnlockedEvent> = stub("unlockedevent")
 }
 
 interface IssueOrPullRequest : QType {
-  fun issue(): Stub<Issue> = stub<Issue>()
+  fun issue(): Stub<Issue> = stub("issue")
 
-  fun pullrequest(): Stub<PullRequest> = stub<PullRequest>()
+  fun pullrequest(): Stub<PullRequest> = stub("pullrequest")
 }
 
 interface X509Certificate : QType {
-  fun value(): Stub<String> = stub<String>()
+  fun value(): Stub<String> = stub("value")
 }
 
 interface URI : QType {
-  fun value(): Stub<String> = stub<String>()
+  fun value(): Stub<String> = stub("value")
 }
 
 interface HTML : QType {
-  fun value(): Stub<String> = stub<String>()
+  fun value(): Stub<String> = stub("value")
 }
 
 interface GitTimestamp : QType {
-  fun value(): Stub<String> = stub<String>()
+  fun value(): Stub<String> = stub("value")
 }
 
 interface GitObjectID : QType {
-  fun value(): Stub<String> = stub<String>()
+  fun value(): Stub<String> = stub("value")
 }
 
 interface DateTime : QType {
-  fun value(): Stub<String> = stub<String>()
+  fun value(): Stub<String> = stub("value")
 }
 
 data class UpdateTopicsInput(val repositoryId: String, val topicNames: String) : QInput {

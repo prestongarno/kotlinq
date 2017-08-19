@@ -1,43 +1,49 @@
 package com.prestongarno.ktq
 
+import org.jetbrains.annotations.Nullable
 import kotlin.reflect.*
-import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.jvm.javaType
+import kotlin.reflect.full.superclasses
 
 @Suppress("UNCHECKED_CAST")
 interface QType {
-  fun <T> stub(): Stub<T> = dummy as Stub<T>
+  fun <T> stub(name: String): Stub<T> = PrimitiveStubAdapter<T>(name, this) as Stub<T>
 
-  fun <T> nullableStub(): NullableStub<T> = nullableDummy as NullableStub<T>
+  fun <T> nullableStub(name: String) = NullablePrimitiveStubAdapter<@Nullable T>(name, this) as NullableStub<@Nullable T>
 
-  fun <T : QType> stub(of: () -> T) = StubAdapter(of) as Stub<T>
+  fun <T : QType> stub(name: String, of: () -> T) : Stub<T> {
+    return StubAdapter(name, of, this) as Stub<T>
+  }
 
-  fun <T : QType> nullableStub(of: () -> T) = NullStubAdapter(of) as NullableStub<T>
+  fun <T : QType> nullableStub(name: String, of: () -> T) = NullStubAdapter(name, of, this) as NullableStub<T>
+
+  fun <T: QType> nop(of: () -> T) : T {
+    val invoke = of.invoke()
+    return invoke
+  }
+
+  companion object {
+    inline fun <reified T: QType> none(inst: QType, type: T) : T {
+      return type
+    }
+  }
 }
 
-val dummy: Stub<Any> = object : Stub<Any> { }
-val nullableDummy: NullableStub<Any> = object : NullableStub<Any> {}
-
 interface Stub<T> {
-  operator fun getValue(inst: QType, property: KProperty<*>): T = throw UnsupportedOperationException()
 
-  operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
-    println("Providing stub: ${property.name} of type ${property.returnType}")
-    val mapper = PMapper.create<T>(property)
-    Tracker.putProperty<Any>(inst, mapper)
-    return mapper
-  }
+  fun <U> mapDirect(of: (T) -> Stub<U>) : Stub<U>
+
+  operator fun getValue(inst: QType, property: KProperty<*>): T
+
+  operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<T>
 }
 
 interface NullableStub<T> {
 
-  operator fun getValue(foo: QType, property: KProperty<*>): T? = throw UnsupportedOperationException()
+  fun <U> mapDirect(of: (T) -> NullableStub<U>): NullableStub<U>
 
-  operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
-    println("Providing nullable stub: ${property.name} of type ${property.returnType}")
-    val mapper = NullPMapper.create<T>(property)
-    Tracker.putProperty<Any>(inst, mapper)
-    return mapper as NullableStub<T>
-  }
+  operator fun getValue(inst: QType, property: KProperty<*>): T?
+
+  operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T>
 }
