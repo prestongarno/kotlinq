@@ -335,6963 +335,6828 @@ enum class CommentAuthorAssociation {
 }
 
 interface UserEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> node(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> node(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("node", of)
+  fun <T> node(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("node", of)
 }
 
 interface UserConnection : QType {
-  fun <T : UserEdge> edges(init: () -> T): Stub<UserEdge> = stub(init)
+  fun <T : UserEdge> edges(init: () -> T): NullableStub<UserEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<UserEdge, Stub<T>>): Stub<T> = stub<UserEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<UserEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<UserEdge, T>("edges", of)
 
-  fun <T : User> nodes(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> nodes(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface User : QType {
-  fun avatarUrl(): Stub<URI> = stub()
+  fun bio(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun bio(): Stub<String> = stub()
+  fun bioHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun bioHTML(): Stub<HTML> = stub()
+  fun company(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun company(): Stub<String> = stub()
+  fun companyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun companyHTML(): Stub<HTML> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T : RepositoryConnection> contributedRepositories(init: () -> T): Stub<RepositoryConnection> = stub(init)
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T> contributedRepositories(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("contributedRepositories", of)
+  fun email(): Stub<String, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun isBountyHunter(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun email(): Stub<String> = stub()
+  fun isCampusExpert(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : FollowerConnection> followers(init: () -> T): Stub<FollowerConnection> = stub(init)
+  fun isDeveloperProgramMember(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> followers(of: KFunction1<FollowerConnection, Stub<T>>): Stub<T> =
-        stub<FollowerConnection, T>("followers", of)
+  fun isEmployee(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : FollowingConnection> following(init: () -> T): Stub<FollowingConnection> = stub(init)
+  fun isHireable(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> following(of: KFunction1<FollowingConnection, Stub<T>>): Stub<T> =
-        stub<FollowingConnection, T>("following", of)
+  fun isInvoiced(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : Gist> gist(init: () -> T): Stub<Gist> = stub(init)
+  fun isSiteAdmin(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> gist(of: KFunction1<Gist, Stub<T>>): Stub<T> = stub<Gist, T>("gist", of)
+  fun isViewer(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : GistConnection> gists(init: () -> T): Stub<GistConnection> = stub(init)
+  fun location(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T> gists(of: KFunction1<GistConnection, Stub<T>>): Stub<T> =
-        stub<GistConnection, T>("gists", of)
+  fun login(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun name(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun isBountyHunter(): Stub<Boolean> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun isCampusExpert(): Stub<Boolean> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun isDeveloperProgramMember(): Stub<Boolean> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun isEmployee(): Stub<Boolean> = stub()
+  fun viewerCanFollow(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isHireable(): Stub<Boolean> = stub()
+  fun viewerIsFollowing(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isInvoiced(): Stub<Boolean> = stub()
+  fun websiteUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun isSiteAdmin(): Stub<Boolean> = stub()
+  fun <T : URI> avatarUrl(init: () -> T,
+      argBuilder: AvatarUrlArgs = AvatarUrlArgs()): Stub<T, AvatarUrlArgs> =
+        configStub(init, argBuilder)
 
-  fun isViewer(): Stub<Boolean> = stub()
+  fun <T : RepositoryConnection> contributedRepositories(init: () -> T,
+      argBuilder: ContributedRepositoriesArgs = ContributedRepositoriesArgs()): Stub<T, ContributedRepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : IssueConnection> issues(init: () -> T): Stub<IssueConnection> = stub(init)
+  fun <T : FollowerConnection> followers(init: () -> T,
+      argBuilder: FollowersArgs = FollowersArgs()): Stub<T, FollowersArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> issues(of: KFunction1<IssueConnection, Stub<T>>): Stub<T> =
-        stub<IssueConnection, T>("issues", of)
+  fun <T : FollowingConnection> following(init: () -> T,
+      argBuilder: FollowingArgs = FollowingArgs()): Stub<T, FollowingArgs> =
+        configStub(init, argBuilder)
 
-  fun location(): Stub<String> = stub()
+  fun <T : Gist> gist(init: () -> T, argBuilder: GistArgs = GistArgs()): NullableStub<T, GistArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun login(): Stub<String> = stub()
+  fun <T : GistConnection> gists(init: () -> T,
+      argBuilder: GistsArgs = GistsArgs()): Stub<T, GistsArgs> = configStub(init, argBuilder)
 
-  fun name(): Stub<String> = stub()
+  fun <T : IssueConnection> issues(init: () -> T,
+      argBuilder: IssuesArgs = IssuesArgs()): Stub<T, IssuesArgs> = configStub(init, argBuilder)
 
-  fun <T : Organization> organization(init: () -> T): Stub<Organization> = stub(init)
+  fun <T : Organization> organization(init: () -> T,
+      argBuilder: OrganizationArgs = OrganizationArgs()): NullableStub<T, OrganizationArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> organization(of: KFunction1<Organization, Stub<T>>): Stub<T> =
-        stub<Organization, T>("organization", of)
+  fun <T : OrganizationConnection> organizations(init: () -> T,
+      argBuilder: OrganizationsArgs = OrganizationsArgs()): Stub<T, OrganizationsArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : OrganizationConnection> organizations(init: () -> T): Stub<OrganizationConnection> = stub(init)
+  fun <T : RepositoryConnection> pinnedRepositories(init: () -> T,
+      argBuilder: PinnedRepositoriesArgs = PinnedRepositoriesArgs()): Stub<T, PinnedRepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> organizations(of: KFunction1<OrganizationConnection, Stub<T>>): Stub<T> =
-        stub<OrganizationConnection, T>("organizations", of)
+  fun <T : PullRequestConnection> pullRequests(init: () -> T,
+      argBuilder: PullRequestsArgs = PullRequestsArgs()): Stub<T, PullRequestsArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : RepositoryConnection> pinnedRepositories(init: () -> T): Stub<RepositoryConnection> = stub(init)
+  fun <T : RepositoryConnection> repositories(init: () -> T,
+      argBuilder: RepositoriesArgs = RepositoriesArgs()): Stub<T, RepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> pinnedRepositories(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("pinnedRepositories", of)
+  fun <T : Repository> repository(init: () -> T,
+      argBuilder: RepositoryArgs = RepositoryArgs()): NullableStub<T, RepositoryArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : PullRequestConnection> pullRequests(init: () -> T): Stub<PullRequestConnection> = stub(init)
+  fun <T : StarredRepositoryConnection> starredRepositories(init: () -> T,
+      argBuilder: StarredRepositoriesArgs = StarredRepositoriesArgs()): Stub<T, StarredRepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> pullRequests(of: KFunction1<PullRequestConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestConnection, T>("pullRequests", of)
-
-  fun <T : RepositoryConnection> repositories(init: () -> T): Stub<RepositoryConnection> = stub(init)
-
-  fun <T> repositories(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("repositories", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
-        stub<Repository, T>("repository", of)
-
-  fun resourcePath(): Stub<URI> = stub()
-
-  fun <T : StarredRepositoryConnection> starredRepositories(init: () -> T): Stub<StarredRepositoryConnection> = stub(init)
-
-  fun <T> starredRepositories(of: KFunction1<StarredRepositoryConnection, Stub<T>>): Stub<T> =
-        stub<StarredRepositoryConnection, T>("starredRepositories", of)
-
-  fun updatedAt(): Stub<DateTime> = stub()
-
-  fun url(): Stub<URI> = stub()
-
-  fun viewerCanFollow(): Stub<Boolean> = stub()
-
-  fun viewerIsFollowing(): Stub<Boolean> = stub()
-
-  fun <T : RepositoryConnection> watching(init: () -> T): Stub<RepositoryConnection> = stub(init)
-
-  fun <T> watching(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("watching", of)
-
-  fun websiteUrl(): Stub<URI> = stub()
+  fun <T : RepositoryConnection> watching(init: () -> T,
+      argBuilder: WatchingArgs = WatchingArgs()): Stub<T, WatchingArgs> =
+        configStub(init, argBuilder)
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun size(value: Int): AvatarUrlArgs {
-      return apply { addArg("size", value) }
-    }
+    fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
+
   }
 
   class ContributedRepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ContributedRepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ContributedRepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ContributedRepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ContributedRepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ContributedRepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ContributedRepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): ContributedRepositoriesArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): ContributedRepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): ContributedRepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): ContributedRepositoriesArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): ContributedRepositoriesArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): ContributedRepositoriesArgs {
-      return apply { addArg("isLocked", value) }
-    }
+
+    fun privacy(value: RepositoryPrivacy): ContributedRepositoriesArgs =
+          apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): ContributedRepositoriesArgs =
+          apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): ContributedRepositoriesArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): ContributedRepositoriesArgs = apply { addArg("isLocked", value) }
+
   }
 
   class FollowersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): FollowersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): FollowersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): FollowersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): FollowersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): FollowersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): FollowersArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): FollowersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): FollowersArgs = apply { addArg("before", value) }
+
   }
 
   class FollowingArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): FollowingArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): FollowingArgs = apply { addArg("first", value) }
 
-    fun after(value: String): FollowingArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): FollowingArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): FollowingArgs = apply { addArg("after", value) }
 
-    fun before(value: String): FollowingArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): FollowingArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): FollowingArgs = apply { addArg("before", value) }
+
   }
 
   class GistArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun name(value: String): GistArgs {
-      return apply { addArg("name", value) }
-    }
+    fun name(value: String): GistArgs = apply { addArg("name", value) }
+
   }
 
   class GistsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): GistsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): GistsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): GistsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): GistsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): GistsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): GistsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: GistPrivacy): GistsArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): GistsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): GistsArgs = apply { addArg("before", value) }
+
+
+    fun privacy(value: GistPrivacy): GistsArgs = apply { addArg("privacy", value) }
+
   }
 
   class IssuesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): IssuesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): IssuesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): IssuesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): IssuesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): IssuesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): IssuesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun labels(value: String): IssuesArgs {
-      return apply { addArg("labels", value) }
-    }
+    fun last(value: Int): IssuesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: IssueOrder): IssuesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun states(value: IssueState): IssuesArgs {
-      return apply { addArg("states", value) }
-    }
+    fun before(value: String): IssuesArgs = apply { addArg("before", value) }
+
+
+    fun labels(value: String): IssuesArgs = apply { addArg("labels", value) }
+
+
+    fun orderBy(value: IssueOrder): IssuesArgs = apply { addArg("orderBy", value) }
+
+
+    fun states(value: IssueState): IssuesArgs = apply { addArg("states", value) }
+
   }
 
   class OrganizationArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun login(value: String): OrganizationArgs {
-      return apply { addArg("login", value) }
-    }
+    fun login(value: String): OrganizationArgs = apply { addArg("login", value) }
+
   }
 
   class OrganizationsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): OrganizationsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): OrganizationsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): OrganizationsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): OrganizationsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): OrganizationsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): OrganizationsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): OrganizationsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): OrganizationsArgs = apply { addArg("before", value) }
+
   }
 
   class PinnedRepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): PinnedRepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): PinnedRepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): PinnedRepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): PinnedRepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): PinnedRepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): PinnedRepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): PinnedRepositoriesArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): PinnedRepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): PinnedRepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): PinnedRepositoriesArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): PinnedRepositoriesArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): PinnedRepositoriesArgs {
-      return apply { addArg("isLocked", value) }
-    }
+
+    fun privacy(value: RepositoryPrivacy): PinnedRepositoriesArgs =
+          apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): PinnedRepositoriesArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): PinnedRepositoriesArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): PinnedRepositoriesArgs = apply { addArg("isLocked", value) }
+
   }
 
   class PullRequestsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): PullRequestsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): PullRequestsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): PullRequestsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): PullRequestsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): PullRequestsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): PullRequestsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun states(value: PullRequestState): PullRequestsArgs {
-      return apply { addArg("states", value) }
-    }
+    fun last(value: Int): PullRequestsArgs = apply { addArg("last", value) }
 
-    fun labels(value: String): PullRequestsArgs {
-      return apply { addArg("labels", value) }
-    }
 
-    fun headRefName(value: String): PullRequestsArgs {
-      return apply { addArg("headRefName", value) }
-    }
+    fun before(value: String): PullRequestsArgs = apply { addArg("before", value) }
 
-    fun baseRefName(value: String): PullRequestsArgs {
-      return apply { addArg("baseRefName", value) }
-    }
 
-    fun orderBy(value: IssueOrder): PullRequestsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun states(value: PullRequestState): PullRequestsArgs = apply { addArg("states", value) }
+
+
+    fun labels(value: String): PullRequestsArgs = apply { addArg("labels", value) }
+
+
+    fun headRefName(value: String): PullRequestsArgs = apply { addArg("headRefName", value) }
+
+
+    fun baseRefName(value: String): PullRequestsArgs = apply { addArg("baseRefName", value) }
+
+
+    fun orderBy(value: IssueOrder): PullRequestsArgs = apply { addArg("orderBy", value) }
+
   }
 
   class RepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): RepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): RepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): RepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): RepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): RepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): RepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): RepositoriesArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): RepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): RepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): RepositoriesArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): RepositoriesArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): RepositoriesArgs {
-      return apply { addArg("isLocked", value) }
-    }
 
-    fun isFork(value: Boolean): RepositoriesArgs {
-      return apply { addArg("isFork", value) }
-    }
+    fun privacy(value: RepositoryPrivacy): RepositoriesArgs = apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): RepositoriesArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): RepositoriesArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): RepositoriesArgs = apply { addArg("isLocked", value) }
+
+
+    fun isFork(value: Boolean): RepositoriesArgs = apply { addArg("isFork", value) }
+
   }
 
   class RepositoryArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun name(value: String): RepositoryArgs {
-      return apply { addArg("name", value) }
-    }
+    fun name(value: String): RepositoryArgs = apply { addArg("name", value) }
+
   }
 
   class StarredRepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): StarredRepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): StarredRepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): StarredRepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): StarredRepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): StarredRepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): StarredRepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun ownedByViewer(value: Boolean): StarredRepositoriesArgs {
-      return apply { addArg("ownedByViewer", value) }
-    }
+    fun last(value: Int): StarredRepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: StarOrder): StarredRepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
+
+    fun before(value: String): StarredRepositoriesArgs = apply { addArg("before", value) }
+
+
+    fun ownedByViewer(value: Boolean): StarredRepositoriesArgs =
+          apply { addArg("ownedByViewer", value) }
+
+
+    fun orderBy(value: StarOrder): StarredRepositoriesArgs = apply { addArg("orderBy", value) }
+
   }
 
   class WatchingArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): WatchingArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): WatchingArgs = apply { addArg("first", value) }
 
-    fun after(value: String): WatchingArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): WatchingArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): WatchingArgs = apply { addArg("after", value) }
 
-    fun before(value: String): WatchingArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): WatchingArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): WatchingArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): WatchingArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): WatchingArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): WatchingArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): WatchingArgs {
-      return apply { addArg("isLocked", value) }
-    }
+
+    fun privacy(value: RepositoryPrivacy): WatchingArgs = apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): WatchingArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): WatchingArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): WatchingArgs = apply { addArg("isLocked", value) }
+
   }
 }
 
 interface UpdateTopicsPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun invalidTopicNames(): Stub<String> = stub()
+  fun invalidTopicNames(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 }
 
 interface UpdateSubscriptionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Subscribable> subscribable(init: () -> T): Stub<Subscribable> = stub(init)
+  fun <T : Subscribable> subscribable(init: () -> T): Stub<Subscribable, ArgBuilder> = stub()
 
-  fun <T> subscribable(of: KFunction1<Subscribable, Stub<T>>): Stub<T> =
+  fun <T> subscribable(of: KFunction1<Subscribable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Subscribable, T>("subscribable", of)
 }
 
 interface UpdatePullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview, ArgBuilder> =
+        stub()
 
-  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
+  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReview, T>("pullRequestReview", of)
 }
 
 interface UpdatePullRequestReviewCommentPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestReviewComment> pullRequestReviewComment(init: () -> T): Stub<PullRequestReviewComment> = stub(init)
+  fun <T : PullRequestReviewComment> pullRequestReviewComment(init: () -> T): Stub<PullRequestReviewComment, ArgBuilder> =
+        stub()
 
-  fun <T> pullRequestReviewComment(of: KFunction1<PullRequestReviewComment, Stub<T>>): Stub<T> =
+  fun <T> pullRequestReviewComment(of: KFunction1<PullRequestReviewComment, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReviewComment, T>("pullRequestReviewComment", of)
 }
 
 interface UpdateProjectPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> project(init: () -> T): Stub<Project, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun <T> project(of: KFunction1<Project, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Project, T>("project", of)
 }
 
 interface UpdateProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : ProjectColumn> projectColumn(init: () -> T): Stub<ProjectColumn> = stub(init)
+  fun <T : ProjectColumn> projectColumn(init: () -> T): Stub<ProjectColumn, ArgBuilder> = stub()
 
-  fun <T> projectColumn(of: KFunction1<ProjectColumn, Stub<T>>): Stub<T> =
+  fun <T> projectColumn(of: KFunction1<ProjectColumn, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectColumn, T>("projectColumn", of)
 }
 
 interface UpdateProjectCardPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : ProjectCard> projectCard(init: () -> T): Stub<ProjectCard> = stub(init)
+  fun <T : ProjectCard> projectCard(init: () -> T): Stub<ProjectCard, ArgBuilder> = stub()
 
-  fun <T> projectCard(of: KFunction1<ProjectCard, Stub<T>>): Stub<T> =
+  fun <T> projectCard(of: KFunction1<ProjectCard, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectCard, T>("projectCard", of)
 }
 
 interface UnsubscribedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Subscribable> subscribable(init: () -> T): Stub<Subscribable> = stub(init)
+  fun <T : Subscribable> subscribable(init: () -> T): Stub<Subscribable, ArgBuilder> = stub()
 
-  fun <T> subscribable(of: KFunction1<Subscribable, Stub<T>>): Stub<T> =
+  fun <T> subscribable(of: KFunction1<Subscribable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Subscribable, T>("subscribable", of)
 }
 
 interface UnlockedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Lockable> lockable(init: () -> T): Stub<Lockable> = stub(init)
+  fun <T : Lockable> lockable(init: () -> T): Stub<Lockable, ArgBuilder> = stub()
 
-  fun <T> lockable(of: KFunction1<Lockable, Stub<T>>): Stub<T> = stub<Lockable, T>("lockable", of)
+  fun <T> lockable(of: KFunction1<Lockable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Lockable, T>("lockable", of)
 }
 
 interface UnlabeledEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Label> label(init: () -> T): Stub<Label> = stub(init)
+  fun <T : Label> label(init: () -> T): Stub<Label, ArgBuilder> = stub()
 
-  fun <T> label(of: KFunction1<Label, Stub<T>>): Stub<T> = stub<Label, T>("label", of)
+  fun <T> label(of: KFunction1<Label, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Label, T>("label", of)
 
-  fun <T : Labelable> labelable(init: () -> T): Stub<Labelable> = stub(init)
+  fun <T : Labelable> labelable(init: () -> T): Stub<Labelable, ArgBuilder> = stub()
 
-  fun <T> labelable(of: KFunction1<Labelable, Stub<T>>): Stub<T> =
+  fun <T> labelable(of: KFunction1<Labelable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Labelable, T>("labelable", of)
 }
 
 interface UnknownSignature : QType {
-  fun email(): Stub<String> = stub()
+  fun email(): Stub<String, ArgBuilder> = stub()
 
-  fun isValid(): Stub<Boolean> = stub()
+  fun isValid(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun payload(): Stub<String> = stub()
+  fun payload(): Stub<String, ArgBuilder> = stub()
 
-  fun signature(): Stub<String> = stub()
+  fun signature(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> signer(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> signer(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> signer(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("signer", of)
+  fun <T> signer(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("signer", of)
 
-  fun state(): Stub<GitSignatureState> = stub()
+  fun state(): Stub<GitSignatureState, ArgBuilder> = stub()
 }
 
 interface UnassignedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Assignable> assignable(init: () -> T): Stub<Assignable> = stub(init)
+  fun <T : Assignable> assignable(init: () -> T): Stub<Assignable, ArgBuilder> = stub()
 
-  fun <T> assignable(of: KFunction1<Assignable, Stub<T>>): Stub<T> =
+  fun <T> assignable(of: KFunction1<Assignable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Assignable, T>("assignable", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> user(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("user", of)
 }
 
 interface TreeEntry : QType {
-  fun mode(): Stub<Int> = stub()
+  fun mode(): Stub<Int, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : GitObject> objectVal(init: () -> T): Stub<GitObject> = stub(init)
+  fun <T : GitObject> objectVal(init: () -> T): NullableStub<GitObject, ArgBuilder> = nullableStub()
 
-  fun <T> objectVal(of: KFunction1<GitObject, Stub<T>>): Stub<T> =
-        stub<GitObject, T>("objectVal", of)
+  fun <T> objectVal(of: KFunction1<GitObject, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GitObject, T>("objectVal", of)
 
-  fun oid(): Stub<GitObjectID> = stub()
+  fun oid(): Stub<GitObjectID, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun type(): Stub<String> = stub()
+  fun type(): Stub<String, ArgBuilder> = stub()
 }
 
 interface Tree : QType {
-  fun abbreviatedOid(): Stub<String> = stub()
+  fun abbreviatedOid(): Stub<String, ArgBuilder> = stub()
 
-  fun commitResourcePath(): Stub<URI> = stub()
+  fun commitResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun commitUrl(): Stub<URI> = stub()
+  fun commitUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : TreeEntry> entries(init: () -> T): Stub<TreeEntry> = stub(init)
+  fun <T : TreeEntry> entries(init: () -> T): Stub<TreeEntry, ArgBuilder> = stub()
 
-  fun <T> entries(of: KFunction1<TreeEntry, Stub<T>>): Stub<T> = stub<TreeEntry, T>("entries", of)
+  fun <T> entries(of: KFunction1<TreeEntry, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<TreeEntry, T>("entries", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun oid(): Stub<GitObjectID> = stub()
+  fun oid(): Stub<GitObjectID, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 }
 
 interface Topic : QType {
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Topic> relatedTopics(init: () -> T): Stub<Topic> = stub(init)
+  fun <T : Topic> relatedTopics(init: () -> T): Stub<Topic, ArgBuilder> = stub()
 
-  fun <T> relatedTopics(of: KFunction1<Topic, Stub<T>>): Stub<T> =
+  fun <T> relatedTopics(of: KFunction1<Topic, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Topic, T>("relatedTopics", of)
 }
 
 interface TeamEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Team> node(init: () -> T): Stub<Team> = stub(init)
+  fun <T : Team> node(init: () -> T): NullableStub<Team, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Team, Stub<T>>): Stub<T> = stub<Team, T>("node", of)
+  fun <T> node(of: KFunction1<Team, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Team, T>("node", of)
 }
 
 interface TeamConnection : QType {
-  fun <T : TeamEdge> edges(init: () -> T): Stub<TeamEdge> = stub(init)
+  fun <T : TeamEdge> edges(init: () -> T): NullableStub<TeamEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<TeamEdge, Stub<T>>): Stub<T> = stub<TeamEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<TeamEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<TeamEdge, T>("edges", of)
 
-  fun <T : Team> nodes(init: () -> T): Stub<Team> = stub(init)
+  fun <T : Team> nodes(init: () -> T): NullableStub<Team, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Team, Stub<T>>): Stub<T> = stub<Team, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Team, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Team, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Team : QType {
-  fun description(): Stub<String> = stub()
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun editTeamResourcePath(): Stub<URI> = stub()
+  fun editTeamResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun editTeamUrl(): Stub<URI> = stub()
+  fun editTeamUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : OrganizationInvitationConnection> invitations(init: () -> T): Stub<OrganizationInvitationConnection> = stub(init)
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> invitations(of: KFunction1<OrganizationInvitationConnection, Stub<T>>): Stub<T> =
-        stub<OrganizationInvitationConnection, T>("invitations", of)
+  fun <T : Organization> organization(init: () -> T): Stub<Organization, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
-
-  fun <T : Organization> organization(init: () -> T): Stub<Organization> = stub(init)
-
-  fun <T> organization(of: KFunction1<Organization, Stub<T>>): Stub<T> =
+  fun <T> organization(of: KFunction1<Organization, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Organization, T>("organization", of)
 
-  fun privacy(): Stub<TeamPrivacy> = stub()
+  fun privacy(): Stub<TeamPrivacy, ArgBuilder> = stub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun slug(): Stub<String> = stub()
+  fun slug(): Stub<String, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
+
+  fun <T : OrganizationInvitationConnection> invitations(init: () -> T,
+      argBuilder: InvitationsArgs = InvitationsArgs()): NullableStub<T, InvitationsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
   class InvitationsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): InvitationsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): InvitationsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): InvitationsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): InvitationsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): InvitationsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): InvitationsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): InvitationsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): InvitationsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface Tag : QType {
-  fun abbreviatedOid(): Stub<String> = stub()
+  fun abbreviatedOid(): Stub<String, ArgBuilder> = stub()
 
-  fun commitResourcePath(): Stub<URI> = stub()
+  fun commitResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun commitUrl(): Stub<URI> = stub()
+  fun commitUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun message(): Stub<String> = stub()
+  fun message(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun oid(): Stub<GitObjectID> = stub()
+  fun oid(): Stub<GitObjectID, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun <T : GitActor> tagger(init: () -> T): Stub<GitActor> = stub(init)
+  fun <T : GitActor> tagger(init: () -> T): NullableStub<GitActor, ArgBuilder> = nullableStub()
 
-  fun <T> tagger(of: KFunction1<GitActor, Stub<T>>): Stub<T> = stub<GitActor, T>("tagger", of)
+  fun <T> tagger(of: KFunction1<GitActor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GitActor, T>("tagger", of)
 
-  fun <T : GitObject> target(init: () -> T): Stub<GitObject> = stub(init)
+  fun <T : GitObject> target(init: () -> T): Stub<GitObject, ArgBuilder> = stub()
 
-  fun <T> target(of: KFunction1<GitObject, Stub<T>>): Stub<T> = stub<GitObject, T>("target", of)
+  fun <T> target(of: KFunction1<GitObject, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<GitObject, T>("target", of)
 }
 
 interface SuggestedReviewer : QType {
-  fun isAuthor(): Stub<Boolean> = stub()
+  fun isAuthor(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isCommenter(): Stub<Boolean> = stub()
+  fun isCommenter(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : User> reviewer(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> reviewer(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> reviewer(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("reviewer", of)
+  fun <T> reviewer(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("reviewer", of)
 }
 
 interface SubscribedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Subscribable> subscribable(init: () -> T): Stub<Subscribable> = stub(init)
+  fun <T : Subscribable> subscribable(init: () -> T): Stub<Subscribable, ArgBuilder> = stub()
 
-  fun <T> subscribable(of: KFunction1<Subscribable, Stub<T>>): Stub<T> =
+  fun <T> subscribable(of: KFunction1<Subscribable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Subscribable, T>("subscribable", of)
 }
 
 interface SubmitPullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview, ArgBuilder> =
+        stub()
 
-  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
+  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReview, T>("pullRequestReview", of)
 }
 
 interface StatusContext : QType {
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("commit", of)
 
-  fun context(): Stub<String> = stub()
+  fun context(): Stub<String, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T : Actor> creator(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> creator(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> creator(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("creator", of)
+  fun <T> creator(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("creator", of)
 
-  fun description(): Stub<String> = stub()
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun state(): Stub<StatusState> = stub()
+  fun state(): Stub<StatusState, ArgBuilder> = stub()
 
-  fun targetUrl(): Stub<URI> = stub()
+  fun targetUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 }
 
 interface Status : QType {
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("commit", of)
 
-  fun <T : StatusContext> context(init: () -> T): Stub<StatusContext> = stub(init)
+  fun <T : StatusContext> contexts(init: () -> T): Stub<StatusContext, ArgBuilder> = stub()
 
-  fun <T> context(of: KFunction1<StatusContext, Stub<T>>): Stub<T> =
-        stub<StatusContext, T>("context", of)
-
-  fun <T : StatusContext> contexts(init: () -> T): Stub<StatusContext> = stub(init)
-
-  fun <T> contexts(of: KFunction1<StatusContext, Stub<T>>): Stub<T> =
+  fun <T> contexts(of: KFunction1<StatusContext, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<StatusContext, T>("contexts", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun state(): Stub<StatusState> = stub()
+  fun state(): Stub<StatusState, ArgBuilder> = stub()
+
+  fun <T : StatusContext> context(init: () -> T,
+      argBuilder: ContextArgs = ContextArgs()): NullableStub<T, ContextArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
   class ContextArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun name(value: String): ContextArgs {
-      return apply { addArg("name", value) }
-    }
+    fun name(value: String): ContextArgs = apply { addArg("name", value) }
+
   }
 }
 
 interface StarredRepositoryEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Repository> node(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> node(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> node(of: KFunction1<Repository, Stub<T>>): Stub<T> = stub<Repository, T>("node", of)
+  fun <T> node(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Repository, T>("node", of)
 
-  fun starredAt(): Stub<DateTime> = stub()
+  fun starredAt(): Stub<DateTime, ArgBuilder> = stub()
 }
 
 interface StarredRepositoryConnection : QType {
-  fun <T : StarredRepositoryEdge> edges(init: () -> T): Stub<StarredRepositoryEdge> = stub(init)
+  fun <T : StarredRepositoryEdge> edges(init: () -> T): NullableStub<StarredRepositoryEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<StarredRepositoryEdge, Stub<T>>): Stub<T> =
-        stub<StarredRepositoryEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<StarredRepositoryEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<StarredRepositoryEdge, T>("edges", of)
 
-  fun <T : Repository> nodes(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> nodes(init: () -> T): NullableStub<Repository, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Repository, Stub<T>>): Stub<T> = stub<Repository, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Repository, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Repository, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface StargazerEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> node(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> node(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> node(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("node", of)
+  fun <T> node(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("node", of)
 
-  fun starredAt(): Stub<DateTime> = stub()
+  fun starredAt(): Stub<DateTime, ArgBuilder> = stub()
 }
 
 interface StargazerConnection : QType {
-  fun <T : StargazerEdge> edges(init: () -> T): Stub<StargazerEdge> = stub(init)
+  fun <T : StargazerEdge> edges(init: () -> T): NullableStub<StargazerEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<StargazerEdge, Stub<T>>): Stub<T> =
-        stub<StargazerEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<StargazerEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<StargazerEdge, T>("edges", of)
 
-  fun <T : User> nodes(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> nodes(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface SmimeSignature : QType {
-  fun email(): Stub<String> = stub()
+  fun email(): Stub<String, ArgBuilder> = stub()
 
-  fun isValid(): Stub<Boolean> = stub()
+  fun isValid(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun payload(): Stub<String> = stub()
+  fun payload(): Stub<String, ArgBuilder> = stub()
 
-  fun signature(): Stub<String> = stub()
+  fun signature(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> signer(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> signer(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> signer(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("signer", of)
+  fun <T> signer(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("signer", of)
 
-  fun state(): Stub<GitSignatureState> = stub()
+  fun state(): Stub<GitSignatureState, ArgBuilder> = stub()
 }
 
 interface SearchResultItemEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : SearchResultItem> node(init: () -> T): Stub<SearchResultItem> = stub(init)
+  fun <T : SearchResultItem> node(init: () -> T): NullableStub<SearchResultItem, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<SearchResultItem, Stub<T>>): Stub<T> =
-        stub<SearchResultItem, T>("node", of)
+  fun <T> node(of: KFunction1<SearchResultItem, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<SearchResultItem, T>("node", of)
 }
 
 interface SearchResultItemConnection : QType {
-  fun codeCount(): Stub<Int> = stub()
+  fun codeCount(): Stub<Int, ArgBuilder> = stub()
 
-  fun <T : SearchResultItemEdge> edges(init: () -> T): Stub<SearchResultItemEdge> = stub(init)
+  fun <T : SearchResultItemEdge> edges(init: () -> T): NullableStub<SearchResultItemEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<SearchResultItemEdge, Stub<T>>): Stub<T> =
-        stub<SearchResultItemEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<SearchResultItemEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<SearchResultItemEdge, T>("edges", of)
 
-  fun issueCount(): Stub<Int> = stub()
+  fun issueCount(): Stub<Int, ArgBuilder> = stub()
 
-  fun <T : SearchResultItem> nodes(init: () -> T): Stub<SearchResultItem> = stub(init)
+  fun <T : SearchResultItem> nodes(init: () -> T): NullableStub<SearchResultItem, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<SearchResultItem, Stub<T>>): Stub<T> =
-        stub<SearchResultItem, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<SearchResultItem, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<SearchResultItem, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun repositoryCount(): Stub<Int> = stub()
+  fun repositoryCount(): Stub<Int, ArgBuilder> = stub()
 
-  fun userCount(): Stub<Int> = stub()
+  fun userCount(): Stub<Int, ArgBuilder> = stub()
 
-  fun wikiCount(): Stub<Int> = stub()
+  fun wikiCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ReviewRequestedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : User> subject(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> subject(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("subject", of)
+  fun <T> subject(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("subject", of)
 }
 
 interface ReviewRequestRemovedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : User> subject(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> subject(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("subject", of)
+  fun <T> subject(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("subject", of)
 }
 
 interface ReviewRequestEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ReviewRequest> node(init: () -> T): Stub<ReviewRequest> = stub(init)
+  fun <T : ReviewRequest> node(init: () -> T): NullableStub<ReviewRequest, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<ReviewRequest, Stub<T>>): Stub<T> = stub<ReviewRequest, T>("node", of)
+  fun <T> node(of: KFunction1<ReviewRequest, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReviewRequest, T>("node", of)
 }
 
 interface ReviewRequestConnection : QType {
-  fun <T : ReviewRequestEdge> edges(init: () -> T): Stub<ReviewRequestEdge> = stub(init)
+  fun <T : ReviewRequestEdge> edges(init: () -> T): NullableStub<ReviewRequestEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ReviewRequestEdge, Stub<T>>): Stub<T> =
-        stub<ReviewRequestEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ReviewRequestEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReviewRequestEdge, T>("edges", of)
 
-  fun <T : ReviewRequest> nodes(init: () -> T): Stub<ReviewRequest> = stub(init)
+  fun <T : ReviewRequest> nodes(init: () -> T): NullableStub<ReviewRequest, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<ReviewRequest, Stub<T>>): Stub<T> =
-        stub<ReviewRequest, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<ReviewRequest, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReviewRequest, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ReviewRequest : QType {
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : User> reviewer(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> reviewer(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> reviewer(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("reviewer", of)
+  fun <T> reviewer(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("reviewer", of)
 }
 
 interface ReviewDismissedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun message(): Stub<String> = stub()
+  fun message(): Stub<String, ArgBuilder> = stub()
 
-  fun messageHtml(): Stub<HTML> = stub()
+  fun messageHtml(): Stub<HTML, ArgBuilder> = stub()
 
-  fun previousReviewState(): Stub<PullRequestReviewState> = stub()
+  fun previousReviewState(): Stub<PullRequestReviewState, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : PullRequestCommit> pullRequestCommit(init: () -> T): Stub<PullRequestCommit> = stub(init)
+  fun <T : PullRequestCommit> pullRequestCommit(init: () -> T): NullableStub<PullRequestCommit, ArgBuilder> =
+        nullableStub()
 
-  fun <T> pullRequestCommit(of: KFunction1<PullRequestCommit, Stub<T>>): Stub<T> =
-        stub<PullRequestCommit, T>("pullRequestCommit", of)
+  fun <T> pullRequestCommit(of: KFunction1<PullRequestCommit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestCommit, T>("pullRequestCommit", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : PullRequestReview> review(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> review(init: () -> T): NullableStub<PullRequestReview, ArgBuilder> =
+        nullableStub()
 
-  fun <T> review(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
-        stub<PullRequestReview, T>("review", of)
+  fun <T> review(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReview, T>("review", of)
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface ReviewDismissalAllowanceEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ReviewDismissalAllowance> node(init: () -> T): Stub<ReviewDismissalAllowance> = stub(init)
+  fun <T : ReviewDismissalAllowance> node(init: () -> T): NullableStub<ReviewDismissalAllowance, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<ReviewDismissalAllowance, Stub<T>>): Stub<T> =
-        stub<ReviewDismissalAllowance, T>("node", of)
+  fun <T> node(of: KFunction1<ReviewDismissalAllowance, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReviewDismissalAllowance, T>("node", of)
 }
 
 interface ReviewDismissalAllowanceConnection : QType {
-  fun <T : ReviewDismissalAllowanceEdge> edges(init: () -> T): Stub<ReviewDismissalAllowanceEdge> = stub(init)
+  fun <T : ReviewDismissalAllowanceEdge> edges(init: () -> T): NullableStub<ReviewDismissalAllowanceEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ReviewDismissalAllowanceEdge, Stub<T>>): Stub<T> =
-        stub<ReviewDismissalAllowanceEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ReviewDismissalAllowanceEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReviewDismissalAllowanceEdge, T>("edges", of)
 
-  fun <T : ReviewDismissalAllowance> nodes(init: () -> T): Stub<ReviewDismissalAllowance> = stub(init)
+  fun <T : ReviewDismissalAllowance> nodes(init: () -> T): NullableStub<ReviewDismissalAllowance, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<ReviewDismissalAllowance, Stub<T>>): Stub<T> =
-        stub<ReviewDismissalAllowance, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<ReviewDismissalAllowance, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReviewDismissalAllowance, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ReviewDismissalAllowance : QType {
-  fun <T : ReviewDismissalAllowanceActor> actor(init: () -> T): Stub<ReviewDismissalAllowanceActor> = stub(init)
+  fun <T : ReviewDismissalAllowanceActor> actor(init: () -> T): NullableStub<ReviewDismissalAllowanceActor, ArgBuilder> =
+        nullableStub()
 
-  fun <T> actor(of: KFunction1<ReviewDismissalAllowanceActor, Stub<T>>): Stub<T> =
-        stub<ReviewDismissalAllowanceActor, T>("actor", of)
+  fun <T> actor(of: KFunction1<ReviewDismissalAllowanceActor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReviewDismissalAllowanceActor, T>("actor", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ProtectedBranch> protectedBranch(init: () -> T): Stub<ProtectedBranch> = stub(init)
+  fun <T : ProtectedBranch> protectedBranch(init: () -> T): Stub<ProtectedBranch, ArgBuilder> =
+        stub()
 
-  fun <T> protectedBranch(of: KFunction1<ProtectedBranch, Stub<T>>): Stub<T> =
+  fun <T> protectedBranch(of: KFunction1<ProtectedBranch, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProtectedBranch, T>("protectedBranch", of)
 }
 
 interface RequestReviewsPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : UserEdge> requestedReviewersEdge(init: () -> T): Stub<UserEdge> = stub(init)
+  fun <T : UserEdge> requestedReviewersEdge(init: () -> T): Stub<UserEdge, ArgBuilder> = stub()
 
-  fun <T> requestedReviewersEdge(of: KFunction1<UserEdge, Stub<T>>): Stub<T> =
+  fun <T> requestedReviewersEdge(of: KFunction1<UserEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UserEdge, T>("requestedReviewersEdge", of)
 }
 
 interface RepositoryTopicEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : RepositoryTopic> node(init: () -> T): Stub<RepositoryTopic> = stub(init)
+  fun <T : RepositoryTopic> node(init: () -> T): NullableStub<RepositoryTopic, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<RepositoryTopic, Stub<T>>): Stub<T> =
-        stub<RepositoryTopic, T>("node", of)
+  fun <T> node(of: KFunction1<RepositoryTopic, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RepositoryTopic, T>("node", of)
 }
 
 interface RepositoryTopicConnection : QType {
-  fun <T : RepositoryTopicEdge> edges(init: () -> T): Stub<RepositoryTopicEdge> = stub(init)
+  fun <T : RepositoryTopicEdge> edges(init: () -> T): NullableStub<RepositoryTopicEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<RepositoryTopicEdge, Stub<T>>): Stub<T> =
-        stub<RepositoryTopicEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<RepositoryTopicEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RepositoryTopicEdge, T>("edges", of)
 
-  fun <T : RepositoryTopic> nodes(init: () -> T): Stub<RepositoryTopic> = stub(init)
+  fun <T : RepositoryTopic> nodes(init: () -> T): NullableStub<RepositoryTopic, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<RepositoryTopic, Stub<T>>): Stub<T> =
-        stub<RepositoryTopic, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<RepositoryTopic, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RepositoryTopic, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface RepositoryTopic : QType {
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : Topic> topic(init: () -> T): Stub<Topic> = stub(init)
+  fun <T : Topic> topic(init: () -> T): Stub<Topic, ArgBuilder> = stub()
 
-  fun <T> topic(of: KFunction1<Topic, Stub<T>>): Stub<T> = stub<Topic, T>("topic", of)
+  fun <T> topic(of: KFunction1<Topic, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Topic, T>("topic", of)
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface RepositoryInvitationRepository : QType {
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun description(): Stub<String> = stub()
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun descriptionHTML(): Stub<HTML> = stub()
+  fun descriptionHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun hasIssuesEnabled(): Stub<Boolean> = stub()
+  fun hasIssuesEnabled(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasWikiEnabled(): Stub<Boolean> = stub()
+  fun hasWikiEnabled(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun homepageUrl(): Stub<URI> = stub()
+  fun homepageUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun isFork(): Stub<Boolean> = stub()
+  fun isFork(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isLocked(): Stub<Boolean> = stub()
+  fun isLocked(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isMirror(): Stub<Boolean> = stub()
+  fun isMirror(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isPrivate(): Stub<Boolean> = stub()
+  fun isPrivate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun license(): Stub<String> = stub()
+  fun license(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun lockReason(): Stub<RepositoryLockReason> = stub()
+  fun lockReason(): NullableStub<RepositoryLockReason, ArgBuilder> = nullableStub()
 
-  fun mirrorUrl(): Stub<URI> = stub()
+  fun mirrorUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun nameWithOwner(): Stub<String> = stub()
+  fun nameWithOwner(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : RepositoryOwner> owner(init: () -> T): Stub<RepositoryOwner> = stub(init)
+  fun <T : RepositoryOwner> owner(init: () -> T): Stub<RepositoryOwner, ArgBuilder> = stub()
 
-  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T>>): Stub<T> =
+  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<RepositoryOwner, T>("owner", of)
 
-  fun pushedAt(): Stub<DateTime> = stub()
+  fun pushedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface RepositoryInvitation : QType {
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> invitee(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> invitee(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> invitee(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("invitee", of)
+  fun <T> invitee(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("invitee", of)
 
-  fun <T : User> inviter(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> inviter(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> inviter(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("inviter", of)
+  fun <T> inviter(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("inviter", of)
 
-  fun <T : RepositoryInvitationRepository> repository(init: () -> T): Stub<RepositoryInvitationRepository> = stub(init)
+  fun <T : RepositoryInvitationRepository> repository(init: () -> T): NullableStub<RepositoryInvitationRepository, ArgBuilder> =
+        nullableStub()
 
-  fun <T> repository(of: KFunction1<RepositoryInvitationRepository, Stub<T>>): Stub<T> =
-        stub<RepositoryInvitationRepository, T>("repository", of)
+  fun <T> repository(of: KFunction1<RepositoryInvitationRepository, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RepositoryInvitationRepository, T>("repository", of)
 }
 
 interface RepositoryEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Repository> node(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> node(init: () -> T): NullableStub<Repository, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Repository, Stub<T>>): Stub<T> = stub<Repository, T>("node", of)
+  fun <T> node(of: KFunction1<Repository, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Repository, T>("node", of)
 }
 
 interface RepositoryConnection : QType {
-  fun <T : RepositoryEdge> edges(init: () -> T): Stub<RepositoryEdge> = stub(init)
+  fun <T : RepositoryEdge> edges(init: () -> T): NullableStub<RepositoryEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<RepositoryEdge, Stub<T>>): Stub<T> =
-        stub<RepositoryEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<RepositoryEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RepositoryEdge, T>("edges", of)
 
-  fun <T : Repository> nodes(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> nodes(init: () -> T): NullableStub<Repository, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Repository, Stub<T>>): Stub<T> = stub<Repository, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Repository, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Repository, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 
-  fun totalDiskUsage(): Stub<Int> = stub()
+  fun totalDiskUsage(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Repository : QType {
-  fun <T : CodeOfConduct> codeOfConduct(init: () -> T): Stub<CodeOfConduct> = stub(init)
+  fun <T : CodeOfConduct> codeOfConduct(init: () -> T): NullableStub<CodeOfConduct, ArgBuilder> =
+        nullableStub()
 
-  fun <T> codeOfConduct(of: KFunction1<CodeOfConduct, Stub<T>>): Stub<T> =
-        stub<CodeOfConduct, T>("codeOfConduct", of)
+  fun <T> codeOfConduct(of: KFunction1<CodeOfConduct, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<CodeOfConduct, T>("codeOfConduct", of)
 
-  fun <T : CommitCommentConnection> commitComments(init: () -> T): Stub<CommitCommentConnection> = stub(init)
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> commitComments(of: KFunction1<CommitCommentConnection, Stub<T>>): Stub<T> =
-        stub<CommitCommentConnection, T>("commitComments", of)
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun <T : Ref> defaultBranchRef(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun <T> defaultBranchRef(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("defaultBranchRef", of)
 
-  fun <T : Ref> defaultBranchRef(init: () -> T): Stub<Ref> = stub(init)
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T> defaultBranchRef(of: KFunction1<Ref, Stub<T>>): Stub<T> =
-        stub<Ref, T>("defaultBranchRef", of)
+  fun descriptionHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun <T : DeploymentConnection> deployments(init: () -> T): Stub<DeploymentConnection> = stub(init)
+  fun diskUsage(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T> deployments(of: KFunction1<DeploymentConnection, Stub<T>>): Stub<T> =
-        stub<DeploymentConnection, T>("deployments", of)
+  fun hasIssuesEnabled(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun description(): Stub<String> = stub()
+  fun hasWikiEnabled(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun descriptionHTML(): Stub<HTML> = stub()
+  fun homepageUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun diskUsage(): Stub<Int> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : RepositoryConnection> forks(init: () -> T): Stub<RepositoryConnection> = stub(init)
+  fun isFork(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> forks(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("forks", of)
+  fun isLocked(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasIssuesEnabled(): Stub<Boolean> = stub()
+  fun isMirror(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasWikiEnabled(): Stub<Boolean> = stub()
+  fun isPrivate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun homepageUrl(): Stub<URI> = stub()
+  fun license(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun lockReason(): NullableStub<RepositoryLockReason, ArgBuilder> = nullableStub()
 
-  fun isFork(): Stub<Boolean> = stub()
+  fun mirrorUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun isLocked(): Stub<Boolean> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun isMirror(): Stub<Boolean> = stub()
+  fun nameWithOwner(): Stub<String, ArgBuilder> = stub()
 
-  fun isPrivate(): Stub<Boolean> = stub()
+  fun <T : RepositoryOwner> owner(init: () -> T): Stub<RepositoryOwner, ArgBuilder> = stub()
 
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
-
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
-
-  fun <T : IssueOrPullRequest> issueOrPullRequest(init: () -> T): Stub<IssueOrPullRequest> = stub(init)
-
-  fun <T> issueOrPullRequest(of: KFunction1<IssueOrPullRequest, Stub<T>>): Stub<T> =
-        stub<IssueOrPullRequest, T>("issueOrPullRequest", of)
-
-  fun <T : IssueConnection> issues(init: () -> T): Stub<IssueConnection> = stub(init)
-
-  fun <T> issues(of: KFunction1<IssueConnection, Stub<T>>): Stub<T> =
-        stub<IssueConnection, T>("issues", of)
-
-  fun <T : Label> label(init: () -> T): Stub<Label> = stub(init)
-
-  fun <T> label(of: KFunction1<Label, Stub<T>>): Stub<T> = stub<Label, T>("label", of)
-
-  fun <T : LabelConnection> labels(init: () -> T): Stub<LabelConnection> = stub(init)
-
-  fun <T> labels(of: KFunction1<LabelConnection, Stub<T>>): Stub<T> =
-        stub<LabelConnection, T>("labels", of)
-
-  fun <T : LanguageConnection> languages(init: () -> T): Stub<LanguageConnection> = stub(init)
-
-  fun <T> languages(of: KFunction1<LanguageConnection, Stub<T>>): Stub<T> =
-        stub<LanguageConnection, T>("languages", of)
-
-  fun license(): Stub<String> = stub()
-
-  fun lockReason(): Stub<RepositoryLockReason> = stub()
-
-  fun <T : UserConnection> mentionableUsers(init: () -> T): Stub<UserConnection> = stub(init)
-
-  fun <T> mentionableUsers(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("mentionableUsers", of)
-
-  fun <T : Milestone> milestone(init: () -> T): Stub<Milestone> = stub(init)
-
-  fun <T> milestone(of: KFunction1<Milestone, Stub<T>>): Stub<T> =
-        stub<Milestone, T>("milestone", of)
-
-  fun <T : MilestoneConnection> milestones(init: () -> T): Stub<MilestoneConnection> = stub(init)
-
-  fun <T> milestones(of: KFunction1<MilestoneConnection, Stub<T>>): Stub<T> =
-        stub<MilestoneConnection, T>("milestones", of)
-
-  fun mirrorUrl(): Stub<URI> = stub()
-
-  fun name(): Stub<String> = stub()
-
-  fun nameWithOwner(): Stub<String> = stub()
-
-  fun <T : GitObject> objectVal(init: () -> T): Stub<GitObject> = stub(init)
-
-  fun <T> objectVal(of: KFunction1<GitObject, Stub<T>>): Stub<T> =
-        stub<GitObject, T>("objectVal", of)
-
-  fun <T : RepositoryOwner> owner(init: () -> T): Stub<RepositoryOwner> = stub(init)
-
-  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T>>): Stub<T> =
+  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<RepositoryOwner, T>("owner", of)
 
-  fun <T : Repository> parent(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> parent(init: () -> T): NullableStub<Repository, ArgBuilder> = nullableStub()
 
-  fun <T> parent(of: KFunction1<Repository, Stub<T>>): Stub<T> = stub<Repository, T>("parent", of)
+  fun <T> parent(of: KFunction1<Repository, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Repository, T>("parent", of)
 
-  fun <T : Language> primaryLanguage(init: () -> T): Stub<Language> = stub(init)
+  fun <T : Language> primaryLanguage(init: () -> T): NullableStub<Language, ArgBuilder> =
+        nullableStub()
 
-  fun <T> primaryLanguage(of: KFunction1<Language, Stub<T>>): Stub<T> =
-        stub<Language, T>("primaryLanguage", of)
+  fun <T> primaryLanguage(of: KFunction1<Language, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Language, T>("primaryLanguage", of)
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun projectsResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun projectsUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : ProjectConnection> projects(init: () -> T): Stub<ProjectConnection> = stub(init)
+  fun pushedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T> projects(of: KFunction1<ProjectConnection, Stub<T>>): Stub<T> =
-        stub<ProjectConnection, T>("projects", of)
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun projectsResourcePath(): Stub<URI> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun projectsUrl(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : ProtectedBranchConnection> protectedBranches(init: () -> T): Stub<ProtectedBranchConnection> = stub(init)
+  fun viewerCanAdminister(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> protectedBranches(of: KFunction1<ProtectedBranchConnection, Stub<T>>): Stub<T> =
-        stub<ProtectedBranchConnection, T>("protectedBranches", of)
+  fun viewerCanCreateProjects(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun viewerCanSubscribe(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
-        stub<PullRequest, T>("pullRequest", of)
+  fun viewerCanUpdateTopics(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : PullRequestConnection> pullRequests(init: () -> T): Stub<PullRequestConnection> = stub(init)
+  fun viewerHasStarred(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> pullRequests(of: KFunction1<PullRequestConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestConnection, T>("pullRequests", of)
+  fun viewerSubscription(): Stub<SubscriptionState, ArgBuilder> = stub()
 
-  fun pushedAt(): Stub<DateTime> = stub()
+  fun <T : CommitCommentConnection> commitComments(init: () -> T,
+      argBuilder: CommitCommentsArgs = CommitCommentsArgs()): Stub<T, CommitCommentsArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : Ref> ref(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : DeploymentConnection> deployments(init: () -> T,
+      argBuilder: DeploymentsArgs = DeploymentsArgs()): Stub<T, DeploymentsArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> ref(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("ref", of)
+  fun <T : RepositoryConnection> forks(init: () -> T,
+      argBuilder: ForksArgs = ForksArgs()): Stub<T, ForksArgs> = configStub(init, argBuilder)
 
-  fun <T : RefConnection> refs(init: () -> T): Stub<RefConnection> = stub(init)
+  fun <T : Issue> issue(init: () -> T,
+      argBuilder: IssueArgs = IssueArgs()): NullableStub<T, IssueArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> refs(of: KFunction1<RefConnection, Stub<T>>): Stub<T> = stub<RefConnection, T>("refs", of)
+  fun <T : IssueOrPullRequest> issueOrPullRequest(init: () -> T,
+      argBuilder: IssueOrPullRequestArgs = IssueOrPullRequestArgs()): NullableStub<T, IssueOrPullRequestArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : ReleaseConnection> releases(init: () -> T): Stub<ReleaseConnection> = stub(init)
+  fun <T : IssueConnection> issues(init: () -> T,
+      argBuilder: IssuesArgs = IssuesArgs()): Stub<T, IssuesArgs> = configStub(init, argBuilder)
 
-  fun <T> releases(of: KFunction1<ReleaseConnection, Stub<T>>): Stub<T> =
-        stub<ReleaseConnection, T>("releases", of)
+  fun <T : Label> label(init: () -> T,
+      argBuilder: LabelArgs = LabelArgs()): NullableStub<T, LabelArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : RepositoryTopicConnection> repositoryTopics(init: () -> T): Stub<RepositoryTopicConnection> = stub(init)
+  fun <T : LabelConnection> labels(init: () -> T,
+      argBuilder: LabelsArgs = LabelsArgs()): NullableStub<T, LabelsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> repositoryTopics(of: KFunction1<RepositoryTopicConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryTopicConnection, T>("repositoryTopics", of)
+  fun <T : LanguageConnection> languages(init: () -> T,
+      argBuilder: LanguagesArgs = LanguagesArgs()): NullableStub<T, LanguagesArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun <T : UserConnection> mentionableUsers(init: () -> T,
+      argBuilder: MentionableUsersArgs = MentionableUsersArgs()): Stub<T, MentionableUsersArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : StargazerConnection> stargazers(init: () -> T): Stub<StargazerConnection> = stub(init)
+  fun <T : Milestone> milestone(init: () -> T,
+      argBuilder: MilestoneArgs = MilestoneArgs()): NullableStub<T, MilestoneArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> stargazers(of: KFunction1<StargazerConnection, Stub<T>>): Stub<T> =
-        stub<StargazerConnection, T>("stargazers", of)
+  fun <T : MilestoneConnection> milestones(init: () -> T,
+      argBuilder: MilestonesArgs = MilestonesArgs()): NullableStub<T, MilestonesArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun <T : GitObject> objectVal(init: () -> T,
+      argBuilder: ObjectValArgs = ObjectValArgs()): NullableStub<T, ObjectValArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun url(): Stub<URI> = stub()
+  fun <T : Project> project(init: () -> T,
+      argBuilder: ProjectArgs = ProjectArgs()): NullableStub<T, ProjectArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun viewerCanAdminister(): Stub<Boolean> = stub()
+  fun <T : ProjectConnection> projects(init: () -> T,
+      argBuilder: ProjectsArgs = ProjectsArgs()): Stub<T, ProjectsArgs> =
+        configStub(init, argBuilder)
 
-  fun viewerCanCreateProjects(): Stub<Boolean> = stub()
+  fun <T : ProtectedBranchConnection> protectedBranches(init: () -> T,
+      argBuilder: ProtectedBranchesArgs = ProtectedBranchesArgs()): Stub<T, ProtectedBranchesArgs> =
+        configStub(init, argBuilder)
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub()
+  fun <T : PullRequest> pullRequest(init: () -> T,
+      argBuilder: PullRequestArgs = PullRequestArgs()): NullableStub<T, PullRequestArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun viewerCanUpdateTopics(): Stub<Boolean> = stub()
+  fun <T : PullRequestConnection> pullRequests(init: () -> T,
+      argBuilder: PullRequestsArgs = PullRequestsArgs()): Stub<T, PullRequestsArgs> =
+        configStub(init, argBuilder)
 
-  fun viewerHasStarred(): Stub<Boolean> = stub()
+  fun <T : Ref> ref(init: () -> T, argBuilder: RefArgs = RefArgs()): NullableStub<T, RefArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub()
+  fun <T : RefConnection> refs(init: () -> T,
+      argBuilder: RefsArgs = RefsArgs()): NullableStub<T, RefsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : UserConnection> watchers(init: () -> T): Stub<UserConnection> = stub(init)
+  fun <T : ReleaseConnection> releases(init: () -> T,
+      argBuilder: ReleasesArgs = ReleasesArgs()): Stub<T, ReleasesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> watchers(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("watchers", of)
+  fun <T : RepositoryTopicConnection> repositoryTopics(init: () -> T,
+      argBuilder: RepositoryTopicsArgs = RepositoryTopicsArgs()): Stub<T, RepositoryTopicsArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : StargazerConnection> stargazers(init: () -> T,
+      argBuilder: StargazersArgs = StargazersArgs()): Stub<T, StargazersArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : UserConnection> watchers(init: () -> T,
+      argBuilder: WatchersArgs = WatchersArgs()): Stub<T, WatchersArgs> =
+        configStub(init, argBuilder)
 
   class CommitCommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommitCommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommitCommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommitCommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommitCommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommitCommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommitCommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommitCommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommitCommentsArgs = apply { addArg("before", value) }
+
   }
 
   class DeploymentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): DeploymentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): DeploymentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): DeploymentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): DeploymentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): DeploymentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): DeploymentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): DeploymentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): DeploymentsArgs = apply { addArg("before", value) }
+
   }
 
   class ForksArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ForksArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ForksArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ForksArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ForksArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ForksArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ForksArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): ForksArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): ForksArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): ForksArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): ForksArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): ForksArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): ForksArgs {
-      return apply { addArg("isLocked", value) }
-    }
+
+    fun privacy(value: RepositoryPrivacy): ForksArgs = apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): ForksArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): ForksArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): ForksArgs = apply { addArg("isLocked", value) }
+
   }
 
   class IssueArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun number(value: Int): IssueArgs {
-      return apply { addArg("number", value) }
-    }
+    fun number(value: Int): IssueArgs = apply { addArg("number", value) }
+
   }
 
   class IssueOrPullRequestArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun number(value: Int): IssueOrPullRequestArgs {
-      return apply { addArg("number", value) }
-    }
+    fun number(value: Int): IssueOrPullRequestArgs = apply { addArg("number", value) }
+
   }
 
   class IssuesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): IssuesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): IssuesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): IssuesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): IssuesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): IssuesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): IssuesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun labels(value: String): IssuesArgs {
-      return apply { addArg("labels", value) }
-    }
+    fun last(value: Int): IssuesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: IssueOrder): IssuesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun states(value: IssueState): IssuesArgs {
-      return apply { addArg("states", value) }
-    }
+    fun before(value: String): IssuesArgs = apply { addArg("before", value) }
+
+
+    fun labels(value: String): IssuesArgs = apply { addArg("labels", value) }
+
+
+    fun orderBy(value: IssueOrder): IssuesArgs = apply { addArg("orderBy", value) }
+
+
+    fun states(value: IssueState): IssuesArgs = apply { addArg("states", value) }
+
   }
 
   class LabelArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun name(value: String): LabelArgs {
-      return apply { addArg("name", value) }
-    }
+    fun name(value: String): LabelArgs = apply { addArg("name", value) }
+
   }
 
   class LabelsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): LabelsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): LabelsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): LabelsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): LabelsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): LabelsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): LabelsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): LabelsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): LabelsArgs = apply { addArg("before", value) }
+
   }
 
   class LanguagesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): LanguagesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): LanguagesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): LanguagesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): LanguagesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): LanguagesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): LanguagesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun orderBy(value: LanguageOrder): LanguagesArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun last(value: Int): LanguagesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): LanguagesArgs = apply { addArg("before", value) }
+
+
+    fun orderBy(value: LanguageOrder): LanguagesArgs = apply { addArg("orderBy", value) }
+
   }
 
   class MentionableUsersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): MentionableUsersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): MentionableUsersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): MentionableUsersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): MentionableUsersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): MentionableUsersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): MentionableUsersArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): MentionableUsersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): MentionableUsersArgs = apply { addArg("before", value) }
+
   }
 
   class MilestoneArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun number(value: Int): MilestoneArgs {
-      return apply { addArg("number", value) }
-    }
+    fun number(value: Int): MilestoneArgs = apply { addArg("number", value) }
+
   }
 
   class MilestonesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): MilestonesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): MilestonesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): MilestonesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): MilestonesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): MilestonesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): MilestonesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): MilestonesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): MilestonesArgs = apply { addArg("before", value) }
+
   }
 
   class ObjectValArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun oid(value: GitObjectID): ObjectValArgs {
-      return apply { addArg("oid", value) }
-    }
+    fun oid(value: GitObjectID): ObjectValArgs = apply { addArg("oid", value) }
 
-    fun expression(value: String): ObjectValArgs {
-      return apply { addArg("expression", value) }
-    }
+
+    fun expression(value: String): ObjectValArgs = apply { addArg("expression", value) }
+
   }
 
   class ProjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun number(value: Int): ProjectArgs {
-      return apply { addArg("number", value) }
-    }
+    fun number(value: Int): ProjectArgs = apply { addArg("number", value) }
+
   }
 
   class ProjectsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ProjectsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ProjectsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ProjectsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ProjectsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ProjectsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ProjectsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun orderBy(value: ProjectOrder): ProjectsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun last(value: Int): ProjectsArgs = apply { addArg("last", value) }
 
-    fun search(value: String): ProjectsArgs {
-      return apply { addArg("search", value) }
-    }
 
-    fun states(value: ProjectState): ProjectsArgs {
-      return apply { addArg("states", value) }
-    }
+    fun before(value: String): ProjectsArgs = apply { addArg("before", value) }
+
+
+    fun orderBy(value: ProjectOrder): ProjectsArgs = apply { addArg("orderBy", value) }
+
+
+    fun search(value: String): ProjectsArgs = apply { addArg("search", value) }
+
+
+    fun states(value: ProjectState): ProjectsArgs = apply { addArg("states", value) }
+
   }
 
   class ProtectedBranchesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ProtectedBranchesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ProtectedBranchesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ProtectedBranchesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ProtectedBranchesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ProtectedBranchesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ProtectedBranchesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ProtectedBranchesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ProtectedBranchesArgs = apply { addArg("before", value) }
+
   }
 
   class PullRequestArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun number(value: Int): PullRequestArgs {
-      return apply { addArg("number", value) }
-    }
+    fun number(value: Int): PullRequestArgs = apply { addArg("number", value) }
+
   }
 
   class PullRequestsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): PullRequestsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): PullRequestsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): PullRequestsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): PullRequestsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): PullRequestsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): PullRequestsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun states(value: PullRequestState): PullRequestsArgs {
-      return apply { addArg("states", value) }
-    }
+    fun last(value: Int): PullRequestsArgs = apply { addArg("last", value) }
 
-    fun labels(value: String): PullRequestsArgs {
-      return apply { addArg("labels", value) }
-    }
 
-    fun headRefName(value: String): PullRequestsArgs {
-      return apply { addArg("headRefName", value) }
-    }
+    fun before(value: String): PullRequestsArgs = apply { addArg("before", value) }
 
-    fun baseRefName(value: String): PullRequestsArgs {
-      return apply { addArg("baseRefName", value) }
-    }
 
-    fun orderBy(value: IssueOrder): PullRequestsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun states(value: PullRequestState): PullRequestsArgs = apply { addArg("states", value) }
+
+
+    fun labels(value: String): PullRequestsArgs = apply { addArg("labels", value) }
+
+
+    fun headRefName(value: String): PullRequestsArgs = apply { addArg("headRefName", value) }
+
+
+    fun baseRefName(value: String): PullRequestsArgs = apply { addArg("baseRefName", value) }
+
+
+    fun orderBy(value: IssueOrder): PullRequestsArgs = apply { addArg("orderBy", value) }
+
   }
 
   class RefArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun qualifiedName(value: String): RefArgs {
-      return apply { addArg("qualifiedName", value) }
-    }
+    fun qualifiedName(value: String): RefArgs = apply { addArg("qualifiedName", value) }
+
   }
 
   class RefsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): RefsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): RefsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): RefsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): RefsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): RefsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): RefsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun refPrefix(value: String): RefsArgs {
-      return apply { addArg("refPrefix", value) }
-    }
+    fun last(value: Int): RefsArgs = apply { addArg("last", value) }
 
-    fun direction(value: OrderDirection): RefsArgs {
-      return apply { addArg("direction", value) }
-    }
+
+    fun before(value: String): RefsArgs = apply { addArg("before", value) }
+
+
+    fun refPrefix(value: String): RefsArgs = apply { addArg("refPrefix", value) }
+
+
+    fun direction(value: OrderDirection): RefsArgs = apply { addArg("direction", value) }
+
   }
 
   class ReleasesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReleasesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReleasesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReleasesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReleasesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReleasesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReleasesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ReleasesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ReleasesArgs = apply { addArg("before", value) }
+
   }
 
   class RepositoryTopicsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): RepositoryTopicsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): RepositoryTopicsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): RepositoryTopicsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): RepositoryTopicsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): RepositoryTopicsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): RepositoryTopicsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): RepositoryTopicsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): RepositoryTopicsArgs = apply { addArg("before", value) }
+
   }
 
   class StargazersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): StargazersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): StargazersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): StargazersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): StargazersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): StargazersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): StargazersArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun orderBy(value: StarOrder): StargazersArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun last(value: Int): StargazersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): StargazersArgs = apply { addArg("before", value) }
+
+
+    fun orderBy(value: StarOrder): StargazersArgs = apply { addArg("orderBy", value) }
+
   }
 
   class WatchersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): WatchersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): WatchersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): WatchersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): WatchersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): WatchersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): WatchersArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): WatchersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): WatchersArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface ReopenedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Closable> closable(init: () -> T): Stub<Closable> = stub(init)
+  fun <T : Closable> closable(init: () -> T): Stub<Closable, ArgBuilder> = stub()
 
-  fun <T> closable(of: KFunction1<Closable, Stub<T>>): Stub<T> = stub<Closable, T>("closable", of)
+  fun <T> closable(of: KFunction1<Closable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Closable, T>("closable", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface RenamedTitleEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun currentTitle(): Stub<String> = stub()
+  fun currentTitle(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun previousTitle(): Stub<String> = stub()
+  fun previousTitle(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : RenamedTitleSubject> subject(init: () -> T): Stub<RenamedTitleSubject> = stub(init)
+  fun <T : RenamedTitleSubject> subject(init: () -> T): Stub<RenamedTitleSubject, ArgBuilder> =
+        stub()
 
-  fun <T> subject(of: KFunction1<RenamedTitleSubject, Stub<T>>): Stub<T> =
+  fun <T> subject(of: KFunction1<RenamedTitleSubject, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<RenamedTitleSubject, T>("subject", of)
 }
 
 interface RemovedFromProjectEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface RemoveStarPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Starrable> starrable(init: () -> T): Stub<Starrable> = stub(init)
+  fun <T : Starrable> starrable(init: () -> T): Stub<Starrable, ArgBuilder> = stub()
 
-  fun <T> starrable(of: KFunction1<Starrable, Stub<T>>): Stub<T> =
+  fun <T> starrable(of: KFunction1<Starrable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Starrable, T>("starrable", of)
 }
 
 interface RemoveReactionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Reaction> reaction(init: () -> T): Stub<Reaction> = stub(init)
+  fun <T : Reaction> reaction(init: () -> T): Stub<Reaction, ArgBuilder> = stub()
 
-  fun <T> reaction(of: KFunction1<Reaction, Stub<T>>): Stub<T> = stub<Reaction, T>("reaction", of)
+  fun <T> reaction(of: KFunction1<Reaction, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Reaction, T>("reaction", of)
 
-  fun <T : Reactable> subject(init: () -> T): Stub<Reactable> = stub(init)
+  fun <T : Reactable> subject(init: () -> T): Stub<Reactable, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<Reactable, Stub<T>>): Stub<T> = stub<Reactable, T>("subject", of)
+  fun <T> subject(of: KFunction1<Reactable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Reactable, T>("subject", of)
 }
 
 interface RemoveOutsideCollaboratorPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : User> removedUser(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> removedUser(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> removedUser(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("removedUser", of)
+  fun <T> removedUser(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("removedUser", of)
 }
 
 interface ReleaseEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Release> node(init: () -> T): Stub<Release> = stub(init)
+  fun <T : Release> node(init: () -> T): NullableStub<Release, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Release, Stub<T>>): Stub<T> = stub<Release, T>("node", of)
+  fun <T> node(of: KFunction1<Release, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Release, T>("node", of)
 }
 
 interface ReleaseConnection : QType {
-  fun <T : ReleaseEdge> edges(init: () -> T): Stub<ReleaseEdge> = stub(init)
+  fun <T : ReleaseEdge> edges(init: () -> T): NullableStub<ReleaseEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<ReleaseEdge, Stub<T>>): Stub<T> = stub<ReleaseEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ReleaseEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReleaseEdge, T>("edges", of)
 
-  fun <T : Release> nodes(init: () -> T): Stub<Release> = stub(init)
+  fun <T : Release> nodes(init: () -> T): NullableStub<Release, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Release, Stub<T>>): Stub<T> = stub<Release, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Release, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Release, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ReleaseAssetEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ReleaseAsset> node(init: () -> T): Stub<ReleaseAsset> = stub(init)
+  fun <T : ReleaseAsset> node(init: () -> T): NullableStub<ReleaseAsset, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<ReleaseAsset, Stub<T>>): Stub<T> = stub<ReleaseAsset, T>("node", of)
+  fun <T> node(of: KFunction1<ReleaseAsset, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReleaseAsset, T>("node", of)
 }
 
 interface ReleaseAssetConnection : QType {
-  fun <T : ReleaseAssetEdge> edges(init: () -> T): Stub<ReleaseAssetEdge> = stub(init)
+  fun <T : ReleaseAssetEdge> edges(init: () -> T): NullableStub<ReleaseAssetEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ReleaseAssetEdge, Stub<T>>): Stub<T> =
-        stub<ReleaseAssetEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ReleaseAssetEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReleaseAssetEdge, T>("edges", of)
 
-  fun <T : ReleaseAsset> nodes(init: () -> T): Stub<ReleaseAsset> = stub(init)
+  fun <T : ReleaseAsset> nodes(init: () -> T): NullableStub<ReleaseAsset, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<ReleaseAsset, Stub<T>>): Stub<T> = stub<ReleaseAsset, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<ReleaseAsset, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReleaseAsset, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ReleaseAsset : QType {
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Release> release(init: () -> T): Stub<Release> = stub(init)
+  fun <T : Release> release(init: () -> T): NullableStub<Release, ArgBuilder> = nullableStub()
 
-  fun <T> release(of: KFunction1<Release, Stub<T>>): Stub<T> = stub<Release, T>("release", of)
+  fun <T> release(of: KFunction1<Release, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Release, T>("release", of)
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface Release : QType {
-  fun description(): Stub<String> = stub()
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun publishedAt(): Stub<DateTime> = stub()
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : ReleaseAssetConnection> releaseAsset(init: () -> T): Stub<ReleaseAssetConnection> = stub(init)
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> releaseAsset(of: KFunction1<ReleaseAssetConnection, Stub<T>>): Stub<T> =
-        stub<ReleaseAssetConnection, T>("releaseAsset", of)
+  fun <T : Ref> tag(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T : ReleaseAssetConnection> releaseAssets(init: () -> T): Stub<ReleaseAssetConnection> = stub(init)
+  fun <T> tag(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("tag", of)
 
-  fun <T> releaseAssets(of: KFunction1<ReleaseAssetConnection, Stub<T>>): Stub<T> =
-        stub<ReleaseAssetConnection, T>("releaseAssets", of)
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun <T : ReleaseAssetConnection> releaseAsset(init: () -> T,
+      argBuilder: ReleaseAssetArgs = ReleaseAssetArgs()): Stub<T, ReleaseAssetArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : Ref> tag(init: () -> T): Stub<Ref> = stub(init)
-
-  fun <T> tag(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("tag", of)
-
-  fun url(): Stub<URI> = stub()
+  fun <T : ReleaseAssetConnection> releaseAssets(init: () -> T,
+      argBuilder: ReleaseAssetsArgs = ReleaseAssetsArgs()): Stub<T, ReleaseAssetsArgs> =
+        configStub(init, argBuilder)
 
   class ReleaseAssetArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReleaseAssetArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReleaseAssetArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReleaseAssetArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReleaseAssetArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReleaseAssetArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReleaseAssetArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun name(value: String): ReleaseAssetArgs {
-      return apply { addArg("name", value) }
-    }
+    fun last(value: Int): ReleaseAssetArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ReleaseAssetArgs = apply { addArg("before", value) }
+
+
+    fun name(value: String): ReleaseAssetArgs = apply { addArg("name", value) }
+
   }
 
   class ReleaseAssetsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReleaseAssetsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReleaseAssetsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReleaseAssetsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReleaseAssetsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReleaseAssetsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReleaseAssetsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ReleaseAssetsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ReleaseAssetsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface ReferencedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("commit", of)
 
-  fun <T : Repository> commitRepository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> commitRepository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> commitRepository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> commitRepository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("commitRepository", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun isCrossReference(): Stub<Boolean> = stub()
+  fun isCrossReference(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isCrossRepository(): Stub<Boolean> = stub()
+  fun isCrossRepository(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isDirectReference(): Stub<Boolean> = stub()
+  fun isDirectReference(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : ReferencedSubject> subject(init: () -> T): Stub<ReferencedSubject> = stub(init)
+  fun <T : ReferencedSubject> subject(init: () -> T): Stub<ReferencedSubject, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<ReferencedSubject, Stub<T>>): Stub<T> =
+  fun <T> subject(of: KFunction1<ReferencedSubject, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReferencedSubject, T>("subject", of)
 }
 
 interface RefEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Ref> node(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : Ref> node(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("node", of)
+  fun <T> node(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("node", of)
 }
 
 interface RefConnection : QType {
-  fun <T : RefEdge> edges(init: () -> T): Stub<RefEdge> = stub(init)
+  fun <T : RefEdge> edges(init: () -> T): NullableStub<RefEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<RefEdge, Stub<T>>): Stub<T> = stub<RefEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<RefEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RefEdge, T>("edges", of)
 
-  fun <T : Ref> nodes(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : Ref> nodes(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Ref : QType {
-  fun <T : PullRequestConnection> associatedPullRequests(init: () -> T): Stub<PullRequestConnection> = stub(init)
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> associatedPullRequests(of: KFunction1<PullRequestConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestConnection, T>("associatedPullRequests", of)
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun prefix(): Stub<String, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun prefix(): Stub<String> = stub()
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun <T : GitObject> target(init: () -> T): Stub<GitObject> = stub(init)
+  fun <T : GitObject> target(init: () -> T): Stub<GitObject, ArgBuilder> = stub()
 
-  fun <T> target(of: KFunction1<GitObject, Stub<T>>): Stub<T> = stub<GitObject, T>("target", of)
+  fun <T> target(of: KFunction1<GitObject, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<GitObject, T>("target", of)
+
+  fun <T : PullRequestConnection> associatedPullRequests(init: () -> T,
+      argBuilder: AssociatedPullRequestsArgs = AssociatedPullRequestsArgs()): Stub<T, AssociatedPullRequestsArgs> =
+        configStub(init, argBuilder)
 
   class AssociatedPullRequestsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): AssociatedPullRequestsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): AssociatedPullRequestsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): AssociatedPullRequestsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): AssociatedPullRequestsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): AssociatedPullRequestsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): AssociatedPullRequestsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun states(value: PullRequestState): AssociatedPullRequestsArgs {
-      return apply { addArg("states", value) }
-    }
+    fun last(value: Int): AssociatedPullRequestsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): AssociatedPullRequestsArgs = apply { addArg("before", value) }
+
+
+    fun states(value: PullRequestState): AssociatedPullRequestsArgs =
+          apply { addArg("states", value) }
+
   }
 }
 
 interface ReactionGroup : QType {
-  fun content(): Stub<ReactionContent> = stub()
+  fun content(): Stub<ReactionContent, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : Reactable> subject(init: () -> T): Stub<Reactable> = stub(init)
+  fun <T : Reactable> subject(init: () -> T): Stub<Reactable, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<Reactable, Stub<T>>): Stub<T> = stub<Reactable, T>("subject", of)
+  fun <T> subject(of: KFunction1<Reactable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Reactable, T>("subject", of)
 
-  fun <T : ReactingUserConnection> users(init: () -> T): Stub<ReactingUserConnection> = stub(init)
+  fun viewerHasReacted(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> users(of: KFunction1<ReactingUserConnection, Stub<T>>): Stub<T> =
-        stub<ReactingUserConnection, T>("users", of)
-
-  fun viewerHasReacted(): Stub<Boolean> = stub()
+  fun <T : ReactingUserConnection> users(init: () -> T,
+      argBuilder: UsersArgs = UsersArgs()): Stub<T, UsersArgs> = configStub(init, argBuilder)
 
   class UsersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): UsersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): UsersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): UsersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): UsersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): UsersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): UsersArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): UsersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): UsersArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface ReactionEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Reaction> node(init: () -> T): Stub<Reaction> = stub(init)
+  fun <T : Reaction> node(init: () -> T): NullableStub<Reaction, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Reaction, Stub<T>>): Stub<T> = stub<Reaction, T>("node", of)
+  fun <T> node(of: KFunction1<Reaction, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Reaction, T>("node", of)
 }
 
 interface ReactionConnection : QType {
-  fun <T : ReactionEdge> edges(init: () -> T): Stub<ReactionEdge> = stub(init)
+  fun <T : ReactionEdge> edges(init: () -> T): NullableStub<ReactionEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ReactionEdge, Stub<T>>): Stub<T> = stub<ReactionEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ReactionEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReactionEdge, T>("edges", of)
 
-  fun <T : Reaction> nodes(init: () -> T): Stub<Reaction> = stub(init)
+  fun <T : Reaction> nodes(init: () -> T): NullableStub<Reaction, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Reaction, Stub<T>>): Stub<T> = stub<Reaction, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Reaction, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Reaction, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 
-  fun viewerHasReacted(): Stub<Boolean> = stub()
+  fun viewerHasReacted(): Stub<Boolean, ArgBuilder> = stub()
 }
 
 interface Reaction : QType {
-  fun content(): Stub<ReactionContent> = stub()
+  fun content(): Stub<ReactionContent, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> user(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("user", of)
 }
 
 interface ReactingUserEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> node(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> node(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> node(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("node", of)
+  fun <T> node(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("node", of)
 
-  fun reactedAt(): Stub<DateTime> = stub()
+  fun reactedAt(): Stub<DateTime, ArgBuilder> = stub()
 }
 
 interface ReactingUserConnection : QType {
-  fun <T : ReactingUserEdge> edges(init: () -> T): Stub<ReactingUserEdge> = stub(init)
+  fun <T : ReactingUserEdge> edges(init: () -> T): NullableStub<ReactingUserEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ReactingUserEdge, Stub<T>>): Stub<T> =
-        stub<ReactingUserEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ReactingUserEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ReactingUserEdge, T>("edges", of)
 
-  fun <T : User> nodes(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> nodes(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface RateLimit : QType {
-  fun cost(): Stub<Int> = stub()
+  fun cost(): Stub<Int, ArgBuilder> = stub()
 
-  fun limit(): Stub<Int> = stub()
+  fun limit(): Stub<Int, ArgBuilder> = stub()
 
-  fun remaining(): Stub<Int> = stub()
+  fun remaining(): Stub<Int, ArgBuilder> = stub()
 
-  fun resetAt(): Stub<DateTime> = stub()
+  fun resetAt(): Stub<DateTime, ArgBuilder> = stub()
 }
 
 interface Query : QType {
-  fun <T : CodeOfConduct> codeOfConduct(init: () -> T): Stub<CodeOfConduct> = stub(init)
+  fun <T : CodeOfConduct> codesOfConduct(init: () -> T): NullableStub<CodeOfConduct, ArgBuilder> =
+        nullableStub()
 
-  fun <T> codeOfConduct(of: KFunction1<CodeOfConduct, Stub<T>>): Stub<T> =
-        stub<CodeOfConduct, T>("codeOfConduct", of)
+  fun <T> codesOfConduct(of: KFunction1<CodeOfConduct, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<CodeOfConduct, T>("codesOfConduct", of)
 
-  fun <T : CodeOfConduct> codesOfConduct(init: () -> T): Stub<CodeOfConduct> = stub(init)
+  fun <T : RateLimit> rateLimit(init: () -> T): NullableStub<RateLimit, ArgBuilder> = nullableStub()
 
-  fun <T> codesOfConduct(of: KFunction1<CodeOfConduct, Stub<T>>): Stub<T> =
-        stub<CodeOfConduct, T>("codesOfConduct", of)
+  fun <T> rateLimit(of: KFunction1<RateLimit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RateLimit, T>("rateLimit", of)
 
-  fun <T : Node> node(init: () -> T): Stub<Node> = stub(init)
+  fun <T : Query> relay(init: () -> T): Stub<Query, ArgBuilder> = stub()
 
-  fun <T> node(of: KFunction1<Node, Stub<T>>): Stub<T> = stub<Node, T>("node", of)
+  fun <T> relay(of: KFunction1<Query, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Query, T>("relay", of)
 
-  fun <T : Node> nodes(init: () -> T): Stub<Node> = stub(init)
+  fun <T : User> viewer(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> nodes(of: KFunction1<Node, Stub<T>>): Stub<T> = stub<Node, T>("nodes", of)
+  fun <T> viewer(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("viewer", of)
 
-  fun <T : Organization> organization(init: () -> T): Stub<Organization> = stub(init)
+  fun <T : CodeOfConduct> codeOfConduct(init: () -> T,
+      argBuilder: CodeOfConductArgs = CodeOfConductArgs()): NullableStub<T, CodeOfConductArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> organization(of: KFunction1<Organization, Stub<T>>): Stub<T> =
-        stub<Organization, T>("organization", of)
+  fun <T : Node> node(init: () -> T, argBuilder: NodeArgs = NodeArgs()): NullableStub<T, NodeArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : RateLimit> rateLimit(init: () -> T): Stub<RateLimit> = stub(init)
+  fun <T : Node> nodes(init: () -> T,
+      argBuilder: NodesArgs = NodesArgs()): NullableStub<T, NodesArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> rateLimit(of: KFunction1<RateLimit, Stub<T>>): Stub<T> =
-        stub<RateLimit, T>("rateLimit", of)
+  fun <T : Organization> organization(init: () -> T,
+      argBuilder: OrganizationArgs = OrganizationArgs()): NullableStub<T, OrganizationArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : Query> relay(init: () -> T): Stub<Query> = stub(init)
+  fun <T : Repository> repository(init: () -> T,
+      argBuilder: RepositoryArgs = RepositoryArgs()): NullableStub<T, RepositoryArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> relay(of: KFunction1<Query, Stub<T>>): Stub<T> = stub<Query, T>("relay", of)
+  fun <T : RepositoryOwner> repositoryOwner(init: () -> T,
+      argBuilder: RepositoryOwnerArgs = RepositoryOwnerArgs()): NullableStub<T, RepositoryOwnerArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : UniformResourceLocatable> resource(init: () -> T,
+      argBuilder: ResourceArgs = ResourceArgs()): NullableStub<T, ResourceArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
-        stub<Repository, T>("repository", of)
+  fun <T : SearchResultItemConnection> search(init: () -> T,
+      argBuilder: SearchArgs = SearchArgs()): Stub<T, SearchArgs> = configStub(init, argBuilder)
 
-  fun <T : RepositoryOwner> repositoryOwner(init: () -> T): Stub<RepositoryOwner> = stub(init)
+  fun <T : Topic> topic(init: () -> T,
+      argBuilder: TopicArgs = TopicArgs()): NullableStub<T, TopicArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> repositoryOwner(of: KFunction1<RepositoryOwner, Stub<T>>): Stub<T> =
-        stub<RepositoryOwner, T>("repositoryOwner", of)
-
-  fun <T : UniformResourceLocatable> resource(init: () -> T): Stub<UniformResourceLocatable> = stub(init)
-
-  fun <T> resource(of: KFunction1<UniformResourceLocatable, Stub<T>>): Stub<T> =
-        stub<UniformResourceLocatable, T>("resource", of)
-
-  fun <T : SearchResultItemConnection> search(init: () -> T): Stub<SearchResultItemConnection> = stub(init)
-
-  fun <T> search(of: KFunction1<SearchResultItemConnection, Stub<T>>): Stub<T> =
-        stub<SearchResultItemConnection, T>("search", of)
-
-  fun <T : Topic> topic(init: () -> T): Stub<Topic> = stub(init)
-
-  fun <T> topic(of: KFunction1<Topic, Stub<T>>): Stub<T> = stub<Topic, T>("topic", of)
-
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
-
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
-
-  fun <T : User> viewer(init: () -> T): Stub<User> = stub(init)
-
-  fun <T> viewer(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("viewer", of)
+  fun <T : User> user(init: () -> T, argBuilder: UserArgs = UserArgs()): NullableStub<T, UserArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
   class CodeOfConductArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun key(value: String): CodeOfConductArgs {
-      return apply { addArg("key", value) }
-    }
+    fun key(value: String): CodeOfConductArgs = apply { addArg("key", value) }
+
   }
 
   class NodeArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun id(value: String): NodeArgs {
-      return apply { addArg("id", value) }
-    }
+    fun id(value: String): NodeArgs = apply { addArg("id", value) }
+
   }
 
   class NodesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun ids(value: String): NodesArgs {
-      return apply { addArg("ids", value) }
-    }
+    fun ids(value: String): NodesArgs = apply { addArg("ids", value) }
+
   }
 
   class OrganizationArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun login(value: String): OrganizationArgs {
-      return apply { addArg("login", value) }
-    }
+    fun login(value: String): OrganizationArgs = apply { addArg("login", value) }
+
   }
 
   class RepositoryArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun owner(value: String): RepositoryArgs {
-      return apply { addArg("owner", value) }
-    }
+    fun owner(value: String): RepositoryArgs = apply { addArg("owner", value) }
 
-    fun name(value: String): RepositoryArgs {
-      return apply { addArg("name", value) }
-    }
+
+    fun name(value: String): RepositoryArgs = apply { addArg("name", value) }
+
   }
 
   class RepositoryOwnerArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun login(value: String): RepositoryOwnerArgs {
-      return apply { addArg("login", value) }
-    }
+    fun login(value: String): RepositoryOwnerArgs = apply { addArg("login", value) }
+
   }
 
   class ResourceArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun url(value: URI): ResourceArgs {
-      return apply { addArg("url", value) }
-    }
+    fun url(value: URI): ResourceArgs = apply { addArg("url", value) }
+
   }
 
   class SearchArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): SearchArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): SearchArgs = apply { addArg("first", value) }
 
-    fun after(value: String): SearchArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): SearchArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): SearchArgs = apply { addArg("after", value) }
 
-    fun before(value: String): SearchArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun query(value: String): SearchArgs {
-      return apply { addArg("query", value) }
-    }
+    fun last(value: Int): SearchArgs = apply { addArg("last", value) }
 
-    fun type(value: SearchType): SearchArgs {
-      return apply { addArg("type", value) }
-    }
+
+    fun before(value: String): SearchArgs = apply { addArg("before", value) }
+
+
+    fun query(value: String): SearchArgs = apply { addArg("query", value) }
+
+
+    fun type(value: SearchType): SearchArgs = apply { addArg("type", value) }
+
   }
 
   class TopicArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun name(value: String): TopicArgs {
-      return apply { addArg("name", value) }
-    }
+    fun name(value: String): TopicArgs = apply { addArg("name", value) }
+
   }
 
   class UserArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun login(value: String): UserArgs {
-      return apply { addArg("login", value) }
-    }
+    fun login(value: String): UserArgs = apply { addArg("login", value) }
+
   }
 }
 
 interface PushAllowanceEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PushAllowance> node(init: () -> T): Stub<PushAllowance> = stub(init)
+  fun <T : PushAllowance> node(init: () -> T): NullableStub<PushAllowance, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<PushAllowance, Stub<T>>): Stub<T> = stub<PushAllowance, T>("node", of)
+  fun <T> node(of: KFunction1<PushAllowance, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PushAllowance, T>("node", of)
 }
 
 interface PushAllowanceConnection : QType {
-  fun <T : PushAllowanceEdge> edges(init: () -> T): Stub<PushAllowanceEdge> = stub(init)
+  fun <T : PushAllowanceEdge> edges(init: () -> T): NullableStub<PushAllowanceEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<PushAllowanceEdge, Stub<T>>): Stub<T> =
-        stub<PushAllowanceEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<PushAllowanceEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PushAllowanceEdge, T>("edges", of)
 
-  fun <T : PushAllowance> nodes(init: () -> T): Stub<PushAllowance> = stub(init)
+  fun <T : PushAllowance> nodes(init: () -> T): NullableStub<PushAllowance, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<PushAllowance, Stub<T>>): Stub<T> =
-        stub<PushAllowance, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<PushAllowance, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PushAllowance, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface PushAllowance : QType {
-  fun <T : PushAllowanceActor> actor(init: () -> T): Stub<PushAllowanceActor> = stub(init)
+  fun <T : PushAllowanceActor> actor(init: () -> T): NullableStub<PushAllowanceActor, ArgBuilder> =
+        nullableStub()
 
-  fun <T> actor(of: KFunction1<PushAllowanceActor, Stub<T>>): Stub<T> =
-        stub<PushAllowanceActor, T>("actor", of)
+  fun <T> actor(of: KFunction1<PushAllowanceActor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PushAllowanceActor, T>("actor", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ProtectedBranch> protectedBranch(init: () -> T): Stub<ProtectedBranch> = stub(init)
+  fun <T : ProtectedBranch> protectedBranch(init: () -> T): Stub<ProtectedBranch, ArgBuilder> =
+        stub()
 
-  fun <T> protectedBranch(of: KFunction1<ProtectedBranch, Stub<T>>): Stub<T> =
+  fun <T> protectedBranch(of: KFunction1<ProtectedBranch, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProtectedBranch, T>("protectedBranch", of)
 }
 
 interface PullRequestTimelineItemEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequestTimelineItem> node(init: () -> T): Stub<PullRequestTimelineItem> = stub(init)
+  fun <T : PullRequestTimelineItem> node(init: () -> T): NullableStub<PullRequestTimelineItem, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<PullRequestTimelineItem, Stub<T>>): Stub<T> =
-        stub<PullRequestTimelineItem, T>("node", of)
+  fun <T> node(of: KFunction1<PullRequestTimelineItem, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestTimelineItem, T>("node", of)
 }
 
 interface PullRequestTimelineConnection : QType {
-  fun <T : PullRequestTimelineItemEdge> edges(init: () -> T): Stub<PullRequestTimelineItemEdge> = stub(init)
+  fun <T : PullRequestTimelineItemEdge> edges(init: () -> T): NullableStub<PullRequestTimelineItemEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<PullRequestTimelineItemEdge, Stub<T>>): Stub<T> =
-        stub<PullRequestTimelineItemEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<PullRequestTimelineItemEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestTimelineItemEdge, T>("edges", of)
 
-  fun <T : PullRequestTimelineItem> nodes(init: () -> T): Stub<PullRequestTimelineItem> = stub(init)
+  fun <T : PullRequestTimelineItem> nodes(init: () -> T): NullableStub<PullRequestTimelineItem, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<PullRequestTimelineItem, Stub<T>>): Stub<T> =
-        stub<PullRequestTimelineItem, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<PullRequestTimelineItem, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestTimelineItem, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface PullRequestReviewThread : QType {
-  fun <T : PullRequestReviewCommentConnection> comments(init: () -> T): Stub<PullRequestReviewCommentConnection> = stub(init)
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> comments(of: KFunction1<PullRequestReviewCommentConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestReviewCommentConnection, T>("comments", of)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
-
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
-
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
+  fun <T : PullRequestReviewCommentConnection> comments(init: () -> T,
+      argBuilder: CommentsArgs = CommentsArgs()): Stub<T, CommentsArgs> =
+        configStub(init, argBuilder)
+
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommentsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface PullRequestReviewEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequestReview> node(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> node(init: () -> T): NullableStub<PullRequestReview, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
-        stub<PullRequestReview, T>("node", of)
+  fun <T> node(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReview, T>("node", of)
 }
 
 interface PullRequestReviewConnection : QType {
-  fun <T : PullRequestReviewEdge> edges(init: () -> T): Stub<PullRequestReviewEdge> = stub(init)
+  fun <T : PullRequestReviewEdge> edges(init: () -> T): NullableStub<PullRequestReviewEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<PullRequestReviewEdge, Stub<T>>): Stub<T> =
-        stub<PullRequestReviewEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<PullRequestReviewEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReviewEdge, T>("edges", of)
 
-  fun <T : PullRequestReview> nodes(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> nodes(init: () -> T): NullableStub<PullRequestReview, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
-        stub<PullRequestReview, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReview, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface PullRequestReviewCommentEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequestReviewComment> node(init: () -> T): Stub<PullRequestReviewComment> = stub(init)
+  fun <T : PullRequestReviewComment> node(init: () -> T): NullableStub<PullRequestReviewComment, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<PullRequestReviewComment, Stub<T>>): Stub<T> =
-        stub<PullRequestReviewComment, T>("node", of)
+  fun <T> node(of: KFunction1<PullRequestReviewComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReviewComment, T>("node", of)
 }
 
 interface PullRequestReviewCommentConnection : QType {
-  fun <T : PullRequestReviewCommentEdge> edges(init: () -> T): Stub<PullRequestReviewCommentEdge> = stub(init)
+  fun <T : PullRequestReviewCommentEdge> edges(init: () -> T): NullableStub<PullRequestReviewCommentEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<PullRequestReviewCommentEdge, Stub<T>>): Stub<T> =
-        stub<PullRequestReviewCommentEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<PullRequestReviewCommentEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReviewCommentEdge, T>("edges", of)
 
-  fun <T : PullRequestReviewComment> nodes(init: () -> T): Stub<PullRequestReviewComment> = stub(init)
+  fun <T : PullRequestReviewComment> nodes(init: () -> T): NullableStub<PullRequestReviewComment, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<PullRequestReviewComment, Stub<T>>): Stub<T> =
-        stub<PullRequestReviewComment, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<PullRequestReviewComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReviewComment, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface PullRequestReviewComment : QType {
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun bodyText(): Stub<String> = stub()
+  fun bodyText(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("commit", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun diffHunk(): Stub<String> = stub()
+  fun diffHunk(): Stub<String, ArgBuilder> = stub()
 
-  fun draftedAt(): Stub<DateTime> = stub()
+  fun draftedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : Commit> originalCommit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> originalCommit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> originalCommit(of: KFunction1<Commit, Stub<T>>): Stub<T> =
+  fun <T> originalCommit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Commit, T>("originalCommit", of)
 
-  fun originalPosition(): Stub<Int> = stub()
+  fun originalPosition(): Stub<Int, ArgBuilder> = stub()
 
-  fun path(): Stub<String> = stub()
+  fun path(): Stub<String, ArgBuilder> = stub()
 
-  fun position(): Stub<Int> = stub()
+  fun position(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun publishedAt(): Stub<DateTime> = stub()
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> pullRequestReview(init: () -> T): NullableStub<PullRequestReview, ArgBuilder> =
+        nullableStub()
 
-  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
-        stub<PullRequestReview, T>("pullRequestReview", of)
+  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestReview, T>("pullRequestReview", of)
 
-  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup> = stub(init)
+  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup, ArgBuilder> = stub()
 
-  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T>>): Stub<T> =
+  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReactionGroup, T>("reactionGroups", of)
 
-  fun <T : ReactionConnection> reactions(init: () -> T): Stub<ReactionConnection> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> reactions(of: KFunction1<ReactionConnection, Stub<T>>): Stub<T> =
-        stub<ReactionConnection, T>("reactions", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun viewerCanDelete(): Stub<Boolean> = stub()
+  fun viewerCanDelete(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanReact(): Stub<Boolean> = stub()
+  fun viewerCanReact(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
+
+  fun <T : ReactionConnection> reactions(init: () -> T,
+      argBuilder: ReactionsArgs = ReactionsArgs()): Stub<T, ReactionsArgs> =
+        configStub(init, argBuilder)
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReactionsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReactionsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReactionsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReactionsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReactionsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReactionsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun content(value: ReactionContent): ReactionsArgs {
-      return apply { addArg("content", value) }
-    }
+    fun last(value: Int): ReactionsArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: ReactionOrder): ReactionsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+
+    fun before(value: String): ReactionsArgs = apply { addArg("before", value) }
+
+
+    fun content(value: ReactionContent): ReactionsArgs = apply { addArg("content", value) }
+
+
+    fun orderBy(value: ReactionOrder): ReactionsArgs = apply { addArg("orderBy", value) }
+
   }
 }
 
 interface PullRequestReview : QType {
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun bodyText(): Stub<String> = stub()
+  fun bodyText(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequestReviewCommentConnection> comments(init: () -> T): Stub<PullRequestReviewCommentConnection> = stub(init)
+  fun <T : Commit> commit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> comments(of: KFunction1<PullRequestReviewCommentConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestReviewCommentConnection, T>("comments", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("commit", of)
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun publishedAt(): Stub<DateTime> = stub()
-
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
-
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun state(): Stub<PullRequestReviewState> = stub()
+  fun state(): Stub<PullRequestReviewState, ArgBuilder> = stub()
 
-  fun submittedAt(): Stub<DateTime> = stub()
+  fun submittedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun viewerCanDelete(): Stub<Boolean> = stub()
+  fun viewerCanDelete(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
+
+  fun <T : PullRequestReviewCommentConnection> comments(init: () -> T,
+      argBuilder: CommentsArgs = CommentsArgs()): Stub<T, CommentsArgs> =
+        configStub(init, argBuilder)
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommentsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface PullRequestEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> node(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> node(init: () -> T): NullableStub<PullRequest, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<PullRequest, Stub<T>>): Stub<T> = stub<PullRequest, T>("node", of)
+  fun <T> node(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequest, T>("node", of)
 }
 
 interface PullRequestConnection : QType {
-  fun <T : PullRequestEdge> edges(init: () -> T): Stub<PullRequestEdge> = stub(init)
+  fun <T : PullRequestEdge> edges(init: () -> T): NullableStub<PullRequestEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<PullRequestEdge, Stub<T>>): Stub<T> =
-        stub<PullRequestEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<PullRequestEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestEdge, T>("edges", of)
 
-  fun <T : PullRequest> nodes(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> nodes(init: () -> T): NullableStub<PullRequest, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<PullRequest, Stub<T>>): Stub<T> = stub<PullRequest, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequest, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface PullRequestCommitEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequestCommit> node(init: () -> T): Stub<PullRequestCommit> = stub(init)
+  fun <T : PullRequestCommit> node(init: () -> T): NullableStub<PullRequestCommit, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<PullRequestCommit, Stub<T>>): Stub<T> =
-        stub<PullRequestCommit, T>("node", of)
+  fun <T> node(of: KFunction1<PullRequestCommit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestCommit, T>("node", of)
 }
 
 interface PullRequestCommitConnection : QType {
-  fun <T : PullRequestCommitEdge> edges(init: () -> T): Stub<PullRequestCommitEdge> = stub(init)
+  fun <T : PullRequestCommitEdge> edges(init: () -> T): NullableStub<PullRequestCommitEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<PullRequestCommitEdge, Stub<T>>): Stub<T> =
-        stub<PullRequestCommitEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<PullRequestCommitEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestCommitEdge, T>("edges", of)
 
-  fun <T : PullRequestCommit> nodes(init: () -> T): Stub<PullRequestCommit> = stub(init)
+  fun <T : PullRequestCommit> nodes(init: () -> T): NullableStub<PullRequestCommit, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<PullRequestCommit, Stub<T>>): Stub<T> =
-        stub<PullRequestCommit, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<PullRequestCommit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<PullRequestCommit, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface PullRequestCommit : QType {
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("commit", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface PullRequest : QType {
-  fun <T : UserConnection> assignees(init: () -> T): Stub<UserConnection> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> assignees(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("assignees", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun <T : Ref> baseRef(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun <T> baseRef(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("baseRef", of)
 
-  fun <T : Ref> baseRef(init: () -> T): Stub<Ref> = stub(init)
+  fun baseRefName(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> baseRef(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("baseRef", of)
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun baseRefName(): Stub<String> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun bodyText(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun closed(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun bodyText(): Stub<String> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun closed(): Stub<Boolean> = stub()
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : IssueCommentConnection> comments(init: () -> T): Stub<IssueCommentConnection> = stub(init)
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T> comments(of: KFunction1<IssueCommentConnection, Stub<T>>): Stub<T> =
-        stub<IssueCommentConnection, T>("comments", of)
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestCommitConnection> commits(init: () -> T): Stub<PullRequestCommitConnection> = stub(init)
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun <T> commits(of: KFunction1<PullRequestCommitConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestCommitConnection, T>("commits", of)
+  fun <T : Ref> headRef(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun <T> headRef(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("headRef", of)
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun headRefName(): Stub<String, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun <T : Repository> headRepository(init: () -> T): NullableStub<Repository, ArgBuilder> =
+        nullableStub()
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T> headRepository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Repository, T>("headRepository", of)
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun <T : RepositoryOwner> headRepositoryOwner(init: () -> T): NullableStub<RepositoryOwner, ArgBuilder> =
+        nullableStub()
 
-  fun <T : Ref> headRef(init: () -> T): Stub<Ref> = stub(init)
+  fun <T> headRepositoryOwner(of: KFunction1<RepositoryOwner, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RepositoryOwner, T>("headRepositoryOwner", of)
 
-  fun <T> headRef(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("headRef", of)
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun headRefName(): Stub<String> = stub()
+  fun isCrossRepository(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : Repository> headRepository(init: () -> T): Stub<Repository> = stub(init)
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T> headRepository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
-        stub<Repository, T>("headRepository", of)
+  fun locked(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : RepositoryOwner> headRepositoryOwner(init: () -> T): Stub<RepositoryOwner> = stub(init)
+  fun <T : Commit> mergeCommit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> headRepositoryOwner(of: KFunction1<RepositoryOwner, Stub<T>>): Stub<T> =
-        stub<RepositoryOwner, T>("headRepositoryOwner", of)
+  fun <T> mergeCommit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("mergeCommit", of)
 
-  fun id(): Stub<String> = stub()
+  fun mergeable(): Stub<MergeableState, ArgBuilder> = stub()
 
-  fun isCrossRepository(): Stub<Boolean> = stub()
+  fun merged(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : LabelConnection> labels(init: () -> T): Stub<LabelConnection> = stub(init)
+  fun mergedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T> labels(of: KFunction1<LabelConnection, Stub<T>>): Stub<T> =
-        stub<LabelConnection, T>("labels", of)
+  fun number(): Stub<Int, ArgBuilder> = stub()
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun <T : Commit> potentialMergeCommit(init: () -> T): NullableStub<Commit, ArgBuilder> =
+        nullableStub()
 
-  fun locked(): Stub<Boolean> = stub()
+  fun <T> potentialMergeCommit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("potentialMergeCommit", of)
 
-  fun <T : Commit> mergeCommit(init: () -> T): Stub<Commit> = stub(init)
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T> mergeCommit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("mergeCommit", of)
+  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup, ArgBuilder> = stub()
 
-  fun mergeable(): Stub<MergeableState> = stub()
-
-  fun merged(): Stub<Boolean> = stub()
-
-  fun mergedAt(): Stub<DateTime> = stub()
-
-  fun number(): Stub<Int> = stub()
-
-  fun <T : UserConnection> participants(init: () -> T): Stub<UserConnection> = stub(init)
-
-  fun <T> participants(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("participants", of)
-
-  fun <T : Commit> potentialMergeCommit(init: () -> T): Stub<Commit> = stub(init)
-
-  fun <T> potentialMergeCommit(of: KFunction1<Commit, Stub<T>>): Stub<T> =
-        stub<Commit, T>("potentialMergeCommit", of)
-
-  fun publishedAt(): Stub<DateTime> = stub()
-
-  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup> = stub(init)
-
-  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T>>): Stub<T> =
+  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReactionGroup, T>("reactionGroups", of)
 
-  fun <T : ReactionConnection> reactions(init: () -> T): Stub<ReactionConnection> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> reactions(of: KFunction1<ReactionConnection, Stub<T>>): Stub<T> =
-        stub<ReactionConnection, T>("reactions", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun revertResourcePath(): Stub<URI> = stub()
+  fun revertResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun revertUrl(): Stub<URI> = stub()
+  fun revertUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : ReviewRequestConnection> reviewRequests(init: () -> T): Stub<ReviewRequestConnection> = stub(init)
+  fun state(): Stub<PullRequestState, ArgBuilder> = stub()
 
-  fun <T> reviewRequests(of: KFunction1<ReviewRequestConnection, Stub<T>>): Stub<T> =
-        stub<ReviewRequestConnection, T>("reviewRequests", of)
+  fun <T : SuggestedReviewer> suggestedReviewers(init: () -> T): NullableStub<SuggestedReviewer, ArgBuilder> =
+        nullableStub()
 
-  fun <T : PullRequestReviewConnection> reviews(init: () -> T): Stub<PullRequestReviewConnection> = stub(init)
+  fun <T> suggestedReviewers(of: KFunction1<SuggestedReviewer, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<SuggestedReviewer, T>("suggestedReviewers", of)
 
-  fun <T> reviews(of: KFunction1<PullRequestReviewConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestReviewConnection, T>("reviews", of)
+  fun title(): Stub<String, ArgBuilder> = stub()
 
-  fun state(): Stub<PullRequestState> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T : SuggestedReviewer> suggestedReviewers(init: () -> T): Stub<SuggestedReviewer> = stub(init)
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> suggestedReviewers(of: KFunction1<SuggestedReviewer, Stub<T>>): Stub<T> =
-        stub<SuggestedReviewer, T>("suggestedReviewers", of)
+  fun viewerCanReact(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : PullRequestTimelineConnection> timeline(init: () -> T): Stub<PullRequestTimelineConnection> = stub(init)
+  fun viewerCanSubscribe(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> timeline(of: KFunction1<PullRequestTimelineConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestTimelineConnection, T>("timeline", of)
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun title(): Stub<String> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun viewerSubscription(): Stub<SubscriptionState, ArgBuilder> = stub()
 
-  fun viewerCanReact(): Stub<Boolean> = stub()
+  fun <T : UserConnection> assignees(init: () -> T,
+      argBuilder: AssigneesArgs = AssigneesArgs()): Stub<T, AssigneesArgs> =
+        configStub(init, argBuilder)
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub()
+  fun <T : IssueCommentConnection> comments(init: () -> T,
+      argBuilder: CommentsArgs = CommentsArgs()): Stub<T, CommentsArgs> =
+        configStub(init, argBuilder)
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun <T : PullRequestCommitConnection> commits(init: () -> T,
+      argBuilder: CommitsArgs = CommitsArgs()): Stub<T, CommitsArgs> = configStub(init, argBuilder)
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun <T : LabelConnection> labels(init: () -> T,
+      argBuilder: LabelsArgs = LabelsArgs()): NullableStub<T, LabelsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun <T : UserConnection> participants(init: () -> T,
+      argBuilder: ParticipantsArgs = ParticipantsArgs()): Stub<T, ParticipantsArgs> =
+        configStub(init, argBuilder)
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub()
+  fun <T : ReactionConnection> reactions(init: () -> T,
+      argBuilder: ReactionsArgs = ReactionsArgs()): Stub<T, ReactionsArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : ReviewRequestConnection> reviewRequests(init: () -> T,
+      argBuilder: ReviewRequestsArgs = ReviewRequestsArgs()): NullableStub<T, ReviewRequestsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
+
+  fun <T : PullRequestReviewConnection> reviews(init: () -> T,
+      argBuilder: ReviewsArgs = ReviewsArgs()): NullableStub<T, ReviewsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
+
+  fun <T : PullRequestTimelineConnection> timeline(init: () -> T,
+      argBuilder: TimelineArgs = TimelineArgs()): Stub<T, TimelineArgs> =
+        configStub(init, argBuilder)
 
   class AssigneesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): AssigneesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): AssigneesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): AssigneesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): AssigneesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): AssigneesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): AssigneesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): AssigneesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): AssigneesArgs = apply { addArg("before", value) }
+
   }
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommentsArgs = apply { addArg("before", value) }
+
   }
 
   class CommitsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommitsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommitsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommitsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommitsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommitsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommitsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommitsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommitsArgs = apply { addArg("before", value) }
+
   }
 
   class LabelsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): LabelsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): LabelsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): LabelsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): LabelsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): LabelsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): LabelsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): LabelsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): LabelsArgs = apply { addArg("before", value) }
+
   }
 
   class ParticipantsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ParticipantsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ParticipantsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ParticipantsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ParticipantsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ParticipantsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ParticipantsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ParticipantsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ParticipantsArgs = apply { addArg("before", value) }
+
   }
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReactionsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReactionsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReactionsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReactionsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReactionsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReactionsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun content(value: ReactionContent): ReactionsArgs {
-      return apply { addArg("content", value) }
-    }
+    fun last(value: Int): ReactionsArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: ReactionOrder): ReactionsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+
+    fun before(value: String): ReactionsArgs = apply { addArg("before", value) }
+
+
+    fun content(value: ReactionContent): ReactionsArgs = apply { addArg("content", value) }
+
+
+    fun orderBy(value: ReactionOrder): ReactionsArgs = apply { addArg("orderBy", value) }
+
   }
 
   class ReviewRequestsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReviewRequestsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReviewRequestsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReviewRequestsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReviewRequestsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReviewRequestsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReviewRequestsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ReviewRequestsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ReviewRequestsArgs = apply { addArg("before", value) }
+
   }
 
   class ReviewsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReviewsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReviewsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReviewsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReviewsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReviewsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReviewsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun states(value: PullRequestReviewState): ReviewsArgs {
-      return apply { addArg("states", value) }
-    }
+    fun last(value: Int): ReviewsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ReviewsArgs = apply { addArg("before", value) }
+
+
+    fun states(value: PullRequestReviewState): ReviewsArgs = apply { addArg("states", value) }
+
   }
 
   class TimelineArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): TimelineArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): TimelineArgs = apply { addArg("first", value) }
 
-    fun after(value: String): TimelineArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): TimelineArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): TimelineArgs = apply { addArg("after", value) }
 
-    fun before(value: String): TimelineArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun since(value: DateTime): TimelineArgs {
-      return apply { addArg("since", value) }
-    }
+    fun last(value: Int): TimelineArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): TimelineArgs = apply { addArg("before", value) }
+
+
+    fun since(value: DateTime): TimelineArgs = apply { addArg("since", value) }
+
   }
 }
 
 interface ProtectedBranchEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ProtectedBranch> node(init: () -> T): Stub<ProtectedBranch> = stub(init)
+  fun <T : ProtectedBranch> node(init: () -> T): NullableStub<ProtectedBranch, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<ProtectedBranch, Stub<T>>): Stub<T> =
-        stub<ProtectedBranch, T>("node", of)
+  fun <T> node(of: KFunction1<ProtectedBranch, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProtectedBranch, T>("node", of)
 }
 
 interface ProtectedBranchConnection : QType {
-  fun <T : ProtectedBranchEdge> edges(init: () -> T): Stub<ProtectedBranchEdge> = stub(init)
+  fun <T : ProtectedBranchEdge> edges(init: () -> T): NullableStub<ProtectedBranchEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ProtectedBranchEdge, Stub<T>>): Stub<T> =
-        stub<ProtectedBranchEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ProtectedBranchEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProtectedBranchEdge, T>("edges", of)
 
-  fun <T : ProtectedBranch> nodes(init: () -> T): Stub<ProtectedBranch> = stub(init)
+  fun <T : ProtectedBranch> nodes(init: () -> T): NullableStub<ProtectedBranch, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<ProtectedBranch, Stub<T>>): Stub<T> =
-        stub<ProtectedBranch, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<ProtectedBranch, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProtectedBranch, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ProtectedBranch : QType {
-  fun <T : Actor> creator(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> creator(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> creator(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("creator", of)
+  fun <T> creator(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("creator", of)
 
-  fun hasDismissableStaleReviews(): Stub<Boolean> = stub()
+  fun hasDismissableStaleReviews(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasRequiredReviews(): Stub<Boolean> = stub()
+  fun hasRequiredReviews(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasRequiredStatusChecks(): Stub<Boolean> = stub()
+  fun hasRequiredStatusChecks(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasRestrictedPushes(): Stub<Boolean> = stub()
+  fun hasRestrictedPushes(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasRestrictedReviewDismissals(): Stub<Boolean> = stub()
+  fun hasRestrictedReviewDismissals(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasStrictRequiredStatusChecks(): Stub<Boolean> = stub()
+  fun hasStrictRequiredStatusChecks(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun isAdminEnforced(): Stub<Boolean> = stub()
+  fun isAdminEnforced(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PushAllowanceConnection> pushAllowances(init: () -> T): Stub<PushAllowanceConnection> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> pushAllowances(of: KFunction1<PushAllowanceConnection, Stub<T>>): Stub<T> =
-        stub<PushAllowanceConnection, T>("pushAllowances", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun requiredStatusCheckContexts(): Stub<String> = stub()
+  fun requiredStatusCheckContexts(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : ReviewDismissalAllowanceConnection> reviewDismissalAllowances(init: () -> T): Stub<ReviewDismissalAllowanceConnection> = stub(init)
+  fun <T : PushAllowanceConnection> pushAllowances(init: () -> T,
+      argBuilder: PushAllowancesArgs = PushAllowancesArgs()): Stub<T, PushAllowancesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> reviewDismissalAllowances(of: KFunction1<ReviewDismissalAllowanceConnection, Stub<T>>): Stub<T> =
-        stub<ReviewDismissalAllowanceConnection, T>("reviewDismissalAllowances", of)
+  fun <T : ReviewDismissalAllowanceConnection> reviewDismissalAllowances(init: () -> T,
+      argBuilder: ReviewDismissalAllowancesArgs = ReviewDismissalAllowancesArgs()): Stub<T, ReviewDismissalAllowancesArgs> =
+        configStub(init, argBuilder)
 
   class PushAllowancesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): PushAllowancesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): PushAllowancesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): PushAllowancesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): PushAllowancesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): PushAllowancesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): PushAllowancesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): PushAllowancesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): PushAllowancesArgs = apply { addArg("before", value) }
+
   }
 
   class ReviewDismissalAllowancesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReviewDismissalAllowancesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReviewDismissalAllowancesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReviewDismissalAllowancesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReviewDismissalAllowancesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReviewDismissalAllowancesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReviewDismissalAllowancesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ReviewDismissalAllowancesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ReviewDismissalAllowancesArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface ProjectEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Project> node(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> node(init: () -> T): NullableStub<Project, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("node", of)
+  fun <T> node(of: KFunction1<Project, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Project, T>("node", of)
 }
 
 interface ProjectConnection : QType {
-  fun <T : ProjectEdge> edges(init: () -> T): Stub<ProjectEdge> = stub(init)
+  fun <T : ProjectEdge> edges(init: () -> T): NullableStub<ProjectEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<ProjectEdge, Stub<T>>): Stub<T> = stub<ProjectEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ProjectEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectEdge, T>("edges", of)
 
-  fun <T : Project> nodes(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> nodes(init: () -> T): NullableStub<Project, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Project, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Project, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ProjectColumnEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ProjectColumn> node(init: () -> T): Stub<ProjectColumn> = stub(init)
+  fun <T : ProjectColumn> node(init: () -> T): NullableStub<ProjectColumn, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<ProjectColumn, Stub<T>>): Stub<T> = stub<ProjectColumn, T>("node", of)
+  fun <T> node(of: KFunction1<ProjectColumn, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectColumn, T>("node", of)
 }
 
 interface ProjectColumnConnection : QType {
-  fun <T : ProjectColumnEdge> edges(init: () -> T): Stub<ProjectColumnEdge> = stub(init)
+  fun <T : ProjectColumnEdge> edges(init: () -> T): NullableStub<ProjectColumnEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ProjectColumnEdge, Stub<T>>): Stub<T> =
-        stub<ProjectColumnEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ProjectColumnEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectColumnEdge, T>("edges", of)
 
-  fun <T : ProjectColumn> nodes(init: () -> T): Stub<ProjectColumn> = stub(init)
+  fun <T : ProjectColumn> nodes(init: () -> T): NullableStub<ProjectColumn, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<ProjectColumn, Stub<T>>): Stub<T> =
-        stub<ProjectColumn, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<ProjectColumn, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectColumn, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ProjectColumn : QType {
-  fun <T : ProjectCardConnection> cards(init: () -> T): Stub<ProjectCardConnection> = stub(init)
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> cards(of: KFunction1<ProjectCardConnection, Stub<T>>): Stub<T> =
-        stub<ProjectCardConnection, T>("cards", of)
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun <T : Project> project(init: () -> T): Stub<Project, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun <T> project(of: KFunction1<Project, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Project, T>("project", of)
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
-
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun <T : ProjectCardConnection> cards(init: () -> T,
+      argBuilder: CardsArgs = CardsArgs()): Stub<T, CardsArgs> = configStub(init, argBuilder)
 
   class CardsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CardsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CardsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CardsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CardsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CardsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CardsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CardsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CardsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface ProjectCardEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ProjectCard> node(init: () -> T): Stub<ProjectCard> = stub(init)
+  fun <T : ProjectCard> node(init: () -> T): NullableStub<ProjectCard, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<ProjectCard, Stub<T>>): Stub<T> = stub<ProjectCard, T>("node", of)
+  fun <T> node(of: KFunction1<ProjectCard, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectCard, T>("node", of)
 }
 
 interface ProjectCardConnection : QType {
-  fun <T : ProjectCardEdge> edges(init: () -> T): Stub<ProjectCardEdge> = stub(init)
+  fun <T : ProjectCardEdge> edges(init: () -> T): NullableStub<ProjectCardEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ProjectCardEdge, Stub<T>>): Stub<T> =
-        stub<ProjectCardEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ProjectCardEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectCardEdge, T>("edges", of)
 
-  fun <T : ProjectCard> nodes(init: () -> T): Stub<ProjectCard> = stub(init)
+  fun <T : ProjectCard> nodes(init: () -> T): NullableStub<ProjectCard, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<ProjectCard, Stub<T>>): Stub<T> = stub<ProjectCard, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<ProjectCard, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectCard, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ProjectCard : QType {
-  fun <T : ProjectColumn> column(init: () -> T): Stub<ProjectColumn> = stub(init)
+  fun <T : ProjectColumn> column(init: () -> T): NullableStub<ProjectColumn, ArgBuilder> =
+        nullableStub()
 
-  fun <T> column(of: KFunction1<ProjectColumn, Stub<T>>): Stub<T> =
-        stub<ProjectColumn, T>("column", of)
+  fun <T> column(of: KFunction1<ProjectColumn, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectColumn, T>("column", of)
 
-  fun <T : ProjectCardItem> content(init: () -> T): Stub<ProjectCardItem> = stub(init)
+  fun <T : ProjectCardItem> content(init: () -> T): NullableStub<ProjectCardItem, ArgBuilder> =
+        nullableStub()
 
-  fun <T> content(of: KFunction1<ProjectCardItem, Stub<T>>): Stub<T> =
-        stub<ProjectCardItem, T>("content", of)
+  fun <T> content(of: KFunction1<ProjectCardItem, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ProjectCardItem, T>("content", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T : Actor> creator(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> creator(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> creator(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("creator", of)
+  fun <T> creator(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("creator", of)
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun note(): Stub<String> = stub()
+  fun note(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> project(init: () -> T): Stub<Project, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun <T> project(of: KFunction1<Project, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Project, T>("project", of)
 
-  fun <T : ProjectColumn> projectColumn(init: () -> T): Stub<ProjectColumn> = stub(init)
+  fun <T : ProjectColumn> projectColumn(init: () -> T): Stub<ProjectColumn, ArgBuilder> = stub()
 
-  fun <T> projectColumn(of: KFunction1<ProjectColumn, Stub<T>>): Stub<T> =
+  fun <T> projectColumn(of: KFunction1<ProjectColumn, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectColumn, T>("projectColumn", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun state(): Stub<ProjectCardState> = stub()
+  fun state(): NullableStub<ProjectCardState, ArgBuilder> = nullableStub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface Project : QType {
-  fun body(): Stub<String> = stub()
+  fun body(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun closedAt(): Stub<DateTime> = stub()
+  fun closedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : ProjectColumnConnection> columns(init: () -> T): Stub<ProjectColumnConnection> = stub(init)
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> columns(of: KFunction1<ProjectColumnConnection, Stub<T>>): Stub<T> =
-        stub<ProjectColumnConnection, T>("columns", of)
+  fun <T : Actor> creator(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun <T> creator(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("creator", of)
 
-  fun <T : Actor> creator(init: () -> T): Stub<Actor> = stub(init)
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T> creator(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("creator", of)
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun number(): Stub<Int, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun <T : ProjectOwner> owner(init: () -> T): Stub<ProjectOwner, ArgBuilder> = stub()
 
-  fun number(): Stub<Int> = stub()
+  fun <T> owner(of: KFunction1<ProjectOwner, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<ProjectOwner, T>("owner", of)
 
-  fun <T : ProjectOwner> owner(init: () -> T): Stub<ProjectOwner> = stub(init)
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> owner(of: KFunction1<ProjectOwner, Stub<T>>): Stub<T> = stub<ProjectOwner, T>("owner", of)
+  fun state(): Stub<ProjectState, ArgBuilder> = stub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun state(): Stub<ProjectState> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
-
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun <T : ProjectColumnConnection> columns(init: () -> T,
+      argBuilder: ColumnsArgs = ColumnsArgs()): Stub<T, ColumnsArgs> = configStub(init, argBuilder)
 
   class ColumnsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ColumnsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ColumnsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ColumnsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ColumnsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ColumnsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ColumnsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ColumnsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ColumnsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface PageInfo : QType {
-  fun endCursor(): Stub<String> = stub()
+  fun endCursor(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun hasNextPage(): Stub<Boolean> = stub()
+  fun hasNextPage(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasPreviousPage(): Stub<Boolean> = stub()
+  fun hasPreviousPage(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun startCursor(): Stub<String> = stub()
+  fun startCursor(): NullableStub<String, ArgBuilder> = nullableStub()
 }
 
 interface OrganizationInvitationEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : OrganizationInvitation> node(init: () -> T): Stub<OrganizationInvitation> = stub(init)
+  fun <T : OrganizationInvitation> node(init: () -> T): NullableStub<OrganizationInvitation, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<OrganizationInvitation, Stub<T>>): Stub<T> =
-        stub<OrganizationInvitation, T>("node", of)
+  fun <T> node(of: KFunction1<OrganizationInvitation, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<OrganizationInvitation, T>("node", of)
 }
 
 interface OrganizationInvitationConnection : QType {
-  fun <T : OrganizationInvitationEdge> edges(init: () -> T): Stub<OrganizationInvitationEdge> = stub(init)
+  fun <T : OrganizationInvitationEdge> edges(init: () -> T): NullableStub<OrganizationInvitationEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<OrganizationInvitationEdge, Stub<T>>): Stub<T> =
-        stub<OrganizationInvitationEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<OrganizationInvitationEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<OrganizationInvitationEdge, T>("edges", of)
 
-  fun <T : OrganizationInvitation> nodes(init: () -> T): Stub<OrganizationInvitation> = stub(init)
+  fun <T : OrganizationInvitation> nodes(init: () -> T): NullableStub<OrganizationInvitation, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<OrganizationInvitation, Stub<T>>): Stub<T> =
-        stub<OrganizationInvitation, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<OrganizationInvitation, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<OrganizationInvitation, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface OrganizationInvitation : QType {
-  fun email(): Stub<String> = stub()
+  fun email(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> invitee(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> invitee(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> invitee(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("invitee", of)
+  fun <T> invitee(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("invitee", of)
 
-  fun <T : User> inviter(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> inviter(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> inviter(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("inviter", of)
+  fun <T> inviter(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("inviter", of)
 
-  fun role(): Stub<OrganizationInvitationRole> = stub()
+  fun role(): Stub<OrganizationInvitationRole, ArgBuilder> = stub()
 }
 
 interface OrganizationIdentityProvider : QType {
-  fun digestMethod(): Stub<URI> = stub()
+  fun digestMethod(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun <T : ExternalIdentityConnection> externalIdentities(init: () -> T): Stub<ExternalIdentityConnection> = stub(init)
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> externalIdentities(of: KFunction1<ExternalIdentityConnection, Stub<T>>): Stub<T> =
-        stub<ExternalIdentityConnection, T>("externalIdentities", of)
+  fun idpCertificate(): NullableStub<X509Certificate, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun issuer(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun idpCertificate(): Stub<X509Certificate> = stub()
+  fun <T : Organization> organization(init: () -> T): NullableStub<Organization, ArgBuilder> =
+        nullableStub()
 
-  fun issuer(): Stub<String> = stub()
+  fun <T> organization(of: KFunction1<Organization, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Organization, T>("organization", of)
 
-  fun <T : Organization> organization(init: () -> T): Stub<Organization> = stub(init)
+  fun signatureMethod(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun <T> organization(of: KFunction1<Organization, Stub<T>>): Stub<T> =
-        stub<Organization, T>("organization", of)
+  fun ssoUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun signatureMethod(): Stub<URI> = stub()
-
-  fun ssoUrl(): Stub<URI> = stub()
+  fun <T : ExternalIdentityConnection> externalIdentities(init: () -> T,
+      argBuilder: ExternalIdentitiesArgs = ExternalIdentitiesArgs()): Stub<T, ExternalIdentitiesArgs> =
+        configStub(init, argBuilder)
 
   class ExternalIdentitiesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ExternalIdentitiesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ExternalIdentitiesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ExternalIdentitiesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ExternalIdentitiesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ExternalIdentitiesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ExternalIdentitiesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ExternalIdentitiesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ExternalIdentitiesArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface OrganizationEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Organization> node(init: () -> T): Stub<Organization> = stub(init)
+  fun <T : Organization> node(init: () -> T): NullableStub<Organization, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<Organization, Stub<T>>): Stub<T> = stub<Organization, T>("node", of)
+  fun <T> node(of: KFunction1<Organization, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Organization, T>("node", of)
 }
 
 interface OrganizationConnection : QType {
-  fun <T : OrganizationEdge> edges(init: () -> T): Stub<OrganizationEdge> = stub(init)
+  fun <T : OrganizationEdge> edges(init: () -> T): NullableStub<OrganizationEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<OrganizationEdge, Stub<T>>): Stub<T> =
-        stub<OrganizationEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<OrganizationEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<OrganizationEdge, T>("edges", of)
 
-  fun <T : Organization> nodes(init: () -> T): Stub<Organization> = stub(init)
+  fun <T : Organization> nodes(init: () -> T): NullableStub<Organization, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<Organization, Stub<T>>): Stub<T> = stub<Organization, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Organization, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Organization, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Organization : QType {
-  fun avatarUrl(): Stub<URI> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun isInvoiced(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isInvoiced(): Stub<Boolean> = stub()
+  fun login(): Stub<String, ArgBuilder> = stub()
 
-  fun login(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : UserConnection> members(init: () -> T): Stub<UserConnection> = stub(init)
+  fun newTeamResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> members(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("members", of)
+  fun newTeamUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun organizationBillingEmail(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun newTeamResourcePath(): Stub<URI> = stub()
+  fun projectsResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun newTeamUrl(): Stub<URI> = stub()
+  fun projectsUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun organizationBillingEmail(): Stub<String> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : RepositoryConnection> pinnedRepositories(init: () -> T): Stub<RepositoryConnection> = stub(init)
+  fun <T : OrganizationIdentityProvider> samlIdentityProvider(init: () -> T): NullableStub<OrganizationIdentityProvider, ArgBuilder> =
+        nullableStub()
 
-  fun <T> pinnedRepositories(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("pinnedRepositories", of)
+  fun <T> samlIdentityProvider(of: KFunction1<OrganizationIdentityProvider, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<OrganizationIdentityProvider, T>("samlIdentityProvider", of)
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun teamsResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun teamsUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : ProjectConnection> projects(init: () -> T): Stub<ProjectConnection> = stub(init)
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> projects(of: KFunction1<ProjectConnection, Stub<T>>): Stub<T> =
-        stub<ProjectConnection, T>("projects", of)
+  fun viewerCanAdminister(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun projectsResourcePath(): Stub<URI> = stub()
+  fun viewerCanCreateProjects(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun projectsUrl(): Stub<URI> = stub()
+  fun viewerCanCreateRepositories(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : RepositoryConnection> repositories(init: () -> T): Stub<RepositoryConnection> = stub(init)
+  fun viewerCanCreateTeams(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> repositories(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("repositories", of)
+  fun viewerIsAMember(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : URI> avatarUrl(init: () -> T,
+      argBuilder: AvatarUrlArgs = AvatarUrlArgs()): Stub<T, AvatarUrlArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
-        stub<Repository, T>("repository", of)
+  fun <T : UserConnection> members(init: () -> T,
+      argBuilder: MembersArgs = MembersArgs()): Stub<T, MembersArgs> = configStub(init, argBuilder)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun <T : RepositoryConnection> pinnedRepositories(init: () -> T,
+      argBuilder: PinnedRepositoriesArgs = PinnedRepositoriesArgs()): Stub<T, PinnedRepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : OrganizationIdentityProvider> samlIdentityProvider(init: () -> T): Stub<OrganizationIdentityProvider> = stub(init)
+  fun <T : Project> project(init: () -> T,
+      argBuilder: ProjectArgs = ProjectArgs()): NullableStub<T, ProjectArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> samlIdentityProvider(of: KFunction1<OrganizationIdentityProvider, Stub<T>>): Stub<T> =
-        stub<OrganizationIdentityProvider, T>("samlIdentityProvider", of)
+  fun <T : ProjectConnection> projects(init: () -> T,
+      argBuilder: ProjectsArgs = ProjectsArgs()): Stub<T, ProjectsArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : Team> team(init: () -> T): Stub<Team> = stub(init)
+  fun <T : RepositoryConnection> repositories(init: () -> T,
+      argBuilder: RepositoriesArgs = RepositoriesArgs()): Stub<T, RepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> team(of: KFunction1<Team, Stub<T>>): Stub<T> = stub<Team, T>("team", of)
+  fun <T : Repository> repository(init: () -> T,
+      argBuilder: RepositoryArgs = RepositoryArgs()): NullableStub<T, RepositoryArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : TeamConnection> teams(init: () -> T): Stub<TeamConnection> = stub(init)
+  fun <T : Team> team(init: () -> T, argBuilder: TeamArgs = TeamArgs()): NullableStub<T, TeamArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> teams(of: KFunction1<TeamConnection, Stub<T>>): Stub<T> =
-        stub<TeamConnection, T>("teams", of)
-
-  fun teamsResourcePath(): Stub<URI> = stub()
-
-  fun teamsUrl(): Stub<URI> = stub()
-
-  fun url(): Stub<URI> = stub()
-
-  fun viewerCanAdminister(): Stub<Boolean> = stub()
-
-  fun viewerCanCreateProjects(): Stub<Boolean> = stub()
-
-  fun viewerCanCreateRepositories(): Stub<Boolean> = stub()
-
-  fun viewerCanCreateTeams(): Stub<Boolean> = stub()
-
-  fun viewerIsAMember(): Stub<Boolean> = stub()
+  fun <T : TeamConnection> teams(init: () -> T,
+      argBuilder: TeamsArgs = TeamsArgs()): Stub<T, TeamsArgs> = configStub(init, argBuilder)
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun size(value: Int): AvatarUrlArgs {
-      return apply { addArg("size", value) }
-    }
+    fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
+
   }
 
   class MembersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): MembersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): MembersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): MembersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): MembersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): MembersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): MembersArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): MembersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): MembersArgs = apply { addArg("before", value) }
+
   }
 
   class PinnedRepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): PinnedRepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): PinnedRepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): PinnedRepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): PinnedRepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): PinnedRepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): PinnedRepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): PinnedRepositoriesArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): PinnedRepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): PinnedRepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): PinnedRepositoriesArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): PinnedRepositoriesArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): PinnedRepositoriesArgs {
-      return apply { addArg("isLocked", value) }
-    }
+
+    fun privacy(value: RepositoryPrivacy): PinnedRepositoriesArgs =
+          apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): PinnedRepositoriesArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): PinnedRepositoriesArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): PinnedRepositoriesArgs = apply { addArg("isLocked", value) }
+
   }
 
   class ProjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun number(value: Int): ProjectArgs {
-      return apply { addArg("number", value) }
-    }
+    fun number(value: Int): ProjectArgs = apply { addArg("number", value) }
+
   }
 
   class ProjectsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ProjectsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ProjectsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ProjectsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ProjectsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ProjectsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ProjectsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun orderBy(value: ProjectOrder): ProjectsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun last(value: Int): ProjectsArgs = apply { addArg("last", value) }
 
-    fun search(value: String): ProjectsArgs {
-      return apply { addArg("search", value) }
-    }
 
-    fun states(value: ProjectState): ProjectsArgs {
-      return apply { addArg("states", value) }
-    }
+    fun before(value: String): ProjectsArgs = apply { addArg("before", value) }
+
+
+    fun orderBy(value: ProjectOrder): ProjectsArgs = apply { addArg("orderBy", value) }
+
+
+    fun search(value: String): ProjectsArgs = apply { addArg("search", value) }
+
+
+    fun states(value: ProjectState): ProjectsArgs = apply { addArg("states", value) }
+
   }
 
   class RepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): RepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): RepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): RepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): RepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): RepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): RepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): RepositoriesArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): RepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): RepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): RepositoriesArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): RepositoriesArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): RepositoriesArgs {
-      return apply { addArg("isLocked", value) }
-    }
 
-    fun isFork(value: Boolean): RepositoriesArgs {
-      return apply { addArg("isFork", value) }
-    }
+    fun privacy(value: RepositoryPrivacy): RepositoriesArgs = apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): RepositoriesArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): RepositoriesArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): RepositoriesArgs = apply { addArg("isLocked", value) }
+
+
+    fun isFork(value: Boolean): RepositoriesArgs = apply { addArg("isFork", value) }
+
   }
 
   class RepositoryArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun name(value: String): RepositoryArgs {
-      return apply { addArg("name", value) }
-    }
+    fun name(value: String): RepositoryArgs = apply { addArg("name", value) }
+
   }
 
   class TeamArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun slug(value: String): TeamArgs {
-      return apply { addArg("slug", value) }
-    }
+    fun slug(value: String): TeamArgs = apply { addArg("slug", value) }
+
   }
 
   class TeamsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): TeamsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): TeamsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): TeamsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): TeamsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): TeamsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): TeamsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: TeamPrivacy): TeamsArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): TeamsArgs = apply { addArg("last", value) }
 
-    fun role(value: TeamRole): TeamsArgs {
-      return apply { addArg("role", value) }
-    }
 
-    fun query(value: String): TeamsArgs {
-      return apply { addArg("query", value) }
-    }
+    fun before(value: String): TeamsArgs = apply { addArg("before", value) }
 
-    fun userLogins(value: String): TeamsArgs {
-      return apply { addArg("userLogins", value) }
-    }
 
-    fun orderBy(value: TeamOrder): TeamsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun privacy(value: TeamPrivacy): TeamsArgs = apply { addArg("privacy", value) }
 
-    fun ldapMapped(value: Boolean): TeamsArgs {
-      return apply { addArg("ldapMapped", value) }
-    }
+
+    fun role(value: TeamRole): TeamsArgs = apply { addArg("role", value) }
+
+
+    fun query(value: String): TeamsArgs = apply { addArg("query", value) }
+
+
+    fun userLogins(value: String): TeamsArgs = apply { addArg("userLogins", value) }
+
+
+    fun orderBy(value: TeamOrder): TeamsArgs = apply { addArg("orderBy", value) }
+
+
+    fun ldapMapped(value: Boolean): TeamsArgs = apply { addArg("ldapMapped", value) }
+
   }
 }
 
 interface Mutation : QType {
-  fun <T : AcceptTopicSuggestionPayload> acceptTopicSuggestion(init: () -> T): Stub<AcceptTopicSuggestionPayload> = stub(init)
+  fun <T : AcceptTopicSuggestionPayload> acceptTopicSuggestion(init: () -> T,
+      argBuilder: AcceptTopicSuggestionArgs = AcceptTopicSuggestionArgs()): NullableStub<T, AcceptTopicSuggestionArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> acceptTopicSuggestion(of: KFunction1<AcceptTopicSuggestionPayload, Stub<T>>): Stub<T> =
-        stub<AcceptTopicSuggestionPayload, T>("acceptTopicSuggestion", of)
+  fun <T : AddCommentPayload> addComment(init: () -> T,
+      argBuilder: AddCommentArgs = AddCommentArgs()): NullableStub<T, AddCommentArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : AddCommentPayload> addComment(init: () -> T): Stub<AddCommentPayload> = stub(init)
+  fun <T : AddProjectCardPayload> addProjectCard(init: () -> T,
+      argBuilder: AddProjectCardArgs = AddProjectCardArgs()): NullableStub<T, AddProjectCardArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> addComment(of: KFunction1<AddCommentPayload, Stub<T>>): Stub<T> =
-        stub<AddCommentPayload, T>("addComment", of)
+  fun <T : AddProjectColumnPayload> addProjectColumn(init: () -> T,
+      argBuilder: AddProjectColumnArgs = AddProjectColumnArgs()): NullableStub<T, AddProjectColumnArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : AddProjectCardPayload> addProjectCard(init: () -> T): Stub<AddProjectCardPayload> = stub(init)
+  fun <T : AddPullRequestReviewPayload> addPullRequestReview(init: () -> T,
+      argBuilder: AddPullRequestReviewArgs = AddPullRequestReviewArgs()): NullableStub<T, AddPullRequestReviewArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> addProjectCard(of: KFunction1<AddProjectCardPayload, Stub<T>>): Stub<T> =
-        stub<AddProjectCardPayload, T>("addProjectCard", of)
+  fun <T : AddPullRequestReviewCommentPayload> addPullRequestReviewComment(init: () -> T,
+      argBuilder: AddPullRequestReviewCommentArgs = AddPullRequestReviewCommentArgs()): NullableStub<T, AddPullRequestReviewCommentArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : AddProjectColumnPayload> addProjectColumn(init: () -> T): Stub<AddProjectColumnPayload> = stub(init)
+  fun <T : AddReactionPayload> addReaction(init: () -> T,
+      argBuilder: AddReactionArgs = AddReactionArgs()): NullableStub<T, AddReactionArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> addProjectColumn(of: KFunction1<AddProjectColumnPayload, Stub<T>>): Stub<T> =
-        stub<AddProjectColumnPayload, T>("addProjectColumn", of)
+  fun <T : AddStarPayload> addStar(init: () -> T,
+      argBuilder: AddStarArgs = AddStarArgs()): NullableStub<T, AddStarArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : AddPullRequestReviewPayload> addPullRequestReview(init: () -> T): Stub<AddPullRequestReviewPayload> = stub(init)
+  fun <T : CreateProjectPayload> createProject(init: () -> T,
+      argBuilder: CreateProjectArgs = CreateProjectArgs()): NullableStub<T, CreateProjectArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> addPullRequestReview(of: KFunction1<AddPullRequestReviewPayload, Stub<T>>): Stub<T> =
-        stub<AddPullRequestReviewPayload, T>("addPullRequestReview", of)
+  fun <T : DeclineTopicSuggestionPayload> declineTopicSuggestion(init: () -> T,
+      argBuilder: DeclineTopicSuggestionArgs = DeclineTopicSuggestionArgs()): NullableStub<T, DeclineTopicSuggestionArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : AddPullRequestReviewCommentPayload> addPullRequestReviewComment(init: () -> T): Stub<AddPullRequestReviewCommentPayload> = stub(init)
+  fun <T : DeleteProjectPayload> deleteProject(init: () -> T,
+      argBuilder: DeleteProjectArgs = DeleteProjectArgs()): NullableStub<T, DeleteProjectArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> addPullRequestReviewComment(of: KFunction1<AddPullRequestReviewCommentPayload, Stub<T>>): Stub<T> =
-        stub<AddPullRequestReviewCommentPayload, T>("addPullRequestReviewComment", of)
+  fun <T : DeleteProjectCardPayload> deleteProjectCard(init: () -> T,
+      argBuilder: DeleteProjectCardArgs = DeleteProjectCardArgs()): NullableStub<T, DeleteProjectCardArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : AddReactionPayload> addReaction(init: () -> T): Stub<AddReactionPayload> = stub(init)
+  fun <T : DeleteProjectColumnPayload> deleteProjectColumn(init: () -> T,
+      argBuilder: DeleteProjectColumnArgs = DeleteProjectColumnArgs()): NullableStub<T, DeleteProjectColumnArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> addReaction(of: KFunction1<AddReactionPayload, Stub<T>>): Stub<T> =
-        stub<AddReactionPayload, T>("addReaction", of)
+  fun <T : DeletePullRequestReviewPayload> deletePullRequestReview(init: () -> T,
+      argBuilder: DeletePullRequestReviewArgs = DeletePullRequestReviewArgs()): NullableStub<T, DeletePullRequestReviewArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : AddStarPayload> addStar(init: () -> T): Stub<AddStarPayload> = stub(init)
+  fun <T : DismissPullRequestReviewPayload> dismissPullRequestReview(init: () -> T,
+      argBuilder: DismissPullRequestReviewArgs = DismissPullRequestReviewArgs()): NullableStub<T, DismissPullRequestReviewArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> addStar(of: KFunction1<AddStarPayload, Stub<T>>): Stub<T> =
-        stub<AddStarPayload, T>("addStar", of)
+  fun <T : MoveProjectCardPayload> moveProjectCard(init: () -> T,
+      argBuilder: MoveProjectCardArgs = MoveProjectCardArgs()): NullableStub<T, MoveProjectCardArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : CreateProjectPayload> createProject(init: () -> T): Stub<CreateProjectPayload> = stub(init)
+  fun <T : MoveProjectColumnPayload> moveProjectColumn(init: () -> T,
+      argBuilder: MoveProjectColumnArgs = MoveProjectColumnArgs()): NullableStub<T, MoveProjectColumnArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> createProject(of: KFunction1<CreateProjectPayload, Stub<T>>): Stub<T> =
-        stub<CreateProjectPayload, T>("createProject", of)
+  fun <T : RemoveOutsideCollaboratorPayload> removeOutsideCollaborator(init: () -> T,
+      argBuilder: RemoveOutsideCollaboratorArgs = RemoveOutsideCollaboratorArgs()): NullableStub<T, RemoveOutsideCollaboratorArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : DeclineTopicSuggestionPayload> declineTopicSuggestion(init: () -> T): Stub<DeclineTopicSuggestionPayload> = stub(init)
+  fun <T : RemoveReactionPayload> removeReaction(init: () -> T,
+      argBuilder: RemoveReactionArgs = RemoveReactionArgs()): NullableStub<T, RemoveReactionArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> declineTopicSuggestion(of: KFunction1<DeclineTopicSuggestionPayload, Stub<T>>): Stub<T> =
-        stub<DeclineTopicSuggestionPayload, T>("declineTopicSuggestion", of)
+  fun <T : RemoveStarPayload> removeStar(init: () -> T,
+      argBuilder: RemoveStarArgs = RemoveStarArgs()): NullableStub<T, RemoveStarArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : DeleteProjectPayload> deleteProject(init: () -> T): Stub<DeleteProjectPayload> = stub(init)
+  fun <T : RequestReviewsPayload> requestReviews(init: () -> T,
+      argBuilder: RequestReviewsArgs = RequestReviewsArgs()): NullableStub<T, RequestReviewsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> deleteProject(of: KFunction1<DeleteProjectPayload, Stub<T>>): Stub<T> =
-        stub<DeleteProjectPayload, T>("deleteProject", of)
+  fun <T : SubmitPullRequestReviewPayload> submitPullRequestReview(init: () -> T,
+      argBuilder: SubmitPullRequestReviewArgs = SubmitPullRequestReviewArgs()): NullableStub<T, SubmitPullRequestReviewArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : DeleteProjectCardPayload> deleteProjectCard(init: () -> T): Stub<DeleteProjectCardPayload> = stub(init)
+  fun <T : UpdateProjectPayload> updateProject(init: () -> T,
+      argBuilder: UpdateProjectArgs = UpdateProjectArgs()): NullableStub<T, UpdateProjectArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> deleteProjectCard(of: KFunction1<DeleteProjectCardPayload, Stub<T>>): Stub<T> =
-        stub<DeleteProjectCardPayload, T>("deleteProjectCard", of)
+  fun <T : UpdateProjectCardPayload> updateProjectCard(init: () -> T,
+      argBuilder: UpdateProjectCardArgs = UpdateProjectCardArgs()): NullableStub<T, UpdateProjectCardArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : DeleteProjectColumnPayload> deleteProjectColumn(init: () -> T): Stub<DeleteProjectColumnPayload> = stub(init)
+  fun <T : UpdateProjectColumnPayload> updateProjectColumn(init: () -> T,
+      argBuilder: UpdateProjectColumnArgs = UpdateProjectColumnArgs()): NullableStub<T, UpdateProjectColumnArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> deleteProjectColumn(of: KFunction1<DeleteProjectColumnPayload, Stub<T>>): Stub<T> =
-        stub<DeleteProjectColumnPayload, T>("deleteProjectColumn", of)
+  fun <T : UpdatePullRequestReviewPayload> updatePullRequestReview(init: () -> T,
+      argBuilder: UpdatePullRequestReviewArgs = UpdatePullRequestReviewArgs()): NullableStub<T, UpdatePullRequestReviewArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : DeletePullRequestReviewPayload> deletePullRequestReview(init: () -> T): Stub<DeletePullRequestReviewPayload> = stub(init)
+  fun <T : UpdatePullRequestReviewCommentPayload> updatePullRequestReviewComment(init: () -> T,
+      argBuilder: UpdatePullRequestReviewCommentArgs = UpdatePullRequestReviewCommentArgs()): NullableStub<T, UpdatePullRequestReviewCommentArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T> deletePullRequestReview(of: KFunction1<DeletePullRequestReviewPayload, Stub<T>>): Stub<T> =
-        stub<DeletePullRequestReviewPayload, T>("deletePullRequestReview", of)
+  fun <T : UpdateSubscriptionPayload> updateSubscription(init: () -> T,
+      argBuilder: UpdateSubscriptionArgs = UpdateSubscriptionArgs()): NullableStub<T, UpdateSubscriptionArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun <T : DismissPullRequestReviewPayload> dismissPullRequestReview(init: () -> T): Stub<DismissPullRequestReviewPayload> = stub(init)
-
-  fun <T> dismissPullRequestReview(of: KFunction1<DismissPullRequestReviewPayload, Stub<T>>): Stub<T> =
-        stub<DismissPullRequestReviewPayload, T>("dismissPullRequestReview", of)
-
-  fun <T : MoveProjectCardPayload> moveProjectCard(init: () -> T): Stub<MoveProjectCardPayload> = stub(init)
-
-  fun <T> moveProjectCard(of: KFunction1<MoveProjectCardPayload, Stub<T>>): Stub<T> =
-        stub<MoveProjectCardPayload, T>("moveProjectCard", of)
-
-  fun <T : MoveProjectColumnPayload> moveProjectColumn(init: () -> T): Stub<MoveProjectColumnPayload> = stub(init)
-
-  fun <T> moveProjectColumn(of: KFunction1<MoveProjectColumnPayload, Stub<T>>): Stub<T> =
-        stub<MoveProjectColumnPayload, T>("moveProjectColumn", of)
-
-  fun <T : RemoveOutsideCollaboratorPayload> removeOutsideCollaborator(init: () -> T): Stub<RemoveOutsideCollaboratorPayload> = stub(init)
-
-  fun <T> removeOutsideCollaborator(of: KFunction1<RemoveOutsideCollaboratorPayload, Stub<T>>): Stub<T> =
-        stub<RemoveOutsideCollaboratorPayload, T>("removeOutsideCollaborator", of)
-
-  fun <T : RemoveReactionPayload> removeReaction(init: () -> T): Stub<RemoveReactionPayload> = stub(init)
-
-  fun <T> removeReaction(of: KFunction1<RemoveReactionPayload, Stub<T>>): Stub<T> =
-        stub<RemoveReactionPayload, T>("removeReaction", of)
-
-  fun <T : RemoveStarPayload> removeStar(init: () -> T): Stub<RemoveStarPayload> = stub(init)
-
-  fun <T> removeStar(of: KFunction1<RemoveStarPayload, Stub<T>>): Stub<T> =
-        stub<RemoveStarPayload, T>("removeStar", of)
-
-  fun <T : RequestReviewsPayload> requestReviews(init: () -> T): Stub<RequestReviewsPayload> = stub(init)
-
-  fun <T> requestReviews(of: KFunction1<RequestReviewsPayload, Stub<T>>): Stub<T> =
-        stub<RequestReviewsPayload, T>("requestReviews", of)
-
-  fun <T : SubmitPullRequestReviewPayload> submitPullRequestReview(init: () -> T): Stub<SubmitPullRequestReviewPayload> = stub(init)
-
-  fun <T> submitPullRequestReview(of: KFunction1<SubmitPullRequestReviewPayload, Stub<T>>): Stub<T> =
-        stub<SubmitPullRequestReviewPayload, T>("submitPullRequestReview", of)
-
-  fun <T : UpdateProjectPayload> updateProject(init: () -> T): Stub<UpdateProjectPayload> = stub(init)
-
-  fun <T> updateProject(of: KFunction1<UpdateProjectPayload, Stub<T>>): Stub<T> =
-        stub<UpdateProjectPayload, T>("updateProject", of)
-
-  fun <T : UpdateProjectCardPayload> updateProjectCard(init: () -> T): Stub<UpdateProjectCardPayload> = stub(init)
-
-  fun <T> updateProjectCard(of: KFunction1<UpdateProjectCardPayload, Stub<T>>): Stub<T> =
-        stub<UpdateProjectCardPayload, T>("updateProjectCard", of)
-
-  fun <T : UpdateProjectColumnPayload> updateProjectColumn(init: () -> T): Stub<UpdateProjectColumnPayload> = stub(init)
-
-  fun <T> updateProjectColumn(of: KFunction1<UpdateProjectColumnPayload, Stub<T>>): Stub<T> =
-        stub<UpdateProjectColumnPayload, T>("updateProjectColumn", of)
-
-  fun <T : UpdatePullRequestReviewPayload> updatePullRequestReview(init: () -> T): Stub<UpdatePullRequestReviewPayload> = stub(init)
-
-  fun <T> updatePullRequestReview(of: KFunction1<UpdatePullRequestReviewPayload, Stub<T>>): Stub<T> =
-        stub<UpdatePullRequestReviewPayload, T>("updatePullRequestReview", of)
-
-  fun <T : UpdatePullRequestReviewCommentPayload> updatePullRequestReviewComment(init: () -> T): Stub<UpdatePullRequestReviewCommentPayload> = stub(init)
-
-  fun <T> updatePullRequestReviewComment(of: KFunction1<UpdatePullRequestReviewCommentPayload, Stub<T>>): Stub<T> =
-        stub<UpdatePullRequestReviewCommentPayload, T>("updatePullRequestReviewComment", of)
-
-  fun <T : UpdateSubscriptionPayload> updateSubscription(init: () -> T): Stub<UpdateSubscriptionPayload> = stub(init)
-
-  fun <T> updateSubscription(of: KFunction1<UpdateSubscriptionPayload, Stub<T>>): Stub<T> =
-        stub<UpdateSubscriptionPayload, T>("updateSubscription", of)
-
-  fun <T : UpdateTopicsPayload> updateTopics(init: () -> T): Stub<UpdateTopicsPayload> = stub(init)
-
-  fun <T> updateTopics(of: KFunction1<UpdateTopicsPayload, Stub<T>>): Stub<T> =
-        stub<UpdateTopicsPayload, T>("updateTopics", of)
+  fun <T : UpdateTopicsPayload> updateTopics(init: () -> T,
+      argBuilder: UpdateTopicsArgs = UpdateTopicsArgs()): NullableStub<T, UpdateTopicsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
   class AcceptTopicSuggestionArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AcceptTopicSuggestionInput): AcceptTopicSuggestionArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AcceptTopicSuggestionInput): AcceptTopicSuggestionArgs =
+          apply { addArg("input", value) }
+
   }
 
   class AddCommentArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AddCommentInput): AddCommentArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AddCommentInput): AddCommentArgs = apply { addArg("input", value) }
+
   }
 
   class AddProjectCardArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AddProjectCardInput): AddProjectCardArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AddProjectCardInput): AddProjectCardArgs = apply { addArg("input", value) }
+
   }
 
   class AddProjectColumnArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AddProjectColumnInput): AddProjectColumnArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AddProjectColumnInput): AddProjectColumnArgs = apply { addArg("input", value) }
+
   }
 
   class AddPullRequestReviewArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AddPullRequestReviewInput): AddPullRequestReviewArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AddPullRequestReviewInput): AddPullRequestReviewArgs =
+          apply { addArg("input", value) }
+
   }
 
   class AddPullRequestReviewCommentArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AddPullRequestReviewCommentInput): AddPullRequestReviewCommentArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AddPullRequestReviewCommentInput): AddPullRequestReviewCommentArgs =
+          apply { addArg("input", value) }
+
   }
 
   class AddReactionArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AddReactionInput): AddReactionArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AddReactionInput): AddReactionArgs = apply { addArg("input", value) }
+
   }
 
   class AddStarArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: AddStarInput): AddStarArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: AddStarInput): AddStarArgs = apply { addArg("input", value) }
+
   }
 
   class CreateProjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: CreateProjectInput): CreateProjectArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: CreateProjectInput): CreateProjectArgs = apply { addArg("input", value) }
+
   }
 
   class DeclineTopicSuggestionArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: DeclineTopicSuggestionInput): DeclineTopicSuggestionArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: DeclineTopicSuggestionInput): DeclineTopicSuggestionArgs =
+          apply { addArg("input", value) }
+
   }
 
   class DeleteProjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: DeleteProjectInput): DeleteProjectArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: DeleteProjectInput): DeleteProjectArgs = apply { addArg("input", value) }
+
   }
 
   class DeleteProjectCardArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: DeleteProjectCardInput): DeleteProjectCardArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: DeleteProjectCardInput): DeleteProjectCardArgs =
+          apply { addArg("input", value) }
+
   }
 
   class DeleteProjectColumnArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: DeleteProjectColumnInput): DeleteProjectColumnArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: DeleteProjectColumnInput): DeleteProjectColumnArgs =
+          apply { addArg("input", value) }
+
   }
 
   class DeletePullRequestReviewArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: DeletePullRequestReviewInput): DeletePullRequestReviewArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: DeletePullRequestReviewInput): DeletePullRequestReviewArgs =
+          apply { addArg("input", value) }
+
   }
 
   class DismissPullRequestReviewArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: DismissPullRequestReviewInput): DismissPullRequestReviewArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: DismissPullRequestReviewInput): DismissPullRequestReviewArgs =
+          apply { addArg("input", value) }
+
   }
 
   class MoveProjectCardArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: MoveProjectCardInput): MoveProjectCardArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: MoveProjectCardInput): MoveProjectCardArgs = apply { addArg("input", value) }
+
   }
 
   class MoveProjectColumnArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: MoveProjectColumnInput): MoveProjectColumnArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: MoveProjectColumnInput): MoveProjectColumnArgs =
+          apply { addArg("input", value) }
+
   }
 
   class RemoveOutsideCollaboratorArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: RemoveOutsideCollaboratorInput): RemoveOutsideCollaboratorArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: RemoveOutsideCollaboratorInput): RemoveOutsideCollaboratorArgs =
+          apply { addArg("input", value) }
+
   }
 
   class RemoveReactionArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: RemoveReactionInput): RemoveReactionArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: RemoveReactionInput): RemoveReactionArgs = apply { addArg("input", value) }
+
   }
 
   class RemoveStarArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: RemoveStarInput): RemoveStarArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: RemoveStarInput): RemoveStarArgs = apply { addArg("input", value) }
+
   }
 
   class RequestReviewsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: RequestReviewsInput): RequestReviewsArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: RequestReviewsInput): RequestReviewsArgs = apply { addArg("input", value) }
+
   }
 
   class SubmitPullRequestReviewArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: SubmitPullRequestReviewInput): SubmitPullRequestReviewArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: SubmitPullRequestReviewInput): SubmitPullRequestReviewArgs =
+          apply { addArg("input", value) }
+
   }
 
   class UpdateProjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: UpdateProjectInput): UpdateProjectArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: UpdateProjectInput): UpdateProjectArgs = apply { addArg("input", value) }
+
   }
 
   class UpdateProjectCardArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: UpdateProjectCardInput): UpdateProjectCardArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: UpdateProjectCardInput): UpdateProjectCardArgs =
+          apply { addArg("input", value) }
+
   }
 
   class UpdateProjectColumnArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: UpdateProjectColumnInput): UpdateProjectColumnArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: UpdateProjectColumnInput): UpdateProjectColumnArgs =
+          apply { addArg("input", value) }
+
   }
 
   class UpdatePullRequestReviewArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: UpdatePullRequestReviewInput): UpdatePullRequestReviewArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: UpdatePullRequestReviewInput): UpdatePullRequestReviewArgs =
+          apply { addArg("input", value) }
+
   }
 
   class UpdatePullRequestReviewCommentArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: UpdatePullRequestReviewCommentInput): UpdatePullRequestReviewCommentArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: UpdatePullRequestReviewCommentInput): UpdatePullRequestReviewCommentArgs =
+          apply { addArg("input", value) }
+
   }
 
   class UpdateSubscriptionArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: UpdateSubscriptionInput): UpdateSubscriptionArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: UpdateSubscriptionInput): UpdateSubscriptionArgs =
+          apply { addArg("input", value) }
+
   }
 
   class UpdateTopicsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun input(value: UpdateTopicsInput): UpdateTopicsArgs {
-      return apply { addArg("input", value) }
-    }
+    fun input(value: UpdateTopicsInput): UpdateTopicsArgs = apply { addArg("input", value) }
+
   }
 }
 
 interface MovedColumnsInProjectEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface MoveProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : ProjectColumnEdge> columnEdge(init: () -> T): Stub<ProjectColumnEdge> = stub(init)
+  fun <T : ProjectColumnEdge> columnEdge(init: () -> T): Stub<ProjectColumnEdge, ArgBuilder> =
+        stub()
 
-  fun <T> columnEdge(of: KFunction1<ProjectColumnEdge, Stub<T>>): Stub<T> =
+  fun <T> columnEdge(of: KFunction1<ProjectColumnEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectColumnEdge, T>("columnEdge", of)
 }
 
 interface MoveProjectCardPayload : QType {
-  fun <T : ProjectCardEdge> cardEdge(init: () -> T): Stub<ProjectCardEdge> = stub(init)
+  fun <T : ProjectCardEdge> cardEdge(init: () -> T): Stub<ProjectCardEdge, ArgBuilder> = stub()
 
-  fun <T> cardEdge(of: KFunction1<ProjectCardEdge, Stub<T>>): Stub<T> =
+  fun <T> cardEdge(of: KFunction1<ProjectCardEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectCardEdge, T>("cardEdge", of)
 
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 }
 
 interface MilestonedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun milestoneTitle(): Stub<String> = stub()
+  fun milestoneTitle(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : MilestoneItem> subject(init: () -> T): Stub<MilestoneItem> = stub(init)
+  fun <T : MilestoneItem> subject(init: () -> T): Stub<MilestoneItem, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<MilestoneItem, Stub<T>>): Stub<T> =
+  fun <T> subject(of: KFunction1<MilestoneItem, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<MilestoneItem, T>("subject", of)
 }
 
 interface MilestoneEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Milestone> node(init: () -> T): Stub<Milestone> = stub(init)
+  fun <T : Milestone> node(init: () -> T): NullableStub<Milestone, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Milestone, Stub<T>>): Stub<T> = stub<Milestone, T>("node", of)
+  fun <T> node(of: KFunction1<Milestone, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Milestone, T>("node", of)
 }
 
 interface MilestoneConnection : QType {
-  fun <T : MilestoneEdge> edges(init: () -> T): Stub<MilestoneEdge> = stub(init)
+  fun <T : MilestoneEdge> edges(init: () -> T): NullableStub<MilestoneEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<MilestoneEdge, Stub<T>>): Stub<T> =
-        stub<MilestoneEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<MilestoneEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<MilestoneEdge, T>("edges", of)
 
-  fun <T : Milestone> nodes(init: () -> T): Stub<Milestone> = stub(init)
+  fun <T : Milestone> nodes(init: () -> T): NullableStub<Milestone, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Milestone, Stub<T>>): Stub<T> = stub<Milestone, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Milestone, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Milestone, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Milestone : QType {
-  fun <T : Actor> creator(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> creator(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> creator(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("creator", of)
+  fun <T> creator(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("creator", of)
 
-  fun description(): Stub<String> = stub()
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun dueOn(): Stub<DateTime> = stub()
+  fun dueOn(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun number(): Stub<Int> = stub()
+  fun number(): Stub<Int, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun state(): Stub<MilestoneState> = stub()
+  fun state(): Stub<MilestoneState, ArgBuilder> = stub()
 
-  fun title(): Stub<String> = stub()
+  fun title(): Stub<String, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface MergedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("commit", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Ref> mergeRef(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : Ref> mergeRef(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T> mergeRef(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("mergeRef", of)
+  fun <T> mergeRef(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("mergeRef", of)
 
-  fun mergeRefName(): Stub<String> = stub()
+  fun mergeRefName(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface MentionedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface LockedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Lockable> lockable(init: () -> T): Stub<Lockable> = stub(init)
+  fun <T : Lockable> lockable(init: () -> T): Stub<Lockable, ArgBuilder> = stub()
 
-  fun <T> lockable(of: KFunction1<Lockable, Stub<T>>): Stub<T> = stub<Lockable, T>("lockable", of)
+  fun <T> lockable(of: KFunction1<Lockable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Lockable, T>("lockable", of)
 }
 
 interface LanguageEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Language> node(init: () -> T): Stub<Language> = stub(init)
+  fun <T : Language> node(init: () -> T): Stub<Language, ArgBuilder> = stub()
 
-  fun <T> node(of: KFunction1<Language, Stub<T>>): Stub<T> = stub<Language, T>("node", of)
+  fun <T> node(of: KFunction1<Language, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Language, T>("node", of)
 
-  fun size(): Stub<Int> = stub()
+  fun size(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface LanguageConnection : QType {
-  fun <T : LanguageEdge> edges(init: () -> T): Stub<LanguageEdge> = stub(init)
+  fun <T : LanguageEdge> edges(init: () -> T): NullableStub<LanguageEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<LanguageEdge, Stub<T>>): Stub<T> = stub<LanguageEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<LanguageEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<LanguageEdge, T>("edges", of)
 
-  fun <T : Language> nodes(init: () -> T): Stub<Language> = stub(init)
+  fun <T : Language> nodes(init: () -> T): NullableStub<Language, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Language, Stub<T>>): Stub<T> = stub<Language, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Language, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Language, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 
-  fun totalSize(): Stub<Int> = stub()
+  fun totalSize(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Language : QType {
-  fun color(): Stub<String> = stub()
+  fun color(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 }
 
 interface LabeledEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Label> label(init: () -> T): Stub<Label> = stub(init)
+  fun <T : Label> label(init: () -> T): Stub<Label, ArgBuilder> = stub()
 
-  fun <T> label(of: KFunction1<Label, Stub<T>>): Stub<T> = stub<Label, T>("label", of)
+  fun <T> label(of: KFunction1<Label, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Label, T>("label", of)
 
-  fun <T : Labelable> labelable(init: () -> T): Stub<Labelable> = stub(init)
+  fun <T : Labelable> labelable(init: () -> T): Stub<Labelable, ArgBuilder> = stub()
 
-  fun <T> labelable(of: KFunction1<Labelable, Stub<T>>): Stub<T> =
+  fun <T> labelable(of: KFunction1<Labelable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Labelable, T>("labelable", of)
 }
 
 interface LabelEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Label> node(init: () -> T): Stub<Label> = stub(init)
+  fun <T : Label> node(init: () -> T): NullableStub<Label, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Label, Stub<T>>): Stub<T> = stub<Label, T>("node", of)
+  fun <T> node(of: KFunction1<Label, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Label, T>("node", of)
 }
 
 interface LabelConnection : QType {
-  fun <T : LabelEdge> edges(init: () -> T): Stub<LabelEdge> = stub(init)
+  fun <T : LabelEdge> edges(init: () -> T): NullableStub<LabelEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<LabelEdge, Stub<T>>): Stub<T> = stub<LabelEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<LabelEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<LabelEdge, T>("edges", of)
 
-  fun <T : Label> nodes(init: () -> T): Stub<Label> = stub(init)
+  fun <T : Label> nodes(init: () -> T): NullableStub<Label, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Label, Stub<T>>): Stub<T> = stub<Label, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Label, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Label, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Label : QType {
-  fun color(): Stub<String> = stub()
+  fun color(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : IssueConnection> issues(init: () -> T): Stub<IssueConnection> = stub(init)
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> issues(of: KFunction1<IssueConnection, Stub<T>>): Stub<T> =
-        stub<IssueConnection, T>("issues", of)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
-
-  fun <T : PullRequestConnection> pullRequests(init: () -> T): Stub<PullRequestConnection> = stub(init)
-
-  fun <T> pullRequests(of: KFunction1<PullRequestConnection, Stub<T>>): Stub<T> =
-        stub<PullRequestConnection, T>("pullRequests", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
+  fun <T : IssueConnection> issues(init: () -> T,
+      argBuilder: IssuesArgs = IssuesArgs()): Stub<T, IssuesArgs> = configStub(init, argBuilder)
+
+  fun <T : PullRequestConnection> pullRequests(init: () -> T,
+      argBuilder: PullRequestsArgs = PullRequestsArgs()): NullableStub<T, PullRequestsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
+
   class IssuesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): IssuesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): IssuesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): IssuesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): IssuesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): IssuesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): IssuesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun labels(value: String): IssuesArgs {
-      return apply { addArg("labels", value) }
-    }
+    fun last(value: Int): IssuesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: IssueOrder): IssuesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun states(value: IssueState): IssuesArgs {
-      return apply { addArg("states", value) }
-    }
+    fun before(value: String): IssuesArgs = apply { addArg("before", value) }
+
+
+    fun labels(value: String): IssuesArgs = apply { addArg("labels", value) }
+
+
+    fun orderBy(value: IssueOrder): IssuesArgs = apply { addArg("orderBy", value) }
+
+
+    fun states(value: IssueState): IssuesArgs = apply { addArg("states", value) }
+
   }
 
   class PullRequestsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): PullRequestsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): PullRequestsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): PullRequestsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): PullRequestsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): PullRequestsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): PullRequestsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): PullRequestsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): PullRequestsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface IssueTimelineItemEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : IssueTimelineItem> node(init: () -> T): Stub<IssueTimelineItem> = stub(init)
+  fun <T : IssueTimelineItem> node(init: () -> T): NullableStub<IssueTimelineItem, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<IssueTimelineItem, Stub<T>>): Stub<T> =
-        stub<IssueTimelineItem, T>("node", of)
+  fun <T> node(of: KFunction1<IssueTimelineItem, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<IssueTimelineItem, T>("node", of)
 }
 
 interface IssueTimelineConnection : QType {
-  fun <T : IssueTimelineItemEdge> edges(init: () -> T): Stub<IssueTimelineItemEdge> = stub(init)
+  fun <T : IssueTimelineItemEdge> edges(init: () -> T): NullableStub<IssueTimelineItemEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<IssueTimelineItemEdge, Stub<T>>): Stub<T> =
-        stub<IssueTimelineItemEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<IssueTimelineItemEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<IssueTimelineItemEdge, T>("edges", of)
 
-  fun <T : IssueTimelineItem> nodes(init: () -> T): Stub<IssueTimelineItem> = stub(init)
+  fun <T : IssueTimelineItem> nodes(init: () -> T): NullableStub<IssueTimelineItem, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<IssueTimelineItem, Stub<T>>): Stub<T> =
-        stub<IssueTimelineItem, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<IssueTimelineItem, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<IssueTimelineItem, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface IssueEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Issue> node(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> node(init: () -> T): NullableStub<Issue, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("node", of)
+  fun <T> node(of: KFunction1<Issue, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Issue, T>("node", of)
 }
 
 interface IssueConnection : QType {
-  fun <T : IssueEdge> edges(init: () -> T): Stub<IssueEdge> = stub(init)
+  fun <T : IssueEdge> edges(init: () -> T): NullableStub<IssueEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<IssueEdge, Stub<T>>): Stub<T> = stub<IssueEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<IssueEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<IssueEdge, T>("edges", of)
 
-  fun <T : Issue> nodes(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> nodes(init: () -> T): NullableStub<Issue, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Issue, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Issue, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface IssueCommentEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : IssueComment> node(init: () -> T): Stub<IssueComment> = stub(init)
+  fun <T : IssueComment> node(init: () -> T): NullableStub<IssueComment, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<IssueComment, Stub<T>>): Stub<T> = stub<IssueComment, T>("node", of)
+  fun <T> node(of: KFunction1<IssueComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<IssueComment, T>("node", of)
 }
 
 interface IssueCommentConnection : QType {
-  fun <T : IssueCommentEdge> edges(init: () -> T): Stub<IssueCommentEdge> = stub(init)
+  fun <T : IssueCommentEdge> edges(init: () -> T): NullableStub<IssueCommentEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<IssueCommentEdge, Stub<T>>): Stub<T> =
-        stub<IssueCommentEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<IssueCommentEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<IssueCommentEdge, T>("edges", of)
 
-  fun <T : IssueComment> nodes(init: () -> T): Stub<IssueComment> = stub(init)
+  fun <T : IssueComment> nodes(init: () -> T): NullableStub<IssueComment, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<IssueComment, Stub<T>>): Stub<T> = stub<IssueComment, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<IssueComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<IssueComment, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface IssueComment : QType {
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun bodyText(): Stub<String> = stub()
+  fun bodyText(): Stub<String, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> issue(init: () -> T): Stub<Issue, ArgBuilder> = stub()
 
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
+  fun <T> issue(of: KFunction1<Issue, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Issue, T>("issue", of)
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun publishedAt(): Stub<DateTime> = stub()
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup> = stub(init)
+  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup, ArgBuilder> = stub()
 
-  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T>>): Stub<T> =
+  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReactionGroup, T>("reactionGroups", of)
 
-  fun <T : ReactionConnection> reactions(init: () -> T): Stub<ReactionConnection> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> reactions(of: KFunction1<ReactionConnection, Stub<T>>): Stub<T> =
-        stub<ReactionConnection, T>("reactions", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun viewerCanDelete(): Stub<Boolean> = stub()
+  fun viewerCanDelete(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanReact(): Stub<Boolean> = stub()
+  fun viewerCanReact(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
+
+  fun <T : ReactionConnection> reactions(init: () -> T,
+      argBuilder: ReactionsArgs = ReactionsArgs()): Stub<T, ReactionsArgs> =
+        configStub(init, argBuilder)
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReactionsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReactionsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReactionsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReactionsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReactionsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReactionsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun content(value: ReactionContent): ReactionsArgs {
-      return apply { addArg("content", value) }
-    }
+    fun last(value: Int): ReactionsArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: ReactionOrder): ReactionsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+
+    fun before(value: String): ReactionsArgs = apply { addArg("before", value) }
+
+
+    fun content(value: ReactionContent): ReactionsArgs = apply { addArg("content", value) }
+
+
+    fun orderBy(value: ReactionOrder): ReactionsArgs = apply { addArg("orderBy", value) }
+
   }
 }
 
 interface Issue : QType {
-  fun <T : UserConnection> assignees(init: () -> T): Stub<UserConnection> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> assignees(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("assignees", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun bodyText(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun closed(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun bodyText(): Stub<String> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun closed(): Stub<Boolean> = stub()
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : IssueCommentConnection> comments(init: () -> T): Stub<IssueCommentConnection> = stub(init)
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T> comments(of: KFunction1<IssueCommentConnection, Stub<T>>): Stub<T> =
-        stub<IssueCommentConnection, T>("comments", of)
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun locked(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun <T : Milestone> milestone(init: () -> T): NullableStub<Milestone, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun <T> milestone(of: KFunction1<Milestone, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Milestone, T>("milestone", of)
 
-  fun <T : LabelConnection> labels(init: () -> T): Stub<LabelConnection> = stub(init)
+  fun number(): Stub<Int, ArgBuilder> = stub()
 
-  fun <T> labels(of: KFunction1<LabelConnection, Stub<T>>): Stub<T> =
-        stub<LabelConnection, T>("labels", of)
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup, ArgBuilder> = stub()
 
-  fun locked(): Stub<Boolean> = stub()
-
-  fun <T : Milestone> milestone(init: () -> T): Stub<Milestone> = stub(init)
-
-  fun <T> milestone(of: KFunction1<Milestone, Stub<T>>): Stub<T> =
-        stub<Milestone, T>("milestone", of)
-
-  fun number(): Stub<Int> = stub()
-
-  fun <T : UserConnection> participants(init: () -> T): Stub<UserConnection> = stub(init)
-
-  fun <T> participants(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("participants", of)
-
-  fun publishedAt(): Stub<DateTime> = stub()
-
-  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup> = stub(init)
-
-  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T>>): Stub<T> =
+  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReactionGroup, T>("reactionGroups", of)
 
-  fun <T : ReactionConnection> reactions(init: () -> T): Stub<ReactionConnection> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> reactions(of: KFunction1<ReactionConnection, Stub<T>>): Stub<T> =
-        stub<ReactionConnection, T>("reactions", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun state(): Stub<IssueState> = stub()
+  fun state(): Stub<IssueState, ArgBuilder> = stub()
 
-  fun <T : IssueTimelineConnection> timeline(init: () -> T): Stub<IssueTimelineConnection> = stub(init)
+  fun title(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> timeline(of: KFunction1<IssueTimelineConnection, Stub<T>>): Stub<T> =
-        stub<IssueTimelineConnection, T>("timeline", of)
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun title(): Stub<String> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun viewerCanReact(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun viewerCanSubscribe(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanReact(): Stub<Boolean> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun viewerSubscription(): Stub<SubscriptionState, ArgBuilder> = stub()
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun <T : UserConnection> assignees(init: () -> T,
+      argBuilder: AssigneesArgs = AssigneesArgs()): Stub<T, AssigneesArgs> =
+        configStub(init, argBuilder)
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub()
+  fun <T : IssueCommentConnection> comments(init: () -> T,
+      argBuilder: CommentsArgs = CommentsArgs()): Stub<T, CommentsArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : LabelConnection> labels(init: () -> T,
+      argBuilder: LabelsArgs = LabelsArgs()): NullableStub<T, LabelsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
+
+  fun <T : UserConnection> participants(init: () -> T,
+      argBuilder: ParticipantsArgs = ParticipantsArgs()): Stub<T, ParticipantsArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : ReactionConnection> reactions(init: () -> T,
+      argBuilder: ReactionsArgs = ReactionsArgs()): Stub<T, ReactionsArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : IssueTimelineConnection> timeline(init: () -> T,
+      argBuilder: TimelineArgs = TimelineArgs()): Stub<T, TimelineArgs> =
+        configStub(init, argBuilder)
 
   class AssigneesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): AssigneesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): AssigneesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): AssigneesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): AssigneesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): AssigneesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): AssigneesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): AssigneesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): AssigneesArgs = apply { addArg("before", value) }
+
   }
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommentsArgs = apply { addArg("before", value) }
+
   }
 
   class LabelsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): LabelsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): LabelsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): LabelsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): LabelsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): LabelsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): LabelsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): LabelsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): LabelsArgs = apply { addArg("before", value) }
+
   }
 
   class ParticipantsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ParticipantsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ParticipantsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ParticipantsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ParticipantsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ParticipantsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ParticipantsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): ParticipantsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): ParticipantsArgs = apply { addArg("before", value) }
+
   }
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReactionsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReactionsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReactionsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReactionsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReactionsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReactionsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun content(value: ReactionContent): ReactionsArgs {
-      return apply { addArg("content", value) }
-    }
+    fun last(value: Int): ReactionsArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: ReactionOrder): ReactionsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+
+    fun before(value: String): ReactionsArgs = apply { addArg("before", value) }
+
+
+    fun content(value: ReactionContent): ReactionsArgs = apply { addArg("content", value) }
+
+
+    fun orderBy(value: ReactionOrder): ReactionsArgs = apply { addArg("orderBy", value) }
+
   }
 
   class TimelineArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): TimelineArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): TimelineArgs = apply { addArg("first", value) }
 
-    fun after(value: String): TimelineArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): TimelineArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): TimelineArgs = apply { addArg("after", value) }
 
-    fun before(value: String): TimelineArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun since(value: DateTime): TimelineArgs {
-      return apply { addArg("since", value) }
-    }
+    fun last(value: Int): TimelineArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): TimelineArgs = apply { addArg("before", value) }
+
+
+    fun since(value: DateTime): TimelineArgs = apply { addArg("since", value) }
+
   }
 }
 
 interface HeadRefRestoredEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 }
 
 interface HeadRefForcePushedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Commit> afterCommit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> afterCommit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> afterCommit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("afterCommit", of)
+  fun <T> afterCommit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("afterCommit", of)
 
-  fun <T : Commit> beforeCommit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> beforeCommit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> beforeCommit(of: KFunction1<Commit, Stub<T>>): Stub<T> =
+  fun <T> beforeCommit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Commit, T>("beforeCommit", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : Ref> ref(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : Ref> ref(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T> ref(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("ref", of)
+  fun <T> ref(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("ref", of)
 }
 
 interface HeadRefDeletedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T : Ref> headRef(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : Ref> headRef(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T> headRef(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("headRef", of)
+  fun <T> headRef(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("headRef", of)
 
-  fun headRefName(): Stub<String> = stub()
+  fun headRefName(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 }
 
 interface GpgSignature : QType {
-  fun email(): Stub<String> = stub()
+  fun email(): Stub<String, ArgBuilder> = stub()
 
-  fun isValid(): Stub<Boolean> = stub()
+  fun isValid(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun keyId(): Stub<String> = stub()
+  fun keyId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun payload(): Stub<String> = stub()
+  fun payload(): Stub<String, ArgBuilder> = stub()
 
-  fun signature(): Stub<String> = stub()
+  fun signature(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> signer(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> signer(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> signer(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("signer", of)
+  fun <T> signer(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("signer", of)
 
-  fun state(): Stub<GitSignatureState> = stub()
+  fun state(): Stub<GitSignatureState, ArgBuilder> = stub()
 }
 
 interface GitActor : QType {
-  fun avatarUrl(): Stub<URI> = stub()
+  fun date(): NullableStub<GitTimestamp, ArgBuilder> = nullableStub()
 
-  fun date(): Stub<GitTimestamp> = stub()
+  fun email(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun email(): Stub<String> = stub()
+  fun name(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun name(): Stub<String> = stub()
+  fun <T : User> user(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("user", of)
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T : URI> avatarUrl(init: () -> T,
+      argBuilder: AvatarUrlArgs = AvatarUrlArgs()): Stub<T, AvatarUrlArgs> =
+        configStub(init, argBuilder)
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun size(value: Int): AvatarUrlArgs {
-      return apply { addArg("size", value) }
-    }
+    fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
+
   }
 }
 
 interface GistEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Gist> node(init: () -> T): Stub<Gist> = stub(init)
+  fun <T : Gist> node(init: () -> T): NullableStub<Gist, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Gist, Stub<T>>): Stub<T> = stub<Gist, T>("node", of)
+  fun <T> node(of: KFunction1<Gist, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Gist, T>("node", of)
 }
 
 interface GistConnection : QType {
-  fun <T : GistEdge> edges(init: () -> T): Stub<GistEdge> = stub(init)
+  fun <T : GistEdge> edges(init: () -> T): NullableStub<GistEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<GistEdge, Stub<T>>): Stub<T> = stub<GistEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<GistEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GistEdge, T>("edges", of)
 
-  fun <T : Gist> nodes(init: () -> T): Stub<Gist> = stub(init)
+  fun <T : Gist> nodes(init: () -> T): NullableStub<Gist, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Gist, Stub<T>>): Stub<T> = stub<Gist, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Gist, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Gist, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface GistCommentEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : GistComment> node(init: () -> T): Stub<GistComment> = stub(init)
+  fun <T : GistComment> node(init: () -> T): NullableStub<GistComment, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<GistComment, Stub<T>>): Stub<T> = stub<GistComment, T>("node", of)
+  fun <T> node(of: KFunction1<GistComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GistComment, T>("node", of)
 }
 
 interface GistCommentConnection : QType {
-  fun <T : GistCommentEdge> edges(init: () -> T): Stub<GistCommentEdge> = stub(init)
+  fun <T : GistCommentEdge> edges(init: () -> T): NullableStub<GistCommentEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<GistCommentEdge, Stub<T>>): Stub<T> =
-        stub<GistCommentEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<GistCommentEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GistCommentEdge, T>("edges", of)
 
-  fun <T : GistComment> nodes(init: () -> T): Stub<GistComment> = stub(init)
+  fun <T : GistComment> nodes(init: () -> T): NullableStub<GistComment, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<GistComment, Stub<T>>): Stub<T> = stub<GistComment, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<GistComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GistComment, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface GistComment : QType {
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun publishedAt(): Stub<DateTime> = stub()
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun viewerCanDelete(): Stub<Boolean> = stub()
+  fun viewerCanDelete(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
 }
 
 interface Gist : QType {
-  fun <T : GistCommentConnection> comments(init: () -> T): Stub<GistCommentConnection> = stub(init)
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> comments(of: KFunction1<GistCommentConnection, Stub<T>>): Stub<T> =
-        stub<GistCommentConnection, T>("comments", of)
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun description(): Stub<String> = stub()
+  fun isPublic(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun isPublic(): Stub<Boolean> = stub()
+  fun <T : RepositoryOwner> owner(init: () -> T): NullableStub<RepositoryOwner, ArgBuilder> =
+        nullableStub()
 
-  fun name(): Stub<String> = stub()
+  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<RepositoryOwner, T>("owner", of)
 
-  fun <T : RepositoryOwner> owner(init: () -> T): Stub<RepositoryOwner> = stub(init)
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T>>): Stub<T> =
-        stub<RepositoryOwner, T>("owner", of)
+  fun viewerHasStarred(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : StargazerConnection> stargazers(init: () -> T): Stub<StargazerConnection> = stub(init)
+  fun <T : GistCommentConnection> comments(init: () -> T,
+      argBuilder: CommentsArgs = CommentsArgs()): Stub<T, CommentsArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> stargazers(of: KFunction1<StargazerConnection, Stub<T>>): Stub<T> =
-        stub<StargazerConnection, T>("stargazers", of)
-
-  fun updatedAt(): Stub<DateTime> = stub()
-
-  fun viewerHasStarred(): Stub<Boolean> = stub()
+  fun <T : StargazerConnection> stargazers(init: () -> T,
+      argBuilder: StargazersArgs = StargazersArgs()): Stub<T, StargazersArgs> =
+        configStub(init, argBuilder)
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommentsArgs = apply { addArg("before", value) }
+
   }
 
   class StargazersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): StargazersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): StargazersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): StargazersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): StargazersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): StargazersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): StargazersArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun orderBy(value: StarOrder): StargazersArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun last(value: Int): StargazersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): StargazersArgs = apply { addArg("before", value) }
+
+
+    fun orderBy(value: StarOrder): StargazersArgs = apply { addArg("orderBy", value) }
+
   }
 }
 
 interface FollowingConnection : QType {
-  fun <T : UserEdge> edges(init: () -> T): Stub<UserEdge> = stub(init)
+  fun <T : UserEdge> edges(init: () -> T): NullableStub<UserEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<UserEdge, Stub<T>>): Stub<T> = stub<UserEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<UserEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<UserEdge, T>("edges", of)
 
-  fun <T : User> nodes(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> nodes(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface FollowerConnection : QType {
-  fun <T : UserEdge> edges(init: () -> T): Stub<UserEdge> = stub(init)
+  fun <T : UserEdge> edges(init: () -> T): NullableStub<UserEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<UserEdge, Stub<T>>): Stub<T> = stub<UserEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<UserEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<UserEdge, T>("edges", of)
 
-  fun <T : User> nodes(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> nodes(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ExternalIdentityScimAttributes : QType {
-  fun username(): Stub<String> = stub()
+  fun username(): NullableStub<String, ArgBuilder> = nullableStub()
 }
 
 interface ExternalIdentitySamlAttributes : QType {
-  fun nameId(): Stub<String> = stub()
+  fun nameId(): NullableStub<String, ArgBuilder> = nullableStub()
 }
 
 interface ExternalIdentityEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ExternalIdentity> node(init: () -> T): Stub<ExternalIdentity> = stub(init)
+  fun <T : ExternalIdentity> node(init: () -> T): NullableStub<ExternalIdentity, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<ExternalIdentity, Stub<T>>): Stub<T> =
-        stub<ExternalIdentity, T>("node", of)
+  fun <T> node(of: KFunction1<ExternalIdentity, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ExternalIdentity, T>("node", of)
 }
 
 interface ExternalIdentityConnection : QType {
-  fun <T : ExternalIdentityEdge> edges(init: () -> T): Stub<ExternalIdentityEdge> = stub(init)
+  fun <T : ExternalIdentityEdge> edges(init: () -> T): NullableStub<ExternalIdentityEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<ExternalIdentityEdge, Stub<T>>): Stub<T> =
-        stub<ExternalIdentityEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<ExternalIdentityEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ExternalIdentityEdge, T>("edges", of)
 
-  fun <T : ExternalIdentity> nodes(init: () -> T): Stub<ExternalIdentity> = stub(init)
+  fun <T : ExternalIdentity> nodes(init: () -> T): NullableStub<ExternalIdentity, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<ExternalIdentity, Stub<T>>): Stub<T> =
-        stub<ExternalIdentity, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<ExternalIdentity, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ExternalIdentity, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface ExternalIdentity : QType {
-  fun guid(): Stub<String> = stub()
+  fun guid(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : OrganizationInvitation> organizationInvitation(init: () -> T): Stub<OrganizationInvitation> = stub(init)
+  fun <T : OrganizationInvitation> organizationInvitation(init: () -> T): NullableStub<OrganizationInvitation, ArgBuilder> =
+        nullableStub()
 
-  fun <T> organizationInvitation(of: KFunction1<OrganizationInvitation, Stub<T>>): Stub<T> =
-        stub<OrganizationInvitation, T>("organizationInvitation", of)
+  fun <T> organizationInvitation(of: KFunction1<OrganizationInvitation, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<OrganizationInvitation, T>("organizationInvitation", of)
 
-  fun <T : ExternalIdentitySamlAttributes> samlIdentity(init: () -> T): Stub<ExternalIdentitySamlAttributes> = stub(init)
+  fun <T : ExternalIdentitySamlAttributes> samlIdentity(init: () -> T): NullableStub<ExternalIdentitySamlAttributes, ArgBuilder> =
+        nullableStub()
 
-  fun <T> samlIdentity(of: KFunction1<ExternalIdentitySamlAttributes, Stub<T>>): Stub<T> =
-        stub<ExternalIdentitySamlAttributes, T>("samlIdentity", of)
+  fun <T> samlIdentity(of: KFunction1<ExternalIdentitySamlAttributes, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ExternalIdentitySamlAttributes, T>("samlIdentity", of)
 
-  fun <T : ExternalIdentityScimAttributes> scimIdentity(init: () -> T): Stub<ExternalIdentityScimAttributes> = stub(init)
+  fun <T : ExternalIdentityScimAttributes> scimIdentity(init: () -> T): NullableStub<ExternalIdentityScimAttributes, ArgBuilder> =
+        nullableStub()
 
-  fun <T> scimIdentity(of: KFunction1<ExternalIdentityScimAttributes, Stub<T>>): Stub<T> =
-        stub<ExternalIdentityScimAttributes, T>("scimIdentity", of)
+  fun <T> scimIdentity(of: KFunction1<ExternalIdentityScimAttributes, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<ExternalIdentityScimAttributes, T>("scimIdentity", of)
 
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> user(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("user", of)
 }
 
 interface DismissPullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview, ArgBuilder> =
+        stub()
 
-  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
+  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReview, T>("pullRequestReview", of)
 }
 
 interface DeploymentStatusEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : DeploymentStatus> node(init: () -> T): Stub<DeploymentStatus> = stub(init)
+  fun <T : DeploymentStatus> node(init: () -> T): NullableStub<DeploymentStatus, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<DeploymentStatus, Stub<T>>): Stub<T> =
-        stub<DeploymentStatus, T>("node", of)
+  fun <T> node(of: KFunction1<DeploymentStatus, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<DeploymentStatus, T>("node", of)
 }
 
 interface DeploymentStatusConnection : QType {
-  fun <T : DeploymentStatusEdge> edges(init: () -> T): Stub<DeploymentStatusEdge> = stub(init)
+  fun <T : DeploymentStatusEdge> edges(init: () -> T): NullableStub<DeploymentStatusEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<DeploymentStatusEdge, Stub<T>>): Stub<T> =
-        stub<DeploymentStatusEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<DeploymentStatusEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<DeploymentStatusEdge, T>("edges", of)
 
-  fun <T : DeploymentStatus> nodes(init: () -> T): Stub<DeploymentStatus> = stub(init)
+  fun <T : DeploymentStatus> nodes(init: () -> T): NullableStub<DeploymentStatus, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<DeploymentStatus, Stub<T>>): Stub<T> =
-        stub<DeploymentStatus, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<DeploymentStatus, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<DeploymentStatus, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface DeploymentStatus : QType {
-  fun <T : Actor> creator(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> creator(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> creator(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("creator", of)
+  fun <T> creator(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("creator", of)
 
-  fun <T : Deployment> deployment(init: () -> T): Stub<Deployment> = stub(init)
+  fun <T : Deployment> deployment(init: () -> T): Stub<Deployment, ArgBuilder> = stub()
 
-  fun <T> deployment(of: KFunction1<Deployment, Stub<T>>): Stub<T> =
+  fun <T> deployment(of: KFunction1<Deployment, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Deployment, T>("deployment", of)
 
-  fun description(): Stub<String> = stub()
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun environmentUrl(): Stub<URI> = stub()
+  fun environmentUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun logUrl(): Stub<URI> = stub()
+  fun logUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun state(): Stub<DeploymentStatusState> = stub()
+  fun state(): Stub<DeploymentStatusState, ArgBuilder> = stub()
 }
 
 interface DeploymentEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Deployment> node(init: () -> T): Stub<Deployment> = stub(init)
+  fun <T : Deployment> node(init: () -> T): NullableStub<Deployment, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Deployment, Stub<T>>): Stub<T> = stub<Deployment, T>("node", of)
+  fun <T> node(of: KFunction1<Deployment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Deployment, T>("node", of)
 }
 
 interface DeploymentConnection : QType {
-  fun <T : DeploymentEdge> edges(init: () -> T): Stub<DeploymentEdge> = stub(init)
+  fun <T : DeploymentEdge> edges(init: () -> T): NullableStub<DeploymentEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<DeploymentEdge, Stub<T>>): Stub<T> =
-        stub<DeploymentEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<DeploymentEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<DeploymentEdge, T>("edges", of)
 
-  fun <T : Deployment> nodes(init: () -> T): Stub<Deployment> = stub(init)
+  fun <T : Deployment> nodes(init: () -> T): NullableStub<Deployment, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Deployment, Stub<T>>): Stub<T> = stub<Deployment, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Deployment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Deployment, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Deployment : QType {
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("commit", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T : Actor> creator(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> creator(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> creator(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("creator", of)
+  fun <T> creator(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("creator", of)
 
-  fun environment(): Stub<String> = stub()
+  fun environment(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : DeploymentStatus> latestStatus(init: () -> T): Stub<DeploymentStatus> = stub(init)
+  fun <T : DeploymentStatus> latestStatus(init: () -> T): NullableStub<DeploymentStatus, ArgBuilder> =
+        nullableStub()
 
-  fun <T> latestStatus(of: KFunction1<DeploymentStatus, Stub<T>>): Stub<T> =
-        stub<DeploymentStatus, T>("latestStatus", of)
+  fun <T> latestStatus(of: KFunction1<DeploymentStatus, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<DeploymentStatus, T>("latestStatus", of)
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun state(): Stub<DeploymentState> = stub()
+  fun state(): NullableStub<DeploymentState, ArgBuilder> = nullableStub()
 
-  fun <T : DeploymentStatusConnection> statuses(init: () -> T): Stub<DeploymentStatusConnection> = stub(init)
-
-  fun <T> statuses(of: KFunction1<DeploymentStatusConnection, Stub<T>>): Stub<T> =
-        stub<DeploymentStatusConnection, T>("statuses", of)
+  fun <T : DeploymentStatusConnection> statuses(init: () -> T,
+      argBuilder: StatusesArgs = StatusesArgs()): NullableStub<T, StatusesArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
   class StatusesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): StatusesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): StatusesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): StatusesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): StatusesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): StatusesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): StatusesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): StatusesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): StatusesArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface DeployedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T : Deployment> deployment(init: () -> T): Stub<Deployment> = stub(init)
+  fun <T : Deployment> deployment(init: () -> T): Stub<Deployment, ArgBuilder> = stub()
 
-  fun <T> deployment(of: KFunction1<Deployment, Stub<T>>): Stub<T> =
+  fun <T> deployment(of: KFunction1<Deployment, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Deployment, T>("deployment", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : Ref> ref(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : Ref> ref(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T> ref(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("ref", of)
+  fun <T> ref(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("ref", of)
 }
 
 interface DemilestonedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun milestoneTitle(): Stub<String> = stub()
+  fun milestoneTitle(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : MilestoneItem> subject(init: () -> T): Stub<MilestoneItem> = stub(init)
+  fun <T : MilestoneItem> subject(init: () -> T): Stub<MilestoneItem, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<MilestoneItem, Stub<T>>): Stub<T> =
+  fun <T> subject(of: KFunction1<MilestoneItem, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<MilestoneItem, T>("subject", of)
 }
 
 interface DeletePullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview, ArgBuilder> =
+        stub()
 
-  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
+  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReview, T>("pullRequestReview", of)
 }
 
 interface DeleteProjectPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : ProjectOwner> owner(init: () -> T): Stub<ProjectOwner> = stub(init)
+  fun <T : ProjectOwner> owner(init: () -> T): Stub<ProjectOwner, ArgBuilder> = stub()
 
-  fun <T> owner(of: KFunction1<ProjectOwner, Stub<T>>): Stub<T> = stub<ProjectOwner, T>("owner", of)
+  fun <T> owner(of: KFunction1<ProjectOwner, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<ProjectOwner, T>("owner", of)
 }
 
 interface DeleteProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun deletedColumnId(): Stub<String> = stub()
+  fun deletedColumnId(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> project(init: () -> T): Stub<Project, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun <T> project(of: KFunction1<Project, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Project, T>("project", of)
 }
 
 interface DeleteProjectCardPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : ProjectColumn> column(init: () -> T): Stub<ProjectColumn> = stub(init)
+  fun <T : ProjectColumn> column(init: () -> T): Stub<ProjectColumn, ArgBuilder> = stub()
 
-  fun <T> column(of: KFunction1<ProjectColumn, Stub<T>>): Stub<T> =
+  fun <T> column(of: KFunction1<ProjectColumn, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectColumn, T>("column", of)
 
-  fun deletedCardId(): Stub<String> = stub()
+  fun deletedCardId(): Stub<String, ArgBuilder> = stub()
 }
 
 interface DeclineTopicSuggestionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Topic> topic(init: () -> T): Stub<Topic> = stub(init)
+  fun <T : Topic> topic(init: () -> T): Stub<Topic, ArgBuilder> = stub()
 
-  fun <T> topic(of: KFunction1<Topic, Stub<T>>): Stub<T> = stub<Topic, T>("topic", of)
+  fun <T> topic(of: KFunction1<Topic, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Topic, T>("topic", of)
 }
 
 interface CreateProjectPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> project(init: () -> T): Stub<Project, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun <T> project(of: KFunction1<Project, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Project, T>("project", of)
 }
 
 interface ConvertedNoteToIssueEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface CommitHistoryConnection : QType {
-  fun <T : CommitEdge> edges(init: () -> T): Stub<CommitEdge> = stub(init)
+  fun <T : CommitEdge> edges(init: () -> T): NullableStub<CommitEdge, ArgBuilder> = nullableStub()
 
-  fun <T> edges(of: KFunction1<CommitEdge, Stub<T>>): Stub<T> = stub<CommitEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<CommitEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<CommitEdge, T>("edges", of)
 
-  fun <T : Commit> nodes(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> nodes(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> nodes(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 }
 
 interface CommitEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Commit> node(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> node(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> node(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("node", of)
+  fun <T> node(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("node", of)
 }
 
 interface CommitCommentThread : QType {
-  fun <T : CommitCommentConnection> comments(init: () -> T): Stub<CommitCommentConnection> = stub(init)
+  fun <T : Commit> commit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> comments(of: KFunction1<CommitCommentConnection, Stub<T>>): Stub<T> =
-        stub<CommitCommentConnection, T>("comments", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("commit", of)
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun path(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun position(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun path(): Stub<String> = stub()
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun position(): Stub<Int> = stub()
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
+  fun <T : CommitCommentConnection> comments(init: () -> T,
+      argBuilder: CommentsArgs = CommentsArgs()): Stub<T, CommentsArgs> =
+        configStub(init, argBuilder)
+
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommentsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface CommitCommentEdge : QType {
-  fun cursor(): Stub<String> = stub()
+  fun cursor(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : CommitComment> node(init: () -> T): Stub<CommitComment> = stub(init)
+  fun <T : CommitComment> node(init: () -> T): NullableStub<CommitComment, ArgBuilder> =
+        nullableStub()
 
-  fun <T> node(of: KFunction1<CommitComment, Stub<T>>): Stub<T> = stub<CommitComment, T>("node", of)
+  fun <T> node(of: KFunction1<CommitComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<CommitComment, T>("node", of)
 }
 
 interface CommitCommentConnection : QType {
-  fun <T : CommitCommentEdge> edges(init: () -> T): Stub<CommitCommentEdge> = stub(init)
+  fun <T : CommitCommentEdge> edges(init: () -> T): NullableStub<CommitCommentEdge, ArgBuilder> =
+        nullableStub()
 
-  fun <T> edges(of: KFunction1<CommitCommentEdge, Stub<T>>): Stub<T> =
-        stub<CommitCommentEdge, T>("edges", of)
+  fun <T> edges(of: KFunction1<CommitCommentEdge, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<CommitCommentEdge, T>("edges", of)
 
-  fun <T : CommitComment> nodes(init: () -> T): Stub<CommitComment> = stub(init)
+  fun <T : CommitComment> nodes(init: () -> T): NullableStub<CommitComment, ArgBuilder> =
+        nullableStub()
 
-  fun <T> nodes(of: KFunction1<CommitComment, Stub<T>>): Stub<T> =
-        stub<CommitComment, T>("nodes", of)
+  fun <T> nodes(of: KFunction1<CommitComment, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<CommitComment, T>("nodes", of)
 
-  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo> = stub(init)
+  fun <T : PageInfo> pageInfo(init: () -> T): Stub<PageInfo, ArgBuilder> = stub()
 
-  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T>>): Stub<T> = stub<PageInfo, T>("pageInfo", of)
+  fun <T> pageInfo(of: KFunction1<PageInfo, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<PageInfo, T>("pageInfo", of)
 
-  fun totalCount(): Stub<Int> = stub()
+  fun totalCount(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface CommitComment : QType {
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("commit", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun path(): Stub<String> = stub()
+  fun path(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun position(): Stub<Int> = stub()
+  fun position(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun publishedAt(): Stub<DateTime> = stub()
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup> = stub(init)
+  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup, ArgBuilder> = stub()
 
-  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T>>): Stub<T> =
+  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReactionGroup, T>("reactionGroups", of)
 
-  fun <T : ReactionConnection> reactions(init: () -> T): Stub<ReactionConnection> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> reactions(of: KFunction1<ReactionConnection, Stub<T>>): Stub<T> =
-        stub<ReactionConnection, T>("reactions", of)
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun viewerCanDelete(): Stub<Boolean> = stub()
+  fun viewerCanDelete(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanReact(): Stub<Boolean> = stub()
+  fun viewerCanReact(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
+
+  fun <T : ReactionConnection> reactions(init: () -> T,
+      argBuilder: ReactionsArgs = ReactionsArgs()): Stub<T, ReactionsArgs> =
+        configStub(init, argBuilder)
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReactionsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReactionsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReactionsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReactionsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReactionsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReactionsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun content(value: ReactionContent): ReactionsArgs {
-      return apply { addArg("content", value) }
-    }
+    fun last(value: Int): ReactionsArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: ReactionOrder): ReactionsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+
+    fun before(value: String): ReactionsArgs = apply { addArg("before", value) }
+
+
+    fun content(value: ReactionContent): ReactionsArgs = apply { addArg("content", value) }
+
+
+    fun orderBy(value: ReactionOrder): ReactionsArgs = apply { addArg("orderBy", value) }
+
   }
 }
 
 interface Commit : QType {
-  fun abbreviatedOid(): Stub<String> = stub()
+  fun abbreviatedOid(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : GitActor> author(init: () -> T): Stub<GitActor> = stub(init)
+  fun <T : GitActor> author(init: () -> T): NullableStub<GitActor, ArgBuilder> = nullableStub()
 
-  fun <T> author(of: KFunction1<GitActor, Stub<T>>): Stub<T> = stub<GitActor, T>("author", of)
+  fun <T> author(of: KFunction1<GitActor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GitActor, T>("author", of)
 
-  fun authoredByCommitter(): Stub<Boolean> = stub()
+  fun authoredByCommitter(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : Blame> blame(init: () -> T): Stub<Blame> = stub(init)
+  fun commitResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> blame(of: KFunction1<Blame, Stub<T>>): Stub<T> = stub<Blame, T>("blame", of)
+  fun commitUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : CommitCommentConnection> comments(init: () -> T): Stub<CommitCommentConnection> = stub(init)
+  fun committedDate(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun <T> comments(of: KFunction1<CommitCommentConnection, Stub<T>>): Stub<T> =
-        stub<CommitCommentConnection, T>("comments", of)
+  fun committedViaWeb(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun commitResourcePath(): Stub<URI> = stub()
+  fun <T : GitActor> committer(init: () -> T): NullableStub<GitActor, ArgBuilder> = nullableStub()
 
-  fun commitUrl(): Stub<URI> = stub()
+  fun <T> committer(of: KFunction1<GitActor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GitActor, T>("committer", of)
 
-  fun committedDate(): Stub<DateTime> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun committedViaWeb(): Stub<Boolean> = stub()
+  fun message(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : GitActor> committer(init: () -> T): Stub<GitActor> = stub(init)
+  fun messageBody(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> committer(of: KFunction1<GitActor, Stub<T>>): Stub<T> = stub<GitActor, T>("committer", of)
+  fun messageBodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun <T : CommitHistoryConnection> history(init: () -> T): Stub<CommitHistoryConnection> = stub(init)
+  fun messageHeadline(): Stub<String, ArgBuilder> = stub()
 
-  fun <T> history(of: KFunction1<CommitHistoryConnection, Stub<T>>): Stub<T> =
-        stub<CommitHistoryConnection, T>("history", of)
+  fun messageHeadlineHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun oid(): Stub<GitObjectID, ArgBuilder> = stub()
 
-  fun message(): Stub<String> = stub()
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun messageBody(): Stub<String> = stub()
-
-  fun messageBodyHTML(): Stub<HTML> = stub()
-
-  fun messageHeadline(): Stub<String> = stub()
-
-  fun messageHeadlineHTML(): Stub<HTML> = stub()
-
-  fun oid(): Stub<GitObjectID> = stub()
-
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : GitSignature> signature(init: () -> T): Stub<GitSignature> = stub(init)
+  fun <T : GitSignature> signature(init: () -> T): NullableStub<GitSignature, ArgBuilder> =
+        nullableStub()
 
-  fun <T> signature(of: KFunction1<GitSignature, Stub<T>>): Stub<T> =
-        stub<GitSignature, T>("signature", of)
+  fun <T> signature(of: KFunction1<GitSignature, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<GitSignature, T>("signature", of)
 
-  fun <T : Status> status(init: () -> T): Stub<Status> = stub(init)
+  fun <T : Status> status(init: () -> T): NullableStub<Status, ArgBuilder> = nullableStub()
 
-  fun <T> status(of: KFunction1<Status, Stub<T>>): Stub<T> = stub<Status, T>("status", of)
+  fun <T> status(of: KFunction1<Status, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Status, T>("status", of)
 
-  fun <T : Tree> tree(init: () -> T): Stub<Tree> = stub(init)
+  fun <T : Tree> tree(init: () -> T): Stub<Tree, ArgBuilder> = stub()
 
-  fun <T> tree(of: KFunction1<Tree, Stub<T>>): Stub<T> = stub<Tree, T>("tree", of)
+  fun <T> tree(of: KFunction1<Tree, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Tree, T>("tree", of)
 
-  fun treeResourcePath(): Stub<URI> = stub()
+  fun treeResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun treeUrl(): Stub<URI> = stub()
+  fun treeUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun viewerCanSubscribe(): Stub<Boolean> = stub()
+  fun viewerCanSubscribe(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub()
+  fun viewerSubscription(): Stub<SubscriptionState, ArgBuilder> = stub()
+
+  fun <T : Blame> blame(init: () -> T, argBuilder: BlameArgs = BlameArgs()): Stub<T, BlameArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : CommitCommentConnection> comments(init: () -> T,
+      argBuilder: CommentsArgs = CommentsArgs()): Stub<T, CommentsArgs> =
+        configStub(init, argBuilder)
+
+  fun <T : CommitHistoryConnection> history(init: () -> T,
+      argBuilder: HistoryArgs = HistoryArgs()): Stub<T, HistoryArgs> = configStub(init, argBuilder)
 
   class BlameArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun path(value: String): BlameArgs {
-      return apply { addArg("path", value) }
-    }
+    fun path(value: String): BlameArgs = apply { addArg("path", value) }
+
   }
 
   class CommentsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): CommentsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): CommentsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): CommentsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): CommentsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): CommentsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): CommentsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): CommentsArgs = apply { addArg("before", value) }
+
   }
 
   class HistoryArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): HistoryArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): HistoryArgs = apply { addArg("first", value) }
 
-    fun after(value: String): HistoryArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): HistoryArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): HistoryArgs = apply { addArg("after", value) }
 
-    fun before(value: String): HistoryArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun path(value: String): HistoryArgs {
-      return apply { addArg("path", value) }
-    }
+    fun last(value: Int): HistoryArgs = apply { addArg("last", value) }
 
-    fun author(value: CommitAuthor): HistoryArgs {
-      return apply { addArg("author", value) }
-    }
 
-    fun since(value: GitTimestamp): HistoryArgs {
-      return apply { addArg("since", value) }
-    }
+    fun before(value: String): HistoryArgs = apply { addArg("before", value) }
 
-    fun until(value: GitTimestamp): HistoryArgs {
-      return apply { addArg("until", value) }
-    }
+
+    fun path(value: String): HistoryArgs = apply { addArg("path", value) }
+
+
+    fun author(value: CommitAuthor): HistoryArgs = apply { addArg("author", value) }
+
+
+    fun since(value: GitTimestamp): HistoryArgs = apply { addArg("since", value) }
+
+
+    fun until(value: GitTimestamp): HistoryArgs = apply { addArg("until", value) }
+
   }
 }
 
 interface CommentDeletedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface CodeOfConduct : QType {
-  fun body(): Stub<String> = stub()
+  fun body(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun key(): Stub<String> = stub()
+  fun key(): Stub<String, ArgBuilder> = stub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): NullableStub<URI, ArgBuilder> = nullableStub()
 }
 
 interface ClosedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Closable> closable(init: () -> T): Stub<Closable> = stub(init)
+  fun <T : Closable> closable(init: () -> T): Stub<Closable, ArgBuilder> = stub()
 
-  fun <T> closable(of: KFunction1<Closable, Stub<T>>): Stub<T> = stub<Closable, T>("closable", of)
+  fun <T> closable(of: KFunction1<Closable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Closable, T>("closable", of)
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): NullableStub<Commit, ArgBuilder> = nullableStub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Commit, T>("commit", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface Bot : QType {
-  fun avatarUrl(): Stub<URI> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun login(): Stub<String, ArgBuilder> = stub()
 
-  fun login(): Stub<String> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun <T : URI> avatarUrl(init: () -> T,
+      argBuilder: AvatarUrlArgs = AvatarUrlArgs()): Stub<T, AvatarUrlArgs> =
+        configStub(init, argBuilder)
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun size(value: Int): AvatarUrlArgs {
-      return apply { addArg("size", value) }
-    }
+    fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
+
   }
 }
 
 interface Blob : QType {
-  fun abbreviatedOid(): Stub<String> = stub()
+  fun abbreviatedOid(): Stub<String, ArgBuilder> = stub()
 
-  fun byteSize(): Stub<Int> = stub()
+  fun byteSize(): Stub<Int, ArgBuilder> = stub()
 
-  fun commitResourcePath(): Stub<URI> = stub()
+  fun commitResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun commitUrl(): Stub<URI> = stub()
+  fun commitUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun isBinary(): Stub<Boolean> = stub()
+  fun isBinary(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isTruncated(): Stub<Boolean> = stub()
+  fun isTruncated(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun oid(): Stub<GitObjectID> = stub()
+  fun oid(): Stub<GitObjectID, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun text(): Stub<String> = stub()
+  fun text(): NullableStub<String, ArgBuilder> = nullableStub()
 }
 
 interface BlameRange : QType {
-  fun age(): Stub<Int> = stub()
+  fun age(): Stub<Int, ArgBuilder> = stub()
 
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("commit", of)
 
-  fun endingLine(): Stub<Int> = stub()
+  fun endingLine(): Stub<Int, ArgBuilder> = stub()
 
-  fun startingLine(): Stub<Int> = stub()
+  fun startingLine(): Stub<Int, ArgBuilder> = stub()
 }
 
 interface Blame : QType {
-  fun <T : BlameRange> ranges(init: () -> T): Stub<BlameRange> = stub(init)
+  fun <T : BlameRange> ranges(init: () -> T): Stub<BlameRange, ArgBuilder> = stub()
 
-  fun <T> ranges(of: KFunction1<BlameRange, Stub<T>>): Stub<T> = stub<BlameRange, T>("ranges", of)
+  fun <T> ranges(of: KFunction1<BlameRange, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<BlameRange, T>("ranges", of)
 }
 
 interface BaseRefForcePushedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Commit> afterCommit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> afterCommit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> afterCommit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("afterCommit", of)
+  fun <T> afterCommit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("afterCommit", of)
 
-  fun <T : Commit> beforeCommit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> beforeCommit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> beforeCommit(of: KFunction1<Commit, Stub<T>>): Stub<T> =
+  fun <T> beforeCommit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Commit, T>("beforeCommit", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullRequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullRequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullRequest", of)
 
-  fun <T : Ref> ref(init: () -> T): Stub<Ref> = stub(init)
+  fun <T : Ref> ref(init: () -> T): NullableStub<Ref, ArgBuilder> = nullableStub()
 
-  fun <T> ref(of: KFunction1<Ref, Stub<T>>): Stub<T> = stub<Ref, T>("ref", of)
+  fun <T> ref(of: KFunction1<Ref, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Ref, T>("ref", of)
 }
 
 interface BaseRefChangedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface AssignedEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun <T : Assignable> assignable(init: () -> T): Stub<Assignable> = stub(init)
+  fun <T : Assignable> assignable(init: () -> T): Stub<Assignable, ArgBuilder> = stub()
 
-  fun <T> assignable(of: KFunction1<Assignable, Stub<T>>): Stub<T> =
+  fun <T> assignable(of: KFunction1<Assignable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Assignable, T>("assignable", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> user(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("user", of)
 }
 
 interface AddedToProjectEvent : QType {
-  fun <T : Actor> actor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> actor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> actor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("actor", of)
+  fun <T> actor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("actor", of)
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface AddStarPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Starrable> starrable(init: () -> T): Stub<Starrable> = stub(init)
+  fun <T : Starrable> starrable(init: () -> T): Stub<Starrable, ArgBuilder> = stub()
 
-  fun <T> starrable(of: KFunction1<Starrable, Stub<T>>): Stub<T> =
+  fun <T> starrable(of: KFunction1<Starrable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Starrable, T>("starrable", of)
 }
 
 interface AddReactionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Reaction> reaction(init: () -> T): Stub<Reaction> = stub(init)
+  fun <T : Reaction> reaction(init: () -> T): Stub<Reaction, ArgBuilder> = stub()
 
-  fun <T> reaction(of: KFunction1<Reaction, Stub<T>>): Stub<T> = stub<Reaction, T>("reaction", of)
+  fun <T> reaction(of: KFunction1<Reaction, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Reaction, T>("reaction", of)
 
-  fun <T : Reactable> subject(init: () -> T): Stub<Reactable> = stub(init)
+  fun <T : Reactable> subject(init: () -> T): Stub<Reactable, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<Reactable, Stub<T>>): Stub<T> = stub<Reactable, T>("subject", of)
+  fun <T> subject(of: KFunction1<Reactable, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Reactable, T>("subject", of)
 }
 
 interface AddPullRequestReviewPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> pullRequestReview(init: () -> T): Stub<PullRequestReview, ArgBuilder> =
+        stub()
 
-  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
+  fun <T> pullRequestReview(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReview, T>("pullRequestReview", of)
 
-  fun <T : PullRequestReviewEdge> reviewEdge(init: () -> T): Stub<PullRequestReviewEdge> = stub(init)
+  fun <T : PullRequestReviewEdge> reviewEdge(init: () -> T): Stub<PullRequestReviewEdge, ArgBuilder> =
+        stub()
 
-  fun <T> reviewEdge(of: KFunction1<PullRequestReviewEdge, Stub<T>>): Stub<T> =
+  fun <T> reviewEdge(of: KFunction1<PullRequestReviewEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReviewEdge, T>("reviewEdge", of)
 }
 
 interface AddPullRequestReviewCommentPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : PullRequestReviewComment> comment(init: () -> T): Stub<PullRequestReviewComment> = stub(init)
+  fun <T : PullRequestReviewComment> comment(init: () -> T): Stub<PullRequestReviewComment, ArgBuilder> =
+        stub()
 
-  fun <T> comment(of: KFunction1<PullRequestReviewComment, Stub<T>>): Stub<T> =
+  fun <T> comment(of: KFunction1<PullRequestReviewComment, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReviewComment, T>("comment", of)
 
-  fun <T : PullRequestReviewCommentEdge> commentEdge(init: () -> T): Stub<PullRequestReviewCommentEdge> = stub(init)
+  fun <T : PullRequestReviewCommentEdge> commentEdge(init: () -> T): Stub<PullRequestReviewCommentEdge, ArgBuilder> =
+        stub()
 
-  fun <T> commentEdge(of: KFunction1<PullRequestReviewCommentEdge, Stub<T>>): Stub<T> =
+  fun <T> commentEdge(of: KFunction1<PullRequestReviewCommentEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReviewCommentEdge, T>("commentEdge", of)
 }
 
 interface AddProjectColumnPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : ProjectColumnEdge> columnEdge(init: () -> T): Stub<ProjectColumnEdge> = stub(init)
+  fun <T : ProjectColumnEdge> columnEdge(init: () -> T): Stub<ProjectColumnEdge, ArgBuilder> =
+        stub()
 
-  fun <T> columnEdge(of: KFunction1<ProjectColumnEdge, Stub<T>>): Stub<T> =
+  fun <T> columnEdge(of: KFunction1<ProjectColumnEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectColumnEdge, T>("columnEdge", of)
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> project(init: () -> T): Stub<Project, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun <T> project(of: KFunction1<Project, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Project, T>("project", of)
 }
 
 interface AddProjectCardPayload : QType {
-  fun <T : ProjectCardEdge> cardEdge(init: () -> T): Stub<ProjectCardEdge> = stub(init)
+  fun <T : ProjectCardEdge> cardEdge(init: () -> T): Stub<ProjectCardEdge, ArgBuilder> = stub()
 
-  fun <T> cardEdge(of: KFunction1<ProjectCardEdge, Stub<T>>): Stub<T> =
+  fun <T> cardEdge(of: KFunction1<ProjectCardEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ProjectCardEdge, T>("cardEdge", of)
 
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Project> projectColumn(init: () -> T): Stub<Project> = stub(init)
+  fun <T : Project> projectColumn(init: () -> T): Stub<Project, ArgBuilder> = stub()
 
-  fun <T> projectColumn(of: KFunction1<Project, Stub<T>>): Stub<T> =
+  fun <T> projectColumn(of: KFunction1<Project, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Project, T>("projectColumn", of)
 }
 
 interface AddCommentPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : IssueCommentEdge> commentEdge(init: () -> T): Stub<IssueCommentEdge> = stub(init)
+  fun <T : IssueCommentEdge> commentEdge(init: () -> T): Stub<IssueCommentEdge, ArgBuilder> = stub()
 
-  fun <T> commentEdge(of: KFunction1<IssueCommentEdge, Stub<T>>): Stub<T> =
+  fun <T> commentEdge(of: KFunction1<IssueCommentEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<IssueCommentEdge, T>("commentEdge", of)
 
-  fun <T : Node> subject(init: () -> T): Stub<Node> = stub(init)
+  fun <T : Node> subject(init: () -> T): Stub<Node, ArgBuilder> = stub()
 
-  fun <T> subject(of: KFunction1<Node, Stub<T>>): Stub<T> = stub<Node, T>("subject", of)
+  fun <T> subject(of: KFunction1<Node, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Node, T>("subject", of)
 
-  fun <T : IssueTimelineItemEdge> timelineEdge(init: () -> T): Stub<IssueTimelineItemEdge> = stub(init)
+  fun <T : IssueTimelineItemEdge> timelineEdge(init: () -> T): Stub<IssueTimelineItemEdge, ArgBuilder> =
+        stub()
 
-  fun <T> timelineEdge(of: KFunction1<IssueTimelineItemEdge, Stub<T>>): Stub<T> =
+  fun <T> timelineEdge(of: KFunction1<IssueTimelineItemEdge, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<IssueTimelineItemEdge, T>("timelineEdge", of)
 }
 
 interface AcceptTopicSuggestionPayload : QType {
-  fun clientMutationId(): Stub<String> = stub()
+  fun clientMutationId(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun <T : Topic> topic(init: () -> T): Stub<Topic> = stub(init)
+  fun <T : Topic> topic(init: () -> T): Stub<Topic, ArgBuilder> = stub()
 
-  fun <T> topic(of: KFunction1<Topic, Stub<T>>): Stub<T> = stub<Topic, T>("topic", of)
+  fun <T> topic(of: KFunction1<Topic, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Topic, T>("topic", of)
 }
 
 interface UpdatableComment : QType {
-  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason> = stub()
+  fun viewerCannotUpdateReasons(): Stub<CommentCannotUpdateReason, ArgBuilder> = stub()
 }
 
 interface Updatable : QType {
-  fun viewerCanUpdate(): Stub<Boolean> = stub()
+  fun viewerCanUpdate(): Stub<Boolean, ArgBuilder> = stub()
 }
 
 interface UniformResourceLocatable : QType {
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface Subscribable : QType {
-  fun viewerCanSubscribe(): Stub<Boolean> = stub()
+  fun viewerCanSubscribe(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun viewerSubscription(): Stub<SubscriptionState> = stub()
+  fun viewerSubscription(): Stub<SubscriptionState, ArgBuilder> = stub()
 }
 
 interface Starrable : QType {
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : StargazerConnection> stargazers(init: () -> T): Stub<StargazerConnection> = stub(init)
+  fun viewerHasStarred(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> stargazers(of: KFunction1<StargazerConnection, Stub<T>>): Stub<T> =
-        stub<StargazerConnection, T>("stargazers", of)
-
-  fun viewerHasStarred(): Stub<Boolean> = stub()
+  fun <T : StargazerConnection> stargazers(init: () -> T,
+      argBuilder: StargazersArgs = StargazersArgs()): Stub<T, StargazersArgs> =
+        configStub(init, argBuilder)
 
   class StargazersArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): StargazersArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): StargazersArgs = apply { addArg("first", value) }
 
-    fun after(value: String): StargazersArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): StargazersArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): StargazersArgs = apply { addArg("after", value) }
 
-    fun before(value: String): StargazersArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun orderBy(value: StarOrder): StargazersArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun last(value: Int): StargazersArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): StargazersArgs = apply { addArg("before", value) }
+
+
+    fun orderBy(value: StarOrder): StargazersArgs = apply { addArg("orderBy", value) }
+
   }
 }
 
 interface RepositoryOwner : QType {
-  fun avatarUrl(): Stub<URI> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun login(): Stub<String, ArgBuilder> = stub()
 
-  fun login(): Stub<String> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : RepositoryConnection> pinnedRepositories(init: () -> T): Stub<RepositoryConnection> = stub(init)
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> pinnedRepositories(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("pinnedRepositories", of)
+  fun <T : URI> avatarUrl(init: () -> T,
+      argBuilder: AvatarUrlArgs = AvatarUrlArgs()): Stub<T, AvatarUrlArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : RepositoryConnection> repositories(init: () -> T): Stub<RepositoryConnection> = stub(init)
+  fun <T : RepositoryConnection> pinnedRepositories(init: () -> T,
+      argBuilder: PinnedRepositoriesArgs = PinnedRepositoriesArgs()): Stub<T, PinnedRepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T> repositories(of: KFunction1<RepositoryConnection, Stub<T>>): Stub<T> =
-        stub<RepositoryConnection, T>("repositories", of)
+  fun <T : RepositoryConnection> repositories(init: () -> T,
+      argBuilder: RepositoriesArgs = RepositoriesArgs()): Stub<T, RepositoriesArgs> =
+        configStub(init, argBuilder)
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
-
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
-        stub<Repository, T>("repository", of)
-
-  fun resourcePath(): Stub<URI> = stub()
-
-  fun url(): Stub<URI> = stub()
+  fun <T : Repository> repository(init: () -> T,
+      argBuilder: RepositoryArgs = RepositoryArgs()): NullableStub<T, RepositoryArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun size(value: Int): AvatarUrlArgs {
-      return apply { addArg("size", value) }
-    }
+    fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
+
   }
 
   class PinnedRepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): PinnedRepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): PinnedRepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): PinnedRepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): PinnedRepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): PinnedRepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): PinnedRepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): PinnedRepositoriesArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): PinnedRepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): PinnedRepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): PinnedRepositoriesArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): PinnedRepositoriesArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): PinnedRepositoriesArgs {
-      return apply { addArg("isLocked", value) }
-    }
+
+    fun privacy(value: RepositoryPrivacy): PinnedRepositoriesArgs =
+          apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): PinnedRepositoriesArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): PinnedRepositoriesArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): PinnedRepositoriesArgs = apply { addArg("isLocked", value) }
+
   }
 
   class RepositoriesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): RepositoriesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): RepositoriesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): RepositoriesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): RepositoriesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): RepositoriesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): RepositoriesArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun privacy(value: RepositoryPrivacy): RepositoriesArgs {
-      return apply { addArg("privacy", value) }
-    }
+    fun last(value: Int): RepositoriesArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: RepositoryOrder): RepositoriesArgs {
-      return apply { addArg("orderBy", value) }
-    }
 
-    fun affiliations(value: RepositoryAffiliation): RepositoriesArgs {
-      return apply { addArg("affiliations", value) }
-    }
+    fun before(value: String): RepositoriesArgs = apply { addArg("before", value) }
 
-    fun isLocked(value: Boolean): RepositoriesArgs {
-      return apply { addArg("isLocked", value) }
-    }
 
-    fun isFork(value: Boolean): RepositoriesArgs {
-      return apply { addArg("isFork", value) }
-    }
+    fun privacy(value: RepositoryPrivacy): RepositoriesArgs = apply { addArg("privacy", value) }
+
+
+    fun orderBy(value: RepositoryOrder): RepositoriesArgs = apply { addArg("orderBy", value) }
+
+
+    fun affiliations(value: RepositoryAffiliation): RepositoriesArgs =
+          apply { addArg("affiliations", value) }
+
+
+    fun isLocked(value: Boolean): RepositoriesArgs = apply { addArg("isLocked", value) }
+
+
+    fun isFork(value: Boolean): RepositoriesArgs = apply { addArg("isFork", value) }
+
   }
 
   class RepositoryArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun name(value: String): RepositoryArgs {
-      return apply { addArg("name", value) }
-    }
+    fun name(value: String): RepositoryArgs = apply { addArg("name", value) }
+
   }
 }
 
 interface RepositoryNode : QType {
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 }
 
 interface RepositoryInfo : QType {
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun description(): Stub<String> = stub()
+  fun description(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun descriptionHTML(): Stub<HTML> = stub()
+  fun descriptionHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun hasIssuesEnabled(): Stub<Boolean> = stub()
+  fun hasIssuesEnabled(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun hasWikiEnabled(): Stub<Boolean> = stub()
+  fun hasWikiEnabled(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun homepageUrl(): Stub<URI> = stub()
+  fun homepageUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun isFork(): Stub<Boolean> = stub()
+  fun isFork(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isLocked(): Stub<Boolean> = stub()
+  fun isLocked(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isMirror(): Stub<Boolean> = stub()
+  fun isMirror(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun isPrivate(): Stub<Boolean> = stub()
+  fun isPrivate(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun license(): Stub<String> = stub()
+  fun license(): NullableStub<String, ArgBuilder> = nullableStub()
 
-  fun lockReason(): Stub<RepositoryLockReason> = stub()
+  fun lockReason(): NullableStub<RepositoryLockReason, ArgBuilder> = nullableStub()
 
-  fun mirrorUrl(): Stub<URI> = stub()
+  fun mirrorUrl(): NullableStub<URI, ArgBuilder> = nullableStub()
 
-  fun name(): Stub<String> = stub()
+  fun name(): Stub<String, ArgBuilder> = stub()
 
-  fun nameWithOwner(): Stub<String> = stub()
+  fun nameWithOwner(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : RepositoryOwner> owner(init: () -> T): Stub<RepositoryOwner> = stub(init)
+  fun <T : RepositoryOwner> owner(init: () -> T): Stub<RepositoryOwner, ArgBuilder> = stub()
 
-  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T>>): Stub<T> =
+  fun <T> owner(of: KFunction1<RepositoryOwner, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<RepositoryOwner, T>("owner", of)
 
-  fun pushedAt(): Stub<DateTime> = stub()
+  fun pushedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 }
 
 interface Reactable : QType {
-  fun databaseId(): Stub<Int> = stub()
+  fun databaseId(): NullableStub<Int, ArgBuilder> = nullableStub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup> = stub(init)
+  fun <T : ReactionGroup> reactionGroups(init: () -> T): Stub<ReactionGroup, ArgBuilder> = stub()
 
-  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T>>): Stub<T> =
+  fun <T> reactionGroups(of: KFunction1<ReactionGroup, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReactionGroup, T>("reactionGroups", of)
 
-  fun <T : ReactionConnection> reactions(init: () -> T): Stub<ReactionConnection> = stub(init)
+  fun viewerCanReact(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> reactions(of: KFunction1<ReactionConnection, Stub<T>>): Stub<T> =
-        stub<ReactionConnection, T>("reactions", of)
-
-  fun viewerCanReact(): Stub<Boolean> = stub()
+  fun <T : ReactionConnection> reactions(init: () -> T,
+      argBuilder: ReactionsArgs = ReactionsArgs()): Stub<T, ReactionsArgs> =
+        configStub(init, argBuilder)
 
   class ReactionsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ReactionsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ReactionsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ReactionsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ReactionsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ReactionsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ReactionsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun content(value: ReactionContent): ReactionsArgs {
-      return apply { addArg("content", value) }
-    }
+    fun last(value: Int): ReactionsArgs = apply { addArg("last", value) }
 
-    fun orderBy(value: ReactionOrder): ReactionsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+
+    fun before(value: String): ReactionsArgs = apply { addArg("before", value) }
+
+
+    fun content(value: ReactionContent): ReactionsArgs = apply { addArg("content", value) }
+
+
+    fun orderBy(value: ReactionOrder): ReactionsArgs = apply { addArg("orderBy", value) }
+
   }
 }
 
 interface ProjectOwner : QType {
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : Project> project(init: () -> T): Stub<Project> = stub(init)
+  fun projectsResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T> project(of: KFunction1<Project, Stub<T>>): Stub<T> = stub<Project, T>("project", of)
+  fun projectsUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun <T : ProjectConnection> projects(init: () -> T): Stub<ProjectConnection> = stub(init)
+  fun viewerCanCreateProjects(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T> projects(of: KFunction1<ProjectConnection, Stub<T>>): Stub<T> =
-        stub<ProjectConnection, T>("projects", of)
+  fun <T : Project> project(init: () -> T,
+      argBuilder: ProjectArgs = ProjectArgs()): NullableStub<T, ProjectArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
-  fun projectsResourcePath(): Stub<URI> = stub()
-
-  fun projectsUrl(): Stub<URI> = stub()
-
-  fun viewerCanCreateProjects(): Stub<Boolean> = stub()
+  fun <T : ProjectConnection> projects(init: () -> T,
+      argBuilder: ProjectsArgs = ProjectsArgs()): Stub<T, ProjectsArgs> =
+        configStub(init, argBuilder)
 
   class ProjectArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun number(value: Int): ProjectArgs {
-      return apply { addArg("number", value) }
-    }
+    fun number(value: Int): ProjectArgs = apply { addArg("number", value) }
+
   }
 
   class ProjectsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): ProjectsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): ProjectsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): ProjectsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): ProjectsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): ProjectsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): ProjectsArgs {
-      return apply { addArg("before", value) }
-    }
 
-    fun orderBy(value: ProjectOrder): ProjectsArgs {
-      return apply { addArg("orderBy", value) }
-    }
+    fun last(value: Int): ProjectsArgs = apply { addArg("last", value) }
 
-    fun search(value: String): ProjectsArgs {
-      return apply { addArg("search", value) }
-    }
 
-    fun states(value: ProjectState): ProjectsArgs {
-      return apply { addArg("states", value) }
-    }
+    fun before(value: String): ProjectsArgs = apply { addArg("before", value) }
+
+
+    fun orderBy(value: ProjectOrder): ProjectsArgs = apply { addArg("orderBy", value) }
+
+
+    fun search(value: String): ProjectsArgs = apply { addArg("search", value) }
+
+
+    fun states(value: ProjectState): ProjectsArgs = apply { addArg("states", value) }
+
   }
 }
 
 interface Node : QType {
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 }
 
 interface Lockable : QType {
-  fun locked(): Stub<Boolean> = stub()
+  fun locked(): Stub<Boolean, ArgBuilder> = stub()
 }
 
 interface Labelable : QType {
-  fun <T : LabelConnection> labels(init: () -> T): Stub<LabelConnection> = stub(init)
-
-  fun <T> labels(of: KFunction1<LabelConnection, Stub<T>>): Stub<T> =
-        stub<LabelConnection, T>("labels", of)
+  fun <T : LabelConnection> labels(init: () -> T,
+      argBuilder: LabelsArgs = LabelsArgs()): NullableStub<T, LabelsArgs> {
+     return configNullableStub(init, argBuilder)
+  }
 
   class LabelsArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): LabelsArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): LabelsArgs = apply { addArg("first", value) }
 
-    fun after(value: String): LabelsArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): LabelsArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): LabelsArgs = apply { addArg("after", value) }
 
-    fun before(value: String): LabelsArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): LabelsArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): LabelsArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface GitSignature : QType {
-  fun email(): Stub<String> = stub()
+  fun email(): Stub<String, ArgBuilder> = stub()
 
-  fun isValid(): Stub<Boolean> = stub()
+  fun isValid(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun payload(): Stub<String> = stub()
+  fun payload(): Stub<String, ArgBuilder> = stub()
 
-  fun signature(): Stub<String> = stub()
+  fun signature(): Stub<String, ArgBuilder> = stub()
 
-  fun <T : User> signer(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> signer(init: () -> T): NullableStub<User, ArgBuilder> = nullableStub()
 
-  fun <T> signer(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("signer", of)
+  fun <T> signer(of: KFunction1<User, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<User, T>("signer", of)
 
-  fun state(): Stub<GitSignatureState> = stub()
+  fun state(): Stub<GitSignatureState, ArgBuilder> = stub()
 }
 
 interface GitObject : QType {
-  fun abbreviatedOid(): Stub<String> = stub()
+  fun abbreviatedOid(): Stub<String, ArgBuilder> = stub()
 
-  fun commitResourcePath(): Stub<URI> = stub()
+  fun commitResourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun commitUrl(): Stub<URI> = stub()
+  fun commitUrl(): Stub<URI, ArgBuilder> = stub()
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun oid(): Stub<GitObjectID> = stub()
+  fun oid(): Stub<GitObjectID, ArgBuilder> = stub()
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 }
 
 interface Deletable : QType {
-  fun viewerCanDelete(): Stub<Boolean> = stub()
+  fun viewerCanDelete(): Stub<Boolean, ArgBuilder> = stub()
 }
 
 interface Comment : QType {
-  fun <T : Actor> author(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> author(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> author(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("author", of)
+  fun <T> author(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("author", of)
 
-  fun authorAssociation(): Stub<CommentAuthorAssociation> = stub()
+  fun authorAssociation(): Stub<CommentAuthorAssociation, ArgBuilder> = stub()
 
-  fun body(): Stub<String> = stub()
+  fun body(): Stub<String, ArgBuilder> = stub()
 
-  fun bodyHTML(): Stub<HTML> = stub()
+  fun bodyHTML(): Stub<HTML, ArgBuilder> = stub()
 
-  fun createdAt(): Stub<DateTime> = stub()
+  fun createdAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun createdViaEmail(): Stub<Boolean> = stub()
+  fun createdViaEmail(): Stub<Boolean, ArgBuilder> = stub()
 
-  fun <T : Actor> editor(init: () -> T): Stub<Actor> = stub(init)
+  fun <T : Actor> editor(init: () -> T): NullableStub<Actor, ArgBuilder> = nullableStub()
 
-  fun <T> editor(of: KFunction1<Actor, Stub<T>>): Stub<T> = stub<Actor, T>("editor", of)
+  fun <T> editor(of: KFunction1<Actor, Stub<T, ArgBuilder>>): NullableStub<T, ArgBuilder> =
+        nullableStub<Actor, T>("editor", of)
 
-  fun id(): Stub<String> = stub()
+  fun id(): Stub<String, ArgBuilder> = stub()
 
-  fun lastEditedAt(): Stub<DateTime> = stub()
+  fun lastEditedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun publishedAt(): Stub<DateTime> = stub()
+  fun publishedAt(): NullableStub<DateTime, ArgBuilder> = nullableStub()
 
-  fun updatedAt(): Stub<DateTime> = stub()
+  fun updatedAt(): Stub<DateTime, ArgBuilder> = stub()
 
-  fun viewerDidAuthor(): Stub<Boolean> = stub()
+  fun viewerDidAuthor(): Stub<Boolean, ArgBuilder> = stub()
 }
 
 interface Closable : QType {
-  fun closed(): Stub<Boolean> = stub()
+  fun closed(): Stub<Boolean, ArgBuilder> = stub()
 }
 
 interface Assignable : QType {
-  fun <T : UserConnection> assignees(init: () -> T): Stub<UserConnection> = stub(init)
-
-  fun <T> assignees(of: KFunction1<UserConnection, Stub<T>>): Stub<T> =
-        stub<UserConnection, T>("assignees", of)
+  fun <T : UserConnection> assignees(init: () -> T,
+      argBuilder: AssigneesArgs = AssigneesArgs()): Stub<T, AssigneesArgs> =
+        configStub(init, argBuilder)
 
   class AssigneesArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun first(value: Int): AssigneesArgs {
-      return apply { addArg("first", value) }
-    }
+    fun first(value: Int): AssigneesArgs = apply { addArg("first", value) }
 
-    fun after(value: String): AssigneesArgs {
-      return apply { addArg("after", value) }
-    }
 
-    fun last(value: Int): AssigneesArgs {
-      return apply { addArg("last", value) }
-    }
+    fun after(value: String): AssigneesArgs = apply { addArg("after", value) }
 
-    fun before(value: String): AssigneesArgs {
-      return apply { addArg("before", value) }
-    }
+
+    fun last(value: Int): AssigneesArgs = apply { addArg("last", value) }
+
+
+    fun before(value: String): AssigneesArgs = apply { addArg("before", value) }
+
   }
 }
 
 interface Actor : QType {
-  fun avatarUrl(): Stub<URI> = stub()
+  fun login(): Stub<String, ArgBuilder> = stub()
 
-  fun login(): Stub<String> = stub()
+  fun resourcePath(): Stub<URI, ArgBuilder> = stub()
 
-  fun resourcePath(): Stub<URI> = stub()
+  fun url(): Stub<URI, ArgBuilder> = stub()
 
-  fun url(): Stub<URI> = stub()
+  fun <T : URI> avatarUrl(init: () -> T,
+      argBuilder: AvatarUrlArgs = AvatarUrlArgs()): Stub<T, AvatarUrlArgs> =
+        configStub(init, argBuilder)
 
   class AvatarUrlArgs(builder: ArgBuilder = ArgBuilder.create()) : ArgBuilder by builder {
-    fun size(value: Int): AvatarUrlArgs {
-      return apply { addArg("size", value) }
-    }
+    fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
+
   }
 }
 
 interface SearchResultItem : QType {
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> issue(init: () -> T): Stub<Issue, ArgBuilder> = stub()
 
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
+  fun <T> issue(of: KFunction1<Issue, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Issue, T>("issue", of)
 
-  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullrequest", of)
 
-  fun <T : Repository> repository(init: () -> T): Stub<Repository> = stub(init)
+  fun <T : Repository> repository(init: () -> T): Stub<Repository, ArgBuilder> = stub()
 
-  fun <T> repository(of: KFunction1<Repository, Stub<T>>): Stub<T> =
+  fun <T> repository(of: KFunction1<Repository, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Repository, T>("repository", of)
 
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> user(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("user", of)
 
-  fun <T : Organization> organization(init: () -> T): Stub<Organization> = stub(init)
+  fun <T : Organization> organization(init: () -> T): Stub<Organization, ArgBuilder> = stub()
 
-  fun <T> organization(of: KFunction1<Organization, Stub<T>>): Stub<T> =
+  fun <T> organization(of: KFunction1<Organization, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<Organization, T>("organization", of)
 }
 
 interface ReviewDismissalAllowanceActor : QType {
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> user(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("user", of)
 
-  fun <T : Team> team(init: () -> T): Stub<Team> = stub(init)
+  fun <T : Team> team(init: () -> T): Stub<Team, ArgBuilder> = stub()
 
-  fun <T> team(of: KFunction1<Team, Stub<T>>): Stub<T> = stub<Team, T>("team", of)
+  fun <T> team(of: KFunction1<Team, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Team, T>("team", of)
 }
 
 interface RenamedTitleSubject : QType {
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> issue(init: () -> T): Stub<Issue, ArgBuilder> = stub()
 
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
+  fun <T> issue(of: KFunction1<Issue, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Issue, T>("issue", of)
 
-  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullrequest", of)
 }
 
 interface ReferencedSubject : QType {
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> issue(init: () -> T): Stub<Issue, ArgBuilder> = stub()
 
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
+  fun <T> issue(of: KFunction1<Issue, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Issue, T>("issue", of)
 
-  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullrequest", of)
 }
 
 interface PushAllowanceActor : QType {
-  fun <T : User> user(init: () -> T): Stub<User> = stub(init)
+  fun <T : User> user(init: () -> T): Stub<User, ArgBuilder> = stub()
 
-  fun <T> user(of: KFunction1<User, Stub<T>>): Stub<T> = stub<User, T>("user", of)
+  fun <T> user(of: KFunction1<User, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<User, T>("user", of)
 
-  fun <T : Team> team(init: () -> T): Stub<Team> = stub(init)
+  fun <T : Team> team(init: () -> T): Stub<Team, ArgBuilder> = stub()
 
-  fun <T> team(of: KFunction1<Team, Stub<T>>): Stub<T> = stub<Team, T>("team", of)
+  fun <T> team(of: KFunction1<Team, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Team, T>("team", of)
 }
 
 interface PullRequestTimelineItem : QType {
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("commit", of)
 
-  fun <T : CommitCommentThread> commitcommentthread(init: () -> T): Stub<CommitCommentThread> = stub(init)
+  fun <T : CommitCommentThread> commitcommentthread(init: () -> T): Stub<CommitCommentThread, ArgBuilder> =
+        stub()
 
-  fun <T> commitcommentthread(of: KFunction1<CommitCommentThread, Stub<T>>): Stub<T> =
+  fun <T> commitcommentthread(of: KFunction1<CommitCommentThread, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<CommitCommentThread, T>("commitcommentthread", of)
 
-  fun <T : PullRequestReview> pullrequestreview(init: () -> T): Stub<PullRequestReview> = stub(init)
+  fun <T : PullRequestReview> pullrequestreview(init: () -> T): Stub<PullRequestReview, ArgBuilder> =
+        stub()
 
-  fun <T> pullrequestreview(of: KFunction1<PullRequestReview, Stub<T>>): Stub<T> =
+  fun <T> pullrequestreview(of: KFunction1<PullRequestReview, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReview, T>("pullrequestreview", of)
 
-  fun <T : PullRequestReviewThread> pullrequestreviewthread(init: () -> T): Stub<PullRequestReviewThread> = stub(init)
+  fun <T : PullRequestReviewThread> pullrequestreviewthread(init: () -> T): Stub<PullRequestReviewThread, ArgBuilder> =
+        stub()
 
-  fun <T> pullrequestreviewthread(of: KFunction1<PullRequestReviewThread, Stub<T>>): Stub<T> =
+  fun <T> pullrequestreviewthread(of: KFunction1<PullRequestReviewThread, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReviewThread, T>("pullrequestreviewthread", of)
 
-  fun <T : PullRequestReviewComment> pullrequestreviewcomment(init: () -> T): Stub<PullRequestReviewComment> = stub(init)
+  fun <T : PullRequestReviewComment> pullrequestreviewcomment(init: () -> T): Stub<PullRequestReviewComment, ArgBuilder> =
+        stub()
 
-  fun <T> pullrequestreviewcomment(of: KFunction1<PullRequestReviewComment, Stub<T>>): Stub<T> =
+  fun <T> pullrequestreviewcomment(of: KFunction1<PullRequestReviewComment, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequestReviewComment, T>("pullrequestreviewcomment", of)
 
-  fun <T : IssueComment> issuecomment(init: () -> T): Stub<IssueComment> = stub(init)
+  fun <T : IssueComment> issuecomment(init: () -> T): Stub<IssueComment, ArgBuilder> = stub()
 
-  fun <T> issuecomment(of: KFunction1<IssueComment, Stub<T>>): Stub<T> =
+  fun <T> issuecomment(of: KFunction1<IssueComment, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<IssueComment, T>("issuecomment", of)
 
-  fun <T : ClosedEvent> closedevent(init: () -> T): Stub<ClosedEvent> = stub(init)
+  fun <T : ClosedEvent> closedevent(init: () -> T): Stub<ClosedEvent, ArgBuilder> = stub()
 
-  fun <T> closedevent(of: KFunction1<ClosedEvent, Stub<T>>): Stub<T> =
+  fun <T> closedevent(of: KFunction1<ClosedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ClosedEvent, T>("closedevent", of)
 
-  fun <T : ReopenedEvent> reopenedevent(init: () -> T): Stub<ReopenedEvent> = stub(init)
+  fun <T : ReopenedEvent> reopenedevent(init: () -> T): Stub<ReopenedEvent, ArgBuilder> = stub()
 
-  fun <T> reopenedevent(of: KFunction1<ReopenedEvent, Stub<T>>): Stub<T> =
+  fun <T> reopenedevent(of: KFunction1<ReopenedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReopenedEvent, T>("reopenedevent", of)
 
-  fun <T : SubscribedEvent> subscribedevent(init: () -> T): Stub<SubscribedEvent> = stub(init)
+  fun <T : SubscribedEvent> subscribedevent(init: () -> T): Stub<SubscribedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> subscribedevent(of: KFunction1<SubscribedEvent, Stub<T>>): Stub<T> =
+  fun <T> subscribedevent(of: KFunction1<SubscribedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<SubscribedEvent, T>("subscribedevent", of)
 
-  fun <T : UnsubscribedEvent> unsubscribedevent(init: () -> T): Stub<UnsubscribedEvent> = stub(init)
+  fun <T : UnsubscribedEvent> unsubscribedevent(init: () -> T): Stub<UnsubscribedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> unsubscribedevent(of: KFunction1<UnsubscribedEvent, Stub<T>>): Stub<T> =
+  fun <T> unsubscribedevent(of: KFunction1<UnsubscribedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnsubscribedEvent, T>("unsubscribedevent", of)
 
-  fun <T : MergedEvent> mergedevent(init: () -> T): Stub<MergedEvent> = stub(init)
+  fun <T : MergedEvent> mergedevent(init: () -> T): Stub<MergedEvent, ArgBuilder> = stub()
 
-  fun <T> mergedevent(of: KFunction1<MergedEvent, Stub<T>>): Stub<T> =
+  fun <T> mergedevent(of: KFunction1<MergedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<MergedEvent, T>("mergedevent", of)
 
-  fun <T : ReferencedEvent> referencedevent(init: () -> T): Stub<ReferencedEvent> = stub(init)
+  fun <T : ReferencedEvent> referencedevent(init: () -> T): Stub<ReferencedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> referencedevent(of: KFunction1<ReferencedEvent, Stub<T>>): Stub<T> =
+  fun <T> referencedevent(of: KFunction1<ReferencedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReferencedEvent, T>("referencedevent", of)
 
-  fun <T : AssignedEvent> assignedevent(init: () -> T): Stub<AssignedEvent> = stub(init)
+  fun <T : AssignedEvent> assignedevent(init: () -> T): Stub<AssignedEvent, ArgBuilder> = stub()
 
-  fun <T> assignedevent(of: KFunction1<AssignedEvent, Stub<T>>): Stub<T> =
+  fun <T> assignedevent(of: KFunction1<AssignedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<AssignedEvent, T>("assignedevent", of)
 
-  fun <T : UnassignedEvent> unassignedevent(init: () -> T): Stub<UnassignedEvent> = stub(init)
+  fun <T : UnassignedEvent> unassignedevent(init: () -> T): Stub<UnassignedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> unassignedevent(of: KFunction1<UnassignedEvent, Stub<T>>): Stub<T> =
+  fun <T> unassignedevent(of: KFunction1<UnassignedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnassignedEvent, T>("unassignedevent", of)
 
-  fun <T : LabeledEvent> labeledevent(init: () -> T): Stub<LabeledEvent> = stub(init)
+  fun <T : LabeledEvent> labeledevent(init: () -> T): Stub<LabeledEvent, ArgBuilder> = stub()
 
-  fun <T> labeledevent(of: KFunction1<LabeledEvent, Stub<T>>): Stub<T> =
+  fun <T> labeledevent(of: KFunction1<LabeledEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<LabeledEvent, T>("labeledevent", of)
 
-  fun <T : UnlabeledEvent> unlabeledevent(init: () -> T): Stub<UnlabeledEvent> = stub(init)
+  fun <T : UnlabeledEvent> unlabeledevent(init: () -> T): Stub<UnlabeledEvent, ArgBuilder> = stub()
 
-  fun <T> unlabeledevent(of: KFunction1<UnlabeledEvent, Stub<T>>): Stub<T> =
+  fun <T> unlabeledevent(of: KFunction1<UnlabeledEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnlabeledEvent, T>("unlabeledevent", of)
 
-  fun <T : MilestonedEvent> milestonedevent(init: () -> T): Stub<MilestonedEvent> = stub(init)
+  fun <T : MilestonedEvent> milestonedevent(init: () -> T): Stub<MilestonedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> milestonedevent(of: KFunction1<MilestonedEvent, Stub<T>>): Stub<T> =
+  fun <T> milestonedevent(of: KFunction1<MilestonedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<MilestonedEvent, T>("milestonedevent", of)
 
-  fun <T : DemilestonedEvent> demilestonedevent(init: () -> T): Stub<DemilestonedEvent> = stub(init)
+  fun <T : DemilestonedEvent> demilestonedevent(init: () -> T): Stub<DemilestonedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> demilestonedevent(of: KFunction1<DemilestonedEvent, Stub<T>>): Stub<T> =
+  fun <T> demilestonedevent(of: KFunction1<DemilestonedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<DemilestonedEvent, T>("demilestonedevent", of)
 
-  fun <T : RenamedTitleEvent> renamedtitleevent(init: () -> T): Stub<RenamedTitleEvent> = stub(init)
+  fun <T : RenamedTitleEvent> renamedtitleevent(init: () -> T): Stub<RenamedTitleEvent, ArgBuilder> =
+        stub()
 
-  fun <T> renamedtitleevent(of: KFunction1<RenamedTitleEvent, Stub<T>>): Stub<T> =
+  fun <T> renamedtitleevent(of: KFunction1<RenamedTitleEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<RenamedTitleEvent, T>("renamedtitleevent", of)
 
-  fun <T : LockedEvent> lockedevent(init: () -> T): Stub<LockedEvent> = stub(init)
+  fun <T : LockedEvent> lockedevent(init: () -> T): Stub<LockedEvent, ArgBuilder> = stub()
 
-  fun <T> lockedevent(of: KFunction1<LockedEvent, Stub<T>>): Stub<T> =
+  fun <T> lockedevent(of: KFunction1<LockedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<LockedEvent, T>("lockedevent", of)
 
-  fun <T : UnlockedEvent> unlockedevent(init: () -> T): Stub<UnlockedEvent> = stub(init)
+  fun <T : UnlockedEvent> unlockedevent(init: () -> T): Stub<UnlockedEvent, ArgBuilder> = stub()
 
-  fun <T> unlockedevent(of: KFunction1<UnlockedEvent, Stub<T>>): Stub<T> =
+  fun <T> unlockedevent(of: KFunction1<UnlockedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnlockedEvent, T>("unlockedevent", of)
 
-  fun <T : DeployedEvent> deployedevent(init: () -> T): Stub<DeployedEvent> = stub(init)
+  fun <T : DeployedEvent> deployedevent(init: () -> T): Stub<DeployedEvent, ArgBuilder> = stub()
 
-  fun <T> deployedevent(of: KFunction1<DeployedEvent, Stub<T>>): Stub<T> =
+  fun <T> deployedevent(of: KFunction1<DeployedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<DeployedEvent, T>("deployedevent", of)
 
-  fun <T : HeadRefDeletedEvent> headrefdeletedevent(init: () -> T): Stub<HeadRefDeletedEvent> = stub(init)
+  fun <T : HeadRefDeletedEvent> headrefdeletedevent(init: () -> T): Stub<HeadRefDeletedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> headrefdeletedevent(of: KFunction1<HeadRefDeletedEvent, Stub<T>>): Stub<T> =
+  fun <T> headrefdeletedevent(of: KFunction1<HeadRefDeletedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<HeadRefDeletedEvent, T>("headrefdeletedevent", of)
 
-  fun <T : HeadRefRestoredEvent> headrefrestoredevent(init: () -> T): Stub<HeadRefRestoredEvent> = stub(init)
+  fun <T : HeadRefRestoredEvent> headrefrestoredevent(init: () -> T): Stub<HeadRefRestoredEvent, ArgBuilder> =
+        stub()
 
-  fun <T> headrefrestoredevent(of: KFunction1<HeadRefRestoredEvent, Stub<T>>): Stub<T> =
+  fun <T> headrefrestoredevent(of: KFunction1<HeadRefRestoredEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<HeadRefRestoredEvent, T>("headrefrestoredevent", of)
 
-  fun <T : HeadRefForcePushedEvent> headrefforcepushedevent(init: () -> T): Stub<HeadRefForcePushedEvent> = stub(init)
+  fun <T : HeadRefForcePushedEvent> headrefforcepushedevent(init: () -> T): Stub<HeadRefForcePushedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> headrefforcepushedevent(of: KFunction1<HeadRefForcePushedEvent, Stub<T>>): Stub<T> =
+  fun <T> headrefforcepushedevent(of: KFunction1<HeadRefForcePushedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<HeadRefForcePushedEvent, T>("headrefforcepushedevent", of)
 
-  fun <T : BaseRefForcePushedEvent> baserefforcepushedevent(init: () -> T): Stub<BaseRefForcePushedEvent> = stub(init)
+  fun <T : BaseRefForcePushedEvent> baserefforcepushedevent(init: () -> T): Stub<BaseRefForcePushedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> baserefforcepushedevent(of: KFunction1<BaseRefForcePushedEvent, Stub<T>>): Stub<T> =
+  fun <T> baserefforcepushedevent(of: KFunction1<BaseRefForcePushedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<BaseRefForcePushedEvent, T>("baserefforcepushedevent", of)
 
-  fun <T : ReviewRequestedEvent> reviewrequestedevent(init: () -> T): Stub<ReviewRequestedEvent> = stub(init)
+  fun <T : ReviewRequestedEvent> reviewrequestedevent(init: () -> T): Stub<ReviewRequestedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> reviewrequestedevent(of: KFunction1<ReviewRequestedEvent, Stub<T>>): Stub<T> =
+  fun <T> reviewrequestedevent(of: KFunction1<ReviewRequestedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReviewRequestedEvent, T>("reviewrequestedevent", of)
 
-  fun <T : ReviewRequestRemovedEvent> reviewrequestremovedevent(init: () -> T): Stub<ReviewRequestRemovedEvent> = stub(init)
+  fun <T : ReviewRequestRemovedEvent> reviewrequestremovedevent(init: () -> T): Stub<ReviewRequestRemovedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> reviewrequestremovedevent(of: KFunction1<ReviewRequestRemovedEvent, Stub<T>>): Stub<T> =
+  fun <T> reviewrequestremovedevent(of: KFunction1<ReviewRequestRemovedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReviewRequestRemovedEvent, T>("reviewrequestremovedevent", of)
 
-  fun <T : ReviewDismissedEvent> reviewdismissedevent(init: () -> T): Stub<ReviewDismissedEvent> = stub(init)
+  fun <T : ReviewDismissedEvent> reviewdismissedevent(init: () -> T): Stub<ReviewDismissedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> reviewdismissedevent(of: KFunction1<ReviewDismissedEvent, Stub<T>>): Stub<T> =
+  fun <T> reviewdismissedevent(of: KFunction1<ReviewDismissedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReviewDismissedEvent, T>("reviewdismissedevent", of)
 }
 
 interface ProjectCardItem : QType {
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> issue(init: () -> T): Stub<Issue, ArgBuilder> = stub()
 
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
+  fun <T> issue(of: KFunction1<Issue, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Issue, T>("issue", of)
 
-  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullrequest", of)
 }
 
 interface MilestoneItem : QType {
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> issue(init: () -> T): Stub<Issue, ArgBuilder> = stub()
 
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
+  fun <T> issue(of: KFunction1<Issue, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Issue, T>("issue", of)
 
-  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullrequest", of)
 }
 
 interface IssueTimelineItem : QType {
-  fun <T : Commit> commit(init: () -> T): Stub<Commit> = stub(init)
+  fun <T : Commit> commit(init: () -> T): Stub<Commit, ArgBuilder> = stub()
 
-  fun <T> commit(of: KFunction1<Commit, Stub<T>>): Stub<T> = stub<Commit, T>("commit", of)
+  fun <T> commit(of: KFunction1<Commit, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Commit, T>("commit", of)
 
-  fun <T : IssueComment> issuecomment(init: () -> T): Stub<IssueComment> = stub(init)
+  fun <T : IssueComment> issuecomment(init: () -> T): Stub<IssueComment, ArgBuilder> = stub()
 
-  fun <T> issuecomment(of: KFunction1<IssueComment, Stub<T>>): Stub<T> =
+  fun <T> issuecomment(of: KFunction1<IssueComment, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<IssueComment, T>("issuecomment", of)
 
-  fun <T : ClosedEvent> closedevent(init: () -> T): Stub<ClosedEvent> = stub(init)
+  fun <T : ClosedEvent> closedevent(init: () -> T): Stub<ClosedEvent, ArgBuilder> = stub()
 
-  fun <T> closedevent(of: KFunction1<ClosedEvent, Stub<T>>): Stub<T> =
+  fun <T> closedevent(of: KFunction1<ClosedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ClosedEvent, T>("closedevent", of)
 
-  fun <T : ReopenedEvent> reopenedevent(init: () -> T): Stub<ReopenedEvent> = stub(init)
+  fun <T : ReopenedEvent> reopenedevent(init: () -> T): Stub<ReopenedEvent, ArgBuilder> = stub()
 
-  fun <T> reopenedevent(of: KFunction1<ReopenedEvent, Stub<T>>): Stub<T> =
+  fun <T> reopenedevent(of: KFunction1<ReopenedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReopenedEvent, T>("reopenedevent", of)
 
-  fun <T : SubscribedEvent> subscribedevent(init: () -> T): Stub<SubscribedEvent> = stub(init)
+  fun <T : SubscribedEvent> subscribedevent(init: () -> T): Stub<SubscribedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> subscribedevent(of: KFunction1<SubscribedEvent, Stub<T>>): Stub<T> =
+  fun <T> subscribedevent(of: KFunction1<SubscribedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<SubscribedEvent, T>("subscribedevent", of)
 
-  fun <T : UnsubscribedEvent> unsubscribedevent(init: () -> T): Stub<UnsubscribedEvent> = stub(init)
+  fun <T : UnsubscribedEvent> unsubscribedevent(init: () -> T): Stub<UnsubscribedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> unsubscribedevent(of: KFunction1<UnsubscribedEvent, Stub<T>>): Stub<T> =
+  fun <T> unsubscribedevent(of: KFunction1<UnsubscribedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnsubscribedEvent, T>("unsubscribedevent", of)
 
-  fun <T : ReferencedEvent> referencedevent(init: () -> T): Stub<ReferencedEvent> = stub(init)
+  fun <T : ReferencedEvent> referencedevent(init: () -> T): Stub<ReferencedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> referencedevent(of: KFunction1<ReferencedEvent, Stub<T>>): Stub<T> =
+  fun <T> referencedevent(of: KFunction1<ReferencedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<ReferencedEvent, T>("referencedevent", of)
 
-  fun <T : AssignedEvent> assignedevent(init: () -> T): Stub<AssignedEvent> = stub(init)
+  fun <T : AssignedEvent> assignedevent(init: () -> T): Stub<AssignedEvent, ArgBuilder> = stub()
 
-  fun <T> assignedevent(of: KFunction1<AssignedEvent, Stub<T>>): Stub<T> =
+  fun <T> assignedevent(of: KFunction1<AssignedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<AssignedEvent, T>("assignedevent", of)
 
-  fun <T : UnassignedEvent> unassignedevent(init: () -> T): Stub<UnassignedEvent> = stub(init)
+  fun <T : UnassignedEvent> unassignedevent(init: () -> T): Stub<UnassignedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> unassignedevent(of: KFunction1<UnassignedEvent, Stub<T>>): Stub<T> =
+  fun <T> unassignedevent(of: KFunction1<UnassignedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnassignedEvent, T>("unassignedevent", of)
 
-  fun <T : LabeledEvent> labeledevent(init: () -> T): Stub<LabeledEvent> = stub(init)
+  fun <T : LabeledEvent> labeledevent(init: () -> T): Stub<LabeledEvent, ArgBuilder> = stub()
 
-  fun <T> labeledevent(of: KFunction1<LabeledEvent, Stub<T>>): Stub<T> =
+  fun <T> labeledevent(of: KFunction1<LabeledEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<LabeledEvent, T>("labeledevent", of)
 
-  fun <T : UnlabeledEvent> unlabeledevent(init: () -> T): Stub<UnlabeledEvent> = stub(init)
+  fun <T : UnlabeledEvent> unlabeledevent(init: () -> T): Stub<UnlabeledEvent, ArgBuilder> = stub()
 
-  fun <T> unlabeledevent(of: KFunction1<UnlabeledEvent, Stub<T>>): Stub<T> =
+  fun <T> unlabeledevent(of: KFunction1<UnlabeledEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnlabeledEvent, T>("unlabeledevent", of)
 
-  fun <T : MilestonedEvent> milestonedevent(init: () -> T): Stub<MilestonedEvent> = stub(init)
+  fun <T : MilestonedEvent> milestonedevent(init: () -> T): Stub<MilestonedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> milestonedevent(of: KFunction1<MilestonedEvent, Stub<T>>): Stub<T> =
+  fun <T> milestonedevent(of: KFunction1<MilestonedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<MilestonedEvent, T>("milestonedevent", of)
 
-  fun <T : DemilestonedEvent> demilestonedevent(init: () -> T): Stub<DemilestonedEvent> = stub(init)
+  fun <T : DemilestonedEvent> demilestonedevent(init: () -> T): Stub<DemilestonedEvent, ArgBuilder> =
+        stub()
 
-  fun <T> demilestonedevent(of: KFunction1<DemilestonedEvent, Stub<T>>): Stub<T> =
+  fun <T> demilestonedevent(of: KFunction1<DemilestonedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<DemilestonedEvent, T>("demilestonedevent", of)
 
-  fun <T : RenamedTitleEvent> renamedtitleevent(init: () -> T): Stub<RenamedTitleEvent> = stub(init)
+  fun <T : RenamedTitleEvent> renamedtitleevent(init: () -> T): Stub<RenamedTitleEvent, ArgBuilder> =
+        stub()
 
-  fun <T> renamedtitleevent(of: KFunction1<RenamedTitleEvent, Stub<T>>): Stub<T> =
+  fun <T> renamedtitleevent(of: KFunction1<RenamedTitleEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<RenamedTitleEvent, T>("renamedtitleevent", of)
 
-  fun <T : LockedEvent> lockedevent(init: () -> T): Stub<LockedEvent> = stub(init)
+  fun <T : LockedEvent> lockedevent(init: () -> T): Stub<LockedEvent, ArgBuilder> = stub()
 
-  fun <T> lockedevent(of: KFunction1<LockedEvent, Stub<T>>): Stub<T> =
+  fun <T> lockedevent(of: KFunction1<LockedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<LockedEvent, T>("lockedevent", of)
 
-  fun <T : UnlockedEvent> unlockedevent(init: () -> T): Stub<UnlockedEvent> = stub(init)
+  fun <T : UnlockedEvent> unlockedevent(init: () -> T): Stub<UnlockedEvent, ArgBuilder> = stub()
 
-  fun <T> unlockedevent(of: KFunction1<UnlockedEvent, Stub<T>>): Stub<T> =
+  fun <T> unlockedevent(of: KFunction1<UnlockedEvent, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<UnlockedEvent, T>("unlockedevent", of)
 }
 
 interface IssueOrPullRequest : QType {
-  fun <T : Issue> issue(init: () -> T): Stub<Issue> = stub(init)
+  fun <T : Issue> issue(init: () -> T): Stub<Issue, ArgBuilder> = stub()
 
-  fun <T> issue(of: KFunction1<Issue, Stub<T>>): Stub<T> = stub<Issue, T>("issue", of)
+  fun <T> issue(of: KFunction1<Issue, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
+        stub<Issue, T>("issue", of)
 
-  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest> = stub(init)
+  fun <T : PullRequest> pullrequest(init: () -> T): Stub<PullRequest, ArgBuilder> = stub()
 
-  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T>>): Stub<T> =
+  fun <T> pullrequest(of: KFunction1<PullRequest, Stub<T, ArgBuilder>>): Stub<T, ArgBuilder> =
         stub<PullRequest, T>("pullrequest", of)
 }
 
 interface X509Certificate : QType {
-  fun value(): Stub<String> = stub()
+  fun value(): Stub<String, ArgBuilder> = stub()
 }
 
 interface URI : QType {
-  fun value(): Stub<String> = stub()
+  fun value(): Stub<String, ArgBuilder> = stub()
 }
 
 interface HTML : QType {
-  fun value(): Stub<String> = stub()
+  fun value(): Stub<String, ArgBuilder> = stub()
 }
 
 interface GitTimestamp : QType {
-  fun value(): Stub<String> = stub()
+  fun value(): Stub<String, ArgBuilder> = stub()
 }
 
 interface GitObjectID : QType {
-  fun value(): Stub<String> = stub()
+  fun value(): Stub<String, ArgBuilder> = stub()
 }
 
 interface DateTime : QType {
-  fun value(): Stub<String> = stub()
+  fun value(): Stub<String, ArgBuilder> = stub()
 }
 
 data class UpdateTopicsInput(private val repositoryId: String,
     private val topicNames: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class UpdateSubscriptionInput(private val subscribableId: String,
     private val state: SubscriptionState) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class UpdatePullRequestReviewInput(private val pullRequestReviewId: String,
     private val body: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class UpdatePullRequestReviewCommentInput(private val pullRequestReviewCommentId: String,
     private val body: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class UpdateProjectInput(private val projectId: String, private val name: String) : QInput {
   private var clientMutationId: String? = null
-
   private var body: String? = null
-
   private var state: ProjectState? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun body(value: String) = apply { body = value }
@@ -7302,14 +7167,12 @@ data class UpdateProjectInput(private val projectId: String, private val name: S
 data class UpdateProjectColumnInput(private val projectColumnId: String,
     private val name: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class UpdateProjectCardInput(private val projectCardId: String,
     private val note: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
@@ -7320,9 +7183,7 @@ data class TeamOrder(private val field: TeamOrderField,
 data class SubmitPullRequestReviewInput(private val pullRequestReviewId: String,
     private val event: PullRequestReviewEvent) : QInput {
   private var clientMutationId: String? = null
-
   private var body: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun body(value: String) = apply { body = value }
@@ -7335,9 +7196,7 @@ data class StarOrder(private val field: StarOrderField,
 data class RequestReviewsInput(private val pullRequestId: String, private val userIds: String,
     private val teamIds: String) : QInput {
   private var clientMutationId: String? = null
-
   private var union: Boolean? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun union(value: Boolean) = apply { union = value }
@@ -7349,21 +7208,18 @@ data class RepositoryOrder(private val field: RepositoryOrderField,
 
 data class RemoveStarInput(private val starrableId: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class RemoveReactionInput(private val subjectId: String,
     private val content: ReactionContent) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class RemoveOutsideCollaboratorInput(private val userId: String,
     private val organizationId: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
@@ -7377,9 +7233,7 @@ data class ProjectOrder(private val field: ProjectOrderField,
 
 data class MoveProjectColumnInput(private val columnId: String) : QInput {
   private var clientMutationId: String? = null
-
   private var afterColumnId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun afterColumnId(value: String) = apply { afterColumnId = value }
@@ -7387,9 +7241,7 @@ data class MoveProjectColumnInput(private val columnId: String) : QInput {
 
 data class MoveProjectCardInput(private val cardId: String, private val columnId: String) : QInput {
   private var clientMutationId: String? = null
-
   private var afterCardId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun afterCardId(value: String) = apply { afterCardId = value }
@@ -7410,46 +7262,38 @@ data class DraftPullRequestReviewComment(private val path: String, private val p
 data class DismissPullRequestReviewInput(private val pullRequestReviewId: String,
     private val message: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class DeletePullRequestReviewInput(private val pullRequestReviewId: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class DeleteProjectInput(private val projectId: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class DeleteProjectColumnInput(private val columnId: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class DeleteProjectCardInput(private val cardId: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class DeclineTopicSuggestionInput(private val repositoryId: String, private val name: String,
     private val reason: TopicSuggestionDeclineReason) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class CreateProjectInput(private val ownerId: String, private val name: String) : QInput {
   private var clientMutationId: String? = null
-
   private var body: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun body(value: String) = apply { body = value }
@@ -7457,34 +7301,26 @@ data class CreateProjectInput(private val ownerId: String, private val name: Str
 
 data class CommitAuthor(private val emails: String) : QInput {
   private var id: String? = null
-
   fun id(value: String) = apply { id = value }
 }
 
 data class AddStarInput(private val starrableId: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class AddReactionInput(private val subjectId: String,
     private val content: ReactionContent) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class AddPullRequestReviewInput(private val pullRequestId: String) : QInput {
   private var clientMutationId: String? = null
-
   private var commitOID: GitObjectID? = null
-
   private var body: String? = null
-
   private var event: PullRequestReviewEvent? = null
-
   private var comments: DraftPullRequestReviewComment? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun commitOID(value: GitObjectID) = apply { commitOID = value }
@@ -7499,15 +7335,10 @@ data class AddPullRequestReviewInput(private val pullRequestId: String) : QInput
 data class AddPullRequestReviewCommentInput(private val pullRequestReviewId: String,
     private val body: String) : QInput {
   private var clientMutationId: String? = null
-
   private var commitOID: GitObjectID? = null
-
   private var path: String? = null
-
   private var position: Int? = null
-
   private var inReplyTo: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun commitOID(value: GitObjectID) = apply { commitOID = value }
@@ -7521,17 +7352,13 @@ data class AddPullRequestReviewCommentInput(private val pullRequestReviewId: Str
 
 data class AddProjectColumnInput(private val projectId: String, private val name: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class AddProjectCardInput(private val projectColumnId: String) : QInput {
   private var clientMutationId: String? = null
-
   private var contentId: String? = null
-
   private var note: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 
   fun contentId(value: String) = apply { contentId = value }
@@ -7541,13 +7368,11 @@ data class AddProjectCardInput(private val projectColumnId: String) : QInput {
 
 data class AddCommentInput(private val subjectId: String, private val body: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }
 
 data class AcceptTopicSuggestionInput(private val repositoryId: String,
     private val name: String) : QInput {
   private var clientMutationId: String? = null
-
   fun clientMutationId(value: String) = apply { clientMutationId = value }
 }

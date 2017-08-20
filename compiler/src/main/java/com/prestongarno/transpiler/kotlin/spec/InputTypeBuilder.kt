@@ -11,13 +11,14 @@ import com.squareup.kotlinpoet.*
  * TIL about 'apply' functions in kotlin
  */
 object InputTypeBuilder {
+
 	fun createInputSpec(of: QInputType, packageName: String = "com.prestongarno.ktq"): TypeSpec = TypeSpec.classBuilder(of.name)
 			.addModifiers(KModifier.DATA)
 			.addSuperinterface(QInput::class)
 			.addProperties(of.fields.map {
 				PropertySpec.builder(it.name, ClassName.bestGuess(it.type.name), KModifier.PRIVATE)
+            .mutable(it.nullable)
 						.initializer(if(it.nullable) "null" else it.name)
-						.mutable(it.nullable)
 						.build()
 			})
 			.primaryConstructor(createConstructor(of.fields.filterNot { it.nullable }))

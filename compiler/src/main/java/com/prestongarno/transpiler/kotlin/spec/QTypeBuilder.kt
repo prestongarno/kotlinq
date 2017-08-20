@@ -11,60 +11,105 @@ class QTypeBuilder(val packageName: String) {
     val builder = TypeSpec.interfaceBuilder(qType.name)
         .addSuperinterface(QType::class)
 
-    qType.fields.map {
-      if (it.type is QScalarType || it.type is QEnumDef) {
-        builder.addFunctions(listOf(buildPropertySpec(it as QField)))
-      } else {
-        builder.addFunctions(listOf(buildInitializerFunction(it as QField),
-            buildMappingField(it)))
-      }
-    }
+    qType.fields.filter { it.args.isEmpty() && it is QField }
+        .map {
+          if (it.type is QScalarType || it.type is QEnumDef) {
+            builder.addFunctions(listOf(buildPropertySpec(it as QField)))
+          } else {
+            builder.addFunctions(listOf(
+                buildInitializerFun(it as QField),
+                buildMappingFun(it)))
+          }
+        }
 
-    qType.fields.filter { it.args.isNotEmpty() }
-        .map { createPayloadClasses(it.args.map { it as QFieldInputArg }, it as QField) }
-        .forEach { builder.addType(it) }
+    qType.fields.filter { it.args.isNotEmpty() && it is QField }
+        .map { Pair(it as QField, createPayloadClasses(it.args.map { it as QFieldInputArg }, it)) }
+        .forEach {
+          builder.addType(it.second)
+          builder.addFunctions(listOf(
+              buildInitializerConfigFun(it.first, it.second)
+              //buildMappingConfigFun(it.first, it.second))
+          ))
+        }
     return builder.build()
   }
 
-  //builds something like :: fun <T> boss(of: KFunction1<Person, Stub<T>>) = stub<Person, T>("boss", of)
-  private fun buildMappingField(field: QField): FunSpec {
-    val typeVariable = TypeVariableName.Companion.invoke("T")
-    val type = determineTypeName(field)
-    return FunSpec.builder(field.name)
-        .returns(ParameterizedTypeName.get(ClassName.bestGuess("Stub"), typeVariable))
-        .addTypeVariable(typeVariable)
-        .addParameter("of", ParameterizedTypeName.get(ClassName.invoke("kotlin.reflect", "KFunction1"),
-            type,
-            ParameterizedTypeName.get(ClassName.bestGuess("Stub"), typeVariable)))
-        .addCode(CodeBlock.builder()
-            .addStatement("return stub<$type, T>(\"${field.name}\", of)")
-            .build())
-        .build()
-  }
-
-  private fun buildInitializerFunction(field: QField): FunSpec {
+  private fun buildInitializerConfigFun(field: QField, forArgType: TypeSpec): FunSpec {
     val type = determineTypeName(field)
     val typeVariable = TypeVariableName.Companion.invoke("T").withBounds(type)
     return FunSpec.builder(field.name)
         .returns(ParameterizedTypeName
-            .get(ClassName.bestGuess("Stub"), ClassName.bestGuess(determineTypeName(field).toString())))
+            .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
+                typeVariable,
+                ClassName.invoke("", forArgType.name!!).asNonNullable()).asNonNullable())
         .addTypeVariable(typeVariable)
         .addParameter("init", LambdaTypeName.get(null, emptyList(), typeVariable))
+        .addParameter(ParameterSpec.builder("argBuilder", ClassName.bestGuess(forArgType.name!!))
+            .defaultValue(CodeBlock.of("${forArgType.name}()"))
+            .build())
         .addCode(CodeBlock.builder()
-            .addStatement("stub(init)")
+            .addStatement(if (field.nullable) " return configNullableStub(init, argBuilder)"
+            else "return configStub(init, argBuilder)")
             .build())
         .build()
   }
 
-  private fun buildPropertySpec(field: QField): FunSpec =
-      FunSpec.builder(field.name)
-          .addModifiers(KModifier.PUBLIC)
-          .returns(ParameterizedTypeName
-              .get(ClassName.bestGuess("Stub"), ClassName.bestGuess(determineTypeName(field).toString())))
-          .addCode(CodeBlock.builder()
-              .addStatement("stub()")
-              .build())
-          .build()
+  private fun buildMappingConfigFun(it: QField, forArgType: TypeSpec): FunSpec {
+    TODO()
+  }
+
+  //builds something like :: fun <T> boss(of: KFunction1<Person, Stub<T>>) = stub<Person, T>("boss", of)
+  private fun buildMappingFun(field: QField): FunSpec {
+    val typeVariable = TypeVariableName.Companion.invoke("T")
+    val type = determineTypeName(field)
+    val rawReturnName = if (field.nullable) "NullableStub" else "Stub"
+    val returnType = ParameterizedTypeName.get(ClassName.invoke("", rawReturnName),
+        typeVariable,
+        ClassName.bestGuess("ArgBuilder"))
+    return FunSpec.builder(field.name)
+        .returns(returnType)
+        .addTypeVariable(typeVariable)
+        .addParameter("of", ParameterizedTypeName.get(ClassName.invoke("kotlin.reflect", "KFunction1"),
+            type,
+            ParameterizedTypeName.get(ClassName.bestGuess("Stub"),
+                typeVariable,
+                ClassName.bestGuess("ArgBuilder"))))
+        .addCode(CodeBlock.builder()
+            .addStatement("return ${if (field.nullable) "nullableStub" else "stub"}<$type, T>(\"${field.name}\", of)")
+            .build())
+        .build()
+  }
+
+  private fun buildInitializerFun(field: QField): FunSpec {
+    val type = determineTypeName(field)
+    val typeVariable = TypeVariableName.Companion.invoke("T").withBounds(type)
+    return FunSpec.builder(field.name)
+        .returns(ParameterizedTypeName
+            .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
+                ClassName.invoke("", type.toString()),
+                ClassName.bestGuess("ArgBuilder").asNonNullable()).asNonNullable())
+        .addTypeVariable(typeVariable)
+        .addParameter("init", LambdaTypeName.get(null, emptyList(), typeVariable))
+        .addCode(CodeBlock.builder()
+            .addStatement("return ${if (field.nullable) "nullableStub" else "stub"}()")
+            .build())
+        .build()
+  }
+
+  private fun buildPropertySpec(field: QField): FunSpec {
+    return FunSpec.builder(field.name)
+        .addModifiers(KModifier.PUBLIC)
+        .returns(ParameterizedTypeName
+            .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
+                ClassName.invoke("", determineTypeName(field).toString()),
+                ClassName.bestGuess("ArgBuilder")
+                    .asNonNullable())
+            .asNonNullable())
+        .addCode(CodeBlock.builder()
+            .addStatement("return ${if (field.nullable) "nullableStub" else "stub"}()")
+            .build())
+        .build()
+  }
 
   private fun createPayloadClasses(args: List<QFieldInputArg>, field: QField): TypeSpec {
     val inputClazzName = inputBuilderClassName(field.name)
@@ -73,7 +118,6 @@ class QTypeBuilder(val packageName: String) {
             .addParameter(ParameterSpec.builder("builder", ArgBuilder::class)
                 .defaultValue("ArgBuilder.create()")
                 .build())
-            .addAnnotation(ClassName.invoke("com.prestongarno.ktq.runtime.annotations", "Payload"))
             .build())
         .addSuperinterface(ClassName.invoke("", "ArgBuilder_by_builder"))
 
@@ -88,19 +132,17 @@ class QTypeBuilder(val packageName: String) {
       inputClazzName: String) =
       FunSpec.builder(param.name)
           .addParameter("value", typeName)
-          .addCode("return apply { addArg(\"${param.name}\", value) }\n")
+          .addCode(CodeBlock.builder().addStatement("return apply { addArg(\"${param.name}\", value) }\n").build())
           .returns(ClassName.invoke("", inputClazzName))
           .build()
 
   fun determineTypeName(f: QSymbol): TypeName {
     var result: TypeName
     if (f is QScalarType)
-      result = ClassName.bestGuess((f as QScalarType).clazz.simpleName!!)
+      result = ClassName.invoke("", (f as QScalarType).clazz.simpleName!!)
     else
-      result = ClassName.bestGuess(f.type.name.split(".").last())
-
-    //if (f.isList) result = ParameterizedTypeName.get(ClassName.bestGuess("List"), result)
-    return result
+      result = ClassName.invoke("", f.type.name.split(".").last())
+    return result.asNonNullable()
   }
 
   fun inputBuilderClassName(forField: String): String = "${forField[0].toUpperCase()}${forField.substring(1)}Args"

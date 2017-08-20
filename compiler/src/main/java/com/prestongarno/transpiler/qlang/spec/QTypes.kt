@@ -10,46 +10,48 @@ import kotlin.reflect.KClass
  */
 abstract class QSchemaType(var name: String) {
 
-	var description: String = ""
+  var description: String = ""
 
-	override fun toString(): String {
-		return "'$name' (${this::class.simpleName})"
-	}
+  override fun toString(): String {
+    return "'$name' (${this::class.simpleName})"
+  }
 }
 
 /**
  * Enum class representing primitive types
  */
 enum class Scalar(val token: String) {
-	INT("Int"),
-	FLOAT("Float"),
-	BOOL("Boolean"),
-	STRING("String"),
-	ID("ID"),
-	UNKNOWN("");
+  INT("Int"),
+  FLOAT("Float"),
+  BOOL("Boolean"),
+  STRING("String"),
+  ID("ID"),
+  UNKNOWN("");
 
-	companion object matcher {
-		private val values: Map<String, Scalar>
+  companion object matcher {
+    private val values: Map<String, Scalar>
 
-		init { values = Arrays.stream(enumValues<Scalar>()).collect(Collectors.toMap({ t -> t.token }, { t -> t })) }
+    init {
+      values = Arrays.stream(enumValues<Scalar>()).collect(Collectors.toMap({ t -> t.token }, { t -> t }))
+    }
 
-		fun match(keyword: String): Scalar = values[keyword] ?: UNKNOWN
+    fun match(keyword: String): Scalar = values[keyword] ?: UNKNOWN
 
-		fun getType(type: Scalar) : QScalarType = when(type) {
-			INT -> intType
-			FLOAT -> floatType
-			BOOL -> boolType
-			STRING -> stringType
-			Scalar.ID -> stringType
-			UNKNOWN -> customType
-		}
+    fun getType(type: Scalar): QScalarType = when (type) {
+      INT -> intType
+      FLOAT -> floatType
+      BOOL -> boolType
+      STRING -> stringType
+      Scalar.ID -> stringType
+      UNKNOWN -> customType
+    }
 
-		private val intType = QInt();
-		private val floatType = QFloat();
-		private val boolType = QBool();
-		private val stringType = QString();
-		private val customType = QCustomScalar();
-	}
+    private val intType = QInt();
+    private val floatType = QFloat();
+    private val boolType = QBool();
+    private val stringType = QString();
+    private val customType = QCustomScalar();
+  }
 }
 
 sealed class QScalarType(name: String, val clazz: KClass<*>) : QDefinedType(name)
@@ -67,15 +69,26 @@ class QString(val defValue: String = "") : QScalarType("String", String::class)
 class QCustomScalar(defValue: String = "") : QScalarType("Scalar", String::class)
 
 /** Symbol/field types */
-abstract class QSymbol(name: String, var type: QDefinedType, val args: List<QSymbol>, val isList: Boolean = false, val nullable: Boolean = true) : QSchemaType(name)
+abstract class QSymbol(name: String,
+    var type: QDefinedType,
+    val args: List<QSymbol>,
+    val isList: Boolean = false,
+    val nullable: Boolean = true) : QSchemaType(name)
 
+class QField(name: String,
+    type: QDefinedType,
+    args: List<QFieldInputArg>,
+    val directive: QDirectiveSymbol,
+    isList: Boolean,
+    nullable: Boolean)
+  : QSymbol(name, type, args, isList, nullable)
 
-class QField(name: String, type: QDefinedType, args: List<QFieldInputArg>, val directive: QDirectiveSymbol, isList: Boolean, nullable: Boolean)
-	: QSymbol(name, type, args, isList, nullable)
-
-class QFieldInputArg(name: String, type: QDefinedType, val defaultValue : String = "", isList: Boolean, nullable: Boolean)
-	: QSymbol(name, type, Collections.emptyList(), isList, nullable)
-
+class QFieldInputArg(name: String,
+    type: QDefinedType,
+    val defaultValue: String = "",
+    isList: Boolean,
+    nullable: Boolean)
+  : QSymbol(name, type, Collections.emptyList(), isList, nullable)
 
 /**
  * Base class for all "types" defined by the schema
@@ -98,10 +111,10 @@ class QEnumDef(name: String, var options: List<String>) : QDefinedType(name)
 
 class QInputType(name: String, fields: List<QSymbol>) : QStatefulType(name, fields)
 
-class QDirectiveType(name: String, val arg: String): QDefinedType(name)
+class QDirectiveType(name: String, val arg: String) : QDefinedType(name)
 
 class QDirectiveSymbol(type: QDefinedType, val value: String) : QSymbol("DIRECTIVE", type, Collections.emptyList()) {
-	companion object {
-		val default = QDirectiveSymbol(QUnknownType(""), "")
-	}
+  companion object {
+    val default = QDirectiveSymbol(QUnknownType(""), "")
+  }
 }

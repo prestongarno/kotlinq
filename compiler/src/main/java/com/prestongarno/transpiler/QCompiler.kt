@@ -30,8 +30,8 @@ class QCompiler {
     val result = suppressedWarnings.joinToString("\n") +
         "\n\n" +
         (ktBuilder.build().toString().replace("ArgBuilder_by_builder", "ArgBuilder by builder")
-            .replace("> \\{\n.*stub\\((.*)\\)\n.*}".toRegex(), "> = stub($1)")
-            .replace(" = null", "? = null"))
+            .replace("> \\{\n.*stub\\((.*)\\)\n.*}".toRegex(), "> = stub($1)"))
+            .replace(" = null\n".toRegex(), "? = null")
     if (outputPath != null)
       File("$outputPath/${rootPackageName.replace(".", "/")}/QTypes.kt").printWriter().use { out ->
         out.write(result)

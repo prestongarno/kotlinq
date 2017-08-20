@@ -7,14 +7,14 @@ import kotlin.reflect.KFunction1
 /** Generated Types "person" from the Schema
  */
 interface Person : QType {
-  fun username(): Stub<String> = stub<String>()
+  fun username(): Stub<String, ArgBuilder> = stub()
   fun email() = nullableStub<String>()
   fun <T: Contact> emergencyContact(init: () -> T) = stub<T>(init)
 }
 
 interface Contact : QType {
   fun <T : Person> of(init: () -> T) = stub(init)
-  fun <T> of(of: KFunction1<Person, Stub<T>>) = stub<Person, T>("boss", of)
+  fun <T> of(of: KFunction1<Person, Stub<T, ArgBuilder>>) = stub<Person, T>("boss", of)
   fun areaCode() = stub<Int>()
   fun number() = stub<Int>()
 }
@@ -22,8 +22,8 @@ interface Contact : QType {
 interface Employee : Person {
   fun salary() = stub<BigInteger>()
   fun <T : Person> boss(init: () -> T) = stub(init)
-  fun <T> boss(of: KFunction1<Person, Stub<T>>) = stub<Person, T>("boss", of)
-  fun <T> emergencyContact(of: KFunction1<Contact, Stub<T>>) = stub<Contact, T>("emergencyContact", of)
+  fun <T> boss(of: KFunction1<Person, Stub<T, ArgBuilder>>) = stub<Person, T>("boss", of)
+  fun <T> emergencyContact(of: KFunction1<Contact, Stub<T, ArgBuilder>>) = stub<Contact, T>("emergencyContact", of)
 }
 
 /** A concrete implementation of a Database/Query Type

@@ -8,10 +8,10 @@ import kotlin.reflect.KProperty
 internal abstract class Mapper<T>(
     inst: QType,
     var value: T? = null,
-    var property: KProperty<*>?) {
-    //var args: ArgBuilder?) {
+    var property: KProperty<*>?,
+    var args: ArgBuilder?) {
 
-  constructor(inst: QType) : this(inst, null, null)
+  constructor(inst: QType, args: ArgBuilder?) : this(inst, null, null, args)
 
   init {
     Tracker.putProperty(inst, this, this.value)
