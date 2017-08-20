@@ -11,7 +11,7 @@ internal object Tracker {
 	internal val global : MutableMap<QType, LinkedHashMap<Mapper<*>, Any?>> = WeakHashMap()
 
 	fun <T> putProperty(inst: QType, property: Mapper<*>, value: T? = null) {
-		var values = global.get(inst)
+		var values = global[inst]
 		if(values == null) {
 			values = LinkedHashMap()
 			global.put(inst, values)

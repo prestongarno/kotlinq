@@ -3,21 +3,19 @@ package com.prestongarno.transpiler.kotlin.spec
 import com.prestongarno.ktq.QInput
 import com.prestongarno.transpiler.qlang.spec.QInputType
 import com.prestongarno.transpiler.qlang.spec.QSymbol
-import com.prestongarno.transpiler.qlang.spec.QTypeDef
 import com.squareup.kotlinpoet.*
-import kotlin.reflect.full.memberProperties
 
 /**
  * Creates data classes to represent input types. Constructor invocation requires parameters only
  * specified as not-null in the graphql schema, and other values set using builder style functions
  * TIL about 'apply' functions in kotlin
  */
-object InputBuilder {
+object InputTypeBuilder {
 	fun createInputSpec(of: QInputType, packageName: String = "com.prestongarno.ktq"): TypeSpec = TypeSpec.classBuilder(of.name)
 			.addModifiers(KModifier.DATA)
 			.addSuperinterface(QInput::class)
 			.addProperties(of.fields.map {
-				PropertySpec.builder(it.name, ClassName.bestGuess(it.type.name))
+				PropertySpec.builder(it.name, ClassName.bestGuess(it.type.name), KModifier.PRIVATE)
 						.initializer(if(it.nullable) "null" else it.name)
 						.mutable(it.nullable)
 						.build()
@@ -27,7 +25,7 @@ object InputBuilder {
 				FunSpec.builder(it.name)
 						.addParameter(ParameterSpec.builder("value", ClassName.bestGuess(it.type.name))
 								.build())
-						.addCode(CodeBlock.of("apply { ${it.name} = value }"))
+						.addCode(CodeBlock.builder().addStatement("return apply { ${it.name} = value }").build())
 						.build()
 			}).build()
 

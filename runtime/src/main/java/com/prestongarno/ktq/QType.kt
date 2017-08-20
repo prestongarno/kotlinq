@@ -1,24 +1,23 @@
 package com.prestongarno.ktq
 
-import org.jetbrains.annotations.Nullable
+import com.prestongarno.ktq.adapters.*
 import kotlin.reflect.*
 
-@Suppress("UNCHECKED_CAST", "USELESS_CAST")
 interface QType {
 
-  fun <T> stub() = PrimitiveStubAdapter<T>(this) as Stub<T>
+  fun <T> stub(): Stub<T> = PrimitiveStubAdapter(this)
 
-  fun <T> nullableStub() = NullablePrimitiveStubAdapter<@Nullable T>(this) as NullableStub<@Nullable T>
+  fun <T> nullableStub(): NullableStub<T> = NullablePrimitiveStubAdapter(this)
 
-  fun <T : QType> stub(of: () -> T) = StubAdapter(of, this) as Stub<T>
+  fun <T : QType> stub(of: () -> T): Stub<T> = StubAdapter(of, this)
 
-  fun <T : QType> nullableStub(of: () -> T) = NullStubAdapter(of, this) as NullableStub<T>
+  fun <T : QType> nullableStub(of: () -> T): NullableStub<T> = NullStubAdapter(of, this)
 
-  fun <T: QType, U> stub(name: String, mapper: KCallable<Stub<U>>) : Stub<U>
-      = EmptyStubAdapter<U>(name, mapper, this) as Stub<U>
+  @Suppress("unused") fun <T : QType, U> stub(name: String, mapper: KCallable<Stub<U>>): Stub<U>
+      = EmptyStubAdapter(name, mapper, this)
 
-  fun <T: QType, U> nullableStub(name: String, mapper: KCallable<Stub<U>>) : NullableStub<U>
-      = EmptyNullStubAdapter<U>(name, mapper, this) as NullableStub<U>
+  @Suppress("unused") fun <T : QType, U> nullableStub(name: String, mapper: KCallable<Stub<U>>): NullableStub<U>
+      = EmptyNullStubAdapter(name, mapper, this)
 }
 
 interface Stub<T> {
@@ -32,3 +31,4 @@ interface NullableStub<T> {
 
   operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T>
 }
+
