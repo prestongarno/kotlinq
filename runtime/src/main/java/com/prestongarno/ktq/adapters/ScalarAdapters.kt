@@ -6,8 +6,10 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.Stub
 import kotlin.reflect.KProperty
 
-internal class PrimitiveStubAdapter<T, A : ArgBuilder>(inst: QType,
+internal class PrimitiveStubAdapter<T, A : ArgBuilder<T>>(inst: QType,
     argBuilder: A? = null) : Mapper<T>(inst, argBuilder), Stub<T, A> {
+
+  override fun config(): A = super.getArgBuilder()
 
   override operator fun getValue(inst: QType, property: KProperty<*>): T = this.value
       ?: throw IllegalStateException("Expected non-null value for '${property.name}', but was null")
@@ -16,8 +18,10 @@ internal class PrimitiveStubAdapter<T, A : ArgBuilder>(inst: QType,
       : Stub<T, A> = apply { this.property = property }
 }
 
-internal class NullablePrimitiveStubAdapter<T, A : ArgBuilder>(inst: QType,
+internal class NullablePrimitiveStubAdapter<T, A : ArgBuilder<T>>(inst: QType,
     argBuilder: A? = null) : Mapper<T>(inst, argBuilder), NullableStub<T, A> {
+  
+  override fun config(): A = super.getArgBuilder()
 
   override fun getValue(inst: QType, property: KProperty<*>): T? = this.value
 

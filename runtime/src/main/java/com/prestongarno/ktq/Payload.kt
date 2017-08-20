@@ -1,39 +1,31 @@
 package com.prestongarno.ktq
 
-interface ArgBuilder {
+interface ArgBuilder<T> {
 
-  fun addArg(name: String, value: Any): ArgBuilder
+  fun addArg(name: String, value: Any): ArgBuilder<*>
 
-  fun <T: QType> build(of: T): T
+  fun build(): Stub<T, *>
 
   companion object {
-    fun create(): ArgBuilder {
-      println("Creating input args! for:: ${this::class}")
-      val payload = Payload()
-      last = payload
-      return payload
-    }
-
-    /** Nullable field needed for delegates to link a payload with a property*/
-    internal var last: Payload? = null
+    fun <T, A: ArgBuilder<T>> create() : A = TODO()
   }
+
 }
 
-internal class Payload() : ArgBuilder {
+internal class Payload<T>(val stub: Stub<*, *>) : ArgBuilder<T> {
+  override fun build(): Stub<T, *> {
+    @Suppress("UNCHECKED_CAST")
+    return stub as Stub<T, *>
+  }
 
-	constructor(vararg arguments: Pair<String, Any>) : this() {
-		arguments.map { values.put(it.first, it.second) }
-	}
+  val values: MutableMap<in String, Any> = HashMap()
 
-	val values: MutableMap<in String, Any> = HashMap()
-
-	override fun addArg(name: String, value: Any): ArgBuilder {
+	override fun addArg(name: String, value: Any): ArgBuilder<T> {
 		values.put(name, value)
     println(values)
-		return this
-	}
-
-	override fun <T: QType> build(of: T): T = of
+    @Suppress("UNCHECKED_CAST")
+    return this
+  }
 
 	override fun toString(): String = TODO()
 

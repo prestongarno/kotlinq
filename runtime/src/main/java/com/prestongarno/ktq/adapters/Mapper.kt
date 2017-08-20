@@ -1,17 +1,21 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.Tracker
+import com.prestongarno.ktq.*
 import kotlin.reflect.KProperty
 
 internal abstract class Mapper<T>(
     inst: QType,
     var value: T? = null,
     var property: KProperty<*>?,
-    var args: ArgBuilder?) {
+    private var args: ArgBuilder<*>?) {
 
-  constructor(inst: QType, args: ArgBuilder?) : this(inst, null, null, args)
+  fun <A : ArgBuilder<T>> getArgBuilder() : A {
+    if(args == null)
+      args = Payload<Stub<T, A>>(this as Stub<*, *>)
+    @Suppress("UNCHECKED_CAST") return args as A
+  }
+
+  constructor(inst: QType, args: ArgBuilder<T>?) : this(inst, null, null, args)
 
   init {
     Tracker.putProperty(inst, this, this.value)

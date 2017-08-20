@@ -16,9 +16,7 @@ class QTypeBuilder(val packageName: String) {
           if (it.type is QScalarType || it.type is QEnumDef) {
             builder.addFunctions(listOf(buildPropertySpec(it as QField)))
           } else {
-            builder.addFunctions(listOf(
-                buildInitializerFun(it as QField),
-                buildMappingFun(it)))
+            builder.addFunctions(listOf(buildInitializerFun(it as QField)))
           }
         }
 
@@ -26,10 +24,7 @@ class QTypeBuilder(val packageName: String) {
         .map { Pair(it as QField, createPayloadClasses(it.args.map { it as QFieldInputArg }, it)) }
         .forEach {
           builder.addType(it.second)
-          builder.addFunctions(listOf(
-              buildInitializerConfigFun(it.first, it.second)
-              //buildMappingConfigFun(it.first, it.second))
-          ))
+          builder.addFunctions(listOf(buildInitializerConfigFun(it.first, it.second)))
         }
     return builder.build()
   }
@@ -41,7 +36,7 @@ class QTypeBuilder(val packageName: String) {
         .returns(ParameterizedTypeName
             .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
                 typeVariable,
-                ClassName.invoke("", forArgType.name!!).asNonNullable()).asNonNullable())
+                ClassName.invoke("", forArgType.name!!)))
         .addTypeVariable(typeVariable)
         .addParameter("init", LambdaTypeName.get(null, emptyList(), typeVariable))
         .addParameter(ParameterSpec.builder("argBuilder", ClassName.bestGuess(forArgType.name!!))
@@ -54,32 +49,6 @@ class QTypeBuilder(val packageName: String) {
         .build()
   }
 
-  private fun buildMappingConfigFun(it: QField, forArgType: TypeSpec): FunSpec {
-    TODO()
-  }
-
-  //builds something like :: fun <T> boss(of: KFunction1<Person, Stub<T>>) = stub<Person, T>("boss", of)
-  private fun buildMappingFun(field: QField): FunSpec {
-    val typeVariable = TypeVariableName.Companion.invoke("T")
-    val type = determineTypeName(field)
-    val rawReturnName = if (field.nullable) "NullableStub" else "Stub"
-    val returnType = ParameterizedTypeName.get(ClassName.invoke("", rawReturnName),
-        typeVariable,
-        ClassName.bestGuess("ArgBuilder"))
-    return FunSpec.builder(field.name)
-        .returns(returnType)
-        .addTypeVariable(typeVariable)
-        .addParameter("of", ParameterizedTypeName.get(ClassName.invoke("kotlin.reflect", "KFunction1"),
-            type,
-            ParameterizedTypeName.get(ClassName.bestGuess("Stub"),
-                typeVariable,
-                ClassName.bestGuess("ArgBuilder"))))
-        .addCode(CodeBlock.builder()
-            .addStatement("return ${if (field.nullable) "nullableStub" else "stub"}<$type, T>(\"${field.name}\", of)")
-            .build())
-        .build()
-  }
-
   private fun buildInitializerFun(field: QField): FunSpec {
     val type = determineTypeName(field)
     val typeVariable = TypeVariableName.Companion.invoke("T").withBounds(type)
@@ -87,7 +56,7 @@ class QTypeBuilder(val packageName: String) {
         .returns(ParameterizedTypeName
             .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
                 ClassName.invoke("", type.toString()),
-                ClassName.bestGuess("ArgBuilder").asNonNullable()).asNonNullable())
+                ClassName.bestGuess("ArgBuilder")))
         .addTypeVariable(typeVariable)
         .addParameter("init", LambdaTypeName.get(null, emptyList(), typeVariable))
         .addCode(CodeBlock.builder()
@@ -102,9 +71,7 @@ class QTypeBuilder(val packageName: String) {
         .returns(ParameterizedTypeName
             .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
                 ClassName.invoke("", determineTypeName(field).toString()),
-                ClassName.bestGuess("ArgBuilder")
-                    .asNonNullable())
-            .asNonNullable())
+                ClassName.bestGuess("ArgBuilder")))
         .addCode(CodeBlock.builder()
             .addStatement("return ${if (field.nullable) "nullableStub" else "stub"}()")
             .build())
@@ -142,7 +109,7 @@ class QTypeBuilder(val packageName: String) {
       result = ClassName.invoke("", (f as QScalarType).clazz.simpleName!!)
     else
       result = ClassName.invoke("", f.type.name.split(".").last())
-    return result.asNonNullable()
+    return result
   }
 
   fun inputBuilderClassName(forField: String): String = "${forField[0].toUpperCase()}${forField.substring(1)}Args"
