@@ -1,6 +1,6 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.Mapper
+import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.NullableStub
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.Stub

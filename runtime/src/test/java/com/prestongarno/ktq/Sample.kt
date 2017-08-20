@@ -21,7 +21,6 @@ interface Contact : QType {
 
 interface Employee : Person {
   fun salary() = stub<BigInteger>()
-  fun score() = stub<String>()
   fun <T : Person> boss(init: () -> T) = stub(init)
   fun <T> boss(of: KFunction1<Person, Stub<T>>) = stub<Person, T>("boss", of)
   fun <T> emergencyContact(of: KFunction1<Contact, Stub<T>>) = stub<Contact, T>("emergencyContact", of)

@@ -1,5 +1,24 @@
 package com.prestongarno.ktq
 
+interface ArgBuilder {
+
+  fun addArg(name: String, value: Any): ArgBuilder
+
+  fun <T: QType> build(of: T): T
+
+  companion object {
+    fun create(): ArgBuilder {
+      println("Creating input args! for:: ${this::class}")
+      val payload = Payload()
+      last = payload
+      return payload
+    }
+
+    /** Nullable field needed for delegates to link a payload with a property*/
+    internal var last: Payload? = null
+  }
+}
+
 internal class Payload() : ArgBuilder {
 
 	constructor(vararg arguments: Pair<String, Any>) : this() {
@@ -30,26 +49,6 @@ internal class Payload() : ArgBuilder {
 					.joinToString(", ", "[ ", " ]")
 			else -> throw UnsupportedOperationException()
 		}
-	}
-}
-
-interface ArgBuilder {
-
-	fun addArg(name: String, value: Any): ArgBuilder
-
-	fun <T: QType> build(of: T): T
-
-	companion object {
-		fun create(): ArgBuilder {
-      println("Creating input args! for:: ${this::class}")
-			val payload = Payload()
-			last = payload
-			return payload
-		}
-
-		/** Nullable field needed for delegates to link a payload with a property*/
-		internal var last: Payload? = null
-		val empty: ArgBuilder by lazy { Payload() }
 	}
 }
 

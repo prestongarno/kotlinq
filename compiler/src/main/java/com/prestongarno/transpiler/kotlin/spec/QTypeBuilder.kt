@@ -4,15 +4,6 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QType
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
-import kotlin.reflect.KFunction1
-
-/* EXAMPLE:::
-interface Employee : Person {
-  fun salary() = stub<BigInteger>()
-  fun <T : Person> boss(init: () -> T) = stub(init)
-  fun <U> boss(of: KCallable<Stub<U>>) = stub<Person, U>("boss", of)
-}
-*/
 
 class QTypeBuilder(val packageName: String) {
 
@@ -22,7 +13,7 @@ class QTypeBuilder(val packageName: String) {
 
     qType.fields.map {
       if (it.type is QScalarType || it.type is QEnumDef) {
-      builder.addFunctions(listOf(buildPropertySpec(it as QField)))
+        builder.addFunctions(listOf(buildPropertySpec(it as QField)))
       } else {
         builder.addFunctions(listOf(buildInitializerFunction(it as QField),
             buildMappingField(it)))
@@ -50,7 +41,8 @@ class QTypeBuilder(val packageName: String) {
             .build())
         .build()
   }
-  fun buildInitializerFunction(field: QField): FunSpec {
+
+  private fun buildInitializerFunction(field: QField): FunSpec {
     val type = determineTypeName(field)
     val typeVariable = TypeVariableName.Companion.invoke("T").withBounds(type)
     return FunSpec.builder(field.name)

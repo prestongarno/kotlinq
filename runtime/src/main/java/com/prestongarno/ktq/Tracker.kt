@@ -1,5 +1,6 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.adapters.Mapper
 import java.util.*
 import kotlin.collections.LinkedHashMap
 
