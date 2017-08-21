@@ -5,50 +5,52 @@ import kotlin.reflect.*
 
 interface QType {
 
-  fun <T> stub(): Stub<T, ArgBuilder<T>>
-      = PrimitiveStubAdapter(this)
+  fun <T> stub(): Stub<T> = ScalarStub()
 
-  fun <T> nullableStub(): NullableStub<T, ArgBuilder<T>>
-      = NullablePrimitiveStubAdapter(this)
+  fun <T : QType> stub(of: () -> T): TypeStub<QModel<T>, T> = TypeStubAdapter()
 
-  fun <T : QType> stub(of: () -> T): Stub<T, ArgBuilder<T>>
-      = StubAdapter(of, this)
+  fun <T, A : ArgBuilder<T>> configStub(argBuilder: A): Config<T, A> = ScalarStub(argBuilder)
+  /****************************************
+   *         Nested types fields          *
+   ****************************************/
+  fun <T : QType> typeStub(): InitStub<T> = TypeStubAdapter()
 
-  fun <T : QType> nullableStub(of: () -> T): NullableStub<T, ArgBuilder<T>>
-      = NullStubAdapter(of, this)
-
-  /****************************************/
-  // ArgBuilders / Configurable fields
-  /****************************************/
-
-  fun <T, A : ArgBuilder<T>> configStub(argBuilder: A): Stub<T, A>
-      = PrimitiveStubAdapter(this, argBuilder)
-
-  fun <T, A : ArgBuilder<T>> configNullableStub(argBuilder: A): NullableStub<T, A>
-      = NullablePrimitiveStubAdapter(this, argBuilder)
-
-  fun <T : QType, A : ArgBuilder<T>> configStub(of: () -> T, argBuilder: A): Stub<T, A>
-      = StubAdapter(of, this, argBuilder)
-
-  fun <T : QType, A : ArgBuilder<T>> configNullableStub(of: () -> T, argBuilder: A): NullableStub<T, A>
-      = NullStubAdapter(of, this, argBuilder)
+  fun <A : TypeArgBuilder<T, QModel<T>>, T : QType> typeConfigStub(argBuilder: A)
+      : ConfigType<A, T> = TypeStubAdapter(argBuilder)
 }
 
-interface Stub<T, A : ArgBuilder<T>> {
+interface InitStub<T : QType> {
+  fun init(of: () -> QModel<T>): TypeStub<QModel<T>, T>
+}
 
+interface Config<T, A : ArgBuilder<T>> {
   fun config(): A
-
-  operator fun getValue(inst: QType, property: KProperty<*>): T
-
-  operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): Stub<T, A>
 }
 
-interface NullableStub<T, A : ArgBuilder<T>> {
-
+interface ConfigType<out A : TypeArgBuilder<T, QModel<T>>, T : QType> {
   fun config(): A
-
-  operator fun getValue(inst: QType, property: KProperty<*>): T?
-
-  operator fun <R : QType> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T, A>
 }
+
+interface Stub<T> {
+  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
+
+  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T>
+}
+
+interface TypeStub<U : QModel<T>, T : QType> {
+  operator fun getValue(inst: QModel<*>, property: KProperty<*>): U
+
+  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<U, T>
+}
+
+
+
+
+
+
+
+
+
+
+
 

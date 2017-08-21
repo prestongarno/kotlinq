@@ -5,7 +5,7 @@ import java.util.*
 
 /**
  * Contains instance variables of Lists of different kinds of GraphQL schema declarations, each one with a field
- * list of Strings for which each entry represents a declaration within a type declaration (primitive value, field
+ * list of Strings for which each entry represents a declaration within a type declaration (primitive model, field
  * type, or field list of types
  */
 class QCompilationUnit(val types: List<QTypeDef>,

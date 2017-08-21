@@ -98,8 +98,8 @@ class QTypeBuilder(val packageName: String) {
       param: QFieldInputArg,
       inputClazzName: String) =
       FunSpec.builder(param.name)
-          .addParameter("value", typeName)
-          .addCode(CodeBlock.builder().addStatement("return apply { addArg(\"${param.name}\", value) }\n").build())
+          .addParameter("model", typeName)
+          .addCode(CodeBlock.builder().addStatement("return apply { addArg(\"${param.name}\", model) }\n").build())
           .returns(ClassName.invoke("", inputClazzName))
           .build()
 

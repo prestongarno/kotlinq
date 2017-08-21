@@ -1,64 +1,60 @@
 package com.prestongarno.ktq
 
-import com.sun.org.apache.xpath.internal.Arg
 import org.junit.Test
-import java.math.BigInteger
-import kotlin.reflect.KFunction1
 
-/** Generated Types "person" from the Schema
- */
-interface Person : QType {
-  fun username(): Stub<String, ArgBuilder<String>> = stub()
-  fun email() = nullableStub<String>()
+interface UniformResourceLocatable {
+  val url: Stub<String>
 }
 
-interface Contact : QType {
-  fun <T : Person> of(init: () -> T) = stub(init)
-  fun areaCode() = stub<Int>()
-  fun number() = stub<Int>()
+object Location : QType {
+  val latitude by lazy { stub<Int>() }
+  val longitude by lazy { stub<Int>() }
+  val streetAddress by lazy { stub<String>() }
+  val city by lazy { stub<String>() }
+  val state by lazy { stub<String>() }
+  val zip by lazy { stub<Int>() }
 }
 
-interface Employee : Person {
-  fun salary() = stub<BigInteger>()
-  fun <T : Person> boss(init: () -> T) = stub(init)
-  fun <T : Contact> emergencyContact(init: () -> T) = stub<T>(init)
-}
+object User : UniformResourceLocatable, QType {
+  val name by lazy { stub<String>() }
+  val friends by lazy { typeConfigStub(FriendsArgs()) }
+  val address by lazy { typeConfigStub(AddressArgs()) }
+  override val url by lazy { stub<String>() }
 
-class ContactInfoArg<T>(args: ContactInfoArg<T> = ArgBuilder.create<T, ContactInfoArg<T>>()) : ArgBuilder<T> by args {
-  fun first(value: Int): ContactInfoArg<T> = apply { this.addArg("first", value) }
-  fun limitTo(value: Int) = apply { this.addArg("limitTo", value) }
-  fun startingAt(value: String) = apply { this.addArg("startingAt", value) }
-}
+  class FriendsArgs(args: TypeArgBuilder<User, QModel<User>> = TypeArgBuilder.create())
+    : TypeArgBuilder<User, QModel<User>> by args {
 
-/** A concrete implementation of a Database/Query Type
- */
-data class MyEmployeeSelect(val unrelated: String) : Employee {
-  val name by username()
-  val email by email()
-  val salary by salary()
-  val bossName: BasicPersonInfo by boss(::BasicPersonInfo)
-}
-
-class BasicPersonInfo : Person {
-  val name by username()
-  val email by email()
-}
-
-class MappingContactInfo : Contact {
-  val person by of(::BasicPersonInfo)
-  val areaCode by areaCode()
-  val number by number()
-}
-
-class Sample {
-  @Test
-  fun testTypesCorrect() {
-
-    val foobaz = MyEmployeeSelect("HelloWorld")
-    Tracker.global.map {
-      "Entry: ${it.key} :: \n\tproperties = ${it.value.toList().map { "\n\t\t${it.first.property?.name}=${it.second}" }} "
-    }.forEach { println(it) }
+    fun first(value: Int) = apply { addArg("first", value) }
+    fun after(value: String) = apply { addArg("after", value) }
+    fun startAt(value: Int) = apply { addArg("startAt", value) }
   }
 
+  class AddressArgs(args: TypeArgBuilder<Location, QModel<Location>> = TypeArgBuilder.create())
+    : TypeArgBuilder<Location, QModel<Location>> by args {
+
+    fun language(value: String) = apply { addArg("language", value) }
+  }
 }
 
+data class UserImpl(val limitOfFriends: Int, val lang: String) : QModel<User>(User::class) {
+  val username by model.name
+  val url by model.url
+
+  val address: QModel<Location> by model.address.config()
+      .language(lang)
+      .build { object : QModel<Location>(Location::class) {} }
+
+  val friends by model.friends.config()
+      .first(limitOfFriends)
+      .build { object : QModel<User>(User::class) {} as QModel<User> }
+}
+
+class TestSample {
+  @Test
+  fun testCorrectTypes() {
+    val foobaz = UserImpl(1000, "ENGLISH")
+    println("$foobaz \n\t:: ${foobaz.friends}\n\t::${foobaz.address}")
+    val foobar = UserImpl(-69, "CHINESE")
+    println("$foobar \n\t:: ${foobar.friends}\n\t::${foobar.address}")
+  }
+}
