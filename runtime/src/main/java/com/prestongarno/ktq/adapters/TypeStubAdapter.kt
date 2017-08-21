@@ -15,6 +15,12 @@ internal class TypeStubAdapter<
     ConfigType<A, T>,
     TypeArgBuilder<T, QModel<T>> {
 
+  override fun <U : QModel<T>> init(of: () -> U): TypeStub<U, T> {
+    result = of.invoke()
+    @Suppress("UNCHECKED_CAST")
+    return this as TypeStub<U, T>
+  }
+
   @Suppress("UNCHECKED_CAST")
   override fun <U : QModel<T>> build(init: () -> U): TypeStub<U, T>
       = apply { result = init.invoke() } as TypeStub<U, T>
@@ -28,12 +34,6 @@ internal class TypeStubAdapter<
     return if (argBuilder == null)
       this as A
     else argBuilder as A
-  }
-
-  override fun init(of: () -> QModel<T>): TypeStub<QModel<T>, T> {
-    result = of.invoke()
-    @Suppress("UNCHECKED_CAST")
-    return this as TypeStub<QModel<T>, T>
   }
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<U, T> {

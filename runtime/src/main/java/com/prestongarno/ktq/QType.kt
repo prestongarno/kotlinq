@@ -20,7 +20,7 @@ interface QType {
 }
 
 interface InitStub<T : QType> {
-  fun init(of: () -> QModel<T>): TypeStub<QModel<T>, T>
+  fun <U: QModel<T>> init(of: () -> U): TypeStub<U, T>
 }
 
 interface Config<T, A : ArgBuilder<T>> {
