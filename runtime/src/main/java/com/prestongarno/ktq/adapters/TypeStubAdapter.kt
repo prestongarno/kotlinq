@@ -5,10 +5,11 @@ import kotlin.reflect.KProperty
 
 internal class TypeStubAdapter<
     U : QModel<T>,
-    T: QType,
-    A: TypeArgBuilder<T, QModel<T>>>(
+    T : QType,
+    out A : TypeArgBuilder<T, QModel<T>>>(
 
-    var argBuilder: A? = null)
+    private var argBuilder: A? = null)
+
   : TypeStub<U, T>,
     InitStub<T>,
     ConfigType<A, T>,
@@ -20,7 +21,7 @@ internal class TypeStubAdapter<
 
   val args: MutableMap<in String, Any> = HashMap()
 
-  var result : QModel<T>? = null
+  var result: QModel<T>? = null
 
   override fun config(): A {
     @Suppress("UNCHECKED_CAST")
@@ -40,7 +41,7 @@ internal class TypeStubAdapter<
   }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): U {
-    return result as U
+    @Suppress("UNCHECKED_CAST") return result as U
   }
 
   override fun addArg(name: String, value: Any): TypeArgBuilder<T, QModel<T>>
