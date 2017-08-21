@@ -75,6 +75,6 @@ data class Field(val symbol: String, val inputArgs: List<FieldInputArg>, val typ
 
 data class FieldInputArg(val symbol: String, val type: String, val defaultValue: String, val isList: Boolean, val isNullable: Boolean) {
 	override fun toString(): String = "arg: '$symbol' type='$type' isList? $isList -- Nullable? $isNullable" +
-			if (defaultValue.isNotBlank()) " -- default value = '$defaultValue'" else ""
+			if (defaultValue.isNotBlank()) " -- default model = '$defaultValue'" else ""
 }
 

@@ -2,11 +2,10 @@ package com.prestongarno.ktq
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.prestongarno.ktq.adapters.Mapper
 
 internal object Jsonify {
 
-	private val parser: Parser = Parser()
+/*	private val parser: Parser = Parser()
 
 	fun <T : QType> initializeValues(instance: T, response: String, fields: MutableMap<Mapper<*>, Any?>): T {
 		val split: JsonObject = parser.parse(response.byteInputStream()) as JsonObject
@@ -27,5 +26,5 @@ internal object Jsonify {
 			}
 		}.forEach { fields.put(it.first, it.second) }
 		return instance
-	}
+	}*/
 }

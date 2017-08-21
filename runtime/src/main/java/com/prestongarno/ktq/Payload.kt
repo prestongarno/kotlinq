@@ -1,46 +1,48 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.adapters.ScalarStub
+import com.prestongarno.ktq.adapters.TypeStubAdapter
+
 interface ArgBuilder<T> {
-
   fun addArg(name: String, value: Any): ArgBuilder<*>
-
-  fun build(): Stub<T, *>
+  fun build(): Stub<T>
 
   companion object {
-    fun <T, A: ArgBuilder<T>> create() : A = TODO()
+    fun <T> create(): ArgBuilder<T> = ScalarPayload()
   }
-
 }
 
-internal class Payload<T>(val stub: Stub<*, *>) : ArgBuilder<T> {
-  override fun build(): Stub<T, *> {
-    @Suppress("UNCHECKED_CAST")
-    return stub as Stub<T, *>
-  }
+interface TypeArgBuilder<T : QType, U : QModel<T>> {
+  fun <U : QModel<T>> build(init: () -> U) : TypeStub<U, T>
 
+  fun addArg(name: String, value: Any): TypeArgBuilder<T, U>
+
+  companion object {
+    fun <T: QType, A: TypeArgBuilder<T, QModel<T>>> create() : TypeArgBuilder<T, QModel<T>>
+        = TypeStubAdapter<QModel<T>, T, A>()
+  }
+}
+
+internal class ScalarPayload<T> : ArgBuilder<T> {
   val values: MutableMap<in String, Any> = HashMap()
 
-	override fun addArg(name: String, value: Any): ArgBuilder<T> {
-		values.put(name, value)
-    println(values)
-    @Suppress("UNCHECKED_CAST")
-    return this
-  }
+  @Suppress("UNCHECKED_CAST") override fun build() : Stub<T> = ScalarStub()
 
-	override fun toString(): String = TODO()
+  override fun addArg(name: String, value: Any): ArgBuilder<T> = apply { values.put(name, value)  }
 
-	private fun formatAs(value: Any): String {
-		return when (value) {
-			is Int, is Boolean, Float -> "$value"
-			is String -> "\"$value\""
-			is QInput -> value.toPayloadString()
-			is Enum<*> -> value.name
-			is List<*> -> value
-					.map { formatAs(it ?: "") }
-					.filter { it.isNotBlank() }
-					.joinToString(", ", "[ ", " ]")
-			else -> throw UnsupportedOperationException()
-		}
-	}
+  override fun toString(): String = values.map { "${it.key} : ${formatAs(it.value)}" }.joinToString { "\n" }
 }
 
+private fun formatAs(value: Any): String {
+  return when (value) {
+    is Int, is Boolean, Float -> "$value"
+    is String -> "\"$value\""
+    is QInput -> value.toPayloadString()
+    is Enum<*> -> value.name
+    is List<*> -> value
+        .map { formatAs(it ?: "") }
+        .filter { it.isNotBlank() }
+        .joinToString(", ", "[ ", " ]")
+    else -> throw UnsupportedOperationException()
+  }
+}

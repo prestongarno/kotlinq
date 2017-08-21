@@ -7,7 +7,7 @@ import com.squareup.kotlinpoet.*
 
 /**
  * Creates data classes to represent input types. Constructor invocation requires parameters only
- * specified as not-null in the graphql schema, and other values set using builder style functions
+ * specified as not-null in the graphql schema, and other args set using builder style functions
  * TIL about 'apply' functions in kotlin
  */
 object InputTypeBuilder {
@@ -24,9 +24,9 @@ object InputTypeBuilder {
 			.primaryConstructor(createConstructor(of.fields.filterNot { it.nullable }))
 			.addFunctions(of.fields.filter { it.nullable }.map {
 				FunSpec.builder(it.name)
-						.addParameter(ParameterSpec.builder("value", ClassName.bestGuess(it.type.name))
+						.addParameter(ParameterSpec.builder("model", ClassName.bestGuess(it.type.name))
 								.build())
-						.addCode(CodeBlock.builder().addStatement("return apply { ${it.name} = value }").build())
+						.addCode(CodeBlock.builder().addStatement("return apply { ${it.name} = model }").build())
 						.build()
 			}).build()
 
