@@ -8,7 +8,7 @@ interface ArgBuilder<T> {
   fun build(): Stub<T>
 
   companion object {
-    fun <T> create(): ArgBuilder<T> = ScalarPayload()
+    fun <T> create(): ArgBuilder<T> = ScalarStub()
   }
 }
 
@@ -23,26 +23,3 @@ interface TypeArgBuilder<T : QType, U : QModel<T>> {
   }
 }
 
-internal class ScalarPayload<T> : ArgBuilder<T> {
-  val values: MutableMap<in String, Any> = HashMap()
-
-  @Suppress("UNCHECKED_CAST") override fun build() : Stub<T> = ScalarStub()
-
-  override fun addArg(name: String, value: Any): ArgBuilder<T> = apply { values.put(name, value)  }
-
-  override fun toString(): String = values.map { "${it.key} : ${formatAs(it.value)}" }.joinToString { "\n" }
-}
-
-private fun formatAs(value: Any): String {
-  return when (value) {
-    is Int, is Boolean, Float -> "$value"
-    is String -> "\"$value\""
-    is QInput -> value.toPayloadString()
-    is Enum<*> -> value.name
-    is List<*> -> value
-        .map { formatAs(it ?: "") }
-        .filter { it.isNotBlank() }
-        .joinToString(", ", "[ ", " ]")
-    else -> throw UnsupportedOperationException()
-  }
-}

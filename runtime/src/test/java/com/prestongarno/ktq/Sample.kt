@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.prestongarno.ktq
 
 import org.junit.Test
@@ -36,25 +38,55 @@ object User : UniformResourceLocatable, QType {
   }
 }
 
+class SimpleAddress(exactValue: String) : QModel<Location>(Location::class) {
+  val streetAddress = exactValue
+}
+
 data class UserImpl(val limitOfFriends: Int, val lang: String) : QModel<User>(User::class) {
   val username by model.name
   val url by model.url
 
-  val address: QModel<Location> by model.address.config()
+  val address by model.address.config()
       .language(lang)
-      .build { object : QModel<Location>(Location::class) {} }
+      .build { SimpleAddress("666 Hell Lane") }
 
   val friends by model.friends.config()
       .first(limitOfFriends)
       .build { object : QModel<User>(User::class) {} as QModel<User> }
 }
-
+fun foo(value: Int = 69) {
+  println(value)
+}
 class TestSample {
   @Test
   fun testCorrectTypes() {
     val foobaz = UserImpl(1000, "ENGLISH")
     println("$foobaz \n\t:: ${foobaz.friends}\n\t::${foobaz.address}")
+    println(foobaz.address.streetAddress)
     val foobar = UserImpl(-69, "CHINESE")
     println("$foobar \n\t:: ${foobar.friends}\n\t::${foobar.address}")
+    println(foobar.address.streetAddress)
+  }
+
+  @Test
+  fun name() {
+    val param = ::foo.parameters.filter { it.isOptional }.first()
+    println(param.kind.declaringClass)
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
