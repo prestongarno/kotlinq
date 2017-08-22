@@ -1,6 +1,7 @@
 package com.prestongarno.ktq
 
 import org.junit.Test
+import java.util.function.Consumer
 import kotlin.reflect.jvm.reflect
 
 /**
@@ -19,11 +20,12 @@ class InputArguments {
   @Test
   fun tesetInputArgumentCreation() {
     println(UserImpl::avatarUrl.reflect())
+    Guac("", Consumer {  }, Runnable {  })
   }
 }
 
 object UserImpl : QType, RepoOwner, Actor2 {
-  override val avatarUrl : Config<AvatarArgsImpl, URI> by lazy { configStub(AvatarArgsImpl()) }
+  override val avatarUrl: Config<AvatarArgsImpl, URI> by lazy { configStub(AvatarArgsImpl()) }
 }
 
 interface Actor2 : QType {
@@ -40,3 +42,6 @@ interface RepoOwner : QType {
   val avatarUrl: Config<AvatarArgsImpl, URI>
 
 }
+
+class Guac(somethingElse: String, cheese: java.util.function.Consumer<Byte>, bean: Runnable) :
+    java.util.function.Consumer<kotlin.Byte> by cheese, java.lang.Runnable by bean

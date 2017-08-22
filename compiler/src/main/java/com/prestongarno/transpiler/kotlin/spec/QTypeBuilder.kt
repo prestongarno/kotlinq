@@ -10,7 +10,7 @@ import com.prestongarno.transpiler.kotlin.spec.QInterfaceBuilder.Companion.build
 
 class QTypeBuilder {
 
-  fun createType(qType: QTypeDef, packageName: String = "com.prestongarno.ktq"): TypeSpec {
+  fun createType(qType: QTypeDef): TypeSpec {
 
     val result = TypeSpec.objectBuilder(qType.name)
         .addSuperinterface(QType::class)

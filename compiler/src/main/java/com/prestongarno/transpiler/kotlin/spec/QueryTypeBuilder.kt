@@ -1,7 +1,6 @@
 package com.prestongarno.transpiler.kotlin.spec
 
 import com.prestongarno.ktq.QType
-import com.prestongarno.transpiler.qlang.spec.QSymbol
 import com.prestongarno.transpiler.qlang.spec.QTypeDef
 import com.squareup.kotlinpoet.*
 
@@ -11,7 +10,7 @@ object QueryTypeBuilder {
 		val typeVariable = TypeVariableName.Companion.invoke("E").withBounds(QType::class)
 
 		val onSuccess = LambdaTypeName.get(null, listOf(typeVariable), UNIT)
-		val onError = LambdaTypeName.get(null, listOf(INT.topLevelClassName(), ClassName.invoke("java.lang", "String")), UNIT)
+		val onError = LambdaTypeName.get(null, listOf(INT.topLevelClassName(), ClassName.bestGuess("String")), UNIT)
 
 		val companionObject = TypeSpec.companionObjectBuilder()
 

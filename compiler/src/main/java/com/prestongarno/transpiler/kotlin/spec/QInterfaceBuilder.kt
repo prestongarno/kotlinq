@@ -25,7 +25,7 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
         .build())
   }).sortedBy { it.first.name }
 
-  fun buildAbstractProperty(field: QSymbol): PropertySpec {
+  private fun buildAbstractProperty(field: QSymbol): PropertySpec {
     val typeName = determineTypeName(field)
     val rawTypeName =
         if (field.args.isEmpty()) {
@@ -68,13 +68,13 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
                   .defaultValue("${rawType.simpleName}.create()")
                   .build())
               .build())
-          .addSuperinterface(ClassName.invoke("", "${paramSignature.toString()
+          .addSuperinterface(ClassName.bestGuess("${paramSignature.toString()
               .replace(", ", QCompiler.COMMA)
               .replace("<", QCompiler.LESS_THAN)
               .replace(">", QCompiler.GREATER_THAN)}_by_args"))
 
       field.args.map { createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it as QFieldInputArg, inputClazzName) }
-          .forEach { argBuilderSpec.addFun(it) }
+          .let { argBuilderSpec.addFunctions(it) }
 
       return argBuilderSpec.build()
     }
@@ -86,7 +86,7 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
         FunSpec.builder(param.name)
             .addParameter("value", typeName)
             .addCode(CodeBlock.builder().addStatement("return apply { addArg(\"${param.name}\", value) }\n").build())
-            .returns(ClassName.invoke("", inputClazzName))
+            .returns(ClassName.bestGuess(inputClazzName))
             .build()
 
     fun determineTypeName(f: QSymbol): TypeName {

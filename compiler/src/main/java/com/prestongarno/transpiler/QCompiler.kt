@@ -1,8 +1,11 @@
 package com.prestongarno.transpiler
 
 import com.prestongarno.transpiler.kotlin.spec.*
+import com.prestongarno.transpiler.qlang.spec.QInterfaceDef
+import com.prestongarno.transpiler.qlang.spec.QSymbol
 import com.squareup.kotlinpoet.KotlinFile
 import java.io.File
+import kotlin.streams.toList
 
 class QCompiler {
 
@@ -12,10 +15,7 @@ class QCompiler {
     val COMMA = "_COMMA_"
   }
 
-  fun compile(file: File): QCompilationUnit {
-    val result = Attr.attributeCompilationUnit(QLParser().parse(file))
-    return result
-  }
+  fun compile(file: File): QCompilationUnit = Attr.attributeCompilationUnit(QLParser().parse(file))
 
   fun generateKotlinTypes(comp: QCompilationUnit,
       outputPath: String = "",
@@ -39,6 +39,16 @@ class QCompiler {
     comp.inputs.map { ktBuilder.addType(InputTypeBuilder.createInputSpec(it, rootPackageName)) }
     createEnums(comp.enums).map { ktBuilder.addType(it) }
 
+    val duplicates = comp.types.parallelStream().map { type ->
+      type.fields.filter { it.inheritedType != null }
+          .map { checkDuplicateCount(it, type.interfaces.map { it as QInterfaceDef })
+          }.filter { it.isNotEmpty() }
+          .toList()
+    }.toList()
+
+    println(duplicates.joinToString { "\n" })
+
+
     val suppressedWarnings = listOf(
         "@file:Suppress(\"unused\")"
     )
@@ -57,4 +67,20 @@ class QCompiler {
       }
   }
 
+
 }
+
+fun checkDuplicateCount(field: QSymbol, ifaces: List<QInterfaceDef>): List<Pair<QInterfaceDef, QSymbol>> {
+  val linked = mutableListOf<Pair<QInterfaceDef, QSymbol>>()
+  ifaces.forEach { iface ->
+    iface.fields.forEach { linked.add(Pair(iface, it)) }}
+  val filter = linked.filter { it.second.name == field.name }
+  return if(filter.size > 1) filter else emptyList()
+}
+
+
+
+
+
+
+
