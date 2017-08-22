@@ -1,116 +1,102 @@
 package com.prestongarno.transpiler.kotlin.spec
 
-import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.QType
+import com.prestongarno.ktq.*
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
+import com.prestongarno.ktq.QType
+import com.prestongarno.transpiler.kotlin.spec.QInterfaceBuilder.Companion.determineTypeName
+import com.prestongarno.transpiler.kotlin.spec.QInterfaceBuilder.Companion.buildInputArgTypes
 
-class QTypeBuilder(val packageName: String) {
+class QTypeBuilder {
 
-  fun createType(qType: QStatefulType, packageName: String = "com.prestongarno.ktq"): TypeSpec {
-    val builder = TypeSpec.interfaceBuilder(qType.name)
+  fun createType(qType: QTypeDef, packageName: String = "com.prestongarno.ktq"): TypeSpec {
+
+    val result = TypeSpec.objectBuilder(qType.name)
         .addSuperinterface(QType::class)
+        .addSuperinterfaces(qType.interfaces.map {
+          ClassName.bestGuess(it.name)
+        })
+    qType.fields.map {
+      createProperty(it)
+    }.also {
+      result.addProperties(it)
+    }
 
-    qType.fields.filter { it.args.isEmpty() && it is QField }
-        .map {
-          if (it.type is QScalarType || it.type is QEnumDef) {
-            builder.addFunctions(listOf(buildPropertySpec(it as QField)))
-          } else {
-            builder.addFunctions(listOf(buildInitializerFun(it as QField)))
-          }
-        }
+    qType.fields.filter {
+      it.inheritedType == null && it.args.isNotEmpty()
+    }.forEach {
+      result.addType(buildInputArgTypes(field = it))
+    }
 
-    qType.fields.filter { it.args.isNotEmpty() && it is QField }
-        .map { Pair(it as QField, createPayloadClasses(it.args.map { it as QFieldInputArg }, it)) }
-        .forEach {
-          builder.addType(it.second)
-          builder.addFunctions(listOf(buildInitializerConfigFun(it.first, it.second)))
-        }
-    return builder.build()
+    return result.build()
   }
 
-  private fun buildInitializerConfigFun(field: QField, forArgType: TypeSpec): FunSpec {
-    val type = determineTypeName(field)
-    val typeVariable = TypeVariableName.Companion.invoke("T").withBounds(type)
-    return FunSpec.builder(field.name)
-        .returns(ParameterizedTypeName
-            .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
-                typeVariable,
-                ClassName.invoke("", forArgType.name!!)))
-        .addTypeVariable(typeVariable)
-        .addParameter("init", LambdaTypeName.get(null, emptyList(), typeVariable))
-        .addParameter(ParameterSpec.builder("argBuilder", ClassName.bestGuess(forArgType.name!!))
-            .defaultValue(CodeBlock.of("${forArgType.name}()"))
-            .build())
-        .addCode(CodeBlock.builder()
-            .addStatement(if (field.nullable) " return configNullableStub(init, argBuilder)"
-            else "return configStub(init, argBuilder)")
-            .build())
-        .build()
+  private fun createProperty(field: QSymbol): PropertySpec {
+    val type: ParameterizedTypeName = getPropertyType(field)
+    val result = PropertySpec.builder(field.name, type)
+        .delegate(CodeBlock.of(" lazy { ${initFunctionCall(field, type)} } "))
+    if(field.inheritedType != null)
+      result.addModifiers(KModifier.OVERRIDE)
+    return result.build()
   }
 
-  private fun buildInitializerFun(field: QField): FunSpec {
-    val type = determineTypeName(field)
-    val typeVariable = TypeVariableName.Companion.invoke("T").withBounds(type)
-    return FunSpec.builder(field.name)
-        .returns(ParameterizedTypeName
-            .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
-                ClassName.invoke("", type.toString()),
-                ClassName.bestGuess("ArgBuilder")))
-        .addTypeVariable(typeVariable)
-        .addParameter("init", LambdaTypeName.get(null, emptyList(), typeVariable))
-        .addCode(CodeBlock.builder()
-            .addStatement("return ${if (field.nullable) "nullableStub" else "stub"}()")
-            .build())
-        .build()
+  private fun initFunctionCall(field: QSymbol, type: ParameterizedTypeName): String {
+    val paramType = bestGuess(field.type.name)
+    return when (type.rawType.asNonNullable().simpleName()) {
+      "${Stub::class.simpleName}" -> "stub<$paramType>()"
+      "${InitStub::class.simpleName}" -> "typeStub<$paramType>()" /*<${bestGuess(field.type.name)}>*/
+      "${Config::class.simpleName}" -> "configStub(${inputClazzTypeName(field)}())"
+      "${ConfigType::class.simpleName}" -> "typeConfigStub(${inputClazzTypeName(field)}())"
+      else -> throw IllegalStateException("unexpected stub type '$type")
+    }
   }
 
-  private fun buildPropertySpec(field: QField): FunSpec {
-    return FunSpec.builder(field.name)
-        .addModifiers(KModifier.PUBLIC)
-        .returns(ParameterizedTypeName
-            .get(ClassName.bestGuess(if (field.nullable) "NullableStub" else "Stub"),
-                ClassName.invoke("", determineTypeName(field).toString()),
-                ClassName.bestGuess("ArgBuilder")))
-        .addCode(CodeBlock.builder()
-            .addStatement("return ${if (field.nullable) "nullableStub" else "stub"}()")
-            .build())
-        .build()
+  private fun getPropertyType(field: QSymbol): ParameterizedTypeName =
+      if (field.args.isEmpty())
+        noConfigStubName(field)
+      else
+        configStubName(field)
+
+  private fun noConfigStubName(field: QSymbol): ParameterizedTypeName =
+      if (field.type is QScalarType || field.type is QEnumDef) ParameterizedTypeName.get(
+          bestGuess("${Stub::class.simpleName}"),
+          bestGuess(field.type.name))
+      else ParameterizedTypeName.get(
+          bestGuess("${InitStub::class.simpleName}"),
+          determineTypeName(field))
+
+  private fun configStubName(field: QSymbol): ParameterizedTypeName {
+    val inputArgTypeName = inputClazzTypeName(field)
+    return if (field.type is QScalarType || field.type is QEnumDef)
+      ParameterizedTypeName.get(
+          bestGuess("${Config::class.simpleName}"),
+          inputArgTypeName,
+          bestGuess(field.type.name))
+    else {
+      ParameterizedTypeName.get(
+          bestGuess("${ConfigType::class.simpleName}"),
+          inputArgTypeName,
+          bestGuess(field.type.name))
+    }
   }
 
-  private fun createPayloadClasses(args: List<QFieldInputArg>, field: QField): TypeSpec {
-    val inputClazzName = inputBuilderClassName(field.name)
-    val argBuilderSpec = TypeSpec.classBuilder(inputClazzName)
-        .primaryConstructor(FunSpec.constructorBuilder()
-            .addParameter(ParameterSpec.builder("builder", ArgBuilder::class)
-                .defaultValue("ArgBuilder.create()")
-                .build())
-            .build())
-        .addSuperinterface(ClassName.invoke("", "ArgBuilder_by_builder"))
-
-    args.map { createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName) }
-        .forEach { argBuilderSpec.addFun(it) }
-
-    return argBuilderSpec.build()
+  /** This figures out if the field is an inherited field from an interface with required nested Arg/TypeArgBuilder type name
+   * TODO probably carry this metadata on the field itself at the `Attribution` stage
+   */
+  private fun inputClazzTypeName(field: QSymbol): TypeName {
+    return if (field.inheritedType != null)
+      ClassName.bestGuess(classNameString = (field.inheritedType as QInterfaceDef).name)
+          .nestedClass(name = QInterfaceBuilder.inputBuilderClassName(field.name))
+    else ClassName.bestGuess(classNameString = QInterfaceBuilder.inputBuilderClassName(field.name))
   }
 
-  private fun createBuilderMethodUsingPoetBuilderMethod(typeName: TypeName,
-      param: QFieldInputArg,
-      inputClazzName: String) =
-      FunSpec.builder(param.name)
-          .addParameter("model", typeName)
-          .addCode(CodeBlock.builder().addStatement("return apply { addArg(\"${param.name}\", model) }\n").build())
-          .returns(ClassName.invoke("", inputClazzName))
-          .build()
-
-  fun determineTypeName(f: QSymbol): TypeName {
-    var result: TypeName
-    if (f is QScalarType)
-      result = ClassName.invoke("", (f as QScalarType).clazz.simpleName!!)
-    else
-      result = ClassName.invoke("", f.type.name.split(".").last())
-    return result
-  }
-
-  fun inputBuilderClassName(forField: String): String = "${forField[0].toUpperCase()}${forField.substring(1)}Args"
 }
+
+
+
+
+
+
+
+

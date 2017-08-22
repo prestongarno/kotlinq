@@ -4,12 +4,27 @@ package com.prestongarno.ktq
 
 import org.junit.Test
 
-interface UniformResourceLocatable {
+interface URL {
   val url: Stub<String>
 }
 
+interface Friendable {
+
+  val friendCount: Config<FriendCountArgs, Int>
+  val friends: ConfigType<FriendsArgs, OtherUser>
+
+  class FriendsArgs(args: TypeArgBuilder<OtherUser, QModel<OtherUser>> = TypeArgBuilder.create())
+    : TypeArgBuilder<OtherUser, QModel<OtherUser>> by args {
+
+    fun first(value: Int) = apply { addArg("first", value) }
+    fun after(value: String) = apply { addArg("after", value) }
+    fun startAt(value: Int) = apply { addArg("startAt", value) }
+  }
+  class FriendCountArgs(args: ArgBuilder<Int> = ArgBuilder.create()) : ArgBuilder<Int> by args
+}
+
 object Location : QType {
-  val latitude by lazy { stub<Int>() }
+  val latitude : Stub<Int> by lazy { stub<Int>() }
   val longitude by lazy { stub<Int>() }
   val streetAddress by lazy { stub<String>() }
   val city by lazy { stub<String>() }
@@ -17,20 +32,13 @@ object Location : QType {
   val zip by lazy { stub<Int>() }
 }
 
-object User : UniformResourceLocatable, QType {
+object OtherUser : URL, Friendable, QType {
+  override val friendCount by lazy { configStub(Friendable.FriendCountArgs()) }
   val name by lazy { stub<String>() }
-  val enemies by lazy { typeStub<User>() }
-  val friends by lazy { typeConfigStub(FriendsArgs()) }
+  val enemies by lazy { typeStub<OtherUser>() }
+  override val friends by lazy { typeConfigStub(Friendable.FriendsArgs()) }
   val address by lazy { typeConfigStub(AddressArgs()) }
   override val url by lazy { stub<String>() }
-
-  class FriendsArgs(args: TypeArgBuilder<User, QModel<User>> = TypeArgBuilder.create())
-    : TypeArgBuilder<User, QModel<User>> by args {
-
-    fun first(value: Int) = apply { addArg("first", value) }
-    fun after(value: String) = apply { addArg("after", value) }
-    fun startAt(value: Int) = apply { addArg("startAt", value) }
-  }
 
   class AddressArgs(args: TypeArgBuilder<Location, QModel<Location>> = TypeArgBuilder.create())
     : TypeArgBuilder<Location, QModel<Location>> by args {
@@ -43,16 +51,20 @@ class SimpleAddress(exactValue: String) : QModel<Location>(Location::class) {
   val streetAddress = exactValue
 }
 
-class BasicUserInfo : QModel<User>(User::class) {
+class BasicUserInfo : QModel<OtherUser>(OtherUser::class) {
   val name by model.name
   val url by model.url
 }
 
-data class UserImpl(val limitOfFriends: Int, val lang: String) : QModel<User>(User::class) {
+data class MyUser(
+    private val limitOfFriends: Int,
+    private val lang: String) : QModel<OtherUser>(OtherUser::class) {
+
   val username by model.name
   val url by model.url
 
-  val enemies: BasicUserInfo by model.enemies.init(::BasicUserInfo)
+  val enemies: BasicUserInfo by model.enemies
+      .init(::BasicUserInfo)
 
   val address by model.address.config()
       .language(lang)
@@ -66,13 +78,14 @@ data class UserImpl(val limitOfFriends: Int, val lang: String) : QModel<User>(Us
 class TestSample {
   @Test
   fun testCorrectTypes() {
-    val foobaz = UserImpl(1000, "ENGLISH")
+    val foobaz = MyUser(1000, "ENGLISH")
     println("$foobaz \n\t:: ${foobaz.friends}\n\t::${foobaz.address}")
     println(foobaz.address.streetAddress)
-    val foobar = UserImpl(-69, "CHINESE")
+    val foobar = MyUser(-69, "CHINESE")
     println("$foobar \n\t:: ${foobar.friends}\n\t::${foobar.address}")
     println(foobar.address.streetAddress)
     println(foobar.enemies)
+    println(OtherUser.enemies)
   }
 
 }

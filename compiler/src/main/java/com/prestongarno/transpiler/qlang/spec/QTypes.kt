@@ -73,7 +73,8 @@ abstract class QSymbol(name: String,
     var type: QDefinedType,
     val args: List<QSymbol>,
     val isList: Boolean = false,
-    val nullable: Boolean = true) : QSchemaType(name)
+    val nullable: Boolean = true,
+    var inheritedType: QInterfaceDef? = null) : QSchemaType(name)
 
 class QField(name: String,
     type: QDefinedType,

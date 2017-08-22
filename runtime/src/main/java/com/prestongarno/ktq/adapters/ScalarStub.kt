@@ -5,7 +5,7 @@ import kotlin.reflect.KProperty
 
 internal class ScalarStub<T, A: ArgBuilder<T>>(val argBuilder: A? = null) :
     Stub<T>,
-    Config<T, A>,
+    Config<A, T>,
     ArgBuilder<T> {
 
   @Suppress("UNCHECKED_CAST") override fun config(): A = argBuilder ?: ScalarStub<T, A>() as A

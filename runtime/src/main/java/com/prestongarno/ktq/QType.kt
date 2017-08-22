@@ -7,23 +7,33 @@ interface QType {
 
   fun <T> stub(): Stub<T> = ScalarStub()
 
+  fun <T> nullableStub(): Stub<T> = ScalarStub()
+
   fun <T : QType> stub(of: () -> T): TypeStub<QModel<T>, T> = TypeStubAdapter()
 
-  fun <T, A : ArgBuilder<T>> configStub(argBuilder: A): Config<T, A> = ScalarStub(argBuilder)
   /****************************************
    *         Nested types fields          *
    ****************************************/
+
+  /** Stub with no input for nested types, requiring only an initializer
+   */
   fun <T : QType> typeStub(): InitStub<T> = TypeStubAdapter()
 
+  /** Configurable stub for primitives
+   */
+  fun <A : ArgBuilder<T>, T> configStub(argBuilder: A): Config<A, T> = ScalarStub(argBuilder)
+
+  /** Configurable stubs for types
+   */
   fun <A : TypeArgBuilder<T, QModel<T>>, T : QType> typeConfigStub(argBuilder: A)
       : ConfigType<A, T> = TypeStubAdapter(argBuilder)
 }
 
 interface InitStub<T : QType> {
-  fun <U: QModel<T>> init(of: () -> U): TypeStub<U, T>
+  fun <U : QModel<T>> init(of: () -> U): TypeStub<U, T>
 }
 
-interface Config<T, A : ArgBuilder<T>> {
+interface Config<out A : ArgBuilder<T>, T> {
   fun config(): A
 }
 
@@ -33,6 +43,12 @@ interface ConfigType<out A : TypeArgBuilder<T, QModel<T>>, T : QType> {
 
 interface Stub<T> {
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
+
+  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T>
+}
+
+interface NullableStub<T> {
+  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T?
 
   operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T>
 }

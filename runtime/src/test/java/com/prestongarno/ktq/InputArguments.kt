@@ -1,21 +1,42 @@
 package com.prestongarno.ktq
 
-import org.junit.Ignore
 import org.junit.Test
+import kotlin.reflect.jvm.reflect
 
-/*@Ignore
-class RepoSelection() : Repository {
-  val repoName: String by name()
-  val nested : IssueConnection by Repository.IssuesArgs()
-      .first(20)
-      .orderBy(IssueOrder(IssueOrderField.CREATED_AT, OrderDirection.ASC))
-      .build(this)
-      .issues()
-}*/
-
+/**
+ * This needs to be fixed because of GraphQL's ability to have types implementing interfaces with the same names
+ * After generating types, need to check all types for conflicting overriding properties
+ *    1) Check for a type with 2+ ifaces with same field names
+ *    2) check that the field on both is the same type
+ *    3) check that the input arguments are the same for both
+ *    4) fail for now if requires input arguments for different type, because technically it's invalid GraphQL also
+ *    5) move the input arg/builder class to top level
+ *    6) remove the inner class classifier on the type declaration in the interface
+ *    7) ???
+ *    8) Profit
+ */
 class InputArguments {
   @Test
   fun tesetInputArgumentCreation() {
-    //RepoSelection()
+    println(UserImpl::avatarUrl.reflect())
   }
+}
+
+object UserImpl : QType, RepoOwner, Actor2 {
+  override val avatarUrl : Config<AvatarArgsImpl, URI> by lazy { configStub(AvatarArgsImpl()) }
+}
+
+interface Actor2 : QType {
+
+  val avatarUrl: Config<AvatarArgsImpl, URI>
+
+}
+
+class AvatarArgsImpl(args: ArgBuilder<URI> = ArgBuilder.create()) : ArgBuilder<URI> by args {
+  fun size(value: Int): AvatarArgsImpl = apply { addArg("size", value) }
+}
+
+interface RepoOwner : QType {
+  val avatarUrl: Config<AvatarArgsImpl, URI>
+
 }
