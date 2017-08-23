@@ -26,24 +26,3 @@ object QueryTypeBuilder {
 	}
 }
 
-/**
- *
-
-class Query<E>(val onSuccess: (E) -> Unit, val onError: (Int, String) -> Unit = { i, m -> }) {
-
-companion object ArgBuilder {
-
-val queue = LinkedList<Any>()
-
-fun exec() = (queue[0] as Query<SearchResultItemConnection<*,*,*>>).onError(400, "Not Found!")
-
-fun <T : SearchResultItemConnection<*,*,*>> search(ArgBuilder: Search.ArgBuilder<T>): Query.ArgBuilder {
-println("Created object '$ArgBuilder'")
-queue.add(ArgBuilder.search)
-return this
-}
-}
-
-}
-
- */

@@ -25,6 +25,8 @@ class QCompilationUnit(val types: List<QTypeDef>,
 
 	val all: Array<QDefinedType> = addAllStuff(types, ifaces, unions, inputs, scalar, unions, enums).toTypedArray()
 
+	val confictOverrides = mutableMapOf<QField, Pair<QTypeDef, List<QInterfaceDef>>>()
+
 	val stateful: List<QStatefulType> by lazy { LinkedList<QStatefulType>()
 			.addAllAnd(types)
 			.addAllAnd(ifaces)

@@ -39,7 +39,7 @@ class QLParser {
 				TYPE -> {
 					val ifaces = scanner.useDelimiter("\\{").next().split("[\\s,]".toRegex()).filter { s -> s.isNotBlank() }
 					val fields = mapLexerFieldsToSymbols(QLexer.baseFields(scanner.useDelimiter("}").next().trim().substring(1)))
-					all.add(0, QTypeDef(name, if (ifaces.isEmpty()) Collections.emptyList() else ifaces.subList(1, ifaces.size).map { s -> QUnknownType(s) }, fields))
+					all.add(0, QTypeDef(name, if (ifaces.isEmpty()) Collections.emptyList() else ifaces.subList(1, ifaces.size).map { s -> QUnknownInterface(s) }, fields))
 				}
 				INTERFACE -> all.add(0, QInterfaceDef(name, mapLexerFieldsToSymbols(QLexer.baseFields(scanner.useDelimiter("}").next().trim().substring(1)))))
 				SCALAR -> all.add(0, QCustomScalarType(name))
@@ -55,7 +55,7 @@ class QLParser {
 				all.filter { q -> q is QUnionTypeDef }.map{ q -> q as QUnionTypeDef})
 	}
 
-	fun mapLexerFieldsToSymbols(fields: List<Field>): List<QSymbol> = fields.map { (symbol, inputArgs, type, directive, isList, isNullable) ->
+	private fun mapLexerFieldsToSymbols(fields: List<Field>): List<QSymbol> = fields.map { (symbol, inputArgs, type, directive, isList, isNullable) ->
 		QField(symbol, QUnknownType(type),
 				inputArgs.map { arg -> QFieldInputArg(arg.symbol, QUnknownType(arg.type), arg.defaultValue, arg.isList, arg.isNullable) },
 				QDirectiveSymbol(QUnknownType(directive.first), directive.second),

@@ -1,8 +1,8 @@
 package com.prestongarno.transpiler.kotlin.spec
 
 import com.prestongarno.ktq.QInput
+import com.prestongarno.transpiler.qlang.spec.QField
 import com.prestongarno.transpiler.qlang.spec.QInputType
-import com.prestongarno.transpiler.qlang.spec.QSymbol
 import com.squareup.kotlinpoet.*
 
 /**
@@ -30,7 +30,7 @@ object InputTypeBuilder {
 						.build()
 			}).build()
 
-	private fun createConstructor(params: List<QSymbol>): FunSpec = FunSpec.constructorBuilder()
+	private fun createConstructor(params: List<QField>): FunSpec = FunSpec.constructorBuilder()
 			.addParameters(params.map {
 				ParameterSpec.builder(it.name, ClassName.bestGuess(it.type.name)).build()
 			}).build()

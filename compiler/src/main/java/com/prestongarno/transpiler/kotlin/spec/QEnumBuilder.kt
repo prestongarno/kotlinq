@@ -9,4 +9,5 @@ fun createEnums(qEnums: List<QEnumDef>): List<TypeSpec> = qEnums.map { qenum ->
 			.addSuperinterface(QType::class)
 	qenum.options.forEach { str -> spec.addEnumConstant(str) }
 	spec.build()
+			.also { qenum.kotlinSpec = it }
 }

@@ -1,56 +1,21 @@
 package com.prestongarno.transpiler.qlang.spec
 
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import java.util.*
-import java.util.function.Function
-import java.util.stream.Collectors
 import kotlin.reflect.KClass
 
-/**
- * The base class for all components of the compilation
+/** The base class for all components of the compilation
  */
-abstract class QSchemaType(var name: String) {
+abstract class QSchemaType<E>(var name: String) {
+
+  var kotlinSpec: E? = null // sue me
 
   var description: String = ""
 
   override fun toString(): String {
     return "'$name' (${this::class.simpleName})"
-  }
-}
-
-/**
- * Enum class representing primitive types
- */
-enum class Scalar(val token: String) {
-  INT("Int"),
-  FLOAT("Float"),
-  BOOL("Boolean"),
-  STRING("String"),
-  ID("ID"),
-  UNKNOWN("");
-
-  companion object matcher {
-    private val values: Map<String, Scalar>
-
-    init {
-      values = Arrays.stream(enumValues<Scalar>()).collect(Collectors.toMap({ t -> t.token }, { t -> t }))
-    }
-
-    fun match(keyword: String): Scalar = values[keyword] ?: UNKNOWN
-
-    fun getType(type: Scalar): QScalarType = when (type) {
-      INT -> intType
-      FLOAT -> floatType
-      BOOL -> boolType
-      STRING -> stringType
-      Scalar.ID -> stringType
-      UNKNOWN -> customType
-    }
-
-    private val intType = QInt();
-    private val floatType = QFloat();
-    private val boolType = QBool();
-    private val stringType = QString();
-    private val customType = QCustomScalar();
   }
 }
 
@@ -68,53 +33,49 @@ class QString(val defValue: String = "") : QScalarType("String", String::class)
 
 class QCustomScalar(defValue: String = "") : QScalarType("Scalar", String::class)
 
-/** Symbol/field types */
-abstract class QSymbol(name: String,
-    var type: QDefinedType,
-    val args: List<QSymbol>,
-    val isList: Boolean = false,
-    val nullable: Boolean = true,
-    var inheritedType: QInterfaceDef? = null) : QSchemaType(name)
-
 class QField(name: String,
-    type: QDefinedType,
-    args: List<QFieldInputArg>,
-    val directive: QDirectiveSymbol,
-    isList: Boolean,
-    nullable: Boolean)
-  : QSymbol(name, type, args, isList, nullable)
+    var type: QDefinedType,
+    var args: List<QFieldInputArg>,
+    var directive: QDirectiveSymbol,
+    var isList: Boolean = false,
+    var nullable: Boolean = false)
+  : QSchemaType<Pair<PropertySpec, Optional<TypeSpec>>>(name) {
+  var inheritedFrom = mutableListOf<QInterfaceDef>()
+}
 
 class QFieldInputArg(name: String,
-    type: QDefinedType,
-    val defaultValue: String = "",
-    isList: Boolean,
-    nullable: Boolean)
-  : QSymbol(name, type, Collections.emptyList(), isList, nullable)
+    var type: QDefinedType,
+    var defaultValue: String = "",
+    var isList: Boolean = false,
+    var nullable: Boolean = true)
+  : QSchemaType<FunSpec>(name)
 
 /**
  * Base class for all "types" defined by the schema
  */
-abstract class QDefinedType(name: String) : QSchemaType(name)
+abstract class QDefinedType(name: String) : QSchemaType<TypeSpec>(name)
 
-abstract class QStatefulType(name: String, val fields: List<QSymbol>) : QDefinedType(name)
+abstract class QStatefulType(name: String, val fields: List<QField>) : QDefinedType(name)
 
 /** Type definition class
  */
-class QTypeDef(name: String, var interfaces: List<QDefinedType>, fields: List<QSymbol>) : QStatefulType(name, fields)
+class QTypeDef(name: String, var interfaces: List<QInterfaceDef>, fields: List<QField>) : QStatefulType(name, fields)
 
 class QUnknownType(name: String) : QDefinedType(name)
 
-class QInterfaceDef(name: String, fields: List<QSymbol>) : QStatefulType(name, fields)
+class QUnknownInterface(name: String) : QInterfaceDef(name, emptyList())
+
+open class QInterfaceDef(name: String, fields: List<QField>) : QStatefulType(name, fields)
 
 class QUnionTypeDef(name: String, var possibleTypes: List<QDefinedType>) : QDefinedType(name)
 
 class QEnumDef(name: String, var options: List<String>) : QDefinedType(name)
 
-class QInputType(name: String, fields: List<QSymbol>) : QStatefulType(name, fields)
+class QInputType(name: String, fields: List<QField>) : QStatefulType(name, fields)
 
 class QDirectiveType(name: String, val arg: String) : QDefinedType(name)
 
-class QDirectiveSymbol(type: QDefinedType, val value: String) : QSymbol("DIRECTIVE", type, Collections.emptyList()) {
+class QDirectiveSymbol(type: QDefinedType, val value: String) : QSchemaType<Any>(type.name) {
   companion object {
     val default = QDirectiveSymbol(QUnknownType(""), "")
   }

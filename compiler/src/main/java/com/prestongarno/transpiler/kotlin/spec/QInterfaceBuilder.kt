@@ -6,23 +6,25 @@ import com.prestongarno.transpiler.QCompiler
 import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
+import java.util.*
 
 class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
 
   fun buildAll(): List<Pair<QInterfaceDef, TypeSpec>> = allIfaces.mapTo(ArrayList(allIfaces.size), {
     Pair(it, TypeSpec.interfaceBuilder(it.name)
         .addSuperinterface(QType::class)
-        .addProperties(it.fields.map {
-          buildAbstractProperty(it)
-        }).addTypes(
-        it.fields.filter {
+        .addProperties(it.fields.map { field ->
+          buildAbstractProperty(field).also {
+            field.kotlinSpec = Pair(it, Optional.empty()) }
+        }).addTypes( it.fields.filter {
           it.args.isNotEmpty()
-        }.map {
-          buildInputArgTypes(it)
+        }.map { field ->
+          buildInputArgTypes(field).also {
+            field.kotlinSpec = Pair(field.kotlinSpec!!.first, Optional.of(it)) }
         }).build())
   })
 
-  private fun buildAbstractProperty(field: QSymbol): PropertySpec {
+  private fun buildAbstractProperty(field: QField): PropertySpec {
     val typeName = determineTypeName(field)
     val rawTypeName = if (field.args.isEmpty()) {
       if (field.type is QScalarType || field.type is QEnumDef)
@@ -43,7 +45,7 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
 
   companion object {
 
-    fun buildInputArgTypes(field: QSymbol): TypeSpec {
+    fun buildInputArgTypes(field: QField): TypeSpec {
 
       if (field.type is QEnumDef)
         println(field.args)
@@ -70,9 +72,7 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
               .replace(">", QCompiler.GREATER_THAN)}_by_args"))
 
       field.args.map {
-        createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it),
-            it as QFieldInputArg,
-            inputClazzName)
+        createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it, inputClazzName)
       }.let { argBuilderSpec.addFunctions(it) } // kotlinpoet bug
 
       return argBuilderSpec.build()
@@ -88,8 +88,15 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
             .returns(ClassName.bestGuess(inputClazzName))
             .build()
 
-    fun determineTypeName(f: QSymbol): TypeName {
-      return if (f is QScalarType)
+    fun determineTypeName(f: QFieldInputArg): TypeName {
+      return if (f.type is QScalarType)
+        bestGuess((f.type as QScalarType).clazz.simpleName!!)
+      else
+        bestGuess(f.type.name.split(".").last())
+    }
+
+    fun determineTypeName(f: QField): TypeName {
+      return if (f.type is QScalarType)
         bestGuess((f.type as QScalarType).clazz.simpleName!!)
       else
         bestGuess(f.type.name.split(".").last())

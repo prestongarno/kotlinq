@@ -18,7 +18,7 @@ class GithubApiTest {
     content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(!(t is QUnknownType)) } }
     content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(!(field.type is QUnknownType)) } }
     content.types.forEach { type ->
-      type.interfaces.forEach { iface -> assert(!(iface is QUnknownType)) }
+      type.interfaces.forEach { iface -> assert(!(iface is QUnknownInterface)) }
     }
 
     // Why the actual **** is this not compiling?
