@@ -13,8 +13,8 @@ interface Friendable {
   val friendCount: Config<FriendCountArgs, Int>
   val friends: ConfigType<FriendsArgs, OtherUser>
 
-  class FriendsArgs(args: TypeArgBuilder<OtherUser, QModel<OtherUser>> = TypeArgBuilder.create())
-    : TypeArgBuilder<OtherUser, QModel<OtherUser>> by args {
+  class FriendsArgs(args: TypeArgBuilder = TypeArgBuilder.create<OtherUser, FriendsArgs>())
+    : TypeArgBuilder by args {
 
     fun first(value: Int) = apply { addArg("first", value) }
     fun after(value: String) = apply { addArg("after", value) }
@@ -36,12 +36,12 @@ object OtherUser : URL, Friendable, QType {
   override val friendCount by lazy { configStub(Friendable.FriendCountArgs()) }
   val name by lazy { stub<String>() }
   val enemies by lazy { typeStub<OtherUser>() }
-  override val friends by lazy { typeConfigStub(Friendable.FriendsArgs()) }
-  val address by lazy { typeConfigStub(AddressArgs()) }
+  override val friends by lazy { typeConfigStub<OtherUser, Friendable.FriendsArgs>(Friendable.FriendsArgs()) }
+  val address by lazy { typeConfigStub<Location, AddressArgs>(AddressArgs()) }
   override val url by lazy { stub<String>() }
 
-  class AddressArgs(args: TypeArgBuilder<Location, QModel<Location>> = TypeArgBuilder.create())
-    : TypeArgBuilder<Location, QModel<Location>> by args {
+  class AddressArgs(args: TypeArgBuilder = TypeArgBuilder.create<Location, AddressArgs>())
+    : TypeArgBuilder by args {
 
     fun language(value: String) = apply { addArg("language", value) }
   }
@@ -66,7 +66,7 @@ data class MyUser(
   val enemies: BasicUserInfo by model.enemies
       .init(::BasicUserInfo)
 
-  val address by model.address.config()
+  val address: SimpleAddress by model.address.config()
       .language(lang)
       .build { SimpleAddress("666 Hell Lane") }
 

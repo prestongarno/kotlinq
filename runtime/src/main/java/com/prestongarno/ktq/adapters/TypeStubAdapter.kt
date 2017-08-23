@@ -3,48 +3,50 @@ package com.prestongarno.ktq.adapters
 import com.prestongarno.ktq.*
 import kotlin.reflect.KProperty
 
-internal class TypeStubAdapter<
-    U : QModel<T>,
-    T : QType,
-    out A : TypeArgBuilder<T, QModel<T>>>(
+/**
+ * These generics might as well not exist, just another set of generics to remember
+ */
+internal class TypeStubAdapter<I : QType, P : QModel<I>, out A : TypeArgBuilder>(
 
-    private var argBuilder: A? = null)
+		private var argBuilder: A? = null)
 
-  : TypeStub<U, T>,
-    InitStub<T>,
-    ConfigType<A, T>,
-    TypeArgBuilder<T, QModel<T>> {
+	: TypeStub<P, I>,
+		InitStub<I>,
+		ConfigType<A, I>,
+		TypeArgBuilder {
 
-  override fun <U : QModel<T>> init(of: () -> U): TypeStub<U, T> {
-    result = of.invoke()
-    @Suppress("UNCHECKED_CAST")
-    return this as TypeStub<U, T>
-  }
+	override fun getValue(inst: QModel<*>, property: KProperty<*>): P {
+		return this.result!!
+	}
 
-  @Suppress("UNCHECKED_CAST")
-  override fun <U : QModel<T>> build(init: () -> U): TypeStub<U, T>
-      = apply { result = init.invoke() } as TypeStub<U, T>
+	override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> = this
 
-  val args: MutableMap<in String, Any> = HashMap()
+	override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I> {
+		result = of.invoke() as P
+		@Suppress("UNCHECKED_CAST")
+		return this as TypeStub<U, I>
+	}
 
-  var result: QModel<T>? = null
+	override fun <U, T> build(init: () -> U): TypeStub<U, T>
+			where U : QModel<T>,
+				  T : QType {
+		this.result = init.invoke() as P
+		return this as TypeStub<U, T>
+	}
 
-  override fun config(): A {
-    @Suppress("UNCHECKED_CAST")
-    return if (argBuilder == null)
-      this as A
-    else argBuilder as A
-  }
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<U, T> {
-    return this
-  }
+	val args: MutableMap<in String, Any> = HashMap()
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): U {
-    @Suppress("UNCHECKED_CAST") return result as U
-  }
+	var result: P? = null
 
-  override fun addArg(name: String, value: Any): TypeArgBuilder<T, QModel<T>>
-      = apply { args.put(name, value) }
+	override fun config(): A {
+		@Suppress("UNCHECKED_CAST")
+		return if (argBuilder == null)
+			this as A
+		else argBuilder as A
+	}
+
+	override fun addArg(name: String, value: Any): TypeArgBuilder
+			= apply { args.put(name, value) }
 
 }

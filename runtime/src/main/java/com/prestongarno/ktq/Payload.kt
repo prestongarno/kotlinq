@@ -12,14 +12,17 @@ interface ArgBuilder<T> {
   }
 }
 
-interface TypeArgBuilder<T : QType, U : QModel<T>> {
-  fun <U : QModel<T>> build(init: () -> U) : TypeStub<U, T>
+interface TypeArgBuilder {
 
-  fun addArg(name: String, value: Any): TypeArgBuilder<T, U>
+  fun <U, T> build(init: () -> U) : TypeStub<U, T>
+	where U : QModel<T>,
+          T : QType
+
+  fun addArg(name: String, value: Any): TypeArgBuilder
 
   companion object {
-    fun <T: QType, A: TypeArgBuilder<T, QModel<T>>> create() : TypeArgBuilder<T, QModel<T>>
-        = TypeStubAdapter<QModel<T>, T, A>()
+    fun <T, A> create(): TypeArgBuilder  where T: QType, A: TypeArgBuilder
+        = TypeStubAdapter<T, QModel<T>, A>()
   }
 }
 

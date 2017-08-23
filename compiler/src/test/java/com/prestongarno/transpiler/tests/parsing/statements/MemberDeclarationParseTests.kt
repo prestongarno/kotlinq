@@ -16,10 +16,10 @@ class MemberDeclarationParseTests {
 			assert(field.symbol == "foofield"
 					&& field.type == "Int"
 					&& field.inputArgs.size == 1
-					&& field.inputArgs[0]!!.symbol == "limitTo"
-					&& field.inputArgs[0]!!.type == "Int"
-					&& !field.inputArgs[0]!!.isList
-					&& field.inputArgs[0]!!.isNullable
+					&& field.inputArgs[0].symbol == "limitTo"
+					&& field.inputArgs[0].type == "Int"
+					&& !field.inputArgs[0].isList
+					&& field.inputArgs[0].isNullable
 					&& field.directive.first == "foo"
 					&& field.directive.second == "bar"
 					&& field.isList
@@ -106,10 +106,10 @@ class MemberDeclarationParseTests {
 			assert(field.symbol == "foofield"
 					&& field.type == "Object"
 					&& field.inputArgs.size == 1
-					&& field.inputArgs[0]!!.symbol == "query"
-					&& field.inputArgs[0]!!.type == "String"
-					&& !field.inputArgs[0]!!.isList
-					&& !field.inputArgs[0]!!.isNullable
+					&& field.inputArgs[0].symbol == "query"
+					&& field.inputArgs[0].type == "String"
+					&& !field.inputArgs[0].isList
+					&& !field.inputArgs[0].isNullable
 					&& field.isList
 					&& field.isNullable
 					&& field.directive.first == "directive"
@@ -133,10 +133,10 @@ class MemberDeclarationParseTests {
 		assert(baseFields[0].symbol == "foofield"
 				&& baseFields[0].type == "Object"
 				&& baseFields[0].inputArgs.size == 1
-				&& baseFields[0].inputArgs[0]!!.symbol == "query"
-				&& baseFields[0].inputArgs[0]!!.type == "String"
-				&& !baseFields[0].inputArgs[0]!!.isList
-				&& !baseFields[0].inputArgs[0]!!.isNullable
+				&& baseFields[0].inputArgs[0].symbol == "query"
+				&& baseFields[0].inputArgs[0].type == "String"
+				&& !baseFields[0].inputArgs[0].isList
+				&& !baseFields[0].inputArgs[0].isNullable
 				&& baseFields[0].isList
 				&& baseFields[0].isNullable
 				&& baseFields[0].directive.first == "directive"
@@ -145,10 +145,10 @@ class MemberDeclarationParseTests {
 		assert(baseFields[1].symbol == "fooFieldTwo"
 				&& baseFields[1].type == "Int"
 				&& baseFields[1].inputArgs.size == 1
-				&& baseFields[1].inputArgs[0]!!.symbol == "queryTwo"
-				&& baseFields[1].inputArgs[0]!!.type == "Object"
-				&& baseFields[1].inputArgs[0]!!.isList
-				&& !baseFields[1].inputArgs[0]!!.isNullable
+				&& baseFields[1].inputArgs[0].symbol == "queryTwo"
+				&& baseFields[1].inputArgs[0].type == "Object"
+				&& baseFields[1].inputArgs[0].isList
+				&& !baseFields[1].inputArgs[0].isNullable
 				&& !baseFields[1].isList
 				&& baseFields[1].isNullable
 				&& baseFields[1].directive.first == "directiveTwo"
