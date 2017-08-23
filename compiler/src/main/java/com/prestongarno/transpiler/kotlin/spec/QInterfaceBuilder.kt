@@ -9,37 +9,35 @@ import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
 
 class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
 
-  fun buildAll(): List<Pair<QInterfaceDef, TypeSpec>>
-      = allIfaces.mapTo(ArrayList(allIfaces.size), {
+  fun buildAll(): List<Pair<QInterfaceDef, TypeSpec>> = allIfaces.mapTo(ArrayList(allIfaces.size), {
     Pair(it, TypeSpec.interfaceBuilder(it.name)
         .addSuperinterface(QType::class)
         .addProperties(it.fields.map {
           buildAbstractProperty(it)
-        })
-        .addTypes(
-            it.fields.filter {
-              it.args.isNotEmpty()
-            }.map {
-              buildInputArgTypes(it)
-            })
-        .build())
-  }).sortedBy { it.first.name }
+        }).addTypes(
+        it.fields.filter {
+          it.args.isNotEmpty()
+        }.map {
+          buildInputArgTypes(it)
+        }).build())
+  })
 
   private fun buildAbstractProperty(field: QSymbol): PropertySpec {
     val typeName = determineTypeName(field)
-    val rawTypeName =
-        if (field.args.isEmpty()) {
-          if (field.type is QScalarType || field.type is QEnumDef)
-            ParameterizedTypeName.get(bestGuess("${Stub::class.simpleName}"), bestGuess(field.type.name))
-          else ParameterizedTypeName.get(bestGuess("${InitStub::class.simpleName}"), typeName)
-        } else {
-          val inputTypeName = bestGuess(inputBuilderClassName(field.name))
+    val rawTypeName = if (field.args.isEmpty()) {
+      if (field.type is QScalarType || field.type is QEnumDef)
+        ParameterizedTypeName.get(bestGuess("${Stub::class.simpleName}"), bestGuess(field.type.name))
+      else
+        ParameterizedTypeName.get(bestGuess("${InitStub::class.simpleName}"), typeName)
+    } else {
+      val inputTypeName = bestGuess(inputBuilderClassName(field.name))
+      val configName =
           if (field.type is QScalarType)
-            ParameterizedTypeName.get(bestGuess("${Config::class.simpleName}"), inputTypeName, typeName)
-          else {
-            ParameterizedTypeName.get(bestGuess("${ConfigType::class.simpleName}"), inputTypeName, typeName)
-          }
-        }
+            Config::class.simpleName
+          else
+            ConfigType::class.simpleName
+      ParameterizedTypeName.get(bestGuess("$configName"), typeName, inputTypeName)
+    }
     return PropertySpec.builder(field.name, rawTypeName).build()
   }
 
@@ -47,25 +45,23 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
 
     fun buildInputArgTypes(field: QSymbol): TypeSpec {
 
-      if(field.type is QEnumDef)
+      if (field.type is QEnumDef)
         println(field.args)
 
       val inputClazzName = inputBuilderClassName(field.name)
-      val rawType = if (field.type is QScalarType) ArgBuilder::class else TypeArgBuilder::class
 
-      val fieldType = determineTypeName(field)
-      val argBuilderSig = ParameterizedTypeName.get(bestGuess("${rawType.simpleName}"), fieldType)
-      val typeArgBuilderSig = ParameterizedTypeName.get(bestGuess("TypeArgBuilder"),
-          fieldType,
-          ParameterizedTypeName.get(bestGuess("QModel"),
-              fieldType))
+      val rawType =
+          if (field.type is QScalarType)
+            ArgBuilder::class
+          else
+            TypeArgBuilder::class
 
-      val paramSignature = if (rawType == ArgBuilder::class) argBuilderSig else typeArgBuilderSig
+      val paramSignature = if (rawType == ArgBuilder::class) ArgBuilder::class else TypeArgBuilder::class
 
       val argBuilderSpec = TypeSpec.classBuilder(inputClazzName)
           .primaryConstructor(FunSpec.constructorBuilder()
               .addParameter(ParameterSpec.builder("args", paramSignature)
-                  .defaultValue("${rawType.simpleName}.create()")
+                  .defaultValue("${rawType.simpleName}.create<${determineTypeName(field)}, $inputClazzName>()")
                   .build())
               .build())
           .addSuperinterface(ClassName.bestGuess("${paramSignature.toString()
@@ -73,8 +69,11 @@ class QInterfaceBuilder(private val allIfaces: List<QInterfaceDef>) {
               .replace("<", QCompiler.LESS_THAN)
               .replace(">", QCompiler.GREATER_THAN)}_by_args"))
 
-      field.args.map { createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it), it as QFieldInputArg, inputClazzName) }
-          .let { argBuilderSpec.addFunctions(it) }
+      field.args.map {
+        createBuilderMethodUsingPoetBuilderMethod(determineTypeName(it),
+            it as QFieldInputArg,
+            inputClazzName)
+      }.let { argBuilderSpec.addFunctions(it) } // kotlinpoet bug
 
       return argBuilderSpec.build()
     }

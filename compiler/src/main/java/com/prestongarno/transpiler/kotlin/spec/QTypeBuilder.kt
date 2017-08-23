@@ -36,7 +36,7 @@ class QTypeBuilder {
     val type: ParameterizedTypeName = getPropertyType(field)
     val result = PropertySpec.builder(field.name, type)
         .delegate(CodeBlock.of(" lazy { ${initFunctionCall(field, type)} } "))
-    if(field.inheritedType != null)
+    if (field.inheritedType != null)
       result.addModifiers(KModifier.OVERRIDE)
     return result.build()
   }
@@ -45,9 +45,9 @@ class QTypeBuilder {
     val paramType = bestGuess(field.type.name)
     return when (type.rawType.asNonNullable().simpleName()) {
       "${Stub::class.simpleName}" -> "stub<$paramType>()"
-      "${InitStub::class.simpleName}" -> "typeStub<$paramType>()" /*<${bestGuess(field.type.name)}>*/
-      "${Config::class.simpleName}" -> "configStub(${inputClazzTypeName(field)}())"
-      "${ConfigType::class.simpleName}" -> "typeConfigStub(${inputClazzTypeName(field)}())"
+      "${InitStub::class.simpleName}" -> "typeStub<$paramType>()"
+      "${Config::class.simpleName}" -> "configStub<$paramType, ${inputClazzTypeName(field)}>(${inputClazzTypeName(field)}())"
+      "${ConfigType::class.simpleName}" -> "typeConfigStub<$paramType, ${inputClazzTypeName(field)}>(${inputClazzTypeName(field)}())"
       else -> throw IllegalStateException("unexpected stub type '$type")
     }
   }
@@ -68,21 +68,14 @@ class QTypeBuilder {
 
   private fun configStubName(field: QSymbol): ParameterizedTypeName {
     val inputArgTypeName = inputClazzTypeName(field)
-    return if (field.type is QScalarType || field.type is QEnumDef)
-      ParameterizedTypeName.get(
-          bestGuess("${Config::class.simpleName}"),
-          inputArgTypeName,
-          bestGuess(field.type.name))
-    else {
-      ParameterizedTypeName.get(
-          bestGuess("${ConfigType::class.simpleName}"),
-          inputArgTypeName,
-          bestGuess(field.type.name))
-    }
+    val clazz = if (field.type is QScalarType || field.type is QEnumDef)
+      Config::class.simpleName
+    else
+      ConfigType::class.simpleName
+    return ParameterizedTypeName.get(bestGuess("$clazz"), bestGuess(field.type.name), inputArgTypeName)
   }
 
   /** This figures out if the field is an inherited field from an interface with required nested Arg/TypeArgBuilder type name
-   * TODO probably carry this metadata on the field itself at the `Attribution` stage
    */
   private fun inputClazzTypeName(field: QSymbol): TypeName {
     return if (field.inheritedType != null)

@@ -3,12 +3,12 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.adapters.ScalarStub
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 
-interface ArgBuilder<T> {
-  fun addArg(name: String, value: Any): ArgBuilder<*>
-  fun build(): Stub<T>
+interface ArgBuilder {
+  fun addArg(name: String, value: Any): ArgBuilder
+  fun <T> build(): Stub<T>
 
   companion object {
-    fun <T> create(): ArgBuilder<T> = ScalarStub()
+    fun <T, A: ArgBuilder> create(): ArgBuilder = ScalarStub<T, A>()
   }
 }
 

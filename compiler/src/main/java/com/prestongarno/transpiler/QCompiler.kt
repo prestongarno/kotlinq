@@ -39,15 +39,13 @@ class QCompiler {
     comp.inputs.map { ktBuilder.addType(InputTypeBuilder.createInputSpec(it, rootPackageName)) }
     createEnums(comp.enums).map { ktBuilder.addType(it) }
 
-    val duplicates = comp.types.parallelStream().map { type ->
+    //TODO check name resolution issues in inherited fields
+/*    val duplicates = comp.types.parallelStream().map { type ->
       type.fields.filter { it.inheritedType != null }
           .map { checkDuplicateCount(it, type.interfaces.map { it as QInterfaceDef })
           }.filter { it.isNotEmpty() }
           .toList()
-    }.toList()
-
-    println(duplicates.joinToString { "\n" })
-
+    }.toList()*/
 
     val suppressedWarnings = listOf(
         "@file:Suppress(\"unused\")"

@@ -3,10 +3,10 @@ package com.prestongarno.ktq.adapters
 import com.prestongarno.ktq.*
 import kotlin.reflect.KProperty
 
-internal class ScalarStub<T, A: ArgBuilder<T>>(val argBuilder: A? = null) :
+internal class ScalarStub<T, A: ArgBuilder>(val argBuilder: A? = null) :
     Stub<T>,
-    Config<A, T>,
-    ArgBuilder<T> {
+    Config<T, A>,
+    ArgBuilder {
 
   @Suppress("UNCHECKED_CAST") override fun config(): A = argBuilder ?: ScalarStub<T, A>() as A
 
@@ -18,9 +18,9 @@ internal class ScalarStub<T, A: ArgBuilder<T>>(val argBuilder: A? = null) :
 
   val values: MutableMap<in String, Any> = HashMap()
 
-  @Suppress("UNCHECKED_CAST") override fun build() : Stub<T> = ScalarStub()
+  @Suppress("UNCHECKED_CAST") override fun <T> build() : Stub<T> = ScalarStub<T, A>()
 
-  override fun addArg(name: String, value: Any): ArgBuilder<T> = apply { values.put(name, value)  }
+  override fun addArg(name: String, value: Any): ArgBuilder = apply { values.put(name, value)  }
 
   override fun toString(): String = values.map { "${it.key} : ${formatAs(it.value)}" }.joinToString { "\n" }
 

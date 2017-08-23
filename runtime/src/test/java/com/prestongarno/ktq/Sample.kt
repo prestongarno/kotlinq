@@ -10,8 +10,8 @@ interface URL {
 
 interface Friendable {
 
-  val friendCount: Config<FriendCountArgs, Int>
-  val friends: ConfigType<FriendsArgs, OtherUser>
+  val friendCount: Config<Int, Friendable.FriendCountArgs>
+  val friends: ConfigType<OtherUser, FriendsArgs>
 
   class FriendsArgs(args: TypeArgBuilder = TypeArgBuilder.create<OtherUser, FriendsArgs>())
     : TypeArgBuilder by args {
@@ -20,7 +20,7 @@ interface Friendable {
     fun after(value: String) = apply { addArg("after", value) }
     fun startAt(value: Int) = apply { addArg("startAt", value) }
   }
-  class FriendCountArgs(args: ArgBuilder<Int> = ArgBuilder.create()) : ArgBuilder<Int> by args
+  class FriendCountArgs(args: ArgBuilder = ArgBuilder.create<Int, FriendCountArgs>()) : ArgBuilder by args
 }
 
 object Location : QType {
@@ -33,7 +33,7 @@ object Location : QType {
 }
 
 object OtherUser : URL, Friendable, QType {
-  override val friendCount by lazy { configStub(Friendable.FriendCountArgs()) }
+  override val friendCount by lazy { configStub<Int, Friendable.FriendCountArgs>(Friendable.FriendCountArgs()) }
   val name by lazy { stub<String>() }
   val enemies by lazy { typeStub<OtherUser>() }
   override val friends by lazy { typeConfigStub<OtherUser, Friendable.FriendsArgs>(Friendable.FriendsArgs()) }

@@ -12,7 +12,7 @@ internal class TypeStubAdapter<I : QType, P : QModel<I>, out A : TypeArgBuilder>
 
 	: TypeStub<P, I>,
 		InitStub<I>,
-		ConfigType<A, I>,
+		ConfigType<I, A>,
 		TypeArgBuilder {
 
 	override fun getValue(inst: QModel<*>, property: KProperty<*>): P {
