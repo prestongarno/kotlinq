@@ -21,26 +21,24 @@ object Attr {
    * objects (the type each field is tagged with throughout the parsing process)
    */
   private fun verifyTypesToInterfaces(types: List<QTypeDef>, ifaces: List<QInterfaceDef>) {
-    val ifaceMap = HashMap<String, QInterfaceDef>(ifaces.size + 1, 0.99f)
-    ifaces.forEach { iface -> ifaceMap.put(iface.name, iface) }
+    val globalIface = HashMap<String, QInterfaceDef>(ifaces.size + 1, 0.99f)
+    ifaces.forEach { iface -> globalIface.put(iface.name, iface) }
 
     types.forEach { t ->
       val attrInterfaces: LinkedList<QInterfaceDef> = LinkedList()
       val fields = t.fields.map { sym -> Pair(sym.name, sym) }.toMap()
 
-      t.interfaces.forEach { iface ->
-        val attrIf = ifaceMap.get(iface.name) ?: throw IllegalArgumentException("No interface definition " +
+      t.interfaces.map { iface ->
+        val attrIf = globalIface[iface.name] ?: throw IllegalArgumentException("No interface definition " +
             "'${iface.name}' found (declared on type ${t.name})")
         attrInterfaces.add(0, attrIf)
         attrIf.fields.forEach { field ->
-          val inherited = fields[field.name]
-          if (inherited != null) inherited.inheritedFrom.add(attrIf)
-          else
-            throw IllegalArgumentException("Type '${t.name}' implements ${attrIf.name} " +
-                "but does not contain a field named '${field.name}' in its declaration")
+          fields[field.name]?.inheritedFrom?.add(attrIf) ?:
+              throw IllegalArgumentException("Type '${t.name}' implements ${attrIf.name} " +
+                  "but does not contain a field named '${field.name}' in its declaration")
         }
-      }
-      t.interfaces = attrInterfaces
+        attrIf
+      }.also { t.interfaces = attrInterfaces }
     }
   }
 
@@ -72,24 +70,26 @@ object Attr {
     return comp
   }
 
-  private fun checkDiamondOverride(field: QField, type: QStatefulType)
+  private fun checkDiamondOverride(fieldOnType: QField, type: QStatefulType)
       : Optional<Pair<QField, Pair<QTypeDef, List<QInterfaceDef>>>> {
     if (type !is QTypeDef)
       return Optional.empty()
     type.interfaces.map { iface ->
 
       iface.fields.filter {
-        it.name == field.name
+        it.name == fieldOnType.name
       }.map {
         Pair(iface, it)
       }
     }.flatten().also { dup ->
       if (dup.size > 1) {
-        if (field.args.isNotEmpty()) {
-          println("Diamond on: [ ${type.name}.${field.name}  ] from -> ${dup.joinToString { it.first.name }}")
+        if (fieldOnType.args.isNotEmpty()) {
+          fieldOnType.flag(QField.BuilderStatus.TOP_LEVEL)
+          dup.forEach { it.second.flag(QField.BuilderStatus.TOP_LEVEL) }
+          println("Diamond on: [ ${type.name}.${fieldOnType.name}  ] from -> ${dup.joinToString { it.first.name }}")
         }
 
-        return Optional.of(Pair(field, Pair(type, dup.map { (first) -> first })))
+        return Optional.of(Pair(fieldOnType, Pair(type, dup.map { (first) -> first })))
 
       }
     }

@@ -27,7 +27,7 @@ class QCompilationUnit(val types: List<QTypeDef>,
     return whyThis
   }
 
-  val all: Array<QDefinedType> = addAllStuff(types, ifaces, unions, inputs, scalar, unions, enums).toTypedArray()
+  val all: Array<QDefinedType> = addAllStuff(types, ifaces, unions, inputs, scalar, enums).toTypedArray()
 
   fun getAllTypes(): List<TypeSpec> =
       resolveConflicts().toMutableList()
@@ -84,11 +84,6 @@ class QCompilationUnit(val types: List<QTypeDef>,
 
       val baseInputClazzName = inputBuilderClassName(symbol.name)
       val superclazzType: TypeName = ClassName.bestGuess("Base" + baseInputClazzName)
-
-      // Tag the field as no inner class built on the interface
-      pair.second.forEach {
-        it.tagMultiOverride(symbol)
-      }
       // 1) check that all multi-inherited fields are:
       //      i ) same type
       //      ii) concrete field declares all required args as the iface
@@ -98,19 +93,6 @@ class QCompilationUnit(val types: List<QTypeDef>,
       // need to build subclass for fields that have input argument(s)
       if (symbol.args.isNotEmpty()) {
         // 2) Add an argument builder class inside of the type/class for that particular field, extends #3
-        val def = pair.first
-        def.setKotlinSpec(QTypeDef(
-            def.name,
-            def.interfaces,
-            def.fields.minus(symbol)
-        ).toKotlin().toBuilder()
-            .addProperty(symbol.toKotlin().first)
-            .addType(buildArgBuilder(ClassName.bestGuess(baseInputClazzName), symbol, false)
-                .superclass(superclazzType)
-                .addSuperclassConstructorParameter(
-                    CodeBlock.of("args")).build())
-            .build()
-        )
         // 3) Create top-level abstract builder class which unifies multi-override difference
         buildArgBuilder(superclazzType, QField(
             symbol.name,

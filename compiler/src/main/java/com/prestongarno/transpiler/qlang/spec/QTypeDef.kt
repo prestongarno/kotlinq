@@ -14,10 +14,6 @@ import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
 class QTypeDef(name: String, var interfaces: List<QInterfaceDef>, fields: List<QField>) : QStatefulType(name, fields) {
 
   override fun toKotlin(): TypeSpec {
-    TODO("""
-      Tag properties themselves in to take advantage of the paralellized O(n^2) search we need
-      to do for diamond overrides on the entire file
-    """.trimIndent())
     return createType()
   }
 
@@ -29,12 +25,13 @@ class QTypeDef(name: String, var interfaces: List<QInterfaceDef>, fields: List<Q
         .addSuperinterface(QType::class)
         .addSuperinterfaces(this.interfaces.map { ClassName.bestGuess(it.name) })
     this.fields.map {
-      createProperty(it)
+      //createProperty(it)
+      it.toKotlin().first
     }.also { result.addProperties(it) }
 
     this.fields.filter {
-      it.inheritedFrom.isEmpty() && it.args.isNotEmpty()
-    }.forEach { result.addType(buildArgBuilder(field = it).build()) }
+      it.getStatus() != QField.BuilderStatus.NONE && it.toKotlin().second.isPresent
+    }.forEach { result.addType(it.toKotlin().second.get()) }
 
     return result.build()
   }
@@ -86,16 +83,6 @@ class QTypeDef(name: String, var interfaces: List<QInterfaceDef>, fields: List<Q
    *
    * Name the top-level superclass FIELD_NAME + BASE
    */
-  private fun inputClazzTypeName(field: QField): TypeName {
-    return if (field.inheritedFrom.size == 1)
-      ClassName.bestGuess(classNameString = field.inheritedFrom[0].name)
-          .nestedClass(name = inputBuilderClassName(field.name))
-    else if(field.inheritedFrom.size > 1)
-      ClassName.bestGuess("Base" + inputBuilderClassName(field.name))
-    else
-      ClassName.bestGuess(classNameString = inputBuilderClassName(field.name))
-  }
-  fun setKotlinSpec(kotlinSpec: TypeSpec) = apply { this.kotlinSpec = kotlinSpec }
 
   override fun equals(other: Any?): Boolean = this === other
   override fun hashCode(): Int {
