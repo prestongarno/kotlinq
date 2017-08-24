@@ -34,8 +34,7 @@ object Attr {
         attrInterfaces.add(0, attrIf)
         attrIf.fields.forEach { field ->
           val inherited = fields[field.name]
-          if (inherited != null)
-            inherited.inheritedFrom.add(attrIf)
+          if (inherited != null) inherited.inheritedFrom.add(attrIf)
           else
             throw IllegalArgumentException("Type '${t.name}' implements ${attrIf.name} " +
                 "but does not contain a field named '${field.name}' in its declaration")
@@ -57,9 +56,11 @@ object Attr {
 
   private fun attrFieldTypes(types: List<QStatefulType>, comp: QCompilationUnit): QCompilationUnit {
     types.parallelStream().map { type ->
-      type.fields.map { field -> field.type = comp.find(field.type.name) ?:
+      type.fields.map { field ->
+        field.type = comp.find(field.type.name) ?:
             throw IllegalArgumentException("Unknown type '${field.type.name}' on field '${field.name}' in type ${type.name}")
-        field.args.forEach { arg -> arg.type = comp.find(arg.type.name) ?:
+        field.args.forEach { arg ->
+          arg.type = comp.find(arg.type.name) ?:
               throw IllegalArgumentException("Unknown type '${arg.type.name}' on field '${field.name}', argument '${arg.name}', in type ${type.name}")
         }
         checkDiamondOverride(field, type)
@@ -67,7 +68,7 @@ object Attr {
     }.flatMap { it.stream() }
         .map { it.get() }
         .toList()
-        .also { comp.confictOverrides.putAll(it) }
+        .also { comp.addConflicts(it) }
     return comp
   }
 

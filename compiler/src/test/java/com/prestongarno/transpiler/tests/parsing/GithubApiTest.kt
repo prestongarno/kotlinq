@@ -25,13 +25,13 @@ class GithubApiTest {
     val allF: List<QDefinedType> = content.all.toList()
     val whatTheFIsTypeInference: List<QStatefulType> = allF.filter { foo: QDefinedType -> foo is QStatefulType }.map { fook: QDefinedType -> fook as QStatefulType }
     whatTheFIsTypeInference.map { f: QStatefulType ->
-      f.fields.forEach { fooU: QSymbol ->
+      f.fields.forEach { fooU: QField ->
         assert(!(fooU.type is QUnknownType))
         fooU.args.forEach { foo -> assert(!(foo.type is QUnknownType)) }
       }
     }
 
-    qCompiler.generateKotlinTypes(content)//, "/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+    qCompiler.generateKotlinTypes(content, "/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test

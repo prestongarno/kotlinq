@@ -16,7 +16,7 @@ class QLParser {
 
 	fun parse(ioStream: InputStream): QCompilationUnit {
 
-		val all = LinkedList<QSchemaType>()
+		val all = LinkedList<QSchemaType<*>>()
 
 		val scanner = Scanner(ioStream)
 
@@ -33,7 +33,7 @@ class QLParser {
 					scanner.useDelimiter("[a-zA-Z0-9_]".toRegex().pattern).next()
 					val block = scanner.nextLine()
 					all.add(0, QUnionTypeDef(name, QLexer.unionFields(block)
-							.map { str -> QUnknownType(str) }))
+              .map { str -> QUnknownType(str) }))
 				}
 				ENUM -> all.add(0, QEnumDef(name, QLexer.enumFields(scanner.useDelimiter("}").next())))
 				TYPE -> {
@@ -47,19 +47,19 @@ class QLParser {
 			}
 			scanner.useDelimiter("[a-zA-Z]").next()
 		}
-		return QCompilationUnit(all.filter { q -> q is QTypeDef }.map{ q -> q as QTypeDef},
-				all.filter { q -> q is QInterfaceDef }.map{ q -> q as QInterfaceDef},
-				all.filter { q -> q is QInputType }.map{ q -> q as QInputType},
-				all.filter { q -> q is QScalarType }.map{ q -> q as QScalarType},
-				all.filter { q -> q is QEnumDef }.map{ q -> q as QEnumDef},
-				all.filter { q -> q is QUnionTypeDef }.map{ q -> q as QUnionTypeDef})
+		return QCompilationUnit(all.filter { q -> q is QTypeDef }.map{ q -> q as QTypeDef },
+				all.filter { q -> q is QInterfaceDef }.map{ q -> q as QInterfaceDef },
+				all.filter { q -> q is QInputType }.map{ q -> q as QInputType },
+				all.filter { q -> q is QScalarType }.map{ q -> q as QScalarType },
+				all.filter { q -> q is QEnumDef }.map{ q -> q as QEnumDef },
+				all.filter { q -> q is QUnionTypeDef }.map{ q -> q as QUnionTypeDef })
 	}
 
-	private fun mapLexerFieldsToSymbols(fields: List<Field>): List<QSymbol> = fields.map { (symbol, inputArgs, type, directive, isList, isNullable) ->
-		QField(symbol, QUnknownType(type),
-				inputArgs.map { arg -> QFieldInputArg(arg.symbol, QUnknownType(arg.type), arg.defaultValue, arg.isList, arg.isNullable) },
-				QDirectiveSymbol(QUnknownType(directive.first), directive.second),
-				isList,
-				isNullable)
+	private fun mapLexerFieldsToSymbols(fields: List<Field>): List<QField> = fields.map { (symbol, inputArgs, type, directive, isList, isNullable) ->
+    QField(symbol, QUnknownType(type),
+        inputArgs.map { arg -> QFieldInputArg(arg.symbol, QUnknownType(arg.type), arg.defaultValue, arg.isList, arg.isNullable) },
+        QDirectiveSymbol(QUnknownType(directive.first), directive.second),
+        isList,
+        isNullable)
 	}
 }

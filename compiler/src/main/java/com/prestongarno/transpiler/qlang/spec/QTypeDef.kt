@@ -1,37 +1,45 @@
-package com.prestongarno.transpiler.kotlin.spec
+package com.prestongarno.transpiler.qlang.spec
 
+import com.prestongarno.ktq.QType
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import com.prestongarno.ktq.*
-import com.prestongarno.transpiler.qlang.spec.*
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
-import com.prestongarno.ktq.QType
-import com.prestongarno.transpiler.QCompilationUnit
-import com.prestongarno.transpiler.kotlin.spec.QInterfaceBuilder.Companion.determineTypeName
-import com.prestongarno.transpiler.kotlin.spec.QInterfaceBuilder.Companion.buildInputArgTypes
 
-class QTypeBuilder {
+/** Type definition class
+ *
+ */
+class QTypeDef(name: String, var interfaces: List<QInterfaceDef>, fields: List<QField>) : QStatefulType(name, fields) {
 
-  fun createType(qType: QTypeDef, comp: QCompilationUnit): TypeSpec {
+  override fun toKotlin(): TypeSpec {
+    TODO("""
+      Tag properties themselves in to take advantage of the paralellized O(n^2) search we need
+      to do for diamond overrides on the entire file
+    """.trimIndent())
+    return createType()
+  }
 
-    val result = TypeSpec.objectBuilder(qType.name)
+  private fun createType(): TypeSpec {
+    if (kotlinSpec != null)
+      return kotlinSpec!!
+
+    val result = TypeSpec.objectBuilder(this.name)
         .addSuperinterface(QType::class)
-        .addSuperinterfaces(qType.interfaces.map {
-          ClassName.bestGuess(it.name)
-        })
-    qType.fields.map {
+        .addSuperinterfaces(this.interfaces.map { ClassName.bestGuess(it.name) })
+    this.fields.map {
       createProperty(it)
-    }.also {
-      result.addProperties(it)
-    }
+    }.also { result.addProperties(it) }
 
-    qType.fields.filter {
-      it.inheritedFrom.isEmpty() && it.args.isNotEmpty() && comp.confictOverrides[it] == null
-    }.forEach { result.addType(buildInputArgTypes(field = it)) }
+    this.fields.filter {
+      it.inheritedFrom.isEmpty() && it.args.isNotEmpty()
+    }.forEach { result.addType(buildArgBuilder(field = it).build()) }
 
     return result.build()
   }
 
-  private fun createProperty(field: QField): PropertySpec {
+  fun createProperty(field: QField): PropertySpec {
     val type: ParameterizedTypeName = getPropertyType(field)
     val result = PropertySpec.builder(field.name, type)
         .delegate(CodeBlock.of(" lazy { ${initFunctionCall(field, type)} } "))
@@ -79,17 +87,19 @@ class QTypeBuilder {
    * Name the top-level superclass FIELD_NAME + BASE
    */
   private fun inputClazzTypeName(field: QField): TypeName {
-    return if (field.inheritedFrom.isNotEmpty())
-          bestGuess(QInterfaceBuilder.inputBuilderClassName(field.name) + "Base")
-    else ClassName.bestGuess(classNameString = QInterfaceBuilder.inputBuilderClassName(field.name))
+    return if (field.inheritedFrom.size == 1)
+      ClassName.bestGuess(classNameString = field.inheritedFrom[0].name)
+          .nestedClass(name = inputBuilderClassName(field.name))
+    else if(field.inheritedFrom.size > 1)
+      ClassName.bestGuess("Base" + inputBuilderClassName(field.name))
+    else
+      ClassName.bestGuess(classNameString = inputBuilderClassName(field.name))
   }
+  fun setKotlinSpec(kotlinSpec: TypeSpec) = apply { this.kotlinSpec = kotlinSpec }
 
+  override fun equals(other: Any?): Boolean = this === other
+  override fun hashCode(): Int {
+    return interfaces.hashCode()
+  }
 }
-
-
-
-
-
-
-
 
