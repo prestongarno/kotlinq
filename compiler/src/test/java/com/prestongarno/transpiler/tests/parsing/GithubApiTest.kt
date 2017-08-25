@@ -3,6 +3,7 @@ package com.prestongarno.transpiler.tests.parsing
 import com.prestongarno.transpiler.QCompiler
 import com.prestongarno.transpiler.QLParser
 import com.prestongarno.transpiler.qlang.spec.*
+import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.junit.Test
 import java.io.File
 import java.util.*
@@ -13,35 +14,36 @@ class GithubApiTest {
   @Test
   fun schemaTest() {
     val file = this::class.java.classLoader.getResource("graphql.schema.graphqls")
-    val qCompiler = QCompiler()
-    val content = qCompiler.compile(File(file.path))
-    content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(t !is QUnknownType) } }
-    content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(field.type !is QUnknownType) } }
-    content.types.forEach { type ->
-      type.interfaces.forEach { iface -> assert(!(iface is QUnknownInterface)) }
-    }
 
-    content.stateful.forEach { f ->
-      f.fields.forEach { fooU: QField ->
-        assert(!(fooU.type is QUnknownType))
-        fooU.args.forEach { foo -> assert(!(foo.type is QUnknownType)) }
-      }
-    }
-
-    content.stateful.stream()
-        .map { t ->
-          t.fields.map {
-            Pair(t, it)
+    QCompiler.initialize("GitHubGraphql")
+        .packageName("com.prestongarno.ktq.github")
+        .compile(File(file.toURI())) { content ->
+          content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(t !is QUnknownType) } }
+          content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(field.type !is QUnknownType) } }
+          content.types.forEach { type ->
+            type.interfaces.forEach { iface -> assert(!(iface is QUnknownInterface)) }
           }
-        }.flatMap { it.stream() }
-        .forEach { (type, field) ->
-          when (type) {
-            is QTypeDef -> require(!field.abstract)
-            is QInterfaceDef -> require(field.abstract)
-          }
-        }
 
-    qCompiler.generateKotlinTypes(content)//, "/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+          content.stateful.forEach { f ->
+            f.fields.forEach { fooU: QField ->
+              assert(!(fooU.type is QUnknownType))
+              fooU.args.forEach { foo -> assert(!(foo.type is QUnknownType)) }
+            }
+          }
+
+          content.stateful.stream()
+              .map { t ->
+                t.fields.map {
+                  Pair(t, it)
+                }
+              }.flatMap { it.stream() }
+              .forEach { (type, field) ->
+                when (type) {
+                  is QTypeDef -> require(!field.abstract)
+                  is QInterfaceDef -> require(field.abstract)
+                }
+              }
+        }//.result{}.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test
@@ -363,17 +365,17 @@ class GithubApiTest {
 
   companion object {
     fun checkField(field: QField,
-        expectName: String,
-        expectType: String,
-        expectIsList: Boolean,
-        expectIsNullable: Boolean,
-        expectArgCount: Int = 0,
-        expectArgNames: List<String> = empty(),
-        expectArgTypes: List<String> = empty(),
-        expectArgIsList: List<Boolean> = empty(),
-        expectArgNullable: List<Boolean> = empty(),
-        expectArgDefValue: List<String> = empty(),
-        expectDirective: Pair<String, String>? = null): Boolean {
+                   expectName: String,
+                   expectType: String,
+                   expectIsList: Boolean,
+                   expectIsNullable: Boolean,
+                   expectArgCount: Int = 0,
+                   expectArgNames: List<String> = empty(),
+                   expectArgTypes: List<String> = empty(),
+                   expectArgIsList: List<Boolean> = empty(),
+                   expectArgNullable: List<Boolean> = empty(),
+                   expectArgDefValue: List<String> = empty(),
+                   expectDirective: Pair<String, String>? = null): Boolean {
 
       assertEquals(field.name, expectName, "Expected name '$expectName' but was '${field.name}'")
       assertEquals(field.type.name, expectType, "Expected '$expectName' type '$expectType' but was '${field.type.name}'")

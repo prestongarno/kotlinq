@@ -3,24 +3,39 @@ package com.prestongarno.transpiler
 import com.squareup.kotlinpoet.*
 import java.io.File
 
-class QCompiler {
+class QCompiler internal constructor(val source: File, builder: QCompiler.Builder) {
+
+  val packageName = builder.packageName
+  val outputName = builder.outputName
+  var compilation: QCompilationUnit? = null
+  var rawResult: String = ""
 
   companion object {
+    fun initialize(destination: String = "GraphTypes") = Builder(destination)
     // String literals and replacement because of missing kotlinpoet features
     val LESS_THAN = "LESS_THAN"
     val GREATER_THAN = "GREATER_THAN"
     val COMMA = "_COMMA_"
   }
 
-  fun compile(file: File): QCompilationUnit = Attr.attributeCompilationUnit(QLParser().parse(file))
+  class Builder internal constructor(internal var outputName: String) {
+    internal var packageName: String = "com.prestongarno.ktq"
 
-  fun generateKotlinTypes(comp: QCompilationUnit,
-      outputPath: String = "",
-      rootPackageName: String = "com.prestongarno.ktq",
-      fileName: String = "GraphQlModel") {
+    fun packageName(name: String) = apply { this.packageName = name }
 
-    val ktBuilder = KotlinFile.builder(rootPackageName, fileName)
-    comp.getAllTypes().forEach { ktBuilder.addType(it) }
+    fun compile(file: File, result: (QCompilationUnit) -> Unit = {}): QCompiler {
+      val qCompiler = QCompiler(file, this)
+      qCompiler.compile()
+      result(qCompiler.compile());
+      return qCompiler
+    }
+  }
+
+  fun result(consumer: (String) -> Unit) = apply {
+    val ktBuilder = KotlinFile.builder(packageName, outputName)
+    compilation?.getAllTypes()?.forEach {
+      ktBuilder.addType(it)
+    }
 
     // Probably should inherit input arg classes to prevent chance of concrete-type adding arguments failing
     val suppressedWarnings = listOf(
@@ -37,10 +52,20 @@ class QCompiler {
             .replace("> \\{\n.*stub\\((.*)\\)\n.*}".toRegex(), "> = stub($1)"))
             .replace(" = null\n".toRegex(), "? = null")
             .replace("\\nimport class(.*)by args".toRegex(), "\nimport$1")
-    if (outputPath.trim().isNotEmpty())
-      File("$outputPath/${rootPackageName.replace(".", "/")}/$fileName.kt").printWriter().use { out ->
-        out.write(result)
+    this.rawResult = result
+    consumer(result)
+  }
+
+  fun writeToFile(destination: String) = apply {
+    if (destination.trim().isNotEmpty())
+      File("$destination/${packageName.replace(".", "/")}/$outputName.kt").printWriter().use { out ->
+        out.write(rawResult)
       }
+  }
+
+  fun compile(): QCompilationUnit {
+    this.compilation = Attr.attributeCompilationUnit(QLParser().parse(this.source))
+    return compilation!!
   }
 }
 

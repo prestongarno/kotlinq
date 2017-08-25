@@ -1,6 +1,8 @@
 @file:Suppress("unused")
 
-package com.prestongarno.ktq
+package com.prestongarno.ktq.github
+
+import com.prestongarno.ktq.*
 
 abstract class BaseAvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, BaseAvatarUrlArgs>()) : ArgBuilder by args
 
