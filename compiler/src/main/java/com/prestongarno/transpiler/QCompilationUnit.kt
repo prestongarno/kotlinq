@@ -1,10 +1,9 @@
 package com.prestongarno.transpiler
 
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.TypeArgBuilder
 import com.prestongarno.transpiler.qlang.spec.*
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import java.util.*
 
 /**
@@ -33,8 +32,7 @@ class QCompilationUnit(val types: List<QTypeDef>,
       resolveConflicts().toMutableList()
           .also { lizt ->
             lizt.addAll(all.map { it.toKotlin() })
-          }
-          .sortedBy { it::class.simpleName }
+          }.sortedBy { it::class.simpleName }
 
   private val conflictOverrides = mutableMapOf<QField, Pair<QTypeDef, List<QInterfaceDef>>>()
 
@@ -81,7 +79,6 @@ class QCompilationUnit(val types: List<QTypeDef>,
 
   private fun resolveConflicts(): List<TypeSpec> {
     return this.conflictOverrides.toList().mapNotNull { (symbol, pair: Pair<QTypeDef, List<QInterfaceDef>>) ->
-
       val baseInputClazzName = inputBuilderClassName(symbol.name)
       val superclazzType: TypeName = ClassName.bestGuess("Base" + baseInputClazzName)
       // 1) check that all multi-inherited fields are:
@@ -94,13 +91,20 @@ class QCompilationUnit(val types: List<QTypeDef>,
       if (symbol.args.isNotEmpty()) {
         // 2) Add an argument builder class inside of the type/class for that particular field, extends #3
         // 3) Create top-level abstract builder class which unifies multi-override difference
-        buildArgBuilder(superclazzType, QField(
+        val dummy = QField(
             symbol.name,
             symbol.type,
             emptyList(), // TODO filter all base arguments and declare in superclass for muh polymorphism
             symbol.directive,
             symbol.isList,
-            symbol.nullable), true).build()
+            symbol.nullable).also { it.flag(QField.BuilderStatus.TOP_LEVEL); it.abstract(true) }
+        buildArgBuilder(dummy,
+            if (dummy.type is QScalarType || dummy.type is QEnumDef)
+              ArgBuilder::class
+            else TypeArgBuilder::class,
+            superclazzType)
+            .addModifiers(KModifier.ABSTRACT)
+            .build()
       } else null
     }.distinctBy { it.name }
   }

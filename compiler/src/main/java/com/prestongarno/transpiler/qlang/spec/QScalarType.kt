@@ -14,7 +14,7 @@ class QCustomScalarType(name: String) : QScalarType(name, String::class) {
   override fun toKotlin(): TypeSpec {
     if (this.kotlinSpec == null) this.kotlinSpec = QTypeDef(name,
         emptyList(),
-        listOf(QField("model",
+        listOf(QField("value",
             Scalar.getType(Scalar.STRING),
             emptyList(),
             QDirectiveSymbol.default,

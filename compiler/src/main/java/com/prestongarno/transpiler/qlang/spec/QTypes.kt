@@ -23,7 +23,9 @@ abstract class QSchemaType<E>(var name: String) {
  */
 abstract class QDefinedType(name: String) : QSchemaType<TypeSpec>(name)
 
-abstract class QStatefulType(name: String, val fields: List<QField>) : QDefinedType(name)
+abstract class QStatefulType(name: String, val fields: List<QField>) : QDefinedType(name) {
+  val fieldMap = fields.map { Pair(it.name, it) }.toMap()
+}
 
 class QUnknownType(name: String) : QDefinedType(name) {
   override fun toKotlin(): TypeSpec {

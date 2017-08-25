@@ -1,6 +1,7 @@
 package com.prestongarno.transpiler
 
 import com.prestongarno.transpiler.qlang.spec.*
+import com.sun.org.apache.xpath.internal.operations.Bool
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
@@ -67,7 +68,17 @@ object Attr {
         .map { it.get() }
         .toList()
         .also { comp.addConflicts(it) }
+        .parallelStream()
+        .forEach { conflict ->
+          types.filter { it is QTypeDef && (it.interfaces.containsAny(conflict.second.second)) && it.fieldMap[conflict.first.name] != null }
+              .forEach { it.fieldMap[conflict.first.name]!!.flag(QField.BuilderStatus.TOP_LEVEL) }
+        }
     return comp
+  }
+
+  fun List<QInterfaceDef>.containsAny(of: List<QInterfaceDef>) : Boolean {
+    of.forEach { if(this.contains(it)) return true }
+    return false
   }
 
   private fun checkDiamondOverride(fieldOnType: QField, type: QStatefulType)
@@ -85,7 +96,7 @@ object Attr {
       if (dup.size > 1) {
         if (fieldOnType.args.isNotEmpty()) {
           fieldOnType.flag(QField.BuilderStatus.TOP_LEVEL)
-          dup.forEach { it.second.flag(QField.BuilderStatus.TOP_LEVEL) }
+          dup.forEach { it.second.flag(QField.BuilderStatus.TOP_LEVEL); it.second.abstract(true) }
           println("Diamond on: [ ${type.name}.${fieldOnType.name}  ] from -> ${dup.joinToString { it.first.name }}")
         }
 

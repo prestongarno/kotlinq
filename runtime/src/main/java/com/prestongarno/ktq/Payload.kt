@@ -8,7 +8,8 @@ interface ArgBuilder {
   fun <T> build(): Stub<T>
 
   companion object {
-    fun <T, A: ArgBuilder> create(): ArgBuilder = ScalarStub<T, A>()
+    @Suppress("UNCHECKED_CAST")
+    fun <T, A: ArgBuilder> create(): A = ScalarStub<T, A>() as A
   }
 }
 

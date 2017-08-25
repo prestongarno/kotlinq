@@ -15,23 +15,33 @@ class GithubApiTest {
     val file = this::class.java.classLoader.getResource("graphql.schema.graphqls")
     val qCompiler = QCompiler()
     val content = qCompiler.compile(File(file.path))
-    content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(!(t is QUnknownType)) } }
-    content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(!(field.type is QUnknownType)) } }
+    content.unions.forEach { union -> union.possibleTypes.forEach { t -> assert(t !is QUnknownType) } }
+    content.ifaces.forEach { iface -> iface.fields.forEach { field -> assert(field.type !is QUnknownType) } }
     content.types.forEach { type ->
       type.interfaces.forEach { iface -> assert(!(iface is QUnknownInterface)) }
     }
 
-    // Why the actual **** is this not compiling?
-    val allF: List<QDefinedType> = content.all.toList()
-    val whatTheFIsTypeInference: List<QStatefulType> = allF.filter { foo: QDefinedType -> foo is QStatefulType }.map { fook: QDefinedType -> fook as QStatefulType }
-    whatTheFIsTypeInference.map { f: QStatefulType ->
+    content.stateful.forEach { f ->
       f.fields.forEach { fooU: QField ->
         assert(!(fooU.type is QUnknownType))
         fooU.args.forEach { foo -> assert(!(foo.type is QUnknownType)) }
       }
     }
 
-    qCompiler.generateKotlinTypes(content, "/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+    content.stateful.stream()
+        .map { t ->
+          t.fields.map {
+            Pair(t, it)
+          }
+        }.flatMap { it.stream() }
+        .forEach { (type, field) ->
+          when (type) {
+            is QTypeDef -> require(!field.abstract)
+            is QInterfaceDef -> require(field.abstract)
+          }
+        }
+
+    qCompiler.generateKotlinTypes(content)//, "/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test
@@ -254,7 +264,7 @@ class GithubApiTest {
     websiteUrl: URI
 }"""
     val content = QLParser().parse(user.byteInputStream())
-    assertTrue(content.types.size == 1 && content.types[0] is QTypeDef)
+    assertTrue(content.types.size == 1)
     val userType = content.types[0]
     val interfaces = userType.interfaces
     assertTrue(userType.fields.size == 40)
