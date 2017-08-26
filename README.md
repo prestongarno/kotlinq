@@ -3,8 +3,32 @@
 
 An experimental kotlin type generator for GraphQL schema definitions and runtime library for interacting with endpoints
 
+Supports concise, type-safe queries and models. Compiled and tested against open API endpoints such as Github and Yelp. An example model written from the yelp test package (`com.prestongarno.ktq.yelp`):
+
+```
+  class BusinessQuery(searchTerm: String) : QModel<Query>() {
+    val result: List<BusinessNodesModel> by model.search.config()
+        .term(searchTerm)
+        .limit(10)
+        .build { BusinessesNodesModel() }
+  }
+
+  class BusinessesNodesModel : QModel<Businesses>() {
+    val resultCount: Int by model.total
+    val resultsNodes: List<BusinessBasic> by model.business
+        .init { BusinessBasic() }
+  }
+
+  class BusinessBasic : QModel<Business>() {
+    val name: String by model.name
+    val phoneNumber: Int by model.display_phone
+    val directUrl: String by model.url
+  }
+  
+```
+
 ### compiler
-The `compiler` module acts as a code generation library. This (soon) will be isolated as a Gradle plugin which will allow for configuration from gradle build scripts and run as a task like:
+The `compiler` module acts as a kotlin code generation library. This (soon) will be isolated as a Gradle plugin which will allow for configuration from gradle build scripts and run as a task like:
 
 ```
 ktq {
@@ -31,7 +55,7 @@ type User {
 which when targeted will allow the compiler to generate the following class:
 
 ```
-interface User : QType() {
+object User : QType {
   fun name: Stub<String> = stub()
   fun email: Stub<String> = stub()
 }
@@ -39,15 +63,15 @@ interface User : QType() {
 
 If schema types were represented as a data class, things would get messy with nulls or worse - because at runtime you'd have to keep track of which queries resulted in which instances to avoid `NullPointerException`s
 The class above allows implementations to choose from a selection types and fields in the schema type definitions, which allows for safe collections/bounded type parameters. 
-Root types subclass `QType`, which provides utility methods to supply delegates for fields.
+Root types subclass `QModel<out T: QType>`, which provides a field to represent `QType` type argument to delegate the initialization of the value to
 
  ```
- class BasicUser : User {
-   val name by name()
+ class BasicUser : QModel<User> {
+   val name by model.name
  }
  ```
  
-A concrete `User` type example shows how to specify that you want to include <i>only</i> the field as part of a query or mutation response message.
+A concrete `BasicUser` type example shows how to specify that you want to include <i>only</i> the field as part of a query or mutation response message.
 
 ## custom scalars
 
@@ -69,16 +93,16 @@ class DateTime<T: Any> : CustomScalar<T> {
   val value: T by lazy { adapter().invoke( rawData ) }
 }
 
-class SomeModelWithDateField : GraphType() {
-  protected open val dateCreated : DateTime<Any> by lazy { throw SchemaStub() }
+object SomeModelWithDateField : QType {
+  val dateCreated : DateTime<Any> = scalarStub<DateTime>()
 }
 ```
 
 which can be implemented, for example to map to `java.util.Date` type like this:
 
 ```
-class WithDateFieldImpl : GraphType() {
-      public override val dateCreated by scalar<Date> { Date.of(Instant.exact(it)) }
+class WithDateFieldImpl : QModel<SomeModelWithDateField> {
+      myDate by model.date.to { Date.of(Instant.exact(it)) }
 }
 ```
 
@@ -96,47 +120,11 @@ To query a nested object field from a root without specifying a new type, call t
 
 ## input on graphql fields
 
-Any input arguments declared in the schema are represented as builder classes, and allow for a flexible combination for querying/mutation. A field with arguments can be expressed like so:
-
-```
-    class QueryFooBar : User() {
-    
-        val name by string()
-        
-        val repositories by RepositoriesArgs()
-                .affiliations(listOf( OWNER, COLLABORATOR ))
-                .orderBy(object : RepositoryOrder(field = CREATED_AT, order = ASCENDING)
-                .first(100)
-                .privacy(PUBLIC)
-                .build().repository { RepoConnection() }
-    }
-```
-Some types in this example are missing, but the builder configures the arguments for the field at the time the delegate is created, and then after `.build()` it returns this instance from which the field type can be specified ( in this case `repositories` : `RepoConnection` )
+Any input arguments declared in the schema are represented as builder classes, and allow for a flexible combination for querying/mutation. See the yelp model at the top of the README for an example
 
 ## collections
-Functions exactly like nested types, `someList({ elementInitializer() })`
+Functions exactly like nested types, `init({ elementInitializer() })`
 
 ## queries and mutations 
-The queries from classes like shown above are generated on-the-fly and submitted, providing a `Query<Result>` for a callback. Example query generated from the above class:
 
-<sup>* syntax errors: the payload generation is still in progress </sup>
-
-```
-  {
-    getUser(
-      QueryFooBar {
-        name
-        repositories(
-            affiliations: [ OWNER, COLLABORATOR ],
-            orderBy: RepositoryOrder {
-                direction = ASC
-                field = CREATED_AT
-            },
-            privacy: PUBLIC,
-            first: 100
-        )
-    }
-  }
-```
-
-\* NOTE: this is experimental and at the time of writing is <b>not</b> tested thoroughly enough to be trusted as anything reliable
+The queries from classes like shown above are generated on-the-fly and submitted

@@ -37,7 +37,6 @@ class QCompiler internal constructor(val source: File, builder: QCompiler.Builde
       ktBuilder.addType(it)
     }
 
-    // Probably should inherit input arg classes to prevent chance of concrete-type adding arguments failing
     val suppressedWarnings = listOf(
         "@file:Suppress(\"unused\")"
     )

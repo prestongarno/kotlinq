@@ -1,6 +1,7 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.ScalarStub
+import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 
 interface ArgBuilder {
@@ -27,3 +28,16 @@ interface TypeArgBuilder {
   }
 }
 
+interface TypeListArgBuilder {
+
+  fun <U, T> build(init: () -> U) : TypeListStub<U, T>
+      where U : QModel<T>,
+            T : QType
+
+  fun addArg(name: String, value: Any): TypeListArgBuilder
+
+  companion object {
+    fun <T, A> create(): TypeListArgBuilder  where T: QType, A: TypeListArgBuilder
+        = TypeListAdapter<QModel<T>, T, A>()
+  }
+}

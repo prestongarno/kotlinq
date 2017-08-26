@@ -107,7 +107,6 @@ object Query : QType {
 
   class BusinessArgs(args: TypeArgBuilder = TypeArgBuilder.create<Business, BusinessArgs>()) : TypeArgBuilder by args {
     fun id(value: String): BusinessArgs = apply { addArg("id", value) }
-
   }
 
   class Business_match_bestArgs(args: TypeArgBuilder = TypeArgBuilder.create<Business, Business_match_bestArgs>()) : TypeArgBuilder by args {
