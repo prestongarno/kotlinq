@@ -8,7 +8,7 @@ import com.prestongarno.ktq.internal.QTypeStubProvider
 // TODO This file and the entire API could use a bit of the DRY principle
 interface QSchemaType {
   object QScalar : QScalarStubProvider<Stub<*>>, QConfigProvider<Any, ArgBuilder, QConfigStub<*, ArgBuilder>> {
-    override fun <T> stub(): Stub<T> = ScalarStubAdapter<T, ArgBuilder>(null)
+    override fun <T> stub(): Stub<T> = ScalarStubAdapter<T, ArgBuilder> { it }
 
     override fun <T : Any, A : ArgBuilder> configStub(arginit: (ArgBuilder) -> A): QConfigStub<T, A>
         = ScalarStubAdapter(arginit)
@@ -16,15 +16,14 @@ interface QSchemaType {
 
   object QType : QTypeStubProvider<InitStub<*>>, QConfigProvider<QSchemaType, TypeArgBuilder, QTypeConfigStub<*, TypeArgBuilder>> {
     override fun <T : QSchemaType> stub(): InitStub<T>
-        = TypeStubAdapter<T, QModel<T>, TypeArgBuilder>(null)
+        = TypeStubAdapter<T, QModel<T>, TypeArgBuilder> { it }
 
     override fun <T : QSchemaType, A : TypeArgBuilder> configStub(arginit: (TypeArgBuilder) -> A): QTypeConfigStub<T, A>
         = TypeStubAdapter(arginit)
   }
 
   object QScalarList : QScalarStubProvider<ListStub<*>>, QConfigProvider<Any, ListArgBuilder, ListConfig<*, ListArgBuilder>> {
-    override fun <T> stub(): ListStub<T>
-        = ScalarListAdapter<T, ListArgBuilder>(null)
+    override fun <T> stub(): ListStub<T> = ScalarListAdapter { it }
 
     override fun <T : Any, A : ListArgBuilder> configStub(arginit: (ListArgBuilder) -> A): ListConfig<T, A>
         = ScalarListAdapter(arginit)
@@ -32,22 +31,10 @@ interface QSchemaType {
 
   object QTypeList : QTypeStubProvider<ListInitStub<*>>, QConfigProvider<QSchemaType, TypeListArgBuilder, ListConfigType<*, TypeListArgBuilder>> {
     override fun <T : QSchemaType> stub(): ListInitStub<T>
-        = TypeListAdapter<T, QModel<T>, TypeListArgBuilder>(null)
+        = TypeListAdapter<T, QModel<T>, TypeListArgBuilder> { it }
 
     override fun <T : QSchemaType, A : TypeListArgBuilder> configStub(arginit: (TypeListArgBuilder) -> A): ListConfigType<T, A>
         = TypeListAdapter(arginit)
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -9,7 +9,3 @@ internal interface TypeBuilderInit<in F> {
   fun <T: QSchemaType, A: F> create(init: () -> A) : A
 }
 
-public interface Payload {
-  fun addArg(name: String, value: Any) : Payload
-}
-

@@ -1,6 +1,9 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.internal.Payload
+public interface Payload {
+  fun addArg(name: String, value: Any) : Payload
+  fun toRawPayload() : String = TODO()
+}
 
 interface ArgBuilder : Payload {
   fun <T> build(): Stub<T>
