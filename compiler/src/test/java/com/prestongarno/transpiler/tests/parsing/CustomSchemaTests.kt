@@ -17,6 +17,7 @@ class CustomSchemaTests {
     QCompiler.initialize("SampleOne")
         .packageName("com.prestongarno.ktq")
         .compile(File(file.path))
+        //.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test

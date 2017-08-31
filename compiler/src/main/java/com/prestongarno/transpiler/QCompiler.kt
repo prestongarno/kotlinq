@@ -95,6 +95,7 @@ private fun getResolvedImports(): List<KClass<*>> {
   return listOf(
       ArgBuilder::class,
       InitStub::class,
+      ListConfig::class,
       ListConfigType::class,
       ListInitStub::class,
       ListStub::class,
