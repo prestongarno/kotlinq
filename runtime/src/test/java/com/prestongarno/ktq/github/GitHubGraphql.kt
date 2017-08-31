@@ -2,7 +2,22 @@
 
 package com.prestongarno.ktq.github
 
-import com.prestongarno.ktq.*
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.ListConfigType
+import com.prestongarno.ktq.ListInitStub
+import com.prestongarno.ktq.ListStub
+import com.prestongarno.ktq.QConfigStub
+import com.prestongarno.ktq.QInput
+import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QSchemaType.QScalar
+import com.prestongarno.ktq.QSchemaType.QScalarList
+import com.prestongarno.ktq.QSchemaType.QType
+import com.prestongarno.ktq.QSchemaType.QTypeList
+import com.prestongarno.ktq.QTypeConfigStub
+import com.prestongarno.ktq.Stub
+import com.prestongarno.ktq.TypeArgBuilder
+import com.prestongarno.ktq.TypeListArgBuilder
 
 abstract class BaseAvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, BaseAvatarUrlArgs>()) : ArgBuilder by args
 
@@ -13,9 +28,9 @@ data class AcceptTopicSuggestionInput(private val repositoryId: String,
 }
 
 object AcceptTopicSuggestionPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val topic: InitStub<Topic> by lazy { typeStub<Topic>() }
+  val topic: InitStub<Topic> = QType.stub()
 }
 
 interface Actor : QSchemaType {
@@ -34,13 +49,13 @@ data class AddCommentInput(private val subjectId: String, private val body: Stri
 }
 
 object AddCommentPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val commentEdge: InitStub<IssueCommentEdge> by lazy { typeStub<IssueCommentEdge>() }
+  val commentEdge: InitStub<IssueCommentEdge> = QType.stub()
 
-  val subject: InitStub<Node> by lazy { typeStub<Node>() }
+  val subject: InitStub<Node> = QType.stub()
 
-  val timelineEdge: InitStub<IssueTimelineItemEdge> by lazy { typeStub<IssueTimelineItemEdge>() }
+  val timelineEdge: InitStub<IssueTimelineItemEdge> = QType.stub()
 }
 
 data class AddProjectCardInput(private val projectColumnId: String) : QInput {
@@ -55,11 +70,11 @@ data class AddProjectCardInput(private val projectColumnId: String) : QInput {
 }
 
 object AddProjectCardPayload : QSchemaType {
-  val cardEdge: InitStub<ProjectCardEdge> by lazy { typeStub<ProjectCardEdge>() }
+  val cardEdge: InitStub<ProjectCardEdge> = QType.stub()
 
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val projectColumn: InitStub<Project> by lazy { typeStub<Project>() }
+  val projectColumn: InitStub<Project> = QType.stub()
 }
 
 data class AddProjectColumnInput(private val projectId: String, private val name: String) : QInput {
@@ -68,11 +83,11 @@ data class AddProjectColumnInput(private val projectId: String, private val name
 }
 
 object AddProjectColumnPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val columnEdge: InitStub<ProjectColumnEdge> by lazy { typeStub<ProjectColumnEdge>() }
+  val columnEdge: InitStub<ProjectColumnEdge> = QType.stub()
 
-  val project: InitStub<Project> by lazy { typeStub<Project>() }
+  val project: InitStub<Project> = QType.stub()
 }
 
 data class AddPullRequestReviewCommentInput(private val pullRequestReviewId: String,
@@ -94,11 +109,11 @@ data class AddPullRequestReviewCommentInput(private val pullRequestReviewId: Str
 }
 
 object AddPullRequestReviewCommentPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val comment: InitStub<PullRequestReviewComment> by lazy { typeStub<PullRequestReviewComment>() }
+  val comment: InitStub<PullRequestReviewComment> = QType.stub()
 
-  val commentEdge: InitStub<PullRequestReviewCommentEdge> by lazy { typeStub<PullRequestReviewCommentEdge>() }
+  val commentEdge: InitStub<PullRequestReviewCommentEdge> = QType.stub()
 }
 
 data class AddPullRequestReviewInput(private val pullRequestId: String) : QInput {
@@ -119,11 +134,11 @@ data class AddPullRequestReviewInput(private val pullRequestId: String) : QInput
 }
 
 object AddPullRequestReviewPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val pullRequestReview: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val pullRequestReview: InitStub<PullRequestReview> = QType.stub()
 
-  val reviewEdge: InitStub<PullRequestReviewEdge> by lazy { typeStub<PullRequestReviewEdge>() }
+  val reviewEdge: InitStub<PullRequestReviewEdge> = QType.stub()
 }
 
 data class AddReactionInput(private val subjectId: String,
@@ -133,11 +148,11 @@ data class AddReactionInput(private val subjectId: String,
 }
 
 object AddReactionPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val reaction: InitStub<Reaction> by lazy { typeStub<Reaction>() }
+  val reaction: InitStub<Reaction> = QType.stub()
 
-  val subject: InitStub<Reactable> by lazy { typeStub<Reactable>() }
+  val subject: InitStub<Reactable> = QType.stub()
 }
 
 data class AddStarInput(private val starrableId: String) : QInput {
@@ -146,19 +161,19 @@ data class AddStarInput(private val starrableId: String) : QInput {
 }
 
 object AddStarPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val starrable: InitStub<Starrable> by lazy { typeStub<Starrable>() }
+  val starrable: InitStub<Starrable> = QType.stub()
 }
 
 object AddedToProjectEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 interface Assignable : QSchemaType {
@@ -180,91 +195,91 @@ interface Assignable : QSchemaType {
 }
 
 object AssignedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val assignable: InitStub<Assignable> by lazy { typeStub<Assignable>() }
+  val assignable: InitStub<Assignable> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val user: InitStub<User> by lazy { typeStub<User>() }
+  val user: InitStub<User> = QType.stub()
 }
 
 object BaseRefChangedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 object BaseRefForcePushedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val afterCommit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val afterCommit: InitStub<Commit> = QType.stub()
 
-  val beforeCommit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val beforeCommit: InitStub<Commit> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val ref: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val ref: InitStub<Ref> = QType.stub()
 }
 
 object Blame : QSchemaType {
-  val ranges: InitStub<BlameRange> by lazy { typeStub<BlameRange>() }
+  val ranges: ListInitStub<BlameRange> = QTypeList.stub()
 }
 
 object BlameRange : QSchemaType {
-  val age: Stub<Int> by lazy { stub<Int>() }
+  val age: Stub<Int> = QScalar.stub()
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  val endingLine: Stub<Int> by lazy { stub<Int>() }
+  val endingLine: Stub<Int> = QScalar.stub()
 
-  val startingLine: Stub<Int> by lazy { stub<Int>() }
+  val startingLine: Stub<Int> = QScalar.stub()
 }
 
 object Blob : QSchemaType, GitObject, Node {
-  override val abbreviatedOid: Stub<String> by lazy { stub<String>() }
+  override val abbreviatedOid: Stub<String> = QScalar.stub()
 
-  val byteSize: Stub<Int> by lazy { stub<Int>() }
+  val byteSize: Stub<Int> = QScalar.stub()
 
-  override val commitResourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val commitResourcePath: Stub<URI> = QScalar.stub()
 
-  override val commitUrl: Stub<URI> by lazy { stub<URI>() }
+  override val commitUrl: Stub<URI> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val isBinary: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isBinary: Stub<Boolean> = QScalar.stub()
 
-  val isTruncated: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isTruncated: Stub<Boolean> = QScalar.stub()
 
-  override val oid: Stub<GitObjectID> by lazy { stub<GitObjectID>() }
+  override val oid: Stub<GitObjectID> = QScalar.stub()
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  val text: Stub<String> by lazy { stub<String>() }
+  val text: Stub<String> = QScalar.stub()
 }
 
 object Bot : QSchemaType, UniformResourceLocatable, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by lazy { configStub<URI, AvatarUrlArgs>(AvatarUrlArgs()) }
+  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val login: Stub<String> by lazy { stub<String>() }
+  override val login: Stub<String> = QScalar.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 
   class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
@@ -277,25 +292,25 @@ interface Closable : QSchemaType {
 }
 
 object ClosedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val closable: InitStub<Closable> by lazy { typeStub<Closable>() }
+  val closable: InitStub<Closable> = QType.stub()
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 object CodeOfConduct : QSchemaType {
-  val body: Stub<String> by lazy { stub<String>() }
+  val body: Stub<String> = QScalar.stub()
 
-  val key: Stub<String> by lazy { stub<String>() }
+  val key: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 }
 
 interface Comment : QSchemaType {
@@ -351,71 +366,71 @@ enum class CommentCannotUpdateReason : QSchemaType {
 }
 
 object CommentDeletedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 object Commit : QSchemaType, Subscribable, GitObject, Node {
-  override val abbreviatedOid: Stub<String> by lazy { stub<String>() }
+  override val abbreviatedOid: Stub<String> = QScalar.stub()
 
-  val author: InitStub<GitActor> by lazy { typeStub<GitActor>() }
+  val author: InitStub<GitActor> = QType.stub()
 
-  val authoredByCommitter: Stub<Boolean> by lazy { stub<Boolean>() }
+  val authoredByCommitter: Stub<Boolean> = QScalar.stub()
 
-  val blame: QTypeConfigStub<Blame, BlameArgs> by lazy { typeConfigStub<Blame, BlameArgs>(BlameArgs()) }
+  val blame: QTypeConfigStub<Blame, BlameArgs> = QType.configStub(BlameArgs())
 
-  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> by lazy { typeConfigStub<CommitCommentConnection, CommentsArgs>(CommentsArgs()) }
+  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
 
-  override val commitResourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val commitResourcePath: Stub<URI> = QScalar.stub()
 
-  override val commitUrl: Stub<URI> by lazy { stub<URI>() }
+  override val commitUrl: Stub<URI> = QScalar.stub()
 
-  val committedDate: Stub<DateTime> by lazy { stub<DateTime>() }
+  val committedDate: Stub<DateTime> = QScalar.stub()
 
-  val committedViaWeb: Stub<Boolean> by lazy { stub<Boolean>() }
+  val committedViaWeb: Stub<Boolean> = QScalar.stub()
 
-  val committer: InitStub<GitActor> by lazy { typeStub<GitActor>() }
+  val committer: InitStub<GitActor> = QType.stub()
 
-  val history: QTypeConfigStub<CommitHistoryConnection, HistoryArgs> by lazy { typeConfigStub<CommitHistoryConnection, HistoryArgs>(HistoryArgs()) }
+  val history: QTypeConfigStub<CommitHistoryConnection, HistoryArgs> = QType.configStub(HistoryArgs())
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val message: Stub<String> by lazy { stub<String>() }
+  val message: Stub<String> = QScalar.stub()
 
-  val messageBody: Stub<String> by lazy { stub<String>() }
+  val messageBody: Stub<String> = QScalar.stub()
 
-  val messageBodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  val messageBodyHTML: Stub<HTML> = QScalar.stub()
 
-  val messageHeadline: Stub<String> by lazy { stub<String>() }
+  val messageHeadline: Stub<String> = QScalar.stub()
 
-  val messageHeadlineHTML: Stub<HTML> by lazy { stub<HTML>() }
+  val messageHeadlineHTML: Stub<HTML> = QScalar.stub()
 
-  override val oid: Stub<GitObjectID> by lazy { stub<GitObjectID>() }
+  override val oid: Stub<GitObjectID> = QScalar.stub()
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  val resourcePath: Stub<URI> = QScalar.stub()
 
-  val signature: InitStub<GitSignature> by lazy { typeStub<GitSignature>() }
+  val signature: InitStub<GitSignature> = QType.stub()
 
-  val status: InitStub<Status> by lazy { typeStub<Status>() }
+  val status: InitStub<Status> = QType.stub()
 
-  val tree: InitStub<Tree> by lazy { typeStub<Tree>() }
+  val tree: InitStub<Tree> = QType.stub()
 
-  val treeResourcePath: Stub<URI> by lazy { stub<URI>() }
+  val treeResourcePath: Stub<URI> = QScalar.stub()
 
-  val treeUrl: Stub<URI> by lazy { stub<URI>() }
+  val treeUrl: Stub<URI> = QScalar.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 
-  override val viewerCanSubscribe: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanSubscribe: Stub<Boolean> = QScalar.stub()
 
-  override val viewerSubscription: Stub<SubscriptionState> by lazy { stub<SubscriptionState>() }
+  override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
   class BlameArgs(args: TypeArgBuilder = TypeArgBuilder.create<Blame, BlameArgs>()) : TypeArgBuilder by args {
     fun path(value: String): BlameArgs = apply { addArg("path", value) }
@@ -469,81 +484,81 @@ data class CommitAuthor(private val emails: String) : QInput {
 }
 
 object CommitComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, Updatable, Deletable, Comment, Node {
-  override val author: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val author: InitStub<Actor> = QType.stub()
 
-  override val authorAssociation: Stub<CommentAuthorAssociation> by lazy { stub<CommentAuthorAssociation>() }
+  override val authorAssociation: Stub<CommentAuthorAssociation> = QScalar.stub()
 
-  override val body: Stub<String> by lazy { stub<String>() }
+  override val body: Stub<String> = QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val createdViaEmail: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val createdViaEmail: Stub<Boolean> = QScalar.stub()
 
-  override val databaseId: Stub<Int> by lazy { stub<Int>() }
+  override val databaseId: Stub<Int> = QScalar.stub()
 
-  override val editor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val editor: InitStub<Actor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
-  val path: Stub<String> by lazy { stub<String>() }
+  val path: Stub<String> = QScalar.stub()
 
-  val position: Stub<Int> by lazy { stub<Int>() }
+  val position: Stub<Int> = QScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  override val reactionGroups: InitStub<ReactionGroup> by lazy { typeStub<ReactionGroup>() }
+  override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> by lazy { typeConfigStub<ReactionConnection, Reactable.ReactionsArgs>(Reactable.ReactionsArgs()) }
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val viewerCanDelete: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanDelete: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanReact: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanReact: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason> by lazy { stub<CommentCannotUpdateReason>() }
+  override val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason> = QScalarList.stub()
 
-  override val viewerDidAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 }
 
 object CommitCommentConnection : QSchemaType {
-  val edges: InitStub<CommitCommentEdge> by lazy { typeStub<CommitCommentEdge>() }
+  val edges: ListInitStub<CommitCommentEdge> = QTypeList.stub()
 
-  val nodes: InitStub<CommitComment> by lazy { typeStub<CommitComment>() }
+  val nodes: ListInitStub<CommitComment> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object CommitCommentEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<CommitComment> by lazy { typeStub<CommitComment>() }
+  val node: InitStub<CommitComment> = QType.stub()
 }
 
 object CommitCommentThread : QSchemaType, RepositoryNode, Node {
-  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> by lazy { typeConfigStub<CommitCommentConnection, CommentsArgs>(CommentsArgs()) }
+  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val path: Stub<String> by lazy { stub<String>() }
+  val path: Stub<String> = QScalar.stub()
 
-  val position: Stub<Int> by lazy { stub<Int>() }
+  val position: Stub<Int> = QScalar.stub()
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
   class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<CommitCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
@@ -561,27 +576,27 @@ object CommitCommentThread : QSchemaType, RepositoryNode, Node {
 }
 
 object CommitEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val node: InitStub<Commit> = QType.stub()
 }
 
 object CommitHistoryConnection : QSchemaType {
-  val edges: InitStub<CommitEdge> by lazy { typeStub<CommitEdge>() }
+  val edges: ListInitStub<CommitEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val nodes: ListInitStub<Commit> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 }
 
 object ConvertedNoteToIssueEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 data class CreateProjectInput(private val ownerId: String, private val name: String) : QInput {
@@ -593,13 +608,13 @@ data class CreateProjectInput(private val ownerId: String, private val name: Str
 }
 
 object CreateProjectPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val project: InitStub<Project> by lazy { typeStub<Project>() }
+  val project: InitStub<Project> = QType.stub()
 }
 
 object DateTime : QSchemaType {
-  val value: Stub<String> by lazy { stub<String>() }
+  val value: Stub<String> = QScalar.stub()
 }
 
 data class DeclineTopicSuggestionInput(private val repositoryId: String, private val name: String,
@@ -609,9 +624,9 @@ data class DeclineTopicSuggestionInput(private val repositoryId: String, private
 }
 
 object DeclineTopicSuggestionPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val topic: InitStub<Topic> by lazy { typeStub<Topic>() }
+  val topic: InitStub<Topic> = QType.stub()
 }
 
 enum class DefaultRepositoryPermissionField : QSchemaType {
@@ -632,11 +647,11 @@ data class DeleteProjectCardInput(private val cardId: String) : QInput {
 }
 
 object DeleteProjectCardPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val column: InitStub<ProjectColumn> by lazy { typeStub<ProjectColumn>() }
+  val column: InitStub<ProjectColumn> = QType.stub()
 
-  val deletedCardId: Stub<String> by lazy { stub<String>() }
+  val deletedCardId: Stub<String> = QScalar.stub()
 }
 
 data class DeleteProjectColumnInput(private val columnId: String) : QInput {
@@ -645,11 +660,11 @@ data class DeleteProjectColumnInput(private val columnId: String) : QInput {
 }
 
 object DeleteProjectColumnPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val deletedColumnId: Stub<String> by lazy { stub<String>() }
+  val deletedColumnId: Stub<String> = QScalar.stub()
 
-  val project: InitStub<Project> by lazy { typeStub<Project>() }
+  val project: InitStub<Project> = QType.stub()
 }
 
 data class DeleteProjectInput(private val projectId: String) : QInput {
@@ -658,9 +673,9 @@ data class DeleteProjectInput(private val projectId: String) : QInput {
 }
 
 object DeleteProjectPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val owner: InitStub<ProjectOwner> by lazy { typeStub<ProjectOwner>() }
+  val owner: InitStub<ProjectOwner> = QType.stub()
 }
 
 data class DeletePullRequestReviewInput(private val pullRequestReviewId: String) : QInput {
@@ -669,57 +684,57 @@ data class DeletePullRequestReviewInput(private val pullRequestReviewId: String)
 }
 
 object DeletePullRequestReviewPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val pullRequestReview: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val pullRequestReview: InitStub<PullRequestReview> = QType.stub()
 }
 
 object DemilestonedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val milestoneTitle: Stub<String> by lazy { stub<String>() }
+  val milestoneTitle: Stub<String> = QScalar.stub()
 
-  val subject: InitStub<MilestoneItem> by lazy { typeStub<MilestoneItem>() }
+  val subject: InitStub<MilestoneItem> = QType.stub()
 }
 
 object DeployedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  val deployment: InitStub<Deployment> by lazy { typeStub<Deployment>() }
+  val deployment: InitStub<Deployment> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val ref: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val ref: InitStub<Ref> = QType.stub()
 }
 
 object Deployment : QSchemaType, Node {
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val creator: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val creator: InitStub<Actor> = QType.stub()
 
-  val environment: Stub<String> by lazy { stub<String>() }
+  val environment: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val latestStatus: InitStub<DeploymentStatus> by lazy { typeStub<DeploymentStatus>() }
+  val latestStatus: InitStub<DeploymentStatus> = QType.stub()
 
-  val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val repository: InitStub<Repository> = QType.stub()
 
-  val state: Stub<DeploymentState> by lazy { stub<DeploymentState>() }
+  val state: Stub<DeploymentState> = QScalar.stub()
 
-  val statuses: QTypeConfigStub<DeploymentStatusConnection, StatusesArgs> by lazy { typeConfigStub<DeploymentStatusConnection, StatusesArgs>(StatusesArgs()) }
+  val statuses: QTypeConfigStub<DeploymentStatusConnection, StatusesArgs> = QType.configStub(StatusesArgs())
 
   class StatusesArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeploymentStatusConnection, StatusesArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): StatusesArgs = apply { addArg("first", value) }
@@ -737,19 +752,19 @@ object Deployment : QSchemaType, Node {
 }
 
 object DeploymentConnection : QSchemaType {
-  val edges: InitStub<DeploymentEdge> by lazy { typeStub<DeploymentEdge>() }
+  val edges: ListInitStub<DeploymentEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Deployment> by lazy { typeStub<Deployment>() }
+  val nodes: ListInitStub<Deployment> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object DeploymentEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Deployment> by lazy { typeStub<Deployment>() }
+  val node: InitStub<Deployment> = QType.stub()
 }
 
 enum class DeploymentState : QSchemaType {
@@ -769,35 +784,35 @@ enum class DeploymentState : QSchemaType {
 }
 
 object DeploymentStatus : QSchemaType, Node {
-  val creator: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val creator: InitStub<Actor> = QType.stub()
 
-  val deployment: InitStub<Deployment> by lazy { typeStub<Deployment>() }
+  val deployment: InitStub<Deployment> = QType.stub()
 
-  val description: Stub<String> by lazy { stub<String>() }
+  val description: Stub<String> = QScalar.stub()
 
-  val environmentUrl: Stub<URI> by lazy { stub<URI>() }
+  val environmentUrl: Stub<URI> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val logUrl: Stub<URI> by lazy { stub<URI>() }
+  val logUrl: Stub<URI> = QScalar.stub()
 
-  val state: Stub<DeploymentStatusState> by lazy { stub<DeploymentStatusState>() }
+  val state: Stub<DeploymentStatusState> = QScalar.stub()
 }
 
 object DeploymentStatusConnection : QSchemaType {
-  val edges: InitStub<DeploymentStatusEdge> by lazy { typeStub<DeploymentStatusEdge>() }
+  val edges: ListInitStub<DeploymentStatusEdge> = QTypeList.stub()
 
-  val nodes: InitStub<DeploymentStatus> by lazy { typeStub<DeploymentStatus>() }
+  val nodes: ListInitStub<DeploymentStatus> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object DeploymentStatusEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<DeploymentStatus> by lazy { typeStub<DeploymentStatus>() }
+  val node: InitStub<DeploymentStatus> = QType.stub()
 }
 
 enum class DeploymentStatusState : QSchemaType {
@@ -819,92 +834,92 @@ data class DismissPullRequestReviewInput(private val pullRequestReviewId: String
 }
 
 object DismissPullRequestReviewPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val pullRequestReview: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val pullRequestReview: InitStub<PullRequestReview> = QType.stub()
 }
 
 data class DraftPullRequestReviewComment(private val path: String, private val position: Int,
     private val body: String) : QInput
 
 object ExternalIdentity : QSchemaType, Node {
-  val guid: Stub<String> by lazy { stub<String>() }
+  val guid: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val organizationInvitation: InitStub<OrganizationInvitation> by lazy { typeStub<OrganizationInvitation>() }
+  val organizationInvitation: InitStub<OrganizationInvitation> = QType.stub()
 
-  val samlIdentity: InitStub<ExternalIdentitySamlAttributes> by lazy { typeStub<ExternalIdentitySamlAttributes>() }
+  val samlIdentity: InitStub<ExternalIdentitySamlAttributes> = QType.stub()
 
-  val scimIdentity: InitStub<ExternalIdentityScimAttributes> by lazy { typeStub<ExternalIdentityScimAttributes>() }
+  val scimIdentity: InitStub<ExternalIdentityScimAttributes> = QType.stub()
 
-  val user: InitStub<User> by lazy { typeStub<User>() }
+  val user: InitStub<User> = QType.stub()
 }
 
 object ExternalIdentityConnection : QSchemaType {
-  val edges: InitStub<ExternalIdentityEdge> by lazy { typeStub<ExternalIdentityEdge>() }
+  val edges: ListInitStub<ExternalIdentityEdge> = QTypeList.stub()
 
-  val nodes: InitStub<ExternalIdentity> by lazy { typeStub<ExternalIdentity>() }
+  val nodes: ListInitStub<ExternalIdentity> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ExternalIdentityEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<ExternalIdentity> by lazy { typeStub<ExternalIdentity>() }
+  val node: InitStub<ExternalIdentity> = QType.stub()
 }
 
 object ExternalIdentitySamlAttributes : QSchemaType {
-  val nameId: Stub<String> by lazy { stub<String>() }
+  val nameId: Stub<String> = QScalar.stub()
 }
 
 object ExternalIdentityScimAttributes : QSchemaType {
-  val username: Stub<String> by lazy { stub<String>() }
+  val username: Stub<String> = QScalar.stub()
 }
 
 object FollowerConnection : QSchemaType {
-  val edges: InitStub<UserEdge> by lazy { typeStub<UserEdge>() }
+  val edges: ListInitStub<UserEdge> = QTypeList.stub()
 
-  val nodes: InitStub<User> by lazy { typeStub<User>() }
+  val nodes: ListInitStub<User> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object FollowingConnection : QSchemaType {
-  val edges: InitStub<UserEdge> by lazy { typeStub<UserEdge>() }
+  val edges: ListInitStub<UserEdge> = QTypeList.stub()
 
-  val nodes: InitStub<User> by lazy { typeStub<User>() }
+  val nodes: ListInitStub<User> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object Gist : QSchemaType, Starrable, Node {
-  val comments: QTypeConfigStub<GistCommentConnection, CommentsArgs> by lazy { typeConfigStub<GistCommentConnection, CommentsArgs>(CommentsArgs()) }
+  val comments: QTypeConfigStub<GistCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val description: Stub<String> by lazy { stub<String>() }
+  val description: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val isPublic: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isPublic: Stub<Boolean> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val owner: InitStub<RepositoryOwner> by lazy { typeStub<RepositoryOwner>() }
+  val owner: InitStub<RepositoryOwner> = QType.stub()
 
-  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> by lazy { typeConfigStub<StargazerConnection, Starrable.StargazersArgs>(Starrable.StargazersArgs()) }
+  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> = QType.configStub(Starrable.StargazersArgs())
 
-  val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val viewerHasStarred: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerHasStarred: Stub<Boolean> = QScalar.stub()
 
   class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<GistCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
@@ -922,67 +937,67 @@ object Gist : QSchemaType, Starrable, Node {
 }
 
 object GistComment : QSchemaType, UpdatableComment, Updatable, Deletable, Comment, Node {
-  override val author: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val author: InitStub<Actor> = QType.stub()
 
-  override val authorAssociation: Stub<CommentAuthorAssociation> by lazy { stub<CommentAuthorAssociation>() }
+  override val authorAssociation: Stub<CommentAuthorAssociation> = QScalar.stub()
 
-  override val body: Stub<String> by lazy { stub<String>() }
+  override val body: Stub<String> = QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val createdViaEmail: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val createdViaEmail: Stub<Boolean> = QScalar.stub()
 
-  override val editor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val editor: InitStub<Actor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val viewerCanDelete: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanDelete: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason> by lazy { stub<CommentCannotUpdateReason>() }
+  override val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason> = QScalarList.stub()
 
-  override val viewerDidAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 }
 
 object GistCommentConnection : QSchemaType {
-  val edges: InitStub<GistCommentEdge> by lazy { typeStub<GistCommentEdge>() }
+  val edges: ListInitStub<GistCommentEdge> = QTypeList.stub()
 
-  val nodes: InitStub<GistComment> by lazy { typeStub<GistComment>() }
+  val nodes: ListInitStub<GistComment> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object GistCommentEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<GistComment> by lazy { typeStub<GistComment>() }
+  val node: InitStub<GistComment> = QType.stub()
 }
 
 object GistConnection : QSchemaType {
-  val edges: InitStub<GistEdge> by lazy { typeStub<GistEdge>() }
+  val edges: ListInitStub<GistEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Gist> by lazy { typeStub<Gist>() }
+  val nodes: ListInitStub<Gist> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object GistEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Gist> by lazy { typeStub<Gist>() }
+  val node: InitStub<Gist> = QType.stub()
 }
 
 enum class GistPrivacy : QSchemaType {
@@ -994,15 +1009,15 @@ enum class GistPrivacy : QSchemaType {
 }
 
 object GitActor : QSchemaType {
-  val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by lazy { configStub<URI, AvatarUrlArgs>(AvatarUrlArgs()) }
+  val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
 
-  val date: Stub<GitTimestamp> by lazy { stub<GitTimestamp>() }
+  val date: Stub<GitTimestamp> = QScalar.stub()
 
-  val email: Stub<String> by lazy { stub<String>() }
+  val email: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val user: InitStub<User> by lazy { typeStub<User>() }
+  val user: InitStub<User> = QType.stub()
 
   class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : ArgBuilder by args {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
@@ -1025,7 +1040,7 @@ interface GitObject : QSchemaType {
 }
 
 object GitObjectID : QSchemaType {
-  val value: Stub<String> by lazy { stub<String>() }
+  val value: Stub<String> = QScalar.stub()
 }
 
 interface GitSignature : QSchemaType {
@@ -1071,139 +1086,139 @@ enum class GitSignatureState : QSchemaType {
 }
 
 object GitTimestamp : QSchemaType {
-  val value: Stub<String> by lazy { stub<String>() }
+  val value: Stub<String> = QScalar.stub()
 }
 
 object GpgSignature : QSchemaType, GitSignature {
-  override val email: Stub<String> by lazy { stub<String>() }
+  override val email: Stub<String> = QScalar.stub()
 
-  override val isValid: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isValid: Stub<Boolean> = QScalar.stub()
 
-  val keyId: Stub<String> by lazy { stub<String>() }
+  val keyId: Stub<String> = QScalar.stub()
 
-  override val payload: Stub<String> by lazy { stub<String>() }
+  override val payload: Stub<String> = QScalar.stub()
 
-  override val signature: Stub<String> by lazy { stub<String>() }
+  override val signature: Stub<String> = QScalar.stub()
 
-  override val signer: InitStub<User> by lazy { typeStub<User>() }
+  override val signer: InitStub<User> = QType.stub()
 
-  override val state: Stub<GitSignatureState> by lazy { stub<GitSignatureState>() }
+  override val state: Stub<GitSignatureState> = QScalar.stub()
 }
 
 object HTML : QSchemaType {
-  val value: Stub<String> by lazy { stub<String>() }
+  val value: Stub<String> = QScalar.stub()
 }
 
 object HeadRefDeletedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val headRef: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val headRef: InitStub<Ref> = QType.stub()
 
-  val headRefName: Stub<String> by lazy { stub<String>() }
+  val headRefName: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 }
 
 object HeadRefForcePushedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val afterCommit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val afterCommit: InitStub<Commit> = QType.stub()
 
-  val beforeCommit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val beforeCommit: InitStub<Commit> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val ref: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val ref: InitStub<Ref> = QType.stub()
 }
 
 object HeadRefRestoredEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 }
 
 object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNode, Reactable, Lockable, Labelable, UpdatableComment, Updatable, Comment, Closable, Assignable, Node {
-  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> by lazy { typeConfigStub<UserConnection, Assignable.AssigneesArgs>(Assignable.AssigneesArgs()) }
+  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> = QType.configStub(Assignable.AssigneesArgs())
 
-  override val author: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val author: InitStub<Actor> = QType.stub()
 
-  override val authorAssociation: Stub<CommentAuthorAssociation> by lazy { stub<CommentAuthorAssociation>() }
+  override val authorAssociation: Stub<CommentAuthorAssociation> = QScalar.stub()
 
-  override val body: Stub<String> by lazy { stub<String>() }
+  override val body: Stub<String> = QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  val bodyText: Stub<String> by lazy { stub<String>() }
+  val bodyText: Stub<String> = QScalar.stub()
 
-  override val closed: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val closed: Stub<Boolean> = QScalar.stub()
 
-  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> by lazy { typeConfigStub<IssueCommentConnection, CommentsArgs>(CommentsArgs()) }
+  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val createdViaEmail: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val createdViaEmail: Stub<Boolean> = QScalar.stub()
 
-  override val databaseId: Stub<Int> by lazy { stub<Int>() }
+  override val databaseId: Stub<Int> = QScalar.stub()
 
-  override val editor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val editor: InitStub<Actor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> by lazy { typeConfigStub<LabelConnection, Labelable.LabelsArgs>(Labelable.LabelsArgs()) }
+  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> = QType.configStub(Labelable.LabelsArgs())
 
-  override val lastEditedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
-  override val locked: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val locked: Stub<Boolean> = QScalar.stub()
 
-  val milestone: InitStub<Milestone> by lazy { typeStub<Milestone>() }
+  val milestone: InitStub<Milestone> = QType.stub()
 
-  val number: Stub<Int> by lazy { stub<Int>() }
+  val number: Stub<Int> = QScalar.stub()
 
-  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> by lazy { typeConfigStub<UserConnection, ParticipantsArgs>(ParticipantsArgs()) }
+  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> = QType.configStub(ParticipantsArgs())
 
-  override val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  override val reactionGroups: InitStub<ReactionGroup> by lazy { typeStub<ReactionGroup>() }
+  override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> by lazy { typeConfigStub<ReactionConnection, Reactable.ReactionsArgs>(Reactable.ReactionsArgs()) }
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val state: Stub<IssueState> by lazy { stub<IssueState>() }
+  val state: Stub<IssueState> = QScalar.stub()
 
-  val timeline: QTypeConfigStub<IssueTimelineConnection, TimelineArgs> by lazy { typeConfigStub<IssueTimelineConnection, TimelineArgs>(TimelineArgs()) }
+  val timeline: QTypeConfigStub<IssueTimelineConnection, TimelineArgs> = QType.configStub(TimelineArgs())
 
-  val title: Stub<String> by lazy { stub<String>() }
+  val title: Stub<String> = QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 
-  override val viewerCanReact: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanReact: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanSubscribe: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanSubscribe: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason> by lazy { stub<CommentCannotUpdateReason>() }
+  override val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason> = QScalarList.stub()
 
-  override val viewerDidAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 
-  override val viewerSubscription: Stub<SubscriptionState> by lazy { stub<SubscriptionState>() }
+  override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
   class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
@@ -1252,87 +1267,87 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 }
 
 object IssueComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, Updatable, Deletable, Comment, Node {
-  override val author: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val author: InitStub<Actor> = QType.stub()
 
-  override val authorAssociation: Stub<CommentAuthorAssociation> by lazy { stub<CommentAuthorAssociation>() }
+  override val authorAssociation: Stub<CommentAuthorAssociation> = QScalar.stub()
 
-  override val body: Stub<String> by lazy { stub<String>() }
+  override val body: Stub<String> = QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  val bodyText: Stub<String> by lazy { stub<String>() }
+  val bodyText: Stub<String> = QScalar.stub()
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val createdViaEmail: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val createdViaEmail: Stub<Boolean> = QScalar.stub()
 
-  override val databaseId: Stub<Int> by lazy { stub<Int>() }
+  override val databaseId: Stub<Int> = QScalar.stub()
 
-  override val editor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val editor: InitStub<Actor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val issue: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val issue: InitStub<Issue> = QType.stub()
 
-  override val lastEditedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  override val reactionGroups: InitStub<ReactionGroup> by lazy { typeStub<ReactionGroup>() }
+  override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> by lazy { typeConfigStub<ReactionConnection, Reactable.ReactionsArgs>(Reactable.ReactionsArgs()) }
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val viewerCanDelete: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanDelete: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanReact: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanReact: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason> by lazy { stub<CommentCannotUpdateReason>() }
+  override val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason> = QScalarList.stub()
 
-  override val viewerDidAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 }
 
 object IssueCommentConnection : QSchemaType {
-  val edges: InitStub<IssueCommentEdge> by lazy { typeStub<IssueCommentEdge>() }
+  val edges: ListInitStub<IssueCommentEdge> = QTypeList.stub()
 
-  val nodes: InitStub<IssueComment> by lazy { typeStub<IssueComment>() }
+  val nodes: ListInitStub<IssueComment> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object IssueCommentEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<IssueComment> by lazy { typeStub<IssueComment>() }
+  val node: InitStub<IssueComment> = QType.stub()
 }
 
 object IssueConnection : QSchemaType {
-  val edges: InitStub<IssueEdge> by lazy { typeStub<IssueEdge>() }
+  val edges: ListInitStub<IssueEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val nodes: ListInitStub<Issue> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object IssueEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val node: InitStub<Issue> = QType.stub()
 }
 
 object IssueOrPullRequest : QSchemaType {
-  val Issue: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val Issue: ListInitStub<Issue> = QTypeList.stub()
 
-  val PullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val PullRequest: ListInitStub<PullRequest> = QTypeList.stub()
 }
 
 data class IssueOrder(private val field: IssueOrderField,
@@ -1359,67 +1374,67 @@ enum class IssueState : QSchemaType {
 }
 
 object IssueTimelineConnection : QSchemaType {
-  val edges: InitStub<IssueTimelineItemEdge> by lazy { typeStub<IssueTimelineItemEdge>() }
+  val edges: ListInitStub<IssueTimelineItemEdge> = QTypeList.stub()
 
-  val nodes: InitStub<IssueTimelineItem> by lazy { typeStub<IssueTimelineItem>() }
+  val nodes: ListInitStub<IssueTimelineItem> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object IssueTimelineItem : QSchemaType {
-  val Commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val Commit: ListInitStub<Commit> = QTypeList.stub()
 
-  val IssueComment: InitStub<IssueComment> by lazy { typeStub<IssueComment>() }
+  val IssueComment: ListInitStub<IssueComment> = QTypeList.stub()
 
-  val ClosedEvent: InitStub<ClosedEvent> by lazy { typeStub<ClosedEvent>() }
+  val ClosedEvent: ListInitStub<ClosedEvent> = QTypeList.stub()
 
-  val ReopenedEvent: InitStub<ReopenedEvent> by lazy { typeStub<ReopenedEvent>() }
+  val ReopenedEvent: ListInitStub<ReopenedEvent> = QTypeList.stub()
 
-  val SubscribedEvent: InitStub<SubscribedEvent> by lazy { typeStub<SubscribedEvent>() }
+  val SubscribedEvent: ListInitStub<SubscribedEvent> = QTypeList.stub()
 
-  val UnsubscribedEvent: InitStub<UnsubscribedEvent> by lazy { typeStub<UnsubscribedEvent>() }
+  val UnsubscribedEvent: ListInitStub<UnsubscribedEvent> = QTypeList.stub()
 
-  val ReferencedEvent: InitStub<ReferencedEvent> by lazy { typeStub<ReferencedEvent>() }
+  val ReferencedEvent: ListInitStub<ReferencedEvent> = QTypeList.stub()
 
-  val AssignedEvent: InitStub<AssignedEvent> by lazy { typeStub<AssignedEvent>() }
+  val AssignedEvent: ListInitStub<AssignedEvent> = QTypeList.stub()
 
-  val UnassignedEvent: InitStub<UnassignedEvent> by lazy { typeStub<UnassignedEvent>() }
+  val UnassignedEvent: ListInitStub<UnassignedEvent> = QTypeList.stub()
 
-  val LabeledEvent: InitStub<LabeledEvent> by lazy { typeStub<LabeledEvent>() }
+  val LabeledEvent: ListInitStub<LabeledEvent> = QTypeList.stub()
 
-  val UnlabeledEvent: InitStub<UnlabeledEvent> by lazy { typeStub<UnlabeledEvent>() }
+  val UnlabeledEvent: ListInitStub<UnlabeledEvent> = QTypeList.stub()
 
-  val MilestonedEvent: InitStub<MilestonedEvent> by lazy { typeStub<MilestonedEvent>() }
+  val MilestonedEvent: ListInitStub<MilestonedEvent> = QTypeList.stub()
 
-  val DemilestonedEvent: InitStub<DemilestonedEvent> by lazy { typeStub<DemilestonedEvent>() }
+  val DemilestonedEvent: ListInitStub<DemilestonedEvent> = QTypeList.stub()
 
-  val RenamedTitleEvent: InitStub<RenamedTitleEvent> by lazy { typeStub<RenamedTitleEvent>() }
+  val RenamedTitleEvent: ListInitStub<RenamedTitleEvent> = QTypeList.stub()
 
-  val LockedEvent: InitStub<LockedEvent> by lazy { typeStub<LockedEvent>() }
+  val LockedEvent: ListInitStub<LockedEvent> = QTypeList.stub()
 
-  val UnlockedEvent: InitStub<UnlockedEvent> by lazy { typeStub<UnlockedEvent>() }
+  val UnlockedEvent: ListInitStub<UnlockedEvent> = QTypeList.stub()
 }
 
 object IssueTimelineItemEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<IssueTimelineItem> by lazy { typeStub<IssueTimelineItem>() }
+  val node: InitStub<IssueTimelineItem> = QType.stub()
 }
 
 object Label : QSchemaType, Node {
-  val color: Stub<String> by lazy { stub<String>() }
+  val color: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> by lazy { typeConfigStub<IssueConnection, IssuesArgs>(IssuesArgs()) }
+  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub(IssuesArgs())
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> by lazy { typeConfigStub<PullRequestConnection, PullRequestsArgs>(PullRequestsArgs()) }
+  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub(PullRequestsArgs())
 
-  val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val repository: InitStub<Repository> = QType.stub()
 
   class IssuesArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueConnection, IssuesArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): IssuesArgs = apply { addArg("first", value) }
@@ -1460,19 +1475,19 @@ object Label : QSchemaType, Node {
 }
 
 object LabelConnection : QSchemaType {
-  val edges: InitStub<LabelEdge> by lazy { typeStub<LabelEdge>() }
+  val edges: ListInitStub<LabelEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Label> by lazy { typeStub<Label>() }
+  val nodes: ListInitStub<Label> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object LabelEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Label> by lazy { typeStub<Label>() }
+  val node: InitStub<Label> = QType.stub()
 }
 
 interface Labelable : QSchemaType {
@@ -1494,43 +1509,43 @@ interface Labelable : QSchemaType {
 }
 
 object LabeledEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val label: InitStub<Label> by lazy { typeStub<Label>() }
+  val label: InitStub<Label> = QType.stub()
 
-  val labelable: InitStub<Labelable> by lazy { typeStub<Labelable>() }
+  val labelable: InitStub<Labelable> = QType.stub()
 }
 
 object Language : QSchemaType, Node {
-  val color: Stub<String> by lazy { stub<String>() }
+  val color: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 }
 
 object LanguageConnection : QSchemaType {
-  val edges: InitStub<LanguageEdge> by lazy { typeStub<LanguageEdge>() }
+  val edges: ListInitStub<LanguageEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Language> by lazy { typeStub<Language>() }
+  val nodes: ListInitStub<Language> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 
-  val totalSize: Stub<Int> by lazy { stub<Int>() }
+  val totalSize: Stub<Int> = QScalar.stub()
 }
 
 object LanguageEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Language> by lazy { typeStub<Language>() }
+  val node: InitStub<Language> = QType.stub()
 
-  val size: Stub<Int> by lazy { stub<Int>() }
+  val size: Stub<Int> = QScalar.stub()
 }
 
 data class LanguageOrder(private val field: LanguageOrderField,
@@ -1545,23 +1560,23 @@ interface Lockable : QSchemaType {
 }
 
 object LockedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val lockable: InitStub<Lockable> by lazy { typeStub<Lockable>() }
+  val lockable: InitStub<Lockable> = QType.stub()
 }
 
 object MentionedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 enum class MergeableState : QSchemaType {
@@ -1573,67 +1588,67 @@ enum class MergeableState : QSchemaType {
 }
 
 object MergedEvent : QSchemaType, UniformResourceLocatable, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val mergeRef: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val mergeRef: InitStub<Ref> = QType.stub()
 
-  val mergeRefName: Stub<String> by lazy { stub<String>() }
+  val mergeRefName: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 }
 
 object Milestone : QSchemaType, UniformResourceLocatable, Node {
-  val creator: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val creator: InitStub<Actor> = QType.stub()
 
-  val description: Stub<String> by lazy { stub<String>() }
+  val description: Stub<String> = QScalar.stub()
 
-  val dueOn: Stub<DateTime> by lazy { stub<DateTime>() }
+  val dueOn: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val number: Stub<Int> by lazy { stub<Int>() }
+  val number: Stub<Int> = QScalar.stub()
 
-  val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val repository: InitStub<Repository> = QType.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val state: Stub<MilestoneState> by lazy { stub<MilestoneState>() }
+  val state: Stub<MilestoneState> = QScalar.stub()
 
-  val title: Stub<String> by lazy { stub<String>() }
+  val title: Stub<String> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 }
 
 object MilestoneConnection : QSchemaType {
-  val edges: InitStub<MilestoneEdge> by lazy { typeStub<MilestoneEdge>() }
+  val edges: ListInitStub<MilestoneEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Milestone> by lazy { typeStub<Milestone>() }
+  val nodes: ListInitStub<Milestone> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object MilestoneEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Milestone> by lazy { typeStub<Milestone>() }
+  val node: InitStub<Milestone> = QType.stub()
 }
 
 object MilestoneItem : QSchemaType {
-  val Issue: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val Issue: ListInitStub<Issue> = QTypeList.stub()
 
-  val PullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val PullRequest: ListInitStub<PullRequest> = QTypeList.stub()
 }
 
 enum class MilestoneState : QSchemaType {
@@ -1643,15 +1658,15 @@ enum class MilestoneState : QSchemaType {
 }
 
 object MilestonedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val milestoneTitle: Stub<String> by lazy { stub<String>() }
+  val milestoneTitle: Stub<String> = QScalar.stub()
 
-  val subject: InitStub<MilestoneItem> by lazy { typeStub<MilestoneItem>() }
+  val subject: InitStub<MilestoneItem> = QType.stub()
 }
 
 data class MoveProjectCardInput(private val cardId: String, private val columnId: String) : QInput {
@@ -1663,9 +1678,9 @@ data class MoveProjectCardInput(private val cardId: String, private val columnId
 }
 
 object MoveProjectCardPayload : QSchemaType {
-  val cardEdge: InitStub<ProjectCardEdge> by lazy { typeStub<ProjectCardEdge>() }
+  val cardEdge: InitStub<ProjectCardEdge> = QType.stub()
 
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 }
 
 data class MoveProjectColumnInput(private val columnId: String) : QInput {
@@ -1677,79 +1692,79 @@ data class MoveProjectColumnInput(private val columnId: String) : QInput {
 }
 
 object MoveProjectColumnPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val columnEdge: InitStub<ProjectColumnEdge> by lazy { typeStub<ProjectColumnEdge>() }
+  val columnEdge: InitStub<ProjectColumnEdge> = QType.stub()
 }
 
 object MovedColumnsInProjectEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 object Mutation : QSchemaType {
-  val acceptTopicSuggestion: QTypeConfigStub<AcceptTopicSuggestionPayload, AcceptTopicSuggestionArgs> by lazy { typeConfigStub<AcceptTopicSuggestionPayload, AcceptTopicSuggestionArgs>(AcceptTopicSuggestionArgs()) }
+  val acceptTopicSuggestion: QTypeConfigStub<AcceptTopicSuggestionPayload, AcceptTopicSuggestionArgs> = QType.configStub(AcceptTopicSuggestionArgs())
 
-  val addComment: QTypeConfigStub<AddCommentPayload, AddCommentArgs> by lazy { typeConfigStub<AddCommentPayload, AddCommentArgs>(AddCommentArgs()) }
+  val addComment: QTypeConfigStub<AddCommentPayload, AddCommentArgs> = QType.configStub(AddCommentArgs())
 
-  val addProjectCard: QTypeConfigStub<AddProjectCardPayload, AddProjectCardArgs> by lazy { typeConfigStub<AddProjectCardPayload, AddProjectCardArgs>(AddProjectCardArgs()) }
+  val addProjectCard: QTypeConfigStub<AddProjectCardPayload, AddProjectCardArgs> = QType.configStub(AddProjectCardArgs())
 
-  val addProjectColumn: QTypeConfigStub<AddProjectColumnPayload, AddProjectColumnArgs> by lazy { typeConfigStub<AddProjectColumnPayload, AddProjectColumnArgs>(AddProjectColumnArgs()) }
+  val addProjectColumn: QTypeConfigStub<AddProjectColumnPayload, AddProjectColumnArgs> = QType.configStub(AddProjectColumnArgs())
 
-  val addPullRequestReview: QTypeConfigStub<AddPullRequestReviewPayload, AddPullRequestReviewArgs> by lazy { typeConfigStub<AddPullRequestReviewPayload, AddPullRequestReviewArgs>(AddPullRequestReviewArgs()) }
+  val addPullRequestReview: QTypeConfigStub<AddPullRequestReviewPayload, AddPullRequestReviewArgs> = QType.configStub(AddPullRequestReviewArgs())
 
-  val addPullRequestReviewComment: QTypeConfigStub<AddPullRequestReviewCommentPayload, AddPullRequestReviewCommentArgs> by lazy { typeConfigStub<AddPullRequestReviewCommentPayload, AddPullRequestReviewCommentArgs>(AddPullRequestReviewCommentArgs()) }
+  val addPullRequestReviewComment: QTypeConfigStub<AddPullRequestReviewCommentPayload, AddPullRequestReviewCommentArgs> = QType.configStub(AddPullRequestReviewCommentArgs())
 
-  val addReaction: QTypeConfigStub<AddReactionPayload, AddReactionArgs> by lazy { typeConfigStub<AddReactionPayload, AddReactionArgs>(AddReactionArgs()) }
+  val addReaction: QTypeConfigStub<AddReactionPayload, AddReactionArgs> = QType.configStub(AddReactionArgs())
 
-  val addStar: QTypeConfigStub<AddStarPayload, AddStarArgs> by lazy { typeConfigStub<AddStarPayload, AddStarArgs>(AddStarArgs()) }
+  val addStar: QTypeConfigStub<AddStarPayload, AddStarArgs> = QType.configStub(AddStarArgs())
 
-  val createProject: QTypeConfigStub<CreateProjectPayload, CreateProjectArgs> by lazy { typeConfigStub<CreateProjectPayload, CreateProjectArgs>(CreateProjectArgs()) }
+  val createProject: QTypeConfigStub<CreateProjectPayload, CreateProjectArgs> = QType.configStub(CreateProjectArgs())
 
-  val declineTopicSuggestion: QTypeConfigStub<DeclineTopicSuggestionPayload, DeclineTopicSuggestionArgs> by lazy { typeConfigStub<DeclineTopicSuggestionPayload, DeclineTopicSuggestionArgs>(DeclineTopicSuggestionArgs()) }
+  val declineTopicSuggestion: QTypeConfigStub<DeclineTopicSuggestionPayload, DeclineTopicSuggestionArgs> = QType.configStub(DeclineTopicSuggestionArgs())
 
-  val deleteProject: QTypeConfigStub<DeleteProjectPayload, DeleteProjectArgs> by lazy { typeConfigStub<DeleteProjectPayload, DeleteProjectArgs>(DeleteProjectArgs()) }
+  val deleteProject: QTypeConfigStub<DeleteProjectPayload, DeleteProjectArgs> = QType.configStub(DeleteProjectArgs())
 
-  val deleteProjectCard: QTypeConfigStub<DeleteProjectCardPayload, DeleteProjectCardArgs> by lazy { typeConfigStub<DeleteProjectCardPayload, DeleteProjectCardArgs>(DeleteProjectCardArgs()) }
+  val deleteProjectCard: QTypeConfigStub<DeleteProjectCardPayload, DeleteProjectCardArgs> = QType.configStub(DeleteProjectCardArgs())
 
-  val deleteProjectColumn: QTypeConfigStub<DeleteProjectColumnPayload, DeleteProjectColumnArgs> by lazy { typeConfigStub<DeleteProjectColumnPayload, DeleteProjectColumnArgs>(DeleteProjectColumnArgs()) }
+  val deleteProjectColumn: QTypeConfigStub<DeleteProjectColumnPayload, DeleteProjectColumnArgs> = QType.configStub(DeleteProjectColumnArgs())
 
-  val deletePullRequestReview: QTypeConfigStub<DeletePullRequestReviewPayload, DeletePullRequestReviewArgs> by lazy { typeConfigStub<DeletePullRequestReviewPayload, DeletePullRequestReviewArgs>(DeletePullRequestReviewArgs()) }
+  val deletePullRequestReview: QTypeConfigStub<DeletePullRequestReviewPayload, DeletePullRequestReviewArgs> = QType.configStub(DeletePullRequestReviewArgs())
 
-  val dismissPullRequestReview: QTypeConfigStub<DismissPullRequestReviewPayload, DismissPullRequestReviewArgs> by lazy { typeConfigStub<DismissPullRequestReviewPayload, DismissPullRequestReviewArgs>(DismissPullRequestReviewArgs()) }
+  val dismissPullRequestReview: QTypeConfigStub<DismissPullRequestReviewPayload, DismissPullRequestReviewArgs> = QType.configStub(DismissPullRequestReviewArgs())
 
-  val moveProjectCard: QTypeConfigStub<MoveProjectCardPayload, MoveProjectCardArgs> by lazy { typeConfigStub<MoveProjectCardPayload, MoveProjectCardArgs>(MoveProjectCardArgs()) }
+  val moveProjectCard: QTypeConfigStub<MoveProjectCardPayload, MoveProjectCardArgs> = QType.configStub(MoveProjectCardArgs())
 
-  val moveProjectColumn: QTypeConfigStub<MoveProjectColumnPayload, MoveProjectColumnArgs> by lazy { typeConfigStub<MoveProjectColumnPayload, MoveProjectColumnArgs>(MoveProjectColumnArgs()) }
+  val moveProjectColumn: QTypeConfigStub<MoveProjectColumnPayload, MoveProjectColumnArgs> = QType.configStub(MoveProjectColumnArgs())
 
-  val removeOutsideCollaborator: QTypeConfigStub<RemoveOutsideCollaboratorPayload, RemoveOutsideCollaboratorArgs> by lazy { typeConfigStub<RemoveOutsideCollaboratorPayload, RemoveOutsideCollaboratorArgs>(RemoveOutsideCollaboratorArgs()) }
+  val removeOutsideCollaborator: QTypeConfigStub<RemoveOutsideCollaboratorPayload, RemoveOutsideCollaboratorArgs> = QType.configStub(RemoveOutsideCollaboratorArgs())
 
-  val removeReaction: QTypeConfigStub<RemoveReactionPayload, RemoveReactionArgs> by lazy { typeConfigStub<RemoveReactionPayload, RemoveReactionArgs>(RemoveReactionArgs()) }
+  val removeReaction: QTypeConfigStub<RemoveReactionPayload, RemoveReactionArgs> = QType.configStub(RemoveReactionArgs())
 
-  val removeStar: QTypeConfigStub<RemoveStarPayload, RemoveStarArgs> by lazy { typeConfigStub<RemoveStarPayload, RemoveStarArgs>(RemoveStarArgs()) }
+  val removeStar: QTypeConfigStub<RemoveStarPayload, RemoveStarArgs> = QType.configStub(RemoveStarArgs())
 
-  val requestReviews: QTypeConfigStub<RequestReviewsPayload, RequestReviewsArgs> by lazy { typeConfigStub<RequestReviewsPayload, RequestReviewsArgs>(RequestReviewsArgs()) }
+  val requestReviews: QTypeConfigStub<RequestReviewsPayload, RequestReviewsArgs> = QType.configStub(RequestReviewsArgs())
 
-  val submitPullRequestReview: QTypeConfigStub<SubmitPullRequestReviewPayload, SubmitPullRequestReviewArgs> by lazy { typeConfigStub<SubmitPullRequestReviewPayload, SubmitPullRequestReviewArgs>(SubmitPullRequestReviewArgs()) }
+  val submitPullRequestReview: QTypeConfigStub<SubmitPullRequestReviewPayload, SubmitPullRequestReviewArgs> = QType.configStub(SubmitPullRequestReviewArgs())
 
-  val updateProject: QTypeConfigStub<UpdateProjectPayload, UpdateProjectArgs> by lazy { typeConfigStub<UpdateProjectPayload, UpdateProjectArgs>(UpdateProjectArgs()) }
+  val updateProject: QTypeConfigStub<UpdateProjectPayload, UpdateProjectArgs> = QType.configStub(UpdateProjectArgs())
 
-  val updateProjectCard: QTypeConfigStub<UpdateProjectCardPayload, UpdateProjectCardArgs> by lazy { typeConfigStub<UpdateProjectCardPayload, UpdateProjectCardArgs>(UpdateProjectCardArgs()) }
+  val updateProjectCard: QTypeConfigStub<UpdateProjectCardPayload, UpdateProjectCardArgs> = QType.configStub(UpdateProjectCardArgs())
 
-  val updateProjectColumn: QTypeConfigStub<UpdateProjectColumnPayload, UpdateProjectColumnArgs> by lazy { typeConfigStub<UpdateProjectColumnPayload, UpdateProjectColumnArgs>(UpdateProjectColumnArgs()) }
+  val updateProjectColumn: QTypeConfigStub<UpdateProjectColumnPayload, UpdateProjectColumnArgs> = QType.configStub(UpdateProjectColumnArgs())
 
-  val updatePullRequestReview: QTypeConfigStub<UpdatePullRequestReviewPayload, UpdatePullRequestReviewArgs> by lazy { typeConfigStub<UpdatePullRequestReviewPayload, UpdatePullRequestReviewArgs>(UpdatePullRequestReviewArgs()) }
+  val updatePullRequestReview: QTypeConfigStub<UpdatePullRequestReviewPayload, UpdatePullRequestReviewArgs> = QType.configStub(UpdatePullRequestReviewArgs())
 
-  val updatePullRequestReviewComment: QTypeConfigStub<UpdatePullRequestReviewCommentPayload, UpdatePullRequestReviewCommentArgs> by lazy { typeConfigStub<UpdatePullRequestReviewCommentPayload, UpdatePullRequestReviewCommentArgs>(UpdatePullRequestReviewCommentArgs()) }
+  val updatePullRequestReviewComment: QTypeConfigStub<UpdatePullRequestReviewCommentPayload, UpdatePullRequestReviewCommentArgs> = QType.configStub(UpdatePullRequestReviewCommentArgs())
 
-  val updateSubscription: QTypeConfigStub<UpdateSubscriptionPayload, UpdateSubscriptionArgs> by lazy { typeConfigStub<UpdateSubscriptionPayload, UpdateSubscriptionArgs>(UpdateSubscriptionArgs()) }
+  val updateSubscription: QTypeConfigStub<UpdateSubscriptionPayload, UpdateSubscriptionArgs> = QType.configStub(UpdateSubscriptionArgs())
 
-  val updateTopics: QTypeConfigStub<UpdateTopicsPayload, UpdateTopicsArgs> by lazy { typeConfigStub<UpdateTopicsPayload, UpdateTopicsArgs>(UpdateTopicsArgs()) }
+  val updateTopics: QTypeConfigStub<UpdateTopicsPayload, UpdateTopicsArgs> = QType.configStub(UpdateTopicsArgs())
 
   class AcceptTopicSuggestionArgs(args: TypeArgBuilder = TypeArgBuilder.create<AcceptTopicSuggestionPayload, AcceptTopicSuggestionArgs>()) : TypeArgBuilder by args {
     fun input(value: AcceptTopicSuggestionInput): AcceptTopicSuggestionArgs = apply { addArg("input", value) }
@@ -1908,63 +1923,63 @@ enum class OrderDirection : QSchemaType {
 }
 
 object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, ProjectOwner, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by lazy { configStub<URI, AvatarUrlArgs>(AvatarUrlArgs()) }
+  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val isInvoiced: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isInvoiced: Stub<Boolean> = QScalar.stub()
 
-  override val login: Stub<String> by lazy { stub<String>() }
+  override val login: Stub<String> = QScalar.stub()
 
-  val members: QTypeConfigStub<UserConnection, MembersArgs> by lazy { typeConfigStub<UserConnection, MembersArgs>(MembersArgs()) }
+  val members: QTypeConfigStub<UserConnection, MembersArgs> = QType.configStub(MembersArgs())
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val newTeamResourcePath: Stub<URI> by lazy { stub<URI>() }
+  val newTeamResourcePath: Stub<URI> = QScalar.stub()
 
-  val newTeamUrl: Stub<URI> by lazy { stub<URI>() }
+  val newTeamUrl: Stub<URI> = QScalar.stub()
 
-  val organizationBillingEmail: Stub<String> by lazy { stub<String>() }
+  val organizationBillingEmail: Stub<String> = QScalar.stub()
 
-  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> by lazy { typeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs>(RepositoryOwner.PinnedRepositoriesArgs()) }
+  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> = QType.configStub(RepositoryOwner.PinnedRepositoriesArgs())
 
-  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> by lazy { typeConfigStub<Project, ProjectOwner.ProjectArgs>(ProjectOwner.ProjectArgs()) }
+  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> = QType.configStub(ProjectOwner.ProjectArgs())
 
-  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> by lazy { typeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs>(ProjectOwner.ProjectsArgs()) }
+  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> = QType.configStub(ProjectOwner.ProjectsArgs())
 
-  override val projectsResourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val projectsResourcePath: Stub<URI> = QScalar.stub()
 
-  override val projectsUrl: Stub<URI> by lazy { stub<URI>() }
+  override val projectsUrl: Stub<URI> = QScalar.stub()
 
-  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> by lazy { typeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs>(RepositoryOwner.RepositoriesArgs()) }
+  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> = QType.configStub(RepositoryOwner.RepositoriesArgs())
 
-  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> by lazy { typeConfigStub<Repository, RepositoryOwner.RepositoryArgs>(RepositoryOwner.RepositoryArgs()) }
+  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> = QType.configStub(RepositoryOwner.RepositoryArgs())
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val samlIdentityProvider: InitStub<OrganizationIdentityProvider> by lazy { typeStub<OrganizationIdentityProvider>() }
+  val samlIdentityProvider: InitStub<OrganizationIdentityProvider> = QType.stub()
 
-  val team: QTypeConfigStub<Team, TeamArgs> by lazy { typeConfigStub<Team, TeamArgs>(TeamArgs()) }
+  val team: QTypeConfigStub<Team, TeamArgs> = QType.configStub(TeamArgs())
 
-  val teams: QTypeConfigStub<TeamConnection, TeamsArgs> by lazy { typeConfigStub<TeamConnection, TeamsArgs>(TeamsArgs()) }
+  val teams: QTypeConfigStub<TeamConnection, TeamsArgs> = QType.configStub(TeamsArgs())
 
-  val teamsResourcePath: Stub<URI> by lazy { stub<URI>() }
+  val teamsResourcePath: Stub<URI> = QScalar.stub()
 
-  val teamsUrl: Stub<URI> by lazy { stub<URI>() }
+  val teamsUrl: Stub<URI> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 
-  val viewerCanAdminister: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerCanAdminister: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanCreateProjects: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanCreateProjects: Stub<Boolean> = QScalar.stub()
 
-  val viewerCanCreateRepositories: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerCanCreateRepositories: Stub<Boolean> = QScalar.stub()
 
-  val viewerCanCreateTeams: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerCanCreateTeams: Stub<Boolean> = QScalar.stub()
 
-  val viewerIsAMember: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerIsAMember: Stub<Boolean> = QScalar.stub()
 
   class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
@@ -2024,37 +2039,37 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 }
 
 object OrganizationConnection : QSchemaType {
-  val edges: InitStub<OrganizationEdge> by lazy { typeStub<OrganizationEdge>() }
+  val edges: ListInitStub<OrganizationEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Organization> by lazy { typeStub<Organization>() }
+  val nodes: ListInitStub<Organization> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object OrganizationEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Organization> by lazy { typeStub<Organization>() }
+  val node: InitStub<Organization> = QType.stub()
 }
 
 object OrganizationIdentityProvider : QSchemaType, Node {
-  val digestMethod: Stub<URI> by lazy { stub<URI>() }
+  val digestMethod: Stub<URI> = QScalar.stub()
 
-  val externalIdentities: QTypeConfigStub<ExternalIdentityConnection, ExternalIdentitiesArgs> by lazy { typeConfigStub<ExternalIdentityConnection, ExternalIdentitiesArgs>(ExternalIdentitiesArgs()) }
+  val externalIdentities: QTypeConfigStub<ExternalIdentityConnection, ExternalIdentitiesArgs> = QType.configStub(ExternalIdentitiesArgs())
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val idpCertificate: Stub<X509Certificate> by lazy { stub<X509Certificate>() }
+  val idpCertificate: Stub<X509Certificate> = QScalar.stub()
 
-  val issuer: Stub<String> by lazy { stub<String>() }
+  val issuer: Stub<String> = QScalar.stub()
 
-  val organization: InitStub<Organization> by lazy { typeStub<Organization>() }
+  val organization: InitStub<Organization> = QType.stub()
 
-  val signatureMethod: Stub<URI> by lazy { stub<URI>() }
+  val signatureMethod: Stub<URI> = QScalar.stub()
 
-  val ssoUrl: Stub<URI> by lazy { stub<URI>() }
+  val ssoUrl: Stub<URI> = QScalar.stub()
 
   class ExternalIdentitiesArgs(args: TypeArgBuilder = TypeArgBuilder.create<ExternalIdentityConnection, ExternalIdentitiesArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): ExternalIdentitiesArgs = apply { addArg("first", value) }
@@ -2072,31 +2087,31 @@ object OrganizationIdentityProvider : QSchemaType, Node {
 }
 
 object OrganizationInvitation : QSchemaType {
-  val email: Stub<String> by lazy { stub<String>() }
+  val email: Stub<String> = QScalar.stub()
 
-  val id: Stub<String> by lazy { stub<String>() }
+  val id: Stub<String> = QScalar.stub()
 
-  val invitee: InitStub<User> by lazy { typeStub<User>() }
+  val invitee: InitStub<User> = QType.stub()
 
-  val inviter: InitStub<User> by lazy { typeStub<User>() }
+  val inviter: InitStub<User> = QType.stub()
 
-  val role: Stub<OrganizationInvitationRole> by lazy { stub<OrganizationInvitationRole>() }
+  val role: Stub<OrganizationInvitationRole> = QScalar.stub()
 }
 
 object OrganizationInvitationConnection : QSchemaType {
-  val edges: InitStub<OrganizationInvitationEdge> by lazy { typeStub<OrganizationInvitationEdge>() }
+  val edges: ListInitStub<OrganizationInvitationEdge> = QTypeList.stub()
 
-  val nodes: InitStub<OrganizationInvitation> by lazy { typeStub<OrganizationInvitation>() }
+  val nodes: ListInitStub<OrganizationInvitation> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object OrganizationInvitationEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<OrganizationInvitation> by lazy { typeStub<OrganizationInvitation>() }
+  val node: InitStub<OrganizationInvitation> = QType.stub()
 }
 
 enum class OrganizationInvitationRole : QSchemaType {
@@ -2110,47 +2125,47 @@ enum class OrganizationInvitationRole : QSchemaType {
 }
 
 object PageInfo : QSchemaType {
-  val endCursor: Stub<String> by lazy { stub<String>() }
+  val endCursor: Stub<String> = QScalar.stub()
 
-  val hasNextPage: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasNextPage: Stub<Boolean> = QScalar.stub()
 
-  val hasPreviousPage: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasPreviousPage: Stub<Boolean> = QScalar.stub()
 
-  val startCursor: Stub<String> by lazy { stub<String>() }
+  val startCursor: Stub<String> = QScalar.stub()
 }
 
 object Project : QSchemaType, Updatable, Node {
-  val body: Stub<String> by lazy { stub<String>() }
+  val body: Stub<String> = QScalar.stub()
 
-  val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  val closedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val closedAt: Stub<DateTime> = QScalar.stub()
 
-  val columns: QTypeConfigStub<ProjectColumnConnection, ColumnsArgs> by lazy { typeConfigStub<ProjectColumnConnection, ColumnsArgs>(ColumnsArgs()) }
+  val columns: QTypeConfigStub<ProjectColumnConnection, ColumnsArgs> = QType.configStub(ColumnsArgs())
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val creator: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val creator: InitStub<Actor> = QType.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val number: Stub<Int> by lazy { stub<Int>() }
+  val number: Stub<Int> = QScalar.stub()
 
-  val owner: InitStub<ProjectOwner> by lazy { typeStub<ProjectOwner>() }
+  val owner: InitStub<ProjectOwner> = QType.stub()
 
-  val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  val resourcePath: Stub<URI> = QScalar.stub()
 
-  val state: Stub<ProjectState> by lazy { stub<ProjectState>() }
+  val state: Stub<ProjectState> = QScalar.stub()
 
-  val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
   class ColumnsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ProjectColumnConnection, ColumnsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): ColumnsArgs = apply { addArg("first", value) }
@@ -2168,53 +2183,53 @@ object Project : QSchemaType, Updatable, Node {
 }
 
 object ProjectCard : QSchemaType, Node {
-  val column: InitStub<ProjectColumn> by lazy { typeStub<ProjectColumn>() }
+  val column: InitStub<ProjectColumn> = QType.stub()
 
-  val content: InitStub<ProjectCardItem> by lazy { typeStub<ProjectCardItem>() }
+  val content: InitStub<ProjectCardItem> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val creator: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val creator: InitStub<Actor> = QType.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val note: Stub<String> by lazy { stub<String>() }
+  val note: Stub<String> = QScalar.stub()
 
-  val project: InitStub<Project> by lazy { typeStub<Project>() }
+  val project: InitStub<Project> = QType.stub()
 
-  val projectColumn: InitStub<ProjectColumn> by lazy { typeStub<ProjectColumn>() }
+  val projectColumn: InitStub<ProjectColumn> = QType.stub()
 
-  val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  val resourcePath: Stub<URI> = QScalar.stub()
 
-  val state: Stub<ProjectCardState> by lazy { stub<ProjectCardState>() }
+  val state: Stub<ProjectCardState> = QScalar.stub()
 
-  val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 }
 
 object ProjectCardConnection : QSchemaType {
-  val edges: InitStub<ProjectCardEdge> by lazy { typeStub<ProjectCardEdge>() }
+  val edges: ListInitStub<ProjectCardEdge> = QTypeList.stub()
 
-  val nodes: InitStub<ProjectCard> by lazy { typeStub<ProjectCard>() }
+  val nodes: ListInitStub<ProjectCard> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ProjectCardEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<ProjectCard> by lazy { typeStub<ProjectCard>() }
+  val node: InitStub<ProjectCard> = QType.stub()
 }
 
 object ProjectCardItem : QSchemaType {
-  val Issue: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val Issue: ListInitStub<Issue> = QTypeList.stub()
 
-  val PullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val PullRequest: ListInitStub<PullRequest> = QTypeList.stub()
 }
 
 enum class ProjectCardState : QSchemaType {
@@ -2226,19 +2241,19 @@ enum class ProjectCardState : QSchemaType {
 }
 
 object ProjectColumn : QSchemaType, Node {
-  val cards: QTypeConfigStub<ProjectCardConnection, CardsArgs> by lazy { typeConfigStub<ProjectCardConnection, CardsArgs>(CardsArgs()) }
+  val cards: QTypeConfigStub<ProjectCardConnection, CardsArgs> = QType.configStub(CardsArgs())
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val project: InitStub<Project> by lazy { typeStub<Project>() }
+  val project: InitStub<Project> = QType.stub()
 
-  val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val updatedAt: Stub<DateTime> = QScalar.stub()
 
   class CardsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ProjectCardConnection, CardsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CardsArgs = apply { addArg("first", value) }
@@ -2256,35 +2271,35 @@ object ProjectColumn : QSchemaType, Node {
 }
 
 object ProjectColumnConnection : QSchemaType {
-  val edges: InitStub<ProjectColumnEdge> by lazy { typeStub<ProjectColumnEdge>() }
+  val edges: ListInitStub<ProjectColumnEdge> = QTypeList.stub()
 
-  val nodes: InitStub<ProjectColumn> by lazy { typeStub<ProjectColumn>() }
+  val nodes: ListInitStub<ProjectColumn> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ProjectColumnEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<ProjectColumn> by lazy { typeStub<ProjectColumn>() }
+  val node: InitStub<ProjectColumn> = QType.stub()
 }
 
 object ProjectConnection : QSchemaType {
-  val edges: InitStub<ProjectEdge> by lazy { typeStub<ProjectEdge>() }
+  val edges: ListInitStub<ProjectEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Project> by lazy { typeStub<Project>() }
+  val nodes: ListInitStub<Project> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ProjectEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Project> by lazy { typeStub<Project>() }
+  val node: InitStub<Project> = QType.stub()
 }
 
 data class ProjectOrder(private val field: ProjectOrderField,
@@ -2347,33 +2362,33 @@ enum class ProjectState : QSchemaType {
 }
 
 object ProtectedBranch : QSchemaType, Node {
-  val creator: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val creator: InitStub<Actor> = QType.stub()
 
-  val hasDismissableStaleReviews: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasDismissableStaleReviews: Stub<Boolean> = QScalar.stub()
 
-  val hasRequiredReviews: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasRequiredReviews: Stub<Boolean> = QScalar.stub()
 
-  val hasRequiredStatusChecks: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasRequiredStatusChecks: Stub<Boolean> = QScalar.stub()
 
-  val hasRestrictedPushes: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasRestrictedPushes: Stub<Boolean> = QScalar.stub()
 
-  val hasRestrictedReviewDismissals: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasRestrictedReviewDismissals: Stub<Boolean> = QScalar.stub()
 
-  val hasStrictRequiredStatusChecks: Stub<Boolean> by lazy { stub<Boolean>() }
+  val hasStrictRequiredStatusChecks: Stub<Boolean> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val isAdminEnforced: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isAdminEnforced: Stub<Boolean> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val pushAllowances: QTypeConfigStub<PushAllowanceConnection, PushAllowancesArgs> by lazy { typeConfigStub<PushAllowanceConnection, PushAllowancesArgs>(PushAllowancesArgs()) }
+  val pushAllowances: QTypeConfigStub<PushAllowanceConnection, PushAllowancesArgs> = QType.configStub(PushAllowancesArgs())
 
-  val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val repository: InitStub<Repository> = QType.stub()
 
-  val requiredStatusCheckContexts: Stub<String> by lazy { stub<String>() }
+  val requiredStatusCheckContexts: ListStub<String> = QScalarList.stub()
 
-  val reviewDismissalAllowances: QTypeConfigStub<ReviewDismissalAllowanceConnection, ReviewDismissalAllowancesArgs> by lazy { typeConfigStub<ReviewDismissalAllowanceConnection, ReviewDismissalAllowancesArgs>(ReviewDismissalAllowancesArgs()) }
+  val reviewDismissalAllowances: QTypeConfigStub<ReviewDismissalAllowanceConnection, ReviewDismissalAllowancesArgs> = QType.configStub(ReviewDismissalAllowancesArgs())
 
   class PushAllowancesArgs(args: TypeArgBuilder = TypeArgBuilder.create<PushAllowanceConnection, PushAllowancesArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): PushAllowancesArgs = apply { addArg("first", value) }
@@ -2405,125 +2420,125 @@ object ProtectedBranch : QSchemaType, Node {
 }
 
 object ProtectedBranchConnection : QSchemaType {
-  val edges: InitStub<ProtectedBranchEdge> by lazy { typeStub<ProtectedBranchEdge>() }
+  val edges: ListInitStub<ProtectedBranchEdge> = QTypeList.stub()
 
-  val nodes: InitStub<ProtectedBranch> by lazy { typeStub<ProtectedBranch>() }
+  val nodes: ListInitStub<ProtectedBranch> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ProtectedBranchEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<ProtectedBranch> by lazy { typeStub<ProtectedBranch>() }
+  val node: InitStub<ProtectedBranch> = QType.stub()
 }
 
 object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNode, Reactable, Lockable, Labelable, UpdatableComment, Updatable, Comment, Closable, Assignable, Node {
-  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> by lazy { typeConfigStub<UserConnection, Assignable.AssigneesArgs>(Assignable.AssigneesArgs()) }
+  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> = QType.configStub(Assignable.AssigneesArgs())
 
-  override val author: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val author: InitStub<Actor> = QType.stub()
 
-  override val authorAssociation: Stub<CommentAuthorAssociation> by lazy { stub<CommentAuthorAssociation>() }
+  override val authorAssociation: Stub<CommentAuthorAssociation> = QScalar.stub()
 
-  val baseRef: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val baseRef: InitStub<Ref> = QType.stub()
 
-  val baseRefName: Stub<String> by lazy { stub<String>() }
+  val baseRefName: Stub<String> = QScalar.stub()
 
-  override val body: Stub<String> by lazy { stub<String>() }
+  override val body: Stub<String> = QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  val bodyText: Stub<String> by lazy { stub<String>() }
+  val bodyText: Stub<String> = QScalar.stub()
 
-  override val closed: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val closed: Stub<Boolean> = QScalar.stub()
 
-  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> by lazy { typeConfigStub<IssueCommentConnection, CommentsArgs>(CommentsArgs()) }
+  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
 
-  val commits: QTypeConfigStub<PullRequestCommitConnection, CommitsArgs> by lazy { typeConfigStub<PullRequestCommitConnection, CommitsArgs>(CommitsArgs()) }
+  val commits: QTypeConfigStub<PullRequestCommitConnection, CommitsArgs> = QType.configStub(CommitsArgs())
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val createdViaEmail: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val createdViaEmail: Stub<Boolean> = QScalar.stub()
 
-  override val databaseId: Stub<Int> by lazy { stub<Int>() }
+  override val databaseId: Stub<Int> = QScalar.stub()
 
-  override val editor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val editor: InitStub<Actor> = QType.stub()
 
-  val headRef: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val headRef: InitStub<Ref> = QType.stub()
 
-  val headRefName: Stub<String> by lazy { stub<String>() }
+  val headRefName: Stub<String> = QScalar.stub()
 
-  val headRepository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val headRepository: InitStub<Repository> = QType.stub()
 
-  val headRepositoryOwner: InitStub<RepositoryOwner> by lazy { typeStub<RepositoryOwner>() }
+  val headRepositoryOwner: InitStub<RepositoryOwner> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val isCrossRepository: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isCrossRepository: Stub<Boolean> = QScalar.stub()
 
-  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> by lazy { typeConfigStub<LabelConnection, Labelable.LabelsArgs>(Labelable.LabelsArgs()) }
+  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> = QType.configStub(Labelable.LabelsArgs())
 
-  override val lastEditedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
-  override val locked: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val locked: Stub<Boolean> = QScalar.stub()
 
-  val mergeCommit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val mergeCommit: InitStub<Commit> = QType.stub()
 
-  val mergeable: Stub<MergeableState> by lazy { stub<MergeableState>() }
+  val mergeable: Stub<MergeableState> = QScalar.stub()
 
-  val merged: Stub<Boolean> by lazy { stub<Boolean>() }
+  val merged: Stub<Boolean> = QScalar.stub()
 
-  val mergedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val mergedAt: Stub<DateTime> = QScalar.stub()
 
-  val number: Stub<Int> by lazy { stub<Int>() }
+  val number: Stub<Int> = QScalar.stub()
 
-  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> by lazy { typeConfigStub<UserConnection, ParticipantsArgs>(ParticipantsArgs()) }
+  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> = QType.configStub(ParticipantsArgs())
 
-  val potentialMergeCommit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val potentialMergeCommit: InitStub<Commit> = QType.stub()
 
-  override val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  override val reactionGroups: InitStub<ReactionGroup> by lazy { typeStub<ReactionGroup>() }
+  override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> by lazy { typeConfigStub<ReactionConnection, Reactable.ReactionsArgs>(Reactable.ReactionsArgs()) }
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val revertResourcePath: Stub<URI> by lazy { stub<URI>() }
+  val revertResourcePath: Stub<URI> = QScalar.stub()
 
-  val revertUrl: Stub<URI> by lazy { stub<URI>() }
+  val revertUrl: Stub<URI> = QScalar.stub()
 
-  val reviewRequests: QTypeConfigStub<ReviewRequestConnection, ReviewRequestsArgs> by lazy { typeConfigStub<ReviewRequestConnection, ReviewRequestsArgs>(ReviewRequestsArgs()) }
+  val reviewRequests: QTypeConfigStub<ReviewRequestConnection, ReviewRequestsArgs> = QType.configStub(ReviewRequestsArgs())
 
-  val reviews: QTypeConfigStub<PullRequestReviewConnection, ReviewsArgs> by lazy { typeConfigStub<PullRequestReviewConnection, ReviewsArgs>(ReviewsArgs()) }
+  val reviews: QTypeConfigStub<PullRequestReviewConnection, ReviewsArgs> = QType.configStub(ReviewsArgs())
 
-  val state: Stub<PullRequestState> by lazy { stub<PullRequestState>() }
+  val state: Stub<PullRequestState> = QScalar.stub()
 
-  val suggestedReviewers: InitStub<SuggestedReviewer> by lazy { typeStub<SuggestedReviewer>() }
+  val suggestedReviewers: ListInitStub<SuggestedReviewer> = QTypeList.stub()
 
-  val timeline: QTypeConfigStub<PullRequestTimelineConnection, TimelineArgs> by lazy { typeConfigStub<PullRequestTimelineConnection, TimelineArgs>(TimelineArgs()) }
+  val timeline: QTypeConfigStub<PullRequestTimelineConnection, TimelineArgs> = QType.configStub(TimelineArgs())
 
-  val title: Stub<String> by lazy { stub<String>() }
+  val title: Stub<String> = QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 
-  override val viewerCanReact: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanReact: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanSubscribe: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanSubscribe: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason> by lazy { stub<CommentCannotUpdateReason>() }
+  override val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason> = QScalarList.stub()
 
-  override val viewerDidAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 
-  override val viewerSubscription: Stub<SubscriptionState> by lazy { stub<SubscriptionState>() }
+  override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
   class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
@@ -2617,47 +2632,47 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 }
 
 object PullRequestCommit : QSchemaType, UniformResourceLocatable, Node {
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 }
 
 object PullRequestCommitConnection : QSchemaType {
-  val edges: InitStub<PullRequestCommitEdge> by lazy { typeStub<PullRequestCommitEdge>() }
+  val edges: ListInitStub<PullRequestCommitEdge> = QTypeList.stub()
 
-  val nodes: InitStub<PullRequestCommit> by lazy { typeStub<PullRequestCommit>() }
+  val nodes: ListInitStub<PullRequestCommit> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object PullRequestCommitEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<PullRequestCommit> by lazy { typeStub<PullRequestCommit>() }
+  val node: InitStub<PullRequestCommit> = QType.stub()
 }
 
 object PullRequestConnection : QSchemaType {
-  val edges: InitStub<PullRequestEdge> by lazy { typeStub<PullRequestEdge>() }
+  val edges: ListInitStub<PullRequestEdge> = QTypeList.stub()
 
-  val nodes: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val nodes: ListInitStub<PullRequest> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object PullRequestEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val node: InitStub<PullRequest> = QType.stub()
 }
 
 enum class PullRequestPubSubTopic : QSchemaType {
@@ -2669,55 +2684,55 @@ enum class PullRequestPubSubTopic : QSchemaType {
 }
 
 object PullRequestReview : QSchemaType, RepositoryNode, UpdatableComment, Updatable, Deletable, Comment, Node {
-  override val author: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val author: InitStub<Actor> = QType.stub()
 
-  override val authorAssociation: Stub<CommentAuthorAssociation> by lazy { stub<CommentAuthorAssociation>() }
+  override val authorAssociation: Stub<CommentAuthorAssociation> = QScalar.stub()
 
-  override val body: Stub<String> by lazy { stub<String>() }
+  override val body: Stub<String> = QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  val bodyText: Stub<String> by lazy { stub<String>() }
+  val bodyText: Stub<String> = QScalar.stub()
 
-  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> by lazy { typeConfigStub<PullRequestReviewCommentConnection, CommentsArgs>(CommentsArgs()) }
+  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val createdViaEmail: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val createdViaEmail: Stub<Boolean> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val editor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val editor: InitStub<Actor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  val resourcePath: Stub<URI> = QScalar.stub()
 
-  val state: Stub<PullRequestReviewState> by lazy { stub<PullRequestReviewState>() }
+  val state: Stub<PullRequestReviewState> = QScalar.stub()
 
-  val submittedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val submittedAt: Stub<DateTime> = QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 
-  override val viewerCanDelete: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanDelete: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason> by lazy { stub<CommentCannotUpdateReason>() }
+  override val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason> = QScalarList.stub()
 
-  override val viewerDidAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 
   class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestReviewCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
@@ -2735,101 +2750,101 @@ object PullRequestReview : QSchemaType, RepositoryNode, UpdatableComment, Updata
 }
 
 object PullRequestReviewComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, Updatable, Deletable, Comment, Node {
-  override val author: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val author: InitStub<Actor> = QType.stub()
 
-  override val authorAssociation: Stub<CommentAuthorAssociation> by lazy { stub<CommentAuthorAssociation>() }
+  override val authorAssociation: Stub<CommentAuthorAssociation> = QScalar.stub()
 
-  override val body: Stub<String> by lazy { stub<String>() }
+  override val body: Stub<String> = QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val bodyHTML: Stub<HTML> = QScalar.stub()
 
-  val bodyText: Stub<String> by lazy { stub<String>() }
+  val bodyText: Stub<String> = QScalar.stub()
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val createdViaEmail: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val createdViaEmail: Stub<Boolean> = QScalar.stub()
 
-  override val databaseId: Stub<Int> by lazy { stub<Int>() }
+  override val databaseId: Stub<Int> = QScalar.stub()
 
-  val diffHunk: Stub<String> by lazy { stub<String>() }
+  val diffHunk: Stub<String> = QScalar.stub()
 
-  val draftedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val draftedAt: Stub<DateTime> = QScalar.stub()
 
-  override val editor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  override val editor: InitStub<Actor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
-  val originalCommit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val originalCommit: InitStub<Commit> = QType.stub()
 
-  val originalPosition: Stub<Int> by lazy { stub<Int>() }
+  val originalPosition: Stub<Int> = QScalar.stub()
 
-  val path: Stub<String> by lazy { stub<String>() }
+  val path: Stub<String> = QScalar.stub()
 
-  val position: Stub<Int> by lazy { stub<Int>() }
+  val position: Stub<Int> = QScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val pullRequestReview: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val pullRequestReview: InitStub<PullRequestReview> = QType.stub()
 
-  override val reactionGroups: InitStub<ReactionGroup> by lazy { typeStub<ReactionGroup>() }
+  override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> by lazy { typeConfigStub<ReactionConnection, Reactable.ReactionsArgs>(Reactable.ReactionsArgs()) }
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  val resourcePath: Stub<URI> = QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 
-  override val viewerCanDelete: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanDelete: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanReact: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanReact: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanUpdate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason> by lazy { stub<CommentCannotUpdateReason>() }
+  override val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason> = QScalarList.stub()
 
-  override val viewerDidAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 }
 
 object PullRequestReviewCommentConnection : QSchemaType {
-  val edges: InitStub<PullRequestReviewCommentEdge> by lazy { typeStub<PullRequestReviewCommentEdge>() }
+  val edges: ListInitStub<PullRequestReviewCommentEdge> = QTypeList.stub()
 
-  val nodes: InitStub<PullRequestReviewComment> by lazy { typeStub<PullRequestReviewComment>() }
+  val nodes: ListInitStub<PullRequestReviewComment> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object PullRequestReviewCommentEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<PullRequestReviewComment> by lazy { typeStub<PullRequestReviewComment>() }
+  val node: InitStub<PullRequestReviewComment> = QType.stub()
 }
 
 object PullRequestReviewConnection : QSchemaType {
-  val edges: InitStub<PullRequestReviewEdge> by lazy { typeStub<PullRequestReviewEdge>() }
+  val edges: ListInitStub<PullRequestReviewEdge> = QTypeList.stub()
 
-  val nodes: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val nodes: ListInitStub<PullRequestReview> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object PullRequestReviewEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val node: InitStub<PullRequestReview> = QType.stub()
 }
 
 enum class PullRequestReviewEvent : QSchemaType {
@@ -2855,11 +2870,11 @@ enum class PullRequestReviewState : QSchemaType {
 }
 
 object PullRequestReviewThread : QSchemaType, Node {
-  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> by lazy { typeConfigStub<PullRequestReviewCommentConnection, CommentsArgs>(CommentsArgs()) }
+  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
   class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestReviewCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
@@ -2885,139 +2900,139 @@ enum class PullRequestState : QSchemaType {
 }
 
 object PullRequestTimelineConnection : QSchemaType {
-  val edges: InitStub<PullRequestTimelineItemEdge> by lazy { typeStub<PullRequestTimelineItemEdge>() }
+  val edges: ListInitStub<PullRequestTimelineItemEdge> = QTypeList.stub()
 
-  val nodes: InitStub<PullRequestTimelineItem> by lazy { typeStub<PullRequestTimelineItem>() }
+  val nodes: ListInitStub<PullRequestTimelineItem> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object PullRequestTimelineItem : QSchemaType {
-  val Commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val Commit: ListInitStub<Commit> = QTypeList.stub()
 
-  val CommitCommentThread: InitStub<CommitCommentThread> by lazy { typeStub<CommitCommentThread>() }
+  val CommitCommentThread: ListInitStub<CommitCommentThread> = QTypeList.stub()
 
-  val PullRequestReview: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val PullRequestReview: ListInitStub<PullRequestReview> = QTypeList.stub()
 
-  val PullRequestReviewThread: InitStub<PullRequestReviewThread> by lazy { typeStub<PullRequestReviewThread>() }
+  val PullRequestReviewThread: ListInitStub<PullRequestReviewThread> = QTypeList.stub()
 
-  val PullRequestReviewComment: InitStub<PullRequestReviewComment> by lazy { typeStub<PullRequestReviewComment>() }
+  val PullRequestReviewComment: ListInitStub<PullRequestReviewComment> = QTypeList.stub()
 
-  val IssueComment: InitStub<IssueComment> by lazy { typeStub<IssueComment>() }
+  val IssueComment: ListInitStub<IssueComment> = QTypeList.stub()
 
-  val ClosedEvent: InitStub<ClosedEvent> by lazy { typeStub<ClosedEvent>() }
+  val ClosedEvent: ListInitStub<ClosedEvent> = QTypeList.stub()
 
-  val ReopenedEvent: InitStub<ReopenedEvent> by lazy { typeStub<ReopenedEvent>() }
+  val ReopenedEvent: ListInitStub<ReopenedEvent> = QTypeList.stub()
 
-  val SubscribedEvent: InitStub<SubscribedEvent> by lazy { typeStub<SubscribedEvent>() }
+  val SubscribedEvent: ListInitStub<SubscribedEvent> = QTypeList.stub()
 
-  val UnsubscribedEvent: InitStub<UnsubscribedEvent> by lazy { typeStub<UnsubscribedEvent>() }
+  val UnsubscribedEvent: ListInitStub<UnsubscribedEvent> = QTypeList.stub()
 
-  val MergedEvent: InitStub<MergedEvent> by lazy { typeStub<MergedEvent>() }
+  val MergedEvent: ListInitStub<MergedEvent> = QTypeList.stub()
 
-  val ReferencedEvent: InitStub<ReferencedEvent> by lazy { typeStub<ReferencedEvent>() }
+  val ReferencedEvent: ListInitStub<ReferencedEvent> = QTypeList.stub()
 
-  val AssignedEvent: InitStub<AssignedEvent> by lazy { typeStub<AssignedEvent>() }
+  val AssignedEvent: ListInitStub<AssignedEvent> = QTypeList.stub()
 
-  val UnassignedEvent: InitStub<UnassignedEvent> by lazy { typeStub<UnassignedEvent>() }
+  val UnassignedEvent: ListInitStub<UnassignedEvent> = QTypeList.stub()
 
-  val LabeledEvent: InitStub<LabeledEvent> by lazy { typeStub<LabeledEvent>() }
+  val LabeledEvent: ListInitStub<LabeledEvent> = QTypeList.stub()
 
-  val UnlabeledEvent: InitStub<UnlabeledEvent> by lazy { typeStub<UnlabeledEvent>() }
+  val UnlabeledEvent: ListInitStub<UnlabeledEvent> = QTypeList.stub()
 
-  val MilestonedEvent: InitStub<MilestonedEvent> by lazy { typeStub<MilestonedEvent>() }
+  val MilestonedEvent: ListInitStub<MilestonedEvent> = QTypeList.stub()
 
-  val DemilestonedEvent: InitStub<DemilestonedEvent> by lazy { typeStub<DemilestonedEvent>() }
+  val DemilestonedEvent: ListInitStub<DemilestonedEvent> = QTypeList.stub()
 
-  val RenamedTitleEvent: InitStub<RenamedTitleEvent> by lazy { typeStub<RenamedTitleEvent>() }
+  val RenamedTitleEvent: ListInitStub<RenamedTitleEvent> = QTypeList.stub()
 
-  val LockedEvent: InitStub<LockedEvent> by lazy { typeStub<LockedEvent>() }
+  val LockedEvent: ListInitStub<LockedEvent> = QTypeList.stub()
 
-  val UnlockedEvent: InitStub<UnlockedEvent> by lazy { typeStub<UnlockedEvent>() }
+  val UnlockedEvent: ListInitStub<UnlockedEvent> = QTypeList.stub()
 
-  val DeployedEvent: InitStub<DeployedEvent> by lazy { typeStub<DeployedEvent>() }
+  val DeployedEvent: ListInitStub<DeployedEvent> = QTypeList.stub()
 
-  val HeadRefDeletedEvent: InitStub<HeadRefDeletedEvent> by lazy { typeStub<HeadRefDeletedEvent>() }
+  val HeadRefDeletedEvent: ListInitStub<HeadRefDeletedEvent> = QTypeList.stub()
 
-  val HeadRefRestoredEvent: InitStub<HeadRefRestoredEvent> by lazy { typeStub<HeadRefRestoredEvent>() }
+  val HeadRefRestoredEvent: ListInitStub<HeadRefRestoredEvent> = QTypeList.stub()
 
-  val HeadRefForcePushedEvent: InitStub<HeadRefForcePushedEvent> by lazy { typeStub<HeadRefForcePushedEvent>() }
+  val HeadRefForcePushedEvent: ListInitStub<HeadRefForcePushedEvent> = QTypeList.stub()
 
-  val BaseRefForcePushedEvent: InitStub<BaseRefForcePushedEvent> by lazy { typeStub<BaseRefForcePushedEvent>() }
+  val BaseRefForcePushedEvent: ListInitStub<BaseRefForcePushedEvent> = QTypeList.stub()
 
-  val ReviewRequestedEvent: InitStub<ReviewRequestedEvent> by lazy { typeStub<ReviewRequestedEvent>() }
+  val ReviewRequestedEvent: ListInitStub<ReviewRequestedEvent> = QTypeList.stub()
 
-  val ReviewRequestRemovedEvent: InitStub<ReviewRequestRemovedEvent> by lazy { typeStub<ReviewRequestRemovedEvent>() }
+  val ReviewRequestRemovedEvent: ListInitStub<ReviewRequestRemovedEvent> = QTypeList.stub()
 
-  val ReviewDismissedEvent: InitStub<ReviewDismissedEvent> by lazy { typeStub<ReviewDismissedEvent>() }
+  val ReviewDismissedEvent: ListInitStub<ReviewDismissedEvent> = QTypeList.stub()
 }
 
 object PullRequestTimelineItemEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<PullRequestTimelineItem> by lazy { typeStub<PullRequestTimelineItem>() }
+  val node: InitStub<PullRequestTimelineItem> = QType.stub()
 }
 
 object PushAllowance : QSchemaType, Node {
-  val actor: InitStub<PushAllowanceActor> by lazy { typeStub<PushAllowanceActor>() }
+  val actor: InitStub<PushAllowanceActor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val protectedBranch: InitStub<ProtectedBranch> by lazy { typeStub<ProtectedBranch>() }
+  val protectedBranch: InitStub<ProtectedBranch> = QType.stub()
 }
 
 object PushAllowanceActor : QSchemaType {
-  val User: InitStub<User> by lazy { typeStub<User>() }
+  val User: ListInitStub<User> = QTypeList.stub()
 
-  val Team: InitStub<Team> by lazy { typeStub<Team>() }
+  val Team: ListInitStub<Team> = QTypeList.stub()
 }
 
 object PushAllowanceConnection : QSchemaType {
-  val edges: InitStub<PushAllowanceEdge> by lazy { typeStub<PushAllowanceEdge>() }
+  val edges: ListInitStub<PushAllowanceEdge> = QTypeList.stub()
 
-  val nodes: InitStub<PushAllowance> by lazy { typeStub<PushAllowance>() }
+  val nodes: ListInitStub<PushAllowance> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object PushAllowanceEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<PushAllowance> by lazy { typeStub<PushAllowance>() }
+  val node: InitStub<PushAllowance> = QType.stub()
 }
 
 object Query : QSchemaType {
-  val codeOfConduct: QTypeConfigStub<CodeOfConduct, CodeOfConductArgs> by lazy { typeConfigStub<CodeOfConduct, CodeOfConductArgs>(CodeOfConductArgs()) }
+  val codeOfConduct: QTypeConfigStub<CodeOfConduct, CodeOfConductArgs> = QType.configStub(CodeOfConductArgs())
 
-  val codesOfConduct: InitStub<CodeOfConduct> by lazy { typeStub<CodeOfConduct>() }
+  val codesOfConduct: ListInitStub<CodeOfConduct> = QTypeList.stub()
 
-  val node: QTypeConfigStub<Node, NodeArgs> by lazy { typeConfigStub<Node, NodeArgs>(NodeArgs()) }
+  val node: QTypeConfigStub<Node, NodeArgs> = QType.configStub(NodeArgs())
 
-  val nodes: QTypeConfigStub<Node, NodesArgs> by lazy { typeConfigStub<Node, NodesArgs>(NodesArgs()) }
+  val nodes: ListConfigType<Node, NodesArgs> = QTypeList.configStub(NodesArgs())
 
-  val organization: QTypeConfigStub<Organization, OrganizationArgs> by lazy { typeConfigStub<Organization, OrganizationArgs>(OrganizationArgs()) }
+  val organization: QTypeConfigStub<Organization, OrganizationArgs> = QType.configStub(OrganizationArgs())
 
-  val rateLimit: InitStub<RateLimit> by lazy { typeStub<RateLimit>() }
+  val rateLimit: InitStub<RateLimit> = QType.stub()
 
-  val relay: InitStub<Query> by lazy { typeStub<Query>() }
+  val relay: InitStub<Query> = QType.stub()
 
-  val repository: QTypeConfigStub<Repository, RepositoryArgs> by lazy { typeConfigStub<Repository, RepositoryArgs>(RepositoryArgs()) }
+  val repository: QTypeConfigStub<Repository, RepositoryArgs> = QType.configStub(RepositoryArgs())
 
-  val repositoryOwner: QTypeConfigStub<RepositoryOwner, RepositoryOwnerArgs> by lazy { typeConfigStub<RepositoryOwner, RepositoryOwnerArgs>(RepositoryOwnerArgs()) }
+  val repositoryOwner: QTypeConfigStub<RepositoryOwner, RepositoryOwnerArgs> = QType.configStub(RepositoryOwnerArgs())
 
-  val resource: QTypeConfigStub<UniformResourceLocatable, ResourceArgs> by lazy { typeConfigStub<UniformResourceLocatable, ResourceArgs>(ResourceArgs()) }
+  val resource: QTypeConfigStub<UniformResourceLocatable, ResourceArgs> = QType.configStub(ResourceArgs())
 
-  val search: QTypeConfigStub<SearchResultItemConnection, SearchArgs> by lazy { typeConfigStub<SearchResultItemConnection, SearchArgs>(SearchArgs()) }
+  val search: QTypeConfigStub<SearchResultItemConnection, SearchArgs> = QType.configStub(SearchArgs())
 
-  val topic: QTypeConfigStub<Topic, TopicArgs> by lazy { typeConfigStub<Topic, TopicArgs>(TopicArgs()) }
+  val topic: QTypeConfigStub<Topic, TopicArgs> = QType.configStub(TopicArgs())
 
-  val user: QTypeConfigStub<User, UserArgs> by lazy { typeConfigStub<User, UserArgs>(UserArgs()) }
+  val user: QTypeConfigStub<User, UserArgs> = QType.configStub(UserArgs())
 
-  val viewer: InitStub<User> by lazy { typeStub<User>() }
+  val viewer: InitStub<User> = QType.stub()
 
   class CodeOfConductArgs(args: TypeArgBuilder = TypeArgBuilder.create<CodeOfConduct, CodeOfConductArgs>()) : TypeArgBuilder by args {
     fun key(value: String): CodeOfConductArgs = apply { addArg("key", value) }
@@ -3029,7 +3044,7 @@ object Query : QSchemaType {
 
   }
 
-  class NodesArgs(args: TypeArgBuilder = TypeArgBuilder.create<Node, NodesArgs>()) : TypeArgBuilder by args {
+  class NodesArgs(args: TypeListArgBuilder = TypeListArgBuilder.create<Node, NodesArgs>()) : TypeListArgBuilder by args {
     fun ids(value: String): NodesArgs = apply { addArg("ids", value) }
 
   }
@@ -3089,13 +3104,13 @@ object Query : QSchemaType {
 }
 
 object RateLimit : QSchemaType {
-  val cost: Stub<Int> by lazy { stub<Int>() }
+  val cost: Stub<Int> = QScalar.stub()
 
-  val limit: Stub<Int> by lazy { stub<Int>() }
+  val limit: Stub<Int> = QScalar.stub()
 
-  val remaining: Stub<Int> by lazy { stub<Int>() }
+  val remaining: Stub<Int> = QScalar.stub()
 
-  val resetAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val resetAt: Stub<DateTime> = QScalar.stub()
 }
 
 interface Reactable : QSchemaType {
@@ -3103,7 +3118,7 @@ interface Reactable : QSchemaType {
 
   val id: Stub<String>
 
-  val reactionGroups: InitStub<ReactionGroup>
+  val reactionGroups: ListInitStub<ReactionGroup>
 
   val reactions: QTypeConfigStub<ReactionConnection, ReactionsArgs>
 
@@ -3131,45 +3146,45 @@ interface Reactable : QSchemaType {
 }
 
 object ReactingUserConnection : QSchemaType {
-  val edges: InitStub<ReactingUserEdge> by lazy { typeStub<ReactingUserEdge>() }
+  val edges: ListInitStub<ReactingUserEdge> = QTypeList.stub()
 
-  val nodes: InitStub<User> by lazy { typeStub<User>() }
+  val nodes: ListInitStub<User> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ReactingUserEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<User> by lazy { typeStub<User>() }
+  val node: InitStub<User> = QType.stub()
 
-  val reactedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val reactedAt: Stub<DateTime> = QScalar.stub()
 }
 
 object Reaction : QSchemaType, Node {
-  val content: Stub<ReactionContent> by lazy { stub<ReactionContent>() }
+  val content: Stub<ReactionContent> = QScalar.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val user: InitStub<User> by lazy { typeStub<User>() }
+  val user: InitStub<User> = QType.stub()
 }
 
 object ReactionConnection : QSchemaType {
-  val edges: InitStub<ReactionEdge> by lazy { typeStub<ReactionEdge>() }
+  val edges: ListInitStub<ReactionEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Reaction> by lazy { typeStub<Reaction>() }
+  val nodes: ListInitStub<Reaction> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 
-  val viewerHasReacted: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerHasReacted: Stub<Boolean> = QScalar.stub()
 }
 
 enum class ReactionContent : QSchemaType {
@@ -3187,21 +3202,21 @@ enum class ReactionContent : QSchemaType {
 }
 
 object ReactionEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Reaction> by lazy { typeStub<Reaction>() }
+  val node: InitStub<Reaction> = QType.stub()
 }
 
 object ReactionGroup : QSchemaType {
-  val content: Stub<ReactionContent> by lazy { stub<ReactionContent>() }
+  val content: Stub<ReactionContent> = QScalar.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val subject: InitStub<Reactable> by lazy { typeStub<Reactable>() }
+  val subject: InitStub<Reactable> = QType.stub()
 
-  val users: QTypeConfigStub<ReactingUserConnection, UsersArgs> by lazy { typeConfigStub<ReactingUserConnection, UsersArgs>(UsersArgs()) }
+  val users: QTypeConfigStub<ReactingUserConnection, UsersArgs> = QType.configStub(UsersArgs())
 
-  val viewerHasReacted: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerHasReacted: Stub<Boolean> = QScalar.stub()
 
   class UsersArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReactingUserConnection, UsersArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): UsersArgs = apply { addArg("first", value) }
@@ -3226,17 +3241,17 @@ enum class ReactionOrderField : QSchemaType {
 }
 
 object Ref : QSchemaType, Node {
-  val associatedPullRequests: QTypeConfigStub<PullRequestConnection, AssociatedPullRequestsArgs> by lazy { typeConfigStub<PullRequestConnection, AssociatedPullRequestsArgs>(AssociatedPullRequestsArgs()) }
+  val associatedPullRequests: QTypeConfigStub<PullRequestConnection, AssociatedPullRequestsArgs> = QType.configStub(AssociatedPullRequestsArgs())
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val prefix: Stub<String> by lazy { stub<String>() }
+  val prefix: Stub<String> = QScalar.stub()
 
-  val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val repository: InitStub<Repository> = QType.stub()
 
-  val target: InitStub<GitObject> by lazy { typeStub<GitObject>() }
+  val target: InitStub<GitObject> = QType.stub()
 
   class AssociatedPullRequestsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestConnection, AssociatedPullRequestsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): AssociatedPullRequestsArgs = apply { addArg("first", value) }
@@ -3257,65 +3272,65 @@ object Ref : QSchemaType, Node {
 }
 
 object RefConnection : QSchemaType {
-  val edges: InitStub<RefEdge> by lazy { typeStub<RefEdge>() }
+  val edges: ListInitStub<RefEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val nodes: ListInitStub<Ref> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object RefEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val node: InitStub<Ref> = QType.stub()
 }
 
 object ReferencedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  val commitRepository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val commitRepository: InitStub<Repository> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val isCrossReference: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isCrossReference: Stub<Boolean> = QScalar.stub()
 
-  val isCrossRepository: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isCrossRepository: Stub<Boolean> = QScalar.stub()
 
-  val isDirectReference: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isDirectReference: Stub<Boolean> = QScalar.stub()
 
-  val subject: InitStub<ReferencedSubject> by lazy { typeStub<ReferencedSubject>() }
+  val subject: InitStub<ReferencedSubject> = QType.stub()
 }
 
 object ReferencedSubject : QSchemaType {
-  val Issue: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val Issue: ListInitStub<Issue> = QTypeList.stub()
 
-  val PullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val PullRequest: ListInitStub<PullRequest> = QTypeList.stub()
 }
 
 object Release : QSchemaType, UniformResourceLocatable, Node {
-  val description: Stub<String> by lazy { stub<String>() }
+  val description: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val publishedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  val releaseAsset: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetArgs> by lazy { typeConfigStub<ReleaseAssetConnection, ReleaseAssetArgs>(ReleaseAssetArgs()) }
+  val releaseAsset: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetArgs> = QType.configStub(ReleaseAssetArgs())
 
-  val releaseAssets: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetsArgs> by lazy { typeConfigStub<ReleaseAssetConnection, ReleaseAssetsArgs>(ReleaseAssetsArgs()) }
+  val releaseAssets: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetsArgs> = QType.configStub(ReleaseAssetsArgs())
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val tag: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val tag: InitStub<Ref> = QType.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 
   class ReleaseAssetArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReleaseAssetConnection, ReleaseAssetArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): ReleaseAssetArgs = apply { addArg("first", value) }
@@ -3350,45 +3365,45 @@ object Release : QSchemaType, UniformResourceLocatable, Node {
 }
 
 object ReleaseAsset : QSchemaType, Node {
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val release: InitStub<Release> by lazy { typeStub<Release>() }
+  val release: InitStub<Release> = QType.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 }
 
 object ReleaseAssetConnection : QSchemaType {
-  val edges: InitStub<ReleaseAssetEdge> by lazy { typeStub<ReleaseAssetEdge>() }
+  val edges: ListInitStub<ReleaseAssetEdge> = QTypeList.stub()
 
-  val nodes: InitStub<ReleaseAsset> by lazy { typeStub<ReleaseAsset>() }
+  val nodes: ListInitStub<ReleaseAsset> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ReleaseAssetEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<ReleaseAsset> by lazy { typeStub<ReleaseAsset>() }
+  val node: InitStub<ReleaseAsset> = QType.stub()
 }
 
 object ReleaseConnection : QSchemaType {
-  val edges: InitStub<ReleaseEdge> by lazy { typeStub<ReleaseEdge>() }
+  val edges: ListInitStub<ReleaseEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Release> by lazy { typeStub<Release>() }
+  val nodes: ListInitStub<Release> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ReleaseEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Release> by lazy { typeStub<Release>() }
+  val node: InitStub<Release> = QType.stub()
 }
 
 data class RemoveOutsideCollaboratorInput(private val userId: String,
@@ -3398,9 +3413,9 @@ data class RemoveOutsideCollaboratorInput(private val userId: String,
 }
 
 object RemoveOutsideCollaboratorPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val removedUser: InitStub<User> by lazy { typeStub<User>() }
+  val removedUser: InitStub<User> = QType.stub()
 }
 
 data class RemoveReactionInput(private val subjectId: String,
@@ -3410,11 +3425,11 @@ data class RemoveReactionInput(private val subjectId: String,
 }
 
 object RemoveReactionPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val reaction: InitStub<Reaction> by lazy { typeStub<Reaction>() }
+  val reaction: InitStub<Reaction> = QType.stub()
 
-  val subject: InitStub<Reactable> by lazy { typeStub<Reactable>() }
+  val subject: InitStub<Reactable> = QType.stub()
 }
 
 data class RemoveStarInput(private val starrableId: String) : QInput {
@@ -3423,169 +3438,169 @@ data class RemoveStarInput(private val starrableId: String) : QInput {
 }
 
 object RemoveStarPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val starrable: InitStub<Starrable> by lazy { typeStub<Starrable>() }
+  val starrable: InitStub<Starrable> = QType.stub()
 }
 
 object RemovedFromProjectEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 object RenamedTitleEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val currentTitle: Stub<String> by lazy { stub<String>() }
+  val currentTitle: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val previousTitle: Stub<String> by lazy { stub<String>() }
+  val previousTitle: Stub<String> = QScalar.stub()
 
-  val subject: InitStub<RenamedTitleSubject> by lazy { typeStub<RenamedTitleSubject>() }
+  val subject: InitStub<RenamedTitleSubject> = QType.stub()
 }
 
 object RenamedTitleSubject : QSchemaType {
-  val Issue: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val Issue: ListInitStub<Issue> = QTypeList.stub()
 
-  val PullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val PullRequest: ListInitStub<PullRequest> = QTypeList.stub()
 }
 
 object ReopenedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val closable: InitStub<Closable> by lazy { typeStub<Closable>() }
+  val closable: InitStub<Closable> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 }
 
 object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starrable, Subscribable, ProjectOwner, Node {
-  val codeOfConduct: InitStub<CodeOfConduct> by lazy { typeStub<CodeOfConduct>() }
+  val codeOfConduct: InitStub<CodeOfConduct> = QType.stub()
 
-  val commitComments: QTypeConfigStub<CommitCommentConnection, CommitCommentsArgs> by lazy { typeConfigStub<CommitCommentConnection, CommitCommentsArgs>(CommitCommentsArgs()) }
+  val commitComments: QTypeConfigStub<CommitCommentConnection, CommitCommentsArgs> = QType.configStub(CommitCommentsArgs())
 
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  val defaultBranchRef: InitStub<Ref> by lazy { typeStub<Ref>() }
+  val defaultBranchRef: InitStub<Ref> = QType.stub()
 
-  val deployments: QTypeConfigStub<DeploymentConnection, DeploymentsArgs> by lazy { typeConfigStub<DeploymentConnection, DeploymentsArgs>(DeploymentsArgs()) }
+  val deployments: QTypeConfigStub<DeploymentConnection, DeploymentsArgs> = QType.configStub(DeploymentsArgs())
 
-  override val description: Stub<String> by lazy { stub<String>() }
+  override val description: Stub<String> = QScalar.stub()
 
-  override val descriptionHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val descriptionHTML: Stub<HTML> = QScalar.stub()
 
-  val diskUsage: Stub<Int> by lazy { stub<Int>() }
+  val diskUsage: Stub<Int> = QScalar.stub()
 
-  val forks: QTypeConfigStub<RepositoryConnection, ForksArgs> by lazy { typeConfigStub<RepositoryConnection, ForksArgs>(ForksArgs()) }
+  val forks: QTypeConfigStub<RepositoryConnection, ForksArgs> = QType.configStub(ForksArgs())
 
-  override val hasIssuesEnabled: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val hasIssuesEnabled: Stub<Boolean> = QScalar.stub()
 
-  override val hasWikiEnabled: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val hasWikiEnabled: Stub<Boolean> = QScalar.stub()
 
-  override val homepageUrl: Stub<URI> by lazy { stub<URI>() }
+  override val homepageUrl: Stub<URI> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val isFork: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isFork: Stub<Boolean> = QScalar.stub()
 
-  override val isLocked: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isLocked: Stub<Boolean> = QScalar.stub()
 
-  override val isMirror: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isMirror: Stub<Boolean> = QScalar.stub()
 
-  override val isPrivate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isPrivate: Stub<Boolean> = QScalar.stub()
 
-  val issue: QTypeConfigStub<Issue, IssueArgs> by lazy { typeConfigStub<Issue, IssueArgs>(IssueArgs()) }
+  val issue: QTypeConfigStub<Issue, IssueArgs> = QType.configStub(IssueArgs())
 
-  val issueOrPullRequest: QTypeConfigStub<IssueOrPullRequest, IssueOrPullRequestArgs> by lazy { typeConfigStub<IssueOrPullRequest, IssueOrPullRequestArgs>(IssueOrPullRequestArgs()) }
+  val issueOrPullRequest: QTypeConfigStub<IssueOrPullRequest, IssueOrPullRequestArgs> = QType.configStub(IssueOrPullRequestArgs())
 
-  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> by lazy { typeConfigStub<IssueConnection, IssuesArgs>(IssuesArgs()) }
+  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub(IssuesArgs())
 
-  val label: QTypeConfigStub<Label, LabelArgs> by lazy { typeConfigStub<Label, LabelArgs>(LabelArgs()) }
+  val label: QTypeConfigStub<Label, LabelArgs> = QType.configStub(LabelArgs())
 
-  val labels: QTypeConfigStub<LabelConnection, LabelsArgs> by lazy { typeConfigStub<LabelConnection, LabelsArgs>(LabelsArgs()) }
+  val labels: QTypeConfigStub<LabelConnection, LabelsArgs> = QType.configStub(LabelsArgs())
 
-  val languages: QTypeConfigStub<LanguageConnection, LanguagesArgs> by lazy { typeConfigStub<LanguageConnection, LanguagesArgs>(LanguagesArgs()) }
+  val languages: QTypeConfigStub<LanguageConnection, LanguagesArgs> = QType.configStub(LanguagesArgs())
 
-  override val license: Stub<String> by lazy { stub<String>() }
+  override val license: Stub<String> = QScalar.stub()
 
-  override val lockReason: Stub<RepositoryLockReason> by lazy { stub<RepositoryLockReason>() }
+  override val lockReason: Stub<RepositoryLockReason> = QScalar.stub()
 
-  val mentionableUsers: QTypeConfigStub<UserConnection, MentionableUsersArgs> by lazy { typeConfigStub<UserConnection, MentionableUsersArgs>(MentionableUsersArgs()) }
+  val mentionableUsers: QTypeConfigStub<UserConnection, MentionableUsersArgs> = QType.configStub(MentionableUsersArgs())
 
-  val milestone: QTypeConfigStub<Milestone, MilestoneArgs> by lazy { typeConfigStub<Milestone, MilestoneArgs>(MilestoneArgs()) }
+  val milestone: QTypeConfigStub<Milestone, MilestoneArgs> = QType.configStub(MilestoneArgs())
 
-  val milestones: QTypeConfigStub<MilestoneConnection, MilestonesArgs> by lazy { typeConfigStub<MilestoneConnection, MilestonesArgs>(MilestonesArgs()) }
+  val milestones: QTypeConfigStub<MilestoneConnection, MilestonesArgs> = QType.configStub(MilestonesArgs())
 
-  override val mirrorUrl: Stub<URI> by lazy { stub<URI>() }
+  override val mirrorUrl: Stub<URI> = QScalar.stub()
 
-  override val name: Stub<String> by lazy { stub<String>() }
+  override val name: Stub<String> = QScalar.stub()
 
-  override val nameWithOwner: Stub<String> by lazy { stub<String>() }
+  override val nameWithOwner: Stub<String> = QScalar.stub()
 
-  val objectVal: QTypeConfigStub<GitObject, ObjectValArgs> by lazy { typeConfigStub<GitObject, ObjectValArgs>(ObjectValArgs()) }
+  val objectVal: QTypeConfigStub<GitObject, ObjectValArgs> = QType.configStub(ObjectValArgs())
 
-  override val owner: InitStub<RepositoryOwner> by lazy { typeStub<RepositoryOwner>() }
+  override val owner: InitStub<RepositoryOwner> = QType.stub()
 
-  val parent: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val parent: InitStub<Repository> = QType.stub()
 
-  val primaryLanguage: InitStub<Language> by lazy { typeStub<Language>() }
+  val primaryLanguage: InitStub<Language> = QType.stub()
 
-  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> by lazy { typeConfigStub<Project, ProjectOwner.ProjectArgs>(ProjectOwner.ProjectArgs()) }
+  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> = QType.configStub(ProjectOwner.ProjectArgs())
 
-  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> by lazy { typeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs>(ProjectOwner.ProjectsArgs()) }
+  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> = QType.configStub(ProjectOwner.ProjectsArgs())
 
-  override val projectsResourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val projectsResourcePath: Stub<URI> = QScalar.stub()
 
-  override val projectsUrl: Stub<URI> by lazy { stub<URI>() }
+  override val projectsUrl: Stub<URI> = QScalar.stub()
 
-  val protectedBranches: QTypeConfigStub<ProtectedBranchConnection, ProtectedBranchesArgs> by lazy { typeConfigStub<ProtectedBranchConnection, ProtectedBranchesArgs>(ProtectedBranchesArgs()) }
+  val protectedBranches: QTypeConfigStub<ProtectedBranchConnection, ProtectedBranchesArgs> = QType.configStub(ProtectedBranchesArgs())
 
-  val pullRequest: QTypeConfigStub<PullRequest, PullRequestArgs> by lazy { typeConfigStub<PullRequest, PullRequestArgs>(PullRequestArgs()) }
+  val pullRequest: QTypeConfigStub<PullRequest, PullRequestArgs> = QType.configStub(PullRequestArgs())
 
-  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> by lazy { typeConfigStub<PullRequestConnection, PullRequestsArgs>(PullRequestsArgs()) }
+  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub(PullRequestsArgs())
 
-  override val pushedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val pushedAt: Stub<DateTime> = QScalar.stub()
 
-  val ref: QTypeConfigStub<Ref, RefArgs> by lazy { typeConfigStub<Ref, RefArgs>(RefArgs()) }
+  val ref: QTypeConfigStub<Ref, RefArgs> = QType.configStub(RefArgs())
 
-  val refs: QTypeConfigStub<RefConnection, RefsArgs> by lazy { typeConfigStub<RefConnection, RefsArgs>(RefsArgs()) }
+  val refs: QTypeConfigStub<RefConnection, RefsArgs> = QType.configStub(RefsArgs())
 
-  val releases: QTypeConfigStub<ReleaseConnection, ReleasesArgs> by lazy { typeConfigStub<ReleaseConnection, ReleasesArgs>(ReleasesArgs()) }
+  val releases: QTypeConfigStub<ReleaseConnection, ReleasesArgs> = QType.configStub(ReleasesArgs())
 
-  val repositoryTopics: QTypeConfigStub<RepositoryTopicConnection, RepositoryTopicsArgs> by lazy { typeConfigStub<RepositoryTopicConnection, RepositoryTopicsArgs>(RepositoryTopicsArgs()) }
+  val repositoryTopics: QTypeConfigStub<RepositoryTopicConnection, RepositoryTopicsArgs> = QType.configStub(RepositoryTopicsArgs())
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> by lazy { typeConfigStub<StargazerConnection, Starrable.StargazersArgs>(Starrable.StargazersArgs()) }
+  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> = QType.configStub(Starrable.StargazersArgs())
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 
-  val viewerCanAdminister: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerCanAdminister: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanCreateProjects: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanCreateProjects: Stub<Boolean> = QScalar.stub()
 
-  override val viewerCanSubscribe: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerCanSubscribe: Stub<Boolean> = QScalar.stub()
 
-  val viewerCanUpdateTopics: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerCanUpdateTopics: Stub<Boolean> = QScalar.stub()
 
-  override val viewerHasStarred: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val viewerHasStarred: Stub<Boolean> = QScalar.stub()
 
-  override val viewerSubscription: Stub<SubscriptionState> by lazy { stub<SubscriptionState>() }
+  override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
-  val watchers: QTypeConfigStub<UserConnection, WatchersArgs> by lazy { typeConfigStub<UserConnection, WatchersArgs>(WatchersArgs()) }
+  val watchers: QTypeConfigStub<UserConnection, WatchersArgs> = QType.configStub(WatchersArgs())
 
   class CommitCommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<CommitCommentConnection, CommitCommentsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): CommitCommentsArgs = apply { addArg("first", value) }
@@ -3882,21 +3897,21 @@ enum class RepositoryCollaboratorAffiliation : QSchemaType {
 }
 
 object RepositoryConnection : QSchemaType {
-  val edges: InitStub<RepositoryEdge> by lazy { typeStub<RepositoryEdge>() }
+  val edges: ListInitStub<RepositoryEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val nodes: ListInitStub<Repository> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 
-  val totalDiskUsage: Stub<Int> by lazy { stub<Int>() }
+  val totalDiskUsage: Stub<Int> = QScalar.stub()
 }
 
 object RepositoryEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val node: InitStub<Repository> = QType.stub()
 }
 
 interface RepositoryInfo : QSchemaType {
@@ -3942,55 +3957,55 @@ interface RepositoryInfo : QSchemaType {
 }
 
 object RepositoryInvitation : QSchemaType, Node {
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val invitee: InitStub<User> by lazy { typeStub<User>() }
+  val invitee: InitStub<User> = QType.stub()
 
-  val inviter: InitStub<User> by lazy { typeStub<User>() }
+  val inviter: InitStub<User> = QType.stub()
 
-  val repository: InitStub<RepositoryInvitationRepository> by lazy { typeStub<RepositoryInvitationRepository>() }
+  val repository: InitStub<RepositoryInvitationRepository> = QType.stub()
 }
 
 object RepositoryInvitationRepository : QSchemaType, RepositoryInfo {
-  override val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val description: Stub<String> by lazy { stub<String>() }
+  override val description: Stub<String> = QScalar.stub()
 
-  override val descriptionHTML: Stub<HTML> by lazy { stub<HTML>() }
+  override val descriptionHTML: Stub<HTML> = QScalar.stub()
 
-  override val hasIssuesEnabled: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val hasIssuesEnabled: Stub<Boolean> = QScalar.stub()
 
-  override val hasWikiEnabled: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val hasWikiEnabled: Stub<Boolean> = QScalar.stub()
 
-  override val homepageUrl: Stub<URI> by lazy { stub<URI>() }
+  override val homepageUrl: Stub<URI> = QScalar.stub()
 
-  override val isFork: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isFork: Stub<Boolean> = QScalar.stub()
 
-  override val isLocked: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isLocked: Stub<Boolean> = QScalar.stub()
 
-  override val isMirror: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isMirror: Stub<Boolean> = QScalar.stub()
 
-  override val isPrivate: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isPrivate: Stub<Boolean> = QScalar.stub()
 
-  override val license: Stub<String> by lazy { stub<String>() }
+  override val license: Stub<String> = QScalar.stub()
 
-  override val lockReason: Stub<RepositoryLockReason> by lazy { stub<RepositoryLockReason>() }
+  override val lockReason: Stub<RepositoryLockReason> = QScalar.stub()
 
-  override val mirrorUrl: Stub<URI> by lazy { stub<URI>() }
+  override val mirrorUrl: Stub<URI> = QScalar.stub()
 
-  override val name: Stub<String> by lazy { stub<String>() }
+  override val name: Stub<String> = QScalar.stub()
 
-  override val nameWithOwner: Stub<String> by lazy { stub<String>() }
+  override val nameWithOwner: Stub<String> = QScalar.stub()
 
-  override val owner: InitStub<RepositoryOwner> by lazy { typeStub<RepositoryOwner>() }
+  override val owner: InitStub<RepositoryOwner> = QType.stub()
 
-  override val pushedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val pushedAt: Stub<DateTime> = QScalar.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  override val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 }
 
 enum class RepositoryLockReason : QSchemaType {
@@ -4107,29 +4122,29 @@ enum class RepositoryPrivacy : QSchemaType {
 }
 
 object RepositoryTopic : QSchemaType, UniformResourceLocatable, Node {
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val topic: InitStub<Topic> by lazy { typeStub<Topic>() }
+  val topic: InitStub<Topic> = QType.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 }
 
 object RepositoryTopicConnection : QSchemaType {
-  val edges: InitStub<RepositoryTopicEdge> by lazy { typeStub<RepositoryTopicEdge>() }
+  val edges: ListInitStub<RepositoryTopicEdge> = QTypeList.stub()
 
-  val nodes: InitStub<RepositoryTopic> by lazy { typeStub<RepositoryTopic>() }
+  val nodes: ListInitStub<RepositoryTopic> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object RepositoryTopicEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<RepositoryTopic> by lazy { typeStub<RepositoryTopic>() }
+  val node: InitStub<RepositoryTopic> = QType.stub()
 }
 
 data class RequestReviewsInput(private val pullRequestId: String, private val userIds: String,
@@ -4142,153 +4157,153 @@ data class RequestReviewsInput(private val pullRequestId: String, private val us
 }
 
 object RequestReviewsPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val requestedReviewersEdge: InitStub<UserEdge> by lazy { typeStub<UserEdge>() }
+  val requestedReviewersEdge: InitStub<UserEdge> = QType.stub()
 }
 
 object ReviewDismissalAllowance : QSchemaType, Node {
-  val actor: InitStub<ReviewDismissalAllowanceActor> by lazy { typeStub<ReviewDismissalAllowanceActor>() }
+  val actor: InitStub<ReviewDismissalAllowanceActor> = QType.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val protectedBranch: InitStub<ProtectedBranch> by lazy { typeStub<ProtectedBranch>() }
+  val protectedBranch: InitStub<ProtectedBranch> = QType.stub()
 }
 
 object ReviewDismissalAllowanceActor : QSchemaType {
-  val User: InitStub<User> by lazy { typeStub<User>() }
+  val User: ListInitStub<User> = QTypeList.stub()
 
-  val Team: InitStub<Team> by lazy { typeStub<Team>() }
+  val Team: ListInitStub<Team> = QTypeList.stub()
 }
 
 object ReviewDismissalAllowanceConnection : QSchemaType {
-  val edges: InitStub<ReviewDismissalAllowanceEdge> by lazy { typeStub<ReviewDismissalAllowanceEdge>() }
+  val edges: ListInitStub<ReviewDismissalAllowanceEdge> = QTypeList.stub()
 
-  val nodes: InitStub<ReviewDismissalAllowance> by lazy { typeStub<ReviewDismissalAllowance>() }
+  val nodes: ListInitStub<ReviewDismissalAllowance> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ReviewDismissalAllowanceEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<ReviewDismissalAllowance> by lazy { typeStub<ReviewDismissalAllowance>() }
+  val node: InitStub<ReviewDismissalAllowance> = QType.stub()
 }
 
 object ReviewDismissedEvent : QSchemaType, UniformResourceLocatable, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val message: Stub<String> by lazy { stub<String>() }
+  val message: Stub<String> = QScalar.stub()
 
-  val messageHtml: Stub<HTML> by lazy { stub<HTML>() }
+  val messageHtml: Stub<HTML> = QScalar.stub()
 
-  val previousReviewState: Stub<PullRequestReviewState> by lazy { stub<PullRequestReviewState>() }
+  val previousReviewState: Stub<PullRequestReviewState> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val pullRequestCommit: InitStub<PullRequestCommit> by lazy { typeStub<PullRequestCommit>() }
+  val pullRequestCommit: InitStub<PullRequestCommit> = QType.stub()
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val review: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val review: InitStub<PullRequestReview> = QType.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 }
 
 object ReviewRequest : QSchemaType, Node {
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val reviewer: InitStub<User> by lazy { typeStub<User>() }
+  val reviewer: InitStub<User> = QType.stub()
 }
 
 object ReviewRequestConnection : QSchemaType {
-  val edges: InitStub<ReviewRequestEdge> by lazy { typeStub<ReviewRequestEdge>() }
+  val edges: ListInitStub<ReviewRequestEdge> = QTypeList.stub()
 
-  val nodes: InitStub<ReviewRequest> by lazy { typeStub<ReviewRequest>() }
+  val nodes: ListInitStub<ReviewRequest> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object ReviewRequestEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<ReviewRequest> by lazy { typeStub<ReviewRequest>() }
+  val node: InitStub<ReviewRequest> = QType.stub()
 }
 
 object ReviewRequestRemovedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val subject: InitStub<User> by lazy { typeStub<User>() }
+  val subject: InitStub<User> = QType.stub()
 }
 
 object ReviewRequestedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val pullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  val subject: InitStub<User> by lazy { typeStub<User>() }
+  val subject: InitStub<User> = QType.stub()
 }
 
 object SearchResultItem : QSchemaType {
-  val Issue: InitStub<Issue> by lazy { typeStub<Issue>() }
+  val Issue: ListInitStub<Issue> = QTypeList.stub()
 
-  val PullRequest: InitStub<PullRequest> by lazy { typeStub<PullRequest>() }
+  val PullRequest: ListInitStub<PullRequest> = QTypeList.stub()
 
-  val Repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val Repository: ListInitStub<Repository> = QTypeList.stub()
 
-  val User: InitStub<User> by lazy { typeStub<User>() }
+  val User: ListInitStub<User> = QTypeList.stub()
 
-  val Organization: InitStub<Organization> by lazy { typeStub<Organization>() }
+  val Organization: ListInitStub<Organization> = QTypeList.stub()
 }
 
 object SearchResultItemConnection : QSchemaType {
-  val codeCount: Stub<Int> by lazy { stub<Int>() }
+  val codeCount: Stub<Int> = QScalar.stub()
 
-  val edges: InitStub<SearchResultItemEdge> by lazy { typeStub<SearchResultItemEdge>() }
+  val edges: ListInitStub<SearchResultItemEdge> = QTypeList.stub()
 
-  val issueCount: Stub<Int> by lazy { stub<Int>() }
+  val issueCount: Stub<Int> = QScalar.stub()
 
-  val nodes: InitStub<SearchResultItem> by lazy { typeStub<SearchResultItem>() }
+  val nodes: ListInitStub<SearchResultItem> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val repositoryCount: Stub<Int> by lazy { stub<Int>() }
+  val repositoryCount: Stub<Int> = QScalar.stub()
 
-  val userCount: Stub<Int> by lazy { stub<Int>() }
+  val userCount: Stub<Int> = QScalar.stub()
 
-  val wikiCount: Stub<Int> by lazy { stub<Int>() }
+  val wikiCount: Stub<Int> = QScalar.stub()
 }
 
 object SearchResultItemEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<SearchResultItem> by lazy { typeStub<SearchResultItem>() }
+  val node: InitStub<SearchResultItem> = QType.stub()
 }
 
 enum class SearchType : QSchemaType {
@@ -4300,17 +4315,17 @@ enum class SearchType : QSchemaType {
 }
 
 object SmimeSignature : QSchemaType, GitSignature {
-  override val email: Stub<String> by lazy { stub<String>() }
+  override val email: Stub<String> = QScalar.stub()
 
-  override val isValid: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isValid: Stub<Boolean> = QScalar.stub()
 
-  override val payload: Stub<String> by lazy { stub<String>() }
+  override val payload: Stub<String> = QScalar.stub()
 
-  override val signature: Stub<String> by lazy { stub<String>() }
+  override val signature: Stub<String> = QScalar.stub()
 
-  override val signer: InitStub<User> by lazy { typeStub<User>() }
+  override val signer: InitStub<User> = QType.stub()
 
-  override val state: Stub<GitSignatureState> by lazy { stub<GitSignatureState>() }
+  override val state: Stub<GitSignatureState> = QScalar.stub()
 }
 
 data class StarOrder(private val field: StarOrderField,
@@ -4321,21 +4336,21 @@ enum class StarOrderField : QSchemaType {
 }
 
 object StargazerConnection : QSchemaType {
-  val edges: InitStub<StargazerEdge> by lazy { typeStub<StargazerEdge>() }
+  val edges: ListInitStub<StargazerEdge> = QTypeList.stub()
 
-  val nodes: InitStub<User> by lazy { typeStub<User>() }
+  val nodes: ListInitStub<User> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object StargazerEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<User> by lazy { typeStub<User>() }
+  val node: InitStub<User> = QType.stub()
 
-  val starredAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val starredAt: Stub<DateTime> = QScalar.stub()
 }
 
 interface Starrable : QSchemaType {
@@ -4364,33 +4379,33 @@ interface Starrable : QSchemaType {
 }
 
 object StarredRepositoryConnection : QSchemaType {
-  val edges: InitStub<StarredRepositoryEdge> by lazy { typeStub<StarredRepositoryEdge>() }
+  val edges: ListInitStub<StarredRepositoryEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val nodes: ListInitStub<Repository> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object StarredRepositoryEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val node: InitStub<Repository> = QType.stub()
 
-  val starredAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val starredAt: Stub<DateTime> = QScalar.stub()
 }
 
 object Status : QSchemaType, Node {
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  val context: QTypeConfigStub<StatusContext, ContextArgs> by lazy { typeConfigStub<StatusContext, ContextArgs>(ContextArgs()) }
+  val context: QTypeConfigStub<StatusContext, ContextArgs> = QType.configStub(ContextArgs())
 
-  val contexts: InitStub<StatusContext> by lazy { typeStub<StatusContext>() }
+  val contexts: ListInitStub<StatusContext> = QTypeList.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val state: Stub<StatusState> by lazy { stub<StatusState>() }
+  val state: Stub<StatusState> = QScalar.stub()
 
   class ContextArgs(args: TypeArgBuilder = TypeArgBuilder.create<StatusContext, ContextArgs>()) : TypeArgBuilder by args {
     fun name(value: String): ContextArgs = apply { addArg("name", value) }
@@ -4399,21 +4414,21 @@ object Status : QSchemaType, Node {
 }
 
 object StatusContext : QSchemaType, Node {
-  val commit: InitStub<Commit> by lazy { typeStub<Commit>() }
+  val commit: InitStub<Commit> = QType.stub()
 
-  val context: Stub<String> by lazy { stub<String>() }
+  val context: Stub<String> = QScalar.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val creator: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val creator: InitStub<Actor> = QType.stub()
 
-  val description: Stub<String> by lazy { stub<String>() }
+  val description: Stub<String> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val state: Stub<StatusState> by lazy { stub<StatusState>() }
+  val state: Stub<StatusState> = QScalar.stub()
 
-  val targetUrl: Stub<URI> by lazy { stub<URI>() }
+  val targetUrl: Stub<URI> = QScalar.stub()
 }
 
 enum class StatusState : QSchemaType {
@@ -4438,9 +4453,9 @@ data class SubmitPullRequestReviewInput(private val pullRequestReviewId: String,
 }
 
 object SubmitPullRequestReviewPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val pullRequestReview: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val pullRequestReview: InitStub<PullRequestReview> = QType.stub()
 }
 
 interface Subscribable : QSchemaType {
@@ -4450,13 +4465,13 @@ interface Subscribable : QSchemaType {
 }
 
 object SubscribedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val subscribable: InitStub<Subscribable> by lazy { typeStub<Subscribable>() }
+  val subscribable: InitStub<Subscribable> = QType.stub()
 }
 
 enum class SubscriptionState : QSchemaType {
@@ -4468,57 +4483,57 @@ enum class SubscriptionState : QSchemaType {
 }
 
 object SuggestedReviewer : QSchemaType {
-  val isAuthor: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isAuthor: Stub<Boolean> = QScalar.stub()
 
-  val isCommenter: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isCommenter: Stub<Boolean> = QScalar.stub()
 
-  val reviewer: InitStub<User> by lazy { typeStub<User>() }
+  val reviewer: InitStub<User> = QType.stub()
 }
 
 object Tag : QSchemaType, GitObject, Node {
-  override val abbreviatedOid: Stub<String> by lazy { stub<String>() }
+  override val abbreviatedOid: Stub<String> = QScalar.stub()
 
-  override val commitResourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val commitResourcePath: Stub<URI> = QScalar.stub()
 
-  override val commitUrl: Stub<URI> by lazy { stub<URI>() }
+  override val commitUrl: Stub<URI> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val message: Stub<String> by lazy { stub<String>() }
+  val message: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  override val oid: Stub<GitObjectID> by lazy { stub<GitObjectID>() }
+  override val oid: Stub<GitObjectID> = QScalar.stub()
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 
-  val tagger: InitStub<GitActor> by lazy { typeStub<GitActor>() }
+  val tagger: InitStub<GitActor> = QType.stub()
 
-  val target: InitStub<GitObject> by lazy { typeStub<GitObject>() }
+  val target: InitStub<GitObject> = QType.stub()
 }
 
 object Team : QSchemaType, Node {
-  val description: Stub<String> by lazy { stub<String>() }
+  val description: Stub<String> = QScalar.stub()
 
-  val editTeamResourcePath: Stub<URI> by lazy { stub<URI>() }
+  val editTeamResourcePath: Stub<URI> = QScalar.stub()
 
-  val editTeamUrl: Stub<URI> by lazy { stub<URI>() }
+  val editTeamUrl: Stub<URI> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val invitations: QTypeConfigStub<OrganizationInvitationConnection, InvitationsArgs> by lazy { typeConfigStub<OrganizationInvitationConnection, InvitationsArgs>(InvitationsArgs()) }
+  val invitations: QTypeConfigStub<OrganizationInvitationConnection, InvitationsArgs> = QType.configStub(InvitationsArgs())
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val organization: InitStub<Organization> by lazy { typeStub<Organization>() }
+  val organization: InitStub<Organization> = QType.stub()
 
-  val privacy: Stub<TeamPrivacy> by lazy { stub<TeamPrivacy>() }
+  val privacy: Stub<TeamPrivacy> = QScalar.stub()
 
-  val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  val resourcePath: Stub<URI> = QScalar.stub()
 
-  val slug: Stub<String> by lazy { stub<String>() }
+  val slug: Stub<String> = QScalar.stub()
 
-  val url: Stub<URI> by lazy { stub<URI>() }
+  val url: Stub<URI> = QScalar.stub()
 
   class InvitationsArgs(args: TypeArgBuilder = TypeArgBuilder.create<OrganizationInvitationConnection, InvitationsArgs>()) : TypeArgBuilder by args {
     fun first(value: Int): InvitationsArgs = apply { addArg("first", value) }
@@ -4536,19 +4551,19 @@ object Team : QSchemaType, Node {
 }
 
 object TeamConnection : QSchemaType {
-  val edges: InitStub<TeamEdge> by lazy { typeStub<TeamEdge>() }
+  val edges: ListInitStub<TeamEdge> = QTypeList.stub()
 
-  val nodes: InitStub<Team> by lazy { typeStub<Team>() }
+  val nodes: ListInitStub<Team> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object TeamEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<Team> by lazy { typeStub<Team>() }
+  val node: InitStub<Team> = QType.stub()
 }
 
 data class TeamOrder(private val field: TeamOrderField,
@@ -4571,11 +4586,11 @@ enum class TeamRole : QSchemaType {
 }
 
 object Topic : QSchemaType, Node {
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val relatedTopics: InitStub<Topic> by lazy { typeStub<Topic>() }
+  val relatedTopics: ListInitStub<Topic> = QTypeList.stub()
 }
 
 enum class TopicSuggestionDeclineReason : QSchemaType {
@@ -4589,49 +4604,49 @@ enum class TopicSuggestionDeclineReason : QSchemaType {
 }
 
 object Tree : QSchemaType, GitObject, Node {
-  override val abbreviatedOid: Stub<String> by lazy { stub<String>() }
+  override val abbreviatedOid: Stub<String> = QScalar.stub()
 
-  override val commitResourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val commitResourcePath: Stub<URI> = QScalar.stub()
 
-  override val commitUrl: Stub<URI> by lazy { stub<URI>() }
+  override val commitUrl: Stub<URI> = QScalar.stub()
 
-  val entries: InitStub<TreeEntry> by lazy { typeStub<TreeEntry>() }
+  val entries: ListInitStub<TreeEntry> = QTypeList.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  override val oid: Stub<GitObjectID> by lazy { stub<GitObjectID>() }
+  override val oid: Stub<GitObjectID> = QScalar.stub()
 
-  override val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  override val repository: InitStub<Repository> = QType.stub()
 }
 
 object TreeEntry : QSchemaType {
-  val mode: Stub<Int> by lazy { stub<Int>() }
+  val mode: Stub<Int> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val objectVal: InitStub<GitObject> by lazy { typeStub<GitObject>() }
+  val objectVal: InitStub<GitObject> = QType.stub()
 
-  val oid: Stub<GitObjectID> by lazy { stub<GitObjectID>() }
+  val oid: Stub<GitObjectID> = QScalar.stub()
 
-  val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val repository: InitStub<Repository> = QType.stub()
 
-  val type: Stub<String> by lazy { stub<String>() }
+  val type: Stub<String> = QScalar.stub()
 }
 
 object URI : QSchemaType {
-  val value: Stub<String> by lazy { stub<String>() }
+  val value: Stub<String> = QScalar.stub()
 }
 
 object UnassignedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val assignable: InitStub<Assignable> by lazy { typeStub<Assignable>() }
+  val assignable: InitStub<Assignable> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val user: InitStub<User> by lazy { typeStub<User>() }
+  val user: InitStub<User> = QType.stub()
 }
 
 interface UniformResourceLocatable : QSchemaType {
@@ -4641,49 +4656,49 @@ interface UniformResourceLocatable : QSchemaType {
 }
 
 object UnknownSignature : QSchemaType, GitSignature {
-  override val email: Stub<String> by lazy { stub<String>() }
+  override val email: Stub<String> = QScalar.stub()
 
-  override val isValid: Stub<Boolean> by lazy { stub<Boolean>() }
+  override val isValid: Stub<Boolean> = QScalar.stub()
 
-  override val payload: Stub<String> by lazy { stub<String>() }
+  override val payload: Stub<String> = QScalar.stub()
 
-  override val signature: Stub<String> by lazy { stub<String>() }
+  override val signature: Stub<String> = QScalar.stub()
 
-  override val signer: InitStub<User> by lazy { typeStub<User>() }
+  override val signer: InitStub<User> = QType.stub()
 
-  override val state: Stub<GitSignatureState> by lazy { stub<GitSignatureState>() }
+  override val state: Stub<GitSignatureState> = QScalar.stub()
 }
 
 object UnlabeledEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val label: InitStub<Label> by lazy { typeStub<Label>() }
+  val label: InitStub<Label> = QType.stub()
 
-  val labelable: InitStub<Labelable> by lazy { typeStub<Labelable>() }
+  val labelable: InitStub<Labelable> = QType.stub()
 }
 
 object UnlockedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val lockable: InitStub<Lockable> by lazy { typeStub<Lockable>() }
+  val lockable: InitStub<Lockable> = QType.stub()
 }
 
 object UnsubscribedEvent : QSchemaType, Node {
-  val actor: InitStub<Actor> by lazy { typeStub<Actor>() }
+  val actor: InitStub<Actor> = QType.stub()
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val subscribable: InitStub<Subscribable> by lazy { typeStub<Subscribable>() }
+  val subscribable: InitStub<Subscribable> = QType.stub()
 }
 
 interface Updatable : QSchemaType {
@@ -4691,7 +4706,7 @@ interface Updatable : QSchemaType {
 }
 
 interface UpdatableComment : QSchemaType {
-  val viewerCannotUpdateReasons: Stub<CommentCannotUpdateReason>
+  val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason>
 }
 
 data class UpdateProjectCardInput(private val projectCardId: String,
@@ -4701,9 +4716,9 @@ data class UpdateProjectCardInput(private val projectCardId: String,
 }
 
 object UpdateProjectCardPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val projectCard: InitStub<ProjectCard> by lazy { typeStub<ProjectCard>() }
+  val projectCard: InitStub<ProjectCard> = QType.stub()
 }
 
 data class UpdateProjectColumnInput(private val projectColumnId: String,
@@ -4713,9 +4728,9 @@ data class UpdateProjectColumnInput(private val projectColumnId: String,
 }
 
 object UpdateProjectColumnPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val projectColumn: InitStub<ProjectColumn> by lazy { typeStub<ProjectColumn>() }
+  val projectColumn: InitStub<ProjectColumn> = QType.stub()
 }
 
 data class UpdateProjectInput(private val projectId: String, private val name: String) : QInput {
@@ -4730,9 +4745,9 @@ data class UpdateProjectInput(private val projectId: String, private val name: S
 }
 
 object UpdateProjectPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val project: InitStub<Project> by lazy { typeStub<Project>() }
+  val project: InitStub<Project> = QType.stub()
 }
 
 data class UpdatePullRequestReviewCommentInput(private val pullRequestReviewCommentId: String,
@@ -4742,9 +4757,9 @@ data class UpdatePullRequestReviewCommentInput(private val pullRequestReviewComm
 }
 
 object UpdatePullRequestReviewCommentPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val pullRequestReviewComment: InitStub<PullRequestReviewComment> by lazy { typeStub<PullRequestReviewComment>() }
+  val pullRequestReviewComment: InitStub<PullRequestReviewComment> = QType.stub()
 }
 
 data class UpdatePullRequestReviewInput(private val pullRequestReviewId: String,
@@ -4754,9 +4769,9 @@ data class UpdatePullRequestReviewInput(private val pullRequestReviewId: String,
 }
 
 object UpdatePullRequestReviewPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val pullRequestReview: InitStub<PullRequestReview> by lazy { typeStub<PullRequestReview>() }
+  val pullRequestReview: InitStub<PullRequestReview> = QType.stub()
 }
 
 data class UpdateSubscriptionInput(private val subscribableId: String,
@@ -4766,9 +4781,9 @@ data class UpdateSubscriptionInput(private val subscribableId: String,
 }
 
 object UpdateSubscriptionPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val subscribable: InitStub<Subscribable> by lazy { typeStub<Subscribable>() }
+  val subscribable: InitStub<Subscribable> = QType.stub()
 }
 
 data class UpdateTopicsInput(private val repositoryId: String,
@@ -4778,93 +4793,93 @@ data class UpdateTopicsInput(private val repositoryId: String,
 }
 
 object UpdateTopicsPayload : QSchemaType {
-  val clientMutationId: Stub<String> by lazy { stub<String>() }
+  val clientMutationId: Stub<String> = QScalar.stub()
 
-  val invalidTopicNames: Stub<String> by lazy { stub<String>() }
+  val invalidTopicNames: ListStub<String> = QScalarList.stub()
 
-  val repository: InitStub<Repository> by lazy { typeStub<Repository>() }
+  val repository: InitStub<Repository> = QType.stub()
 }
 
 object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by lazy { configStub<URI, AvatarUrlArgs>(AvatarUrlArgs()) }
+  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
 
-  val bio: Stub<String> by lazy { stub<String>() }
+  val bio: Stub<String> = QScalar.stub()
 
-  val bioHTML: Stub<HTML> by lazy { stub<HTML>() }
+  val bioHTML: Stub<HTML> = QScalar.stub()
 
-  val company: Stub<String> by lazy { stub<String>() }
+  val company: Stub<String> = QScalar.stub()
 
-  val companyHTML: Stub<HTML> by lazy { stub<HTML>() }
+  val companyHTML: Stub<HTML> = QScalar.stub()
 
-  val contributedRepositories: QTypeConfigStub<RepositoryConnection, ContributedRepositoriesArgs> by lazy { typeConfigStub<RepositoryConnection, ContributedRepositoriesArgs>(ContributedRepositoriesArgs()) }
+  val contributedRepositories: QTypeConfigStub<RepositoryConnection, ContributedRepositoriesArgs> = QType.configStub(ContributedRepositoriesArgs())
 
-  val createdAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val createdAt: Stub<DateTime> = QScalar.stub()
 
-  val databaseId: Stub<Int> by lazy { stub<Int>() }
+  val databaseId: Stub<Int> = QScalar.stub()
 
-  val email: Stub<String> by lazy { stub<String>() }
+  val email: Stub<String> = QScalar.stub()
 
-  val followers: QTypeConfigStub<FollowerConnection, FollowersArgs> by lazy { typeConfigStub<FollowerConnection, FollowersArgs>(FollowersArgs()) }
+  val followers: QTypeConfigStub<FollowerConnection, FollowersArgs> = QType.configStub(FollowersArgs())
 
-  val following: QTypeConfigStub<FollowingConnection, FollowingArgs> by lazy { typeConfigStub<FollowingConnection, FollowingArgs>(FollowingArgs()) }
+  val following: QTypeConfigStub<FollowingConnection, FollowingArgs> = QType.configStub(FollowingArgs())
 
-  val gist: QTypeConfigStub<Gist, GistArgs> by lazy { typeConfigStub<Gist, GistArgs>(GistArgs()) }
+  val gist: QTypeConfigStub<Gist, GistArgs> = QType.configStub(GistArgs())
 
-  val gists: QTypeConfigStub<GistConnection, GistsArgs> by lazy { typeConfigStub<GistConnection, GistsArgs>(GistsArgs()) }
+  val gists: QTypeConfigStub<GistConnection, GistsArgs> = QType.configStub(GistsArgs())
 
-  override val id: Stub<String> by lazy { stub<String>() }
+  override val id: Stub<String> = QScalar.stub()
 
-  val isBountyHunter: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isBountyHunter: Stub<Boolean> = QScalar.stub()
 
-  val isCampusExpert: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isCampusExpert: Stub<Boolean> = QScalar.stub()
 
-  val isDeveloperProgramMember: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isDeveloperProgramMember: Stub<Boolean> = QScalar.stub()
 
-  val isEmployee: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isEmployee: Stub<Boolean> = QScalar.stub()
 
-  val isHireable: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isHireable: Stub<Boolean> = QScalar.stub()
 
-  val isInvoiced: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isInvoiced: Stub<Boolean> = QScalar.stub()
 
-  val isSiteAdmin: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isSiteAdmin: Stub<Boolean> = QScalar.stub()
 
-  val isViewer: Stub<Boolean> by lazy { stub<Boolean>() }
+  val isViewer: Stub<Boolean> = QScalar.stub()
 
-  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> by lazy { typeConfigStub<IssueConnection, IssuesArgs>(IssuesArgs()) }
+  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub(IssuesArgs())
 
-  val location: Stub<String> by lazy { stub<String>() }
+  val location: Stub<String> = QScalar.stub()
 
-  override val login: Stub<String> by lazy { stub<String>() }
+  override val login: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 
-  val organization: QTypeConfigStub<Organization, OrganizationArgs> by lazy { typeConfigStub<Organization, OrganizationArgs>(OrganizationArgs()) }
+  val organization: QTypeConfigStub<Organization, OrganizationArgs> = QType.configStub(OrganizationArgs())
 
-  val organizations: QTypeConfigStub<OrganizationConnection, OrganizationsArgs> by lazy { typeConfigStub<OrganizationConnection, OrganizationsArgs>(OrganizationsArgs()) }
+  val organizations: QTypeConfigStub<OrganizationConnection, OrganizationsArgs> = QType.configStub(OrganizationsArgs())
 
-  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> by lazy { typeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs>(RepositoryOwner.PinnedRepositoriesArgs()) }
+  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> = QType.configStub(RepositoryOwner.PinnedRepositoriesArgs())
 
-  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> by lazy { typeConfigStub<PullRequestConnection, PullRequestsArgs>(PullRequestsArgs()) }
+  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub(PullRequestsArgs())
 
-  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> by lazy { typeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs>(RepositoryOwner.RepositoriesArgs()) }
+  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> = QType.configStub(RepositoryOwner.RepositoriesArgs())
 
-  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> by lazy { typeConfigStub<Repository, RepositoryOwner.RepositoryArgs>(RepositoryOwner.RepositoryArgs()) }
+  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> = QType.configStub(RepositoryOwner.RepositoryArgs())
 
-  override val resourcePath: Stub<URI> by lazy { stub<URI>() }
+  override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val starredRepositories: QTypeConfigStub<StarredRepositoryConnection, StarredRepositoriesArgs> by lazy { typeConfigStub<StarredRepositoryConnection, StarredRepositoriesArgs>(StarredRepositoriesArgs()) }
+  val starredRepositories: QTypeConfigStub<StarredRepositoryConnection, StarredRepositoriesArgs> = QType.configStub(StarredRepositoriesArgs())
 
-  val updatedAt: Stub<DateTime> by lazy { stub<DateTime>() }
+  val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  override val url: Stub<URI> by lazy { stub<URI>() }
+  override val url: Stub<URI> = QScalar.stub()
 
-  val viewerCanFollow: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerCanFollow: Stub<Boolean> = QScalar.stub()
 
-  val viewerIsFollowing: Stub<Boolean> by lazy { stub<Boolean>() }
+  val viewerIsFollowing: Stub<Boolean> = QScalar.stub()
 
-  val watching: QTypeConfigStub<RepositoryConnection, WatchingArgs> by lazy { typeConfigStub<RepositoryConnection, WatchingArgs>(WatchingArgs()) }
+  val watching: QTypeConfigStub<RepositoryConnection, WatchingArgs> = QType.configStub(WatchingArgs())
 
-  val websiteUrl: Stub<URI> by lazy { stub<URI>() }
+  val websiteUrl: Stub<URI> = QScalar.stub()
 
   class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
@@ -5066,21 +5081,21 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 }
 
 object UserConnection : QSchemaType {
-  val edges: InitStub<UserEdge> by lazy { typeStub<UserEdge>() }
+  val edges: ListInitStub<UserEdge> = QTypeList.stub()
 
-  val nodes: InitStub<User> by lazy { typeStub<User>() }
+  val nodes: ListInitStub<User> = QTypeList.stub()
 
-  val pageInfo: InitStub<PageInfo> by lazy { typeStub<PageInfo>() }
+  val pageInfo: InitStub<PageInfo> = QType.stub()
 
-  val totalCount: Stub<Int> by lazy { stub<Int>() }
+  val totalCount: Stub<Int> = QScalar.stub()
 }
 
 object UserEdge : QSchemaType {
-  val cursor: Stub<String> by lazy { stub<String>() }
+  val cursor: Stub<String> = QScalar.stub()
 
-  val node: InitStub<User> by lazy { typeStub<User>() }
+  val node: InitStub<User> = QType.stub()
 }
 
 object X509Certificate : QSchemaType {
-  val value: Stub<String> by lazy { stub<String>() }
+  val value: Stub<String> = QScalar.stub()
 }

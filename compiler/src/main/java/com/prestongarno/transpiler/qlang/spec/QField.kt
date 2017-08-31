@@ -39,7 +39,6 @@ class QField(name: String,
     val typeName = determineTypeName(this)
     val rawTypeName =
         if (this.args.isEmpty()) {
-
           val stubType : KClass<*> =
               if (!isList) {
                 if (this.type is QScalarType || this.type is QEnumDef)
@@ -49,21 +48,24 @@ class QField(name: String,
               } else {
                 if (this.type is QScalarType || this.type is QEnumDef)
                   ListStub::class
-                else ListInitStub::class
+                else {
+                  ListInitStub::class }
               }
 
           ParameterizedTypeName.get(ClassName.bestGuess("${stubType.simpleName}"), typeName)
 
         } else {
           val configName =
-              if (this.type is QScalarType && !isList)
-                QConfigStub::class.simpleName
-              else if (!isList)
-                QTypeConfigStub::class.simpleName
-              else if (isList && type is QScalarType)
-                ListConfig::class.simpleName
-              else
-                ListConfigType::class.simpleName
+              if (!isList) {
+                if (this.type is QScalarType || this.type is QEnumDef)
+                  QConfigStub::class.simpleName
+                else
+                  QTypeConfigStub::class.simpleName
+              } else {
+                if (this.type is QScalarType || this.type is QEnumDef)
+                  ListConfig::class.simpleName
+                else ListConfigType::class.simpleName
+              }
           ParameterizedTypeName.get(ClassName.bestGuess("$configName"), typeName,
               if (abstract) {
                 // TOP_LEVEL on abstract means that it's a Base... name, enclosing means on iface,
@@ -214,13 +216,15 @@ private fun determineArgBuilderType(field: QField): KClass<*> =
     }
 
 private fun getStubTargetInvoke(field: QField): String =
-    (if (field.type is QScalarType && !field.isList)
-      "QScalar"
-    else if (field.type is QScalarType && field.isList)
-      "QScalarList"
-    else if (!field.isList)
-      "QType"
-    else "QTypeList") +
+    (if (!field.isList) {
+      if (field.type is QScalarType || field.type is QEnumDef) {
+        "QScalar"
+      } else "QType"
+    } else {
+      if (field.type is QScalarType || field.type is QEnumDef) {
+        "QScalarList"
+      } else com.prestongarno.ktq.QSchemaType.QTypeList::class.simpleName
+    }) +
         "." +
         if (field.args.isNotEmpty())
           "configStub"
