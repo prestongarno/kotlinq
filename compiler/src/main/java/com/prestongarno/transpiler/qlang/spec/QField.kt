@@ -103,9 +103,9 @@ class QField(name: String,
     if (!abstract) {
       spec.initializer(
           if (args.isEmpty()) {
-            lazyInitializerNoConfig()
+            initializerNoConfig()
           } else {
-            lazyInitializerConfig(
+            initializerConfig(
                 if (argBuilderSpec.isPresent)
                   ClassName.bestGuess(argBuilderSpec.get().name ?: throw IllegalStateException("report this"))
                 else
@@ -126,16 +126,17 @@ class QField(name: String,
     else Optional.empty()
   }
 
-  private fun lazyInitializerNoConfig(): CodeBlock {
+  private fun initializerNoConfig(): CodeBlock {
     if (abstract || args.isNotEmpty()) throw IllegalStateException()
     return CodeBlock.of("${getStubTargetInvoke(this)}()")
   }
 
-  private fun lazyInitializerConfig(argTypeName: TypeName): CodeBlock {
+  private fun initializerConfig(argTypeName: TypeName): CodeBlock {
     if (abstract || args.isEmpty()) throw IllegalStateException("abstract=$abstract args=$args")
-    val constructorInvocation = "${argTypeName.asNonNullable()}()"
+
+    val constructorInvocation = "${argTypeName.asNonNullable()}(it)"
     if (builderStatus == BuilderStatus.NONE) throw IllegalStateException()
-    return CodeBlock.of("${getStubTargetInvoke(this)}($constructorInvocation)"
+    return CodeBlock.of("${getStubTargetInvoke(this)} { $constructorInvocation }"
     )
   }
 
@@ -168,7 +169,7 @@ fun buildArgBuilder(field: QField, superInterface: KClass<*>, name: TypeName): T
   val result = TypeSpec.classBuilder(name.toString())
       .primaryConstructor(FunSpec.constructorBuilder()
           .addParameter(ParameterSpec.builder("args", superInterface)
-              .defaultValue("${superInterface.simpleName}.create<${determineTypeName(field)}, $name>()")
+              //.defaultValue("${superInterface.simpleName}.create<${determineTypeName(field)}, $name>()")
               .build())
           .build())
       .addSuperinterface(ClassName.bestGuess(superInterface.simpleName?.replace("$".toRegex(), "_by_args")!!))
@@ -190,7 +191,7 @@ fun buildArgBuilder(field: QField, superclass: TypeName): TypeSpec.Builder {
   val argBuilderSpec = TypeSpec.classBuilder(argClassName.toString())
       .primaryConstructor(FunSpec.constructorBuilder()
           .addParameter(ParameterSpec.builder("args", rawType)
-              .defaultValue("${rawType.simpleName}.create<${determineTypeName(field)}, $argClassName>()")
+              //.defaultValue("${rawType.simpleName}.create<${determineTypeName(field)}, $argClassName>()")
               .build())
           .build())
       .superclass(superclass)

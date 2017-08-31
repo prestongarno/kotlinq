@@ -4,6 +4,7 @@ package com.prestongarno.ktq.github
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.ListStub
@@ -19,7 +20,7 @@ import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.TypeArgBuilder
 import com.prestongarno.ktq.TypeListArgBuilder
 
-abstract class BaseAvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, BaseAvatarUrlArgs>()) : ArgBuilder by args
+abstract class BaseAvatarUrlArgs(args: ArgBuilder) : ArgBuilder by args
 
 data class AcceptTopicSuggestionInput(private val repositoryId: String,
     private val name: String) : QInput {
@@ -179,7 +180,7 @@ object AddedToProjectEvent : QSchemaType, Node {
 interface Assignable : QSchemaType {
   val assignees: QTypeConfigStub<UserConnection, AssigneesArgs>
 
-  class AssigneesArgs(args: TypeArgBuilder = TypeArgBuilder.create<UserConnection, AssigneesArgs>()) : TypeArgBuilder by args {
+  class AssigneesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): AssigneesArgs = apply { addArg("first", value) }
 
 
@@ -269,7 +270,7 @@ object Blob : QSchemaType, GitObject, Node {
 }
 
 object Bot : QSchemaType, UniformResourceLocatable, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
+  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub { AvatarUrlArgs(it) }
 
   val databaseId: Stub<Int> = QScalar.stub()
 
@@ -281,7 +282,7 @@ object Bot : QSchemaType, UniformResourceLocatable, Actor, Node {
 
   override val url: Stub<URI> = QScalar.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : BaseAvatarUrlArgs(args) {
+  class AvatarUrlArgs(args: ArgBuilder) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
@@ -382,9 +383,9 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 
   val authoredByCommitter: Stub<Boolean> = QScalar.stub()
 
-  val blame: QTypeConfigStub<Blame, BlameArgs> = QType.configStub(BlameArgs())
+  val blame: QTypeConfigStub<Blame, BlameArgs> = QType.configStub { BlameArgs(it) }
 
-  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
+  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> = QType.configStub { CommentsArgs(it) }
 
   override val commitResourcePath: Stub<URI> = QScalar.stub()
 
@@ -396,7 +397,7 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 
   val committer: InitStub<GitActor> = QType.stub()
 
-  val history: QTypeConfigStub<CommitHistoryConnection, HistoryArgs> = QType.configStub(HistoryArgs())
+  val history: QTypeConfigStub<CommitHistoryConnection, HistoryArgs> = QType.configStub { HistoryArgs(it) }
 
   override val id: Stub<String> = QScalar.stub()
 
@@ -432,12 +433,12 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 
   override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
-  class BlameArgs(args: TypeArgBuilder = TypeArgBuilder.create<Blame, BlameArgs>()) : TypeArgBuilder by args {
+  class BlameArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun path(value: String): BlameArgs = apply { addArg("path", value) }
 
   }
 
-  class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<CommitCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
+  class CommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
 
@@ -451,7 +452,7 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 
   }
 
-  class HistoryArgs(args: TypeArgBuilder = TypeArgBuilder.create<CommitHistoryConnection, HistoryArgs>()) : TypeArgBuilder by args {
+  class HistoryArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): HistoryArgs = apply { addArg("first", value) }
 
 
@@ -514,7 +515,7 @@ object CommitComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment,
 
   override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub { Reactable.ReactionsArgs(it) }
 
   override val repository: InitStub<Repository> = QType.stub()
 
@@ -548,7 +549,7 @@ object CommitCommentEdge : QSchemaType {
 }
 
 object CommitCommentThread : QSchemaType, RepositoryNode, Node {
-  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
+  val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> = QType.configStub { CommentsArgs(it) }
 
   val commit: InitStub<Commit> = QType.stub()
 
@@ -560,7 +561,7 @@ object CommitCommentThread : QSchemaType, RepositoryNode, Node {
 
   override val repository: InitStub<Repository> = QType.stub()
 
-  class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<CommitCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
+  class CommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
 
@@ -734,9 +735,9 @@ object Deployment : QSchemaType, Node {
 
   val state: Stub<DeploymentState> = QScalar.stub()
 
-  val statuses: QTypeConfigStub<DeploymentStatusConnection, StatusesArgs> = QType.configStub(StatusesArgs())
+  val statuses: QTypeConfigStub<DeploymentStatusConnection, StatusesArgs> = QType.configStub { StatusesArgs(it) }
 
-  class StatusesArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeploymentStatusConnection, StatusesArgs>()) : TypeArgBuilder by args {
+  class StatusesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): StatusesArgs = apply { addArg("first", value) }
 
 
@@ -901,7 +902,7 @@ object FollowingConnection : QSchemaType {
 }
 
 object Gist : QSchemaType, Starrable, Node {
-  val comments: QTypeConfigStub<GistCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
+  val comments: QTypeConfigStub<GistCommentConnection, CommentsArgs> = QType.configStub { CommentsArgs(it) }
 
   val createdAt: Stub<DateTime> = QScalar.stub()
 
@@ -915,13 +916,13 @@ object Gist : QSchemaType, Starrable, Node {
 
   val owner: InitStub<RepositoryOwner> = QType.stub()
 
-  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> = QType.configStub(Starrable.StargazersArgs())
+  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> = QType.configStub { Starrable.StargazersArgs(it) }
 
   val updatedAt: Stub<DateTime> = QScalar.stub()
 
   override val viewerHasStarred: Stub<Boolean> = QScalar.stub()
 
-  class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<GistCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
+  class CommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
 
@@ -1009,7 +1010,7 @@ enum class GistPrivacy : QSchemaType {
 }
 
 object GitActor : QSchemaType {
-  val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
+  val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub { AvatarUrlArgs(it) }
 
   val date: Stub<GitTimestamp> = QScalar.stub()
 
@@ -1019,7 +1020,7 @@ object GitActor : QSchemaType {
 
   val user: InitStub<User> = QType.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : ArgBuilder by args {
+  class AvatarUrlArgs(args: ArgBuilder) : ArgBuilder by args {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
@@ -1150,7 +1151,7 @@ object HeadRefRestoredEvent : QSchemaType, Node {
 }
 
 object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNode, Reactable, Lockable, Labelable, UpdatableComment, Updatable, Comment, Closable, Assignable, Node {
-  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> = QType.configStub(Assignable.AssigneesArgs())
+  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> = QType.configStub { Assignable.AssigneesArgs(it) }
 
   override val author: InitStub<Actor> = QType.stub()
 
@@ -1164,7 +1165,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   override val closed: Stub<Boolean> = QScalar.stub()
 
-  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
+  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> = QType.configStub { CommentsArgs(it) }
 
   override val createdAt: Stub<DateTime> = QScalar.stub()
 
@@ -1176,7 +1177,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   override val id: Stub<String> = QScalar.stub()
 
-  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> = QType.configStub(Labelable.LabelsArgs())
+  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> = QType.configStub { Labelable.LabelsArgs(it) }
 
   override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
@@ -1186,13 +1187,13 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   val number: Stub<Int> = QScalar.stub()
 
-  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> = QType.configStub(ParticipantsArgs())
+  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> = QType.configStub { ParticipantsArgs(it) }
 
   override val publishedAt: Stub<DateTime> = QScalar.stub()
 
   override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub { Reactable.ReactionsArgs(it) }
 
   override val repository: InitStub<Repository> = QType.stub()
 
@@ -1200,7 +1201,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   val state: Stub<IssueState> = QScalar.stub()
 
-  val timeline: QTypeConfigStub<IssueTimelineConnection, TimelineArgs> = QType.configStub(TimelineArgs())
+  val timeline: QTypeConfigStub<IssueTimelineConnection, TimelineArgs> = QType.configStub { TimelineArgs(it) }
 
   val title: Stub<String> = QScalar.stub()
 
@@ -1220,7 +1221,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
-  class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
+  class CommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
 
@@ -1234,7 +1235,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   }
 
-  class ParticipantsArgs(args: TypeArgBuilder = TypeArgBuilder.create<UserConnection, ParticipantsArgs>()) : TypeArgBuilder by args {
+  class ParticipantsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ParticipantsArgs = apply { addArg("first", value) }
 
 
@@ -1248,7 +1249,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   }
 
-  class TimelineArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueTimelineConnection, TimelineArgs>()) : TypeArgBuilder by args {
+  class TimelineArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): TimelineArgs = apply { addArg("first", value) }
 
 
@@ -1295,7 +1296,7 @@ object IssueComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, 
 
   override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub { Reactable.ReactionsArgs(it) }
 
   override val repository: InitStub<Repository> = QType.stub()
 
@@ -1428,15 +1429,15 @@ object Label : QSchemaType, Node {
 
   override val id: Stub<String> = QScalar.stub()
 
-  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub(IssuesArgs())
+  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub { IssuesArgs(it) }
 
   val name: Stub<String> = QScalar.stub()
 
-  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub(PullRequestsArgs())
+  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub { PullRequestsArgs(it) }
 
   val repository: InitStub<Repository> = QType.stub()
 
-  class IssuesArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueConnection, IssuesArgs>()) : TypeArgBuilder by args {
+  class IssuesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): IssuesArgs = apply { addArg("first", value) }
 
 
@@ -1459,7 +1460,7 @@ object Label : QSchemaType, Node {
 
   }
 
-  class PullRequestsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestConnection, PullRequestsArgs>()) : TypeArgBuilder by args {
+  class PullRequestsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): PullRequestsArgs = apply { addArg("first", value) }
 
 
@@ -1493,7 +1494,7 @@ object LabelEdge : QSchemaType {
 interface Labelable : QSchemaType {
   val labels: QTypeConfigStub<LabelConnection, LabelsArgs>
 
-  class LabelsArgs(args: TypeArgBuilder = TypeArgBuilder.create<LabelConnection, LabelsArgs>()) : TypeArgBuilder by args {
+  class LabelsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): LabelsArgs = apply { addArg("first", value) }
 
 
@@ -1708,205 +1709,205 @@ object MovedColumnsInProjectEvent : QSchemaType, Node {
 }
 
 object Mutation : QSchemaType {
-  val acceptTopicSuggestion: QTypeConfigStub<AcceptTopicSuggestionPayload, AcceptTopicSuggestionArgs> = QType.configStub(AcceptTopicSuggestionArgs())
+  val acceptTopicSuggestion: QTypeConfigStub<AcceptTopicSuggestionPayload, AcceptTopicSuggestionArgs> = QType.configStub { AcceptTopicSuggestionArgs(it) }
 
-  val addComment: QTypeConfigStub<AddCommentPayload, AddCommentArgs> = QType.configStub(AddCommentArgs())
+  val addComment: QTypeConfigStub<AddCommentPayload, AddCommentArgs> = QType.configStub { AddCommentArgs(it) }
 
-  val addProjectCard: QTypeConfigStub<AddProjectCardPayload, AddProjectCardArgs> = QType.configStub(AddProjectCardArgs())
+  val addProjectCard: QTypeConfigStub<AddProjectCardPayload, AddProjectCardArgs> = QType.configStub { AddProjectCardArgs(it) }
 
-  val addProjectColumn: QTypeConfigStub<AddProjectColumnPayload, AddProjectColumnArgs> = QType.configStub(AddProjectColumnArgs())
+  val addProjectColumn: QTypeConfigStub<AddProjectColumnPayload, AddProjectColumnArgs> = QType.configStub { AddProjectColumnArgs(it) }
 
-  val addPullRequestReview: QTypeConfigStub<AddPullRequestReviewPayload, AddPullRequestReviewArgs> = QType.configStub(AddPullRequestReviewArgs())
+  val addPullRequestReview: QTypeConfigStub<AddPullRequestReviewPayload, AddPullRequestReviewArgs> = QType.configStub { AddPullRequestReviewArgs(it) }
 
-  val addPullRequestReviewComment: QTypeConfigStub<AddPullRequestReviewCommentPayload, AddPullRequestReviewCommentArgs> = QType.configStub(AddPullRequestReviewCommentArgs())
+  val addPullRequestReviewComment: QTypeConfigStub<AddPullRequestReviewCommentPayload, AddPullRequestReviewCommentArgs> = QType.configStub { AddPullRequestReviewCommentArgs(it) }
 
-  val addReaction: QTypeConfigStub<AddReactionPayload, AddReactionArgs> = QType.configStub(AddReactionArgs())
+  val addReaction: QTypeConfigStub<AddReactionPayload, AddReactionArgs> = QType.configStub { AddReactionArgs(it) }
 
-  val addStar: QTypeConfigStub<AddStarPayload, AddStarArgs> = QType.configStub(AddStarArgs())
+  val addStar: QTypeConfigStub<AddStarPayload, AddStarArgs> = QType.configStub { AddStarArgs(it) }
 
-  val createProject: QTypeConfigStub<CreateProjectPayload, CreateProjectArgs> = QType.configStub(CreateProjectArgs())
+  val createProject: QTypeConfigStub<CreateProjectPayload, CreateProjectArgs> = QType.configStub { CreateProjectArgs(it) }
 
-  val declineTopicSuggestion: QTypeConfigStub<DeclineTopicSuggestionPayload, DeclineTopicSuggestionArgs> = QType.configStub(DeclineTopicSuggestionArgs())
+  val declineTopicSuggestion: QTypeConfigStub<DeclineTopicSuggestionPayload, DeclineTopicSuggestionArgs> = QType.configStub { DeclineTopicSuggestionArgs(it) }
 
-  val deleteProject: QTypeConfigStub<DeleteProjectPayload, DeleteProjectArgs> = QType.configStub(DeleteProjectArgs())
+  val deleteProject: QTypeConfigStub<DeleteProjectPayload, DeleteProjectArgs> = QType.configStub { DeleteProjectArgs(it) }
 
-  val deleteProjectCard: QTypeConfigStub<DeleteProjectCardPayload, DeleteProjectCardArgs> = QType.configStub(DeleteProjectCardArgs())
+  val deleteProjectCard: QTypeConfigStub<DeleteProjectCardPayload, DeleteProjectCardArgs> = QType.configStub { DeleteProjectCardArgs(it) }
 
-  val deleteProjectColumn: QTypeConfigStub<DeleteProjectColumnPayload, DeleteProjectColumnArgs> = QType.configStub(DeleteProjectColumnArgs())
+  val deleteProjectColumn: QTypeConfigStub<DeleteProjectColumnPayload, DeleteProjectColumnArgs> = QType.configStub { DeleteProjectColumnArgs(it) }
 
-  val deletePullRequestReview: QTypeConfigStub<DeletePullRequestReviewPayload, DeletePullRequestReviewArgs> = QType.configStub(DeletePullRequestReviewArgs())
+  val deletePullRequestReview: QTypeConfigStub<DeletePullRequestReviewPayload, DeletePullRequestReviewArgs> = QType.configStub { DeletePullRequestReviewArgs(it) }
 
-  val dismissPullRequestReview: QTypeConfigStub<DismissPullRequestReviewPayload, DismissPullRequestReviewArgs> = QType.configStub(DismissPullRequestReviewArgs())
+  val dismissPullRequestReview: QTypeConfigStub<DismissPullRequestReviewPayload, DismissPullRequestReviewArgs> = QType.configStub { DismissPullRequestReviewArgs(it) }
 
-  val moveProjectCard: QTypeConfigStub<MoveProjectCardPayload, MoveProjectCardArgs> = QType.configStub(MoveProjectCardArgs())
+  val moveProjectCard: QTypeConfigStub<MoveProjectCardPayload, MoveProjectCardArgs> = QType.configStub { MoveProjectCardArgs(it) }
 
-  val moveProjectColumn: QTypeConfigStub<MoveProjectColumnPayload, MoveProjectColumnArgs> = QType.configStub(MoveProjectColumnArgs())
+  val moveProjectColumn: QTypeConfigStub<MoveProjectColumnPayload, MoveProjectColumnArgs> = QType.configStub { MoveProjectColumnArgs(it) }
 
-  val removeOutsideCollaborator: QTypeConfigStub<RemoveOutsideCollaboratorPayload, RemoveOutsideCollaboratorArgs> = QType.configStub(RemoveOutsideCollaboratorArgs())
+  val removeOutsideCollaborator: QTypeConfigStub<RemoveOutsideCollaboratorPayload, RemoveOutsideCollaboratorArgs> = QType.configStub { RemoveOutsideCollaboratorArgs(it) }
 
-  val removeReaction: QTypeConfigStub<RemoveReactionPayload, RemoveReactionArgs> = QType.configStub(RemoveReactionArgs())
+  val removeReaction: QTypeConfigStub<RemoveReactionPayload, RemoveReactionArgs> = QType.configStub { RemoveReactionArgs(it) }
 
-  val removeStar: QTypeConfigStub<RemoveStarPayload, RemoveStarArgs> = QType.configStub(RemoveStarArgs())
+  val removeStar: QTypeConfigStub<RemoveStarPayload, RemoveStarArgs> = QType.configStub { RemoveStarArgs(it) }
 
-  val requestReviews: QTypeConfigStub<RequestReviewsPayload, RequestReviewsArgs> = QType.configStub(RequestReviewsArgs())
+  val requestReviews: QTypeConfigStub<RequestReviewsPayload, RequestReviewsArgs> = QType.configStub { RequestReviewsArgs(it) }
 
-  val submitPullRequestReview: QTypeConfigStub<SubmitPullRequestReviewPayload, SubmitPullRequestReviewArgs> = QType.configStub(SubmitPullRequestReviewArgs())
+  val submitPullRequestReview: QTypeConfigStub<SubmitPullRequestReviewPayload, SubmitPullRequestReviewArgs> = QType.configStub { SubmitPullRequestReviewArgs(it) }
 
-  val updateProject: QTypeConfigStub<UpdateProjectPayload, UpdateProjectArgs> = QType.configStub(UpdateProjectArgs())
+  val updateProject: QTypeConfigStub<UpdateProjectPayload, UpdateProjectArgs> = QType.configStub { UpdateProjectArgs(it) }
 
-  val updateProjectCard: QTypeConfigStub<UpdateProjectCardPayload, UpdateProjectCardArgs> = QType.configStub(UpdateProjectCardArgs())
+  val updateProjectCard: QTypeConfigStub<UpdateProjectCardPayload, UpdateProjectCardArgs> = QType.configStub { UpdateProjectCardArgs(it) }
 
-  val updateProjectColumn: QTypeConfigStub<UpdateProjectColumnPayload, UpdateProjectColumnArgs> = QType.configStub(UpdateProjectColumnArgs())
+  val updateProjectColumn: QTypeConfigStub<UpdateProjectColumnPayload, UpdateProjectColumnArgs> = QType.configStub { UpdateProjectColumnArgs(it) }
 
-  val updatePullRequestReview: QTypeConfigStub<UpdatePullRequestReviewPayload, UpdatePullRequestReviewArgs> = QType.configStub(UpdatePullRequestReviewArgs())
+  val updatePullRequestReview: QTypeConfigStub<UpdatePullRequestReviewPayload, UpdatePullRequestReviewArgs> = QType.configStub { UpdatePullRequestReviewArgs(it) }
 
-  val updatePullRequestReviewComment: QTypeConfigStub<UpdatePullRequestReviewCommentPayload, UpdatePullRequestReviewCommentArgs> = QType.configStub(UpdatePullRequestReviewCommentArgs())
+  val updatePullRequestReviewComment: QTypeConfigStub<UpdatePullRequestReviewCommentPayload, UpdatePullRequestReviewCommentArgs> = QType.configStub { UpdatePullRequestReviewCommentArgs(it) }
 
-  val updateSubscription: QTypeConfigStub<UpdateSubscriptionPayload, UpdateSubscriptionArgs> = QType.configStub(UpdateSubscriptionArgs())
+  val updateSubscription: QTypeConfigStub<UpdateSubscriptionPayload, UpdateSubscriptionArgs> = QType.configStub { UpdateSubscriptionArgs(it) }
 
-  val updateTopics: QTypeConfigStub<UpdateTopicsPayload, UpdateTopicsArgs> = QType.configStub(UpdateTopicsArgs())
+  val updateTopics: QTypeConfigStub<UpdateTopicsPayload, UpdateTopicsArgs> = QType.configStub { UpdateTopicsArgs(it) }
 
-  class AcceptTopicSuggestionArgs(args: TypeArgBuilder = TypeArgBuilder.create<AcceptTopicSuggestionPayload, AcceptTopicSuggestionArgs>()) : TypeArgBuilder by args {
+  class AcceptTopicSuggestionArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AcceptTopicSuggestionInput): AcceptTopicSuggestionArgs = apply { addArg("input", value) }
 
   }
 
-  class AddCommentArgs(args: TypeArgBuilder = TypeArgBuilder.create<AddCommentPayload, AddCommentArgs>()) : TypeArgBuilder by args {
+  class AddCommentArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AddCommentInput): AddCommentArgs = apply { addArg("input", value) }
 
   }
 
-  class AddProjectCardArgs(args: TypeArgBuilder = TypeArgBuilder.create<AddProjectCardPayload, AddProjectCardArgs>()) : TypeArgBuilder by args {
+  class AddProjectCardArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AddProjectCardInput): AddProjectCardArgs = apply { addArg("input", value) }
 
   }
 
-  class AddProjectColumnArgs(args: TypeArgBuilder = TypeArgBuilder.create<AddProjectColumnPayload, AddProjectColumnArgs>()) : TypeArgBuilder by args {
+  class AddProjectColumnArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AddProjectColumnInput): AddProjectColumnArgs = apply { addArg("input", value) }
 
   }
 
-  class AddPullRequestReviewArgs(args: TypeArgBuilder = TypeArgBuilder.create<AddPullRequestReviewPayload, AddPullRequestReviewArgs>()) : TypeArgBuilder by args {
+  class AddPullRequestReviewArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AddPullRequestReviewInput): AddPullRequestReviewArgs = apply { addArg("input", value) }
 
   }
 
-  class AddPullRequestReviewCommentArgs(args: TypeArgBuilder = TypeArgBuilder.create<AddPullRequestReviewCommentPayload, AddPullRequestReviewCommentArgs>()) : TypeArgBuilder by args {
+  class AddPullRequestReviewCommentArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AddPullRequestReviewCommentInput): AddPullRequestReviewCommentArgs = apply { addArg("input", value) }
 
   }
 
-  class AddReactionArgs(args: TypeArgBuilder = TypeArgBuilder.create<AddReactionPayload, AddReactionArgs>()) : TypeArgBuilder by args {
+  class AddReactionArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AddReactionInput): AddReactionArgs = apply { addArg("input", value) }
 
   }
 
-  class AddStarArgs(args: TypeArgBuilder = TypeArgBuilder.create<AddStarPayload, AddStarArgs>()) : TypeArgBuilder by args {
+  class AddStarArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: AddStarInput): AddStarArgs = apply { addArg("input", value) }
 
   }
 
-  class CreateProjectArgs(args: TypeArgBuilder = TypeArgBuilder.create<CreateProjectPayload, CreateProjectArgs>()) : TypeArgBuilder by args {
+  class CreateProjectArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: CreateProjectInput): CreateProjectArgs = apply { addArg("input", value) }
 
   }
 
-  class DeclineTopicSuggestionArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeclineTopicSuggestionPayload, DeclineTopicSuggestionArgs>()) : TypeArgBuilder by args {
+  class DeclineTopicSuggestionArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: DeclineTopicSuggestionInput): DeclineTopicSuggestionArgs = apply { addArg("input", value) }
 
   }
 
-  class DeleteProjectArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeleteProjectPayload, DeleteProjectArgs>()) : TypeArgBuilder by args {
+  class DeleteProjectArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: DeleteProjectInput): DeleteProjectArgs = apply { addArg("input", value) }
 
   }
 
-  class DeleteProjectCardArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeleteProjectCardPayload, DeleteProjectCardArgs>()) : TypeArgBuilder by args {
+  class DeleteProjectCardArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: DeleteProjectCardInput): DeleteProjectCardArgs = apply { addArg("input", value) }
 
   }
 
-  class DeleteProjectColumnArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeleteProjectColumnPayload, DeleteProjectColumnArgs>()) : TypeArgBuilder by args {
+  class DeleteProjectColumnArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: DeleteProjectColumnInput): DeleteProjectColumnArgs = apply { addArg("input", value) }
 
   }
 
-  class DeletePullRequestReviewArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeletePullRequestReviewPayload, DeletePullRequestReviewArgs>()) : TypeArgBuilder by args {
+  class DeletePullRequestReviewArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: DeletePullRequestReviewInput): DeletePullRequestReviewArgs = apply { addArg("input", value) }
 
   }
 
-  class DismissPullRequestReviewArgs(args: TypeArgBuilder = TypeArgBuilder.create<DismissPullRequestReviewPayload, DismissPullRequestReviewArgs>()) : TypeArgBuilder by args {
+  class DismissPullRequestReviewArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: DismissPullRequestReviewInput): DismissPullRequestReviewArgs = apply { addArg("input", value) }
 
   }
 
-  class MoveProjectCardArgs(args: TypeArgBuilder = TypeArgBuilder.create<MoveProjectCardPayload, MoveProjectCardArgs>()) : TypeArgBuilder by args {
+  class MoveProjectCardArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: MoveProjectCardInput): MoveProjectCardArgs = apply { addArg("input", value) }
 
   }
 
-  class MoveProjectColumnArgs(args: TypeArgBuilder = TypeArgBuilder.create<MoveProjectColumnPayload, MoveProjectColumnArgs>()) : TypeArgBuilder by args {
+  class MoveProjectColumnArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: MoveProjectColumnInput): MoveProjectColumnArgs = apply { addArg("input", value) }
 
   }
 
-  class RemoveOutsideCollaboratorArgs(args: TypeArgBuilder = TypeArgBuilder.create<RemoveOutsideCollaboratorPayload, RemoveOutsideCollaboratorArgs>()) : TypeArgBuilder by args {
+  class RemoveOutsideCollaboratorArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: RemoveOutsideCollaboratorInput): RemoveOutsideCollaboratorArgs = apply { addArg("input", value) }
 
   }
 
-  class RemoveReactionArgs(args: TypeArgBuilder = TypeArgBuilder.create<RemoveReactionPayload, RemoveReactionArgs>()) : TypeArgBuilder by args {
+  class RemoveReactionArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: RemoveReactionInput): RemoveReactionArgs = apply { addArg("input", value) }
 
   }
 
-  class RemoveStarArgs(args: TypeArgBuilder = TypeArgBuilder.create<RemoveStarPayload, RemoveStarArgs>()) : TypeArgBuilder by args {
+  class RemoveStarArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: RemoveStarInput): RemoveStarArgs = apply { addArg("input", value) }
 
   }
 
-  class RequestReviewsArgs(args: TypeArgBuilder = TypeArgBuilder.create<RequestReviewsPayload, RequestReviewsArgs>()) : TypeArgBuilder by args {
+  class RequestReviewsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: RequestReviewsInput): RequestReviewsArgs = apply { addArg("input", value) }
 
   }
 
-  class SubmitPullRequestReviewArgs(args: TypeArgBuilder = TypeArgBuilder.create<SubmitPullRequestReviewPayload, SubmitPullRequestReviewArgs>()) : TypeArgBuilder by args {
+  class SubmitPullRequestReviewArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: SubmitPullRequestReviewInput): SubmitPullRequestReviewArgs = apply { addArg("input", value) }
 
   }
 
-  class UpdateProjectArgs(args: TypeArgBuilder = TypeArgBuilder.create<UpdateProjectPayload, UpdateProjectArgs>()) : TypeArgBuilder by args {
+  class UpdateProjectArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: UpdateProjectInput): UpdateProjectArgs = apply { addArg("input", value) }
 
   }
 
-  class UpdateProjectCardArgs(args: TypeArgBuilder = TypeArgBuilder.create<UpdateProjectCardPayload, UpdateProjectCardArgs>()) : TypeArgBuilder by args {
+  class UpdateProjectCardArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: UpdateProjectCardInput): UpdateProjectCardArgs = apply { addArg("input", value) }
 
   }
 
-  class UpdateProjectColumnArgs(args: TypeArgBuilder = TypeArgBuilder.create<UpdateProjectColumnPayload, UpdateProjectColumnArgs>()) : TypeArgBuilder by args {
+  class UpdateProjectColumnArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: UpdateProjectColumnInput): UpdateProjectColumnArgs = apply { addArg("input", value) }
 
   }
 
-  class UpdatePullRequestReviewArgs(args: TypeArgBuilder = TypeArgBuilder.create<UpdatePullRequestReviewPayload, UpdatePullRequestReviewArgs>()) : TypeArgBuilder by args {
+  class UpdatePullRequestReviewArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: UpdatePullRequestReviewInput): UpdatePullRequestReviewArgs = apply { addArg("input", value) }
 
   }
 
-  class UpdatePullRequestReviewCommentArgs(args: TypeArgBuilder = TypeArgBuilder.create<UpdatePullRequestReviewCommentPayload, UpdatePullRequestReviewCommentArgs>()) : TypeArgBuilder by args {
+  class UpdatePullRequestReviewCommentArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: UpdatePullRequestReviewCommentInput): UpdatePullRequestReviewCommentArgs = apply { addArg("input", value) }
 
   }
 
-  class UpdateSubscriptionArgs(args: TypeArgBuilder = TypeArgBuilder.create<UpdateSubscriptionPayload, UpdateSubscriptionArgs>()) : TypeArgBuilder by args {
+  class UpdateSubscriptionArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: UpdateSubscriptionInput): UpdateSubscriptionArgs = apply { addArg("input", value) }
 
   }
 
-  class UpdateTopicsArgs(args: TypeArgBuilder = TypeArgBuilder.create<UpdateTopicsPayload, UpdateTopicsArgs>()) : TypeArgBuilder by args {
+  class UpdateTopicsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun input(value: UpdateTopicsInput): UpdateTopicsArgs = apply { addArg("input", value) }
 
   }
@@ -1923,7 +1924,7 @@ enum class OrderDirection : QSchemaType {
 }
 
 object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, ProjectOwner, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
+  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub { AvatarUrlArgs(it) }
 
   val databaseId: Stub<Int> = QScalar.stub()
 
@@ -1933,7 +1934,7 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   override val login: Stub<String> = QScalar.stub()
 
-  val members: QTypeConfigStub<UserConnection, MembersArgs> = QType.configStub(MembersArgs())
+  val members: QTypeConfigStub<UserConnection, MembersArgs> = QType.configStub { MembersArgs(it) }
 
   val name: Stub<String> = QScalar.stub()
 
@@ -1943,27 +1944,27 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   val organizationBillingEmail: Stub<String> = QScalar.stub()
 
-  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> = QType.configStub(RepositoryOwner.PinnedRepositoriesArgs())
+  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> = QType.configStub { RepositoryOwner.PinnedRepositoriesArgs(it) }
 
-  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> = QType.configStub(ProjectOwner.ProjectArgs())
+  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> = QType.configStub { ProjectOwner.ProjectArgs(it) }
 
-  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> = QType.configStub(ProjectOwner.ProjectsArgs())
+  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> = QType.configStub { ProjectOwner.ProjectsArgs(it) }
 
   override val projectsResourcePath: Stub<URI> = QScalar.stub()
 
   override val projectsUrl: Stub<URI> = QScalar.stub()
 
-  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> = QType.configStub(RepositoryOwner.RepositoriesArgs())
+  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> = QType.configStub { RepositoryOwner.RepositoriesArgs(it) }
 
-  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> = QType.configStub(RepositoryOwner.RepositoryArgs())
+  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> = QType.configStub { RepositoryOwner.RepositoryArgs(it) }
 
   override val resourcePath: Stub<URI> = QScalar.stub()
 
   val samlIdentityProvider: InitStub<OrganizationIdentityProvider> = QType.stub()
 
-  val team: QTypeConfigStub<Team, TeamArgs> = QType.configStub(TeamArgs())
+  val team: QTypeConfigStub<Team, TeamArgs> = QType.configStub { TeamArgs(it) }
 
-  val teams: QTypeConfigStub<TeamConnection, TeamsArgs> = QType.configStub(TeamsArgs())
+  val teams: QTypeConfigStub<TeamConnection, TeamsArgs> = QType.configStub { TeamsArgs(it) }
 
   val teamsResourcePath: Stub<URI> = QScalar.stub()
 
@@ -1981,12 +1982,12 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   val viewerIsAMember: Stub<Boolean> = QScalar.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : BaseAvatarUrlArgs(args) {
+  class AvatarUrlArgs(args: ArgBuilder) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
 
-  class MembersArgs(args: TypeArgBuilder = TypeArgBuilder.create<UserConnection, MembersArgs>()) : TypeArgBuilder by args {
+  class MembersArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): MembersArgs = apply { addArg("first", value) }
 
 
@@ -2000,12 +2001,12 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   }
 
-  class TeamArgs(args: TypeArgBuilder = TypeArgBuilder.create<Team, TeamArgs>()) : TypeArgBuilder by args {
+  class TeamArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun slug(value: String): TeamArgs = apply { addArg("slug", value) }
 
   }
 
-  class TeamsArgs(args: TypeArgBuilder = TypeArgBuilder.create<TeamConnection, TeamsArgs>()) : TypeArgBuilder by args {
+  class TeamsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): TeamsArgs = apply { addArg("first", value) }
 
 
@@ -2057,7 +2058,7 @@ object OrganizationEdge : QSchemaType {
 object OrganizationIdentityProvider : QSchemaType, Node {
   val digestMethod: Stub<URI> = QScalar.stub()
 
-  val externalIdentities: QTypeConfigStub<ExternalIdentityConnection, ExternalIdentitiesArgs> = QType.configStub(ExternalIdentitiesArgs())
+  val externalIdentities: QTypeConfigStub<ExternalIdentityConnection, ExternalIdentitiesArgs> = QType.configStub { ExternalIdentitiesArgs(it) }
 
   override val id: Stub<String> = QScalar.stub()
 
@@ -2071,7 +2072,7 @@ object OrganizationIdentityProvider : QSchemaType, Node {
 
   val ssoUrl: Stub<URI> = QScalar.stub()
 
-  class ExternalIdentitiesArgs(args: TypeArgBuilder = TypeArgBuilder.create<ExternalIdentityConnection, ExternalIdentitiesArgs>()) : TypeArgBuilder by args {
+  class ExternalIdentitiesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ExternalIdentitiesArgs = apply { addArg("first", value) }
 
 
@@ -2141,7 +2142,7 @@ object Project : QSchemaType, Updatable, Node {
 
   val closedAt: Stub<DateTime> = QScalar.stub()
 
-  val columns: QTypeConfigStub<ProjectColumnConnection, ColumnsArgs> = QType.configStub(ColumnsArgs())
+  val columns: QTypeConfigStub<ProjectColumnConnection, ColumnsArgs> = QType.configStub { ColumnsArgs(it) }
 
   val createdAt: Stub<DateTime> = QScalar.stub()
 
@@ -2167,7 +2168,7 @@ object Project : QSchemaType, Updatable, Node {
 
   override val viewerCanUpdate: Stub<Boolean> = QScalar.stub()
 
-  class ColumnsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ProjectColumnConnection, ColumnsArgs>()) : TypeArgBuilder by args {
+  class ColumnsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ColumnsArgs = apply { addArg("first", value) }
 
 
@@ -2241,7 +2242,7 @@ enum class ProjectCardState : QSchemaType {
 }
 
 object ProjectColumn : QSchemaType, Node {
-  val cards: QTypeConfigStub<ProjectCardConnection, CardsArgs> = QType.configStub(CardsArgs())
+  val cards: QTypeConfigStub<ProjectCardConnection, CardsArgs> = QType.configStub { CardsArgs(it) }
 
   val createdAt: Stub<DateTime> = QScalar.stub()
 
@@ -2255,7 +2256,7 @@ object ProjectColumn : QSchemaType, Node {
 
   val updatedAt: Stub<DateTime> = QScalar.stub()
 
-  class CardsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ProjectCardConnection, CardsArgs>()) : TypeArgBuilder by args {
+  class CardsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CardsArgs = apply { addArg("first", value) }
 
 
@@ -2326,12 +2327,12 @@ interface ProjectOwner : QSchemaType {
 
   val viewerCanCreateProjects: Stub<Boolean>
 
-  class ProjectArgs(args: TypeArgBuilder = TypeArgBuilder.create<Project, ProjectArgs>()) : TypeArgBuilder by args {
+  class ProjectArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun number(value: Int): ProjectArgs = apply { addArg("number", value) }
 
   }
 
-  class ProjectsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ProjectConnection, ProjectsArgs>()) : TypeArgBuilder by args {
+  class ProjectsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ProjectsArgs = apply { addArg("first", value) }
 
 
@@ -2382,15 +2383,15 @@ object ProtectedBranch : QSchemaType, Node {
 
   val name: Stub<String> = QScalar.stub()
 
-  val pushAllowances: QTypeConfigStub<PushAllowanceConnection, PushAllowancesArgs> = QType.configStub(PushAllowancesArgs())
+  val pushAllowances: QTypeConfigStub<PushAllowanceConnection, PushAllowancesArgs> = QType.configStub { PushAllowancesArgs(it) }
 
   val repository: InitStub<Repository> = QType.stub()
 
   val requiredStatusCheckContexts: ListStub<String> = QScalarList.stub()
 
-  val reviewDismissalAllowances: QTypeConfigStub<ReviewDismissalAllowanceConnection, ReviewDismissalAllowancesArgs> = QType.configStub(ReviewDismissalAllowancesArgs())
+  val reviewDismissalAllowances: QTypeConfigStub<ReviewDismissalAllowanceConnection, ReviewDismissalAllowancesArgs> = QType.configStub { ReviewDismissalAllowancesArgs(it) }
 
-  class PushAllowancesArgs(args: TypeArgBuilder = TypeArgBuilder.create<PushAllowanceConnection, PushAllowancesArgs>()) : TypeArgBuilder by args {
+  class PushAllowancesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): PushAllowancesArgs = apply { addArg("first", value) }
 
 
@@ -2404,7 +2405,7 @@ object ProtectedBranch : QSchemaType, Node {
 
   }
 
-  class ReviewDismissalAllowancesArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReviewDismissalAllowanceConnection, ReviewDismissalAllowancesArgs>()) : TypeArgBuilder by args {
+  class ReviewDismissalAllowancesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReviewDismissalAllowancesArgs = apply { addArg("first", value) }
 
 
@@ -2436,7 +2437,7 @@ object ProtectedBranchEdge : QSchemaType {
 }
 
 object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNode, Reactable, Lockable, Labelable, UpdatableComment, Updatable, Comment, Closable, Assignable, Node {
-  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> = QType.configStub(Assignable.AssigneesArgs())
+  override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> = QType.configStub { Assignable.AssigneesArgs(it) }
 
   override val author: InitStub<Actor> = QType.stub()
 
@@ -2454,9 +2455,9 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   override val closed: Stub<Boolean> = QScalar.stub()
 
-  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
+  val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> = QType.configStub { CommentsArgs(it) }
 
-  val commits: QTypeConfigStub<PullRequestCommitConnection, CommitsArgs> = QType.configStub(CommitsArgs())
+  val commits: QTypeConfigStub<PullRequestCommitConnection, CommitsArgs> = QType.configStub { CommitsArgs(it) }
 
   override val createdAt: Stub<DateTime> = QScalar.stub()
 
@@ -2478,7 +2479,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val isCrossRepository: Stub<Boolean> = QScalar.stub()
 
-  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> = QType.configStub(Labelable.LabelsArgs())
+  override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> = QType.configStub { Labelable.LabelsArgs(it) }
 
   override val lastEditedAt: Stub<DateTime> = QScalar.stub()
 
@@ -2494,7 +2495,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val number: Stub<Int> = QScalar.stub()
 
-  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> = QType.configStub(ParticipantsArgs())
+  val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> = QType.configStub { ParticipantsArgs(it) }
 
   val potentialMergeCommit: InitStub<Commit> = QType.stub()
 
@@ -2502,7 +2503,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub { Reactable.ReactionsArgs(it) }
 
   override val repository: InitStub<Repository> = QType.stub()
 
@@ -2512,15 +2513,15 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val revertUrl: Stub<URI> = QScalar.stub()
 
-  val reviewRequests: QTypeConfigStub<ReviewRequestConnection, ReviewRequestsArgs> = QType.configStub(ReviewRequestsArgs())
+  val reviewRequests: QTypeConfigStub<ReviewRequestConnection, ReviewRequestsArgs> = QType.configStub { ReviewRequestsArgs(it) }
 
-  val reviews: QTypeConfigStub<PullRequestReviewConnection, ReviewsArgs> = QType.configStub(ReviewsArgs())
+  val reviews: QTypeConfigStub<PullRequestReviewConnection, ReviewsArgs> = QType.configStub { ReviewsArgs(it) }
 
   val state: Stub<PullRequestState> = QScalar.stub()
 
   val suggestedReviewers: ListInitStub<SuggestedReviewer> = QTypeList.stub()
 
-  val timeline: QTypeConfigStub<PullRequestTimelineConnection, TimelineArgs> = QType.configStub(TimelineArgs())
+  val timeline: QTypeConfigStub<PullRequestTimelineConnection, TimelineArgs> = QType.configStub { TimelineArgs(it) }
 
   val title: Stub<String> = QScalar.stub()
 
@@ -2540,7 +2541,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
-  class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
+  class CommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
 
@@ -2554,7 +2555,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   }
 
-  class CommitsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestCommitConnection, CommitsArgs>()) : TypeArgBuilder by args {
+  class CommitsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommitsArgs = apply { addArg("first", value) }
 
 
@@ -2568,7 +2569,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   }
 
-  class ParticipantsArgs(args: TypeArgBuilder = TypeArgBuilder.create<UserConnection, ParticipantsArgs>()) : TypeArgBuilder by args {
+  class ParticipantsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ParticipantsArgs = apply { addArg("first", value) }
 
 
@@ -2582,7 +2583,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   }
 
-  class ReviewRequestsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReviewRequestConnection, ReviewRequestsArgs>()) : TypeArgBuilder by args {
+  class ReviewRequestsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReviewRequestsArgs = apply { addArg("first", value) }
 
 
@@ -2596,7 +2597,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   }
 
-  class ReviewsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestReviewConnection, ReviewsArgs>()) : TypeArgBuilder by args {
+  class ReviewsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReviewsArgs = apply { addArg("first", value) }
 
 
@@ -2613,7 +2614,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   }
 
-  class TimelineArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestTimelineConnection, TimelineArgs>()) : TypeArgBuilder by args {
+  class TimelineArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): TimelineArgs = apply { addArg("first", value) }
 
 
@@ -2694,7 +2695,7 @@ object PullRequestReview : QSchemaType, RepositoryNode, UpdatableComment, Updata
 
   val bodyText: Stub<String> = QScalar.stub()
 
-  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
+  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> = QType.configStub { CommentsArgs(it) }
 
   val commit: InitStub<Commit> = QType.stub()
 
@@ -2734,7 +2735,7 @@ object PullRequestReview : QSchemaType, RepositoryNode, UpdatableComment, Updata
 
   override val viewerDidAuthor: Stub<Boolean> = QScalar.stub()
 
-  class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestReviewCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
+  class CommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
 
@@ -2794,7 +2795,7 @@ object PullRequestReviewComment : QSchemaType, RepositoryNode, Reactable, Updata
 
   override val reactionGroups: ListInitStub<ReactionGroup> = QTypeList.stub()
 
-  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub(Reactable.ReactionsArgs())
+  override val reactions: QTypeConfigStub<ReactionConnection, Reactable.ReactionsArgs> = QType.configStub { Reactable.ReactionsArgs(it) }
 
   override val repository: InitStub<Repository> = QType.stub()
 
@@ -2870,13 +2871,13 @@ enum class PullRequestReviewState : QSchemaType {
 }
 
 object PullRequestReviewThread : QSchemaType, Node {
-  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> = QType.configStub(CommentsArgs())
+  val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> = QType.configStub { CommentsArgs(it) }
 
   override val id: Stub<String> = QScalar.stub()
 
   val pullRequest: InitStub<PullRequest> = QType.stub()
 
-  class CommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestReviewCommentConnection, CommentsArgs>()) : TypeArgBuilder by args {
+  class CommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommentsArgs = apply { addArg("first", value) }
 
 
@@ -3006,55 +3007,55 @@ object PushAllowanceEdge : QSchemaType {
 }
 
 object Query : QSchemaType {
-  val codeOfConduct: QTypeConfigStub<CodeOfConduct, CodeOfConductArgs> = QType.configStub(CodeOfConductArgs())
+  val codeOfConduct: QTypeConfigStub<CodeOfConduct, CodeOfConductArgs> = QType.configStub { CodeOfConductArgs(it) }
 
   val codesOfConduct: ListInitStub<CodeOfConduct> = QTypeList.stub()
 
-  val node: QTypeConfigStub<Node, NodeArgs> = QType.configStub(NodeArgs())
+  val node: QTypeConfigStub<Node, NodeArgs> = QType.configStub { NodeArgs(it) }
 
-  val nodes: ListConfigType<Node, NodesArgs> = QTypeList.configStub(NodesArgs())
+  val nodes: ListConfigType<Node, NodesArgs> = QTypeList.configStub { NodesArgs(it) }
 
-  val organization: QTypeConfigStub<Organization, OrganizationArgs> = QType.configStub(OrganizationArgs())
+  val organization: QTypeConfigStub<Organization, OrganizationArgs> = QType.configStub { OrganizationArgs(it) }
 
   val rateLimit: InitStub<RateLimit> = QType.stub()
 
   val relay: InitStub<Query> = QType.stub()
 
-  val repository: QTypeConfigStub<Repository, RepositoryArgs> = QType.configStub(RepositoryArgs())
+  val repository: QTypeConfigStub<Repository, RepositoryArgs> = QType.configStub { RepositoryArgs(it) }
 
-  val repositoryOwner: QTypeConfigStub<RepositoryOwner, RepositoryOwnerArgs> = QType.configStub(RepositoryOwnerArgs())
+  val repositoryOwner: QTypeConfigStub<RepositoryOwner, RepositoryOwnerArgs> = QType.configStub { RepositoryOwnerArgs(it) }
 
-  val resource: QTypeConfigStub<UniformResourceLocatable, ResourceArgs> = QType.configStub(ResourceArgs())
+  val resource: QTypeConfigStub<UniformResourceLocatable, ResourceArgs> = QType.configStub { ResourceArgs(it) }
 
-  val search: QTypeConfigStub<SearchResultItemConnection, SearchArgs> = QType.configStub(SearchArgs())
+  val search: QTypeConfigStub<SearchResultItemConnection, SearchArgs> = QType.configStub { SearchArgs(it) }
 
-  val topic: QTypeConfigStub<Topic, TopicArgs> = QType.configStub(TopicArgs())
+  val topic: QTypeConfigStub<Topic, TopicArgs> = QType.configStub { TopicArgs(it) }
 
-  val user: QTypeConfigStub<User, UserArgs> = QType.configStub(UserArgs())
+  val user: QTypeConfigStub<User, UserArgs> = QType.configStub { UserArgs(it) }
 
   val viewer: InitStub<User> = QType.stub()
 
-  class CodeOfConductArgs(args: TypeArgBuilder = TypeArgBuilder.create<CodeOfConduct, CodeOfConductArgs>()) : TypeArgBuilder by args {
+  class CodeOfConductArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun key(value: String): CodeOfConductArgs = apply { addArg("key", value) }
 
   }
 
-  class NodeArgs(args: TypeArgBuilder = TypeArgBuilder.create<Node, NodeArgs>()) : TypeArgBuilder by args {
+  class NodeArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun id(value: String): NodeArgs = apply { addArg("id", value) }
 
   }
 
-  class NodesArgs(args: TypeListArgBuilder = TypeListArgBuilder.create<Node, NodesArgs>()) : TypeListArgBuilder by args {
+  class NodesArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
     fun ids(value: String): NodesArgs = apply { addArg("ids", value) }
 
   }
 
-  class OrganizationArgs(args: TypeArgBuilder = TypeArgBuilder.create<Organization, OrganizationArgs>()) : TypeArgBuilder by args {
+  class OrganizationArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun login(value: String): OrganizationArgs = apply { addArg("login", value) }
 
   }
 
-  class RepositoryArgs(args: TypeArgBuilder = TypeArgBuilder.create<Repository, RepositoryArgs>()) : TypeArgBuilder by args {
+  class RepositoryArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun owner(value: String): RepositoryArgs = apply { addArg("owner", value) }
 
 
@@ -3062,17 +3063,17 @@ object Query : QSchemaType {
 
   }
 
-  class RepositoryOwnerArgs(args: TypeArgBuilder = TypeArgBuilder.create<RepositoryOwner, RepositoryOwnerArgs>()) : TypeArgBuilder by args {
+  class RepositoryOwnerArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun login(value: String): RepositoryOwnerArgs = apply { addArg("login", value) }
 
   }
 
-  class ResourceArgs(args: TypeArgBuilder = TypeArgBuilder.create<UniformResourceLocatable, ResourceArgs>()) : TypeArgBuilder by args {
+  class ResourceArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun url(value: URI): ResourceArgs = apply { addArg("url", value) }
 
   }
 
-  class SearchArgs(args: TypeArgBuilder = TypeArgBuilder.create<SearchResultItemConnection, SearchArgs>()) : TypeArgBuilder by args {
+  class SearchArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): SearchArgs = apply { addArg("first", value) }
 
 
@@ -3092,12 +3093,12 @@ object Query : QSchemaType {
 
   }
 
-  class TopicArgs(args: TypeArgBuilder = TypeArgBuilder.create<Topic, TopicArgs>()) : TypeArgBuilder by args {
+  class TopicArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun name(value: String): TopicArgs = apply { addArg("name", value) }
 
   }
 
-  class UserArgs(args: TypeArgBuilder = TypeArgBuilder.create<User, UserArgs>()) : TypeArgBuilder by args {
+  class UserArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun login(value: String): UserArgs = apply { addArg("login", value) }
 
   }
@@ -3124,7 +3125,7 @@ interface Reactable : QSchemaType {
 
   val viewerCanReact: Stub<Boolean>
 
-  class ReactionsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReactionConnection, ReactionsArgs>()) : TypeArgBuilder by args {
+  class ReactionsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReactionsArgs = apply { addArg("first", value) }
 
 
@@ -3214,11 +3215,11 @@ object ReactionGroup : QSchemaType {
 
   val subject: InitStub<Reactable> = QType.stub()
 
-  val users: QTypeConfigStub<ReactingUserConnection, UsersArgs> = QType.configStub(UsersArgs())
+  val users: QTypeConfigStub<ReactingUserConnection, UsersArgs> = QType.configStub { UsersArgs(it) }
 
   val viewerHasReacted: Stub<Boolean> = QScalar.stub()
 
-  class UsersArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReactingUserConnection, UsersArgs>()) : TypeArgBuilder by args {
+  class UsersArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): UsersArgs = apply { addArg("first", value) }
 
 
@@ -3241,7 +3242,7 @@ enum class ReactionOrderField : QSchemaType {
 }
 
 object Ref : QSchemaType, Node {
-  val associatedPullRequests: QTypeConfigStub<PullRequestConnection, AssociatedPullRequestsArgs> = QType.configStub(AssociatedPullRequestsArgs())
+  val associatedPullRequests: QTypeConfigStub<PullRequestConnection, AssociatedPullRequestsArgs> = QType.configStub { AssociatedPullRequestsArgs(it) }
 
   override val id: Stub<String> = QScalar.stub()
 
@@ -3253,7 +3254,7 @@ object Ref : QSchemaType, Node {
 
   val target: InitStub<GitObject> = QType.stub()
 
-  class AssociatedPullRequestsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestConnection, AssociatedPullRequestsArgs>()) : TypeArgBuilder by args {
+  class AssociatedPullRequestsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): AssociatedPullRequestsArgs = apply { addArg("first", value) }
 
 
@@ -3322,9 +3323,9 @@ object Release : QSchemaType, UniformResourceLocatable, Node {
 
   val publishedAt: Stub<DateTime> = QScalar.stub()
 
-  val releaseAsset: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetArgs> = QType.configStub(ReleaseAssetArgs())
+  val releaseAsset: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetArgs> = QType.configStub { ReleaseAssetArgs(it) }
 
-  val releaseAssets: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetsArgs> = QType.configStub(ReleaseAssetsArgs())
+  val releaseAssets: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetsArgs> = QType.configStub { ReleaseAssetsArgs(it) }
 
   override val resourcePath: Stub<URI> = QScalar.stub()
 
@@ -3332,7 +3333,7 @@ object Release : QSchemaType, UniformResourceLocatable, Node {
 
   override val url: Stub<URI> = QScalar.stub()
 
-  class ReleaseAssetArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReleaseAssetConnection, ReleaseAssetArgs>()) : TypeArgBuilder by args {
+  class ReleaseAssetArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReleaseAssetArgs = apply { addArg("first", value) }
 
 
@@ -3349,7 +3350,7 @@ object Release : QSchemaType, UniformResourceLocatable, Node {
 
   }
 
-  class ReleaseAssetsArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReleaseAssetConnection, ReleaseAssetsArgs>()) : TypeArgBuilder by args {
+  class ReleaseAssetsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReleaseAssetsArgs = apply { addArg("first", value) }
 
 
@@ -3486,7 +3487,7 @@ object ReopenedEvent : QSchemaType, Node {
 object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starrable, Subscribable, ProjectOwner, Node {
   val codeOfConduct: InitStub<CodeOfConduct> = QType.stub()
 
-  val commitComments: QTypeConfigStub<CommitCommentConnection, CommitCommentsArgs> = QType.configStub(CommitCommentsArgs())
+  val commitComments: QTypeConfigStub<CommitCommentConnection, CommitCommentsArgs> = QType.configStub { CommitCommentsArgs(it) }
 
   override val createdAt: Stub<DateTime> = QScalar.stub()
 
@@ -3494,7 +3495,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   val defaultBranchRef: InitStub<Ref> = QType.stub()
 
-  val deployments: QTypeConfigStub<DeploymentConnection, DeploymentsArgs> = QType.configStub(DeploymentsArgs())
+  val deployments: QTypeConfigStub<DeploymentConnection, DeploymentsArgs> = QType.configStub { DeploymentsArgs(it) }
 
   override val description: Stub<String> = QScalar.stub()
 
@@ -3502,7 +3503,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   val diskUsage: Stub<Int> = QScalar.stub()
 
-  val forks: QTypeConfigStub<RepositoryConnection, ForksArgs> = QType.configStub(ForksArgs())
+  val forks: QTypeConfigStub<RepositoryConnection, ForksArgs> = QType.configStub { ForksArgs(it) }
 
   override val hasIssuesEnabled: Stub<Boolean> = QScalar.stub()
 
@@ -3520,27 +3521,27 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   override val isPrivate: Stub<Boolean> = QScalar.stub()
 
-  val issue: QTypeConfigStub<Issue, IssueArgs> = QType.configStub(IssueArgs())
+  val issue: QTypeConfigStub<Issue, IssueArgs> = QType.configStub { IssueArgs(it) }
 
-  val issueOrPullRequest: QTypeConfigStub<IssueOrPullRequest, IssueOrPullRequestArgs> = QType.configStub(IssueOrPullRequestArgs())
+  val issueOrPullRequest: QTypeConfigStub<IssueOrPullRequest, IssueOrPullRequestArgs> = QType.configStub { IssueOrPullRequestArgs(it) }
 
-  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub(IssuesArgs())
+  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub { IssuesArgs(it) }
 
-  val label: QTypeConfigStub<Label, LabelArgs> = QType.configStub(LabelArgs())
+  val label: QTypeConfigStub<Label, LabelArgs> = QType.configStub { LabelArgs(it) }
 
-  val labels: QTypeConfigStub<LabelConnection, LabelsArgs> = QType.configStub(LabelsArgs())
+  val labels: QTypeConfigStub<LabelConnection, LabelsArgs> = QType.configStub { LabelsArgs(it) }
 
-  val languages: QTypeConfigStub<LanguageConnection, LanguagesArgs> = QType.configStub(LanguagesArgs())
+  val languages: QTypeConfigStub<LanguageConnection, LanguagesArgs> = QType.configStub { LanguagesArgs(it) }
 
   override val license: Stub<String> = QScalar.stub()
 
   override val lockReason: Stub<RepositoryLockReason> = QScalar.stub()
 
-  val mentionableUsers: QTypeConfigStub<UserConnection, MentionableUsersArgs> = QType.configStub(MentionableUsersArgs())
+  val mentionableUsers: QTypeConfigStub<UserConnection, MentionableUsersArgs> = QType.configStub { MentionableUsersArgs(it) }
 
-  val milestone: QTypeConfigStub<Milestone, MilestoneArgs> = QType.configStub(MilestoneArgs())
+  val milestone: QTypeConfigStub<Milestone, MilestoneArgs> = QType.configStub { MilestoneArgs(it) }
 
-  val milestones: QTypeConfigStub<MilestoneConnection, MilestonesArgs> = QType.configStub(MilestonesArgs())
+  val milestones: QTypeConfigStub<MilestoneConnection, MilestonesArgs> = QType.configStub { MilestonesArgs(it) }
 
   override val mirrorUrl: Stub<URI> = QScalar.stub()
 
@@ -3548,7 +3549,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   override val nameWithOwner: Stub<String> = QScalar.stub()
 
-  val objectVal: QTypeConfigStub<GitObject, ObjectValArgs> = QType.configStub(ObjectValArgs())
+  val objectVal: QTypeConfigStub<GitObject, ObjectValArgs> = QType.configStub { ObjectValArgs(it) }
 
   override val owner: InitStub<RepositoryOwner> = QType.stub()
 
@@ -3556,33 +3557,33 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   val primaryLanguage: InitStub<Language> = QType.stub()
 
-  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> = QType.configStub(ProjectOwner.ProjectArgs())
+  override val project: QTypeConfigStub<Project, ProjectOwner.ProjectArgs> = QType.configStub { ProjectOwner.ProjectArgs(it) }
 
-  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> = QType.configStub(ProjectOwner.ProjectsArgs())
+  override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> = QType.configStub { ProjectOwner.ProjectsArgs(it) }
 
   override val projectsResourcePath: Stub<URI> = QScalar.stub()
 
   override val projectsUrl: Stub<URI> = QScalar.stub()
 
-  val protectedBranches: QTypeConfigStub<ProtectedBranchConnection, ProtectedBranchesArgs> = QType.configStub(ProtectedBranchesArgs())
+  val protectedBranches: QTypeConfigStub<ProtectedBranchConnection, ProtectedBranchesArgs> = QType.configStub { ProtectedBranchesArgs(it) }
 
-  val pullRequest: QTypeConfigStub<PullRequest, PullRequestArgs> = QType.configStub(PullRequestArgs())
+  val pullRequest: QTypeConfigStub<PullRequest, PullRequestArgs> = QType.configStub { PullRequestArgs(it) }
 
-  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub(PullRequestsArgs())
+  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub { PullRequestsArgs(it) }
 
   override val pushedAt: Stub<DateTime> = QScalar.stub()
 
-  val ref: QTypeConfigStub<Ref, RefArgs> = QType.configStub(RefArgs())
+  val ref: QTypeConfigStub<Ref, RefArgs> = QType.configStub { RefArgs(it) }
 
-  val refs: QTypeConfigStub<RefConnection, RefsArgs> = QType.configStub(RefsArgs())
+  val refs: QTypeConfigStub<RefConnection, RefsArgs> = QType.configStub { RefsArgs(it) }
 
-  val releases: QTypeConfigStub<ReleaseConnection, ReleasesArgs> = QType.configStub(ReleasesArgs())
+  val releases: QTypeConfigStub<ReleaseConnection, ReleasesArgs> = QType.configStub { ReleasesArgs(it) }
 
-  val repositoryTopics: QTypeConfigStub<RepositoryTopicConnection, RepositoryTopicsArgs> = QType.configStub(RepositoryTopicsArgs())
+  val repositoryTopics: QTypeConfigStub<RepositoryTopicConnection, RepositoryTopicsArgs> = QType.configStub { RepositoryTopicsArgs(it) }
 
   override val resourcePath: Stub<URI> = QScalar.stub()
 
-  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> = QType.configStub(Starrable.StargazersArgs())
+  override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> = QType.configStub { Starrable.StargazersArgs(it) }
 
   override val updatedAt: Stub<DateTime> = QScalar.stub()
 
@@ -3600,9 +3601,9 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   override val viewerSubscription: Stub<SubscriptionState> = QScalar.stub()
 
-  val watchers: QTypeConfigStub<UserConnection, WatchersArgs> = QType.configStub(WatchersArgs())
+  val watchers: QTypeConfigStub<UserConnection, WatchersArgs> = QType.configStub { WatchersArgs(it) }
 
-  class CommitCommentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<CommitCommentConnection, CommitCommentsArgs>()) : TypeArgBuilder by args {
+  class CommitCommentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CommitCommentsArgs = apply { addArg("first", value) }
 
 
@@ -3616,7 +3617,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class DeploymentsArgs(args: TypeArgBuilder = TypeArgBuilder.create<DeploymentConnection, DeploymentsArgs>()) : TypeArgBuilder by args {
+  class DeploymentsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): DeploymentsArgs = apply { addArg("first", value) }
 
 
@@ -3630,7 +3631,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class ForksArgs(args: TypeArgBuilder = TypeArgBuilder.create<RepositoryConnection, ForksArgs>()) : TypeArgBuilder by args {
+  class ForksArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ForksArgs = apply { addArg("first", value) }
 
 
@@ -3656,17 +3657,17 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class IssueArgs(args: TypeArgBuilder = TypeArgBuilder.create<Issue, IssueArgs>()) : TypeArgBuilder by args {
+  class IssueArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun number(value: Int): IssueArgs = apply { addArg("number", value) }
 
   }
 
-  class IssueOrPullRequestArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueOrPullRequest, IssueOrPullRequestArgs>()) : TypeArgBuilder by args {
+  class IssueOrPullRequestArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun number(value: Int): IssueOrPullRequestArgs = apply { addArg("number", value) }
 
   }
 
-  class IssuesArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueConnection, IssuesArgs>()) : TypeArgBuilder by args {
+  class IssuesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): IssuesArgs = apply { addArg("first", value) }
 
 
@@ -3689,12 +3690,12 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class LabelArgs(args: TypeArgBuilder = TypeArgBuilder.create<Label, LabelArgs>()) : TypeArgBuilder by args {
+  class LabelArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun name(value: String): LabelArgs = apply { addArg("name", value) }
 
   }
 
-  class LabelsArgs(args: TypeArgBuilder = TypeArgBuilder.create<LabelConnection, LabelsArgs>()) : TypeArgBuilder by args {
+  class LabelsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): LabelsArgs = apply { addArg("first", value) }
 
 
@@ -3708,7 +3709,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class LanguagesArgs(args: TypeArgBuilder = TypeArgBuilder.create<LanguageConnection, LanguagesArgs>()) : TypeArgBuilder by args {
+  class LanguagesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): LanguagesArgs = apply { addArg("first", value) }
 
 
@@ -3725,7 +3726,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class MentionableUsersArgs(args: TypeArgBuilder = TypeArgBuilder.create<UserConnection, MentionableUsersArgs>()) : TypeArgBuilder by args {
+  class MentionableUsersArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): MentionableUsersArgs = apply { addArg("first", value) }
 
 
@@ -3739,12 +3740,12 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class MilestoneArgs(args: TypeArgBuilder = TypeArgBuilder.create<Milestone, MilestoneArgs>()) : TypeArgBuilder by args {
+  class MilestoneArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun number(value: Int): MilestoneArgs = apply { addArg("number", value) }
 
   }
 
-  class MilestonesArgs(args: TypeArgBuilder = TypeArgBuilder.create<MilestoneConnection, MilestonesArgs>()) : TypeArgBuilder by args {
+  class MilestonesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): MilestonesArgs = apply { addArg("first", value) }
 
 
@@ -3758,7 +3759,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class ObjectValArgs(args: TypeArgBuilder = TypeArgBuilder.create<GitObject, ObjectValArgs>()) : TypeArgBuilder by args {
+  class ObjectValArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun oid(value: GitObjectID): ObjectValArgs = apply { addArg("oid", value) }
 
 
@@ -3766,7 +3767,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class ProtectedBranchesArgs(args: TypeArgBuilder = TypeArgBuilder.create<ProtectedBranchConnection, ProtectedBranchesArgs>()) : TypeArgBuilder by args {
+  class ProtectedBranchesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ProtectedBranchesArgs = apply { addArg("first", value) }
 
 
@@ -3780,12 +3781,12 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class PullRequestArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequest, PullRequestArgs>()) : TypeArgBuilder by args {
+  class PullRequestArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun number(value: Int): PullRequestArgs = apply { addArg("number", value) }
 
   }
 
-  class PullRequestsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestConnection, PullRequestsArgs>()) : TypeArgBuilder by args {
+  class PullRequestsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): PullRequestsArgs = apply { addArg("first", value) }
 
 
@@ -3814,12 +3815,12 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class RefArgs(args: TypeArgBuilder = TypeArgBuilder.create<Ref, RefArgs>()) : TypeArgBuilder by args {
+  class RefArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun qualifiedName(value: String): RefArgs = apply { addArg("qualifiedName", value) }
 
   }
 
-  class RefsArgs(args: TypeArgBuilder = TypeArgBuilder.create<RefConnection, RefsArgs>()) : TypeArgBuilder by args {
+  class RefsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): RefsArgs = apply { addArg("first", value) }
 
 
@@ -3839,7 +3840,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class ReleasesArgs(args: TypeArgBuilder = TypeArgBuilder.create<ReleaseConnection, ReleasesArgs>()) : TypeArgBuilder by args {
+  class ReleasesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReleasesArgs = apply { addArg("first", value) }
 
 
@@ -3853,7 +3854,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class RepositoryTopicsArgs(args: TypeArgBuilder = TypeArgBuilder.create<RepositoryTopicConnection, RepositoryTopicsArgs>()) : TypeArgBuilder by args {
+  class RepositoryTopicsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): RepositoryTopicsArgs = apply { addArg("first", value) }
 
 
@@ -3867,7 +3868,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   }
 
-  class WatchersArgs(args: TypeArgBuilder = TypeArgBuilder.create<UserConnection, WatchersArgs>()) : TypeArgBuilder by args {
+  class WatchersArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): WatchersArgs = apply { addArg("first", value) }
 
 
@@ -4054,7 +4055,7 @@ interface RepositoryOwner : QSchemaType {
 
   val url: Stub<URI>
 
-  class PinnedRepositoriesArgs(args: TypeArgBuilder = TypeArgBuilder.create<RepositoryConnection, PinnedRepositoriesArgs>()) : TypeArgBuilder by args {
+  class PinnedRepositoriesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): PinnedRepositoriesArgs = apply { addArg("first", value) }
 
 
@@ -4080,7 +4081,7 @@ interface RepositoryOwner : QSchemaType {
 
   }
 
-  class RepositoriesArgs(args: TypeArgBuilder = TypeArgBuilder.create<RepositoryConnection, RepositoriesArgs>()) : TypeArgBuilder by args {
+  class RepositoriesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): RepositoriesArgs = apply { addArg("first", value) }
 
 
@@ -4109,7 +4110,7 @@ interface RepositoryOwner : QSchemaType {
 
   }
 
-  class RepositoryArgs(args: TypeArgBuilder = TypeArgBuilder.create<Repository, RepositoryArgs>()) : TypeArgBuilder by args {
+  class RepositoryArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun name(value: String): RepositoryArgs = apply { addArg("name", value) }
 
   }
@@ -4360,7 +4361,7 @@ interface Starrable : QSchemaType {
 
   val viewerHasStarred: Stub<Boolean>
 
-  class StargazersArgs(args: TypeArgBuilder = TypeArgBuilder.create<StargazerConnection, StargazersArgs>()) : TypeArgBuilder by args {
+  class StargazersArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): StargazersArgs = apply { addArg("first", value) }
 
 
@@ -4399,7 +4400,7 @@ object StarredRepositoryEdge : QSchemaType {
 object Status : QSchemaType, Node {
   val commit: InitStub<Commit> = QType.stub()
 
-  val context: QTypeConfigStub<StatusContext, ContextArgs> = QType.configStub(ContextArgs())
+  val context: QTypeConfigStub<StatusContext, ContextArgs> = QType.configStub { ContextArgs(it) }
 
   val contexts: ListInitStub<StatusContext> = QTypeList.stub()
 
@@ -4407,7 +4408,7 @@ object Status : QSchemaType, Node {
 
   val state: Stub<StatusState> = QScalar.stub()
 
-  class ContextArgs(args: TypeArgBuilder = TypeArgBuilder.create<StatusContext, ContextArgs>()) : TypeArgBuilder by args {
+  class ContextArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun name(value: String): ContextArgs = apply { addArg("name", value) }
 
   }
@@ -4521,7 +4522,7 @@ object Team : QSchemaType, Node {
 
   override val id: Stub<String> = QScalar.stub()
 
-  val invitations: QTypeConfigStub<OrganizationInvitationConnection, InvitationsArgs> = QType.configStub(InvitationsArgs())
+  val invitations: QTypeConfigStub<OrganizationInvitationConnection, InvitationsArgs> = QType.configStub { InvitationsArgs(it) }
 
   val name: Stub<String> = QScalar.stub()
 
@@ -4535,7 +4536,7 @@ object Team : QSchemaType, Node {
 
   val url: Stub<URI> = QScalar.stub()
 
-  class InvitationsArgs(args: TypeArgBuilder = TypeArgBuilder.create<OrganizationInvitationConnection, InvitationsArgs>()) : TypeArgBuilder by args {
+  class InvitationsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): InvitationsArgs = apply { addArg("first", value) }
 
 
@@ -4801,7 +4802,7 @@ object UpdateTopicsPayload : QSchemaType {
 }
 
 object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub(AvatarUrlArgs())
+  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> = QScalar.configStub { AvatarUrlArgs(it) }
 
   val bio: Stub<String> = QScalar.stub()
 
@@ -4811,7 +4812,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   val companyHTML: Stub<HTML> = QScalar.stub()
 
-  val contributedRepositories: QTypeConfigStub<RepositoryConnection, ContributedRepositoriesArgs> = QType.configStub(ContributedRepositoriesArgs())
+  val contributedRepositories: QTypeConfigStub<RepositoryConnection, ContributedRepositoriesArgs> = QType.configStub { ContributedRepositoriesArgs(it) }
 
   val createdAt: Stub<DateTime> = QScalar.stub()
 
@@ -4819,13 +4820,13 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   val email: Stub<String> = QScalar.stub()
 
-  val followers: QTypeConfigStub<FollowerConnection, FollowersArgs> = QType.configStub(FollowersArgs())
+  val followers: QTypeConfigStub<FollowerConnection, FollowersArgs> = QType.configStub { FollowersArgs(it) }
 
-  val following: QTypeConfigStub<FollowingConnection, FollowingArgs> = QType.configStub(FollowingArgs())
+  val following: QTypeConfigStub<FollowingConnection, FollowingArgs> = QType.configStub { FollowingArgs(it) }
 
-  val gist: QTypeConfigStub<Gist, GistArgs> = QType.configStub(GistArgs())
+  val gist: QTypeConfigStub<Gist, GistArgs> = QType.configStub { GistArgs(it) }
 
-  val gists: QTypeConfigStub<GistConnection, GistsArgs> = QType.configStub(GistsArgs())
+  val gists: QTypeConfigStub<GistConnection, GistsArgs> = QType.configStub { GistsArgs(it) }
 
   override val id: Stub<String> = QScalar.stub()
 
@@ -4845,7 +4846,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   val isViewer: Stub<Boolean> = QScalar.stub()
 
-  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub(IssuesArgs())
+  val issues: QTypeConfigStub<IssueConnection, IssuesArgs> = QType.configStub { IssuesArgs(it) }
 
   val location: Stub<String> = QScalar.stub()
 
@@ -4853,21 +4854,21 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   val name: Stub<String> = QScalar.stub()
 
-  val organization: QTypeConfigStub<Organization, OrganizationArgs> = QType.configStub(OrganizationArgs())
+  val organization: QTypeConfigStub<Organization, OrganizationArgs> = QType.configStub { OrganizationArgs(it) }
 
-  val organizations: QTypeConfigStub<OrganizationConnection, OrganizationsArgs> = QType.configStub(OrganizationsArgs())
+  val organizations: QTypeConfigStub<OrganizationConnection, OrganizationsArgs> = QType.configStub { OrganizationsArgs(it) }
 
-  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> = QType.configStub(RepositoryOwner.PinnedRepositoriesArgs())
+  override val pinnedRepositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.PinnedRepositoriesArgs> = QType.configStub { RepositoryOwner.PinnedRepositoriesArgs(it) }
 
-  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub(PullRequestsArgs())
+  val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> = QType.configStub { PullRequestsArgs(it) }
 
-  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> = QType.configStub(RepositoryOwner.RepositoriesArgs())
+  override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> = QType.configStub { RepositoryOwner.RepositoriesArgs(it) }
 
-  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> = QType.configStub(RepositoryOwner.RepositoryArgs())
+  override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> = QType.configStub { RepositoryOwner.RepositoryArgs(it) }
 
   override val resourcePath: Stub<URI> = QScalar.stub()
 
-  val starredRepositories: QTypeConfigStub<StarredRepositoryConnection, StarredRepositoriesArgs> = QType.configStub(StarredRepositoriesArgs())
+  val starredRepositories: QTypeConfigStub<StarredRepositoryConnection, StarredRepositoriesArgs> = QType.configStub { StarredRepositoriesArgs(it) }
 
   val updatedAt: Stub<DateTime> = QScalar.stub()
 
@@ -4877,16 +4878,16 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   val viewerIsFollowing: Stub<Boolean> = QScalar.stub()
 
-  val watching: QTypeConfigStub<RepositoryConnection, WatchingArgs> = QType.configStub(WatchingArgs())
+  val watching: QTypeConfigStub<RepositoryConnection, WatchingArgs> = QType.configStub { WatchingArgs(it) }
 
   val websiteUrl: Stub<URI> = QScalar.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder = ArgBuilder.create<URI, AvatarUrlArgs>()) : BaseAvatarUrlArgs(args) {
+  class AvatarUrlArgs(args: ArgBuilder) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
 
-  class ContributedRepositoriesArgs(args: TypeArgBuilder = TypeArgBuilder.create<RepositoryConnection, ContributedRepositoriesArgs>()) : TypeArgBuilder by args {
+  class ContributedRepositoriesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ContributedRepositoriesArgs = apply { addArg("first", value) }
 
 
@@ -4912,7 +4913,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class FollowersArgs(args: TypeArgBuilder = TypeArgBuilder.create<FollowerConnection, FollowersArgs>()) : TypeArgBuilder by args {
+  class FollowersArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): FollowersArgs = apply { addArg("first", value) }
 
 
@@ -4926,7 +4927,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class FollowingArgs(args: TypeArgBuilder = TypeArgBuilder.create<FollowingConnection, FollowingArgs>()) : TypeArgBuilder by args {
+  class FollowingArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): FollowingArgs = apply { addArg("first", value) }
 
 
@@ -4940,12 +4941,12 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class GistArgs(args: TypeArgBuilder = TypeArgBuilder.create<Gist, GistArgs>()) : TypeArgBuilder by args {
+  class GistArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun name(value: String): GistArgs = apply { addArg("name", value) }
 
   }
 
-  class GistsArgs(args: TypeArgBuilder = TypeArgBuilder.create<GistConnection, GistsArgs>()) : TypeArgBuilder by args {
+  class GistsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): GistsArgs = apply { addArg("first", value) }
 
 
@@ -4962,7 +4963,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class IssuesArgs(args: TypeArgBuilder = TypeArgBuilder.create<IssueConnection, IssuesArgs>()) : TypeArgBuilder by args {
+  class IssuesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): IssuesArgs = apply { addArg("first", value) }
 
 
@@ -4985,12 +4986,12 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class OrganizationArgs(args: TypeArgBuilder = TypeArgBuilder.create<Organization, OrganizationArgs>()) : TypeArgBuilder by args {
+  class OrganizationArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun login(value: String): OrganizationArgs = apply { addArg("login", value) }
 
   }
 
-  class OrganizationsArgs(args: TypeArgBuilder = TypeArgBuilder.create<OrganizationConnection, OrganizationsArgs>()) : TypeArgBuilder by args {
+  class OrganizationsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): OrganizationsArgs = apply { addArg("first", value) }
 
 
@@ -5004,7 +5005,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class PullRequestsArgs(args: TypeArgBuilder = TypeArgBuilder.create<PullRequestConnection, PullRequestsArgs>()) : TypeArgBuilder by args {
+  class PullRequestsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): PullRequestsArgs = apply { addArg("first", value) }
 
 
@@ -5033,7 +5034,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class StarredRepositoriesArgs(args: TypeArgBuilder = TypeArgBuilder.create<StarredRepositoryConnection, StarredRepositoriesArgs>()) : TypeArgBuilder by args {
+  class StarredRepositoriesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): StarredRepositoriesArgs = apply { addArg("first", value) }
 
 
@@ -5053,7 +5054,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   }
 
-  class WatchingArgs(args: TypeArgBuilder = TypeArgBuilder.create<RepositoryConnection, WatchingArgs>()) : TypeArgBuilder by args {
+  class WatchingArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): WatchingArgs = apply { addArg("first", value) }
 
 

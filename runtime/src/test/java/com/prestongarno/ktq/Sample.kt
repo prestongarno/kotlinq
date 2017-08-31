@@ -14,15 +14,14 @@ interface Friendable {
   val friendCount: QConfigStub<Int, Friendable.FriendCountArgs>
   val friends: ListConfigType<OtherUser, FriendsArgs>
 
-  class FriendsArgs(args: TypeListArgBuilder = TypeListArgBuilder.create<OtherUser, FriendsArgs>())
-    : TypeListArgBuilder by args {
+  class FriendsArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
 
     fun first(value: Int) = apply { addArg("first", value) }
     fun after(value: String) = apply { addArg("after", value) }
     fun startAt(value: Int) = apply { addArg("startAt", value) }
   }
 
-  class FriendCountArgs(args: ArgBuilder = ArgBuilder.create<Int, FriendCountArgs>()) : ArgBuilder by args
+  class FriendCountArgs(args: ArgBuilder) : ArgBuilder by args
 }
 
 object Location : QSchemaType {
@@ -35,15 +34,14 @@ object Location : QSchemaType {
 }
 
 object OtherUser : URL, Friendable, QSchemaType {
-  override val friendCount = QScalar.configStub<Int, Friendable.FriendCountArgs>(Friendable.FriendCountArgs())
-  val name by lazy { stub<String>() }
-  val enemies by lazy { typeStub<OtherUser>() }
-  override val friends = QTypeList.configStub<OtherUser, Friendable.FriendsArgs>(Friendable.FriendsArgs())
-  val address = QType.configStub<Location, AddressArgs>(AddressArgs())
-  override val url by lazy { stub<String>() }
+  override val friendCount = QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
+  val name = QScalar.stub<String>()
+  val enemies = QType.stub<OtherUser>()
+  override val friends = QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
+  val address = QType.configStub<Location, AddressArgs> { AddressArgs(it) }
+  override val url = QScalar.stub<String>()
 
-  class AddressArgs(args: TypeArgBuilder = TypeArgBuilder.create<Location, AddressArgs>())
-    : TypeArgBuilder by args {
+  class AddressArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
 
     fun language(value: String) = apply { addArg("language", value) }
   }
@@ -82,7 +80,6 @@ class TestSample {
     println(foobaz.address.streetAddress)
     val foobar = MyUser(-69, "CHINESE")
     println("$foobar \n\t:: ${foobar.friends}\n\t::${foobar.address}")
-    println(foobar.address.streetAddress)
     println(foobar.enemies)
     println(OtherUser.enemies)
   }

@@ -4,6 +4,7 @@ package com.prestongarno.ktq.yelp
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.ListStub
@@ -108,24 +109,24 @@ object OpenHours : QSchemaType {
 }
 
 object Query : QSchemaType {
-  val business: QTypeConfigStub<Business, BusinessArgs> = QType.configStub(BusinessArgs())
+  val business: QTypeConfigStub<Business, BusinessArgs> = QType.configStub { BusinessArgs(it) }
 
-  val business_match_best: QTypeConfigStub<Business, Business_match_bestArgs> = QType.configStub(Business_match_bestArgs())
+  val business_match_best: QTypeConfigStub<Business, Business_match_bestArgs> = QType.configStub { Business_match_bestArgs(it) }
 
-  val business_match_lookup: QTypeConfigStub<Businesses, Business_match_lookupArgs> = QType.configStub(Business_match_lookupArgs())
+  val business_match_lookup: QTypeConfigStub<Businesses, Business_match_lookupArgs> = QType.configStub { Business_match_lookupArgs(it) }
 
-  val reviews: QTypeConfigStub<Reviews, ReviewsArgs> = QType.configStub(ReviewsArgs())
+  val reviews: QTypeConfigStub<Reviews, ReviewsArgs> = QType.configStub { ReviewsArgs(it) }
 
-  val phone_search: QTypeConfigStub<Businesses, Phone_searchArgs> = QType.configStub(Phone_searchArgs())
+  val phone_search: QTypeConfigStub<Businesses, Phone_searchArgs> = QType.configStub { Phone_searchArgs(it) }
 
-  val search: QTypeConfigStub<Businesses, SearchArgs> = QType.configStub(SearchArgs())
+  val search: QTypeConfigStub<Businesses, SearchArgs> = QType.configStub { SearchArgs(it) }
 
-  class BusinessArgs(args: TypeArgBuilder = TypeArgBuilder.create<Business, BusinessArgs>()) : TypeArgBuilder by args {
+  class BusinessArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun id(value: String): BusinessArgs = apply { addArg("id", value) }
 
   }
 
-  class Business_match_bestArgs(args: TypeArgBuilder = TypeArgBuilder.create<Business, Business_match_bestArgs>()) : TypeArgBuilder by args {
+  class Business_match_bestArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun name(value: String): Business_match_bestArgs = apply { addArg("name", value) }
 
 
@@ -160,7 +161,7 @@ object Query : QSchemaType {
 
   }
 
-  class Business_match_lookupArgs(args: TypeArgBuilder = TypeArgBuilder.create<Businesses, Business_match_lookupArgs>()) : TypeArgBuilder by args {
+  class Business_match_lookupArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun name(value: String): Business_match_lookupArgs = apply { addArg("name", value) }
 
 
@@ -195,7 +196,7 @@ object Query : QSchemaType {
 
   }
 
-  class ReviewsArgs(args: TypeArgBuilder = TypeArgBuilder.create<Reviews, ReviewsArgs>()) : TypeArgBuilder by args {
+  class ReviewsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun business(value: String): ReviewsArgs = apply { addArg("business", value) }
 
 
@@ -203,12 +204,12 @@ object Query : QSchemaType {
 
   }
 
-  class Phone_searchArgs(args: TypeArgBuilder = TypeArgBuilder.create<Businesses, Phone_searchArgs>()) : TypeArgBuilder by args {
+  class Phone_searchArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun phone(value: String): Phone_searchArgs = apply { addArg("phone", value) }
 
   }
 
-  class SearchArgs(args: TypeArgBuilder = TypeArgBuilder.create<Businesses, SearchArgs>()) : TypeArgBuilder by args {
+  class SearchArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun term(value: String): SearchArgs = apply { addArg("term", value) }
 
 

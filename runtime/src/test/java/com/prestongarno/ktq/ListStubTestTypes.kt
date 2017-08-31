@@ -1,4 +1,5 @@
 package com.prestongarno.ktq
+/*
 
 object Configuration : QSchemaType {
   val dependencies : ListInitStub<ProjImpl> = typeListStub<ProjImpl>()
@@ -28,4 +29,4 @@ class ProjectModel : QModel<ProjImpl>(ProjImpl::class)
 
 fun main(args: Array<String>) {
   ConfigModel().depends
-}
+}*/

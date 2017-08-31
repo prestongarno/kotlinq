@@ -1,9 +1,10 @@
-package com.prestongarno.ktq.yelp.runtime
+package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.QModel
+/*import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.yelp.Business
 import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Query
+import org.junit.Test
 
 class BusinessQuery(searchTerm: String) : QModel<Query>(Query::class) {
   val result by model.search.config()
@@ -23,3 +24,12 @@ class BusinessBasic : QModel<Business>(Business::class) {
   val phoneNumber by model.display_phone
   val directUrl by model.url
 }
+
+class TestCorrectStructure {
+  @Test
+  fun testBusinessBasic() {
+    val one = BusinessQuery("foobaz")
+    val two = BusinessQuery("foobar")
+    val foo = Query
+  }
+}*/

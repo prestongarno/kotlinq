@@ -17,7 +17,7 @@ class CustomSchemaTests {
     QCompiler.initialize("SampleOne")
         .packageName("com.prestongarno.ktq")
         .compile(File(file.path))
-        //.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+        .writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test
@@ -27,7 +27,7 @@ class CustomSchemaTests {
         .packageName("com.prestongarno.ktq.yelp")
         .compile(File(file.path))
         .result {}
-        //.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+        .writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 }
 

@@ -43,7 +43,7 @@ class GithubApiTest {
                   is QInterfaceDef -> require(field.abstract)
                 }
               }
-        }.result{}//.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+        }.result{}.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test

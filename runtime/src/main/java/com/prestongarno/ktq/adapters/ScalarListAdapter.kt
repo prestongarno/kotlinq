@@ -7,23 +7,25 @@ import com.prestongarno.ktq.QModel
 import kotlin.reflect.KProperty
 
 
-internal class ScalarListAdapter<I, out B : ListArgBuilder>(argBuilder: B? = null) :
+internal class ScalarListAdapter<I, out B : ListArgBuilder>(val builderInit: ( (ListArgBuilder) -> B )?) :
     ListStub<I>,
     ListConfig<I, B>,
     ListArgBuilder {
 
-  @Suppress("UNCHECKED_CAST") private val argBuilder: B = argBuilder ?: this as B
+  val values = mutableListOf<I>()
+  val argMap = mutableMapOf<String, Any>()
+  lateinit var property: KProperty<*>
 
-  private val values = mutableListOf<I>()
-  private val argMap = mutableMapOf<String, Any>()
-
-  override fun config(): B {
-    return argBuilder
-  }
+  @Suppress("UNCHECKED_CAST")
+  override fun config(): B = builderInit?.invoke(this)?: this as B
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> = this
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> {
+    println(property)
+    this.property = property
+    return this
+  }
 
   @Suppress("UNCHECKED_CAST") override fun <T> build(): ListStub<T> = this as ListStub<T>
 
