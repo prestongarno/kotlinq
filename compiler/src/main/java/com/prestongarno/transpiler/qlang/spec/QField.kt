@@ -6,11 +6,11 @@ import java.util.*
 import kotlin.reflect.KClass
 
 class QField(name: String,
-    var type: QDefinedType,
-    var args: List<QFieldInputArg>,
-    var directive: QDirectiveSymbol,
-    var isList: Boolean = false,
-    var nullable: Boolean = false)
+             var type: QDefinedType,
+             var args: List<QFieldInputArg>,
+             var directive: QDirectiveSymbol,
+             var isList: Boolean = false,
+             var nullable: Boolean = false)
   : QSchemaType<Pair<PropertySpec, Optional<TypeSpec>>>(name) {
 
   enum class BuilderStatus {
@@ -37,64 +37,82 @@ class QField(name: String,
     if (this.kotlinSpec != null) return kotlinSpec!!
 
     val typeName = determineTypeName(this)
-    val rawTypeName = if (this.args.isEmpty()) {
-      if (this.type is QScalarType || this.type is QEnumDef)
-        ParameterizedTypeName.get(ClassName.bestGuess("${Stub::class.simpleName}"), ClassName.bestGuess(this.type.name))
-      else
-        ParameterizedTypeName.get(ClassName.bestGuess("${InitStub::class.simpleName}"), typeName)
-    } else {
-      val configName =
-          if (this.type is QScalarType)
-            Config::class.simpleName
-          else
-            ConfigType::class.simpleName
-      ParameterizedTypeName.get(ClassName.bestGuess("$configName"), typeName,
-          if (abstract) {
-            // TOP_LEVEL on abstract means that it's a Base... name, enclosing means on iface,
-            when (builderStatus) {
-              BuilderStatus.NONE -> throw IllegalStateException()
-              BuilderStatus.ENCLOSING -> ClassName.bestGuess(inputBuilderClassName(name))
-              BuilderStatus.TOP_LEVEL -> ClassName.bestGuess("Base" + inputBuilderClassName(name))
-            }
-          } else {
-            // concrete -> needs to declare type if TOP_LEVEL as enclosing (inherited from Base_)
-            when (builderStatus) {
-              BuilderStatus.NONE -> throw IllegalStateException()
-              BuilderStatus.ENCLOSING ->
-                if (inheritedFrom.isEmpty() || inheritedFrom[0].fieldMap[name]!!.builderStatus == BuilderStatus.TOP_LEVEL)
-                  ClassName.bestGuess(inputBuilderClassName(name))
+    val rawTypeName =
+        if (this.args.isEmpty()) {
+
+          val stubType : KClass<*> =
+              if (!isList) {
+                if (this.type is QScalarType || this.type is QEnumDef)
+                  Stub::class
                 else
-                  ClassName.bestGuess(inheritedFrom[0].name).nestedClass(inputBuilderClassName(name))
-              BuilderStatus.TOP_LEVEL -> if (inheritedFrom.isEmpty()) throw IllegalStateException()
-              else inputBuilderClassName(name).let { ClassName.bestGuess(it) }
-            }
-          }
-      )
-    }
-    val complex = if (type !is QScalarType && type !is QEnumDef) TypeArgBuilder::class else ArgBuilder::class
-    val argBuilderOpt = // This can be cleaned up
-        if (this.args.isEmpty())
+                  InitStub::class
+              } else {
+                if (this.type is QScalarType || this.type is QEnumDef)
+                  ListStub::class
+                else ListInitStub::class
+              }
+
+          ParameterizedTypeName.get(ClassName.bestGuess("${stubType.simpleName}"), typeName)
+
+        } else {
+          val configName =
+              if (this.type is QScalarType && !isList)
+                QConfigStub::class.simpleName
+              else if (!isList)
+                QTypeConfigStub::class.simpleName
+              else if (isList && type is QScalarType)
+                ListConfig::class.simpleName
+              else
+                ListConfigType::class.simpleName
+          ParameterizedTypeName.get(ClassName.bestGuess("$configName"), typeName,
+              if (abstract) {
+                // TOP_LEVEL on abstract means that it's a Base... name, enclosing means on iface,
+                when (builderStatus) {
+                  BuilderStatus.NONE -> throw IllegalStateException()
+                  BuilderStatus.ENCLOSING -> ClassName.bestGuess(inputBuilderClassName(name))
+                  BuilderStatus.TOP_LEVEL -> ClassName.bestGuess("Base" + inputBuilderClassName(name))
+                }
+              } else {
+                // concrete -> needs to declare type if TOP_LEVEL as enclosing (inherited from Base_)
+                when (builderStatus) {
+                  BuilderStatus.NONE -> throw IllegalStateException()
+                  BuilderStatus.ENCLOSING ->
+                    if (inheritedFrom.isEmpty() || inheritedFrom[0].fieldMap[name]!!.builderStatus == BuilderStatus.TOP_LEVEL)
+                      ClassName.bestGuess(inputBuilderClassName(name))
+                    else
+                      ClassName.bestGuess(inheritedFrom[0].name).nestedClass(inputBuilderClassName(name))
+                  BuilderStatus.TOP_LEVEL -> if (inheritedFrom.isEmpty()) throw IllegalStateException()
+                  else inputBuilderClassName(name).let { ClassName.bestGuess(it) }
+                }
+              }
+          )
+        }
+    val complex = determineArgBuilderType(this)
+    val argBuilderSpec = // This can be cleaned up
+        if (this.args.isEmpty()) {
           Optional.empty()
-        else if (this.inheritedFrom.isEmpty() || abstract && builderStatus != BuilderStatus.TOP_LEVEL)
+        } else if (this.inheritedFrom.isEmpty() || abstract && builderStatus != BuilderStatus.TOP_LEVEL) {
           Optional.of(buildArgBuilder(this, complex, ClassName.bestGuess(inputBuilderClassName(this.name))).build())
-        else (checkSuper())
+        } else {
+          (checkSuper())
+        }
 
     val spec = PropertySpec.builder(this.name, rawTypeName)
     if (!abstract) {
-      spec.delegate(
-          if (args.isEmpty()) lazyInitializerNoConfig()
-          else
+      spec.initializer(
+          if (args.isEmpty()) {
+            lazyInitializerNoConfig()
+          } else {
             lazyInitializerConfig(
-                if (argBuilderOpt.isPresent)
-                  ClassName.bestGuess(argBuilderOpt.get().name?: throw IllegalStateException("report this"))
+                if (argBuilderSpec.isPresent)
+                  ClassName.bestGuess(argBuilderSpec.get().name ?: throw IllegalStateException("report this"))
                 else
-                  ClassName.bestGuess(inheritedFrom[0].name).nestedClass(inputBuilderClassName(this.name))
-            )).also {
-        if (inheritedFrom.isNotEmpty())
-          it.addModifiers(KModifier.OVERRIDE)
-      }
+                  ClassName.bestGuess(inheritedFrom[0].name).nestedClass(inputBuilderClassName(this.name)))
+          })
     }
-    this.kotlinSpec = Pair(spec.build(), argBuilderOpt)
+    if (inheritedFrom.isNotEmpty())
+      spec.addModifiers(KModifier.OVERRIDE)
+    this.kotlinSpec = Pair(spec.build(), argBuilderSpec)
     return this.kotlinSpec!!
   }
 
@@ -108,28 +126,14 @@ class QField(name: String,
 
   private fun lazyInitializerNoConfig(): CodeBlock {
     if (abstract || args.isNotEmpty()) throw IllegalStateException()
-    val rawType =
-        if (type is QScalarType || type is QEnumDef)
-          Stub::class
-        else InitStub::class
-    return CodeBlock.of(
-        if (rawType == Stub::class) "lazy { stub<${this.type.name}>() }"
-        else "lazy { typeStub<${this.type.name}>() }"
-    )
+    return CodeBlock.of("${getStubTargetInvoke(this)}()")
   }
 
   private fun lazyInitializerConfig(argTypeName: TypeName): CodeBlock {
     if (abstract || args.isEmpty()) throw IllegalStateException("abstract=$abstract args=$args")
-    val rawType =
-        if (type is QScalarType || type is QEnumDef) Config::class
-        else ConfigType::class
     val constructorInvocation = "${argTypeName.asNonNullable()}()"
-
     if (builderStatus == BuilderStatus.NONE) throw IllegalStateException()
-
-    return CodeBlock.of(
-        if (rawType == Config::class) "lazy { configStub<${this.type.name}, ${argTypeName.asNonNullable()}>($constructorInvocation) }"
-        else "lazy { typeConfigStub<${this.type.name}, ${argTypeName.asNonNullable()}>($constructorInvocation) }"
+    return CodeBlock.of("${getStubTargetInvoke(this)}($constructorInvocation)"
     )
   }
 
@@ -156,6 +160,8 @@ class QField(name: String,
 
 }
 
+fun inputBuilderClassName(forField: String): String = "${forField[0].toUpperCase()}${forField.substring(1)}Args"
+
 fun buildArgBuilder(field: QField, superInterface: KClass<*>, name: TypeName): TypeSpec.Builder {
   val result = TypeSpec.classBuilder(name.toString())
       .primaryConstructor(FunSpec.constructorBuilder()
@@ -171,15 +177,12 @@ fun buildArgBuilder(field: QField, superInterface: KClass<*>, name: TypeName): T
 }
 
 /**
- * Builds an argbuilder inheriting from a top-level class
+ * Builds an argbuilder inheriting from a top-level class denoted by `superclass`
+ * @param field the field to build the argbuilder for
+ * @param superclass the supertype of the argbuilder class
  */
 fun buildArgBuilder(field: QField, superclass: TypeName): TypeSpec.Builder {
-  val rawType =
-      if (field.type is QScalarType)
-        ArgBuilder::class
-      else
-        TypeArgBuilder::class
-
+  val rawType = determineArgBuilderType(field)
   val argClassName = ClassName.bestGuess(inputBuilderClassName(field.name))
 
   val argBuilderSpec = TypeSpec.classBuilder(argClassName.toString())
@@ -197,13 +200,37 @@ fun buildArgBuilder(field: QField, superclass: TypeName): TypeSpec.Builder {
   return argBuilderSpec
 }
 
+private fun determineArgBuilderType(field: QField): KClass<*> =
+    if (!field.isList) {
+      if (field.type is QScalarType)
+        ArgBuilder::class
+      else
+        TypeArgBuilder::class
+    } else {
+      if (field.type is QScalarType)
+        ListArgBuilder::class
+      else
+        TypeListArgBuilder::class
+    }
+
+private fun getStubTargetInvoke(field: QField): String =
+    (if (field.type is QScalarType && !field.isList)
+      "QScalar"
+    else if (field.type is QScalarType && field.isList)
+      "QScalarList"
+    else if (!field.isList)
+      "QType"
+    else "QTypeList") +
+        "." +
+        if (field.args.isNotEmpty())
+          "configStub"
+        else "stub"
+
 private fun builderTypesMethod(typeName: TypeName, param: QFieldInputArg, inputClazzName: String) =
     FunSpec.builder(param.name)
         .addParameter("value", typeName)
         .addCode(CodeBlock.builder().addStatement("return apply { addArg(\"${param.name}\", value) }\n").build())
         .returns(ClassName.bestGuess(inputClazzName))
         .build()
-
-fun inputBuilderClassName(forField: String): String = "${forField[0].toUpperCase()}${forField.substring(1)}Args"
 
 

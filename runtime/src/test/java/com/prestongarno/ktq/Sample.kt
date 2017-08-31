@@ -2,6 +2,7 @@
 
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.QSchemaType.*
 import org.junit.Test
 
 interface URL {
@@ -10,34 +11,35 @@ interface URL {
 
 interface Friendable {
 
-  val friendCount: Config<Int, Friendable.FriendCountArgs>
-  val friends: ConfigType<OtherUser, FriendsArgs>
+  val friendCount: QConfigStub<Int, Friendable.FriendCountArgs>
+  val friends: ListConfigType<OtherUser, FriendsArgs>
 
-  class FriendsArgs(args: TypeArgBuilder = TypeArgBuilder.create<OtherUser, FriendsArgs>())
-    : TypeArgBuilder by args {
+  class FriendsArgs(args: TypeListArgBuilder = TypeListArgBuilder.create<OtherUser, FriendsArgs>())
+    : TypeListArgBuilder by args {
 
     fun first(value: Int) = apply { addArg("first", value) }
     fun after(value: String) = apply { addArg("after", value) }
     fun startAt(value: Int) = apply { addArg("startAt", value) }
   }
+
   class FriendCountArgs(args: ArgBuilder = ArgBuilder.create<Int, FriendCountArgs>()) : ArgBuilder by args
 }
 
-object Location : QType {
-  val latitude : Stub<Int> by lazy { stub<Int>() }
-  val longitude by lazy { stub<Int>() }
-  val streetAddress by lazy { stub<String>() }
-  val city by lazy { stub<String>() }
-  val state by lazy { stub<String>() }
-  val zip by lazy { stub<Int>() }
+object Location : QSchemaType {
+  val latitude: Stub<Int> = QScalar.stub()
+  val longitude: Stub<Int> = QScalar.stub()
+  val streetAddress: Stub<String> = QScalar.stub()
+  val city: Stub<String> = QScalar.stub()
+  val state: Stub<String> = QScalar.stub()
+  val zip: Stub<Int> = QScalar.stub()
 }
 
-object OtherUser : URL, Friendable, QType {
-  override val friendCount by lazy { configStub<Int, Friendable.FriendCountArgs>(Friendable.FriendCountArgs()) }
+object OtherUser : URL, Friendable, QSchemaType {
+  override val friendCount = QScalar.configStub<Int, Friendable.FriendCountArgs>(Friendable.FriendCountArgs())
   val name by lazy { stub<String>() }
   val enemies by lazy { typeStub<OtherUser>() }
-  override val friends by lazy { typeConfigStub<OtherUser, Friendable.FriendsArgs>(Friendable.FriendsArgs()) }
-  val address by lazy { typeConfigStub<Location, AddressArgs>(AddressArgs()) }
+  override val friends = QTypeList.configStub<OtherUser, Friendable.FriendsArgs>(Friendable.FriendsArgs())
+  val address = QType.configStub<Location, AddressArgs>(AddressArgs())
   override val url by lazy { stub<String>() }
 
   class AddressArgs(args: TypeArgBuilder = TypeArgBuilder.create<Location, AddressArgs>())
@@ -56,10 +58,7 @@ class BasicUserInfo : QModel<OtherUser>(OtherUser::class) {
   val url by model.url
 }
 
-data class MyUser(
-    private val limitOfFriends: Int,
-    private val lang: String) : QModel<OtherUser>(OtherUser::class) {
-
+data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser::class) {
   val username by model.name
   val url by model.url
 

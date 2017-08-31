@@ -1,7 +1,15 @@
 package com.prestongarno.transpiler
 
+import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.ListInitStub
+import com.prestongarno.ktq.ListStub
+import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QTypeConfigStub
+import com.prestongarno.ktq.Stub
+import com.prestongarno.ktq.TypeArgBuilder
 import com.squareup.kotlinpoet.*
 import java.io.File
+import kotlin.reflect.KClass
 
 class QCompiler internal constructor(val source: File, builder: QCompiler.Builder) {
 
@@ -33,6 +41,15 @@ class QCompiler internal constructor(val source: File, builder: QCompiler.Builde
 
   fun result(consumer: (String) -> Unit) = apply {
     val ktBuilder = KotlinFile.builder(packageName, outputName)
+    getResolvedImports().mapNotNull {
+      it.simpleName
+    }.let {
+      ktBuilder.addStaticImport("com.prestongarno.ktq", *it.toTypedArray()) }
+    getSchemaTypeHelpers().mapNotNull {
+      it.simpleName
+    }.let {
+      ktBuilder.addStaticImport(com.prestongarno.ktq.QSchemaType::class, *it.toTypedArray())
+    }
     compilation?.getAllTypes()?.forEach {
       ktBuilder.addType(it)
     }
@@ -68,3 +85,22 @@ class QCompiler internal constructor(val source: File, builder: QCompiler.Builde
   }
 }
 
+private fun getResolvedImports(): List<KClass<*>> {
+  return listOf(
+      InitStub::class,
+      ListInitStub::class,
+      ListStub::class,
+      QSchemaType::class,
+      QTypeConfigStub::class,
+      Stub::class,
+      TypeArgBuilder::class
+  )
+}
+
+private fun getSchemaTypeHelpers(): List<KClass<*>> =
+    listOf(
+        QSchemaType.QScalar::class,
+        QSchemaType.QScalarList::class,
+        QSchemaType.QType::class,
+        QSchemaType.QTypeList::class
+    )

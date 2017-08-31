@@ -1,7 +1,7 @@
 package com.prestongarno.transpiler.qlang.spec
 
 import com.squareup.kotlinpoet.TypeSpec
-import com.prestongarno.ktq.QType
+import com.prestongarno.ktq.QSchemaType
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
 
@@ -14,7 +14,7 @@ open class QInterfaceDef(name: String, fields: List<QField>) : QStatefulType(nam
   }
 
   private fun build(): TypeSpec = TypeSpec.interfaceBuilder(this.name)
-      .addSuperinterface(QType::class)
+      .addSuperinterface(QSchemaType::class)
       .addProperties(this.fields.map { field -> field.toKotlin().first })
       .addTypes(this.fields
           .filter { it.builderStatus == QField.BuilderStatus.ENCLOSING && it.toKotlin().second.isPresent }

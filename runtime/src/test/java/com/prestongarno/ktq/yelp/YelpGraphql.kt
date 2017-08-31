@@ -2,111 +2,122 @@
 
 package com.prestongarno.ktq.yelp
 
-import com.prestongarno.ktq.*
+import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.ListInitStub
+import com.prestongarno.ktq.ListStub
+import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QSchemaType.QScalar
+import com.prestongarno.ktq.QSchemaType.QScalarList
+import com.prestongarno.ktq.QSchemaType.QType
+import com.prestongarno.ktq.QSchemaType.QTypeList
+import com.prestongarno.ktq.QTypeConfigStub
+import com.prestongarno.ktq.Stub
+import com.prestongarno.ktq.TypeArgBuilder
 
-object Business : QType {
-  val name: Stub<String> by lazy { stub<String>() }
+object Business : QSchemaType {
+  val name: Stub<String> = QScalar.stub()
 
-  val id: Stub<String> by lazy { stub<String>() }
+  val id: Stub<String> = QScalar.stub()
 
-  val is_claimed: Stub<Boolean> by lazy { stub<Boolean>() }
+  val is_claimed: Stub<Boolean> = QScalar.stub()
 
-  val is_closed: Stub<Boolean> by lazy { stub<Boolean>() }
+  val is_closed: Stub<Boolean> = QScalar.stub()
 
-  val url: Stub<String> by lazy { stub<String>() }
+  val url: Stub<String> = QScalar.stub()
 
-  val phone: Stub<String> by lazy { stub<String>() }
+  val phone: Stub<String> = QScalar.stub()
 
-  val display_phone: Stub<String> by lazy { stub<String>() }
+  val display_phone: Stub<String> = QScalar.stub()
 
-  val review_count: Stub<Int> by lazy { stub<Int>() }
+  val review_count: Stub<Int> = QScalar.stub()
 
-  val categories: InitStub<Category> by lazy { typeStub<Category>() }
+  val categories: ListInitStub<Category> = QTypeList.stub()
 
-  val rating: Stub<Float> by lazy { stub<Float>() }
+  val rating: Stub<Float> = QScalar.stub()
 
-  val price: Stub<String> by lazy { stub<String>() }
+  val price: Stub<String> = QScalar.stub()
 
-  val location: InitStub<Location> by lazy { typeStub<Location>() }
+  val location: InitStub<Location> = QType.stub()
 
-  val coordinates: InitStub<Coordinates> by lazy { typeStub<Coordinates>() }
+  val coordinates: InitStub<Coordinates> = QType.stub()
 
-  val photos: Stub<String> by lazy { stub<String>() }
+  val photos: ListStub<String> = QScalarList.stub()
 
-  val hours: InitStub<Hours> by lazy { typeStub<Hours>() }
+  val hours: ListInitStub<Hours> = QTypeList.stub()
 
-  val reviews: InitStub<Review> by lazy { typeStub<Review>() }
+  val reviews: ListInitStub<Review> = QTypeList.stub()
 }
 
-object Businesses : QType {
-  val business: InitStub<Business> by lazy { typeStub<Business>() }
+object Businesses : QSchemaType {
+  val business: ListInitStub<Business> = QTypeList.stub()
 
-  val total: Stub<Int> by lazy { stub<Int>() }
+  val total: Stub<Int> = QScalar.stub()
 }
 
-object Category : QType {
-  val title: Stub<String> by lazy { stub<String>() }
+object Category : QSchemaType {
+  val title: Stub<String> = QScalar.stub()
 
-  val alias: Stub<String> by lazy { stub<String>() }
+  val alias: Stub<String> = QScalar.stub()
 }
 
-object Coordinates : QType {
-  val latitude: Stub<Float> by lazy { stub<Float>() }
+object Coordinates : QSchemaType {
+  val latitude: Stub<Float> = QScalar.stub()
 
-  val longitude: Stub<Float> by lazy { stub<Float>() }
+  val longitude: Stub<Float> = QScalar.stub()
 }
 
-object Hours : QType {
-  val hours_type: Stub<String> by lazy { stub<String>() }
+object Hours : QSchemaType {
+  val hours_type: Stub<String> = QScalar.stub()
 
-  val open: InitStub<OpenHours> by lazy { typeStub<OpenHours>() }
+  val open: ListInitStub<OpenHours> = QTypeList.stub()
 
-  val is_open_now: Stub<Boolean> by lazy { stub<Boolean>() }
+  val is_open_now: Stub<Boolean> = QScalar.stub()
 }
 
-object Location : QType {
-  val address1: Stub<String> by lazy { stub<String>() }
+object Location : QSchemaType {
+  val address1: Stub<String> = QScalar.stub()
 
-  val address2: Stub<String> by lazy { stub<String>() }
+  val address2: Stub<String> = QScalar.stub()
 
-  val address3: Stub<String> by lazy { stub<String>() }
+  val address3: Stub<String> = QScalar.stub()
 
-  val city: Stub<String> by lazy { stub<String>() }
+  val city: Stub<String> = QScalar.stub()
 
-  val state: Stub<String> by lazy { stub<String>() }
+  val state: Stub<String> = QScalar.stub()
 
-  val zip_code: Stub<String> by lazy { stub<String>() }
+  val zip_code: Stub<String> = QScalar.stub()
 
-  val country: Stub<String> by lazy { stub<String>() }
+  val country: Stub<String> = QScalar.stub()
 
-  val formatted_address: Stub<String> by lazy { stub<String>() }
+  val formatted_address: Stub<String> = QScalar.stub()
 }
 
-object OpenHours : QType {
-  val is_overnight: Stub<Boolean> by lazy { stub<Boolean>() }
+object OpenHours : QSchemaType {
+  val is_overnight: Stub<Boolean> = QScalar.stub()
 
-  val end: Stub<String> by lazy { stub<String>() }
+  val end: Stub<String> = QScalar.stub()
 
-  val start: Stub<String> by lazy { stub<String>() }
+  val start: Stub<String> = QScalar.stub()
 
-  val day: Stub<Int> by lazy { stub<Int>() }
+  val day: Stub<Int> = QScalar.stub()
 }
 
-object Query : QType {
-  val business: ConfigType<Business, BusinessArgs> by lazy { typeConfigStub<Business, BusinessArgs>(BusinessArgs()) }
+object Query : QSchemaType {
+  val business: QTypeConfigStub<Business, BusinessArgs> = QType.configStub(BusinessArgs())
 
-  val business_match_best: ConfigType<Business, Business_match_bestArgs> by lazy { typeConfigStub<Business, Business_match_bestArgs>(Business_match_bestArgs()) }
+  val business_match_best: QTypeConfigStub<Business, Business_match_bestArgs> = QType.configStub(Business_match_bestArgs())
 
-  val business_match_lookup: ConfigType<Businesses, Business_match_lookupArgs> by lazy { typeConfigStub<Businesses, Business_match_lookupArgs>(Business_match_lookupArgs()) }
+  val business_match_lookup: QTypeConfigStub<Businesses, Business_match_lookupArgs> = QType.configStub(Business_match_lookupArgs())
 
-  val reviews: ConfigType<Reviews, ReviewsArgs> by lazy { typeConfigStub<Reviews, ReviewsArgs>(ReviewsArgs()) }
+  val reviews: QTypeConfigStub<Reviews, ReviewsArgs> = QType.configStub(ReviewsArgs())
 
-  val phone_search: ConfigType<Businesses, Phone_searchArgs> by lazy { typeConfigStub<Businesses, Phone_searchArgs>(Phone_searchArgs()) }
+  val phone_search: QTypeConfigStub<Businesses, Phone_searchArgs> = QType.configStub(Phone_searchArgs())
 
-  val search: ConfigType<Businesses, SearchArgs> by lazy { typeConfigStub<Businesses, SearchArgs>(SearchArgs()) }
+  val search: QTypeConfigStub<Businesses, SearchArgs> = QType.configStub(SearchArgs())
 
   class BusinessArgs(args: TypeArgBuilder = TypeArgBuilder.create<Business, BusinessArgs>()) : TypeArgBuilder by args {
     fun id(value: String): BusinessArgs = apply { addArg("id", value) }
+
   }
 
   class Business_match_bestArgs(args: TypeArgBuilder = TypeArgBuilder.create<Business, Business_match_bestArgs>()) : TypeArgBuilder by args {
@@ -240,26 +251,26 @@ object Query : QType {
   }
 }
 
-object Review : QType {
-  val rating: Stub<Int> by lazy { stub<Int>() }
+object Review : QSchemaType {
+  val rating: Stub<Int> = QScalar.stub()
 
-  val user: InitStub<User> by lazy { typeStub<User>() }
+  val user: InitStub<User> = QType.stub()
 
-  val text: Stub<String> by lazy { stub<String>() }
+  val text: Stub<String> = QScalar.stub()
 
-  val time_created: Stub<String> by lazy { stub<String>() }
+  val time_created: Stub<String> = QScalar.stub()
 
-  val url: Stub<String> by lazy { stub<String>() }
+  val url: Stub<String> = QScalar.stub()
 }
 
-object Reviews : QType {
-  val review: InitStub<Review> by lazy { typeStub<Review>() }
+object Reviews : QSchemaType {
+  val review: ListInitStub<Review> = QTypeList.stub()
 
-  val total: Stub<Int> by lazy { stub<Int>() }
+  val total: Stub<Int> = QScalar.stub()
 }
 
-object User : QType {
-  val image_url: Stub<String> by lazy { stub<String>() }
+object User : QSchemaType {
+  val image_url: Stub<String> = QScalar.stub()
 
-  val name: Stub<String> by lazy { stub<String>() }
+  val name: Stub<String> = QScalar.stub()
 }

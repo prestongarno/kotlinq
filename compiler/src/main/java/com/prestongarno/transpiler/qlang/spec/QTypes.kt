@@ -8,14 +8,11 @@ abstract class QSchemaType<E>(var name: String) {
 
   protected var kotlinSpec: E? = null // sue me
 
-  // TODO associate each QSchemaType with transforming themselves into a kotlinpoet type
   abstract fun toKotlin() : E
 
   var description: String = ""
 
-  override fun toString(): String {
-    return "'$name' (${this::class.simpleName})"
-  }
+  override fun toString(): String = "'$name' (${this::class.simpleName})"
 }
 
 /**

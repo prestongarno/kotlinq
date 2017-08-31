@@ -4,6 +4,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.yelp.Business
 import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Query
+import java.util.function.Consumer
 
 class BusinessQuery(searchTerm: String) : QModel<Query>(Query::class) {
   val result by model.search.config()
@@ -23,3 +24,4 @@ class BusinessBasic : QModel<Business>(Business::class) {
   val phoneNumber by model.display_phone
   val directUrl by model.url
 }
+class Guac(somethingElse: String) : Consumer<String> by Consumer({ println(it) })

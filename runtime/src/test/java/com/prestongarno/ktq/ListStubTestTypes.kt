@@ -1,6 +1,6 @@
 package com.prestongarno.ktq
 
-object Configuration : QType {
+object Configuration : QSchemaType {
   val dependencies : ListInitStub<ProjImpl> = typeListStub<ProjImpl>()
 
   class DependenciesArgs(args: TypeArgBuilder = TypeArgBuilder.create<Project, DependenciesArgs>())
@@ -12,7 +12,7 @@ object Configuration : QType {
   }
 }
 
-interface Project : QType {
+interface Project : QSchemaType {
   val name : Stub<String>
 }
 
