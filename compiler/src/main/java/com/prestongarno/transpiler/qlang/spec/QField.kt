@@ -10,8 +10,13 @@ class QField(name: String,
              var args: List<QFieldInputArg>,
              var directive: QDirectiveSymbol,
              var isList: Boolean = false,
-             var nullable: Boolean = false)
+             var nullable: Boolean = false,
+             comment: String = "")
   : QSchemaType<Pair<PropertySpec, Optional<TypeSpec>>>(name) {
+
+  init {
+    super.description = comment
+  }
 
   enum class BuilderStatus {
     NONE,
@@ -100,6 +105,8 @@ class QField(name: String,
         }
 
     val spec = PropertySpec.builder(this.name, rawTypeName)
+    if(description.isNotEmpty())
+      spec.addKdoc(CodeBlock.of(description, "%W"))
     if (!abstract) {
       spec.delegate(
           if (args.isEmpty()) {

@@ -79,7 +79,7 @@ class QCompiler internal constructor(val source: File, builder: QCompiler.Builde
   }
 
   fun writeToFile(destination: String) = apply {
-    val shouldWrite = System.getProperty("-Dcom.prestongarno.ktq.compiler.writeTestFiles") ?: throw IllegalStateException()
+    val shouldWrite = System.getProperty("-Dcom.prestongarno.ktq.compiler.writeTestFiles") ?: "false"
     if (shouldWrite == "true" && destination.trim().isNotEmpty())
       File("$destination/${packageName.replace(".", "/")}/$outputName.kt").printWriter().use { out ->
         out.write(rawResult)

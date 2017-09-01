@@ -12,11 +12,11 @@ import java.util.*
  * type, or field list of types
  */
 class QCompilationUnit(val types: List<QTypeDef>,
-    val ifaces: List<QInterfaceDef>,
-    val inputs: List<QInputType>,
-    val scalar: List<QScalarType>,
-    val enums: List<QEnumDef>,
-    val unions: List<QUnionTypeDef>) {
+                       val ifaces: List<QInterfaceDef>,
+                       val inputs: List<QInputType>,
+                       val scalar: List<QScalarType>,
+                       val enums: List<QEnumDef>,
+                       val unions: List<QUnionTypeDef>) {
 
   private fun <T : QDefinedType> addAllStuff(vararg foo: List<T>): List<QDefinedType> {
     val whyThis = LinkedList<QDefinedType>()
@@ -31,8 +31,16 @@ class QCompilationUnit(val types: List<QTypeDef>,
   fun getAllTypes(): List<TypeSpec> =
       resolveConflicts().toMutableList()
           .also { lizt ->
-            lizt.addAll(all.map { it.toKotlin() })
-          }.sortedBy { it::class.simpleName }
+            lizt.addAll(
+                all.map {
+                  if (it.description.isNotEmpty())
+                    it.toKotlin()
+                        .toBuilder()
+                        .addKdoc(CodeBlock.of(it.description, "%W"))
+                        .build()
+                  else it.toKotlin()
+                })
+          }
 
   private val conflictOverrides = mutableMapOf<QField, Pair<QTypeDef, List<QInterfaceDef>>>()
 
@@ -77,7 +85,7 @@ class QCompilationUnit(val types: List<QTypeDef>,
     return null
   }
 
-  private fun resolveConflicts(): List<TypeSpec> {
+  private fun resolveConflicts(): MutableList<TypeSpec> {
     return this.conflictOverrides.toList().mapNotNull { (symbol, pair: Pair<QTypeDef, List<QInterfaceDef>>) ->
       val baseInputClazzName = inputBuilderClassName(symbol.name)
       val superclazzType: TypeName = ClassName.bestGuess("Base" + baseInputClazzName)
@@ -107,11 +115,12 @@ class QCompilationUnit(val types: List<QTypeDef>,
             .build()
       } else null
     }.distinctBy { it.name }
+        .toMutableList()
   }
 
   private fun verifyOverridingFields(symbol: QField,
-      declaring: QTypeDef,
-      overriding: List<QInterfaceDef>): Optional<Throwable> {
+                                     declaring: QTypeDef,
+                                     overriding: List<QInterfaceDef>): Optional<Throwable> {
     overriding.fold(overriding[0], { curr, next ->
       val first = curr.fields.find { it.type.name == symbol.type.name }!! // would have failed in attr stage if null
       val verifi = verifyInputArguments(symbol, first)

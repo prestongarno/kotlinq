@@ -108,6 +108,9 @@ object OpenHours : QSchemaType {
   val day: Stub<Int> by QScalar.stub()
 }
 
+/**
+ * Represents the lack of understanding the developer team at yelp had when
+ * they used a type system in order to spam strings by tens as args to fields... */
 object Query : QSchemaType {
   val business: QTypeConfigStub<Business, BusinessArgs> by QType.configStub { BusinessArgs(it) }
 
@@ -257,15 +260,30 @@ object Query : QSchemaType {
   }
 }
 
+/**
+ * This type represents a review. You know, like in that one south park episode? */
 object Review : QSchemaType {
+  /**
+   *  The rating that someone gave, ranging 1->5, with 5 being the greatest rating */
   val rating: Stub<Int> by QScalar.stub()
 
+  /**
+   * The user that left the rating */
   val user: InitStub<User> by QType.stub()
 
+  /**
+   * The body
+   * of the review
+   *  usually somewhat longer
+   * than single comment lines ;) */
   val text: Stub<String> by QScalar.stub()
 
+  /**
+   * The time it was posted */
   val time_created: Stub<String> by QScalar.stub()
 
+  /**
+   * hard link to the review */
   val url: Stub<String> by QScalar.stub()
 }
 

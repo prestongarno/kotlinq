@@ -10,8 +10,8 @@ import kotlin.reflect.KProperty
  * when generating queries/payloads
  *
  * Delegation inception : this property delegate is delegated to in order to get the name of the
- * property, then passes it off to the ctor of the Delegate for the actual delegation to happen
- * on a model impl.
+ * schema field, then passes it off to the backing field, which is another delegate in order for the
+ * actual delegation to happen on a schema model implementation
  *
  * This class does minimal work in order to reduce added complexity - it simply gets passed a function
  * which, when applied a string, produces the correct schemastub.  When delegated to by schemastub types,

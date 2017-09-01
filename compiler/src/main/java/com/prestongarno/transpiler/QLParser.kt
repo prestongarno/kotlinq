@@ -20,52 +20,96 @@ class QLParser {
 
     val scanner = Scanner(ioStream)
 
+    var comments = ""
 
     while (scanner.hasNext()) {
       val declType = scanner.useDelimiter("\\s").next().trim()
+
+      comments =
+          if (comments.isNotEmpty()) {
+            comments
+          } else if (declType.trim().startsWith("#")) {
+            var entire = declType.append(scanner.nextLine())
+            while (scanner.hasNext("\\s*#.*"))
+              entire = entire.append("<<||>>" + scanner.nextLine().trim())
+            comments = entire.trim()
+                .substring(1)
+                .replace("<<||>>#", "\n")
+            continue
+          } else ""
+
       val typeKind = RootType.match(declType)
 
       val name = scanner.next().trim()
 
       when (typeKind) {
-        UNKNOWN -> throw IllegalArgumentException("Unknown type declaration \"$declType\"")
+        UNKNOWN -> {
+          throw IllegalArgumentException("Unknown type declaration \"$declType\"")
+        }
+
         UNION -> {
           scanner.useDelimiter("[a-zA-Z0-9_]".toRegex().pattern).next()
           val block = scanner.nextLine()
           all.add(0, QUnionTypeDef(name, QLexer.unionFields(block)
               .map { str -> QUnknownType(str) }))
         }
+
         ENUM -> all.add(0, QEnumDef(name, QLexer.enumFields(scanner.useDelimiter("}").next())))
+
         TYPE -> {
-          val ifaces = scanner.useDelimiter("\\{").next().split("[\\s,]".toRegex()).filter { s -> s.isNotBlank() }
-          val fields = mapLexerFieldsToSymbols(QLexer.baseFields(scanner.useDelimiter("}").next().trim().substring(1)))
-          all.add(0, QTypeDef(name, if (ifaces.isEmpty()) Collections.emptyList() else ifaces.subList(1, ifaces.size).map { s -> QUnknownInterface(s) }, fields))
+          val ifaces = scanner.useDelimiter("\\{")
+              .next()
+              .split("[\\s,]".toRegex())
+              .filter { s -> s.isNotBlank() }
+
+          val fields = lexFieldsToSymbols(QLexer.baseFields(scanner.getClosure()))
+          all.add(0, QTypeDef(name,
+              if (ifaces.isEmpty()) {
+                emptyList()
+              } else {
+                ifaces.subList(1, ifaces.size)
+                    .map { s -> QUnknownInterface(s) }
+              }
+              , fields))
         }
+
         INTERFACE -> all.add(0, QInterfaceDef(name,
-            mapLexerFieldsToSymbols(QLexer
-                .baseFields(scanner.useDelimiter("}")
-                    .next()
-                    .trim()
-                    .substring(1)))
-                .also { it.forEach { it.abstract(true) } }))
+            lexFieldsToSymbols(QLexer.baseFields(scanner.getClosure()))
+                .also {
+                  it.forEach { it.abstract(true) }
+                }))
+
         SCALAR -> all.add(0, QCustomScalarType(name))
-        INPUT -> all.add(0, QInputType(name, mapLexerFieldsToSymbols(QLexer.baseFields(scanner.useDelimiter("}").next().trim().substring(1)))))
+        INPUT -> all.add(0, QInputType(name, lexFieldsToSymbols(QLexer.baseFields(scanner.getClosure()))))
       }
-      scanner.useDelimiter("[a-zA-Z]").next()
+      if (comments.trim().isNotEmpty()) {
+        all[0].description = comments
+        comments = ""
+      }
+      scanner.useDelimiter("[a-zA-Z#]").next()
     }
-    return QCompilationUnit(all.filter { q -> q is QTypeDef }.map { q -> q as QTypeDef },
-        all.filter { q -> q is QInterfaceDef }.map { q -> q as QInterfaceDef },
-        all.filter { q -> q is QInputType }.map { q -> q as QInputType },
-        all.filter { q -> q is QScalarType }.map { q -> q as QScalarType },
-        all.filter { q -> q is QEnumDef }.map { q -> q as QEnumDef },
-        all.filter { q -> q is QUnionTypeDef }.map { q -> q as QUnionTypeDef })
+    return QCompilationUnit(all.only(), all.only(), all.only(), all.only(), all.only(), all.only())
   }
 
-  private fun mapLexerFieldsToSymbols(fields: List<Field>): List<QField> = fields.map { (symbol, inputArgs, type, directive, isList, isNullable) ->
-    QField(symbol, QUnknownType(type),
-        inputArgs.map { arg -> QFieldInputArg(arg.symbol, QUnknownType(arg.type), arg.defaultValue, arg.isList, arg.isNullable) },
-        QDirectiveSymbol(QUnknownType(directive.first), directive.second),
-        isList,
-        isNullable)
-  }
+  private fun lexFieldsToSymbols(fields: List<Field>): List<QField> =
+      fields.map { (symbol, inputArgs, type, directive, isList, isNullable, comment) ->
+        QField(symbol, QUnknownType(type),
+            inputArgs.map { arg ->
+              QFieldInputArg(arg.symbol,
+                  QUnknownType(arg.type),
+                  arg.defaultValue,
+                  arg.isList,
+                  arg.isNullable)
+            },
+            QDirectiveSymbol(QUnknownType(directive.first), directive.second),
+            isList,
+            isNullable,
+            comment)
+      }
 }
+
+private fun Scanner.getClosure() = useDelimiter("}").next().trim().substring(1)
+
+private inline fun <reified T : QSchemaType<*>> List<QSchemaType<*>>.only(): List<T> = filterIsInstance(T::class.java)
+
+private fun String.append(to: String) = this + to

@@ -45,13 +45,11 @@ class BusinessBasic : QModel<Business>(Business::class) {
 class TestCorrectStructure {
   @Test
   fun testBusinessBasic() {
+    // make sure that a new config & new Model instance is created per invocation
     val one = BusinessQuery("bazfoo")
     val two = BusinessQuery("foobar")
-    // make sure that a new config & new Model instance is created per invocation
     require(one.fields != two.fields)
     require(one.result != two.result)
     require(one.reviews != two.reviews)
-    println(one.toGraphql())
-    println(one.toGraphql().replace("\n", " ").replace("\\s*".toRegex(), ""))
   }
 }

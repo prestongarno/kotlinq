@@ -12,8 +12,7 @@ abstract class QModel<out T : QSchemaType>(of: KClass<T>) {
   }
 
   fun toGraphql(indentation: Int = 0): String {
-    return ( "{\n".indent(indentation) + (fields.map { it.toRawPayload() }
-        .joinToString(separator = ",\n")
+    return ( "{\n".indent(indentation) + (fields.joinToString(separator = ",\n") { it.toRawPayload() }
         .indent(indentation + 1))+ "\n}".indent(indentation) )
   }
 

@@ -55,7 +55,8 @@ type OpenHours {
   start: String
   day: Int
 }
-
+#Represents the lack of understanding the developer team at yelp had when
+#they used a type system in order to spam strings by tens as args to fields...
 type Query {
   business(id: String): Business
   business_match_best(name: String!, address1: String, address2: String, address3: String, city: String!, state: String!, country: String!, latitude: Float, longitude: Float, phone: String, postal_code: String): Business
@@ -65,11 +66,20 @@ type Query {
   search(term: String, location: String, country: String, offset: Int, limit: Int, sort_by: String, locale: String, longitude: Float, latitude: Float, categories: String, open_now: Boolean, open_at: Int, price: String, attributes: String, radius: Float): Businesses
 }
 
+#This type represents a review. You know, like in that one south park episode?
 type Review {
+  # The rating that someone gave, ranging 1->5, with 5 being the greatest rating
   rating: Int
+  #The user that left the rating
   user: User
+  #The body
+  #of the review
+  # usually somewhat longer
+  #than single comment lines ;)
   text: String
+  #The time it was posted
   time_created: String
+  #hard link to the review
   url: String
 }
 
