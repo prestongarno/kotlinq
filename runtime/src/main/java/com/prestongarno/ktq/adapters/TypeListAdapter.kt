@@ -9,7 +9,9 @@ import com.prestongarno.ktq.TypeListStub
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
-internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(val builderInit: (TypeListArgBuilder) -> B) : FieldAdapter(),
+internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
+    val builderInit: (TypeListArgBuilder) -> B
+) : FieldAdapter(),
     ListInitStub<I>,
     TypeListStub<P, I>,
     ListConfigType<I, B>,
@@ -31,7 +33,9 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeListStub<U, I>
     = apply { this.init = of as () -> P } as TypeListStub<U, I>
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> {
+    return results
+  }
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> {
     this.property = property

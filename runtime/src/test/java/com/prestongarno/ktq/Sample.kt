@@ -12,8 +12,8 @@ interface URL {
 
 interface Friendable {
 
-  val friendCount: QConfigStub<Int, Friendable.FriendCountArgs>
-  val friends: ListConfigType<OtherUser, FriendsArgs>
+  @Id("name")val friendCount: QConfigStub<Int, Friendable.FriendCountArgs>
+  @Id("name")val friends: ListConfigType<OtherUser, FriendsArgs>
 
   class FriendsArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
 
@@ -26,21 +26,21 @@ interface Friendable {
 }
 
 object Location : QSchemaType {
-  val latitude: Stub<Int> = QScalar.stub()
-  val longitude: Stub<Int> = QScalar.stub()
-  val streetAddress: Stub<String> = QScalar.stub()
-  val city: Stub<String> = QScalar.stub()
-  val state: Stub<String> = QScalar.stub()
-  val zip: Stub<Int> = QScalar.stub()
+  @Id("latitude") val latitude: Stub<Int> = QScalar.stub()
+  @Id("name")val longitude: Stub<Int> = QScalar.stub()
+  @Id("name")val streetAddress: Stub<String> = QScalar.stub()
+  @Id("name")val city: Stub<String> = QScalar.stub()
+  @Id("name")val state: Stub<String> = QScalar.stub()
+  @Id("name")val zip: Stub<Int> = QScalar.stub()
 }
 
 object OtherUser : URL, Friendable, QSchemaType {
-  override val friendCount = QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
+  @Id("name")override val friendCount = QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
   @Id("name") val name = QScalar.stub<String>()
-  val enemies = QType.stub<OtherUser>()
-  override val friends = QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
-  val address = QType.configStub<Location, AddressArgs> { AddressArgs(it) }
-  override val url = QScalar.stub<String>()
+  @Id("name")val enemies = QType.stub<OtherUser>()
+  @Id("name")override val friends = QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
+  @Id("name")val address = QType.configStub<Location, AddressArgs> { AddressArgs(it) }
+  @Id("name")override val url = QScalar.stub<String>()
 
   class AddressArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
 
@@ -78,8 +78,8 @@ class TestSample {
   fun testCorrectTypes() {
     val foobaz = MyUser(1000, "ENGLISH")
     val foobar = MyUser(-69, "CHINESE")
-    println(foobaz.toJson())
-    println(foobar.toJson(5))
+/*    println(foobaz.toJson())
+    println(foobar.toJson(5))*/
   }
 
 }

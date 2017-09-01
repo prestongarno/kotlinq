@@ -2,10 +2,18 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.FieldAdapter
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty0
+import kotlin.reflect.full.createInstance
+import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
 abstract class QModel<out T : QSchemaType>(of: KClass<T>) {
   protected val model: T = of.objectInstance!!
+
+  init {
+    model::class.memberProperties.map { it.annotations.joinToString(", ", it.name) }.map { println(it) }
+  }
 
   internal val fields = mutableListOf<FieldAdapter>()
   override fun toString(): String {
