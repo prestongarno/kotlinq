@@ -3,7 +3,6 @@ package com.prestongarno.transpiler.tests.parsing
 import com.prestongarno.transpiler.QCompiler
 import com.prestongarno.transpiler.QLParser
 import com.prestongarno.transpiler.qlang.spec.*
-import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.junit.Test
 import java.io.File
 import java.util.*
@@ -43,7 +42,7 @@ class GithubApiTest {
                   is QInterfaceDef -> require(field.abstract)
                 }
               }
-        }.result{}//.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+        }.result{}.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test
@@ -282,7 +281,7 @@ class GithubApiTest {
     val F = false
     val T = true
     userType.fields.forEachIndexed { i, field ->
-      val f = field as QField; when (i) {
+      val f = field; when (i) {
       0 -> assertTrue(checkField(f, "avatarUrl", "URI", false, false, 1, listOf("size"), listOf("Int"), listOf(false),
           listOf(true), listOf("")))
       1 -> assertTrue(checkField(f, "bio", "String", false, true))
@@ -384,8 +383,6 @@ class GithubApiTest {
       assertEquals(field.args.size, expectArgCount, "Expected $expectName arg count $expectArgCount but was ${field.args.size}")
 
       field.args.forEachIndexed { index, arg ->
-        assertTrue(arg is QFieldInputArg)
-        arg as QFieldInputArg
         assertTrue(arg.name == expectArgNames[index])
         assertTrue(arg.type.name == expectArgTypes[index])
         assertTrue(arg.nullable == expectArgNullable[index])

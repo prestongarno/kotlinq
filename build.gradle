@@ -1,41 +1,46 @@
-
 buildscript {
-    ext.kotlin_version = '1.1.4-3'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+  ext.kotlin_version = '1.1.4-3'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
 }
+
 
 
 subprojects {
 
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'kotlin'
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+  apply plugin: 'java'
+  apply plugin: 'idea'
+  apply plugin: 'kotlin'
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
 
-    dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-        compile "org.jetbrains.kotlin:kotlin-reflect"
-        testCompile 'junit:junit:4.12'
-        testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-        compile 'com.beust:klaxon:0.31'
+  dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect"
+    testCompile 'junit:junit:4.12'
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    compile 'com.beust:klaxon:0.31'
+  }
+  compileKotlin {
+    kotlinOptions {
+      jvmTarget = "1.8"
     }
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
+  }
+  compileTestKotlin {
+    kotlinOptions {
+      jvmTarget = "1.8"
     }
-    compileTestKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
+  }
+  test {
+    options {
+      systemProperties.put("-Dcom.prestongarno.ktq.compiler.writeTestFiles", "false")
     }
+  }
 
 }

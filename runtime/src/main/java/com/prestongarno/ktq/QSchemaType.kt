@@ -1,40 +1,41 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.*
-import com.prestongarno.ktq.internal.QConfigProvider
-import com.prestongarno.ktq.internal.QScalarStubProvider
-import com.prestongarno.ktq.internal.QTypeStubProvider
+import com.prestongarno.ktq.internal.Grub
 
 // TODO This file and the entire API could use a bit of the DRY principle
 interface QSchemaType {
-  object QScalar : QScalarStubProvider<Stub<*>>, QConfigProvider<Any, ArgBuilder, QConfigStub<*, ArgBuilder>> {
-    override fun <T> stub(): Stub<T> = ScalarStubAdapter<T, ArgBuilder> { it }
+  object QScalar {
 
-    override fun <T : Any, A : ArgBuilder> configStub(arginit: (ArgBuilder) -> A): QConfigStub<T, A>
-        = ScalarStubAdapter(arginit)
+     fun <T> stub(): Grub<Stub<T>> = Grub { ScalarStubAdapter<T, ArgBuilder>(it, { it }) }
+
+     fun <T : Any, A : ArgBuilder> configStub(arginit: (ArgBuilder) -> A): Grub<QConfigStub<T, A>>
+        = Grub { ScalarStubAdapter<T, A>(it, arginit) }
   }
 
-  object QType : QTypeStubProvider<InitStub<*>>, QConfigProvider<QSchemaType, TypeArgBuilder, QTypeConfigStub<*, TypeArgBuilder>> {
-    override fun <T : QSchemaType> stub(): InitStub<T>
-        = TypeStubAdapter<T, QModel<T>, TypeArgBuilder> { it }
+  object QType {
 
-    override fun <T : QSchemaType, A : TypeArgBuilder> configStub(arginit: (TypeArgBuilder) -> A): QTypeConfigStub<T, A>
-        = TypeStubAdapter(arginit)
+     fun <T : QSchemaType> stub(): Grub<InitStub<T>> = Grub { TypeStubAdapter<T, QModel<T>, TypeArgBuilder>(it, { it }) }
+
+     fun <T : QSchemaType, A : TypeArgBuilder> configStub(arginit: (TypeArgBuilder) -> A): Grub<QTypeConfigStub<T, A>>
+        = Grub { TypeStubAdapter<T, QModel<T>, A>(it, arginit) }
   }
 
-  object QScalarList : QScalarStubProvider<ListStub<*>>, QConfigProvider<Any, ListArgBuilder, ListConfig<*, ListArgBuilder>> {
-    override fun <T> stub(): ListStub<T> = ScalarListAdapter { it }
+  object QScalarList {
 
-    override fun <T : Any, A : ListArgBuilder> configStub(arginit: (ListArgBuilder) -> A): ListConfig<T, A>
-        = ScalarListAdapter(arginit)
+     fun <T> stub(): Grub<ListStub<T>> = Grub { ScalarListAdapter<T, ListArgBuilder>(it, { it }) }
+
+     fun <T : Any, A : ListArgBuilder> configStub(arginit: (ListArgBuilder) -> A): Grub<ListConfig<T, A>>
+        = Grub { ScalarListAdapter<T, A>(it, arginit) }
   }
 
-  object QTypeList : QTypeStubProvider<ListInitStub<*>>, QConfigProvider<QSchemaType, TypeListArgBuilder, ListConfigType<*, TypeListArgBuilder>> {
-    override fun <T : QSchemaType> stub(): ListInitStub<T>
-        = TypeListAdapter<T, QModel<T>, TypeListArgBuilder> { it }
+  object QTypeList {
 
-    override fun <T : QSchemaType, A : TypeListArgBuilder> configStub(arginit: (TypeListArgBuilder) -> A): ListConfigType<T, A>
-        = TypeListAdapter(arginit)
+     fun <T : QSchemaType> stub(): Grub<ListInitStub<T>>
+        = Grub { TypeListAdapter<T, QModel<T>, TypeListArgBuilder>(it, { it }) }
+
+     fun <T : QSchemaType, A : TypeListArgBuilder> configStub(arginit: (TypeListArgBuilder) -> A): Grub<ListConfigType<T, A>>
+        = Grub { TypeListAdapter<T, QModel<T>, A>(it, arginit) }
   }
 }
 

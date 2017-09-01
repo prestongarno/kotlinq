@@ -7,14 +7,17 @@ import com.prestongarno.ktq.QModel
 import kotlin.reflect.KProperty
 
 
-internal class ScalarListAdapter<I, out B : ListArgBuilder>(val builderInit: (ListArgBuilder) -> B ) : FieldAdapter(),
+internal class ScalarListAdapter<I, out B : ListArgBuilder>(
+    fieldName: String,
+    val builderInit: (ListArgBuilder) -> B
+) : FieldAdapter(fieldName),
     ListStub<I>,
     ListConfig<I, B>,
     ListArgBuilder {
 
   val values = mutableListOf<I>()
 
-  override fun config(): B = builderInit(ScalarListAdapter<I, B>(builderInit))
+  override fun config(): B = builderInit(ScalarListAdapter<I, B>(fieldName, builderInit))
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
 

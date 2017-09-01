@@ -3,7 +3,6 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.QSchemaType.*
-import com.prestongarno.ktq.annotations.Id
 import org.junit.Test
 
 interface URL {
@@ -12,8 +11,8 @@ interface URL {
 
 interface Friendable {
 
-  @Id("name")val friendCount: QConfigStub<Int, Friendable.FriendCountArgs>
-  @Id("name")val friends: ListConfigType<OtherUser, FriendsArgs>
+  val friendCount: QConfigStub<Int, Friendable.FriendCountArgs>
+  val friends: ListConfigType<OtherUser, FriendsArgs>
 
   class FriendsArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
 
@@ -26,21 +25,21 @@ interface Friendable {
 }
 
 object Location : QSchemaType {
-  @Id("latitude") val latitude: Stub<Int> = QScalar.stub()
-  @Id("name")val longitude: Stub<Int> = QScalar.stub()
-  @Id("name")val streetAddress: Stub<String> = QScalar.stub()
-  @Id("name")val city: Stub<String> = QScalar.stub()
-  @Id("name")val state: Stub<String> = QScalar.stub()
-  @Id("name")val zip: Stub<Int> = QScalar.stub()
+   val latitude: Stub<Int> by QScalar.stub()
+  val longitude: Stub<Int> by QScalar.stub()
+  val streetAddress: Stub<String> by QScalar.stub()
+  val city: Stub<String> by QScalar.stub()
+  val state: Stub<String> by QScalar.stub()
+  val zip: Stub<Int> by QScalar.stub()
 }
 
 object OtherUser : URL, Friendable, QSchemaType {
-  @Id("name")override val friendCount = QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
-  @Id("name") val name = QScalar.stub<String>()
-  @Id("name")val enemies = QType.stub<OtherUser>()
-  @Id("name")override val friends = QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
-  @Id("name")val address = QType.configStub<Location, AddressArgs> { AddressArgs(it) }
-  @Id("name")override val url = QScalar.stub<String>()
+  override val friendCount by QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
+   val name by QScalar.stub<String>()
+  val enemies by QType.stub<OtherUser>()
+  override val friends by QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
+  val address by QType.configStub<Location, AddressArgs> { AddressArgs(it) }
+  override val url by QScalar.stub<String>()
 
   class AddressArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
 
@@ -78,8 +77,10 @@ class TestSample {
   fun testCorrectTypes() {
     val foobaz = MyUser(1000, "ENGLISH")
     val foobar = MyUser(-69, "CHINESE")
-/*    println(foobaz.toJson())
-    println(foobar.toJson(5))*/
+    println(foobaz.toJson())
+    println(foobar.toJson(5))
+    println(foobar.friends)
+    println(foobaz.friends)
   }
 
 }

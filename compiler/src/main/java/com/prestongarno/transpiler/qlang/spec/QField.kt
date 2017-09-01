@@ -101,7 +101,7 @@ class QField(name: String,
 
     val spec = PropertySpec.builder(this.name, rawTypeName)
     if (!abstract) {
-      spec.initializer(
+      spec.delegate(
           if (args.isEmpty()) {
             initializerNoConfig()
           } else {

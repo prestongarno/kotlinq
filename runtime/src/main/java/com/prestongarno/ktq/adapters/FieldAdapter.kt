@@ -6,7 +6,7 @@ import com.prestongarno.ktq.indent
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
-internal abstract class FieldAdapter {
+internal abstract class FieldAdapter(val fieldName: String) {
   val args: MutableMap<String, Any> = HashMap(4, 0.75f)
 
   lateinit var property: KProperty<*>

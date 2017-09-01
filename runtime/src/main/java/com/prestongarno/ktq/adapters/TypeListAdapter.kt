@@ -8,10 +8,12 @@ import com.prestongarno.ktq.TypeListArgBuilder
 import com.prestongarno.ktq.TypeListStub
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.declaredMemberProperties
 
 internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
+    fieldName : String,
     val builderInit: (TypeListArgBuilder) -> B
-) : FieldAdapter(),
+) : FieldAdapter(fieldName),
     ListInitStub<I>,
     TypeListStub<P, I>,
     ListConfigType<I, B>,
@@ -21,7 +23,7 @@ internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeList
   val results = mutableListOf<P>()
   lateinit var init: () -> P
 
-  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(builderInit))
+  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(fieldName, builderInit))
 
   override fun getModel(): QModel<*> = init()
 

@@ -11,10 +11,10 @@ object Attr {
 
   fun attributeCompilationUnit(comp: QCompilationUnit): QCompilationUnit {
     verifyTypesToInterfaces(comp.types, comp.ifaces)
-    var unit = attrUnionTypes(comp.unions, comp)
-    unit = attrFieldTypes(comp.types + comp.ifaces + comp.inputs, comp)
-    unit = validateNames(unit)
-    return unit
+    attrUnionTypes(comp.unions, comp)
+    attrFieldTypes(comp.types + comp.ifaces + comp.inputs, comp)
+    validateNames(comp)
+    return comp
   }
 
   /**

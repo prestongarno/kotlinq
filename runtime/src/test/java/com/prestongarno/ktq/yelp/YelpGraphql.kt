@@ -19,109 +19,107 @@ import com.prestongarno.ktq.QTypeConfigStub
 import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.TypeArgBuilder
 import com.prestongarno.ktq.TypeListArgBuilder
-import com.prestongarno.ktq.annotations.Id
 
 object Business : QSchemaType {
-  val name: Stub<String> = QScalar.stub()
+  val name: Stub<String> by QScalar.stub()
 
-  val id: Stub<String> = QScalar.stub()
+  val id: Stub<String> by QScalar.stub()
 
-  val is_claimed: Stub<Boolean> = QScalar.stub()
+  val is_claimed: Stub<Boolean> by QScalar.stub()
 
-  val is_closed: Stub<Boolean> = QScalar.stub()
+  val is_closed: Stub<Boolean> by QScalar.stub()
 
-  val url: Stub<String> = QScalar.stub()
+  val url: Stub<String> by QScalar.stub()
 
-  val phone: Stub<String> = QScalar.stub()
+  val phone: Stub<String> by QScalar.stub()
 
-  val display_phone: Stub<String> = QScalar.stub()
+  val display_phone: Stub<String> by QScalar.stub()
 
-  val review_count: Stub<Int> = QScalar.stub()
+  val review_count: Stub<Int> by QScalar.stub()
 
-  val categories: ListInitStub<Category> = QTypeList.stub()
+  val categories: ListInitStub<Category> by QTypeList.stub()
 
-  val rating: Stub<Float> = QScalar.stub()
+  val rating: Stub<Float> by QScalar.stub()
 
-  val price: Stub<String> = QScalar.stub()
+  val price: Stub<String> by QScalar.stub()
 
-  val location: InitStub<Location> = QType.stub()
+  val location: InitStub<Location> by QType.stub()
 
-  val coordinates: InitStub<Coordinates> = QType.stub()
+  val coordinates: InitStub<Coordinates> by QType.stub()
 
-  val photos: ListStub<String> = QScalarList.stub()
+  val photos: ListStub<String> by QScalarList.stub()
 
-  val hours: ListInitStub<Hours> = QTypeList.stub()
+  val hours: ListInitStub<Hours> by QTypeList.stub()
 
-  val reviews: ListInitStub<Review> = QTypeList.stub()
+  val reviews: ListInitStub<Review> by QTypeList.stub()
 }
 
 object Businesses : QSchemaType {
-  val business: ListInitStub<Business> = QTypeList.stub()
+  val business: ListInitStub<Business> by QTypeList.stub()
 
-  val total: Stub<Int> = QScalar.stub()
+  val total: Stub<Int> by QScalar.stub()
 }
 
 object Category : QSchemaType {
-  val title: Stub<String> = QScalar.stub()
+  val title: Stub<String> by QScalar.stub()
 
-  val alias: Stub<String> = QScalar.stub()
+  val alias: Stub<String> by QScalar.stub()
 }
 
 object Coordinates : QSchemaType {
-  val latitude: Stub<Float> = QScalar.stub()
+  val latitude: Stub<Float> by QScalar.stub()
 
-  val longitude: Stub<Float> = QScalar.stub()
+  val longitude: Stub<Float> by QScalar.stub()
 }
 
 object Hours : QSchemaType {
-  val hours_type: Stub<String> = QScalar.stub()
+  val hours_type: Stub<String> by QScalar.stub()
 
-  val open: ListInitStub<OpenHours> = QTypeList.stub()
+  val open: ListInitStub<OpenHours> by QTypeList.stub()
 
-  val is_open_now: Stub<Boolean> = QScalar.stub()
+  val is_open_now: Stub<Boolean> by QScalar.stub()
 }
 
 object Location : QSchemaType {
-  val address1: Stub<String> = QScalar.stub()
+  val address1: Stub<String> by QScalar.stub()
 
-  val address2: Stub<String> = QScalar.stub()
+  val address2: Stub<String> by QScalar.stub()
 
-  val address3: Stub<String> = QScalar.stub()
+  val address3: Stub<String> by QScalar.stub()
 
-  val city: Stub<String> = QScalar.stub()
+  val city: Stub<String> by QScalar.stub()
 
-  val state: Stub<String> = QScalar.stub()
+  val state: Stub<String> by QScalar.stub()
 
-  val zip_code: Stub<String> = QScalar.stub()
+  val zip_code: Stub<String> by QScalar.stub()
 
-  val country: Stub<String> = QScalar.stub()
+  val country: Stub<String> by QScalar.stub()
 
-  val formatted_address: Stub<String> = QScalar.stub()
+  val formatted_address: Stub<String> by QScalar.stub()
 }
 
 object OpenHours : QSchemaType {
-  val is_overnight: Stub<Boolean> = QScalar.stub()
+  val is_overnight: Stub<Boolean> by QScalar.stub()
 
-  val end: Stub<String> = QScalar.stub()
+  val end: Stub<String> by QScalar.stub()
 
-  val start: Stub<String> = QScalar.stub()
+  val start: Stub<String> by QScalar.stub()
 
-  val day: Stub<Int> = QScalar.stub()
+  val day: Stub<Int> by QScalar.stub()
 }
 
 object Query : QSchemaType {
-  val business: QTypeConfigStub<Business, BusinessArgs> = QType.configStub { BusinessArgs(it) }
+  val business: QTypeConfigStub<Business, BusinessArgs> by QType.configStub { BusinessArgs(it) }
 
-  val business_match_best: QTypeConfigStub<Business, Business_match_bestArgs> = QType.configStub { Business_match_bestArgs(it) }
+  val business_match_best: QTypeConfigStub<Business, Business_match_bestArgs> by QType.configStub { Business_match_bestArgs(it) }
 
-  val business_match_lookup: QTypeConfigStub<Businesses, Business_match_lookupArgs> = QType.configStub { Business_match_lookupArgs(it) }
+  val business_match_lookup: QTypeConfigStub<Businesses, Business_match_lookupArgs> by QType.configStub { Business_match_lookupArgs(it) }
 
-  val reviews: QTypeConfigStub<Reviews, ReviewsArgs> = QType.configStub { ReviewsArgs(it) }
+  val reviews: QTypeConfigStub<Reviews, ReviewsArgs> by QType.configStub { ReviewsArgs(it) }
 
-  val phone_search: QTypeConfigStub<Businesses, Phone_searchArgs> = QType.configStub { Phone_searchArgs(it) }
+  val phone_search: QTypeConfigStub<Businesses, Phone_searchArgs> by QType.configStub { Phone_searchArgs(it) }
 
-  @Id("search")
-  val search: QTypeConfigStub<Businesses, SearchArgs> = QType.configStub { SearchArgs(it) }
+  val search: QTypeConfigStub<Businesses, SearchArgs> by QType.configStub { SearchArgs(it) }
 
   class BusinessArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun id(value: String): BusinessArgs = apply { addArg("id", value) }
@@ -260,25 +258,25 @@ object Query : QSchemaType {
 }
 
 object Review : QSchemaType {
-  val rating: Stub<Int> = QScalar.stub()
+  val rating: Stub<Int> by QScalar.stub()
 
-  val user: InitStub<User> = QType.stub()
+  val user: InitStub<User> by QType.stub()
 
-  val text: Stub<String> = QScalar.stub()
+  val text: Stub<String> by QScalar.stub()
 
-  val time_created: Stub<String> = QScalar.stub()
+  val time_created: Stub<String> by QScalar.stub()
 
-  val url: Stub<String> = QScalar.stub()
+  val url: Stub<String> by QScalar.stub()
 }
 
 object Reviews : QSchemaType {
-  val review: ListInitStub<Review> = QTypeList.stub()
+  val review: ListInitStub<Review> by QTypeList.stub()
 
-  val total: Stub<Int> = QScalar.stub()
+  val total: Stub<Int> by QScalar.stub()
 }
 
 object User : QSchemaType {
-  val image_url: Stub<String> = QScalar.stub()
+  val image_url: Stub<String> by QScalar.stub()
 
-  val name: Stub<String> = QScalar.stub()
+  val name: Stub<String> by QScalar.stub()
 }

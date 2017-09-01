@@ -3,12 +3,7 @@ package com.prestongarno.transpiler.tests.parsing
 
 import com.prestongarno.transpiler.QCompiler
 import java.io.File
-import org.junit.Assert
 import org.junit.Test
-import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
-import java.lang.management.ManagementFactory
-import java.util.concurrent.TimeUnit
-import javax.script.*
 
 class CustomSchemaTests {
   @Test
@@ -17,7 +12,7 @@ class CustomSchemaTests {
     QCompiler.initialize("SampleOne")
         .packageName("com.prestongarno.ktq")
         .compile(File(file.path))
-        //.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+        .writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 
   @Test
@@ -27,7 +22,7 @@ class CustomSchemaTests {
         .packageName("com.prestongarno.ktq.yelp")
         .compile(File(file.path))
         .result {}
-        //.writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
+        .writeToFile("/Users/admin/IdeaProjects/ktq/runtime/src/test/java/")
   }
 }
 

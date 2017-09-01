@@ -4,7 +4,9 @@ import com.prestongarno.ktq.*
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
-internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(val builderInit: (TypeArgBuilder) -> B) : FieldAdapter(),
+internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(
+    fieldName: String, val builderInit: (TypeArgBuilder) -> B
+) : FieldAdapter(fieldName),
     TypeStub<P, I>,
 		InitStub<I>,
 		QTypeConfigStub<I, B>,
@@ -13,7 +15,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
 
   lateinit var result: P
 
-  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(builderInit))
+  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(fieldName, builderInit))
 
   override fun getModel(): QModel<*> = result
 

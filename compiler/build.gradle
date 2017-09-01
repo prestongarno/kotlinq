@@ -17,6 +17,14 @@ dependencies {
   compile project(':runtime')
 }
 
+task integrationTest(type: Test) {
+  options {
+    systemProperties System.getProperties() as Map<String, ?>
+    //noinspection GroovyAssignabilityCheck
+    systemProperties.put("-Dcom.prestongarno.ktq.compiler.writeTestFiles", "true")
+  }
+}
+
 sourceSets {
   main {
     java {
