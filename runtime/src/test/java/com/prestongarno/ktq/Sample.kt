@@ -3,6 +3,7 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.QSchemaType.*
+import com.prestongarno.ktq.annotations.Id
 import org.junit.Test
 
 interface URL {
@@ -35,7 +36,7 @@ object Location : QSchemaType {
 
 object OtherUser : URL, Friendable, QSchemaType {
   override val friendCount = QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
-  val name = QScalar.stub<String>()
+  @Id("name") val name = QScalar.stub<String>()
   val enemies = QType.stub<OtherUser>()
   override val friends = QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
   val address = QType.configStub<Location, AddressArgs> { AddressArgs(it) }
@@ -76,12 +77,9 @@ class TestSample {
   @Test
   fun testCorrectTypes() {
     val foobaz = MyUser(1000, "ENGLISH")
-    println("$foobaz \n\t:: ${foobaz.friends}\n\t::${foobaz.address}")
-    println(foobaz.address.streetAddress)
     val foobar = MyUser(-69, "CHINESE")
-    println("$foobar \n\t:: ${foobar.friends}\n\t::${foobar.address}")
-    println(foobar.enemies)
-    println(OtherUser.enemies)
+    println(foobaz.toJson())
+    println(foobar.toJson(5))
   }
 
 }

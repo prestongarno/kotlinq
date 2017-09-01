@@ -97,7 +97,7 @@ object Attr {
         if (fieldOnType.args.isNotEmpty()) {
           fieldOnType.flag(QField.BuilderStatus.TOP_LEVEL)
           dup.forEach { it.second.flag(QField.BuilderStatus.TOP_LEVEL); it.second.abstract(true) }
-          println("Diamond on: [ ${type.name}.${fieldOnType.name}  ] from -> ${dup.joinToString { it.first.name }}")
+          //println("Diamond on: [ ${type.name}.${fieldOnType.name}  ] from -> ${dup.joinToString { it.first.name }}")
         }
 
         return Optional.of(Pair(fieldOnType, Pair(type, dup.map { (first) -> first })))

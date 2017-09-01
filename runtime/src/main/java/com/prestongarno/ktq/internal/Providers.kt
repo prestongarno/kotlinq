@@ -18,3 +18,7 @@ internal interface QScalarStubProvider<out E> {
 internal interface QTypeStubProvider<out E> {
   fun <T : QSchemaType> stub(): E
 }
+
+internal interface ModelProvider {
+  fun getModel() : QModel<*>
+}

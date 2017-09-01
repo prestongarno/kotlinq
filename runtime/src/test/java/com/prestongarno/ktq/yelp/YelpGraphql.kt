@@ -19,6 +19,7 @@ import com.prestongarno.ktq.QTypeConfigStub
 import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.TypeArgBuilder
 import com.prestongarno.ktq.TypeListArgBuilder
+import com.prestongarno.ktq.annotations.Id
 
 object Business : QSchemaType {
   val name: Stub<String> = QScalar.stub()
@@ -119,6 +120,7 @@ object Query : QSchemaType {
 
   val phone_search: QTypeConfigStub<Businesses, Phone_searchArgs> = QType.configStub { Phone_searchArgs(it) }
 
+  @Id("search")
   val search: QTypeConfigStub<Businesses, SearchArgs> = QType.configStub { SearchArgs(it) }
 
   class BusinessArgs(args: TypeArgBuilder) : TypeArgBuilder by args {

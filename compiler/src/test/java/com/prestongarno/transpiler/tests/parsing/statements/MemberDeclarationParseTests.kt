@@ -24,7 +24,6 @@ class MemberDeclarationParseTests {
 					&& field.directive.second == "bar"
 					&& field.isList
 					&& !field.isNullable)
-			println(field)
 		}
 
 	}
@@ -40,7 +39,6 @@ class MemberDeclarationParseTests {
 					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
 					&& !field.isList
 					&& field.isNullable)
-			println(field)
 		}
 
 	}
@@ -56,7 +54,6 @@ class MemberDeclarationParseTests {
 					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
 					&& field.isList
 					&& field.isNullable)
-			println(field)
 		}
 
 	}
@@ -72,7 +69,6 @@ class MemberDeclarationParseTests {
 					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
 					&& field.isList
 					&& !field.isNullable)
-			println(field)
 		}
 
 	}
@@ -83,7 +79,6 @@ class MemberDeclarationParseTests {
 		val rawField = "foofield: [Object] @directive(\"foo @*^%$@^&%$#@}{\")"
 
 		QLexer.baseFields(rawField).forEach { field ->
-			println(field)
 			assert(field.symbol == "foofield"
 					&& field.type == "Object"
 					&& field.inputArgs == Collections.emptyList<QFieldInputArg>()
@@ -102,7 +97,6 @@ class MemberDeclarationParseTests {
 
 		val baseFields = QLexer.baseFields(rawField)
 		baseFields.forEach { field ->
-			println(field)
 			assert(field.symbol == "foofield"
 					&& field.type == "Object"
 					&& field.inputArgs.size == 1
@@ -127,7 +121,6 @@ class MemberDeclarationParseTests {
 
 		val baseFields = QLexer.baseFields(rawField)
 
-		baseFields.forEach { field -> println(field) }
 		assert(baseFields.size == 2)
 
 		assert(baseFields[0].symbol == "foofield"

@@ -2,6 +2,9 @@ package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.*
 import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.getExtensionDelegate
 
 internal class ScalarStubAdapter<T, out B: ArgBuilder>(val builderInit: (ArgBuilder) -> B) : FieldAdapter(),
     Stub<T>,

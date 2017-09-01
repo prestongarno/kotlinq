@@ -27,7 +27,4 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(val builderInit: (Li
 
   override fun addArg(name: String, value: Any): ListArgBuilder = apply { args.put(name, value) }
 
-  companion object {
-  }
 }
-

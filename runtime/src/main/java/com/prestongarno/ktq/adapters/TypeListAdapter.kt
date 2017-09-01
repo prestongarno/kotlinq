@@ -6,18 +6,22 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.TypeListArgBuilder
 import com.prestongarno.ktq.TypeListStub
+import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
 internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(val builderInit: (TypeListArgBuilder) -> B) : FieldAdapter(),
     ListInitStub<I>,
     TypeListStub<P, I>,
     ListConfigType<I, B>,
-    TypeListArgBuilder {
+    TypeListArgBuilder,
+    ModelProvider {
 
   val results = mutableListOf<P>()
   lateinit var init: () -> P
 
   override fun config(): B = builderInit(TypeListAdapter<I, P, B>(builderInit))
+
+  override fun getModel(): QModel<*> = init()
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeListStub<U, T>
       = apply { this.init = init as () -> P } as TypeListStub<U, T>

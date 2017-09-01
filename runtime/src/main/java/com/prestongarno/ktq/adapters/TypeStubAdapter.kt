@@ -1,17 +1,21 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.*
+import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(val builderInit: (TypeArgBuilder) -> B) : FieldAdapter(),
     TypeStub<P, I>,
 		InitStub<I>,
 		QTypeConfigStub<I, B>,
-		TypeArgBuilder {
+		TypeArgBuilder,
+    ModelProvider {
 
   lateinit var result: P
 
   override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(builderInit))
+
+  override fun getModel(): QModel<*> = result
 
 	override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.result
 

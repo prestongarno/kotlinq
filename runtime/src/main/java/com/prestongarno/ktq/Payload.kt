@@ -2,7 +2,6 @@ package com.prestongarno.ktq
 
 public interface Payload {
   fun addArg(name: String, value: Any) : Payload
-  fun toRawPayload() : String = TODO()
 }
 
 interface ArgBuilder : Payload {
