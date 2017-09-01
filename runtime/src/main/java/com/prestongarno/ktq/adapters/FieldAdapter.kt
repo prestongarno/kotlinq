@@ -21,20 +21,23 @@ internal abstract class FieldAdapter(val fieldName: String) {
       fieldName +
           (if (args.isNotEmpty()) {
             args.map {
-              "${it.key}: ${formatAs(it.value, indentation + 1)}"
-            }.joinToString(separator = ",\n\t", prefix = "(", postfix = ")")
+              "${it.key}: ${formatAs(it.value)}"
+            }.joinToString(separator = ",", prefix = "(", postfix = ")")
           } else "")
               .concat(
                   if (this is ModelProvider)
-                    this.getModel().toGraphql()
+                    this.getModel().let {
+                      if (!it.fields.isEmpty())
+                        it.toGraphql()
+                      else ""
+                    }
                   else "")
-              .indent(indentation).replace("\\s+([(,])".toRegex(), "$1")
-
+              .replace("\\s*([(,])".toRegex(), "$1").trim()
 
   override fun toString(): String = toRawPayload()
 }
 
-internal fun formatAs(value: Any, indentation: Int = 1): String {
+internal fun formatAs(value: Any): String {
   return when (value) {
     is Int, is Boolean, Float -> "$value"
     is String -> "\"$value\""

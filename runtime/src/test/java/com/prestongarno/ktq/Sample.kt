@@ -49,6 +49,7 @@ object OtherUser : URL, Friendable, QSchemaType {
 
 class SimpleAddress(exactValue: String) : QModel<Location>(Location::class) {
   val streetAddress = exactValue
+  //val baz by model.city
 }
 
 class BasicUserInfo : QModel<OtherUser>(OtherUser::class) {
@@ -78,9 +79,7 @@ class TestSample {
     val foobaz = MyUser(1000, "ENGLISH")
     val foobar = MyUser(-69, "CHINESE")
     println(foobaz.toGraphql())
-    println(foobar.toGraphql(5))
-    println(foobar.friends)
-    println(foobaz.friends)
+    println(foobar.toGraphql())
   }
 
 }

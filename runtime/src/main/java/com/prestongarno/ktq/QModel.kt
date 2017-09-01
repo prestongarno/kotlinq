@@ -12,12 +12,14 @@ abstract class QModel<out T : QSchemaType>(of: KClass<T>) {
   }
 
   fun toGraphql(indentation: Int = 0): String {
-    return ( "{\n".indent(indentation) + (fields.joinToString(separator = ",\n") { it.toRawPayload() }
-        .indent(indentation + 1))+ "\n}".indent(indentation) )
+    return ((fields.joinToString(separator = ",\n") { it.toRawPayload() }
+        .indent(1)) + "\n}").prepend("{\n").indent(indentation)
   }
 
 }
+
 fun String.indent(times: Int = 1): String =
     replace("^".toRegex(), Jsonify.INDENT.repeat(times))
         .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
 
+fun String.prepend(of: String): String = of + this
