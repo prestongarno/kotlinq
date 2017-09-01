@@ -46,7 +46,7 @@ class BusinessBasic : QModel<Business>(Business::class) {
 class TestCorrectStructure {
   @Test
   fun testBusinessBasic() {
-    val one = BusinessQuery("asuh dude")
+    val one = BusinessQuery("bazfoo")
     val two = BusinessQuery("foobar")
     // make sure that a new config & new Model instance is created per invocation
     require(one.fields != two.fields)

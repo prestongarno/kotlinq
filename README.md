@@ -27,6 +27,24 @@ Supports concise, type-safe queries and models. Compiled and tested against open
   
 ```
 
+When initializing a `BusinessQuery` calling the `.toGraphql()` results in a valid graphql query as a String:
+
+E.g. `BusinessQuery("foobar").toGraphql()`
+
+```
+  {
+   search(limit: 10,
+      term: "foobar"){
+     total,
+     business {
+       name,
+       display_phone,
+       url 
+      }
+    }
+  }
+```
+
 ### compiler
 The `compiler` module acts as a kotlin code generation library. This (soon) will be isolated as a Gradle plugin which will allow for configuration from gradle build scripts and run as a task like:
 

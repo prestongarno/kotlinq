@@ -18,7 +18,7 @@ internal abstract class FieldAdapter(val fieldName: String) {
    * ... this still works though somehow. Expression-based languages will be the end of me
    */
   fun toRawPayload(indentation: Int = 1): String =
-      property.name +
+      fieldName +
           (if (args.isNotEmpty()) {
             args.map {
               "${it.key}: ${formatAs(it.value, indentation + 1)}"

@@ -11,10 +11,6 @@ import kotlin.reflect.jvm.isAccessible
 abstract class QModel<out T : QSchemaType>(of: KClass<T>) {
   protected val model: T = of.objectInstance!!
 
-  init {
-    model::class.memberProperties.map { it.annotations.joinToString(", ", it.name) }.map { println(it) }
-  }
-
   internal val fields = mutableListOf<FieldAdapter>()
   override fun toString(): String {
     return this.toJson(0)
