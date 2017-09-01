@@ -26,7 +26,7 @@ internal abstract class FieldAdapter(val fieldName: String) {
           } else "")
               .concat(
                   if (this is ModelProvider)
-                    this.getModel().toJson()
+                    this.getModel().toGraphql()
                   else "")
               .indent(indentation).replace("\\s+([(,])".toRegex(), "$1")
 

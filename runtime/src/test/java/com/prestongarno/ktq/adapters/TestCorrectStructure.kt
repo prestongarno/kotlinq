@@ -1,7 +1,6 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.indent
 import com.prestongarno.ktq.yelp.Business
 import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Query
@@ -52,7 +51,7 @@ class TestCorrectStructure {
     require(one.fields != two.fields)
     require(one.result != two.result)
     require(one.reviews != two.reviews)
-    println(one.toJson())
-    println(one.toJson().replace("\n", " ").replace("\\s*".toRegex(), ""))
+    println(one.toGraphql())
+    println(one.toGraphql().replace("\n", " ").replace("\\s*".toRegex(), ""))
   }
 }

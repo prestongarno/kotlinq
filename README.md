@@ -29,7 +29,7 @@ Supports concise, type-safe queries and models. Compiled and tested against open
 
 When initializing a `BusinessQuery` calling the `.toGraphql()` results in a valid graphql query as a String:
 
-E.g. `BusinessQuery("foobar").toGraphql()`
+E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
 
 ```
   {

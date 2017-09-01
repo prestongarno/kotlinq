@@ -77,8 +77,8 @@ class TestSample {
   fun testCorrectTypes() {
     val foobaz = MyUser(1000, "ENGLISH")
     val foobar = MyUser(-69, "CHINESE")
-    println(foobaz.toJson())
-    println(foobar.toJson(5))
+    println(foobaz.toGraphql())
+    println(foobar.toGraphql(5))
     println(foobar.friends)
     println(foobaz.friends)
   }
