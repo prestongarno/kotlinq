@@ -1,0 +1,115 @@
+version '0.1'
+group 'com.prestongarno.ktq'
+
+sourceCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/java']
+    }
+    resources {
+      srcDirs = ['src/main/res']
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/java']
+    }
+    resources {
+      srcDirs = ['src/test/res']
+    }
+  }
+}
+
+tasks {
+  println("Client project artifact ID :: '$id'")
+}
+
+task releaseApiJar(type: Jar) {
+  baseName id
+  from sourceSets.main.output
+  exclude '**/impl/**'
+}
+
+task sourceReleaseJar(type: Jar) {
+  from sourceSets.main.allJava
+}
+
+task releaseDoc(type: Javadoc) {
+  source = sourceSets.main.allSource
+  title = "client-javadoc-" + version
+}
+
+task buildArtifactDoc(type: Jar) {
+  from(releaseDoc.destinationDir)
+  classifier 'javadoc'
+  archiveName = "${id}-$version-javadoc.jar"
+}
+
+task buildArtifactSource(type: Jar) {
+  from(sourceSets.main.allSource)
+  from(sourceSets.test.allSource)
+  classifier 'sources'
+  archiveName = "${id}-$version-sources.jar"
+}
+publishing {
+  publications {
+    projectPublish(MavenPublication) {
+      artifactId id
+      artifact releaseApiJar
+      artifact buildArtifactSource
+      artifact buildArtifactDoc
+      pom.withXml {
+        asNode().children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name id
+          description 'a runtime library/graphql client'
+          url 'https://github.com/prestongarno/ktq'
+          organization {
+            name 'prestongarno.com'
+            url 'http://prestongarno.com'
+          }
+          issueManagement {
+            system 'git'
+            url 'https://github.com/prestongarno/ktq/issues'
+          }
+          scm {
+            url 'https://github.com/prestongarno/ktq.git'
+          }
+          licenses {
+            license {
+              name 'MIT'
+              url 'https://github.com/prestongarno/ktq/LICENSE.txt'
+              comments 'See discussion at https://github.com/prestongarno/ktq/LICENSE.txt for more details.'
+              //distribution "$url"
+            }
+          }
+          developers {
+            developer {
+              id 'prestongarno'
+              name "Preston Garno"
+              organization 'prestongarno.com'
+              organizationUrl 'http://prestongarno.com'
+            }
+          }
+        }
+      }
+    }
+  }
+
+  repositories {
+    maven {
+      //url "https://repo1.maven.org/maven2"
+      url "$buildDir/repo"
+    }
+  }
+}
