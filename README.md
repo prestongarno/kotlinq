@@ -1,5 +1,5 @@
-# ktq 
 *__a kotlin client for GraphQL schema definitions.__*
+-----------------------------
 
  [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.1) ](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno/trywithres-compat/badge.svg)](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
