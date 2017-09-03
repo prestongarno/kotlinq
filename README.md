@@ -24,9 +24,6 @@ And apply the plugin:
         id 'com.prestongarno.ktq' version 0.1
       }
       
-      
-===
-
 ### About
 
 Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
