@@ -1,6 +1,8 @@
 
 # ktq<sup>*</sup>
 
+ [ ![Download](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.1) ](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
+
 An experimental kotlin type generator for GraphQL schema definitions and runtime library for interacting with endpoints
 
 Supports concise, type-safe queries and models. Compiled and tested against open API endpoints such as Github and Yelp. An example model written from the yelp test package (`com.prestongarno.ktq.yelp`):

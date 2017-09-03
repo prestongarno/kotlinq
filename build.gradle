@@ -1,46 +1,205 @@
+import groovy.io.FileType
+
 buildscript {
+  ext.sourceCompatibility = 1.8
   ext.kotlin_version = '1.1.4-3'
+  ext.clientId = 'ktq-client'
+  ext.projectDescription = 'a kotlin client for graphql'
+  ext.gitBaseUrl = GIT_BASE_URL + '/ktq'
+  ext.projLicenseUrl = "$gitBaseUrl/LICENSE.txt"
+  ext.localStaging = "$buildDir/publish/staging/"
+  ext.localBintrayStaging = "$buildDir/bintray/"
+
   repositories {
+    jcenter()
     mavenCentral()
   }
+
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
   }
 }
+plugins {
+  id "com.jfrog.bintray" version "1.7.3"
+}
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
 
+version = 0.1
+group = 'com.prestongarno.ktq'
 
+repositories {
+  mavenCentral()
+  jcenter()
+}
 
-subprojects {
-
-  apply plugin: 'java'
-  apply plugin: 'idea'
-  apply plugin: 'kotlin'
-  repositories {
-    mavenCentral()
-    jcenter()
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-reflect"
+  testCompile 'junit:junit:4.12'
+  testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+}
+compileKotlin {
+  kotlinOptions {
+    jvmTarget = "1.8"
   }
-
-  dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-reflect"
-    testCompile 'junit:junit:4.12'
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    compile 'com.beust:klaxon:0.31'
+}
+compileTestKotlin {
+  kotlinOptions {
+    jvmTarget = "1.8"
   }
-  compileKotlin {
-    kotlinOptions {
-      jvmTarget = "1.8"
+}
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+clean {
+  doFirst { delete localStaging }
+}
+
+dependencies {
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/kotlin']
     }
-  }
-  compileTestKotlin {
-    kotlinOptions {
-      jvmTarget = "1.8"
+    resources {
+      srcDirs = ['src/main/res']
     }
   }
   test {
-    options {
-      systemProperties.put("-Dcom.prestongarno.ktq.compiler.writeTestFiles", "false")
+    java {
+      srcDirs = ['src/test/kotlin']
+    }
+    resources {
+      srcDirs = ['src/test/res']
     }
   }
+}
 
+jar {
+  from sourceSets.main.output
+  exclude '**/impl/**'
+}
+
+task jarDoc(type: Jar) {
+  doFirst { javadoc }
+  from(javadoc.destinationDir)
+  classifier 'javadoc'
+  archiveName "$clientId-$version-${classifier}.jar"
+}
+
+task jarSource(type: Jar) {
+  from(sourceSets.main.allSource)
+  from(sourceSets.test.allSource)
+  classifier 'sources'
+  archiveName = "$clientId-$version-sources.jar"
+}
+
+artifacts {
+  archives jar
+  archives jarSource
+  archives jarDoc
+}
+
+publishing {
+  publications {
+
+    staging(MavenPublication) {
+
+      artifactId clientId
+      artifact jar
+      artifact jarSource
+      artifact jarDoc
+
+      pom.withXml {
+        asNode().children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name clientId
+          description projectDescription
+          url gitBaseUrl
+          organization {
+            name DEV_COMPANY
+            url DEV_COMPANY_URL
+          }
+          issueManagement {
+            system 'git'
+            url "$gitBaseUrl/issues"
+          }
+          scm {
+            url "${gitBaseUrl}.git"
+          }
+          licenses {
+            license {
+              name "MIT"
+              url "$projLicenseUrl"
+              comments "See $projLicenseUrl for more details."
+              distribution "$projLicenseUrl"
+            }
+          }
+          developers {
+            developer {
+              id DEV_URL
+              name DEV_NAME
+              organization DEV_COMPANY
+              organizationUrl DEV_COMPANY_URL
+            }
+          }
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      url localStaging
+    }
+  }
+}
+
+bintray {
+  user BINTRAY_USER
+  key BINTRAY_KEY
+  dryRun = false
+  publish = false
+  override = true
+  filesSpec {
+    from(localStaging) {
+      exclude "**/maven-metadata"
+    }
+    into "/"
+    includeEmptyDirs = false
+  }
+
+  pkg {
+    repo = 'ktq'
+    name = clientId
+    desc = projectDescription
+    licenses = ['MIT']
+    vcsUrl = "${gitBaseUrl}.git"
+
+    githubRepo = 'https://github.com/prestongarno/ktq'
+    githubReleaseNotesFile = 'README.md'
+
+    version {
+      name = "$project.version"
+      gpg {
+        sign = true
+        passphrase = GMAIL_GPG
+      }
+      mavenCentralSync {
+        sync = false
+        user = MAVEN2_USERNAME
+        password = MAVEN2_PASSWORD
+        close = '0' //Optional property. By default the staging repository is closed and artifacts
+        // are released to Maven Central. You can optionally turn this behaviour off
+        // (by puting 0 as value) and release the version manually.
+      }
+    }
+  }
 }

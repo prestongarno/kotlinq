@@ -1,4 +1,2 @@
-rootProject.name = 'ktq'
-
-include ':compiler', ':runtime'
-
+rootProject.name = 'ktq-client'
+include ":"
