@@ -1,50 +1,93 @@
+# ktq 
+####*a kotlin client for GraphQL schema definitions.*
 
-# ktq<sup>*</sup>
 
- [ ![Download](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.1) ](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
+ [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.1) ](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno/trywithres-compat/badge.svg)](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
 
-An experimental kotlin type generator for GraphQL schema definitions and runtime library for interacting with endpoints
 
-Supports concise, type-safe queries and models. Compiled and tested against open API endpoints such as Github and Yelp. An example model written from the yelp test package (`com.prestongarno.ktq.yelp`):
 
-```
-  class BusinessQuery(searchTerm: String) : QModel<Query>() {
-    val result: List<BusinessNodesModel> by model.search.config()
-        .term(searchTerm)
-        .limit(10)
-        .build { BusinessesNodesModel() }
-  }
+###Add from Central & JCenter
 
-  class BusinessesNodesModel : QModel<Businesses>() {
-    val resultCount: Int by model.total
-    val resultsNodes: List<BusinessBasic> by model.business
-        .init { BusinessBasic() }
-  }
+To use in a project, add the dependency to a gradle buildscript:
 
-  class BusinessBasic : QModel<Business>() {
-    val name: String by model.name
-    val phoneNumber: Int by model.display_phone
-    val directUrl: String by model.url
-  }
-  
-```
+      compile 'com.prestongarno.ktq:ktq-client:0.1'
+      
+Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
+ the gradle syntax for configuring compilation of graphql schema IDL as kotlin classes. 
+ Add this to project buildscript dependencies block:
+
+      classpath 'com.prestongarno.ktq:ktq-gradle:0.1'
+
+And apply the plugin:
+
+      plugins {
+        id 'com.prestongarno.ktq' version 0.1
+      }
+      
+      
+===
+
+###About
+
+Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
+queries and mutations against a GraphQl schema. 
+
+The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
+and mutations without ever leaving native code.
+
+For an example of how to build models, see the example below created for the Yelp Graphql API. 
+Note that while field types are specified, they are not necessary and can be inferred by the properties
+in the `model` instance which a concrete query/mutation class delegates its properties to.
+
+    class BusinessQuery(searchTerm: String) : QModel(Query::class) {
+    
+      val result: List<BusinessNodesModel> by model.search
+          .config()
+              .term(searchTerm)
+              .limit(10)
+              .build { BusinessesNodesModel() }
+          
+    }
+
+    class BusinessesNodesModel : QModel(Businesses::class) {
+      val resultCount:   Int                    by model.total
+      val resultsNodes:  List<SimpleBusiness>   by model.business.init { SimpleBusiness() }
+    }
+
+    class SimpleBusiness : QModel(Business::class) {
+      val name:         String  by model.name
+      val phoneNumber:  Int     by model.display_phone
+      val directUrl:    String  by model.url
+    }
+    
 
 When initializing a `BusinessQuery` calling the `.toGraphql()` results in a valid graphql query as a String:
 
 E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
 
-```
-  {
-   search(limit: 10,
-      term: "foobar"){
-     total,
-     business {
-       name,
-       display_phone,
-       url 
+    {
+     search(limit: 10,
+        term: "foobar"){
+       total,
+       business {
+         name,
+         display_phone,
+         url 
+        }
       }
     }
-  }
-```
+    
+What's unique about this API is that the delegates serve to both configure queries/inputs as a contract for the 
+resulting value of the delegated property, while also ensuring strong typing across the board. The accompanying
+configuration (i.e. input arguments for a graphql field) class enforces any required arguments and supports the 
+builder pattern for configuring your query for the delegated property in one line.
 
-What's even cooler is that the delegates serve to both configure queries/inputs, and also ensure strong typing across the board. More to come soon:)
+For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
+check out the wiki.
+
+###How to execute a query or mutation:
+
+This isn't currently supported, but pluggable HTTP modules to assist in executing queries 
+using existing tools such as OkHTTP and Fuel and mapping to your objects are currently under development for a 1.0 release
+
