@@ -1,13 +1,12 @@
 # ktq 
-####*a kotlin client for GraphQL schema definitions.*
-
+*__a kotlin client for GraphQL schema definitions.__*
 
  [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.1) ](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno/trywithres-compat/badge.svg)](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
 
 
 
-###Add from Central & JCenter
+### Add from Central & JCenter
 
 To use in a project, add the dependency to a gradle buildscript:
 
@@ -28,7 +27,7 @@ And apply the plugin:
       
 ===
 
-###About
+### About
 
 Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
 queries and mutations against a GraphQl schema. 
@@ -86,7 +85,7 @@ builder pattern for configuring your query for the delegated property in one lin
 For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
 check out the wiki.
 
-###How to execute a query or mutation:
+### How to execute a query or mutation:
 
 This isn't currently supported, but pluggable HTTP modules to assist in executing queries 
 using existing tools such as OkHTTP and Fuel and mapping to your objects are currently under development for a 1.0 release
