@@ -8,6 +8,7 @@ buildscript {
   ext.gitBaseUrl = GIT_BASE_URL + '/ktq'
   ext.projLicenseUrl = "$gitBaseUrl/LICENSE.txt"
   ext.localStaging = "$buildDir/publish/staging/"
+  ext.localBintrayStaging = "$buildDir/bintray/"
 
   repositories {
     jcenter()
@@ -161,15 +162,40 @@ publishing {
   }
 }
 
+task bintrayAssemble(type: Copy) {
+  doFirst {
+    delete file(localBintrayStaging)
+    publish
+  }
+  from(localStaging)
+  into localBintrayStaging
+}
+
+task bintrayPom(type: Copy, dependsOn: [bintrayAssemble]) {
+  from("$localStaging/${group.toString().replace(".", "/")}/$clientId/$version") {
+    include './*.pom*'
+  }
+  into localBintrayStaging
+  rename '(.+).pom(.*)',  'pom.xml$2'
+  eachFile { pomThing ->
+    println("Renaming: " + pomThing)
+    //pomThing.renameTo("$localBintrayStaging/$pomThing.name")
+  }
+}
+
+task bintrayMaven {
+  doFirst { bintrayAssemble }
+  doLast { bintrayUpload }
+}
+
 bintray {
   user BINTRAY_USER
   key BINTRAY_KEY
   dryRun = false
   publish = false
   override = true
-  filesSpec{
-    from localStaging
-    into localStaging
+  filesSpec {
+    from localBintrayStaging
   }
 
   pkg {
@@ -183,7 +209,7 @@ bintray {
     githubReleaseNotesFile = 'README.md'
 
     version {
-      name = "$version"
+      name = "$project.version"
       gpg {
         sign = true
         passphrase = GMAIL_GPG
