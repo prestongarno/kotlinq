@@ -163,23 +163,18 @@ publishing {
 }
 
 task bintrayAssemble(type: Copy) {
-  doFirst {
-    delete file(localBintrayStaging)
-    publish
-  }
-  from(localStaging)
+  doFirst { publish }
+  from localStaging
   into localBintrayStaging
-}
-
-task bintrayPom(type: Copy, dependsOn: [bintrayAssemble]) {
-  from("$localStaging/${group.toString().replace(".", "/")}/$clientId/$version") {
-    include './*.pom*'
-  }
-  into localBintrayStaging
-  rename '(.+).pom(.*)',  'pom.xml$2'
+  //rename '(.+).pom(.*)',  'pom.xml$2'
   eachFile { pomThing ->
-    println("Renaming: " + pomThing)
-    //pomThing.renameTo("$localBintrayStaging/$pomThing.name")
+    println("Renaming: " + pomThing.path)
+    if(pomThing.name.startsWith("maven-metadata")) {
+      pomThing.path = "$pomThing.name"
+    } else {
+      pomThing.path = "$version/$pomThing.name"
+    }
+    print(" to: " + pomThing.path)
   }
 }
 
@@ -196,6 +191,8 @@ bintray {
   override = true
   filesSpec {
     from localBintrayStaging
+    into "${project.group.toString().replace(".", "/")}/$clientId/"
+    includeEmptyDirs false
   }
 
   pkg {
