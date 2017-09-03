@@ -162,27 +162,6 @@ publishing {
   }
 }
 
-task bintrayAssemble(type: Copy) {
-  doFirst { publish }
-  from localStaging
-  into localBintrayStaging
-  //rename '(.+).pom(.*)',  'pom.xml$2'
-  eachFile { pomThing ->
-    println("Renaming: " + pomThing.path)
-    if(pomThing.name.startsWith("maven-metadata")) {
-      pomThing.path = "$pomThing.name"
-    } else {
-      pomThing.path = "$version/$pomThing.name"
-    }
-    print(" to: " + pomThing.path)
-  }
-}
-
-task bintrayMaven {
-  doFirst { bintrayAssemble }
-  doLast { bintrayUpload }
-}
-
 bintray {
   user BINTRAY_USER
   key BINTRAY_KEY
@@ -190,9 +169,11 @@ bintray {
   publish = false
   override = true
   filesSpec {
-    from localBintrayStaging
-    into "${project.group.toString().replace(".", "/")}/$clientId/"
-    includeEmptyDirs false
+    from(localStaging) {
+      exclude "**/maven-metadata"
+    }
+    into "/"
+    includeEmptyDirs = false
   }
 
   pkg {
