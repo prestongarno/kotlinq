@@ -43,13 +43,17 @@ group = 'com.prestongarno.ktq'
 repositories {
   mavenCentral()
   jcenter()
+  maven {
+    url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/'
+  }
 }
 
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-  compile "org.jetbrains.kotlin:kotlin-reflect"
+  compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
   testCompile 'junit:junit:4.12'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+  testCompileClasspath "com.prestongarno.ktq:ktq-gradle:0.2-SNAPSHOT"
 }
 compileKotlin {
   kotlinOptions {
