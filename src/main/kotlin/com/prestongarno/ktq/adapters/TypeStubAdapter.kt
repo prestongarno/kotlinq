@@ -4,6 +4,8 @@ import com.prestongarno.ktq.*
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
+/**
+ * This class represents a stub for a non-leaf type (aka an object) on a graph */
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(
     fieldName: String, val builderInit: (TypeArgBuilder) -> B
 ) : FieldAdapter(fieldName),
