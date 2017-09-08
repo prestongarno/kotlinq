@@ -16,9 +16,8 @@ cache:
   - "$HOME/.gradle/wrapper/"
 env:
   global:
-    secure: WxOJBclFPf0d/LW7V/FGs5FL+2BbQH/RLDEGokLBb4KgThI4mzACpfp8/lXH9dhh8GPKWuNCGDuIz+gMpZQnlijWnHMp0xg9pS5eKwcK38DwXz2UhQjH7mldCFTrYxzG5VmqSwSQTXKNYDP+dVrkrcx/hq6Xt2pzroBYd/n0qpoPLQwjy/tqyLgCVAkF7jDbbn6tkr2n+FhtvU3VEdyDCXnWZDsKQTl+qhEafDrTkTxbtQPhVmv9QYDq0PJgI56tkpcD32zy58T5yQrK84d4IP8yUxf2/wgb3qpbKIt0N0yYx64ibJbLHot/PmBXn71dfmLkYopBa4jWo7rsft9zc7axEdD3pyj/rPmI8RuD1VFMnhHzhyFNm0lFg3Dxgfukngq1aOhzUrck/259nGw6fSIC9HpnRKXNkVZk+IWv/FQKZRs0h3PLDPcbTg3qfLCPlmUo0VhY0jUuKYY1ULl1Ek4ixGqczgRKh7UCIMAk/ckggEvrStylCmtLhKBJYifkP0C1hq8ftaEoqrTCWYEs7kG7zIOYwiaqhFiM+XmQaBzPbf5tUrTEwqDGwtRYTr0nh2LMzgQWfsJiTeGEqg2eXeaJs/f3YtKebc/K+Lmp08zRPqNIuLvAjDmH0JMacOiOGgAf44uscpuWFKL3twnUA9Yum+kbI1+L+3ssK4PI2Cw=
+    secure: Cw3t4c8ffNhPoFIWxwu1+tLPsOapYFHjGhF8tTyeU6GlbhA2DyjlmL6sEzJqEQFiS3Hrn6aADl1/ohfRms8wgaArYmfeq0tojjpZml4WbLA7mndB+W62lgIqZgKhjlc0++oBOzmUB8j/NWWPvml2EAMzvwsOkcV2fXGKfGXTx1VsF5WtoTDTLGWYjg45UPB9qLlmwPCQFOQzz1CVlY3+JNIJmcb2mOu384cDFyvWel6XKUG2JaMGzUXvMx+sdo+tOPOpPC2IleAANt8asv/dxyATWXpbzR6TtML4BwEqE1ckr7GabMKVwzpgXcVBXhTmmewzmDMBRHTgKB/ywqXMsJOWoRpYQ3mEaAisQlapEARPli8Ub8u1ogqmszdIh2KBtbhEj7SJRiqwu4ZlmQJwhdT7k4MKgU5OkODkXJGkkIBiOZ2VZsQP/q18Ho2LmBY95ou/Mm0I6JdVCfL0X3Ut1rh4E/6DnXJcBhDdbE2GYbAxalO+HVl8E1eCNtL4E2snHM1RH66GWxg5/Pbu43clumclT4wNyq7FtGe4GQ8x9OD+zX6yAK30CZsD6ailmh2L/75BmoGTkBic2CspVAVjqduxhMaw5+KeYroShviP1mFXewFOkesiEnnKR9giZbH65FgvLKm1O6nt1eqYfAlMAOatQZk7+HkleoMu2NzydaM=
 before_install:
-- echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg
-  > ~/.gradle/gradle.properties
+  - echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg > ~/.gradle/gradle.properties
 after_success:
-- "./buildscript/snapshot.sh"
+  - "./buildscript/snapshot.sh"
