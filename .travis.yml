@@ -26,7 +26,7 @@ env:
     - secure: SekawXcWGmF9sp7UZIbSn4t8UK+r5kBouU/zvNhvz+7jUb6amANN9uwuhFE+SgKVtF+WRH19aVtVH3WpFYnu1NdGEyPf0FCdcb+PHlk3V45JUCsaM/lRau6uMpTgeBCu8X3qc9X9BAzT29Lxjfi+ELmqd5wD4OUIxBQBuZ2O5/RqYHztWroonwRmnH5xX/ouftSxaUDYZzeRLCwZfmx88U1SQ9vO2YIoA+nev4nJPalgqXmo+TP76TIQkrAKBsOsc0oVJ1YDnoHaerjL2UTGQ/almpWjHwckDE/KwDWGbe05xdAMtP1+DyABhCwxF7xEoIc9oKTPJ4qDYiA7WkaAkMihlnZQ2VA2rznf80Z6BJrXYfVDhh9DhGSCVFZSUre0cG3Nrl5xYOEcHRRRn5TtXBm7wUjoApDpMEPM5qvkXM++IRC7/bWmChF3SJ1LSnhIK2Y6zutltKugi70h9/XAv1XHE9xbfOBB4YhJMOLoQTHz+8f85i9rHLvdKiUdUOvCgtBAkm8comrFYQhuORm/1vQlWMDjuWeksdo7gAEtnf9iD5DkS/yJdncWipWJTZ7ryv3g8su3NVM5TwIdMs1ZLZh+nnH5NU2rkGwQESQU7+K5CuOSCYC9Gn12GS4HPtspotIJnOCDkyl9ynSoIRXR0EZSt70hXAwYtMSsJMubF3w=
 
 before_install:
-  - GPG_TTY=$(tty) && export GPG_TTY; echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg > ~/.gradle/gradle.properties
+  - export GPG_TTY=$(tty) && echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg > ~/.gradle/gradle.properties
 
 after_success:
   - ./buildscript/snapshot.sh
