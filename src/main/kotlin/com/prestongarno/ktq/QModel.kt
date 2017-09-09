@@ -3,9 +3,7 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.adapters.FieldAdapter
 import kotlin.reflect.KClass
 
-open class QModel<out T : QSchemaType>(of: KClass<T>) {
-
-  protected val model: T = of.objectInstance!!
+open class QModel<out T : QSchemaType>(val model: T) {
 
   internal val fields = mutableListOf<FieldAdapter>()
 

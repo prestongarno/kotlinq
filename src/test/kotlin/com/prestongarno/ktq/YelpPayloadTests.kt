@@ -6,10 +6,10 @@ import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Coordinates
 import org.junit.Test
 
-class YelpPayloadTests {
-  @Test
-  fun assertSingleRequestCompiles() {
-    val sample = object : QModel<Business>(Business::class) {
+@Suppress("unused") class YelpPayloadTests {
+
+  @Test fun assertSingleRequestCompiles() {
+    val sample = object : QModel<Business>(Business) {
       val businessName by model.name.withDefault("FooBar Enterprises")
       val businessPhone by model.phone
     }
@@ -23,18 +23,17 @@ class YelpPayloadTests {
           """.trimMargin("|"))
   }
 
-  @Test
-  fun assertRequestCompilerTwo() {
+  @Test fun assertRequestCompilerTwo() {
 
-    val businessListModel = object : QModel<Businesses>(Businesses::class) {
+    val businessListModel = object : QModel<Businesses>(Businesses) {
 
       val amountOf by model.total
-      val nodes by model.business.init { object : QModel<Business>(Business::class) {
+      val nodes by model.business.init { object : QModel<Business>(Business) {
 
           val name by model.name.withDefault("")
           val displayPhonw by model.display_phone
 
-          val displayCoord by model.coordinates.init { object : QModel<Coordinates>(Coordinates::class) {
+          val displayCoord by model.coordinates.init { object : QModel<Coordinates>(Coordinates) {
               val lat by model.latitude;
               val long by model.longitude
             }

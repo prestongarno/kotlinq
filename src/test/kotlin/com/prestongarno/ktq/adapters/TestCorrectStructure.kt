@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.QModel
@@ -8,7 +10,7 @@ import com.prestongarno.ktq.yelp.Reviews
 import com.prestongarno.ktq.yelp.Review
 import org.junit.Test
 
-class BusinessQuery(searchTerm: String) : QModel<Query>(Query::class) {
+class BusinessQuery(searchTerm: String) : QModel<Query>(Query) {
   val result by model.search.config()
       .term(searchTerm)
       .limit(10)
@@ -19,24 +21,24 @@ class BusinessQuery(searchTerm: String) : QModel<Query>(Query::class) {
       .build { ReviewsHolder() }
 }
 
-class ReviewsHolder : QModel<Reviews>(Reviews::class) {
+class ReviewsHolder : QModel<Reviews>(Reviews) {
   val all by model.review
       .init { ReviewModel() }
 }
 
-class ReviewModel : QModel<Review>(Review::class) {
+class ReviewModel : QModel<Review>(Review) {
   val content by model.text
   val rating by model.rating
   val timePosted by model.time_created
 }
 
-class BusinessesNodesModel : QModel<Businesses>(Businesses::class) {
+class BusinessesNodesModel : QModel<Businesses>(Businesses) {
   val resultCount by model.total
   val resultsNodes by model.business
       .init { BusinessBasic() }
 }
 
-class BusinessBasic : QModel<Business>(Business::class) {
+class BusinessBasic : QModel<Business>(Business) {
   val name by model.name
   val phoneNumber by model.display_phone
   val directUrl by model.url

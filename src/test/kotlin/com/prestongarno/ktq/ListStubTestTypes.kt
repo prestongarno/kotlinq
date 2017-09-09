@@ -4,8 +4,7 @@ import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaType.QScalar
 
 /**
- * Example generated
- */
+ * Example generated Configuration */
 object Configuration : QSchemaType {
   val dependencies by QTypeList.configStub<ProjImpl, DependenciesArgs> { DependenciesArgs(it) }
 
@@ -25,13 +24,13 @@ object ProjImpl : Project {
   override val name: Stub<String> by QScalar.stub<String>()
 }
 
-class ConfigModel : QModel<Configuration>(Configuration::class) {
+class ConfigModel : QModel<Configuration>(Configuration) {
   val depends by model.dependencies
       .config()
       .first(20)
       .build { ProjectModel() }
 }
-class ProjectModel : QModel<ProjImpl>(ProjImpl::class)
+class ProjectModel : QModel<ProjImpl>(ProjImpl)
 
 fun main(args: Array<String>) {
   ConfigModel().depends

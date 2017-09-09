@@ -4,7 +4,6 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.QSchemaType.*
 import org.junit.Test
-import com.google.common.truth.StringSubject
 import com.google.common.truth.Truth
 
 interface URL {
@@ -49,17 +48,17 @@ object OtherUser : URL, Friendable, QSchemaType {
   }
 }
 
-class SimpleAddress(exactValue: String) : QModel<Location>(Location::class) {
+class SimpleAddress(exactValue: String) : QModel<Location>(Location) {
   val streetAddress = exactValue
   //val baz by model.city
 }
 
-class BasicUserInfo : QModel<OtherUser>(OtherUser::class) {
+class BasicUserInfo : QModel<OtherUser>(OtherUser) {
   val name by model.name
   val url by model.url
 }
 
-data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser::class) {
+data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser) {
   val username by model.name.withDefault("ageen")
   val url by model.url
 
