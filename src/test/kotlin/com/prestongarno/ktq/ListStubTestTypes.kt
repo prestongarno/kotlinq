@@ -1,11 +1,15 @@
 package com.prestongarno.ktq
-/*
 
+import com.prestongarno.ktq.QSchemaType.QTypeList
+import com.prestongarno.ktq.QSchemaType.QScalar
+
+/**
+ * Example generated
+ */
 object Configuration : QSchemaType {
-  val dependencies : ListInitStub<ProjImpl> = typeListStub<ProjImpl>()
+  val dependencies by QTypeList.configStub<ProjImpl, DependenciesArgs> { DependenciesArgs(it) }
 
-  class DependenciesArgs(args: TypeArgBuilder = TypeArgBuilder.create<Project, DependenciesArgs>())
-    : TypeArgBuilder by args {
+  class DependenciesArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
 
     fun first(value: Int) = apply { addArg("first", value) }
     fun after(value: String) = apply { addArg("after", value) }
@@ -18,15 +22,17 @@ interface Project : QSchemaType {
 }
 
 object ProjImpl : Project {
-  override val name: Stub<String> = stub()
+  override val name: Stub<String> by QScalar.stub<String>()
 }
 
 class ConfigModel : QModel<Configuration>(Configuration::class) {
   val depends by model.dependencies
-      .init { ProjectModel() }
+      .config()
+      .first(20)
+      .build { ProjectModel() }
 }
 class ProjectModel : QModel<ProjImpl>(ProjImpl::class)
 
 fun main(args: Array<String>) {
   ConfigModel().depends
-}*/
+}

@@ -13,7 +13,10 @@ internal class ScalarStubAdapter<T, out B: ArgBuilder>(
     QConfigStub<T, B>,
     ArgBuilder {
 
-  val value : T? = null
+  var value : T? = null
+  var default : T? = null
+
+  override fun withDefault(value: T) = apply { default = value }
 
   override fun config(): B = builderInit(ScalarStubAdapter<T, B>(fieldName, builderInit))
 
@@ -22,7 +25,8 @@ internal class ScalarStubAdapter<T, out B: ArgBuilder>(
     return apply { super.onProvideDelegate(inst) }
   }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value!!
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value?: default?:
+      throw IllegalStateException("property '${property.name}' was null")
 
   @Suppress("UNCHECKED_CAST") override fun <T> build() : Stub<T> = this as Stub<T>
 
