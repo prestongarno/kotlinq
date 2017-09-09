@@ -5,6 +5,7 @@ import com.prestongarno.ktq.internal.Grub
 
 // TODO This file and the entire API could use a bit of the DRY principle
 interface QSchemaType {
+
   object QScalar {
 
      fun <T> stub(): Grub<Stub<T>> = Grub { ScalarStubAdapter<T, ArgBuilder>(it, { it }) }
