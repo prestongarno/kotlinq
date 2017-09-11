@@ -10,6 +10,7 @@ internal abstract class FieldAdapter(val fieldName: String) {
   val args: MutableMap<String, Any> = HashMap(4, 0.75f)
 
   lateinit var property: KProperty<*>
+  var ID: String = ""
 
   fun onProvideDelegate(inst: QModel<*>) = inst.fields.add(this)
 
