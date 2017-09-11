@@ -42,20 +42,23 @@ import org.junit.Test
       }
     }
 
-    assertThat(businessListModel.toGraphql())
-        .isEqualTo("""
-          |{
-          |  total,
-          |  business{
-          |    name,
-          |    display_phone,
-          |    coordinates{
-          |      latitude,
-          |      longitude
-          |    }
-          |  }
-          |}
-          """.trimMargin("|"))
+    businessListModel
+
+    assertThat(
+        businessListModel.toGraphql())
+          .isEqualTo(""" |{
+            |  total,
+            |  business{
+            |    name,
+            |    display_phone,
+            |    coordinates{
+            |      latitude,
+            |      longitude
+            |    }
+            |  }
+            |}
+            """.trimMargin("|"))
+    businessListModel.toGraphql().out()
   }
 }
 
