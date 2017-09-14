@@ -1,22 +1,13 @@
 package com.prestongarno.ktq
 
 import com.google.common.truth.Truth
-import com.intellij.ui.mac.foundation.ID
 import com.prestongarno.ktq.compiler.QCompiler
-import com.prestongarno.ktq.compiler.asFile
 import com.prestongarno.ktq.yelp.Business
 import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Coordinates
-import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
-import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
-import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
-import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
-import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.preprocessor.mkdirsOrFail
-import org.junit.Before
 import org.junit.Test
 import java.io.File
-import java.nio.charset.Charset
 
 const val PACK: String = "com.ktq.yelp"
 
@@ -102,11 +93,20 @@ class YelpPayloadTests {
         .compile()
         .writeToFile(codegenOutputFile)
 
-    require(JvmCompile
-        .exe(codegenOutputFile, compileOutputDir).getFileTree().let {
-        it.size == 1 && it[0].name == "Taco.class"})
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+    compileOutputDir.getFileTree().apply {
+      require(size == 1 && this[0].name == "Taco.class")
+    }
+    val obj = KtqCompileWrapper(compileOutputDir).loadObject("$PACK.Taco")
 
+    Truth.assertThat(QModel<QSchemaType>(obj).allGraphQl())
+        .isEqualTo("""
+          |{
+          |  contents
+          |}
+          """.trimMargin("|"))
   }
+
   @Test
   fun gitHubIntegration() {
     QCompiler.initialize()
@@ -114,22 +114,14 @@ class YelpPayloadTests {
         .schema(File("./src/test/resources/graphql.schema.graphqls"))
         .compile()
         .writeToFile(codegenOutputFile)
-        .result { println(it) }
 
     require(JvmCompile
-        .exe(codegenOutputFile, compileOutputDir).exists())
+        .exe(codegenOutputFile, compileOutputDir))
 
   }
-
 
 
 }
 
 fun String.out() = println(this)
-
-fun File.getFileTree(): List<File> {
-  return this.walkTopDown().asSequence().distinct()
-      .filter { it.isFile }
-      .toList()
-}
 
