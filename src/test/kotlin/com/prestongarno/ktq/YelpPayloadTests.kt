@@ -6,8 +6,11 @@ import com.prestongarno.ktq.yelp.Business
 import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Coordinates
 import org.jetbrains.kotlin.preprocessor.mkdirsOrFail
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.test.fail
 
 const val PACK: String = "com.ktq.yelp"
 
@@ -80,48 +83,4 @@ class YelpPayloadTests {
             """.trimMargin("|"))
     businessListModel.toGraphql().out()
   }
-
-  @Test
-  fun generateSourceToPayload() {
-    QCompiler.initialize()
-        .packageName(PACK)
-        .schema("""
-          |type Taco {
-          |  contents: [String]
-          |}
-          """.trimMargin("|"))
-        .compile()
-        .writeToFile(codegenOutputFile)
-
-    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
-    compileOutputDir.getFileTree().apply {
-      require(size == 1 && this[0].name == "Taco.class")
-    }
-    val obj = KtqCompileWrapper(compileOutputDir).loadObject("$PACK.Taco")
-
-    Truth.assertThat(QModel<QSchemaType>(obj).allGraphQl())
-        .isEqualTo("""
-          |{
-          |  contents
-          |}
-          """.trimMargin("|"))
-  }
-
-  @Test
-  fun gitHubIntegration() {
-    QCompiler.initialize()
-        .packageName(PACK)
-        .schema(File("./src/test/resources/graphql.schema.graphqls"))
-        .compile()
-        .writeToFile(codegenOutputFile)
-
-    require(JvmCompile
-        .exe(codegenOutputFile, compileOutputDir))
-
-  }
-
-
 }
-
-fun String.out() = println(this)
-

@@ -1,8 +1,6 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.FieldAdapter
-import kotlin.reflect.KClass
-import kotlin.reflect.full.declaredMemberProperties
 
 open class QModel<out T : QSchemaType>(val model: T) {
 
@@ -15,12 +13,6 @@ open class QModel<out T : QSchemaType>(val model: T) {
         .indent(1)) + "\n}").prepend("{\n").indent(indentation)
   }
 
-  internal fun allGraphQl() : String {
-    model::class.declaredMemberProperties.map { it.call(model) as FieldAdapter }
-        .forEach { if(!fields.contains(it)) fields.add(it) }
-    return toGraphql()
-  }
-
 }
 
 fun String.indent(times: Int = 1): String =
@@ -28,3 +20,4 @@ fun String.indent(times: Int = 1): String =
         .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
 
 fun String.prepend(of: String): String = of + this
+

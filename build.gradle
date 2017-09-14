@@ -44,12 +44,13 @@ group = 'com.prestongarno.ktq'
 
 repositories {
   jcenter()
+  mavenLocal()
   maven {
     url 'https://dl.bintray.com/kotlin/kotlin-dev/'
   }
-  maven {
+/*  maven {
     url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/'
-  }
+  }*/
 }
 
 dependencies {
@@ -59,7 +60,6 @@ dependencies {
   testCompile 'junit:junit:4.12'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin-api', version: "$kotlin_version"
-  testCompile "org.jetbrains.kotlin:kotlin-daemon-client:1.1.4-3"
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: "$kotlin_version"
   testCompile "com.google.truth:truth:0.28"
   testCompile "com.prestongarno.ktq:ktq-gradle:0.2-SNAPSHOT"
