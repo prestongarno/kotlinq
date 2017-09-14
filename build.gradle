@@ -32,17 +32,21 @@ apply plugin: "com.jfrog.artifactory"
 
 def getVersion = { Project project ->
   if (project.hasProperty("release") &&
-          project.property("release") == "true")
+          project.property("release") == "true") {
     return "0.2"
-  else return "0.2-SNAPSHOT"
+  } else {
+    return "0.2-SNAPSHOT"
+  }
 }
 
 version = getVersion(rootProject)
 group = 'com.prestongarno.ktq'
 
 repositories {
-  mavenCentral()
   jcenter()
+  maven {
+    url 'https://dl.bintray.com/kotlin/kotlin-dev/'
+  }
   maven {
     url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/'
   }
@@ -51,9 +55,13 @@ repositories {
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
   compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+  testCompile gradleApi()
   testCompile 'junit:junit:4.12'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-  testCompile "com.google.truth:truth:0.35"
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin-api', version: "$kotlin_version"
+  testCompile "org.jetbrains.kotlin:kotlin-daemon-client:1.1.4-3"
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: "$kotlin_version"
+  testCompile "com.google.truth:truth:0.28"
   testCompile "com.prestongarno.ktq:ktq-gradle:0.2-SNAPSHOT"
 }
 compileKotlin {
@@ -101,7 +109,7 @@ jar {
   from sourceSets.main.output
   exclude '**/impl/**'
 }
-
+7
 task jarDoc(type: Jar) {
   doFirst { javadoc }
   from(javadoc.destinationDir)
@@ -218,16 +226,16 @@ artifactory {
   contextUrl = 'http://oss.jfrog.org/artifactory'
   publish {
     repository {
-      repoKey = 'oss-snapshot-local'   
-      username = BINTRAY_USER          
+      repoKey = 'oss-snapshot-local'
+      username = BINTRAY_USER
       password = JFROG_KEY
     }
     defaults {
-        publications ('mavenJava')
-        publishPom = true   
+      publications('mavenJava')
+      publishPom = true
     }
   }
   clientConfig.setIncludeEnvVars(false)
-  clientConfig.info.setBuildNumber('' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
-  clientConfig.timeout = 600 
+  clientConfig.info.setBuildNumber(
+          '' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
 }

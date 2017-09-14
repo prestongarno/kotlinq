@@ -1,0 +1,12 @@
+interface Food {
+  associatedCulture: Nation
+}
+
+type Nation {
+  name: String
+}
+
+# Test to make sure this fails for wrong type
+type Burrito      implements        Food {
+  associatedCulture: Int
+}
