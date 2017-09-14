@@ -44,13 +44,12 @@ group = 'com.prestongarno.ktq'
 
 repositories {
   jcenter()
-  mavenLocal()
   maven {
     url 'https://dl.bintray.com/kotlin/kotlin-dev/'
   }
-/*  maven {
+  maven {
     url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/'
-  }*/
+  }
 }
 
 dependencies {
