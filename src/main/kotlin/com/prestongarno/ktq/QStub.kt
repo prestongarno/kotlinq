@@ -4,8 +4,7 @@ import kotlin.reflect.KProperty
 
 /**
  * Simply a marker interface to group together the different
- * stubbable types for the StubMapper delegate to restrict delegation to
- */
+ * stubbable types for the StubMapper delegate to restrict delegation to */
 interface SchemaStub
 
 interface InitStub<T : QSchemaType> : SchemaStub {
@@ -21,6 +20,7 @@ interface QTypeConfigStub<T : QSchemaType, out A : TypeArgBuilder> : SchemaStub 
 }
 
 interface Stub<T> : SchemaStub {
+  fun withDefault(value: T): Stub<T>
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
   operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T>
 }

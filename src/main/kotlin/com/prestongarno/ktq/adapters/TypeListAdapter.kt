@@ -25,7 +25,7 @@ internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeList
 
   override fun config(): B = builderInit(TypeListAdapter<I, P, B>(fieldName, builderInit))
 
-  override fun getModel(): QModel<*> = init()
+  override fun getModel(): QModel<I> = init()
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeListStub<U, T>
       = apply { this.init = init as () -> P } as TypeListStub<U, T>

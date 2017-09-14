@@ -17,11 +17,7 @@ import kotlin.reflect.KProperty
  * which, when applied a string, produces the correct schemastub.  When delegated to by schemastub types,
  * on `getValue` for the schemastub it simply invokes the function with the name of the property that it's
  * delegating to. This way, the property name can be passed to the delegate/schemastub type without having
- * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations
- *
- * TODO() maybe this should just pass the entire property to the stub? This isn't needed now, but might
- * be useful in the future
- */
+ * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 class Grub<out T : SchemaStub>(private val toInit: (String) -> T) {
   operator fun getValue(inst: QSchemaType, property: KProperty<*>) : T = toInit(property.name)
 }

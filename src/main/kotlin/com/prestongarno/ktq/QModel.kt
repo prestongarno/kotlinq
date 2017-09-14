@@ -1,15 +1,12 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.FieldAdapter
-import kotlin.reflect.KClass
 
-abstract class QModel<out T : QSchemaType>(of: KClass<T>) {
-  protected val model: T = of.objectInstance!!
+open class QModel<out T : QSchemaType>(val model: T) {
 
   internal val fields = mutableListOf<FieldAdapter>()
-  override fun toString(): String {
-    return this.toGraphql(0)
-  }
+
+  override fun toString() = this.toGraphql()
 
   fun toGraphql(indentation: Int = 0): String {
     return ((fields.joinToString(separator = ",\n") { it.toRawPayload() }
@@ -23,3 +20,4 @@ fun String.indent(times: Int = 1): String =
         .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
 
 fun String.prepend(of: String): String = of + this
+

@@ -1,15 +1,16 @@
 package com.prestongarno.ktq.adapters
 
+import com.prestongarno.ktq.Payload
 import com.prestongarno.ktq.QInput
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.indent
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
-internal abstract class FieldAdapter(val fieldName: String) {
+internal abstract class FieldAdapter(val fieldName: String) : Payload {
   val args: MutableMap<String, Any> = HashMap(4, 0.75f)
 
   lateinit var property: KProperty<*>
+  var ID: String = ""
 
   fun onProvideDelegate(inst: QModel<*>) = inst.fields.add(this)
 

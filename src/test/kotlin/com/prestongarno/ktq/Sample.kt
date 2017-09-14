@@ -4,6 +4,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.QSchemaType.*
 import org.junit.Test
+import com.google.common.truth.Truth
 
 interface URL {
   val url: Stub<String>
@@ -25,7 +26,7 @@ interface Friendable {
 }
 
 object Location : QSchemaType {
-   val latitude: Stub<Int> by QScalar.stub()
+  val latitude: Stub<Int> by QScalar.stub()
   val longitude: Stub<Int> by QScalar.stub()
   val streetAddress: Stub<String> by QScalar.stub()
   val city: Stub<String> by QScalar.stub()
@@ -35,7 +36,7 @@ object Location : QSchemaType {
 
 object OtherUser : URL, Friendable, QSchemaType {
   override val friendCount by QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
-   val name by QScalar.stub<String>()
+  val name by QScalar.stub<String>()
   val enemies by QType.stub<OtherUser>()
   override val friends by QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
   val address by QType.configStub<Location, AddressArgs> { AddressArgs(it) }
@@ -47,18 +48,18 @@ object OtherUser : URL, Friendable, QSchemaType {
   }
 }
 
-class SimpleAddress(exactValue: String) : QModel<Location>(Location::class) {
+class SimpleAddress(exactValue: String) : QModel<Location>(Location) {
   val streetAddress = exactValue
   //val baz by model.city
 }
 
-class BasicUserInfo : QModel<OtherUser>(OtherUser::class) {
+class BasicUserInfo : QModel<OtherUser>(OtherUser) {
   val name by model.name
   val url by model.url
 }
 
-data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser::class) {
-  val username by model.name
+data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser) {
+  val username by model.name.withDefault("ageen")
   val url by model.url
 
   val enemies: BasicUserInfo by model.enemies
@@ -66,7 +67,7 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
 
   val address: SimpleAddress by model.address.config()
       .language(lang)
-      .build { SimpleAddress("666 Hell Lane") }
+      .build { SimpleAddress("7777 HelloWorld Lane") }
 
   val friends by model.friends.config()
       .first(limitOfFriends)
@@ -74,12 +75,47 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
 }
 
 class TestSample {
-  @Test
-  fun testCorrectTypes() {
+
+
+  @Test fun testToGraphQlValid() {
+
     val foobaz = MyUser(1000, "ENGLISH")
-    val foobar = MyUser(-69, "CHINESE")
-    println(foobaz.toGraphql())
-    println(foobar.toGraphql())
+    Truth.assertThat(foobaz.toGraphql())
+        .isEqualTo("""
+          |{
+          |  name,
+          |  url,
+          |  enemies{
+          |    name,
+          |    url
+          |  },
+          |  address(language: "ENGLISH"),
+          |  friends(first: 1000){
+          |    name,
+          |    url
+          |  }
+          |}
+        """.trimMargin())
   }
 
+  @Test fun testGraphQlWithArguments() {
+
+    val foobaz = MyUser(6565, "FR")
+    Truth.assertThat(foobaz.toGraphql())
+        .isEqualTo("""
+          |{
+          |  name,
+          |  url,
+          |  enemies{
+          |    name,
+          |    url
+          |  },
+          |  address(language: "FR"),
+          |  friends(first: 6565){
+          |    name,
+          |    url
+          |  }
+          |}
+        """.trimMargin())
+  }
 }
