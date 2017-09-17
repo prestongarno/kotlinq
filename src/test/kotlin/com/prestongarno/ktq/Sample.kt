@@ -5,16 +5,17 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.QSchemaType.*
 import org.junit.Test
 import com.google.common.truth.Truth
-import com.prestongarno.ktq.adapters.custom.StringScalar
+import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
+import com.prestongarno.ktq.adapters.custom.StringScalarMapper
+import java.io.File
 
 interface UniformResourceLocatable {
-  val url: CustomInitStub<URL>
+  val url: CustomScalarInitStub<URL>
 }
 
 object URL: CustomScalar
 
 interface Friendable {
-
   val friendCount: QConfigStub<Int, Friendable.FriendCountArgs>
   val friends: ListConfigType<OtherUser, FriendsArgs>
 
@@ -44,7 +45,13 @@ object OtherUser : UniformResourceLocatable, Friendable, QSchemaType {
   override val friends by QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
   val address by QType.configStub<Location, AddressArgs> { AddressArgs(it) }
   override val url by QCustomScalar.stub<URL>()
+  val relatedUrls by QCustomScalarList.stub<URL>()
+  val friendsUrls: CustomScalarListConfigStub<URL, FriendsUrlsArgs> by QCustomScalarList.configStub { FriendsUrlsArgs(it) }
 
+  class FriendsUrlsArgs(args: CustomScalarListArgBuilder) : CustomScalarListArgBuilder by args{
+    fun shortUrls(value: Boolean) = apply { addArg("shortUrls", value) }
+
+  }
   class AddressArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
 
     fun language(value: String) = apply { addArg("language", value) }
@@ -57,12 +64,20 @@ class SimpleAddress(exactValue: String) : QModel<Location>(Location) {
 
 class BasicUserInfo : QModel<OtherUser>(OtherUser) {
   val name by model.name
-  val url by model.url.init(StringScalar{it.toInt()})
+  val url by model.url.init(StringScalarMapper {it.toInt()})
+  val relatedLinks by model.relatedUrls.init(StringScalarListMapper { it.toInt() })
+  val friendsUrls by model.friendsUrls.config()
+      .shortUrls(true)
+      .build(StringScalarListMapper {
+        File(it)
+            .toURI()
+            .toURL()!!
+      })
 }
 
 data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser) {
   val username by model.name.withDefault("ageen")
-  val url by model.url.init(StringScalar{it})
+  val url by model.url.init(StringScalarMapper {it})
 
   val enemies: BasicUserInfo by model.enemies
       .init(::BasicUserInfo)
@@ -77,8 +92,6 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
 }
 
 class TestSample {
-
-
   @Test fun testToGraphQlValid() {
     val foobaz = MyUser(1000, "ENGLISH")
     Truth.assertThat(foobaz.toGraphql())
@@ -88,12 +101,16 @@ class TestSample {
           |  url,
           |  enemies{
           |    name,
-          |    url
+          |    url,
+          |    relatedUrls,
+          |    friendsUrls(shortUrls: true)
           |  },
           |  address(language: "ENGLISH"),
           |  friends(first: 1000){
           |    name,
-          |    url
+          |    url,
+          |    relatedUrls,
+          |    friendsUrls(shortUrls: true)
           |  }
           |}
         """.trimMargin())
@@ -109,12 +126,16 @@ class TestSample {
           |  url,
           |  enemies{
           |    name,
-          |    url
+          |    url,
+          |    relatedUrls,
+          |    friendsUrls(shortUrls: true)
           |  },
           |  address(language: "FR"),
           |  friends(first: 6565){
           |    name,
-          |    url
+          |    url,
+          |    relatedUrls,
+          |    friendsUrls(shortUrls: true)
           |  }
           |}
         """.trimMargin())

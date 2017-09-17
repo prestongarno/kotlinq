@@ -1,33 +1,38 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.*
-import com.prestongarno.ktq.adapters.custom.ScalarAdapter
+import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import kotlin.reflect.KProperty
 
-internal class CustomScalarAdapter<E: CustomScalar, I: ScalarAdapter<T>, T>(
-    fieldName: String
+internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, out B: CustomScalarArgBuilder>(
+    fieldName: String, val builderInit: (CustomScalarArgBuilder) -> B
 ) : FieldAdapter(fieldName),
-    CustomInitStub<E>,
-    CustomStub<I, T> {
+    CustomScalarArgBuilder,
+    CustomScalarConfigStub<E, B>,
+    CustomScalarInitStub<E>,
+    CustomStub<P, Q> {
 
-  internal lateinit var init: ScalarAdapter<T>
+  override fun config(): B = builderInit(CustomScalarAdapter<E, P, Q, B>(fieldName, builderInit))
 
-  @Suppress("UNCHECKED_CAST") override fun <U : ScalarAdapter<A>, A> init(of: U): CustomStub<U, A> {
-    this.init = of as ScalarAdapter<T>
-    return this as CustomStub<U, A>
-  }
+  internal lateinit var adapter: QScalarMapper<Q>
 
   override fun addArg(name: String, value: Any): Payload = apply { this.args.put(name, value) }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): T = init.value
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = adapter.value
 
-  override fun toRawPayload(indentation: Int): String = fieldName
-
-  override fun toString() = toRawPayload()
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomStub<I, T> {
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomStub<P, Q> {
     inst.fields.add(this)
     return this
+  }
+
+  override fun <U : QScalarMapper<T>, T> build(init: U): CustomStub<U, T> {
+    this.adapter = adapter
+    @Suppress("UNCHECKED_CAST") return this as CustomStub<U, T>
+  }
+
+  @Suppress("UNCHECKED_CAST") override fun <U : QScalarMapper<A>, A> init(of: U): CustomStub<U, A> {
+    this.adapter = of as QScalarMapper<Q>
+    return this as CustomStub<U, A>
   }
 
 }
