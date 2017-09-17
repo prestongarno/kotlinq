@@ -13,39 +13,34 @@ import org.jetbrains.kotlin.config.Services
 import java.io.*
 import java.net.URLClassLoader
 import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.declaredMemberProperties
 
 object JvmCompile {
 
-  var defaultCompArgs: Map<String, String> = mutableMapOf<String, String>(
-      Pair("", "-no-stdlib"),
-      Pair("", "-no-reflect"),
-      Pair("-Xskip-runtime-version-check=true", ""),
-      Pair("-classpath", System.getProperty("java.class.path")
+  fun exe(input: File, output: File): Boolean = K2JVMCompiler().run {
+    val args = K2JVMCompilerArguments().apply {
+      freeArgs = listOf(input.absolutePath)
+      loadBuiltInsFromDependencies = true
+      destination = output.absolutePath
+      classpath = System.getProperty("java.class.path")
           .split(System.getProperty("path.separator"))
           .filter {
             it.asFile().exists() && it.asFile().canRead()
-          }.joinToString(":"))
-  )
-
-  fun exe(input: File, output: File): Boolean = K2JVMCompiler().run {
-    val args = K2JVMCompilerArguments().apply {
-      this.freeArgs = listOf(input.absolutePath)
-      loadBuiltInsFromDependencies = true
-      destination = output.absolutePath
-      classpath = defaultCompArgs["-classpath"]!!
+          }.joinToString(":")
+      noStdlib = true
+      noReflect = true
+      skipRuntimeVersionCheck = true
       reportPerf = true
     }
     output.deleteOnExit()
-    this.execImpl(PrintingMessageCollector(java.io.PrintStream(File("/dev/null")),
-        MessageRenderer.WITHOUT_PATHS, true),
+    execImpl(
+        PrintingMessageCollector(
+            System.out, //java.io.PrintStream(File("/dev/null")),
+            MessageRenderer.WITHOUT_PATHS, true),
         Services.EMPTY,
         args)
   }.code == 0
-
-  fun load(output: File): ClassLoader = URLClassLoader(
-      listOf(output.toURI().toURL()).toTypedArray(),
-      this::class.java.classLoader)
 }
 
 fun File.getFileTree(): List<File> {
@@ -56,7 +51,9 @@ fun File.getFileTree(): List<File> {
 
 class KtqCompileWrapper(private val root: File) {
 
-  private val loader = JvmCompile.load(root)
+  val loader = URLClassLoader(
+      listOf(root.toURI().toURL()).toTypedArray(),
+      this::class.java.classLoader)
 
   @Suppress("UNCHECKED_CAST") fun loadObject(name: String): QSchemaType =
       (loader.loadClass(name).kotlin as KClass<QSchemaType>).objectInstance!!

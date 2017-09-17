@@ -22,4 +22,4 @@ before_install:
   - echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg > ~/.gradle/gradle.properties
 
 after_success:
-  - ./buildscript/snapshot.sh
+  - ./.buildscript/snapshot.sh

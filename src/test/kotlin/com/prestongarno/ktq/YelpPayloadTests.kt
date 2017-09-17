@@ -18,16 +18,11 @@ const val PACK: String = "com.ktq.yelp"
 class YelpPayloadTests {
 
 
-  lateinit var compileOutputDir: File
-  lateinit var codegenOutputFile: File
-
-  init {
-    compileOutputDir = File("${System.getProperty("java.io.tmpdir")}/ktq-gradle-temp/").apply {
-      mkdirsOrFail()
-      deleteOnExit()
-    }
-    codegenOutputFile = File(compileOutputDir.parent.plus("/KtqKotlinPoet.kt"))
+  var compileOutputDir: File = File("${System.getProperty("java.io.tmpdir")}/ktq-gradle-temp/").apply {
+    mkdirsOrFail()
+    deleteOnExit()
   }
+  var codegenOutputFile: File = File(compileOutputDir.parent.plus("/KtqKotlinPoet.kt"))
 
   @Test
   fun assertSingleRequestCompiles() {
@@ -81,6 +76,5 @@ class YelpPayloadTests {
             |  }
             |}
             """.trimMargin("|"))
-    businessListModel.toGraphql().out()
   }
 }

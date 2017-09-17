@@ -1,6 +1,6 @@
 package com.prestongarno.ktq
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.compiler.QCompiler
 import org.jetbrains.kotlin.preprocessor.mkdirsOrFail
 import org.junit.After
@@ -9,6 +9,9 @@ import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.util.concurrent.ThreadLocalRandom
+import java.util.function.Consumer
+import kotlin.reflect.full.superclasses
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class IntegrationTest {
@@ -44,7 +47,7 @@ class IntegrationTest {
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
     val obj = KtqCompileWrapper(compileOutputDir).loadObject("$PACK.Taco")
 
-    Truth.assertThat(QModel(obj).allGraphQl())
+    assertThat(QModel(obj).allGraphQl())
         .isEqualTo("""
           |{
           |  contents
@@ -70,7 +73,7 @@ class IntegrationTest {
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
     val obj = KtqCompileWrapper(compileOutputDir).loadObject("$PACK.Taco")
 
-    Truth.assertThat(QModel(obj).allGraphQl())
+    assertThat(QModel(obj).allGraphQl())
         .isEqualTo("""
           |{
           |  contents,
@@ -98,7 +101,7 @@ class IntegrationTest {
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
     val obj = KtqCompileWrapper(compileOutputDir).loadObject("$PACK.Taco")
 
-    Truth.assertThat(QModel(obj).mockGraphql(listOf("weight")))
+    assertThat(QModel(obj).mockGraphql(listOf("weight")))
         .isEqualTo("""
           |{
           |  weight
@@ -122,7 +125,7 @@ class IntegrationTest {
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
     val obj = KtqCompileWrapper(compileOutputDir).loadObject("$PACK.Burger")
 
-    Truth.assertThat(QModel(obj).mockInputGraphql("addToppingMutation",
+    assertThat(QModel(obj).mockInputGraphql("addToppingMutation",
         mapOf(Pair("selection", listOf("burger", "lettuce", "tomato", "ketchup", "pickles")))).toGraphql())
         .isEqualTo("""
           |{
@@ -183,8 +186,8 @@ class IntegrationTest {
        val user = loadObject("$PACK.User")
        val actor = loadInterface("$PACK.Actor")
 
-       Truth.assertThat(user::class.isInstance(actor))
-       Truth.assertThat(QModel(user).allGraphQl())
+       assertTrue(user::class.superclasses.contains(actor))
+       assertThat(QModel(user).allGraphQl())
            .isEqualTo("""
           |{
           |  email,
@@ -227,10 +230,10 @@ class IntegrationTest {
       val actor = loadInterface("$PACK.Actor")
       val node = loadInterface("$PACK.Node")
 
-      Truth.assertThat(user::class.isInstance(actor))
-      Truth.assertThat(user::class.isInstance(node))
+      assertTrue(user::class.superclasses.contains(actor))
+      assertTrue(user::class.superclasses.contains(node))
 
-      Truth.assertThat(QModel(user).allGraphQl())
+      assertThat(QModel(user).allGraphQl())
           .isEqualTo(("""
             |{
             |  email,
@@ -239,6 +242,21 @@ class IntegrationTest {
             |}
             """.trimMargin("|")))
     }
+  }
+
+  @Test fun customScalarTest() {
+    QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |type Foo {
+          |  url: UniformResourceLocatable
+          |}
+          |
+          |
+          """.trimMargin("|"))
+        .compile()
+        .result { println(it) }
   }
 
   @Ignore @Test fun gitHubIntegration() {
@@ -250,9 +268,5 @@ class IntegrationTest {
 
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
   }
-
-
 }
-
-fun String.out() = println(this)
 

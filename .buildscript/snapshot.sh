@@ -1,4 +1,5 @@
 #!/bin/bash
 if [ "$TRAVIS_BRANCH" == "master" ]; then
-  ../gradlew artifactoryPublish --info
+  echo "deploying snapshot build to oss.jfrog.org..."
+  bash ./gradlew artifactoryPublish --info
 fi
