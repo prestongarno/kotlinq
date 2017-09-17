@@ -1,6 +1,6 @@
 package com.prestongarno.ktq
 
-public interface Payload {
+interface Payload {
   fun addArg(name: String, value: Any) : Payload
 }
 

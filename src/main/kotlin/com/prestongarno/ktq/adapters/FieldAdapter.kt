@@ -16,9 +16,8 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
 
   /**
    * I try to make my code as unreadable as possible
-   * ... this still works though somehow. Expression-based languages will be the end of me
-   */
-  fun toRawPayload(indentation: Int = 1): String =
+   * ... this still works though somehow. Expression-based languages will be the end of me */
+  open fun toRawPayload(indentation: Int = 1): String =
       fieldName +
           (if (args.isNotEmpty()) {
             args.map {

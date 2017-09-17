@@ -243,6 +243,21 @@ class IntegrationTest {
     }
   }
 
+  @Test fun customScalarTest() {
+    QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |type Foo {
+          |  url: UniformResourceLocatable
+          |}
+          |
+          |
+          """.trimMargin("|"))
+        .compile()
+        .result { println(it) }
+  }
+
   @Ignore @Test fun gitHubIntegration() {
     QCompiler.initialize()
         .packageName(PACK)
@@ -252,7 +267,5 @@ class IntegrationTest {
 
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
   }
-
-
 }
 

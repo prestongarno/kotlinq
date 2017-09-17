@@ -5,10 +5,13 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.QSchemaType.*
 import org.junit.Test
 import com.google.common.truth.Truth
+import com.prestongarno.ktq.adapters.custom.StringScalar
 
-interface URL {
-  val url: Stub<String>
+interface UniformResourceLocatable {
+  val url: CustomInitStub<URL>
 }
+
+object URL: CustomScalar
 
 interface Friendable {
 
@@ -34,13 +37,13 @@ object Location : QSchemaType {
   val zip: Stub<Int> by QScalar.stub()
 }
 
-object OtherUser : URL, Friendable, QSchemaType {
+object OtherUser : UniformResourceLocatable, Friendable, QSchemaType {
   override val friendCount by QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
   val name by QScalar.stub<String>()
   val enemies by QType.stub<OtherUser>()
   override val friends by QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
   val address by QType.configStub<Location, AddressArgs> { AddressArgs(it) }
-  override val url by QScalar.stub<String>()
+  override val url by QCustomScalar.stub<URL>()
 
   class AddressArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
 
@@ -50,17 +53,16 @@ object OtherUser : URL, Friendable, QSchemaType {
 
 class SimpleAddress(exactValue: String) : QModel<Location>(Location) {
   val streetAddress = exactValue
-  //val baz by model.city
 }
 
 class BasicUserInfo : QModel<OtherUser>(OtherUser) {
   val name by model.name
-  val url by model.url
+  val url by model.url.init(StringScalar{it.toInt()})
 }
 
 data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser) {
   val username by model.name.withDefault("ageen")
-  val url by model.url
+  val url by model.url.init(StringScalar{it})
 
   val enemies: BasicUserInfo by model.enemies
       .init(::BasicUserInfo)
@@ -78,7 +80,6 @@ class TestSample {
 
 
   @Test fun testToGraphQlValid() {
-
     val foobaz = MyUser(1000, "ENGLISH")
     Truth.assertThat(foobaz.toGraphql())
         .isEqualTo("""

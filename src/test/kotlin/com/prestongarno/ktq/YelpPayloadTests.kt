@@ -81,6 +81,5 @@ class YelpPayloadTests {
             |  }
             |}
             """.trimMargin("|"))
-    businessListModel.toGraphql().out()
   }
 }

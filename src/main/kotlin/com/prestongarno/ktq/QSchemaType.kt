@@ -1,6 +1,7 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.*
+import com.prestongarno.ktq.adapters.custom.ScalarAdapter
 import com.prestongarno.ktq.internal.Grub
 
 /**
@@ -11,13 +12,13 @@ interface QSchemaType {
 
   object QScalar {
      fun <T> stub(): Grub<Stub<T>> = Grub { ScalarStubAdapter<T, ArgBuilder>(it, { it }) }
-    /**
-     * Gets a nullable stub. Note that there are no nullable stubs for types, because we get passed a function
-     * which returns the type, so only the fields can be null */
-    fun <T> nullableStub(): Grub<NullableStub<T>> = Grub { NullableStubAdapter<T, ArgBuilder>(it, { it }) }
 
      fun <T : Any, A : ArgBuilder> configStub(arginit: (ArgBuilder) -> A): Grub<QConfigStub<T, A>>
         = Grub { ScalarStubAdapter<T, A>(it, arginit) }
+  }
+
+  object QCustomScalar {
+    fun <T: CustomScalar> stub(): Grub<CustomInitStub<T>> = Grub { CustomScalarAdapter<T, ScalarAdapter<Any>, Any>(it) }
   }
 
   object QType {
@@ -43,3 +44,4 @@ interface QSchemaType {
   }
 }
 
+interface CustomScalar : QSchemaType

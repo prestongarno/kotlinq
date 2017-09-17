@@ -1,5 +1,6 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.adapters.custom.ScalarAdapter
 import kotlin.reflect.KProperty
 
 /**
@@ -9,6 +10,15 @@ interface SchemaStub
 
 interface InitStub<T : QSchemaType> : SchemaStub {
   fun <U : QModel<T>> init(of: () -> U): TypeStub<U, T>
+}
+
+interface CustomInitStub<T: CustomScalar> : SchemaStub {
+  fun <U: ScalarAdapter<A>, A> init(of: U): CustomStub<U, A>
+}
+
+interface CustomStub<U: ScalarAdapter<T>, T> : SchemaStub {
+  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
+  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomStub<U, T>
 }
 
 interface QConfigStub<T, out A : ArgBuilder> : SchemaStub {
