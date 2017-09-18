@@ -1,6 +1,12 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.*
+import com.prestongarno.ktq.CustomScalar
+import com.prestongarno.ktq.CustomScalarListArgBuilder
+import com.prestongarno.ktq.CustomScalarListConfigStub
+import com.prestongarno.ktq.CustomScalarListInitStub
+import com.prestongarno.ktq.CustomScalarListStub
+import com.prestongarno.ktq.Payload
+import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import kotlin.reflect.KProperty
 

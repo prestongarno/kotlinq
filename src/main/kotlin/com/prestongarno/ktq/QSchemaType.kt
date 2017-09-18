@@ -1,6 +1,11 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.*
+import com.prestongarno.ktq.adapters.CustomScalarAdapter
+import com.prestongarno.ktq.adapters.CustomScalarListAdapter
+import com.prestongarno.ktq.adapters.ScalarListAdapter
+import com.prestongarno.ktq.adapters.ScalarStubAdapter
+import com.prestongarno.ktq.adapters.TypeListAdapter
+import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.internal.Grub
@@ -161,7 +166,6 @@ interface QSchemaType {
     ): Grub<CustomScalarListConfigStub<T, A>> =
         Grub { CustomScalarListAdapter<T, QScalarListMapper<T>, T, A>(it, arginit) }
   }
-
 }
 
 /**

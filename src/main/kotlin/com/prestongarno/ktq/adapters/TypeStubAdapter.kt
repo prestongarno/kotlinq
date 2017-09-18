@@ -1,6 +1,11 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.*
+import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QTypeConfigStub
+import com.prestongarno.ktq.TypeArgBuilder
+import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 

@@ -8,7 +8,6 @@ import com.prestongarno.ktq.TypeListArgBuilder
 import com.prestongarno.ktq.TypeListStub
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.declaredMemberProperties
 
 internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
     fieldName : String,
