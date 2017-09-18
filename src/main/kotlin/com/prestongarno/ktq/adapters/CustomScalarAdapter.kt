@@ -22,8 +22,10 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
 
   override fun accept(result: Any?) {
     when (adapter) {
-      is InputStreamScalarMapper<*> -> (adapter as InputStreamScalarMapper).rawValue = "$result".byteInputStream()
-      is StringScalarMapper<*> -> (adapter as StringScalarMapper).rawValue = "$result"
+      is InputStreamScalarMapper<*> -> (adapter as InputStreamScalarMapper)
+          .rawValue = "${result?:""}".byteInputStream()
+      is StringScalarMapper<*> -> (adapter as StringScalarMapper)
+          .rawValue = "${result?:""}"
     }
   }
 
@@ -40,14 +42,10 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
     return this
   }
 
-  override fun <U : QScalarMapper<T>, T> build(init: U): CustomStub<U, T> {
-    this.adapter = adapter
-    @Suppress("UNCHECKED_CAST") return this as CustomStub<U, T>
-  }
+  override fun <U : QScalarMapper<A>, A> init(of: U): CustomStub<U, A> = this.build(of)
 
-  @Suppress("UNCHECKED_CAST") override fun <U : QScalarMapper<A>, A> init(of: U): CustomStub<U, A> {
-    this.adapter = of as QScalarMapper<Q>
-    return this as CustomStub<U, A>
+  @Suppress("UNCHECKED_CAST") override fun <U : QScalarMapper<T>, T> build(init: U): CustomStub<U, T> {
+    this.adapter = init as QScalarMapper<Q>
+    return this as CustomStub<U, T>
   }
-
 }

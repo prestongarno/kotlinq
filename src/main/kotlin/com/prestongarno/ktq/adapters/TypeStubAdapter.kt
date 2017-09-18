@@ -1,5 +1,6 @@
 package com.prestongarno.ktq.adapters
 
+import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
@@ -19,8 +20,11 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     QTypeConfigStub<I, B>,
     TypeArgBuilder,
     ModelProvider {
+
   override fun accept(result: Any?) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    if(result is JsonObject)
+      this.result.fields.forEach {
+        it.accept(result[it.fieldName]) }
   }
 
   lateinit var result: P

@@ -7,7 +7,6 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.typedListValueFrom
 import kotlin.reflect.KProperty
 
-
 internal class ScalarListAdapter<I, out B : ListArgBuilder>(
     fieldName: String,
     val builderInit: (ListArgBuilder) -> B

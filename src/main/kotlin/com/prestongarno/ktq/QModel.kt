@@ -29,6 +29,8 @@ open class QModel<out T : QSchemaType>(val model: T) {
   }
 
   internal fun onResponse(input: String) = onResponse(input.byteInputStream())
+
+  internal fun accept(input: JsonObject) = this.fields.forEach { it.accept(input[it.fieldName]) }
 }
 
 fun String.indent(times: Int = 1): String =
