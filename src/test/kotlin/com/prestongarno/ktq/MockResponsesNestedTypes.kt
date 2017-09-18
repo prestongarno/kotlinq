@@ -68,13 +68,15 @@ class MockResponsesNestedTypes {
       val friendList by model.friends
           .init { BasicUserModel() }
     }
+
     assertThat(myUser.toGraphql())
         .isEqualTo("""
           |{
           |  name,
           |  friends{
           |    name,
-          |    age
+          |    age,
+          |    isHandicapped
           |  }
           |}
           """.trimMargin("|"))
