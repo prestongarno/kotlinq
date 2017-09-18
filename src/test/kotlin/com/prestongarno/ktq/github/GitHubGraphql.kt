@@ -3,6 +3,14 @@
 package com.prestongarno.ktq.github
 
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.CustomScalar
+import com.prestongarno.ktq.CustomScalarArgBuilder
+import com.prestongarno.ktq.CustomScalarConfigStub
+import com.prestongarno.ktq.CustomScalarInitStub
+import com.prestongarno.ktq.CustomScalarListArgBuilder
+import com.prestongarno.ktq.CustomScalarListConfigStub
+import com.prestongarno.ktq.CustomScalarListInitStub
+import com.prestongarno.ktq.CustomScalarListStub
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListConfigType
@@ -11,6 +19,8 @@ import com.prestongarno.ktq.ListStub
 import com.prestongarno.ktq.QConfigStub
 import com.prestongarno.ktq.QInput
 import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QSchemaType.QCustomScalar
+import com.prestongarno.ktq.QSchemaType.QCustomScalarList
 import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QScalarList
 import com.prestongarno.ktq.QSchemaType.QType
@@ -20,9 +30,9 @@ import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.TypeArgBuilder
 import com.prestongarno.ktq.TypeListArgBuilder
 
-abstract class BaseAvatarUrlArgs(args: ArgBuilder) : ArgBuilder by args
+abstract class BaseAvatarUrlArgs(args: CustomScalarArgBuilder) : CustomScalarArgBuilder by args
 
-data class AcceptTopicSuggestionInput(private val repositoryId: String,
+data class AcceptTopicSuggestionInput(private val repositoryId: ID,
     private val name: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -35,16 +45,16 @@ object AcceptTopicSuggestionPayload : QSchemaType {
 }
 
 interface Actor : QSchemaType {
-  val avatarUrl: QConfigStub<URI, BaseAvatarUrlArgs>
+  val avatarUrl: CustomScalarConfigStub<URI, BaseAvatarUrlArgs>
 
   val login: Stub<String>
 
-  val resourcePath: Stub<URI>
+  val resourcePath: CustomScalarInitStub<URI>
 
-  val url: Stub<URI>
+  val url: CustomScalarInitStub<URI>
 }
 
-data class AddCommentInput(private val subjectId: String, private val body: String) : QInput {
+data class AddCommentInput(private val subjectId: ID, private val body: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -59,13 +69,13 @@ object AddCommentPayload : QSchemaType {
   val timelineEdge: InitStub<IssueTimelineItemEdge> by QType.stub()
 }
 
-data class AddProjectCardInput(private val projectColumnId: String) : QInput {
+data class AddProjectCardInput(private val projectColumnId: ID) : QInput {
   private var clientMutationId: String? = null
-  private var contentId: String? = null
+  private var contentId: ID? = null
   private var note: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 
-  fun contentId(model: String) = apply { contentId = model }
+  fun contentId(model: ID) = apply { contentId = model }
 
   fun note(model: String) = apply { note = model }
 }
@@ -78,7 +88,7 @@ object AddProjectCardPayload : QSchemaType {
   val projectColumn: InitStub<Project> by QType.stub()
 }
 
-data class AddProjectColumnInput(private val projectId: String, private val name: String) : QInput {
+data class AddProjectColumnInput(private val projectId: ID, private val name: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -91,13 +101,13 @@ object AddProjectColumnPayload : QSchemaType {
   val project: InitStub<Project> by QType.stub()
 }
 
-data class AddPullRequestReviewCommentInput(private val pullRequestReviewId: String,
+data class AddPullRequestReviewCommentInput(private val pullRequestReviewId: ID,
     private val body: String) : QInput {
   private var clientMutationId: String? = null
   private var commitOID: GitObjectID? = null
   private var path: String? = null
   private var position: Int? = null
-  private var inReplyTo: String? = null
+  private var inReplyTo: ID? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 
   fun commitOID(model: GitObjectID) = apply { commitOID = model }
@@ -106,7 +116,7 @@ data class AddPullRequestReviewCommentInput(private val pullRequestReviewId: Str
 
   fun position(model: Int) = apply { position = model }
 
-  fun inReplyTo(model: String) = apply { inReplyTo = model }
+  fun inReplyTo(model: ID) = apply { inReplyTo = model }
 }
 
 object AddPullRequestReviewCommentPayload : QSchemaType {
@@ -117,12 +127,12 @@ object AddPullRequestReviewCommentPayload : QSchemaType {
   val commentEdge: InitStub<PullRequestReviewCommentEdge> by QType.stub()
 }
 
-data class AddPullRequestReviewInput(private val pullRequestId: String) : QInput {
+data class AddPullRequestReviewInput(private val pullRequestId: ID,
+    private val comments: DraftPullRequestReviewComment) : QInput {
   private var clientMutationId: String? = null
   private var commitOID: GitObjectID? = null
   private var body: String? = null
   private var event: PullRequestReviewEvent? = null
-  private var comments: DraftPullRequestReviewComment? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 
   fun commitOID(model: GitObjectID) = apply { commitOID = model }
@@ -130,8 +140,6 @@ data class AddPullRequestReviewInput(private val pullRequestId: String) : QInput
   fun body(model: String) = apply { body = model }
 
   fun event(model: PullRequestReviewEvent) = apply { event = model }
-
-  fun comments(model: DraftPullRequestReviewComment) = apply { comments = model }
 }
 
 object AddPullRequestReviewPayload : QSchemaType {
@@ -142,7 +150,7 @@ object AddPullRequestReviewPayload : QSchemaType {
   val reviewEdge: InitStub<PullRequestReviewEdge> by QType.stub()
 }
 
-data class AddReactionInput(private val subjectId: String,
+data class AddReactionInput(private val subjectId: ID,
     private val content: ReactionContent) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -156,7 +164,7 @@ object AddReactionPayload : QSchemaType {
   val subject: InitStub<Reactable> by QType.stub()
 }
 
-data class AddStarInput(private val starrableId: String) : QInput {
+data class AddStarInput(private val starrableId: ID) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -170,11 +178,11 @@ object AddStarPayload : QSchemaType {
 object AddedToProjectEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 interface Assignable : QSchemaType {
@@ -200,9 +208,9 @@ object AssignedEvent : QSchemaType, Node {
 
   val assignable: InitStub<Assignable> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val user: InitStub<User> by QType.stub()
 }
@@ -210,11 +218,11 @@ object AssignedEvent : QSchemaType, Node {
 object BaseRefChangedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 object BaseRefForcePushedEvent : QSchemaType, Node {
@@ -224,9 +232,9 @@ object BaseRefForcePushedEvent : QSchemaType, Node {
 
   val beforeCommit: InitStub<Commit> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -252,17 +260,17 @@ object Blob : QSchemaType, GitObject, Node {
 
   val byteSize: Stub<Int> by QScalar.stub()
 
-  override val commitResourcePath: Stub<URI> by QScalar.stub()
+  override val commitResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val commitUrl: Stub<URI> by QScalar.stub()
+  override val commitUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val isBinary: Stub<Boolean> by QScalar.stub()
 
   val isTruncated: Stub<Boolean> by QScalar.stub()
 
-  override val oid: Stub<GitObjectID> by QScalar.stub()
+  override val oid: CustomScalarInitStub<GitObjectID> by QCustomScalar.stub()
 
   override val repository: InitStub<Repository> by QType.stub()
 
@@ -270,19 +278,19 @@ object Blob : QSchemaType, GitObject, Node {
 }
 
 object Bot : QSchemaType, UniformResourceLocatable, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by QScalar.configStub { AvatarUrlArgs(it) }
+  override val avatarUrl: CustomScalarConfigStub<URI, AvatarUrlArgs> by QCustomScalar.configStub { AvatarUrlArgs(it) }
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   override val login: Stub<String> by QScalar.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder) : BaseAvatarUrlArgs(args) {
+  class AvatarUrlArgs(args: CustomScalarArgBuilder) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
@@ -299,9 +307,9 @@ object ClosedEvent : QSchemaType, Node {
 
   val commit: InitStub<Commit> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 object CodeOfConduct : QSchemaType {
@@ -311,7 +319,7 @@ object CodeOfConduct : QSchemaType {
 
   val name: Stub<String> by QScalar.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 interface Comment : QSchemaType {
@@ -321,21 +329,21 @@ interface Comment : QSchemaType {
 
   val body: Stub<String>
 
-  val bodyHTML: Stub<HTML>
+  val bodyHTML: CustomScalarInitStub<HTML>
 
-  val createdAt: Stub<DateTime>
+  val createdAt: CustomScalarInitStub<DateTime>
 
   val createdViaEmail: Stub<Boolean>
 
   val editor: InitStub<Actor>
 
-  val id: Stub<String>
+  val id: CustomScalarInitStub<ID>
 
-  val lastEditedAt: Stub<DateTime>
+  val lastEditedAt: CustomScalarInitStub<DateTime>
 
-  val publishedAt: Stub<DateTime>
+  val publishedAt: CustomScalarInitStub<DateTime>
 
-  val updatedAt: Stub<DateTime>
+  val updatedAt: CustomScalarInitStub<DateTime>
 
   val viewerDidAuthor: Stub<Boolean>
 }
@@ -369,11 +377,11 @@ enum class CommentCannotUpdateReason : QSchemaType {
 object CommentDeletedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 object Commit : QSchemaType, Subscribable, GitObject, Node {
@@ -387,11 +395,11 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 
   val comments: QTypeConfigStub<CommitCommentConnection, CommentsArgs> by QType.configStub { CommentsArgs(it) }
 
-  override val commitResourcePath: Stub<URI> by QScalar.stub()
+  override val commitResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val commitUrl: Stub<URI> by QScalar.stub()
+  override val commitUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val committedDate: Stub<DateTime> by QScalar.stub()
+  val committedDate: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val committedViaWeb: Stub<Boolean> by QScalar.stub()
 
@@ -399,23 +407,23 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 
   val history: QTypeConfigStub<CommitHistoryConnection, HistoryArgs> by QType.configStub { HistoryArgs(it) }
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val message: Stub<String> by QScalar.stub()
 
   val messageBody: Stub<String> by QScalar.stub()
 
-  val messageBodyHTML: Stub<HTML> by QScalar.stub()
+  val messageBodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val messageHeadline: Stub<String> by QScalar.stub()
 
-  val messageHeadlineHTML: Stub<HTML> by QScalar.stub()
+  val messageHeadlineHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
-  override val oid: Stub<GitObjectID> by QScalar.stub()
+  override val oid: CustomScalarInitStub<GitObjectID> by QCustomScalar.stub()
 
   override val repository: InitStub<Repository> by QType.stub()
 
-  val resourcePath: Stub<URI> by QScalar.stub()
+  val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val signature: InitStub<GitSignature> by QType.stub()
 
@@ -423,11 +431,11 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 
   val tree: InitStub<Tree> by QType.stub()
 
-  val treeResourcePath: Stub<URI> by QScalar.stub()
+  val treeResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val treeUrl: Stub<URI> by QScalar.stub()
+  val treeUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val viewerCanSubscribe: Stub<Boolean> by QScalar.stub()
 
@@ -480,8 +488,8 @@ object Commit : QSchemaType, Subscribable, GitObject, Node {
 }
 
 data class CommitAuthor(private val emails: String) : QInput {
-  private var id: String? = null
-  fun id(model: String) = apply { id = model }
+  private var id: ID? = null
+  fun id(model: ID) = apply { id = model }
 }
 
 object CommitComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, Updatable, Deletable, Comment, Node {
@@ -491,11 +499,11 @@ object CommitComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment,
 
   override val body: Stub<String> by QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by QScalar.stub()
+  override val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val commit: InitStub<Commit> by QType.stub()
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val createdViaEmail: Stub<Boolean> by QScalar.stub()
 
@@ -503,15 +511,15 @@ object CommitComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment,
 
   override val editor: InitStub<Actor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by QScalar.stub()
+  override val lastEditedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val path: Stub<String> by QScalar.stub()
 
   val position: Stub<Int> by QScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by QScalar.stub()
+  override val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val reactionGroups: ListInitStub<ReactionGroup> by QTypeList.stub()
 
@@ -519,7 +527,7 @@ object CommitComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment,
 
   override val repository: InitStub<Repository> by QType.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val viewerCanDelete: Stub<Boolean> by QScalar.stub()
 
@@ -553,7 +561,7 @@ object CommitCommentThread : QSchemaType, RepositoryNode, Node {
 
   val commit: InitStub<Commit> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val path: Stub<String> by QScalar.stub()
 
@@ -593,14 +601,14 @@ object CommitHistoryConnection : QSchemaType {
 object ConvertedNoteToIssueEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
-data class CreateProjectInput(private val ownerId: String, private val name: String) : QInput {
+data class CreateProjectInput(private val ownerId: ID, private val name: String) : QInput {
   private var clientMutationId: String? = null
   private var body: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -614,11 +622,9 @@ object CreateProjectPayload : QSchemaType {
   val project: InitStub<Project> by QType.stub()
 }
 
-object DateTime : QSchemaType {
-  val value: Stub<String> by QScalar.stub()
-}
+object DateTime : CustomScalar
 
-data class DeclineTopicSuggestionInput(private val repositoryId: String, private val name: String,
+data class DeclineTopicSuggestionInput(private val repositoryId: ID, private val name: String,
     private val reason: TopicSuggestionDeclineReason) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -642,7 +648,7 @@ interface Deletable : QSchemaType {
   val viewerCanDelete: Stub<Boolean>
 }
 
-data class DeleteProjectCardInput(private val cardId: String) : QInput {
+data class DeleteProjectCardInput(private val cardId: ID) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -652,10 +658,10 @@ object DeleteProjectCardPayload : QSchemaType {
 
   val column: InitStub<ProjectColumn> by QType.stub()
 
-  val deletedCardId: Stub<String> by QScalar.stub()
+  val deletedCardId: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
-data class DeleteProjectColumnInput(private val columnId: String) : QInput {
+data class DeleteProjectColumnInput(private val columnId: ID) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -663,12 +669,12 @@ data class DeleteProjectColumnInput(private val columnId: String) : QInput {
 object DeleteProjectColumnPayload : QSchemaType {
   val clientMutationId: Stub<String> by QScalar.stub()
 
-  val deletedColumnId: Stub<String> by QScalar.stub()
+  val deletedColumnId: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val project: InitStub<Project> by QType.stub()
 }
 
-data class DeleteProjectInput(private val projectId: String) : QInput {
+data class DeleteProjectInput(private val projectId: ID) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -679,7 +685,7 @@ object DeleteProjectPayload : QSchemaType {
   val owner: InitStub<ProjectOwner> by QType.stub()
 }
 
-data class DeletePullRequestReviewInput(private val pullRequestReviewId: String) : QInput {
+data class DeletePullRequestReviewInput(private val pullRequestReviewId: ID) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -693,9 +699,9 @@ object DeletePullRequestReviewPayload : QSchemaType {
 object DemilestonedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val milestoneTitle: Stub<String> by QScalar.stub()
 
@@ -705,13 +711,13 @@ object DemilestonedEvent : QSchemaType, Node {
 object DeployedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
   val deployment: InitStub<Deployment> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -721,13 +727,13 @@ object DeployedEvent : QSchemaType, Node {
 object Deployment : QSchemaType, Node {
   val commit: InitStub<Commit> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val creator: InitStub<Actor> by QType.stub()
 
   val environment: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val latestStatus: InitStub<DeploymentStatus> by QType.stub()
 
@@ -791,11 +797,11 @@ object DeploymentStatus : QSchemaType, Node {
 
   val description: Stub<String> by QScalar.stub()
 
-  val environmentUrl: Stub<URI> by QScalar.stub()
+  val environmentUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  val logUrl: Stub<URI> by QScalar.stub()
+  val logUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val state: Stub<DeploymentStatusState> by QScalar.stub()
 }
@@ -828,7 +834,7 @@ enum class DeploymentStatusState : QSchemaType {
   ERROR
 }
 
-data class DismissPullRequestReviewInput(private val pullRequestReviewId: String,
+data class DismissPullRequestReviewInput(private val pullRequestReviewId: ID,
     private val message: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -846,7 +852,7 @@ data class DraftPullRequestReviewComment(private val path: String, private val p
 object ExternalIdentity : QSchemaType, Node {
   val guid: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val organizationInvitation: InitStub<OrganizationInvitation> by QType.stub()
 
@@ -904,11 +910,11 @@ object FollowingConnection : QSchemaType {
 object Gist : QSchemaType, Starrable, Node {
   val comments: QTypeConfigStub<GistCommentConnection, CommentsArgs> by QType.configStub { CommentsArgs(it) }
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val description: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val isPublic: Stub<Boolean> by QScalar.stub()
 
@@ -918,7 +924,7 @@ object Gist : QSchemaType, Starrable, Node {
 
   override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> by QType.configStub { Starrable.StargazersArgs(it) }
 
-  val updatedAt: Stub<DateTime> by QScalar.stub()
+  val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val viewerHasStarred: Stub<Boolean> by QScalar.stub()
 
@@ -944,21 +950,21 @@ object GistComment : QSchemaType, UpdatableComment, Updatable, Deletable, Commen
 
   override val body: Stub<String> by QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by QScalar.stub()
+  override val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val createdViaEmail: Stub<Boolean> by QScalar.stub()
 
   override val editor: InitStub<Actor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by QScalar.stub()
+  override val lastEditedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by QScalar.stub()
+  override val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val viewerCanDelete: Stub<Boolean> by QScalar.stub()
 
@@ -1010,9 +1016,9 @@ enum class GistPrivacy : QSchemaType {
 }
 
 object GitActor : QSchemaType {
-  val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by QScalar.configStub { AvatarUrlArgs(it) }
+  val avatarUrl: CustomScalarConfigStub<URI, AvatarUrlArgs> by QCustomScalar.configStub { AvatarUrlArgs(it) }
 
-  val date: Stub<GitTimestamp> by QScalar.stub()
+  val date: CustomScalarInitStub<GitTimestamp> by QCustomScalar.stub()
 
   val email: Stub<String> by QScalar.stub()
 
@@ -1020,7 +1026,7 @@ object GitActor : QSchemaType {
 
   val user: InitStub<User> by QType.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder) : ArgBuilder by args {
+  class AvatarUrlArgs(args: CustomScalarArgBuilder) : CustomScalarArgBuilder by args {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
@@ -1029,20 +1035,18 @@ object GitActor : QSchemaType {
 interface GitObject : QSchemaType {
   val abbreviatedOid: Stub<String>
 
-  val commitResourcePath: Stub<URI>
+  val commitResourcePath: CustomScalarInitStub<URI>
 
-  val commitUrl: Stub<URI>
+  val commitUrl: CustomScalarInitStub<URI>
 
-  val id: Stub<String>
+  val id: CustomScalarInitStub<ID>
 
-  val oid: Stub<GitObjectID>
+  val oid: CustomScalarInitStub<GitObjectID>
 
   val repository: InitStub<Repository>
 }
 
-object GitObjectID : QSchemaType {
-  val value: Stub<String> by QScalar.stub()
-}
+object GitObjectID : CustomScalar
 
 interface GitSignature : QSchemaType {
   val email: Stub<String>
@@ -1086,9 +1090,7 @@ enum class GitSignatureState : QSchemaType {
   EXPIRED_KEY
 }
 
-object GitTimestamp : QSchemaType {
-  val value: Stub<String> by QScalar.stub()
-}
+object GitTimestamp : CustomScalar
 
 object GpgSignature : QSchemaType, GitSignature {
   override val email: Stub<String> by QScalar.stub()
@@ -1106,20 +1108,18 @@ object GpgSignature : QSchemaType, GitSignature {
   override val state: Stub<GitSignatureState> by QScalar.stub()
 }
 
-object HTML : QSchemaType {
-  val value: Stub<String> by QScalar.stub()
-}
+object HTML : CustomScalar
 
 object HeadRefDeletedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val headRef: InitStub<Ref> by QType.stub()
 
   val headRefName: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 }
@@ -1131,9 +1131,9 @@ object HeadRefForcePushedEvent : QSchemaType, Node {
 
   val beforeCommit: InitStub<Commit> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -1143,12 +1143,14 @@ object HeadRefForcePushedEvent : QSchemaType, Node {
 object HeadRefRestoredEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 }
+
+object ID : CustomScalar
 
 object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNode, Reactable, Lockable, Labelable, UpdatableComment, Updatable, Comment, Closable, Assignable, Node {
   override val assignees: QTypeConfigStub<UserConnection, Assignable.AssigneesArgs> by QType.configStub { Assignable.AssigneesArgs(it) }
@@ -1159,7 +1161,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   override val body: Stub<String> by QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by QScalar.stub()
+  override val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val bodyText: Stub<String> by QScalar.stub()
 
@@ -1167,7 +1169,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   val comments: QTypeConfigStub<IssueCommentConnection, CommentsArgs> by QType.configStub { CommentsArgs(it) }
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val createdViaEmail: Stub<Boolean> by QScalar.stub()
 
@@ -1175,11 +1177,11 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   override val editor: InitStub<Actor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> by QType.configStub { Labelable.LabelsArgs(it) }
 
-  override val lastEditedAt: Stub<DateTime> by QScalar.stub()
+  override val lastEditedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val locked: Stub<Boolean> by QScalar.stub()
 
@@ -1189,7 +1191,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   val participants: QTypeConfigStub<UserConnection, ParticipantsArgs> by QType.configStub { ParticipantsArgs(it) }
 
-  override val publishedAt: Stub<DateTime> by QScalar.stub()
+  override val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val reactionGroups: ListInitStub<ReactionGroup> by QTypeList.stub()
 
@@ -1197,7 +1199,7 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   override val repository: InitStub<Repository> by QType.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val state: Stub<IssueState> by QScalar.stub()
 
@@ -1205,9 +1207,9 @@ object Issue : QSchemaType, UniformResourceLocatable, Subscribable, RepositoryNo
 
   val title: Stub<String> by QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val viewerCanReact: Stub<Boolean> by QScalar.stub()
 
@@ -1274,11 +1276,11 @@ object IssueComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, 
 
   override val body: Stub<String> by QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by QScalar.stub()
+  override val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val bodyText: Stub<String> by QScalar.stub()
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val createdViaEmail: Stub<Boolean> by QScalar.stub()
 
@@ -1286,13 +1288,13 @@ object IssueComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, 
 
   override val editor: InitStub<Actor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val issue: InitStub<Issue> by QType.stub()
 
-  override val lastEditedAt: Stub<DateTime> by QScalar.stub()
+  override val lastEditedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by QScalar.stub()
+  override val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val reactionGroups: ListInitStub<ReactionGroup> by QTypeList.stub()
 
@@ -1300,7 +1302,7 @@ object IssueComment : QSchemaType, RepositoryNode, Reactable, UpdatableComment, 
 
   override val repository: InitStub<Repository> by QType.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val viewerCanDelete: Stub<Boolean> by QScalar.stub()
 
@@ -1427,7 +1429,7 @@ object IssueTimelineItemEdge : QSchemaType {
 object Label : QSchemaType, Node {
   val color: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val issues: QTypeConfigStub<IssueConnection, IssuesArgs> by QType.configStub { IssuesArgs(it) }
 
@@ -1512,9 +1514,9 @@ interface Labelable : QSchemaType {
 object LabeledEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val label: InitStub<Label> by QType.stub()
 
@@ -1524,7 +1526,7 @@ object LabeledEvent : QSchemaType, Node {
 object Language : QSchemaType, Node {
   val color: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 }
@@ -1563,9 +1565,9 @@ interface Lockable : QSchemaType {
 object LockedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val lockable: InitStub<Lockable> by QType.stub()
 }
@@ -1573,11 +1575,11 @@ object LockedEvent : QSchemaType, Node {
 object MentionedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 enum class MergeableState : QSchemaType {
@@ -1593,9 +1595,9 @@ object MergedEvent : QSchemaType, UniformResourceLocatable, Node {
 
   val commit: InitStub<Commit> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val mergeRef: InitStub<Ref> by QType.stub()
 
@@ -1603,9 +1605,9 @@ object MergedEvent : QSchemaType, UniformResourceLocatable, Node {
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 object Milestone : QSchemaType, UniformResourceLocatable, Node {
@@ -1613,21 +1615,21 @@ object Milestone : QSchemaType, UniformResourceLocatable, Node {
 
   val description: Stub<String> by QScalar.stub()
 
-  val dueOn: Stub<DateTime> by QScalar.stub()
+  val dueOn: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val number: Stub<Int> by QScalar.stub()
 
   val repository: InitStub<Repository> by QType.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val state: Stub<MilestoneState> by QScalar.stub()
 
   val title: Stub<String> by QScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 object MilestoneConnection : QSchemaType {
@@ -1661,21 +1663,21 @@ enum class MilestoneState : QSchemaType {
 object MilestonedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val milestoneTitle: Stub<String> by QScalar.stub()
 
   val subject: InitStub<MilestoneItem> by QType.stub()
 }
 
-data class MoveProjectCardInput(private val cardId: String, private val columnId: String) : QInput {
+data class MoveProjectCardInput(private val cardId: ID, private val columnId: ID) : QInput {
   private var clientMutationId: String? = null
-  private var afterCardId: String? = null
+  private var afterCardId: ID? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 
-  fun afterCardId(model: String) = apply { afterCardId = model }
+  fun afterCardId(model: ID) = apply { afterCardId = model }
 }
 
 object MoveProjectCardPayload : QSchemaType {
@@ -1684,12 +1686,12 @@ object MoveProjectCardPayload : QSchemaType {
   val clientMutationId: Stub<String> by QScalar.stub()
 }
 
-data class MoveProjectColumnInput(private val columnId: String) : QInput {
+data class MoveProjectColumnInput(private val columnId: ID) : QInput {
   private var clientMutationId: String? = null
-  private var afterColumnId: String? = null
+  private var afterColumnId: ID? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 
-  fun afterColumnId(model: String) = apply { afterColumnId = model }
+  fun afterColumnId(model: ID) = apply { afterColumnId = model }
 }
 
 object MoveProjectColumnPayload : QSchemaType {
@@ -1701,11 +1703,11 @@ object MoveProjectColumnPayload : QSchemaType {
 object MovedColumnsInProjectEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 object Mutation : QSchemaType {
@@ -1914,7 +1916,7 @@ object Mutation : QSchemaType {
 }
 
 interface Node : QSchemaType {
-  val id: Stub<String>
+  val id: CustomScalarInitStub<ID>
 }
 
 enum class OrderDirection : QSchemaType {
@@ -1924,11 +1926,11 @@ enum class OrderDirection : QSchemaType {
 }
 
 object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, ProjectOwner, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by QScalar.configStub { AvatarUrlArgs(it) }
+  override val avatarUrl: CustomScalarConfigStub<URI, AvatarUrlArgs> by QCustomScalar.configStub { AvatarUrlArgs(it) }
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val isInvoiced: Stub<Boolean> by QScalar.stub()
 
@@ -1938,9 +1940,9 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   val name: Stub<String> by QScalar.stub()
 
-  val newTeamResourcePath: Stub<URI> by QScalar.stub()
+  val newTeamResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val newTeamUrl: Stub<URI> by QScalar.stub()
+  val newTeamUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val organizationBillingEmail: Stub<String> by QScalar.stub()
 
@@ -1950,15 +1952,15 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> by QType.configStub { ProjectOwner.ProjectsArgs(it) }
 
-  override val projectsResourcePath: Stub<URI> by QScalar.stub()
+  override val projectsResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val projectsUrl: Stub<URI> by QScalar.stub()
+  override val projectsUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val repositories: QTypeConfigStub<RepositoryConnection, RepositoryOwner.RepositoriesArgs> by QType.configStub { RepositoryOwner.RepositoriesArgs(it) }
 
   override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> by QType.configStub { RepositoryOwner.RepositoryArgs(it) }
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val samlIdentityProvider: InitStub<OrganizationIdentityProvider> by QType.stub()
 
@@ -1966,11 +1968,11 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   val teams: QTypeConfigStub<TeamConnection, TeamsArgs> by QType.configStub { TeamsArgs(it) }
 
-  val teamsResourcePath: Stub<URI> by QScalar.stub()
+  val teamsResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val teamsUrl: Stub<URI> by QScalar.stub()
+  val teamsUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val viewerCanAdminister: Stub<Boolean> by QScalar.stub()
 
@@ -1982,7 +1984,7 @@ object Organization : QSchemaType, UniformResourceLocatable, RepositoryOwner, Pr
 
   val viewerIsAMember: Stub<Boolean> by QScalar.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder) : BaseAvatarUrlArgs(args) {
+  class AvatarUrlArgs(args: CustomScalarArgBuilder) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
@@ -2056,21 +2058,21 @@ object OrganizationEdge : QSchemaType {
 }
 
 object OrganizationIdentityProvider : QSchemaType, Node {
-  val digestMethod: Stub<URI> by QScalar.stub()
+  val digestMethod: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val externalIdentities: QTypeConfigStub<ExternalIdentityConnection, ExternalIdentitiesArgs> by QType.configStub { ExternalIdentitiesArgs(it) }
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  val idpCertificate: Stub<X509Certificate> by QScalar.stub()
+  val idpCertificate: CustomScalarInitStub<X509Certificate> by QCustomScalar.stub()
 
   val issuer: Stub<String> by QScalar.stub()
 
   val organization: InitStub<Organization> by QType.stub()
 
-  val signatureMethod: Stub<URI> by QScalar.stub()
+  val signatureMethod: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val ssoUrl: Stub<URI> by QScalar.stub()
+  val ssoUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   class ExternalIdentitiesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ExternalIdentitiesArgs = apply { addArg("first", value) }
@@ -2090,7 +2092,7 @@ object OrganizationIdentityProvider : QSchemaType, Node {
 object OrganizationInvitation : QSchemaType {
   val email: Stub<String> by QScalar.stub()
 
-  val id: Stub<String> by QScalar.stub()
+  val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val invitee: InitStub<User> by QType.stub()
 
@@ -2138,19 +2140,19 @@ object PageInfo : QSchemaType {
 object Project : QSchemaType, Updatable, Node {
   val body: Stub<String> by QScalar.stub()
 
-  val bodyHTML: Stub<HTML> by QScalar.stub()
+  val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
-  val closedAt: Stub<DateTime> by QScalar.stub()
+  val closedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val columns: QTypeConfigStub<ProjectColumnConnection, ColumnsArgs> by QType.configStub { ColumnsArgs(it) }
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val creator: InitStub<Actor> by QType.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 
@@ -2158,13 +2160,13 @@ object Project : QSchemaType, Updatable, Node {
 
   val owner: InitStub<ProjectOwner> by QType.stub()
 
-  val resourcePath: Stub<URI> by QScalar.stub()
+  val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val state: Stub<ProjectState> by QScalar.stub()
 
-  val updatedAt: Stub<DateTime> by QScalar.stub()
+  val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val viewerCanUpdate: Stub<Boolean> by QScalar.stub()
 
@@ -2188,13 +2190,13 @@ object ProjectCard : QSchemaType, Node {
 
   val content: InitStub<ProjectCardItem> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val creator: InitStub<Actor> by QType.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val note: Stub<String> by QScalar.stub()
 
@@ -2202,13 +2204,13 @@ object ProjectCard : QSchemaType, Node {
 
   val projectColumn: InitStub<ProjectColumn> by QType.stub()
 
-  val resourcePath: Stub<URI> by QScalar.stub()
+  val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val state: Stub<ProjectCardState> by QScalar.stub()
 
-  val updatedAt: Stub<DateTime> by QScalar.stub()
+  val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 object ProjectCardConnection : QSchemaType {
@@ -2244,17 +2246,17 @@ enum class ProjectCardState : QSchemaType {
 object ProjectColumn : QSchemaType, Node {
   val cards: QTypeConfigStub<ProjectCardConnection, CardsArgs> by QType.configStub { CardsArgs(it) }
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 
   val project: InitStub<Project> by QType.stub()
 
-  val updatedAt: Stub<DateTime> by QScalar.stub()
+  val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   class CardsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): CardsArgs = apply { addArg("first", value) }
@@ -2315,15 +2317,15 @@ enum class ProjectOrderField : QSchemaType {
 }
 
 interface ProjectOwner : QSchemaType {
-  val id: Stub<String>
+  val id: CustomScalarInitStub<ID>
 
   val project: QTypeConfigStub<Project, ProjectArgs>
 
   val projects: QTypeConfigStub<ProjectConnection, ProjectsArgs>
 
-  val projectsResourcePath: Stub<URI>
+  val projectsResourcePath: CustomScalarInitStub<URI>
 
-  val projectsUrl: Stub<URI>
+  val projectsUrl: CustomScalarInitStub<URI>
 
   val viewerCanCreateProjects: Stub<Boolean>
 
@@ -2377,7 +2379,7 @@ object ProtectedBranch : QSchemaType, Node {
 
   val hasStrictRequiredStatusChecks: Stub<Boolean> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val isAdminEnforced: Stub<Boolean> by QScalar.stub()
 
@@ -2449,7 +2451,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   override val body: Stub<String> by QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by QScalar.stub()
+  override val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val bodyText: Stub<String> by QScalar.stub()
 
@@ -2459,7 +2461,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val commits: QTypeConfigStub<PullRequestCommitConnection, CommitsArgs> by QType.configStub { CommitsArgs(it) }
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val createdViaEmail: Stub<Boolean> by QScalar.stub()
 
@@ -2475,13 +2477,13 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val headRepositoryOwner: InitStub<RepositoryOwner> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val isCrossRepository: Stub<Boolean> by QScalar.stub()
 
   override val labels: QTypeConfigStub<LabelConnection, Labelable.LabelsArgs> by QType.configStub { Labelable.LabelsArgs(it) }
 
-  override val lastEditedAt: Stub<DateTime> by QScalar.stub()
+  override val lastEditedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val locked: Stub<Boolean> by QScalar.stub()
 
@@ -2491,7 +2493,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val merged: Stub<Boolean> by QScalar.stub()
 
-  val mergedAt: Stub<DateTime> by QScalar.stub()
+  val mergedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val number: Stub<Int> by QScalar.stub()
 
@@ -2499,7 +2501,7 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val potentialMergeCommit: InitStub<Commit> by QType.stub()
 
-  override val publishedAt: Stub<DateTime> by QScalar.stub()
+  override val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val reactionGroups: ListInitStub<ReactionGroup> by QTypeList.stub()
 
@@ -2507,11 +2509,11 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   override val repository: InitStub<Repository> by QType.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val revertResourcePath: Stub<URI> by QScalar.stub()
+  val revertResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val revertUrl: Stub<URI> by QScalar.stub()
+  val revertUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val reviewRequests: QTypeConfigStub<ReviewRequestConnection, ReviewRequestsArgs> by QType.configStub { ReviewRequestsArgs(it) }
 
@@ -2525,9 +2527,9 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 
   val title: Stub<String> by QScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val viewerCanReact: Stub<Boolean> by QScalar.stub()
 
@@ -2635,13 +2637,13 @@ object PullRequest : QSchemaType, UniformResourceLocatable, Subscribable, Reposi
 object PullRequestCommit : QSchemaType, UniformResourceLocatable, Node {
   val commit: InitStub<Commit> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 object PullRequestCommitConnection : QSchemaType {
@@ -2691,7 +2693,7 @@ object PullRequestReview : QSchemaType, RepositoryNode, UpdatableComment, Updata
 
   override val body: Stub<String> by QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by QScalar.stub()
+  override val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val bodyText: Stub<String> by QScalar.stub()
 
@@ -2699,7 +2701,7 @@ object PullRequestReview : QSchemaType, RepositoryNode, UpdatableComment, Updata
 
   val commit: InitStub<Commit> by QType.stub()
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val createdViaEmail: Stub<Boolean> by QScalar.stub()
 
@@ -2707,25 +2709,25 @@ object PullRequestReview : QSchemaType, RepositoryNode, UpdatableComment, Updata
 
   override val editor: InitStub<Actor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by QScalar.stub()
+  override val lastEditedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by QScalar.stub()
+  override val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
   override val repository: InitStub<Repository> by QType.stub()
 
-  val resourcePath: Stub<URI> by QScalar.stub()
+  val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val state: Stub<PullRequestReviewState> by QScalar.stub()
 
-  val submittedAt: Stub<DateTime> by QScalar.stub()
+  val submittedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val viewerCanDelete: Stub<Boolean> by QScalar.stub()
 
@@ -2757,13 +2759,13 @@ object PullRequestReviewComment : QSchemaType, RepositoryNode, Reactable, Updata
 
   override val body: Stub<String> by QScalar.stub()
 
-  override val bodyHTML: Stub<HTML> by QScalar.stub()
+  override val bodyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val bodyText: Stub<String> by QScalar.stub()
 
   val commit: InitStub<Commit> by QType.stub()
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val createdViaEmail: Stub<Boolean> by QScalar.stub()
 
@@ -2771,13 +2773,13 @@ object PullRequestReviewComment : QSchemaType, RepositoryNode, Reactable, Updata
 
   val diffHunk: Stub<String> by QScalar.stub()
 
-  val draftedAt: Stub<DateTime> by QScalar.stub()
+  val draftedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val editor: InitStub<Actor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  override val lastEditedAt: Stub<DateTime> by QScalar.stub()
+  override val lastEditedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val originalCommit: InitStub<Commit> by QType.stub()
 
@@ -2787,7 +2789,7 @@ object PullRequestReviewComment : QSchemaType, RepositoryNode, Reactable, Updata
 
   val position: Stub<Int> by QScalar.stub()
 
-  override val publishedAt: Stub<DateTime> by QScalar.stub()
+  override val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -2799,11 +2801,11 @@ object PullRequestReviewComment : QSchemaType, RepositoryNode, Reactable, Updata
 
   override val repository: InitStub<Repository> by QType.stub()
 
-  val resourcePath: Stub<URI> by QScalar.stub()
+  val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val viewerCanDelete: Stub<Boolean> by QScalar.stub()
 
@@ -2873,7 +2875,7 @@ enum class PullRequestReviewState : QSchemaType {
 object PullRequestReviewThread : QSchemaType, Node {
   val comments: QTypeConfigStub<PullRequestReviewCommentConnection, CommentsArgs> by QType.configStub { CommentsArgs(it) }
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -2979,7 +2981,7 @@ object PullRequestTimelineItemEdge : QSchemaType {
 object PushAllowance : QSchemaType, Node {
   val actor: InitStub<PushAllowanceActor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val protectedBranch: InitStub<ProtectedBranch> by QType.stub()
 }
@@ -3041,12 +3043,12 @@ object Query : QSchemaType {
   }
 
   class NodeArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
-    fun id(value: String): NodeArgs = apply { addArg("id", value) }
+    fun id(value: ID): NodeArgs = apply { addArg("id", value) }
 
   }
 
   class NodesArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
-    fun ids(value: String): NodesArgs = apply { addArg("ids", value) }
+    fun ids(value: ID): NodesArgs = apply { addArg("ids", value) }
 
   }
 
@@ -3111,13 +3113,13 @@ object RateLimit : QSchemaType {
 
   val remaining: Stub<Int> by QScalar.stub()
 
-  val resetAt: Stub<DateTime> by QScalar.stub()
+  val resetAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 }
 
 interface Reactable : QSchemaType {
   val databaseId: Stub<Int>
 
-  val id: Stub<String>
+  val id: CustomScalarInitStub<ID>
 
   val reactionGroups: ListInitStub<ReactionGroup>
 
@@ -3161,17 +3163,17 @@ object ReactingUserEdge : QSchemaType {
 
   val node: InitStub<User> by QType.stub()
 
-  val reactedAt: Stub<DateTime> by QScalar.stub()
+  val reactedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 }
 
 object Reaction : QSchemaType, Node {
   val content: Stub<ReactionContent> by QScalar.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val user: InitStub<User> by QType.stub()
 }
@@ -3211,7 +3213,7 @@ object ReactionEdge : QSchemaType {
 object ReactionGroup : QSchemaType {
   val content: Stub<ReactionContent> by QScalar.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val subject: InitStub<Reactable> by QType.stub()
 
@@ -3244,7 +3246,7 @@ enum class ReactionOrderField : QSchemaType {
 object Ref : QSchemaType, Node {
   val associatedPullRequests: QTypeConfigStub<PullRequestConnection, AssociatedPullRequestsArgs> by QType.configStub { AssociatedPullRequestsArgs(it) }
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 
@@ -3295,9 +3297,9 @@ object ReferencedEvent : QSchemaType, Node {
 
   val commitRepository: InitStub<Repository> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val isCrossReference: Stub<Boolean> by QScalar.stub()
 
@@ -3317,21 +3319,21 @@ object ReferencedSubject : QSchemaType {
 object Release : QSchemaType, UniformResourceLocatable, Node {
   val description: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 
-  val publishedAt: Stub<DateTime> by QScalar.stub()
+  val publishedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val releaseAsset: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetArgs> by QType.configStub { ReleaseAssetArgs(it) }
 
   val releaseAssets: QTypeConfigStub<ReleaseAssetConnection, ReleaseAssetsArgs> by QType.configStub { ReleaseAssetsArgs(it) }
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val tag: InitStub<Ref> by QType.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   class ReleaseAssetArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): ReleaseAssetArgs = apply { addArg("first", value) }
@@ -3366,13 +3368,13 @@ object Release : QSchemaType, UniformResourceLocatable, Node {
 }
 
 object ReleaseAsset : QSchemaType, Node {
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 
   val release: InitStub<Release> by QType.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 object ReleaseAssetConnection : QSchemaType {
@@ -3407,8 +3409,8 @@ object ReleaseEdge : QSchemaType {
   val node: InitStub<Release> by QType.stub()
 }
 
-data class RemoveOutsideCollaboratorInput(private val userId: String,
-    private val organizationId: String) : QInput {
+data class RemoveOutsideCollaboratorInput(private val userId: ID,
+    private val organizationId: ID) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -3419,7 +3421,7 @@ object RemoveOutsideCollaboratorPayload : QSchemaType {
   val removedUser: InitStub<User> by QType.stub()
 }
 
-data class RemoveReactionInput(private val subjectId: String,
+data class RemoveReactionInput(private val subjectId: ID,
     private val content: ReactionContent) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -3433,7 +3435,7 @@ object RemoveReactionPayload : QSchemaType {
   val subject: InitStub<Reactable> by QType.stub()
 }
 
-data class RemoveStarInput(private val starrableId: String) : QInput {
+data class RemoveStarInput(private val starrableId: ID) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
 }
@@ -3447,21 +3449,21 @@ object RemoveStarPayload : QSchemaType {
 object RemovedFromProjectEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 object RenamedTitleEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val currentTitle: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val previousTitle: Stub<String> by QScalar.stub()
 
@@ -3479,9 +3481,9 @@ object ReopenedEvent : QSchemaType, Node {
 
   val closable: InitStub<Closable> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 }
 
 object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starrable, Subscribable, ProjectOwner, Node {
@@ -3489,7 +3491,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   val commitComments: QTypeConfigStub<CommitCommentConnection, CommitCommentsArgs> by QType.configStub { CommitCommentsArgs(it) }
 
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
@@ -3499,7 +3501,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   override val description: Stub<String> by QScalar.stub()
 
-  override val descriptionHTML: Stub<HTML> by QScalar.stub()
+  override val descriptionHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val diskUsage: Stub<Int> by QScalar.stub()
 
@@ -3509,9 +3511,9 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   override val hasWikiEnabled: Stub<Boolean> by QScalar.stub()
 
-  override val homepageUrl: Stub<URI> by QScalar.stub()
+  override val homepageUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   override val isFork: Stub<Boolean> by QScalar.stub()
 
@@ -3543,7 +3545,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   val milestones: QTypeConfigStub<MilestoneConnection, MilestonesArgs> by QType.configStub { MilestonesArgs(it) }
 
-  override val mirrorUrl: Stub<URI> by QScalar.stub()
+  override val mirrorUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val name: Stub<String> by QScalar.stub()
 
@@ -3561,9 +3563,9 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   override val projects: QTypeConfigStub<ProjectConnection, ProjectOwner.ProjectsArgs> by QType.configStub { ProjectOwner.ProjectsArgs(it) }
 
-  override val projectsResourcePath: Stub<URI> by QScalar.stub()
+  override val projectsResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val projectsUrl: Stub<URI> by QScalar.stub()
+  override val projectsUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val protectedBranches: QTypeConfigStub<ProtectedBranchConnection, ProtectedBranchesArgs> by QType.configStub { ProtectedBranchesArgs(it) }
 
@@ -3571,7 +3573,7 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   val pullRequests: QTypeConfigStub<PullRequestConnection, PullRequestsArgs> by QType.configStub { PullRequestsArgs(it) }
 
-  override val pushedAt: Stub<DateTime> by QScalar.stub()
+  override val pushedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val ref: QTypeConfigStub<Ref, RefArgs> by QType.configStub { RefArgs(it) }
 
@@ -3581,13 +3583,13 @@ object Repository : QSchemaType, RepositoryInfo, UniformResourceLocatable, Starr
 
   val repositoryTopics: QTypeConfigStub<RepositoryTopicConnection, RepositoryTopicsArgs> by QType.configStub { RepositoryTopicsArgs(it) }
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val stargazers: QTypeConfigStub<StargazerConnection, Starrable.StargazersArgs> by QType.configStub { Starrable.StargazersArgs(it) }
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val viewerCanAdminister: Stub<Boolean> by QScalar.stub()
 
@@ -3916,17 +3918,17 @@ object RepositoryEdge : QSchemaType {
 }
 
 interface RepositoryInfo : QSchemaType {
-  val createdAt: Stub<DateTime>
+  val createdAt: CustomScalarInitStub<DateTime>
 
   val description: Stub<String>
 
-  val descriptionHTML: Stub<HTML>
+  val descriptionHTML: CustomScalarInitStub<HTML>
 
   val hasIssuesEnabled: Stub<Boolean>
 
   val hasWikiEnabled: Stub<Boolean>
 
-  val homepageUrl: Stub<URI>
+  val homepageUrl: CustomScalarInitStub<URI>
 
   val isFork: Stub<Boolean>
 
@@ -3940,7 +3942,7 @@ interface RepositoryInfo : QSchemaType {
 
   val lockReason: Stub<RepositoryLockReason>
 
-  val mirrorUrl: Stub<URI>
+  val mirrorUrl: CustomScalarInitStub<URI>
 
   val name: Stub<String>
 
@@ -3948,17 +3950,17 @@ interface RepositoryInfo : QSchemaType {
 
   val owner: InitStub<RepositoryOwner>
 
-  val pushedAt: Stub<DateTime>
+  val pushedAt: CustomScalarInitStub<DateTime>
 
-  val resourcePath: Stub<URI>
+  val resourcePath: CustomScalarInitStub<URI>
 
-  val updatedAt: Stub<DateTime>
+  val updatedAt: CustomScalarInitStub<DateTime>
 
-  val url: Stub<URI>
+  val url: CustomScalarInitStub<URI>
 }
 
 object RepositoryInvitation : QSchemaType, Node {
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val invitee: InitStub<User> by QType.stub()
 
@@ -3968,17 +3970,17 @@ object RepositoryInvitation : QSchemaType, Node {
 }
 
 object RepositoryInvitationRepository : QSchemaType, RepositoryInfo {
-  override val createdAt: Stub<DateTime> by QScalar.stub()
+  override val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   override val description: Stub<String> by QScalar.stub()
 
-  override val descriptionHTML: Stub<HTML> by QScalar.stub()
+  override val descriptionHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   override val hasIssuesEnabled: Stub<Boolean> by QScalar.stub()
 
   override val hasWikiEnabled: Stub<Boolean> by QScalar.stub()
 
-  override val homepageUrl: Stub<URI> by QScalar.stub()
+  override val homepageUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val isFork: Stub<Boolean> by QScalar.stub()
 
@@ -3992,7 +3994,7 @@ object RepositoryInvitationRepository : QSchemaType, RepositoryInfo {
 
   override val lockReason: Stub<RepositoryLockReason> by QScalar.stub()
 
-  override val mirrorUrl: Stub<URI> by QScalar.stub()
+  override val mirrorUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   override val name: Stub<String> by QScalar.stub()
 
@@ -4000,13 +4002,13 @@ object RepositoryInvitationRepository : QSchemaType, RepositoryInfo {
 
   override val owner: InitStub<RepositoryOwner> by QType.stub()
 
-  override val pushedAt: Stub<DateTime> by QScalar.stub()
+  override val pushedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val updatedAt: Stub<DateTime> by QScalar.stub()
+  override val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 enum class RepositoryLockReason : QSchemaType {
@@ -4039,9 +4041,9 @@ enum class RepositoryOrderField : QSchemaType {
 }
 
 interface RepositoryOwner : QSchemaType {
-  val avatarUrl: QConfigStub<URI, BaseAvatarUrlArgs>
+  val avatarUrl: CustomScalarConfigStub<URI, BaseAvatarUrlArgs>
 
-  val id: Stub<String>
+  val id: CustomScalarInitStub<ID>
 
   val login: Stub<String>
 
@@ -4051,9 +4053,9 @@ interface RepositoryOwner : QSchemaType {
 
   val repository: QTypeConfigStub<Repository, RepositoryArgs>
 
-  val resourcePath: Stub<URI>
+  val resourcePath: CustomScalarInitStub<URI>
 
-  val url: Stub<URI>
+  val url: CustomScalarInitStub<URI>
 
   class PinnedRepositoriesArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): PinnedRepositoriesArgs = apply { addArg("first", value) }
@@ -4123,13 +4125,13 @@ enum class RepositoryPrivacy : QSchemaType {
 }
 
 object RepositoryTopic : QSchemaType, UniformResourceLocatable, Node {
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val topic: InitStub<Topic> by QType.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 object RepositoryTopicConnection : QSchemaType {
@@ -4148,8 +4150,8 @@ object RepositoryTopicEdge : QSchemaType {
   val node: InitStub<RepositoryTopic> by QType.stub()
 }
 
-data class RequestReviewsInput(private val pullRequestId: String, private val userIds: String,
-    private val teamIds: String) : QInput {
+data class RequestReviewsInput(private val pullRequestId: ID, private val userIds: ID,
+    private val teamIds: ID) : QInput {
   private var clientMutationId: String? = null
   private var union: Boolean? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -4168,7 +4170,7 @@ object RequestReviewsPayload : QSchemaType {
 object ReviewDismissalAllowance : QSchemaType, Node {
   val actor: InitStub<ReviewDismissalAllowanceActor> by QType.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val protectedBranch: InitStub<ProtectedBranch> by QType.stub()
 }
@@ -4198,15 +4200,15 @@ object ReviewDismissalAllowanceEdge : QSchemaType {
 object ReviewDismissedEvent : QSchemaType, UniformResourceLocatable, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val message: Stub<String> by QScalar.stub()
 
-  val messageHtml: Stub<HTML> by QScalar.stub()
+  val messageHtml: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val previousReviewState: Stub<PullRequestReviewState> by QScalar.stub()
 
@@ -4214,17 +4216,17 @@ object ReviewDismissedEvent : QSchemaType, UniformResourceLocatable, Node {
 
   val pullRequestCommit: InitStub<PullRequestCommit> by QType.stub()
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val review: InitStub<PullRequestReview> by QType.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 object ReviewRequest : QSchemaType, Node {
   val databaseId: Stub<Int> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -4250,9 +4252,9 @@ object ReviewRequestEdge : QSchemaType {
 object ReviewRequestRemovedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -4262,9 +4264,9 @@ object ReviewRequestRemovedEvent : QSchemaType, Node {
 object ReviewRequestedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val pullRequest: InitStub<PullRequest> by QType.stub()
 
@@ -4351,11 +4353,11 @@ object StargazerEdge : QSchemaType {
 
   val node: InitStub<User> by QType.stub()
 
-  val starredAt: Stub<DateTime> by QScalar.stub()
+  val starredAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 }
 
 interface Starrable : QSchemaType {
-  val id: Stub<String>
+  val id: CustomScalarInitStub<ID>
 
   val stargazers: QTypeConfigStub<StargazerConnection, StargazersArgs>
 
@@ -4394,7 +4396,7 @@ object StarredRepositoryEdge : QSchemaType {
 
   val node: InitStub<Repository> by QType.stub()
 
-  val starredAt: Stub<DateTime> by QScalar.stub()
+  val starredAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 }
 
 object Status : QSchemaType, Node {
@@ -4404,7 +4406,7 @@ object Status : QSchemaType, Node {
 
   val contexts: ListInitStub<StatusContext> by QTypeList.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val state: Stub<StatusState> by QScalar.stub()
 
@@ -4419,17 +4421,17 @@ object StatusContext : QSchemaType, Node {
 
   val context: Stub<String> by QScalar.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val creator: InitStub<Actor> by QType.stub()
 
   val description: Stub<String> by QScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val state: Stub<StatusState> by QScalar.stub()
 
-  val targetUrl: Stub<URI> by QScalar.stub()
+  val targetUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 }
 
 enum class StatusState : QSchemaType {
@@ -4444,7 +4446,7 @@ enum class StatusState : QSchemaType {
   SUCCESS
 }
 
-data class SubmitPullRequestReviewInput(private val pullRequestReviewId: String,
+data class SubmitPullRequestReviewInput(private val pullRequestReviewId: ID,
     private val event: PullRequestReviewEvent) : QInput {
   private var clientMutationId: String? = null
   private var body: String? = null
@@ -4468,9 +4470,9 @@ interface Subscribable : QSchemaType {
 object SubscribedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val subscribable: InitStub<Subscribable> by QType.stub()
 }
@@ -4494,17 +4496,17 @@ object SuggestedReviewer : QSchemaType {
 object Tag : QSchemaType, GitObject, Node {
   override val abbreviatedOid: Stub<String> by QScalar.stub()
 
-  override val commitResourcePath: Stub<URI> by QScalar.stub()
+  override val commitResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val commitUrl: Stub<URI> by QScalar.stub()
+  override val commitUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val message: Stub<String> by QScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 
-  override val oid: Stub<GitObjectID> by QScalar.stub()
+  override val oid: CustomScalarInitStub<GitObjectID> by QCustomScalar.stub()
 
   override val repository: InitStub<Repository> by QType.stub()
 
@@ -4516,11 +4518,11 @@ object Tag : QSchemaType, GitObject, Node {
 object Team : QSchemaType, Node {
   val description: Stub<String> by QScalar.stub()
 
-  val editTeamResourcePath: Stub<URI> by QScalar.stub()
+  val editTeamResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  val editTeamUrl: Stub<URI> by QScalar.stub()
+  val editTeamUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val invitations: QTypeConfigStub<OrganizationInvitationConnection, InvitationsArgs> by QType.configStub { InvitationsArgs(it) }
 
@@ -4530,11 +4532,11 @@ object Team : QSchemaType, Node {
 
   val privacy: Stub<TeamPrivacy> by QScalar.stub()
 
-  val resourcePath: Stub<URI> by QScalar.stub()
+  val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val slug: Stub<String> by QScalar.stub()
 
-  val url: Stub<URI> by QScalar.stub()
+  val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   class InvitationsArgs(args: TypeArgBuilder) : TypeArgBuilder by args {
     fun first(value: Int): InvitationsArgs = apply { addArg("first", value) }
@@ -4587,7 +4589,7 @@ enum class TeamRole : QSchemaType {
 }
 
 object Topic : QSchemaType, Node {
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val name: Stub<String> by QScalar.stub()
 
@@ -4607,15 +4609,15 @@ enum class TopicSuggestionDeclineReason : QSchemaType {
 object Tree : QSchemaType, GitObject, Node {
   override val abbreviatedOid: Stub<String> by QScalar.stub()
 
-  override val commitResourcePath: Stub<URI> by QScalar.stub()
+  override val commitResourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  override val commitUrl: Stub<URI> by QScalar.stub()
+  override val commitUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val entries: ListInitStub<TreeEntry> by QTypeList.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
-  override val oid: Stub<GitObjectID> by QScalar.stub()
+  override val oid: CustomScalarInitStub<GitObjectID> by QCustomScalar.stub()
 
   override val repository: InitStub<Repository> by QType.stub()
 }
@@ -4627,33 +4629,31 @@ object TreeEntry : QSchemaType {
 
   val objectVal: InitStub<GitObject> by QType.stub()
 
-  val oid: Stub<GitObjectID> by QScalar.stub()
+  val oid: CustomScalarInitStub<GitObjectID> by QCustomScalar.stub()
 
   val repository: InitStub<Repository> by QType.stub()
 
   val type: Stub<String> by QScalar.stub()
 }
 
-object URI : QSchemaType {
-  val value: Stub<String> by QScalar.stub()
-}
+object URI : CustomScalar
 
 object UnassignedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
   val assignable: InitStub<Assignable> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val user: InitStub<User> by QType.stub()
 }
 
 interface UniformResourceLocatable : QSchemaType {
-  val resourcePath: Stub<URI>
+  val resourcePath: CustomScalarInitStub<URI>
 
-  val url: Stub<URI>
+  val url: CustomScalarInitStub<URI>
 }
 
 object UnknownSignature : QSchemaType, GitSignature {
@@ -4673,9 +4673,9 @@ object UnknownSignature : QSchemaType, GitSignature {
 object UnlabeledEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val label: InitStub<Label> by QType.stub()
 
@@ -4685,9 +4685,9 @@ object UnlabeledEvent : QSchemaType, Node {
 object UnlockedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val lockable: InitStub<Lockable> by QType.stub()
 }
@@ -4695,9 +4695,9 @@ object UnlockedEvent : QSchemaType, Node {
 object UnsubscribedEvent : QSchemaType, Node {
   val actor: InitStub<Actor> by QType.stub()
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val subscribable: InitStub<Subscribable> by QType.stub()
 }
@@ -4710,7 +4710,7 @@ interface UpdatableComment : QSchemaType {
   val viewerCannotUpdateReasons: ListStub<CommentCannotUpdateReason>
 }
 
-data class UpdateProjectCardInput(private val projectCardId: String,
+data class UpdateProjectCardInput(private val projectCardId: ID,
     private val note: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -4722,7 +4722,7 @@ object UpdateProjectCardPayload : QSchemaType {
   val projectCard: InitStub<ProjectCard> by QType.stub()
 }
 
-data class UpdateProjectColumnInput(private val projectColumnId: String,
+data class UpdateProjectColumnInput(private val projectColumnId: ID,
     private val name: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -4734,7 +4734,7 @@ object UpdateProjectColumnPayload : QSchemaType {
   val projectColumn: InitStub<ProjectColumn> by QType.stub()
 }
 
-data class UpdateProjectInput(private val projectId: String, private val name: String) : QInput {
+data class UpdateProjectInput(private val projectId: ID, private val name: String) : QInput {
   private var clientMutationId: String? = null
   private var body: String? = null
   private var state: ProjectState? = null
@@ -4751,7 +4751,7 @@ object UpdateProjectPayload : QSchemaType {
   val project: InitStub<Project> by QType.stub()
 }
 
-data class UpdatePullRequestReviewCommentInput(private val pullRequestReviewCommentId: String,
+data class UpdatePullRequestReviewCommentInput(private val pullRequestReviewCommentId: ID,
     private val body: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -4763,7 +4763,7 @@ object UpdatePullRequestReviewCommentPayload : QSchemaType {
   val pullRequestReviewComment: InitStub<PullRequestReviewComment> by QType.stub()
 }
 
-data class UpdatePullRequestReviewInput(private val pullRequestReviewId: String,
+data class UpdatePullRequestReviewInput(private val pullRequestReviewId: ID,
     private val body: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -4775,7 +4775,7 @@ object UpdatePullRequestReviewPayload : QSchemaType {
   val pullRequestReview: InitStub<PullRequestReview> by QType.stub()
 }
 
-data class UpdateSubscriptionInput(private val subscribableId: String,
+data class UpdateSubscriptionInput(private val subscribableId: ID,
     private val state: SubscriptionState) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -4787,7 +4787,7 @@ object UpdateSubscriptionPayload : QSchemaType {
   val subscribable: InitStub<Subscribable> by QType.stub()
 }
 
-data class UpdateTopicsInput(private val repositoryId: String,
+data class UpdateTopicsInput(private val repositoryId: ID,
     private val topicNames: String) : QInput {
   private var clientMutationId: String? = null
   fun clientMutationId(model: String) = apply { clientMutationId = model }
@@ -4802,19 +4802,19 @@ object UpdateTopicsPayload : QSchemaType {
 }
 
 object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Node {
-  override val avatarUrl: QConfigStub<URI, AvatarUrlArgs> by QScalar.configStub { AvatarUrlArgs(it) }
+  override val avatarUrl: CustomScalarConfigStub<URI, AvatarUrlArgs> by QCustomScalar.configStub { AvatarUrlArgs(it) }
 
   val bio: Stub<String> by QScalar.stub()
 
-  val bioHTML: Stub<HTML> by QScalar.stub()
+  val bioHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val company: Stub<String> by QScalar.stub()
 
-  val companyHTML: Stub<HTML> by QScalar.stub()
+  val companyHTML: CustomScalarInitStub<HTML> by QCustomScalar.stub()
 
   val contributedRepositories: QTypeConfigStub<RepositoryConnection, ContributedRepositoriesArgs> by QType.configStub { ContributedRepositoriesArgs(it) }
 
-  val createdAt: Stub<DateTime> by QScalar.stub()
+  val createdAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val databaseId: Stub<Int> by QScalar.stub()
 
@@ -4828,7 +4828,7 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   val gists: QTypeConfigStub<GistConnection, GistsArgs> by QType.configStub { GistsArgs(it) }
 
-  override val id: Stub<String> by QScalar.stub()
+  override val id: CustomScalarInitStub<ID> by QCustomScalar.stub()
 
   val isBountyHunter: Stub<Boolean> by QScalar.stub()
 
@@ -4866,13 +4866,13 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   override val repository: QTypeConfigStub<Repository, RepositoryOwner.RepositoryArgs> by QType.configStub { RepositoryOwner.RepositoryArgs(it) }
 
-  override val resourcePath: Stub<URI> by QScalar.stub()
+  override val resourcePath: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val starredRepositories: QTypeConfigStub<StarredRepositoryConnection, StarredRepositoriesArgs> by QType.configStub { StarredRepositoriesArgs(it) }
 
-  val updatedAt: Stub<DateTime> by QScalar.stub()
+  val updatedAt: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
-  override val url: Stub<URI> by QScalar.stub()
+  override val url: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
   val viewerCanFollow: Stub<Boolean> by QScalar.stub()
 
@@ -4880,9 +4880,9 @@ object User : QSchemaType, UniformResourceLocatable, RepositoryOwner, Actor, Nod
 
   val watching: QTypeConfigStub<RepositoryConnection, WatchingArgs> by QType.configStub { WatchingArgs(it) }
 
-  val websiteUrl: Stub<URI> by QScalar.stub()
+  val websiteUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
 
-  class AvatarUrlArgs(args: ArgBuilder) : BaseAvatarUrlArgs(args) {
+  class AvatarUrlArgs(args: CustomScalarArgBuilder) : BaseAvatarUrlArgs(args) {
     fun size(value: Int): AvatarUrlArgs = apply { addArg("size", value) }
 
   }
@@ -5097,6 +5097,4 @@ object UserEdge : QSchemaType {
   val node: InitStub<User> by QType.stub()
 }
 
-object X509Certificate : QSchemaType {
-  val value: Stub<String> by QScalar.stub()
-}
+object X509Certificate : CustomScalar

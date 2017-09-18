@@ -35,7 +35,7 @@ object JvmCompile {
     output.deleteOnExit()
     execImpl(
         PrintingMessageCollector(
-            System.out, //java.io.PrintStream(File("/dev/null")),
+            java.io.PrintStream(File("/dev/null")),
             MessageRenderer.WITHOUT_PATHS, true),
         Services.EMPTY,
         args)
