@@ -19,6 +19,9 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     QTypeConfigStub<I, B>,
     TypeArgBuilder,
     ModelProvider {
+  override fun accept(result: Any?) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
 
   lateinit var result: P
 

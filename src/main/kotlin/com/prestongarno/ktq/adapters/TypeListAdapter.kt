@@ -18,6 +18,9 @@ internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeList
     ListConfigType<I, B>,
     TypeListArgBuilder,
     ModelProvider {
+  override fun accept(result: Any?) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
 
   val results = mutableListOf<P>()
   lateinit var init: () -> P

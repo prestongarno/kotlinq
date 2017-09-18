@@ -18,6 +18,10 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
     CustomScalarListInitStub<E>,
     CustomScalarListStub<P, Q> {
 
+  override fun accept(result: Any?) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
   override fun config(): B = builderInit(CustomScalarListAdapter<E, P, Q, B>(fieldName, builderInit))
 
   internal lateinit var adapter: P

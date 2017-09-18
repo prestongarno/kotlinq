@@ -7,7 +7,9 @@ import com.prestongarno.ktq.CustomScalarInitStub
 import com.prestongarno.ktq.CustomStub
 import com.prestongarno.ktq.Payload
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
+import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, out B: CustomScalarArgBuilder>(
@@ -17,6 +19,13 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
     CustomScalarConfigStub<E, B>,
     CustomScalarInitStub<E>,
     CustomStub<P, Q> {
+
+  override fun accept(result: Any?) {
+    when (adapter) {
+      is InputStreamScalarMapper<*> -> (adapter as InputStreamScalarMapper).rawValue = "$result".byteInputStream()
+      is StringScalarMapper<*> -> (adapter as StringScalarMapper).rawValue = "$result"
+    }
+  }
 
   override fun config(): B = builderInit(CustomScalarAdapter<E, P, Q, B>(fieldName, builderInit))
 
