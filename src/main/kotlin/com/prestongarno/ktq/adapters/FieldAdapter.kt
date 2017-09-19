@@ -10,9 +10,10 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
   val args: MutableMap<String, Any> = HashMap(4, 0.75f)
 
   lateinit var property: KProperty<*>
-  var ID: String = ""
 
   fun onProvideDelegate(inst: QModel<*>) = inst.fields.add(this)
+
+  abstract fun accept(result: Any?)
 
   /**
    * I try to make my code as unreadable as possible

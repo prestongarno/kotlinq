@@ -8,7 +8,7 @@
 
 
 
-### Add from Central & JCenter
+### Add typedValueFrom Central & JCenter
 
 To use in a project, add the dependency to a gradle buildscript:
 

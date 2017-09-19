@@ -10,10 +10,9 @@ import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
 import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.config.Services
-import java.io.*
+import java.io.File
 import java.net.URLClassLoader
 import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.declaredMemberProperties
 
 object JvmCompile {
@@ -36,7 +35,7 @@ object JvmCompile {
     output.deleteOnExit()
     execImpl(
         PrintingMessageCollector(
-            System.out, //java.io.PrintStream(File("/dev/null")),
+            java.io.PrintStream(File("/dev/null")),
             MessageRenderer.WITHOUT_PATHS, true),
         Services.EMPTY,
         args)

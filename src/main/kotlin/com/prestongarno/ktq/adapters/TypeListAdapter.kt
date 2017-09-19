@@ -1,5 +1,7 @@
 package com.prestongarno.ktq.adapters
 
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.QModel
@@ -8,10 +10,9 @@ import com.prestongarno.ktq.TypeListArgBuilder
 import com.prestongarno.ktq.TypeListStub
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.declaredMemberProperties
 
-internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
-    fieldName : String,
+internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
+    fieldName: String,
     val builderInit: (TypeListArgBuilder) -> B
 ) : FieldAdapter(fieldName),
     ListInitStub<I>,
@@ -19,6 +20,16 @@ internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeList
     ListConfigType<I, B>,
     TypeListArgBuilder,
     ModelProvider {
+
+  override fun accept(result: Any?) {
+    if (result is JsonArray<*>) {
+      result.filterIsInstance<JsonObject>().forEach { element ->
+        this.results.add(init().apply {
+          this.accept(element)
+        })
+      }
+    }
+  }
 
   val results = mutableListOf<P>()
   lateinit var init: () -> P
@@ -33,7 +44,7 @@ internal class TypeListAdapter< I : QSchemaType, P : QModel<I>, out B : TypeList
   override fun addArg(name: String, value: Any): TypeListArgBuilder = apply { args.put(name, value) }
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeListStub<U, I>
-    = apply { this.init = of as () -> P } as TypeListStub<U, I>
+      = apply { this.init = of as () -> P } as TypeListStub<U, I>
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> {
     return results

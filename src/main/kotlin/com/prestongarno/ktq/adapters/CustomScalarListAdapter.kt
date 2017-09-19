@@ -1,7 +1,15 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.*
+import com.prestongarno.ktq.CustomScalar
+import com.prestongarno.ktq.CustomScalarListArgBuilder
+import com.prestongarno.ktq.CustomScalarListConfigStub
+import com.prestongarno.ktq.CustomScalarListInitStub
+import com.prestongarno.ktq.CustomScalarListStub
+import com.prestongarno.ktq.Payload
+import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
+import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
 import kotlin.reflect.KProperty
 
 internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, Q, out B : CustomScalarListArgBuilder>(
@@ -11,6 +19,20 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
     CustomScalarListConfigStub<E, B>,
     CustomScalarListInitStub<E>,
     CustomScalarListStub<P, Q> {
+
+  override fun accept(result: Any?) {
+    val values = (if (result is List<*>) result else listOf(result)).filterNotNull()
+    when (adapter) {
+      is InputStreamScalarListMapper<*> -> {
+        (adapter as InputStreamScalarListMapper<*>).rawValue =
+            values.map { "$it".byteInputStream() }
+      }
+      is StringScalarListMapper<*> -> {
+        (adapter as StringScalarListMapper<*>).rawValue =
+            values.map { "$it" }
+      }
+    }
+  }
 
   override fun config(): B = builderInit(CustomScalarListAdapter<E, P, Q, B>(fieldName, builderInit))
 
@@ -25,14 +47,11 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
     return this
   }
 
+  override fun <U : QScalarListMapper<A>, A> init(of: U): CustomScalarListStub<U, A> = this.build(of)
+
   @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T> {
     this.adapter = init as P
     return this as CustomScalarListStub<U, T>
-  }
-
-  @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<A>, A> init(of: U): CustomScalarListStub<U, A> {
-    this.adapter = of as P
-    return this as CustomScalarListStub<U, A>
   }
 }
 

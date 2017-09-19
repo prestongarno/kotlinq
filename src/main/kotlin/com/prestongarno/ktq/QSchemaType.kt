@@ -1,6 +1,11 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.*
+import com.prestongarno.ktq.adapters.CustomScalarAdapter
+import com.prestongarno.ktq.adapters.CustomScalarListAdapter
+import com.prestongarno.ktq.adapters.ScalarListAdapter
+import com.prestongarno.ktq.adapters.ScalarStubAdapter
+import com.prestongarno.ktq.adapters.TypeListAdapter
+import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.internal.Grub
@@ -37,14 +42,14 @@ interface QSchemaType {
 
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates on
-   * fields which are types from any Schema-defined scalars:
+   * fields which are types typedValueFrom any Schema-defined scalars:
    * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#stub()} and
    * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#configStub(arginit)}.*/
   object QCustomScalar {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
      * on schema-defined scalar types
-     * @param T The type argument for the stub, from a schema-defined CustomScalar type
+     * @param T The type argument for the stub, typedValueFrom a schema-defined CustomScalar type
      * @return Grub<CustomScalarInitStub<T>> the delegate which lazily provides a CustomScalarInitStub<T> */
     fun <T : CustomScalar> stub(): Grub<CustomScalarInitStub<T>>
         = Grub { CustomScalarAdapter<T, QScalarMapper<T>, T, CustomScalarArgBuilder>(it, { it }) }
@@ -144,7 +149,7 @@ interface QSchemaType {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} collection
      * fields on schema-defined scalar types
-     * @param T The type argument for the stub, from a schema-defined CustomScalar type
+     * @param T The type argument for the stub, typedValueFrom a schema-defined CustomScalar type
      * @return Grub<CustomScalarListInitStub<T>> the delegate which lazily provides a CustomScalarListInitStub<T> */
     fun <T> stub(): Grub<CustomScalarListInitStub<T>> where T : CustomScalar
         = Grub { CustomScalarListAdapter<T, QScalarListMapper<T>, T, CustomScalarListArgBuilder>(it, { it }) }
@@ -161,7 +166,6 @@ interface QSchemaType {
     ): Grub<CustomScalarListConfigStub<T, A>> =
         Grub { CustomScalarListAdapter<T, QScalarListMapper<T>, T, A>(it, arginit) }
   }
-
 }
 
 /**

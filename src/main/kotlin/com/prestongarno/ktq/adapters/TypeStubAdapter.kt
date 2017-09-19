@@ -1,6 +1,12 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.*
+import com.beust.klaxon.JsonObject
+import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QTypeConfigStub
+import com.prestongarno.ktq.TypeArgBuilder
+import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
@@ -14,6 +20,12 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     QTypeConfigStub<I, B>,
     TypeArgBuilder,
     ModelProvider {
+
+  override fun accept(result: Any?) {
+    if(result is JsonObject)
+      this.result.fields.forEach {
+        it.accept(result[it.fieldName]) }
+  }
 
   lateinit var result: P
 

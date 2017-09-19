@@ -55,6 +55,7 @@ repositories {
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
   compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+  compile 'com.beust:klaxon:0.30'
   testCompile 'junit:junit:4.12'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: "$kotlin_version"
@@ -232,7 +233,4 @@ artifactory {
       publishPom = true
     }
   }
-  clientConfig.setIncludeEnvVars(false)
-  clientConfig.info.setBuildNumber(
-          '' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
 }

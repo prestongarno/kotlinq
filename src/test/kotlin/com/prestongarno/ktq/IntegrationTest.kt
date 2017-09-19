@@ -9,8 +9,11 @@ import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.util.concurrent.ThreadLocalRandom
-import java.util.function.Consumer
+import kotlin.reflect.KClass
+import kotlin.reflect.full.allSupertypes
+import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.superclasses
+import kotlin.reflect.jvm.jvmErasure
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -182,19 +185,19 @@ class IntegrationTest {
         .writeToFile(codegenOutputFile)
 
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
-     KtqCompileWrapper(compileOutputDir).run {
-       val user = loadObject("$PACK.User")
-       val actor = loadInterface("$PACK.Actor")
+    KtqCompileWrapper(compileOutputDir).run {
+      val user = loadObject("$PACK.User")
+      val actor = loadInterface("$PACK.Actor")
 
-       assertTrue(user::class.superclasses.contains(actor))
-       assertThat(QModel(user).allGraphQl())
-           .isEqualTo("""
+      assertTrue(user::class.superclasses.contains(actor))
+      assertThat(QModel(user).allGraphQl())
+          .isEqualTo("""
           |{
           |  email,
           |  login
           |}
           """.trimMargin("|"))
-     }
+    }
 
 
   }
@@ -202,8 +205,6 @@ class IntegrationTest {
   @Test fun inheritanceTestMultiple() {
     QCompiler.initialize()
         .packageName(PACK)
-        /* TODO = Fail a compile on the gradle when nonnullable
-         super-field with nullable inherited? */
         .schema("""
           |
           |interface Actor {
@@ -250,13 +251,477 @@ class IntegrationTest {
         .schema("""
           |
           |type Foo {
-          |  url: UniformResourceLocatable
+          |  url: URL
           |}
           |
+          |scalar URL
           |
           """.trimMargin("|"))
         .compile()
-        .result { println(it) }
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+
+      foo::class.declaredMemberProperties.first().run {
+        assertTrue(name == "url")
+        assertTrue(this.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  url
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun customScalarInterfaceTest() {
+    QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |interface Bar {
+          |  url: URL
+          |}
+          |
+          |type Foo implements Bar{
+          |  url: URL
+          |}
+          |
+          |scalar URL
+          |
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+      val bar = loadInterface("$PACK.Bar")
+
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(bar))
+
+      foo::class.declaredMemberProperties.first().run {
+        assertTrue(name == "url")
+        assertTrue(this.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  url
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun customScalarInterfaceMultipleFields() {
+        QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |interface Bar {
+          |  url: URL
+          |}
+          |
+          |type Foo implements Bar{
+          |  number: Int
+          |  url: URL
+          |}
+          |
+          |scalar URL
+          |
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+      val bar = loadInterface("$PACK.Bar")
+
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(bar))
+
+      foo::class.declaredMemberProperties.find { it.name == "url" }!!.run {
+        assertTrue(this.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  number,
+            |  url
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun customScalarInheritingMultipleFields() {
+            QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |interface Bar {
+          |  number: Int
+          |  url: URL
+          |}
+          |
+          |type Foo implements Bar  {
+          |  number: Int
+          |  url: URL
+          |}
+          |
+          |scalar URL
+          |
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+      val bar = loadInterface("$PACK.Bar")
+
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(bar))
+
+      foo::class.declaredMemberProperties.find { it.name == "url" }!!.run {
+        assertTrue(this.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  number,
+            |  url
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun testCustomScalarMultipleCustomFields() {
+    QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |type Foo {
+          |
+          |  url: URL
+          |
+          |    next: URL
+          |
+          |}
+          |
+          |scalar URL
+          |
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+
+      foo::class.declaredMemberProperties.forEach {
+        assertTrue(it.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  next,
+            |  url
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun testCustomScalarMultipleInherited() {
+        QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |interface Bar {
+          |  url: URL
+          |}
+          |
+          |interface Baz {
+          |  url: URL
+          |}
+          |type Foo implements Bar, Baz {
+          |  url: URL
+          |}
+          |
+          |scalar URL
+          |
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+      val bar = loadInterface("$PACK.Bar")
+      val baz = loadInterface("$PACK.Baz")
+
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(bar))
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(baz))
+
+      foo::class.declaredMemberProperties.forEach {
+        assertTrue(it.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  url
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun testCustomScalarFieldWithInput() {
+    QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |scalar URL
+          |type Foo {
+          |  url(shortened: Boolean): URL
+          |}
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+
+      foo::class.declaredMemberProperties.forEach {
+        assertTrue(it.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  url
+            |}
+            """.trimMargin("|"))
+      assertThat(QModel(foo).mockInputGraphql("url", mapOf(Pair("shortened", true))).toGraphql())
+          .isEqualTo("""
+            |{
+            |  url(shortened: true)
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun testCustomScalarFieldWithMultipleInputArgs() {
+        QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |scalar URL
+          |type Foo {
+          |  url(
+          |    shortened: Boolean,
+          |    encoding: String
+          |  ): URL
+          |}
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+
+      foo::class.declaredMemberProperties.forEach {
+        assertTrue(it.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo).allGraphQl())
+          .isEqualTo("""
+            |{
+            |  url
+            |}
+            """.trimMargin("|"))
+      assertThat(QModel(foo)
+          .mockInputGraphql("url", mapOf(
+              Pair("shortened", true),
+              Pair("encoding", "UTF-8")
+          )).toGraphql())
+          .isEqualTo("""
+            |{
+            |  url(encoding: "UTF-8",shortened: true)
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun testCustomScalarFieldWithEnumAsArgument() {
+    QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |scalar URL
+          |
+          |enum What {
+          |  THIS,
+          |  THAT,
+          |}
+          |
+          |
+          |
+          |type Foo {
+          |  url(
+          |    shortened: Boolean,
+          |    what: What
+          |  ): URL
+          |}
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+      val what = (loadInterface("$PACK.What") as KClass<Enum<*>>)
+
+
+      foo::class.declaredMemberProperties.forEach {
+        assertTrue(it.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo)
+          .mockInputGraphql("url", mapOf(
+              Pair("shortened", true),
+              Pair("what", what.java.enumConstants[0])
+          )).toGraphql())
+          .isEqualTo("""
+            |{
+            |  url(shortened: true,what: THIS)
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun testDiamondTypesWithCustomScalarField() {
+    QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |interface Bar {
+          |  url(shortened: Boolean): URL
+          |}
+          |
+          |interface Baz {
+          |  url(shortened: Boolean): URL
+          |}
+          |type Foo implements Bar, Baz {
+          |  url(shortened: Boolean): URL
+          |}
+          |
+          |scalar URL
+          |
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+      val bar = loadInterface("$PACK.Bar")
+      val baz = loadInterface("$PACK.Baz")
+
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(bar))
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(baz))
+
+      foo::class.declaredMemberProperties.forEach {
+        assertTrue(it.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo)
+          .mockInputGraphql("url", mapOf(
+              Pair("shortened", true)
+          )).toGraphql())
+          .isEqualTo("""
+            |{
+            |  url(shortened: true)
+            |}
+            """.trimMargin("|"))
+    }
+  }
+
+  @Test fun testDiamondConflictingFieldsCustomScalar() {
+        QCompiler.initialize()
+        .packageName(PACK)
+        .schema("""
+          |
+          |interface Bar {
+          |  url(shortened: Boolean): URL
+          |}
+          |
+          |interface Baz {
+          |  url(shortened: Boolean,
+          |    encoding: String
+          |  ): URL
+          |}
+          |type Foo implements Bar, Baz {
+          |  url(shortened: Boolean,encoding: String): URL
+          |}
+          |
+          |scalar URL
+          |
+          """.trimMargin("|"))
+        .compile()
+        .writeToFile(codegenOutputFile)
+
+    require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
+
+    KtqCompileWrapper(compileOutputDir).run {
+      val url = loadObject("$PACK.URL")
+      val foo = loadObject("$PACK.Foo")
+      val bar = loadInterface("$PACK.Bar")
+      val baz = loadInterface("$PACK.Baz")
+
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(bar))
+      assertTrue(foo::class.allSupertypes.map { it.jvmErasure }.contains(baz))
+
+      foo::class.declaredMemberProperties.forEach {
+        assertTrue(it.returnType.arguments[0].type?.jvmErasure == url::class)
+      }
+
+      assertThat(QModel(foo)
+          .mockInputGraphql("url", mapOf(
+              Pair("shortened", true),
+              Pair("encoding", "UTF-8")
+          )).toGraphql())
+          .isEqualTo("""
+            |{
+            |  url(encoding: "UTF-8",shortened: true)
+            |}
+            """.trimMargin("|"))
+    }
   }
 
   @Ignore @Test fun gitHubIntegration() {

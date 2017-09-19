@@ -2,8 +2,12 @@
 
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.QSchemaType.*
 import org.junit.Test
+import com.prestongarno.ktq.QSchemaType.QScalar
+import com.prestongarno.ktq.QSchemaType.QType
+import com.prestongarno.ktq.QSchemaType.QCustomScalar
+import com.prestongarno.ktq.QSchemaType.QCustomScalarList
+import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.google.common.truth.Truth
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
@@ -94,6 +98,7 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
 class TestSample {
   @Test fun testToGraphQlValid() {
     val foobaz = MyUser(1000, "ENGLISH")
+    foobaz.fields.forEach { println(it.fieldName) }
     Truth.assertThat(foobaz.toGraphql())
         .isEqualTo("""
           |{

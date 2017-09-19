@@ -1,16 +1,12 @@
 package com.prestongarno.ktq
 
 import com.google.common.truth.Truth
-import com.prestongarno.ktq.compiler.QCompiler
 import com.prestongarno.ktq.yelp.Business
 import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Coordinates
 import org.jetbrains.kotlin.preprocessor.mkdirsOrFail
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.test.fail
 
 const val PACK: String = "com.ktq.yelp"
 
