@@ -3,6 +3,7 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.QSchemaType.QCustomScalar
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.google.common.truth.Truth.assertThat
+import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 import java.io.File
@@ -44,6 +45,26 @@ class MockResponseCustomScalar {
       assertThat(webUrl.path).isEqualTo("/dev/null")
     }
   }
+
+  @Test fun multipleFieldCustomScalarListedMappings() {
+    val myNote = object : QModel<Note>(Note) {
+      val webUrl by model.webUrl.init(StringScalarMapper { File(it).toURI() })
+      val related by model.relatedLinks.init(StringScalarListMapper { File(it) })
+    }
+
+    @Language("JSON") val response = """{
+        "webUrl": "/dev/null",
+        "relatedLinks": ["stderr", "stdin"]
+      }"""
+
+    myNote.run {
+      onResponse(response)
+      assertThat(webUrl.path).isEqualTo("/dev/null")
+      assertTrue(related.size == 2)
+      assertThat(related[0].name).isEqualTo("stderr")
+      assertThat(related[1].name).isEqualTo("stdin")
+    }
+  }
 }
 
 object DateTime : CustomScalar
@@ -54,4 +75,5 @@ object Note : QSchemaType {
   val dateCreated: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
 
   val webUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
+  val relatedLinks: CustomScalarListInitStub<URI> by QSchemaType.QCustomScalarList.stub()
 }
