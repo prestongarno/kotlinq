@@ -87,6 +87,25 @@ class MockResponseCustomScalar {
       assertThat(refIds[2]).isEqualTo(1002)
     }
   }
+
+  @Test fun configurableStubMappedToCustomScalarList() {
+    val myNote = object : QModel<Note>(Note) {
+      val refIds by model.refIdsConfigurable.config()
+          .first(10)
+          .build(StringScalarListMapper { it.toInt() })
+    }
+    @Language("JSON") val response = """{
+        "refIdsConfigurable": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      }"""
+
+    myNote.run {
+      onResponse(response)
+      assertThat(refIds.size == 10)
+      refIds.forEachIndexed {
+        id, index -> assertThat(id).isEqualTo(index)
+      }
+    }
+  }
 }
 
 object DateTime : CustomScalar
@@ -98,6 +117,12 @@ object Note : QSchemaType {
   val webUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
   val relatedLinks: CustomScalarListInitStub<URI> by QCustomScalarList.stub()
   val refIds: CustomScalarListInitStub<ID> by QCustomScalarList.stub()
+  val refIdsConfigurable: CustomScalarListConfigStub<ID, Note.RefIdsConfigurableArgs>
+      by QCustomScalarList.configStub { RefIdsConfigurableArgs(it) }
+
+  class RefIdsConfigurableArgs(args: CustomScalarListArgBuilder) : CustomScalarListArgBuilder by args {
+    fun first(value: Int): RefIdsConfigurableArgs = apply { addArg("first", value) }
+  }
 }
 
 object ID : CustomScalar
