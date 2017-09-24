@@ -16,9 +16,19 @@ open class QModel<out T : QSchemaType>(val model: T) {
   override fun toString() = this.toGraphql()
 
   fun toGraphql(indentation: Int = 0): String {
-    return ((fields.joinToString(separator = ",\n") { it.toRawPayload() }
-        .indent(1)) + "\n}").prepend("{\n").indent(indentation)
+    return if (model is QSchemaUnion) unionToGraphql(indentation) else
+      ((fields.joinToString(separator = ",\n") { it.toRawPayload() }
+          .indent(1)) + "\n}").prepend("{\n").indent(indentation)
+          .replace("\\s*([(,])".toRegex(), "$1").trim()
   }
+
+  private fun unionToGraphql(indentation: Int): String =
+      (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
+        it.toRawPayload().prepend("... on ")
+      }.indent(1)
+          .plus("\n}")
+          .indent(indentation))
+          .replace("\\s*([(,])".toRegex(), "$1").trim()
 
   internal fun onResponse(input: InputStream) {
     (Parser().parse(input) as JsonObject).run {
@@ -74,7 +84,9 @@ fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
         values.mapNotNull {
           type.java.enumConstants.find { (it as Enum<*>).name == "$it" }
         }
-      } else { emptyList() }
+      } else {
+        emptyList()
+      }
     }
   }
 }

@@ -19,7 +19,7 @@ object JvmCompile {
 
   fun exe(input: File, output: File): Boolean = K2JVMCompiler().run {
     val args = K2JVMCompilerArguments().apply {
-      freeArgs = listOf(input.absolutePath)
+      freeArgs = mutableListOf(input.absolutePath!!)
       loadBuiltInsFromDependencies = true
       destination = output.absolutePath
       classpath = System.getProperty("java.class.path")

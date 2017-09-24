@@ -2,7 +2,7 @@ import groovy.io.FileType
 
 buildscript {
   ext.sourceCompatibility = 1.8
-  ext.kotlin_version = '1.1.4-3'
+  ext.kotlin_version = '1.1.50'
   ext.clientId = 'ktq-client'
   ext.projectDescription = 'a kotlin client for graphql'
   ext.gitBaseUrl = GIT_BASE_URL + '/ktq'
