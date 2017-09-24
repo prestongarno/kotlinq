@@ -11,6 +11,8 @@ import java.io.File
 import java.time.Instant
 import java.util.Calendar
 import java.util.Date
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.isAccessible
 import kotlin.test.assertTrue
 
 class MockResponseCustomScalar {
