@@ -125,7 +125,6 @@ class MockedHttpResults {
       assertThat(justForShow[0] == GoalStatus.IN_PROGRESS)
       assertThat(justForShow[1] == GoalStatus.COMPLETED)
     }
-
   }
 }
 

@@ -173,3 +173,5 @@ interface QSchemaType {
  * Supports custom deserialization or mapping to another object by
  * using {@link com.prestongarno.ktq.adapters.custom.QScalarMapper} */
 interface CustomScalar : QSchemaType
+
+interface QSchemaUnion : QSchemaType

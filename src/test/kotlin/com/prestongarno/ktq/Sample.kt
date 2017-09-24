@@ -98,7 +98,6 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
 class TestSample {
   @Test fun testToGraphQlValid() {
     val foobaz = MyUser(1000, "ENGLISH")
-    foobaz.fields.forEach { println(it.fieldName) }
     Truth.assertThat(foobaz.toGraphql())
         .isEqualTo("""
           |{
