@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
- [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.1) ](https://bintray.com/prestongarno/ktq/ktq-client/0.1/link)
+ [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.2) ](https://bintray.com/prestongarno/ktq/ktq-client/0.2/link)
 
 
 
@@ -12,18 +12,18 @@
 
 To use in a project, add the dependency to a gradle buildscript:
 
-      compile 'com.prestongarno.ktq:ktq-client:0.1'
+      compile 'com.prestongarno.ktq:ktq-client:0.2'
       
 Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
  the gradle syntax for configuring compilation of graphql schema IDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
-      classpath 'com.prestongarno.ktq:ktq-gradle:0.1'
+      classpath 'com.prestongarno.ktq:ktq-gradle:0.2'
 
 And apply the plugin:
 
       plugins {
-        id 'com.prestongarno.ktq' version 0.1
+        id 'com.prestongarno.ktq' version 0.2
       }
       
 ### About
