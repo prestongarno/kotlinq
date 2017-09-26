@@ -1,25 +1,32 @@
 package com.prestongarno.ktq.http
 
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.http.internal.Http4k
 
 interface GraphHttpAdapter {
 
   val endpoint: String
 
-  fun <T: QModel<*>> createRequest(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(`for`)
+  val authorization: Authorization?
+
+  var timeout: Int
+
+  fun <T : QModel<*>> createRequest(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(this, `for`)
 }
 
 /**
  * A wrapper class for a GraphQL request */
-interface GraphQlRequest<T: QModel<*>> {
+interface GraphQlRequest<T : QModel<*>> {
   fun onSuccess(handler: (T) -> Unit): GraphQlRequest<T>
 
   fun onError(handler: (errorCode: Int, message: String) -> Unit): GraphQlRequest<T>
 
-  fun execute()
+  suspend fun execute()
 }
 
-internal class RequestBuilder<T: QModel<*>>(internal val `for`: (() -> T)) : GraphQlRequest<T> {
+internal class RequestBuilder<T : QModel<*>>(
+    internal val adapter: GraphHttpAdapter,
+    internal val `for`: (() -> T)) : GraphQlRequest<T> {
 
   internal var successHandler: ((T) -> Unit)? = null
 
@@ -29,5 +36,6 @@ internal class RequestBuilder<T: QModel<*>>(internal val `for`: (() -> T)) : Gra
 
   override fun onError(handler: (errorCode: Int, message: String) -> Unit) = apply { errorHandler = handler }
 
-  override fun execute() = TODO("not implemented")
+  override suspend fun execute() = Http4k.send(this)
 }
+

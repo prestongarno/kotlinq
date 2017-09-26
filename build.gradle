@@ -53,6 +53,8 @@ dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
   compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
   compile 'com.beust:klaxon:0.30'
+  compile group: "org.http4k", name: "http4k-core", version: "2.29.1"
+  compile group: "org.http4k", name: "http4k-client-okhttp", version: "2.29.1"
   testCompile 'junit:junit:4.12'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: "$kotlin_version"
@@ -229,5 +231,10 @@ artifactory {
       publications('mavenJava')
       publishPom = true
     }
+  }
+}
+kotlin {
+  experimental {
+    coroutines "enable"
   }
 }
