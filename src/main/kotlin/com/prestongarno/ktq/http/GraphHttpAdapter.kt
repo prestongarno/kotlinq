@@ -7,9 +7,7 @@ interface GraphHttpAdapter {
 
   val endpoint: String
 
-  val authorization: Authorization?
-
-  var timeout: Int
+  var authorization: Authorization?
 
   fun <T : QModel<*>> createRequest(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(this, `for`)
 }
