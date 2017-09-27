@@ -95,7 +95,7 @@ class UnionToGraphql {
     assertThat(queryModel.toGraphql())
         .isEqualTo("""
           |{
-          |  searchAccounts(first: 10,searchTerm: "google.com"){
+          |  searchAccounts(first: 10,searchTerm: \"google.com\"){
           |    ... on Organization{
           |      login,
           |      members{
@@ -138,7 +138,7 @@ class UnionToGraphql {
     assertThat(queryModel.toGraphql())
         .isEqualTo("""
           |{
-          |  searchAccounts(first: 10,searchTerm: "google.com"){
+          |  searchAccounts(first: 10,searchTerm: \"google.com\"){
           |    ... on Organization{
           |      login,
           |      members{
@@ -189,7 +189,7 @@ class UnionToGraphql {
     assertThat(queryModel.toGraphql())
         .isEqualTo("""
           |{
-          |  searchAccounts(first: 10,searchTerm: "google.com"){
+          |  searchAccounts(first: 10,searchTerm: \"google.com\"){
           |    ... on Organization{
           |      login,
           |      members{

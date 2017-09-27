@@ -132,7 +132,7 @@ class IntegrationTest {
         mapOf(Pair("selection", listOf("burger", "lettuce", "tomato", "ketchup", "pickles")))).toGraphql())
         .isEqualTo("""
           |{
-          |  addToppingMutation(selection: [ "burger", "lettuce", "tomato", "ketchup", "pickles" ])
+          |  addToppingMutation(selection: [ \"burger\", \"lettuce\", \"tomato\", \"ketchup\", \"pickles\" ])
           |}
           """.trimMargin("|"))
   }
@@ -569,7 +569,7 @@ class IntegrationTest {
           )).toGraphql())
           .isEqualTo("""
             |{
-            |  url(encoding: "UTF-8",shortened: true)
+            |  url(encoding: \"UTF-8\",shortened: true)
             |}
             """.trimMargin("|"))
     }
@@ -718,7 +718,7 @@ class IntegrationTest {
           )).toGraphql())
           .isEqualTo("""
             |{
-            |  url(encoding: "UTF-8",shortened: true)
+            |  url(encoding: \"UTF-8\",shortened: true)
             |}
             """.trimMargin("|"))
     }

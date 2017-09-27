@@ -2,6 +2,8 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaType.QScalar
+import com.prestongarno.ktq.compiler.QCompiler
+import java.io.File
 
 /**
  * Example generated Configuration */
@@ -34,4 +36,9 @@ class ProjectModel : QModel<ProjImpl>(ProjImpl)
 
 fun main(args: Array<String>) {
   ConfigModel().depends
+/*  QCompiler.initialize()
+      .schema(File("/home/preston/IdeaProjects/ktq/src/test/resources/graphql.schema.graphqls"))
+      .packageName("com.prestongarno.ktq.github")
+      .compile()
+      .result { println(it) }*/
 }

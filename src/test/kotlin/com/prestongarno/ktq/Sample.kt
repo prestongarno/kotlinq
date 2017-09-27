@@ -109,7 +109,7 @@ class TestSample {
           |    relatedUrls,
           |    friendsUrls(shortUrls: true)
           |  },
-          |  address(language: "ENGLISH"),
+          |  address(language: \"ENGLISH\"),
           |  friends(first: 1000){
           |    name,
           |    url,
@@ -134,7 +134,7 @@ class TestSample {
           |    relatedUrls,
           |    friendsUrls(shortUrls: true)
           |  },
-          |  address(language: "FR"),
+          |  address(language: \"FR\"),
           |  friends(first: 6565){
           |    name,
           |    url,
