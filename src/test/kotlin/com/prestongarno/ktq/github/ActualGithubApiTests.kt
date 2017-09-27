@@ -7,7 +7,6 @@ import kotlinx.coroutines.experimental.runBlocking
 import kotlin.coroutines.experimental.CoroutineContext
 
 fun main(args: Array<String>) {
-  System.getenv().entries.forEach { println("${it.key}:${it.value}") }
   runBlocking {
     GraphQL.initialize("https://api.github.com/graphql/").apply {
       @Suppress("RemoveSingleExpressionStringTemplate")

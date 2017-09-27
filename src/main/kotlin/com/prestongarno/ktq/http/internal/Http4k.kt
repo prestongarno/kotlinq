@@ -14,31 +14,24 @@ import org.http4k.core.Status
 
 internal object Http4k {
 
-  suspend fun <T: QModel<*>> send(requestBuilder: RequestBuilder<T>) {
+  suspend fun <T : QModel<*>> send(requestBuilder: RequestBuilder<T>) {
     val client: HttpHandler = OkHttp()
 
     val auth = requestBuilder.adapter.authorization
 
-    val request = Request(Method.POST,
-        if (auth is BasicAuth) "${auth}" else ""
-            + requestBuilder.adapter.endpoint)
-
-
     val obj = requestBuilder.`for`()
-    request.body(obj.toGraphql().replace("[\n\r\\s]".toRegex(), ""))
 
     if (requestBuilder.adapter.authorization is TokenAuth) {
-      request.replaceHeader("Authorization", "${requestBuilder.adapter.authorization}")
     }
 
-    val networkResponse: Response = client(request)
+    val networkResponse: Response = client(
+        Request(Method.POST, requestBuilder.adapter.endpoint)
+            .header("Authorization:", "${requestBuilder.adapter.authorization}")
+            .query("", obj.toGraphql()))
 
     if (networkResponse.status == Status.OK && requestBuilder.successHandler != null) {
-      requestBuilder.successHandler!!.invoke(obj.apply {
-        onResponse(networkResponse.body.toString())
-      })
-    }
-    else if (requestBuilder.errorHandler != null) {
+      requestBuilder.successHandler!!.invoke(obj.apply { onResponse(networkResponse.body.toString()) })
+    } else if (requestBuilder.errorHandler != null) {
       requestBuilder.errorHandler!!(networkResponse.status.code, networkResponse.toMessage())
     }
   }
