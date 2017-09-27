@@ -6,6 +6,6 @@ sealed class Authorization(private val value: String) {
   }
 }
 
-class BasicAuth(user: String, pass: String = ""): Authorization("$user${if (pass.isNotBlank()) ":$pass" else ""}")
+//class BasicAuth(user: String, pass: String = ""): Authorization("$user${if (pass.isNotBlank()) ":$pass" else ""}")
 
 class TokenAuth(token: String, type: String = "Bearer") : Authorization("$type $token")
