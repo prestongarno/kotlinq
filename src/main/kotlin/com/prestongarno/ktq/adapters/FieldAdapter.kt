@@ -41,7 +41,7 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
 internal fun formatAs(value: Any): String {
   return when (value) {
     is Int, is Boolean, Float -> "$value"
-    is String -> "\"$value\""
+    is String -> "\\\"$value\\\""
     is QInput -> value.toPayloadString()
     is Enum<*> -> value.name
     is List<*> -> value

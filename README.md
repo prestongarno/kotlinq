@@ -8,7 +8,7 @@
 
 
 
-### Add typedValueFrom Central & JCenter
+### Adding dependency from Central or JCenter
 
 To use in a project, add the dependency to a gradle buildscript:
 
@@ -38,7 +38,7 @@ For an example of how to build models, see the example below created for the Yel
 Note that while field types are specified, they are not necessary and can be inferred by the properties
 in the `model` instance which a concrete query/mutation class delegates its properties to.
 
-    class BusinessQuery(searchTerm: String) : QModel(Query::class) {
+    class BusinessQuery(searchTerm: String) : QModel(Query) {
     
       val result: List<BusinessNodesModel> by model.search
           .config()
@@ -48,12 +48,12 @@ in the `model` instance which a concrete query/mutation class delegates its prop
           
     }
 
-    class BusinessesNodesModel : QModel(Businesses::class) {
+    class BusinessesNodesModel : QModel(Businesses) {
       val resultCount:   Int                    by model.total
       val resultsNodes:  List<SimpleBusiness>   by model.business.init { SimpleBusiness() }
     }
 
-    class SimpleBusiness : QModel(Business::class) {
+    class SimpleBusiness : QModel(Business) {
       val name:         String  by model.name
       val phoneNumber:  Int     by model.display_phone
       val directUrl:    String  by model.url
@@ -76,16 +76,28 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
       }
     }
     
-What's unique about this API is that the delegates serve to both configure queries/inputs as a contract for the 
-resulting value of the delegated property, while also ensuring strong typing across the board. The accompanying
-configuration (i.e. input arguments for a graphql field) class enforces any required arguments and supports the 
-builder pattern for configuring your query for the delegated property in one line.
-
 For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
 check out the wiki.
 
 ### How to execute a query or mutation:
 
-This isn't currently supported, but pluggable HTTP modules to assist in executing queries 
-using existing tools such as OkHTTP and Fuel and mapping to your objects are currently under development for a 1.0 release
+This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
+adds a dependency on [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
+describe your model, and execute. This is an example for getting your github name (not shown: compiled github IDL schema):
 
+    class ViewerQuery : QModel<Query>(Query) {
+      val me by model.viewer.init { UserModel() }
+    }
+    
+    class UserModel : QModel<User>(User) {
+      val name by model.name
+    }
+
+    GraphQL.initialize("https://api.github.com/graphql").apply {
+      authorization = TokenAuth(System.getenv("GITHUB_KEY"))
+    }.query { ViewerQuery() }
+        .onSuccess { println("Hello, ${it.me.name}") }
+        .execute()
+        
+        
+The last code block will print "Hello, \<your name here\>"

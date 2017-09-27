@@ -11,8 +11,12 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.http4k.core.Uri
 
+
+internal enum class RequestType {
+  QUERY,
+  MUTATION
+}
 
 internal object Http4k {
 
@@ -23,14 +27,13 @@ internal object Http4k {
 
     if (requestBuilder.adapter.authorization is TokenAuth) {
     }
-
     val networkResponse: Response = client(
         Request(Method.POST, requestBuilder.adapter.endpoint)
             .let { request ->
               requestBuilder.adapter.authorization
                   ?.let { request.header("Authorization", it.toString()) }
                   ?: request
-            }.body("{ \"query\": \"" + obj.toGraphql().replace("[\\s\n\r]".toRegex(), "") + "\" }")
+            }.body("{ \"${requestBuilder.type.name.toLowerCase()}\": \"" + obj.toGraphql().replace("[\\s\n\r]".toRegex(), "") + "\" }")
             .apply {
               println(body)
             })
@@ -39,10 +42,10 @@ internal object Http4k {
     if (networkResponse.status == Status.OK && requestBuilder.successHandler != null) {
       requestBuilder.successHandler!!.invoke(obj.apply {
         val result = Parser().parse(networkResponse.body.stream)
-        if (result is JsonObject) {
+        if (result is JsonObject && result["data"] is JsonObject) {
           accept(result["data"] as JsonObject)
         } else if (requestBuilder.errorHandler != null) {
-          requestBuilder.errorHandler!!(400, "Malformed Response")
+          requestBuilder.errorHandler!!(400, "Malformed Response: ${networkResponse.body.toString()}")
         }
       })
     } else if (requestBuilder.errorHandler != null) {

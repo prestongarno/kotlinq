@@ -2,6 +2,7 @@ package com.prestongarno.ktq.http
 
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.http.internal.Http4k
+import com.prestongarno.ktq.http.internal.RequestType
 
 interface GraphHttpAdapter {
 
@@ -9,7 +10,9 @@ interface GraphHttpAdapter {
 
   var authorization: Authorization?
 
-  fun <T : QModel<*>> createRequest(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(this, `for`)
+  fun <T : QModel<*>> query(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(RequestType.QUERY, this, `for`)
+
+  fun <T : QModel<*>> mutate(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(RequestType.MUTATION, this, `for`)
 }
 
 /**
@@ -23,6 +26,7 @@ interface GraphQlRequest<T : QModel<*>> {
 }
 
 internal class RequestBuilder<T : QModel<*>>(
+    internal val type: RequestType,
     internal val adapter: GraphHttpAdapter,
     internal val `for`: (() -> T)) : GraphQlRequest<T> {
 

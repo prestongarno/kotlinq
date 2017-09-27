@@ -1,21 +1,46 @@
 package com.prestongarno.ktq.github
 
+import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.http.GraphQL
 import com.prestongarno.ktq.http.TokenAuth
 import kotlinx.coroutines.experimental.runBlocking
+import org.junit.Ignore
+import org.junit.Test
 
-fun main(args: Array<String>) {
-  runBlocking {
-    GraphQL.initialize("https://api.github.com/graphql").apply {
-      authorization = System.getenv("GITHUB_KEY")?.run { TokenAuth(this) } ?: throw IllegalStateException("Null token!")
-    }.createRequest { ViewerQuery() }
-        .onSuccess {
-          println("Hello, ${it.me.name}, with login ${it.me.login}")
-          println("found ${it.me.pinnedRepositories.total} pinned repositories:\n${it.me.pinnedRepositories.nodes.joinToString("\n\t") { "${it.name}: ${it.desc}" }}")
-        }
-        .onError { errorCode, message -> System.err.println("$errorCode: $message") }
-        .execute()
+const val GITHUB = "https://api.github.com/graphql"
+
+class ActualGithubApiTests {
+
+
+  @Ignore @Test fun testMyLogin() {
+    runBlocking {
+      GraphQL.initialize(GITHUB).apply {
+        authorization = System.getenv("GITHUB_KEY")?.run { TokenAuth(this) } ?: throw IllegalStateException("Null token!")
+      }.query { ViewerQuery() }
+          .onSuccess {
+            println("Hello, ${it.me.name}")
+            println("found ${it.me.pinnedRepositories.total} pinned repositories:" +
+                "\n${it.me.pinnedRepositories.nodes.joinToString("\n\t", prefix = "\t") { "${it.name}: ${it.desc}" }}")
+            assertThat(it.me.name).isEqualTo("Preston Garno")
+            assertThat(it.me.login).isEqualTo("prestongarno")
+          }
+          .onError { errorCode, message -> System.err.println("$errorCode: $message") }
+          .execute()
+    }
+  }
+
+  @Ignore @Test fun searchForJakeWharton() {
+    runBlocking {
+      GraphQL.initialize(GITHUB).apply {
+        authorization = System.getenv("GITHUB_KEY")?.run { TokenAuth(this) } ?: throw IllegalStateException("Null token!")
+      }.query { AmbitiousSearch("jake wharton") }
+          .onSuccess { result ->
+            result.search.users.flatMap { it.users }
+                .joinToString { "${it.name}(${it.login})" }
+          }.onError { code, message -> println("$code: $message") }
+          .execute()
+    }
   }
 }
 
@@ -23,11 +48,11 @@ class ViewerQuery : QModel<Query>(Query) {
   val me by model.viewer.init { UserModel() }
 }
 
-class AmbitiousSearch : QModel<Query>(Query) {
+class AmbitiousSearch(val query: String) : QModel<Query>(Query) {
   val search by model.search.config()
+      .query(query)
       .first(10)
       .type(SearchType.USER)
-      .query("jake wharton")
       .build { Connection() }
 }
 
