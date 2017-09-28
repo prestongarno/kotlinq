@@ -1,16 +1,28 @@
 language: java
+
 jdk:
 - oraclejdk8
-script: ./gradlew clean test build
+
+script: 
+  - ./gradlew clean test build
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+
+git:
+    submodules: false
+
 branches:
   only:
   - master
   - development
   - dev
+
 sudo: false
+
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
   - $HOME/.gradle/caches/
@@ -24,6 +36,8 @@ env:
     secure: Cw3t4c8ffNhPoFIWxwu1+tLPsOapYFHjGhF8tTyeU6GlbhA2DyjlmL6sEzJqEQFiS3Hrn6aADl1/ohfRms8wgaArYmfeq0tojjpZml4WbLA7mndB+W62lgIqZgKhjlc0++oBOzmUB8j/NWWPvml2EAMzvwsOkcV2fXGKfGXTx1VsF5WtoTDTLGWYjg45UPB9qLlmwPCQFOQzz1CVlY3+JNIJmcb2mOu384cDFyvWel6XKUG2JaMGzUXvMx+sdo+tOPOpPC2IleAANt8asv/dxyATWXpbzR6TtML4BwEqE1ckr7GabMKVwzpgXcVBXhTmmewzmDMBRHTgKB/ywqXMsJOWoRpYQ3mEaAisQlapEARPli8Ub8u1ogqmszdIh2KBtbhEj7SJRiqwu4ZlmQJwhdT7k4MKgU5OkODkXJGkkIBiOZ2VZsQP/q18Ho2LmBY95ou/Mm0I6JdVCfL0X3Ut1rh4E/6DnXJcBhDdbE2GYbAxalO+HVl8E1eCNtL4E2snHM1RH66GWxg5/Pbu43clumclT4wNyq7FtGe4GQ8x9OD+zX6yAK30CZsD6ailmh2L/75BmoGTkBic2CspVAVjqduxhMaw5+KeYroShviP1mFXewFOkesiEnnKR9giZbH65FgvLKm1O6nt1eqYfAlMAOatQZk7+HkleoMu2NzydaM=
 before_install:
   - echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg > ~/.gradle/gradle.properties
+  - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - git submodule update --init --recursive
 
 after_success:
   - ./.buildscript/snapshot.sh
