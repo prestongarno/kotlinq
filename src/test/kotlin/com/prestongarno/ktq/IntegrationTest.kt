@@ -603,7 +603,7 @@ class IntegrationTest {
     KtqCompileWrapper(compileOutputDir).run {
       val url = loadObject("$PACK.URL")
       val foo = loadObject("$PACK.Foo")
-      val what = (loadInterface("$PACK.What") as KClass<Enum<*>>)
+      @Suppress("UNCHECKED_CAST") val what = (loadInterface("$PACK.What") as KClass<Enum<*>>)
 
 
       foo::class.declaredMemberProperties.forEach {
