@@ -21,14 +21,17 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
     TypeListArgBuilder,
     ModelProvider {
 
-  override fun accept(result: Any?) {
-    if (result is JsonArray<*>) {
+  override fun accept(result: Any?): Boolean {
+    return if (result is JsonArray<*>) {
+      var resolvedOkay = true
       result.filterIsInstance<JsonObject>().forEach { element ->
         this.results.add(init().apply {
-          this.accept(element)
+          if(!this.accept(element))
+            resolvedOkay = false
         })
       }
-    }
+      resolvedOkay
+    } else false
   }
 
   val results = mutableListOf<P>()

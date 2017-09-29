@@ -21,10 +21,16 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     TypeArgBuilder,
     ModelProvider {
 
-  override fun accept(result: Any?) {
-    if(result is JsonObject)
+  override fun accept(result: Any?): Boolean {
+    return if(result is JsonObject) {
+      var resolvedOkay = true
       this.result.fields.forEach {
-        it.accept(result[it.fieldName]) }
+        if (!it.accept(result[it.fieldName]))
+          resolvedOkay = false
+      }
+      resolvedOkay
+    }
+    else false
   }
 
   lateinit var result: P

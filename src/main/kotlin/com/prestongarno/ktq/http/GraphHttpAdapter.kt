@@ -22,7 +22,9 @@ interface GraphQlRequest<T : QModel<*>> {
 
   fun onError(handler: (errorCode: Int, message: String) -> Unit): GraphQlRequest<T>
 
-  suspend fun execute()
+  suspend fun run(): T
+
+  fun runAsync()
 }
 
 internal class RequestBuilder<T : QModel<*>>(
@@ -38,6 +40,10 @@ internal class RequestBuilder<T : QModel<*>>(
 
   override fun onError(handler: (errorCode: Int, message: String) -> Unit) = apply { errorHandler = handler }
 
-  override suspend fun execute() = Http4k.send(this)
+  override suspend fun run() = Http4k.send(this)
+
+  override fun runAsync() {
+    throw UnsupportedOperationException("wut")
+  }
 }
 

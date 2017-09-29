@@ -13,7 +13,7 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
 
   fun onProvideDelegate(inst: QModel<*>) = inst.fields.add(this)
 
-  abstract fun accept(result: Any?)
+  abstract fun accept(result: Any?): Boolean
 
   /**
    * I try to make my code as unreadable as possible

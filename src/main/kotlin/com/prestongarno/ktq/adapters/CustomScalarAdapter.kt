@@ -20,13 +20,14 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
     CustomScalarInitStub<E>,
     CustomStub<P, Q> {
 
-  override fun accept(result: Any?) {
+  override fun accept(result: Any?): Boolean {
     when (adapter) {
       is InputStreamScalarMapper<*> -> (adapter as InputStreamScalarMapper)
           .rawValue = "${result?:""}".byteInputStream()
       is StringScalarMapper<*> -> (adapter as StringScalarMapper)
           .rawValue = "${result?:""}"
     }
+    return true
   }
 
   override fun config(): B = builderInit(CustomScalarAdapter<E, P, Q, B>(fieldName, builderInit))

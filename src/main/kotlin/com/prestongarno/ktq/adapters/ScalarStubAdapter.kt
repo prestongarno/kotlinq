@@ -17,11 +17,13 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
     QConfigStub<T, B>,
     ArgBuilder {
 
-  override fun accept(result: Any?) {
+  override fun accept(result: Any?): Boolean {
     @Suppress("UNCHECKED_CAST")
     value = if (result == null)
       default
     else property.typedValueFrom(result) as T ?: default
+
+    return result != null
   }
 
   var value: T? = null

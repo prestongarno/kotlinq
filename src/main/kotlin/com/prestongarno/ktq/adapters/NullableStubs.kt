@@ -18,7 +18,7 @@ internal class NullableStubAdapter<T, out B: ArgBuilder>(
     QConfigStub<T, B>,
     ArgBuilder {
 
-  override fun accept(result: Any?) = TODO("not implemented")
+  override fun accept(result: Any?): Boolean = TODO("not implemented")
 
   val value : T? = null
 

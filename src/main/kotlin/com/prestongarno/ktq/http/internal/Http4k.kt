@@ -20,7 +20,7 @@ internal enum class RequestType {
 
 internal object Http4k {
 
-  suspend fun <T : QModel<*>> send(requestBuilder: RequestBuilder<T>) {
+  suspend fun <T : QModel<*>> send(requestBuilder: RequestBuilder<T>): T {
     val client: HttpHandler = OkHttp()
 
     val obj = requestBuilder.`for`()
@@ -41,17 +41,25 @@ internal object Http4k {
             })
 
 
-    if (networkResponse.status == Status.OK && requestBuilder.successHandler != null) {
-      requestBuilder.successHandler!!.invoke(obj.apply {
+    if (networkResponse.status == Status.OK) {
+      obj.apply {
         val result = Parser().parse(networkResponse.body.stream)
         if (result is JsonObject && result["data"] is JsonObject) {
-          accept(result["data"] as JsonObject)
+          resolved = accept(result["data"] as JsonObject)
         } else if (requestBuilder.errorHandler != null) {
-          requestBuilder.errorHandler!!(400, "Malformed Response: ${networkResponse.body.toString()}")
+          resolved = false
+          requestBuilder.errorHandler!!(400, "Malformed Response: ${networkResponse.body}")
         }
-      })
-    } else if (requestBuilder.errorHandler != null) {
+      }
+
+      if (requestBuilder.successHandler != null)
+        requestBuilder.successHandler!!.invoke(obj)
+
+    } else if (networkResponse.status != Status.OK && requestBuilder.errorHandler != null) {
+      obj.resolved = false
       requestBuilder.errorHandler!!(networkResponse.status.code, networkResponse.toMessage())
     }
+
+    return obj
   }
 }

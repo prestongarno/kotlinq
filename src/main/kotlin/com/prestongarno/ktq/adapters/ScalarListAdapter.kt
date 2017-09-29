@@ -15,7 +15,7 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
     ListConfig<I, B>,
     ListArgBuilder {
 
-  @Suppress("UNCHECKED_CAST") override fun accept(result: Any?) {
+  @Suppress("UNCHECKED_CAST") override fun accept(result: Any?): Boolean {
     if (result != null) {
       if (result is List<*>)
         result.filterNotNull().run {
@@ -25,6 +25,7 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
       else
         values.addAll(property.typedListValueFrom(result).map { it as I })
     }
+    return true
   }
 
   val values = mutableListOf<I>()

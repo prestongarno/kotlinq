@@ -13,6 +13,10 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   internal val fields = mutableListOf<FieldAdapter>()
 
+  internal var resolved = false
+
+  fun isResolved(): Boolean = resolved
+
   override fun toString() = this.toGraphql()
 
   fun toGraphql(indentation: Int = 0): String {
@@ -40,7 +44,12 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   internal fun onResponse(input: String) = onResponse(input.byteInputStream())
 
-  internal fun accept(input: JsonObject) = this.fields.forEach { it.accept(input[it.fieldName]) }
+  internal fun accept(input: JsonObject): Boolean = this.fields.run {
+    var resolved = true
+    forEach { if (!it.accept(input[it.fieldName]))
+        resolved = false }
+    resolved
+  }
 }
 
 fun String.indent(times: Int = 1): String =
