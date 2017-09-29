@@ -33,7 +33,9 @@ internal object Http4k {
               requestBuilder.adapter.authorization
                   ?.let { request.header("Authorization", it.toString()) }
                   ?: request
-            }.body("{ \"${requestBuilder.type.name.toLowerCase()}\": \"" + obj.toGraphql().replace("[\\s\n\r]".toRegex(), "") + "\" }")
+            }.query(requestBuilder.type.name.toLowerCase(),
+                obj.toGraphql().replace("[\\s\n\r]".toRegex(), "")
+                  .replace("...on", "... on "))
             .apply {
               println(body)
             })
