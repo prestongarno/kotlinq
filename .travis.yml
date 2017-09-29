@@ -35,6 +35,7 @@ env:
 before_install:
   - echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg >> ~/.gradle/gradle.properties
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - sed -i 's/git@github.com:/https:\/\/github.com\//' .git/config
   - git submodule update --init --recursive
   - ./src/test/resources/test-server/install.sh
 
