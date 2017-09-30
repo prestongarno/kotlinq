@@ -15,7 +15,7 @@ class TestZero() : NodeServer() {
 
   @Test fun testHelloGraphqlWorld() {
     val helloWorldModel = object : QModel<Query>(Query) {
-      val message by model.hello
+      val hello by model.hello
     }
 
     runBlocking {
@@ -24,7 +24,7 @@ class TestZero() : NodeServer() {
           .run()
 
       assertTrue(foo.isResolved())
-      assertThat(foo.message).isEqualTo("Hello, world!")
+      assertThat(foo.hello).isEqualTo("world")
     }
   }
 
@@ -66,7 +66,7 @@ class TestZero() : NodeServer() {
           .onError { code, message -> throw IllegalArgumentException("$code: $message") }
           .run()
 
-      assertThat(result.hello).isEqualTo("Hello, world!")
+      assertThat(result.hello).isEqualTo("world")
       assertThat(result.me).isNotNull()
       assertThat(result.me.name).isEqualTo("Preston Garno")
     }
