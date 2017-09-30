@@ -40,11 +40,12 @@ class TestZero() : NodeServer() {
     }
 
     runBlocking {
-      graphql
-          .query { queryMyName }
-          .onSuccess { require(it.me.name == "Preston Garno") }
+      require(graphql.query { queryMyName }
           .onError { code, message -> throw IllegalArgumentException("$code: $message") }
           .run()
+          .let { it.resolved
+                && it.me.resolved
+                && it.me.name == "Preston Garno" })
     }
   }
 

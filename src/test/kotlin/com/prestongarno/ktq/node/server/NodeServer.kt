@@ -1,16 +1,24 @@
 package com.prestongarno.ktq.node.server
 
-import com.prestongarno.ktq.compiler.asFile
-import com.prestongarno.ktq.compiler.child
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
 import com.prestongarno.ktq.http.GraphHttpAdapter
 import com.prestongarno.ktq.http.GraphQL
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import org.junit.After
 import org.junit.Before
-import java.io.File
-import java.io.PrintStream
-import java.nio.file.FileSystems
-import java.nio.file.Path
-import java.nio.file.StandardWatchEventKinds
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
+import java.util.*
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.timerTask
 
 abstract class NodeServer {
 
@@ -22,51 +30,54 @@ abstract class NodeServer {
 
   @Before internal fun setUp() {
 
-    val psb = ProcessBuilder()
-        .command("./src/test/resources/test-server/start-server.sh", "$serverNumber")
+    graphqlServerPs = ProcessBuilder()
+        .command(
+            "./src/test/resources/test-server/start-server.sh",
+            "$serverNumber",
+            "&")
+        .start()
 
-    val messageDir = File(System.getProperty("java.io.tmpdir"))
-        .child("ktq-node")
-        .apply {
-          mkdir()
-          deleteOnExit()
+    val client = OkHttpClient()
+
+    val isStarted = AtomicBoolean(false)
+
+    Timer().scheduleAtFixedRate(timerTask { try {
+
+        val result = client.newCall(Request.Builder()
+            .get()
+            .url("http://localhost:4000/status")
+            .build())
+            .execute()
+
+        if (result.code() == 200 && result.body()?.byteStream()?.let {
+          Parser().parse(it)?.let {
+            it is JsonObject && it["status"] == "okay"
+          } == true
+        } == true) {
+          isStarted.set(true)
+          cancel()
         }
 
-    val result = File(messageDir.absolutePath.plus("/ktq-node-start-status.txt")).apply {
-      deleteOnExit()
-      require(!exists())
-      psb.redirectOutput(this)
-    }
-
-    val tty = System.out
-    System.setOut(PrintStream(result.absolutePath))
-    val path = FileSystems.getDefault().getPath(messageDir.absolutePath)
-
-    FileSystems.getDefault().newWatchService().use { watch ->
-      graphqlServerPs = psb.start()
-      val key = path.register(watch, StandardWatchEventKinds.ENTRY_MODIFY)
-      while (true) {
-
-        val eventMaybe = key.pollEvents().filter {
-          val changed = it.context() as Path
-          changed.fileName.startsWith(result.absolutePath.split("/").last())
-        }.firstOrNull()
-
-        if (eventMaybe != null) {
-          require(result.readText()
-              .trim()
-              .toInt() == 0)
-          break
-        } else continue
-      }
-    }
+      } catch (ex: Exception) { }
+    }, Date.from(Instant.now(Clock.offset(Clock.systemUTC(),Duration.ofMillis(50L)))), 100L)
 
 
-    System.setOut(tty)
+    do {
+
+      if (isStarted.get())
+        break
+      else Thread.sleep(10)
+
+    } while (!isStarted.get())
+
     graphql = GraphQL.initialize("http://localhost:4000/graphql")
   }
 
   @After fun tearDown() {
-    Runtime.getRuntime().exec("kill ktq-node").waitFor()
+    this.graphqlServerPs.destroy()
+    if(!graphqlServerPs.waitFor(10L, TimeUnit.MILLISECONDS)) {
+      graphqlServerPs.destroyForcibly()
+      Runtime.getRuntime().exec("kill ktq-node").waitFor()
+    }
   }
 }
