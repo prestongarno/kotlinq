@@ -21,43 +21,48 @@ class TestOne : NodeServer() {
 
   override val serverNumber: Int = 1
 
-  @Ignore @Test fun gen() { QCompiler.initialize().schema("""
-      |type Query {
-      |  me: User
-      |}
-      |
-      |union Actor = User | Bot
-      |
-      |type User {
-      |  name: String
-      |}
-      |
-      |type Bot {
-      |  name: String
-      |  owner: User
-      |}
-      |""".trimMargin("|"))
-      .compile().result { println(it) }}
+  @Ignore @Test fun gen() {
+    QCompiler.initialize().schema("""
+        |type Query {
+        |  me: Actor
+        |}
+        |
+        |union Actor = User | Bot
+        |
+        |type User {
+        |  name: String
+        |}
+        |
+        |type Bot {
+        |  name: String
+        |  owner: Actor
+        |}
+        |""".trimMargin("|"))
+        .compile().result { println(it) }
+  }
 
   // Need to redesign the current union type model in order to
   // support single fields
   @Ignore @Test fun uglyDesignMistakeOnUnions() {
 
-    val myUserInit = {
-      object : QModel<User>(User) {
-        val name by User.name
+    var myActorInit: (() -> QModel<Actor>)? = null
+
+    val myBotInit = {
+      object : QModel<Bot>(Bot) {
+        val name by model.name
+        val owner by model.owner.init(myActorInit!!)
       }
     }
 
-    val myActorInit = {
+    myActorInit = {
       object : QModel<Actor>(Actor) {
-        val users by Actor.User.init { myUserInit() }
+        val users by Actor.Bot.init { myBotInit() }
       }
     }
 
     val userQuery = {
       object : QModel<Query>(Query) {
-        val smth by Query.me.init(myActorInit)
+        val smth by Query.me.init(myActorInit!!)
       }
     }
 
@@ -68,10 +73,7 @@ class TestOne : NodeServer() {
           .onError { code, message -> println(message) }
           .run()
 
-      println(result.toGraphql())
-      assertTrue(result.resolved)
-      assertTrue(result.smth.resolved)
-      //assertThat(result.smth.users.first()?.name).isEqualTo("Preston Garno")
+      //println(result.toGraphql())
     }
   }
 
@@ -84,7 +86,7 @@ class TestOne : NodeServer() {
   object Bot : QSchemaType {
     val name: Stub<String> by QScalar.stub()
 
-    val owner: InitStub<User> by QType.stub()
+    val owner: InitStub<Actor> by QType.stub()
   }
 
   object Query : QSchemaType {
@@ -94,6 +96,5 @@ class TestOne : NodeServer() {
   object User : QSchemaType {
     val name: Stub<String> by QScalar.stub()
   }
-
 }
 

@@ -43,7 +43,9 @@ open class QModel<out T : QSchemaType>(val model: T) {
     else -> fields.joinToString(",", "{", "}") { it.toRawPayload() }
   }
 
-  private fun unionToGraphql(): String = TODO()
+  private fun unionToGraphql(): String =
+      fields.joinToString(separator = ",", prefix = "{", postfix = "}") {
+        it.toRawPayload().prepend("... on ") }
 
 }
 
