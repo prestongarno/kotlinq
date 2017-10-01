@@ -72,10 +72,6 @@ abstract class NodeServer {
   }
 
   @After fun tearDown() {
-    this.graphqlServerPs.destroy()
-    if (!graphqlServerPs.waitFor(10L, TimeUnit.MILLISECONDS)) {
-      graphqlServerPs.destroyForcibly()
-      Runtime.getRuntime().exec("kill ktq-node").waitFor()
-    }
+    Runtime.getRuntime().exec("kill ktq-node").waitFor()
   }
 }
