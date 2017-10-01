@@ -7,9 +7,6 @@ import com.prestongarno.ktq.http.GraphQL
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
 import org.junit.After
 import org.junit.Before
 import java.time.Clock
@@ -41,8 +38,8 @@ abstract class NodeServer {
 
     val isStarted = AtomicBoolean(false)
 
-    Timer().scheduleAtFixedRate(timerTask { try {
-
+    Timer().scheduleAtFixedRate(timerTask {
+      try {
         val result = client.newCall(Request.Builder()
             .get()
             .url("http://localhost:4000/status")
@@ -58,8 +55,9 @@ abstract class NodeServer {
           cancel()
         }
 
-      } catch (ex: Exception) { }
-    }, Date.from(Instant.now(Clock.offset(Clock.systemUTC(),Duration.ofMillis(50L)))), 100L)
+      } catch (ex: Exception) {
+      }
+    }, Date.from(Instant.now(Clock.offset(Clock.systemUTC(), Duration.ofMillis(50L)))), 100L)
 
 
     do {
@@ -75,7 +73,7 @@ abstract class NodeServer {
 
   @After fun tearDown() {
     this.graphqlServerPs.destroy()
-    if(!graphqlServerPs.waitFor(10L, TimeUnit.MILLISECONDS)) {
+    if (!graphqlServerPs.waitFor(10L, TimeUnit.MILLISECONDS)) {
       graphqlServerPs.destroyForcibly()
       Runtime.getRuntime().exec("kill ktq-node").waitFor()
     }

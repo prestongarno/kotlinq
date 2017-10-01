@@ -47,6 +47,7 @@ internal object Http4k {
         if (result is JsonObject && result["data"] is JsonObject) {
           resolved = accept(result["data"] as JsonObject)
         } else if (requestBuilder.errorHandler != null) {
+
           resolved = false
           requestBuilder.errorHandler!!(400, "Malformed Response: ${networkResponse.body}")
         }

@@ -19,11 +19,11 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
 
   override fun accept(result: Any?): Boolean {
     @Suppress("UNCHECKED_CAST")
-    value = if (result == null)
-      default
-    else property.typedValueFrom(result) as T ?: default
+    value = if(result != null)
+      property.typedValueFrom(result) as T
+    else default
 
-    return result != null
+    return (value != null)
   }
 
   var value: T? = null

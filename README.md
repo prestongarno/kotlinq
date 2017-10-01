@@ -40,7 +40,7 @@ in the `model` instance which a concrete query/mutation class delegates its prop
 
     class BusinessQuery(searchTerm: String) : QModel(Query) {
     
-      val result: List<BusinessNodesModel> by model.search
+      val value: List<BusinessNodesModel> by model.search
           .config()
               .term(searchTerm)
               .limit(10)

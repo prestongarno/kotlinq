@@ -6,6 +6,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.node.server.NodeServer
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Test
 import kotlin.test.assertTrue
@@ -36,16 +37,17 @@ class TestZero() : NodeServer() {
     }
 
     val queryMyName = object : QModel<Query>(Query) {
-      val me by model.me.init(myUserInit)
+      val me by model.me.init { myUserInit() }
     }
 
     runBlocking {
-      require(graphql.query { queryMyName }
+      val result = graphql.query { queryMyName }
           .onError { code, message -> throw IllegalArgumentException("$code: $message") }
           .run()
-          .let { it.resolved
-                && it.me.resolved
-                && it.me.name == "Preston Garno" })
+      assertTrue(result.resolved)
+      assertTrue(result.me.resolved)
+      assertThat(result.me.name)
+          .isEqualTo("Preston Garno")
     }
   }
 

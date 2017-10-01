@@ -22,24 +22,22 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     ModelProvider {
 
   override fun accept(result: Any?): Boolean {
-    return if(result is JsonObject) {
-      var resolvedOkay = true
-      this.result.fields.forEach {
-        if (!it.accept(result[it.fieldName]))
-          resolvedOkay = false
-      }
-      resolvedOkay
+    getModel().resolved = true
+    return result is JsonObject
+        && value.fields.filterNot { f ->
+      f.accept(result[f.fieldName])
+    }.isEmpty().apply {
+      if (!this) getModel().resolved = false
     }
-    else false
   }
 
-  lateinit var result: P
+  lateinit var value: P
 
   override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(fieldName, builderInit))
 
-  override fun getModel(): QModel<*> = result
+  override fun getModel(): QModel<*> = value
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.result
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.value
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> {
     this.property = property
@@ -47,10 +45,10 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
   }
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I>
-      = apply { result = of() as P } as TypeStub<U, I>
+      = apply { value = of() as P } as TypeStub<U, I>
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeStub<U, T>
-      = apply { result = init() as P } as TypeStub<U, T>
+      = apply { value = init() as P } as TypeStub<U, T>
 
   override fun addArg(name: String, value: Any): TypeArgBuilder = apply { args.put(name, value) }
 

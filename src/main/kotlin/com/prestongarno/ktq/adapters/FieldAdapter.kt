@@ -18,22 +18,22 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
   /**
    * I try to make my code as unreadable as possible
    * ... this still works though somehow. Expression-based languages will be the end of me */
-  open fun toRawPayload(indentation: Int = 1): String =
-      fieldName +
-          (if (args.isNotEmpty()) {
-            args.map {
-              "${it.key}: ${formatAs(it.value)}"
-            }.joinToString(separator = ",", prefix = "(", postfix = ")")
-          } else "")
-              .concat(
-                  if (this is ModelProvider)
-                    this.getModel().let {
-                      if (!it.fields.isEmpty())
-                        it.toGraphql()
-                      else ""
-                    }
-                  else "")
-              .replace("\\s*([(,])".toRegex(), "$1").trim()
+  fun toRawPayload(): String = fieldName +
+      if (args.isNotEmpty()) {
+        args.map {
+          "${it.key}: ${formatAs(it.value)}"
+        }.joinToString(separator = ",", prefix = "(", postfix = ")")
+      } else "".plus(if (this is ModelProvider) getModel().toGraphql(false) else "")
+
+  fun prettyPrinted(indentation: Int = 1): String =
+      fieldName + (if (args.isNotEmpty()) {
+        args.map {
+          "${it.key}: ${formatAs(it.value)}"
+        }.joinToString(separator = ",", prefix = "(", postfix = ")")
+      } else "").plus(if (this is ModelProvider) this.getModel().let {
+        if (!it.fields.isEmpty()) it.toGraphql() else ""
+      } else "").replace("\\s*([(,])".toRegex(), "$1").trim()
+
 
   override fun toString(): String = toRawPayload()
 }
@@ -48,9 +48,8 @@ internal fun formatAs(value: Any): String {
         .map { formatAs(it ?: "") }
         .filter { it.isNotBlank() }
         .joinToString(", ", "[ ", " ]")
-    is FieldAdapter -> throw IllegalStateException("how did this get here")//value.toRawPayload(indentation + 1)
+    is FieldAdapter -> throw IllegalStateException("how did this get here")
     else -> throw UnsupportedOperationException()
   }
 }
 
-private fun String.concat(to: String): String = this + to
