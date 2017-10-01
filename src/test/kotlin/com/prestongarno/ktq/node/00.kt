@@ -74,14 +74,16 @@ class TestZero() : NodeServer() {
       assertThat(result.me.name).isEqualTo("Preston Garno")
     }
   }
+
+  object Query : QSchemaType {
+    val hello: Stub<String> by QSchemaType.QScalar.stub()
+
+    val me: InitStub<User> by QSchemaType.QType.stub()
+  }
+
+  object User : QSchemaType {
+    val name: Stub<String> by QSchemaType.QScalar.stub()
+  }
 }
 
-object Query : QSchemaType {
-  val hello: Stub<String> by QSchemaType.QScalar.stub()
 
-  val me: InitStub<User> by QSchemaType.QType.stub()
-}
-
-object User : QSchemaType {
-  val name: Stub<String> by QSchemaType.QScalar.stub()
-}

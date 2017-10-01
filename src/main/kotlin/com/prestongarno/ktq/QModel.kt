@@ -8,6 +8,10 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.jvmErasure
 
+/**
+ * TODO - Encapsulate this class and use completely anon classes/closures
+ * TODO with factory methods for creating models
+ */
 open class QModel<out T : QSchemaType>(val model: T) {
 
   internal val fields = mutableListOf<FieldAdapter>()
@@ -17,10 +21,8 @@ open class QModel<out T : QSchemaType>(val model: T) {
   fun isResolved(): Boolean = resolved
 
   internal fun onResponse(input: InputStream) {
-    (Parser().parse(input) as JsonObject).run {
-      fields.forEach {
-        it.accept(this[it.fieldName])
-      }
+    (Parser().parse(input) as? JsonObject)?.run {
+      fields.forEach { it.accept(this[it.fieldName]) }
     }
   }
 
@@ -35,30 +37,29 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   override fun toString() = this.toGraphql()
 
-  fun toGraphql(pretty: Boolean = true): String = if (pretty) {
-    prettyPrinted(0)
-  } else if (model is QSchemaUnion) {
-    unionToGraphql()
-  } else {
-    fields.joinToString(",", "{", "}") { it.toRawPayload() }
+  fun toGraphql(pretty: Boolean = true): String = when {
+    pretty -> prettyPrinted(0)
+    model is QSchemaUnion -> unionToGraphql()
+    else -> fields.joinToString(",", "{", "}") { it.toRawPayload() }
   }
 
   private fun unionToGraphql(): String = TODO()
 
-  internal fun QModel<*>.prettyPrinted(indentation: Int): String =
-      if (model is QSchemaUnion) prettyPrintUnion(indentation) else
-        ((fields.joinToString(separator = ",\n") { it.prettyPrinted(indentation) }
-            .indent(1)) + "\n}").prepend("{\n").indent(indentation)
-            .replace("\\s*([(,])".toRegex(), "$1").trim()
-
-  internal fun prettyPrintUnion(indentation: Int) =
-      (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
-        it.prettyPrinted(indentation).prepend("... on ")
-      }.indent(1)
-          .plus("\n}")
-          .indent(indentation))
-          .replace("\\s*([(,])".toRegex(), "$1").trim()
 }
+
+private fun QModel<*>.prettyPrinted(indentation: Int): String =
+    if (model is QSchemaUnion) prettyPrintUnion(indentation) else
+      ((fields.joinToString(separator = ",\n") { it.prettyPrinted() }
+          .indent(1)) + "\n}").prepend("{\n").indent(indentation)
+          .replace("\\s*([(,])".toRegex(), "$1").trim()
+
+private fun QModel<*>.prettyPrintUnion(indentation: Int) =
+    (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
+      it.prettyPrinted().prepend("... on ")
+    }.indent(1)
+        .plus("\n}")
+        .indent(indentation))
+        .replace("\\s*([(,])".toRegex(), "$1").trim()
 
 internal fun KProperty<*>.typedValueFrom(value: Any): Any? {
   return if (this.returnType.jvmErasure == value::class)

@@ -44,17 +44,18 @@ internal object Http4k {
     if (networkResponse.status == Status.OK) {
       obj.apply {
         val result = Parser().parse(networkResponse.body.stream)
+
         if (result is JsonObject && result["data"] is JsonObject) {
+
           resolved = accept(result["data"] as JsonObject)
+          if (resolved) requestBuilder.successHandler?.invoke(obj)
+
         } else if (requestBuilder.errorHandler != null) {
 
           resolved = false
           requestBuilder.errorHandler!!(400, "Malformed Response: ${networkResponse.body}")
         }
       }
-
-      if (requestBuilder.successHandler != null)
-        requestBuilder.successHandler!!.invoke(obj)
 
     } else if (networkResponse.status != Status.OK && requestBuilder.errorHandler != null) {
       obj.resolved = false

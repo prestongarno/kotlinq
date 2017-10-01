@@ -18,24 +18,26 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
   /**
    * I try to make my code as unreadable as possible
    * ... this still works though somehow. Expression-based languages will be the end of me */
-  fun toRawPayload(): String = fieldName +
-      if (args.isNotEmpty()) {
-        args.map {
-          "${it.key}: ${formatAs(it.value)}"
-        }.joinToString(separator = ",", prefix = "(", postfix = ")")
-      } else "".plus(if (this is ModelProvider) getModel().toGraphql(false) else "")
+  fun toRawPayload(): String = fieldName + when {
+    args.isNotEmpty() -> this.args.entries
+        .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
+          "$key: ${formatAs(value)}"
+        }
+    this is ModelProvider -> getModel().toGraphql(false)
+    else -> ""
+  }
 
-  fun prettyPrinted(indentation: Int = 1): String =
-      fieldName + (if (args.isNotEmpty()) {
-        args.map {
-          "${it.key}: ${formatAs(it.value)}"
-        }.joinToString(separator = ",", prefix = "(", postfix = ")")
-      } else "").plus(if (this is ModelProvider) this.getModel().let {
-        if (!it.fields.isEmpty()) it.toGraphql() else ""
-      } else "").replace("\\s*([(,])".toRegex(), "$1").trim()
+  fun prettyPrinted(): String = fieldName +
+      (when {
+        args.isNotEmpty() -> args.entries
+            .joinToString(separator = ",", prefix = "(", postfix = ")") {
+              "${it.key}: ${formatAs(it.value)}" }
+        this is ModelProvider -> this.getModel().let {
+          if (!it.fields.isEmpty()) it.toGraphql() else ""
+        }
+        else -> ""
+      }).replace("\\s*([(,])".toRegex(), "$1").trim()
 
-
-  override fun toString(): String = toRawPayload()
 }
 
 internal fun formatAs(value: Any): String {
