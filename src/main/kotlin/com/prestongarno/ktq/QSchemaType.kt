@@ -166,6 +166,10 @@ interface QSchemaType {
     ): Grub<CustomScalarListConfigStub<T, A>> =
         Grub { CustomScalarListAdapter<T, QScalarListMapper<T>, T, A>(it, arginit) }
   }
+
+  object QUnion {
+    fun <T : QSchemaUnion> stub(objectModel: T): Grub<UnionInitStub<T>> = Grub { UnionStubImpl<T>(objectModel) }
+  }
 }
 
 /**
@@ -174,4 +178,12 @@ interface QSchemaType {
  * using {@link com.prestongarno.ktq.adapters.custom.QScalarMapper} */
 interface CustomScalar : QSchemaType
 
-interface QSchemaUnion : QSchemaType
+interface QSchemaUnion : QSchemaType {
+
+  fun <T: QSchemaUnion> fragment(init: T.() -> QModel<*>): QModel<*> =  TODO()//init(this as T)
+
+  companion object {
+    fun create(objectModel: QSchemaUnion) : QSchemaUnion = UnionStubImpl<QSchemaUnion>(objectModel)
+  }
+}
+

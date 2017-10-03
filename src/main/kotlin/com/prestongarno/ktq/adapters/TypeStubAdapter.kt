@@ -31,8 +31,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     }
   }
 
-  lateinit var loader: Lazy<P>
-  val value: P by loader
+  lateinit var value: P
 
   override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(fieldName, builderInit))
 
@@ -46,10 +45,10 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
   }
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I>
-      = apply { loader =  { of() } as Lazy<P> } as TypeStub<U, I>
+      = apply {  this.value = of() as P } as TypeStub<U, I>
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeStub<U, T>
-      = apply { loader =  { init() } as Lazy<P> } as TypeStub<U, T>
+      = apply { this.value = init() as P } as TypeStub<U, T>
 
   override fun addArg(name: String, value: Any): TypeArgBuilder = apply { args.put(name, value) }
 

@@ -8,13 +8,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.jvmErasure
 
-/**
- * TODO - Encapsulate this class and use completely anon classes/closures
- * TODO with factory methods for creating models
- */
 open class QModel<out T : QSchemaType>(val model: T) {
 
-  internal val fields = mutableListOf<FieldAdapter>()
+  internal val fields by lazy { mutableListOf<FieldAdapter>() }
 
   internal var resolved = false
 
@@ -28,25 +24,46 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   internal fun onResponse(input: String) = onResponse(input.byteInputStream())
 
-  internal fun accept(input: JsonObject): Boolean {
+  internal open fun accept(input: JsonObject): Boolean {
     resolved = fields
         .filterNot { it.accept(input[it.fieldName]) }
         .isEmpty()
     return resolved
   }
 
-  override fun toString() = this.toGraphql()
-
-  fun toGraphql(pretty: Boolean = true): String = when {
-    pretty -> prettyPrinted(0)
-    model is QSchemaUnion -> unionToGraphql()
-    else -> fields.joinToString(",", "{", "}") { it.toRawPayload() }
+  fun toGraphql(pretty: Boolean = true): String {
+    return when {
+      pretty -> prettyPrinted(0)
+      model is QSchemaUnion -> unionToGraphql()
+      this is QSchemaUnion -> throw IllegalStateException()
+      else -> fields.joinToString(",", "{", "}") { it.toRawPayload() }
+    }
   }
 
   private fun unionToGraphql(): String =
       fields.joinToString(separator = ",", prefix = "{", postfix = "}") {
-        it.toRawPayload().prepend("... on ") }
+        it.toRawPayload().prepend("... on ")
+      }
 
+  override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
+      if (fields.isNotEmpty())
+        fields.joinToString(",", "[", "]\n") {
+          it.run {
+            fieldName +
+                if (args.isNotEmpty())
+                  args.entries.joinToString(", ", "(", ")") { (k, v) -> "$k=$v" }
+                else ""
+          }
+        }
+      else ""
+
+  companion object {
+    internal val NONE: QModel<*> = QModel<QSchemaType>(object : QSchemaType {
+      override fun equals(other: Any?): Boolean {
+        return other === this
+      }
+    })
+  }
 }
 
 private fun QModel<*>.prettyPrinted(indentation: Int): String =
@@ -87,6 +104,7 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
   val responseType: KClass<*> = if (values.isNotEmpty()) values[0]::class else Any::class
 
   return when (type) {
+    // TODO Take out generic type arguments from the stubs for primitives -> these are BOXED AND UNBOXED every time they're accessed!
     null -> emptyList()
     responseType -> values
     Int::class -> values.mapNotNull { "$it".toIntOrNull() }

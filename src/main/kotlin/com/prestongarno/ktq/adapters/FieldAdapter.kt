@@ -3,6 +3,7 @@ package com.prestongarno.ktq.adapters
 import com.prestongarno.ktq.Payload
 import com.prestongarno.ktq.QInput
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.UnionStubImpl
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
@@ -18,7 +19,7 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
   /**
    * I try to make my code as unreadable as possible
    * ... this still works though somehow. Expression-based languages will be the end of me */
-  fun toRawPayload(): String = fieldName + when {
+  open fun toRawPayload(): String = fieldName + when {
     args.isNotEmpty() -> this.args.entries
         .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
           "$key: ${formatAs(value)}"
@@ -32,9 +33,7 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
         args.isNotEmpty() -> args.entries
             .joinToString(separator = ",", prefix = "(", postfix = ")") {
               "${it.key}: ${formatAs(it.value)}" }
-        this is ModelProvider -> this.getModel().let {
-          if (!it.fields.isEmpty()) it.toGraphql() else ""
-        }
+        this is ModelProvider -> getModel().toGraphql()
         else -> ""
       }).replace("\\s*([(,])".toRegex(), "$1").trim()
 

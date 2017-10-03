@@ -7,8 +7,8 @@ import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.compiler.QCompiler
 import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.compiler.QCompiler
 import com.prestongarno.ktq.QSchemaType.QCustomScalar
 import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QType
@@ -16,7 +16,6 @@ import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.TypeListArgBuilder
-import com.prestongarno.ktq.URL
 import org.junit.Ignore
 import org.junit.Test
 
@@ -71,23 +70,23 @@ class UnionToGraphql {
 
     val userModelInitializer = {
       object : QModel<User>(User) {
-        val login by model.login
+        val login by User.login
       }
     }
     val organizationModelInitializer = {
       object : QModel<Organization>(Organization) {
-        val login by model.login
-        val members by model.members.init { userModelInitializer() }
+        val login by Organization.login
+        val members by Organization.members.init { userModelInitializer() }
       }
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by model.searchAccounts.config()
+      val accountSearch by Query.searchAccounts.config()
           .first(10)
           .searchTerm("google.com")
           .build {
             object : QModel<Account>(Account) {
-              val organizations by model.Organization.init { organizationModelInitializer() }
+              val organizations by Account.Organization.init { organizationModelInitializer() }
             }
           }
     }
@@ -112,25 +111,25 @@ class UnionToGraphql {
 
     val userModelInitializer = {
       object : QModel<User>(User) {
-        val login by model.login
+        val login by User.login
       }
     }
     val organizationModelInitializer = {
       object : QModel<Organization>(Organization) {
-        val login by model.login
-        val members by model.members.init { userModelInitializer() }
+        val login by Organization.login
+        val members by Organization.members.init { userModelInitializer() }
       }
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by model.searchAccounts.config()
+      val accountSearch by Query.searchAccounts.config()
           .first(10)
           .searchTerm("google.com")
           .build {
             object : QModel<Account>(Account) {
-              val organizations by model.Organization.init { organizationModelInitializer() }
+              val organizations by Account.Organization.init { organizationModelInitializer() }
 
-              val users by model.User.init { userModelInitializer() }
+              val users by Account.User.init { userModelInitializer() }
             }
           }
     }
@@ -157,31 +156,31 @@ class UnionToGraphql {
 
     val userModelInitializer = {
       object : QModel<User>(User) {
-        val login by model.login
+        val login by User.login
       }
     }
     val botModelInitializer = {
       object : QModel<Bot>(Bot) {
-        val login by model.login
-        val owner by model.owner.init { userModelInitializer() }
+        val login by Bot.login
+        val owner by Bot.owner.init { userModelInitializer() }
       }
     }
     val organizationModelInitializer = {
       object : QModel<Organization>(Organization) {
-        val login by model.login
-        val members by model.members.init { userModelInitializer() }
+        val login by Organization.login
+        val members by Organization.members.init { userModelInitializer() }
       }
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by model.searchAccounts.config()
+      val accountSearch by Query.searchAccounts.config()
           .first(10)
           .searchTerm("google.com")
           .build {
             object : QModel<Account>(Account) {
-              val organizations by model.Organization.init { organizationModelInitializer() }
-              val users by model.User.init { userModelInitializer() }
-              val bots by model.Bot.init { botModelInitializer() }
+              val organizations by Account.Organization.init { organizationModelInitializer() }
+              val users by Account.User.init { userModelInitializer() }
+              val bots by Account.Bot.init { botModelInitializer() }
             }
           }
     }

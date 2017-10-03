@@ -19,7 +19,6 @@ interface CustomScalarInitStub<T: CustomScalar> : SchemaStub {
 interface QConfigStub<T, out A : ArgBuilder> : SchemaStub {
   fun config(): A
 }
-
 interface QTypeConfigStub<T : QSchemaType, out A : TypeArgBuilder> : SchemaStub {
   fun config(): A
 }
@@ -46,4 +45,9 @@ interface NullableStub<T> : SchemaStub {
 interface TypeStub<U, T> : SchemaStub where  U : QModel<T>, T : QSchemaType {
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): U
   operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<U, T>
+}
+
+interface UnionStub : SchemaStub {
+  operator fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>
+  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub
 }
