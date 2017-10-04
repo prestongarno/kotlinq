@@ -30,7 +30,7 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
 
   val values = mutableListOf<I>()
 
-  override fun config(): B = builderInit(ScalarListAdapter<I, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(ScalarListAdapter<I, B>(graphqlName, builderInit))
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
 

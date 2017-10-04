@@ -1,48 +1,46 @@
 package com.prestongarno.ktq
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.adapters.FieldAdapter
+import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.internal.FragmentProvider
 import kotlin.reflect.KProperty
 
 interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
-  fun on(what: T.() -> QModel<*>): UnionStub
+  fun fragment(what: T.() -> QModel<*>): UnionStub
 }
 
-internal class UnionStubImpl<out R : QSchemaUnion>(
-    val objectModel: R
-) : QModel<QSchemaType>(objectModel),
-    FragmentProvider<QSchemaType>,
-    UnionInitStub<R>,
+internal class UnionAdapter<I: QSchemaUnion>(
+    override val graphqlName: String,
+    val objectModel: QSchemaUnion
+) : QModel<QSchemaUnion>(objectModel),
+    Adapter,
+    FragmentProvider,
+    UnionInitStub<I>,
     UnionStub,
     QSchemaUnion {
 
-  private val __fragments = mutableListOf<() -> QModel<*>>()
-  /**
-   * Why is there a concurrent modification exception thrown if I don't call __fragments.toList() before map...
-   */
-  override val fragments by lazy { __fragments.toList().map { it() } }
+  override val args by lazy { mutableMapOf<String, Any>() }
+
+  internal val fragmentAccumulator by lazy { mutableListOf<() -> QModel<*>>() }
+  override val fragments by lazy { fragmentAccumulator.map { it() } }
   internal var value: QModel<*> = NONE
 
-  override fun on(what: R.() -> QModel<*>): UnionStub = what(objectModel) as? UnionStub?: throw IllegalStateException()
-
-  override fun accept(input: JsonObject): Boolean {
-    value = input["__typename"]?.let { returned ->
-      fragments.map {
-        if (it.model::class.simpleName == returned) it else null
-      }.filterNotNull().first()
-    }?: NONE
-    return value != NONE && value.accept(input)
+  override fun accept(result: Any?): Boolean {
+    return if (result is JsonObject) {
+      value = result["__typename"]?.let { resultType ->
+        fragments.find { it.graphqlType == resultType }?: NONE
+      }?: NONE
+      value != NONE && value.accept(result)
+    } else false
   }
 
-  override fun <T : QSchemaUnion> fragment(init: T.() -> QModel<*>): QModel<*> = apply {
-    try {
-      __fragments.add { init(objectModel as T) }
-    } catch(ex: RuntimeException) { throw ex }
-  }
+  @Suppress("UNCHECKED_CAST")
+  override fun fragment(
+      what: I.() -> QModel<*>
+  ): UnionStub = what(objectModel as I) as? UnionStub?: throw IllegalStateException()
 
-  override fun toPayload(): String {
-    return fragments.joinToString(" ") { "... on ${it.model::class.simpleName}${it.toGraphql(false)}" }
+  override fun toRawPayload(): String = fragments.joinToString(prefix = "__typename,") {
+    "... on ${it.graphqlType}${it.toGraphql(false)}"
   }
 
   override fun getValue(
@@ -53,13 +51,9 @@ internal class UnionStubImpl<out R : QSchemaUnion>(
   override fun <R : QModel<*>> provideDelegate(
       inst: R,
       property: KProperty<*>
-  ): UnionStub = UnionStubImpl(objectModel)
+  ): UnionStub = UnionAdapter<I>(graphqlName, objectModel)
 
-  companion object {
-    val UNKNOWN = UnionStubImpl<QSchemaUnion>(object : QSchemaUnion {
-      override fun toPayload(): String = ""
-    })
+  override fun <T : QSchemaUnion> on(init: T.() -> QModel<*>): QModel<*> = apply {
+    @Suppress("UNCHECKED_CAST") (objectModel as? T)?.also { fragmentAccumulator.add { init(it) } }
   }
 }
-
-

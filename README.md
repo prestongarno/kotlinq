@@ -76,13 +76,13 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
       }
     }
     
-For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
+For a complete guide fragment how to use all other graphql types such as Unions and Nullable fields,
 check out the wiki.
 
 ### How to execute a query or mutation:
 
 This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
-adds a dependency on [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
+adds a dependency fragment [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
 describe your model, and execute. This is an example for getting your github name (not shown: compiled github IDL schema):
 
     class ViewerQuery : QModel<Query>(Query) {

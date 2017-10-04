@@ -11,7 +11,7 @@ import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
 /**
- * This class represents a stub for a non-leaf type (aka an object) on a graph */
+ * This class represents a stub for a non-leaf type (aka an object) fragment a graph */
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(
     fieldName: String, val builderInit: (TypeArgBuilder) -> B
 ) : FieldAdapter(fieldName),
@@ -25,7 +25,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     getModel().resolved = true
     return result is JsonObject
         && value.fields.filterNot { f ->
-      f.accept(result[f.fieldName])
+      f.accept(result[f.graphqlName])
     }.isEmpty().apply {
       if (!this) getModel().resolved = false
     }
@@ -33,7 +33,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
 
   lateinit var value: P
 
-  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(graphqlName, builderInit))
 
   override fun getModel(): QModel<*> = value
 

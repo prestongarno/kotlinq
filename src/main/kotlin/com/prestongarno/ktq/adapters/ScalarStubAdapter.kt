@@ -31,7 +31,7 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
 
   override fun withDefault(value: T) = apply { default = value }
 
-  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlName, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
     this.property = property

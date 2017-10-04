@@ -95,7 +95,7 @@ class UnionToGraphql {
         .isEqualTo("""
           |{
           |  searchAccounts(first: 10,searchTerm: \"google.com\"){
-          |    ... on Organization{
+          |    ... fragment Organization{
           |      login,
           |      members{
           |        login
@@ -138,13 +138,13 @@ class UnionToGraphql {
         .isEqualTo("""
           |{
           |  searchAccounts(first: 10,searchTerm: \"google.com\"){
-          |    ... on Organization{
+          |    ... fragment Organization{
           |      login,
           |      members{
           |        login
           |      }
           |    },
-          |    ... on User{
+          |    ... fragment User{
           |      login
           |    }
           |  }
@@ -189,16 +189,16 @@ class UnionToGraphql {
         .isEqualTo("""
           |{
           |  searchAccounts(first: 10,searchTerm: \"google.com\"){
-          |    ... on Organization{
+          |    ... fragment Organization{
           |      login,
           |      members{
           |        login
           |      }
           |    },
-          |    ... on User{
+          |    ... fragment User{
           |      login
           |    },
-          |    ... on Bot{
+          |    ... fragment Bot{
           |      login,
           |      owner{
           |        login

@@ -20,16 +20,15 @@ class MyUserModel : QModel<User>(User) {
 }
 
 object Actor : QSchemaUnion by QSchemaUnion.create(Actor) {
-  fun user(init: Actor.() -> QModel<User>) = fragment<Actor> { init() }
-  fun bot(init: Actor.() -> QModel<Bot>) = fragment<Actor> { init() }
+  fun user(init: Actor.() -> QModel<User>) = on<Actor> { init() }
+  fun bot(init: Actor.() -> QModel<Bot>) = on<Actor> { init() }
 }
 
 class MyBotModel : QModel<Bot>(Bot) {
-  val bar by model.owner.on {
+  val bar by model.owner.fragment {
     user { MyUserModel() }
   }
   val name by model.name
-  //lazy { (foobar as UnionStubImpl<Actor>).value }
 
 }
 

@@ -2,8 +2,7 @@ package com.prestongarno.ktq
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.prestongarno.ktq.adapters.FieldAdapter
-import com.prestongarno.ktq.internal.FragmentProvider
+import com.prestongarno.ktq.adapters.Adapter
 import java.io.InputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -11,15 +10,17 @@ import kotlin.reflect.jvm.jvmErasure
 
 open class QModel<out T : QSchemaType>(val model: T) {
 
-  internal val fields by lazy { mutableListOf<FieldAdapter>() }
+  internal val fields by lazy { mutableListOf<Adapter>() }
 
   internal var resolved = false
+
+  internal val graphqlType by lazy { model::class.simpleName?: "" }
 
   fun isResolved(): Boolean = resolved
 
   internal fun onResponse(input: InputStream) {
     (Parser().parse(input) as? JsonObject)?.run {
-      fields.forEach { it.accept(this[it.fieldName]) }
+      fields.forEach { it.accept(this[it.graphqlName]) }
     }
   }
 
@@ -27,7 +28,7 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   internal open fun accept(input: JsonObject): Boolean {
     resolved = fields
-        .filterNot { it.accept(input[it.fieldName]) }
+        .filterNot { it.accept(input[it.graphqlName]) }
         .isEmpty()
     return resolved
   }
@@ -35,14 +36,13 @@ open class QModel<out T : QSchemaType>(val model: T) {
   fun toGraphql(pretty: Boolean = true): String {
     return when {
       pretty -> prettyPrinted(0)
-      this is QSchemaUnion -> toPayload()
       else -> fields.joinToString(",", "{", "}") { it.toRawPayload() }
     }
   }
 
   private fun unionToGraphql(): String =
       fields.joinToString(separator = ",", prefix = "{", postfix = "}") {
-        it.toRawPayload().prepend("... on ")
+        it.toRawPayload().prepend("... fragment ")
       }
 
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
@@ -65,7 +65,7 @@ private fun QModel<*>.prettyPrinted(indentation: Int): String =
 
 private fun QModel<*>.prettyPrintUnion(indentation: Int) =
     (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
-      it.prettyPrinted().prepend("... on ")
+      it.prettyPrinted().prepend("... fragment ")
     }.indent(1)
         .plus("\n}")
         .indent(indentation))
@@ -112,6 +112,10 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
       }
     }
   }
+}
+
+fun Adapter.prettyPrinted(): String {
+  throw UnsupportedOperationException()
 }
 
 fun String.indent(times: Int = 1): String =

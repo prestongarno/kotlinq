@@ -30,7 +30,7 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
     return true
   }
 
-  override fun config(): B = builderInit(CustomScalarAdapter<E, P, Q, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(CustomScalarAdapter<E, P, Q, B>(graphqlName, builderInit))
 
   private lateinit var adapter: QScalarMapper<Q>
 

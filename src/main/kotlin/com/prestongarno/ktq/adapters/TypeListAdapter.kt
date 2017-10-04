@@ -38,7 +38,7 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
   lateinit var init: () -> P
   val prototype by lazy { init() }
 
-  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(graphqlName, builderInit))
 
   override fun getModel(): QModel<I> = prototype
 

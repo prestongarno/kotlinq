@@ -3,23 +3,33 @@ package com.prestongarno.ktq.adapters
 import com.prestongarno.ktq.Payload
 import com.prestongarno.ktq.QInput
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.UnionStubImpl
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
-internal abstract class FieldAdapter(val fieldName: String) : Payload {
-  val args: MutableMap<String, Any> = HashMap(4, 0.75f)
+/**
+ * TODO extract this to an interface for fragments & unions */
+internal abstract class FieldAdapter(override val graphqlName: String) : Adapter, Payload {
 
+  /**
+   * A map of arguments for the field (for graphql) */
+  override val args by lazy { mutableMapOf<String, Any>() }
+
+  /**
+   * The backing kotlin property */
   lateinit var property: KProperty<*>
 
-  fun onProvideDelegate(inst: QModel<*>) = inst.fields.add(this)
+  /**
+   * Notified when this object is being provided as an adapter for a field */
+  override fun onProvideDelegate(inst: QModel<*>) { inst.fields.add(this) }
 
-  abstract fun accept(result: Any?): Boolean
+  /**
+   * Accept the result of the query */
+  abstract override fun accept(result: Any?): Boolean
 
   /**
    * I try to make my code as unreadable as possible
    * ... this still works though somehow. Expression-based languages will be the end of me */
-  open fun toRawPayload(): String = fieldName + when {
+  override fun toRawPayload(): String = graphqlName + when {
     args.isNotEmpty() -> this.args.entries
         .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
           "$key: ${formatAs(value)}"
@@ -28,7 +38,7 @@ internal abstract class FieldAdapter(val fieldName: String) : Payload {
     else -> ""
   }
 
-  fun prettyPrinted(): String = fieldName +
+  fun prettyPrinted(): String = graphqlName +
       (when {
         args.isNotEmpty() -> args.entries
             .joinToString(separator = ",", prefix = "(", postfix = ")") {
@@ -49,7 +59,6 @@ internal fun formatAs(value: Any): String {
         .map { formatAs(it ?: "") }
         .filter { it.isNotBlank() }
         .joinToString(", ", "[ ", " ]")
-    is FieldAdapter -> throw IllegalStateException("how did this get here")
     else -> throw UnsupportedOperationException()
   }
 }

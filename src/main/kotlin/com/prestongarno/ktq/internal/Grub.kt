@@ -6,16 +6,16 @@ import kotlin.reflect.KProperty
 
 /**
  * Grand Unified Bootloader for SchemaType definitions/stubs.
- * solves the problem of not knowing the field's GraphQL name on the generated type hierarchy
+ * solves the problem of not knowing the field's GraphQL name fragment the generated type hierarchy
  * when generating queries/payloads
  *
  * Delegation inception : this property delegate is delegated to in order to get the name of the
  * schema field, then passes it off to the backing field, which is another delegate in order for the
- * actual delegation to happen on a schema model implementation
+ * actual delegation to happen fragment a schema model implementation
  *
  * This class does minimal work in order to reduce added complexity - it simply gets passed a function
  * which, when applied a string, produces the correct schemastub.  When delegated to by schemastub types,
- * on `getValue` for the schemastub it simply invokes the function with the name of the property that it's
+ * fragment `getValue` for the schemastub it simply invokes the function with the name of the property that it's
  * delegating to. This way, the property name can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 class Grub<out T : SchemaStub>(private val toInit: (String) -> T) {

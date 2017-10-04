@@ -9,6 +9,6 @@ internal interface ModelProvider {
   fun getModel() : QModel<*>
 }
 
-internal interface FragmentProvider<out T: QSchemaType> {
-  val fragments: List<QModel<T>>
+internal interface FragmentProvider {
+  val fragments: List<QModel<*>>
 }

@@ -22,7 +22,7 @@ internal class NullableStubAdapter<T, out B: ArgBuilder>(
 
   val value : T? = null
 
-  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlName, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
     this.property = property
