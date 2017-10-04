@@ -3,12 +3,11 @@ package com.prestongarno.ktq.unions.experimental
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QModel.Companion.NONE
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
-import com.prestongarno.ktq.UnionStubImpl
+import org.intellij.lang.annotations.Language
 import org.junit.Test
 import kotlin.test.assertTrue
 
@@ -26,11 +25,11 @@ object Actor : QSchemaUnion by QSchemaUnion.create(Actor) {
 }
 
 class MyBotModel : QModel<Bot>(Bot) {
-  val foobar = Bot.owner.on {
+  val bar by model.owner.on {
     user { MyUserModel() }
-    bot { MyBotModel() }
   }
-  val bar by lazy { (foobar as UnionStubImpl<Actor>).value }
+  val name by model.name
+  //lazy { (foobar as UnionStubImpl<Actor>).value }
 
 }
 
@@ -65,23 +64,37 @@ class ExperimentalUnionModel {
         Pair("name", "Garno")
     ))
 
-    require(botModel.foobar is UnionStubImpl<*>)
+    //require(botModel.foobar is UnionStubImpl<*>)
 
-    require((botModel.foobar as UnionStubImpl<*>).accept(input))
+    //require((botModel.foobar as UnionStubImpl<*>).accept(input))
 
+    @Language("JSON") val response = """
+      {
+        "name": "some bot or whatever",
+        "owner": {
+          "__typename": "User",
+          "name": "preston"
+        }
+      }
+      """
+    botModel.onResponse(response)
+    botModel.fields.run { println(this) }
     require(botModel.bar is MyUserModel)
 
     assertTrue(botModel.accept(input))
-    assertTrue(botModel.foobar.accept(input))
-    assertTrue(botModel.foobar != NONE)
+    //assertTrue(botModel.foobar.accept(input))
+    //assertTrue(botModel.foobar != NONE)
 
     assertTrue((botModel.bar as MyUserModel).name == "Preston")
 
-    assertTrue((MyBotModel().apply { (foobar as UnionStubImpl<*>).accept(input2) }.bar as MyUserModel).name == "Garno")
+    //assertTrue((MyBotModel().apply { (foobar as UnionStubImpl<*>).accept(input2) }.bar as MyUserModel).name == "Garno")
 
     println(botModel.bar)
+    println(botModel.toGraphql(false))
     println(Actor.user { MyUserModel() }.toGraphql(false))
     println(MyUserModel().toGraphql(false))
+    //assertTrue(botModel.foobar.fragments.size == 2)
+    //assertTrue((MyBotModel().foobar as UnionStubImpl<*>).fragments.size == 2)
     assertTrue(botModel.bar !== MyBotModel().bar)
 
   }

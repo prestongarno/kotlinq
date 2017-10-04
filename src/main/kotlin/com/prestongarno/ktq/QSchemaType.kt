@@ -182,8 +182,10 @@ interface QSchemaUnion : QSchemaType {
 
   fun <T: QSchemaUnion> fragment(init: T.() -> QModel<*>): QModel<*> =  TODO()//init(this as T)
 
+  fun toPayload(): String = TODO()
+
   companion object {
-    fun create(objectModel: QSchemaUnion) : QSchemaUnion = UnionStubImpl<QSchemaUnion>(objectModel)
+    fun create(objectModel: QSchemaUnion) : QSchemaUnion = UnionStubImpl(objectModel)
   }
 }
 

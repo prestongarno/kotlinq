@@ -10,5 +10,5 @@ internal interface ModelProvider {
 }
 
 internal interface FragmentProvider<out T: QSchemaType> {
-  val fragments: Array<out () -> QModel<T>>
+  val fragments: List<QModel<T>>
 }

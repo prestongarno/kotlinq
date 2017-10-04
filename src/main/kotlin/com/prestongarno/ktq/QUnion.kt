@@ -1,6 +1,7 @@
 package com.prestongarno.ktq
 
 import com.beust.klaxon.JsonObject
+import com.prestongarno.ktq.adapters.FieldAdapter
 import com.prestongarno.ktq.internal.FragmentProvider
 import kotlin.reflect.KProperty
 
@@ -17,7 +18,10 @@ internal class UnionStubImpl<out R : QSchemaUnion>(
     QSchemaUnion {
 
   private val __fragments = mutableListOf<() -> QModel<*>>()
-  override val fragments by lazy { __fragments.toTypedArray() }
+  /**
+   * Why is there a concurrent modification exception thrown if I don't call __fragments.toList() before map...
+   */
+  override val fragments by lazy { __fragments.toList().map { it() } }
   internal var value: QModel<*> = NONE
 
   override fun on(what: R.() -> QModel<*>): UnionStub = what(objectModel) as? UnionStub?: throw IllegalStateException()
@@ -25,14 +29,20 @@ internal class UnionStubImpl<out R : QSchemaUnion>(
   override fun accept(input: JsonObject): Boolean {
     value = input["__typename"]?.let { returned ->
       fragments.map {
-        it().let { if (it.model::class.simpleName == returned) it else null }
+        if (it.model::class.simpleName == returned) it else null
       }.filterNotNull().first()
     }?: NONE
     return value != NONE && value.accept(input)
   }
 
   override fun <T : QSchemaUnion> fragment(init: T.() -> QModel<*>): QModel<*> = apply {
-    __fragments.add { init(objectModel as T) }
+    try {
+      __fragments.add { init(objectModel as T) }
+    } catch(ex: RuntimeException) { throw ex }
+  }
+
+  override fun toPayload(): String {
+    return fragments.joinToString(" ") { "... on ${it.model::class.simpleName}${it.toGraphql(false)}" }
   }
 
   override fun getValue(
@@ -46,7 +56,9 @@ internal class UnionStubImpl<out R : QSchemaUnion>(
   ): UnionStub = UnionStubImpl(objectModel)
 
   companion object {
-    val UNKNOWN = UnionStubImpl<QSchemaUnion>(object : QSchemaUnion { })
+    val UNKNOWN = UnionStubImpl<QSchemaUnion>(object : QSchemaUnion {
+      override fun toPayload(): String = ""
+    })
   }
 }
 
