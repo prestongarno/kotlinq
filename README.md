@@ -93,11 +93,15 @@ describe your model, and execute. This is an example for getting your github nam
       val name by model.name
     }
 
-    GraphQL.initialize("https://api.github.com/graphql").apply {
+    val myFirstQuery = GraphQL.initialize("https://api.github.com/graphql").apply {
       authorization = TokenAuth(System.getenv("GITHUB_KEY"))
     }.query { ViewerQuery() }
-        .onSuccess { println("Hello, ${it.me.name}") }
-        .execute()
-        
-        
+        .send()
+    println("Hello ${myFirstQuery.me.name}")
+
+
 The last code block will print "Hello, \<your name here\>"
+
+### FAQ
+
+* __Can I use this in production?__ Please don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while
