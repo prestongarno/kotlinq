@@ -9,7 +9,7 @@ interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
   fun fragment(what: T.() -> QModel<*>): UnionStub
 }
 
-internal class UnionAdapter<I: QSchemaUnion>(
+internal class UnionAdapter<out I: QSchemaUnion>(
     override val graphqlName: String,
     val objectModel: QSchemaUnion
 ) : QModel<QSchemaUnion>(objectModel),
@@ -22,7 +22,10 @@ internal class UnionAdapter<I: QSchemaUnion>(
   override val args by lazy { mutableMapOf<String, Any>() }
 
   internal val fragmentAccumulator by lazy { mutableListOf<() -> QModel<*>>() }
-  override val fragments by lazy { fragmentAccumulator.map { it() } }
+
+  override var fragments = emptyList<QModel<*>>()
+    get() = fragmentAccumulator.map { it() }
+
   internal var value: QModel<*> = NONE
 
   override fun accept(result: Any?): Boolean {

@@ -10,5 +10,5 @@ internal interface ModelProvider {
 }
 
 internal interface FragmentProvider {
-  val fragments: List<QModel<*>>
+  var fragments: List<QModel<*>>
 }

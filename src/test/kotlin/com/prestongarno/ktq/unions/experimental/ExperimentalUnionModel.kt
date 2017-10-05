@@ -25,7 +25,7 @@ object Actor : QSchemaUnion by QSchemaUnion.create(Actor) {
 }
 
 class MyBotModel : QModel<Bot>(Bot) {
-  val bar by model.owner.fragment {
+  val owner by model.owner.fragment {
     user { MyUserModel() }
   }
   val name by model.name
@@ -63,10 +63,6 @@ class ExperimentalUnionModel {
         Pair("name", "Garno")
     ))
 
-    //require(botModel.foobar is UnionStubImpl<*>)
-
-    //require((botModel.foobar as UnionStubImpl<*>).accept(input))
-
     @Language("JSON") val response = """
       {
         "name": "some bot or whatever",
@@ -77,24 +73,25 @@ class ExperimentalUnionModel {
       }
       """
     botModel.onResponse(response)
-    botModel.fields.run { println(this) }
-    require(botModel.bar is MyUserModel)
+    require(botModel.owner !== QModel.NONE)
+    require(botModel.owner is MyUserModel)
 
     assertTrue(botModel.accept(input))
     //assertTrue(botModel.foobar.accept(input))
     //assertTrue(botModel.foobar != NONE)
 
-    assertTrue((botModel.bar as MyUserModel).name == "Preston")
+    assertTrue((botModel.owner as MyUserModel).name == "Preston")
 
     //assertTrue((MyBotModel().apply { (foobar as UnionStubImpl<*>).accept(input2) }.bar as MyUserModel).name == "Garno")
 
-    println(botModel.bar)
+    println(botModel.owner)
     println(botModel.toGraphql(false))
     println(Actor.user { MyUserModel() }.toGraphql(false))
     println(MyUserModel().toGraphql(false))
     //assertTrue(botModel.foobar.fragments.size == 2)
     //assertTrue((MyBotModel().foobar as UnionStubImpl<*>).fragments.size == 2)
-    assertTrue(botModel.bar !== MyBotModel().bar)
+    assertTrue(botModel.owner !== MyBotModel().owner)
+
 
   }
 }
