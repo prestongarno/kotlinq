@@ -8,3 +8,7 @@ import com.prestongarno.ktq.QSchemaType
 internal interface ModelProvider {
   fun getModel() : QModel<*>
 }
+
+internal interface FragmentProvider {
+  var fragments: List<QModel<*>>
+}

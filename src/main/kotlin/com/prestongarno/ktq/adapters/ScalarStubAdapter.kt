@@ -17,11 +17,13 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
     QConfigStub<T, B>,
     ArgBuilder {
 
-  override fun accept(result: Any?) {
+  override fun accept(result: Any?): Boolean {
     @Suppress("UNCHECKED_CAST")
-    value = if (result == null)
-      default
-    else property.typedValueFrom(result) as T ?: default
+    value = if(result != null)
+      property.typedValueFrom(result) as T
+    else default
+
+    return (value != null)
   }
 
   var value: T? = null
@@ -29,7 +31,7 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
 
   override fun withDefault(value: T) = apply { default = value }
 
-  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlName, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
     this.property = property

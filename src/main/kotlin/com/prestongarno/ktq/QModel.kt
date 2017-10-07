@@ -2,54 +2,74 @@ package com.prestongarno.ktq
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.prestongarno.ktq.adapters.FieldAdapter
+import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.internal.FragmentProvider
 import java.io.InputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.jvm.jvmErasure
 
 open class QModel<out T : QSchemaType>(val model: T) {
 
-  internal val fields = mutableListOf<FieldAdapter>()
+  internal val fields by lazy { mutableListOf<Adapter>() }
 
-  override fun toString() = this.toGraphql()
+  internal var resolved = false
 
-  fun toGraphql(indentation: Int = 0): String {
-    return if (model is QSchemaUnion) unionToGraphql(indentation) else
-      ((fields.joinToString(separator = ",\n") { it.toRawPayload() }
-          .indent(1)) + "\n}").prepend("{\n").indent(indentation)
-          .replace("\\s*([(,])".toRegex(), "$1").trim()
-  }
+  internal val graphqlType by lazy { model::class.simpleName?: "" }
 
-  private fun unionToGraphql(indentation: Int): String =
-      (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
-        it.toRawPayload().prepend("... on ")
-      }.indent(1)
-          .plus("\n}")
-          .indent(indentation))
-          .replace("\\s*([(,])".toRegex(), "$1").trim()
+  fun isResolved(): Boolean = resolved
 
   internal fun onResponse(input: InputStream) {
-    (Parser().parse(input) as JsonObject).run {
-      fields.forEach {
-        it.accept(this[it.fieldName])
-      }
+    (Parser().parse(input) as? JsonObject)?.run {
+      fields.forEach { it.accept(this[it.graphqlName]) }
     }
   }
 
   internal fun onResponse(input: String) = onResponse(input.byteInputStream())
 
-  internal fun accept(input: JsonObject) = this.fields.forEach { it.accept(input[it.fieldName]) }
+  internal open fun accept(input: JsonObject): Boolean {
+    resolved = fields
+        .filterNot { it.accept(input[it.graphqlName]) }
+        .isEmpty()
+    return resolved
+  }
+
+  fun toGraphql(pretty: Boolean = true): String {
+    return when {
+      pretty -> prettyPrinted(0)
+      this is FragmentProvider -> fields.joinToString(",", "{", "${fragments.joinToString { it.toGraphql(false) }}}") { it.toRawPayload() }
+      else -> fields.joinToString(",", "{", "}") { it.toRawPayload() }
+    }
+  }
+
+  private fun unionToGraphql(): String =
+      fields.joinToString(separator = ",", prefix = "{", postfix = "}") {
+        it.toRawPayload().prepend("... fragment ")
+      }
+
+  override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
+      fields.joinToString(",", "[", "]") { it.toRawPayload() }
+
+  companion object {
+    internal val NONE: QModel<*> = QModel<QSchemaType>(object : QSchemaType {})
+  }
 }
 
-fun String.indent(times: Int = 1): String =
-    replace("^".toRegex(), Jsonify.INDENT.repeat(times))
-        .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
+private fun QModel<*>.prettyPrinted(indentation: Int): String =
+    if (model is QSchemaUnion) prettyPrintUnion(indentation) else
+      ((fields.joinToString(separator = ",\n") { it.prettyPrinted() }
+          .indent(1)) + "\n}").prepend("{\n").indent(indentation)
+          .replace("\\s*([(,])".toRegex(), "$1").trim()
 
-fun String.prepend(of: String): String = of + this
+private fun QModel<*>.prettyPrintUnion(indentation: Int) =
+    (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
+      it.prettyPrinted().prepend("... fragment ")
+    }.indent(1)
+        .plus("\n}")
+        .indent(indentation))
+        .replace("\\s*([(,])".toRegex(), "$1").trim()
 
-fun KProperty<*>.typedValueFrom(value: Any): Any? {
+internal fun KProperty<*>.typedValueFrom(value: Any): Any? {
   return if (this.returnType.jvmErasure == value::class)
     value
   else when (this.returnType.jvmErasure) {
@@ -67,12 +87,13 @@ fun KProperty<*>.typedValueFrom(value: Any): Any? {
   }
 }
 
-fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
+internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
   val type: KClass<*>? = returnType.arguments[0].type?.classifier as KClass<*>
   val values = (value as? List<*>)?.filterNotNull() ?: listOf(value)
   val responseType: KClass<*> = if (values.isNotEmpty()) values[0]::class else Any::class
 
   return when (type) {
+    // TODO Take out generic type arguments from the stubs for primitives -> these are BOXED AND UNBOXED every time they're accessed!
     null -> emptyList()
     responseType -> values
     Int::class -> values.mapNotNull { "$it".toIntOrNull() }
@@ -90,3 +111,14 @@ fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
     }
   }
 }
+
+fun Adapter.prettyPrinted(): String {
+  throw UnsupportedOperationException()
+}
+
+fun String.indent(times: Int = 1): String =
+    replace("^".toRegex(), Jsonify.INDENT.repeat(times))
+        .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
+
+fun String.prepend(of: String): String = of + this
+

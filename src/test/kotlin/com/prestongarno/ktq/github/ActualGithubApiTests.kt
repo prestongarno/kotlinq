@@ -26,7 +26,7 @@ class ActualGithubApiTests {
             assertThat(it.me.login).isEqualTo("prestongarno")
           }
           .onError { errorCode, message -> System.err.println("$errorCode: $message") }
-          .execute()
+          .run()
     }
   }
 
@@ -39,7 +39,7 @@ class ActualGithubApiTests {
             result.search.users.flatMap { it.users }
                 .joinToString { "${it.name}(${it.login})" }
           }.onError { code, message -> println("$code: $message") }
-          .execute()
+          .run()
     }
   }
 }

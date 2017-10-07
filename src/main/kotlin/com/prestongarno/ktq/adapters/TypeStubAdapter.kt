@@ -11,7 +11,7 @@ import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
 /**
- * This class represents a stub for a non-leaf type (aka an object) on a graph */
+ * This class represents a stub for a non-leaf type (aka an object) fragment a graph */
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(
     fieldName: String, val builderInit: (TypeArgBuilder) -> B
 ) : FieldAdapter(fieldName),
@@ -21,19 +21,23 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     TypeArgBuilder,
     ModelProvider {
 
-  override fun accept(result: Any?) {
-    if(result is JsonObject)
-      this.result.fields.forEach {
-        it.accept(result[it.fieldName]) }
+  override fun accept(result: Any?): Boolean {
+    getModel().resolved = true
+    return result is JsonObject
+        && value.fields.filterNot { f ->
+      f.accept(result[f.graphqlName])
+    }.isEmpty().apply {
+      if (!this) getModel().resolved = false
+    }
   }
 
-  lateinit var result: P
+  lateinit var value: P
 
-  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(graphqlName, builderInit))
 
-  override fun getModel(): QModel<*> = result
+  override fun getModel(): QModel<*> = value
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.result
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.value
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> {
     this.property = property
@@ -41,10 +45,10 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
   }
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I>
-      = apply { result = of() as P } as TypeStub<U, I>
+      = apply {  this.value = of() as P } as TypeStub<U, I>
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeStub<U, T>
-      = apply { result = init() as P } as TypeStub<U, T>
+      = apply { this.value = init() as P } as TypeStub<U, T>
 
   override fun addArg(name: String, value: Any): TypeArgBuilder = apply { args.put(name, value) }
 

@@ -23,10 +23,10 @@ class MockedHttpResults {
           """.trimMargin("|"))
 
     @Suppress("UNCHECKED_CAST")
-    (firstGoal.fields.find { it.fieldName == "name" }
+    (firstGoal.fields.find { it.graphqlName == "name" }
         as ScalarStubAdapter<String, ArgBuilder>).value = "1.0 release of this project"
     @Suppress("UNCHECKED_CAST")
-    (firstGoal.fields.find { it.fieldName == "description" }
+    (firstGoal.fields.find { it.graphqlName == "description" }
         as ScalarStubAdapter<String, ArgBuilder>).value = "Safe, easy-to-use graphql queries"
 
     assertThat(firstGoal.name).isEqualTo("1.0 release of this project")

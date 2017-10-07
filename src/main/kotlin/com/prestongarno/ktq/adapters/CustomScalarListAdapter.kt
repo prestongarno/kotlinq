@@ -20,7 +20,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
     CustomScalarListInitStub<E>,
     CustomScalarListStub<P, Q> {
 
-  override fun accept(result: Any?) {
+  override fun accept(result: Any?): Boolean {
     val values = (if (result is List<*>) result else listOf(result)).filterNotNull()
     when (adapter) {
       is InputStreamScalarListMapper<*> -> {
@@ -32,9 +32,10 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
             values.map { "$it" }
       }
     }
+    return true
   }
 
-  override fun config(): B = builderInit(CustomScalarListAdapter<E, P, Q, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(CustomScalarListAdapter<E, P, Q, B>(graphqlName, builderInit))
 
   internal lateinit var adapter: P
 

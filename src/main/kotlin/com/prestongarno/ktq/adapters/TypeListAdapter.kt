@@ -21,22 +21,26 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
     TypeListArgBuilder,
     ModelProvider {
 
-  override fun accept(result: Any?) {
-    if (result is JsonArray<*>) {
+  override fun accept(result: Any?): Boolean {
+    return if (result is JsonArray<*>) {
+      var resolvedOkay = true
       result.filterIsInstance<JsonObject>().forEach { element ->
         this.results.add(init().apply {
-          this.accept(element)
+          if(!this.accept(element))
+            resolvedOkay = false
         })
       }
-    }
+      resolvedOkay
+    } else false
   }
 
   val results = mutableListOf<P>()
   lateinit var init: () -> P
+  val prototype by lazy { init() }
 
-  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(graphqlName, builderInit))
 
-  override fun getModel(): QModel<I> = init()
+  override fun getModel(): QModel<I> = prototype
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeListStub<U, T>
       = apply { this.init = init as () -> P } as TypeListStub<U, T>

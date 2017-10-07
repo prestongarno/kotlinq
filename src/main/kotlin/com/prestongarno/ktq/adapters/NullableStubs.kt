@@ -18,11 +18,11 @@ internal class NullableStubAdapter<T, out B: ArgBuilder>(
     QConfigStub<T, B>,
     ArgBuilder {
 
-  override fun accept(result: Any?) = TODO("not implemented")
+  override fun accept(result: Any?): Boolean = TODO("not implemented")
 
   val value : T? = null
 
-  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(fieldName, builderInit))
+  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlName, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
     this.property = property

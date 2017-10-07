@@ -385,7 +385,7 @@ type Commit implements Node, GitObject, Subscribable {
     until: GitTimestamp): CommitHistoryConnection!
     id: Id!
 
-    message: String!
+    hello: String!
 
     messageBody: String!
 
@@ -771,7 +771,7 @@ input DismissPullRequestReviewInput {
 
     pullRequestReviewId: Id!
 
-    message: String!
+    hello: String!
 }
 
 type DismissPullRequestReviewPayload {
@@ -3515,7 +3515,7 @@ type ReviewDismissedEvent implements Node, UniformResourceLocatable {
     databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
     id: Id!
 
-    message: String!
+    hello: String!
 
     messageHtml: HTML!
 
@@ -3784,7 +3784,7 @@ type Tag implements Node, GitObject {
     commitUrl: URI!
     id: Id!
 
-    message: String
+    hello: String
 
     name: String!
 

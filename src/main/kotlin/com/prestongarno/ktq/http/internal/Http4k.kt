@@ -20,38 +20,42 @@ internal enum class RequestType {
 
 internal object Http4k {
 
-  suspend fun <T : QModel<*>> send(requestBuilder: RequestBuilder<T>) {
+  suspend fun <T : QModel<*>> send(requestBuilder: RequestBuilder<T>): T {
     val client: HttpHandler = OkHttp()
 
     val obj = requestBuilder.`for`()
 
-    if (requestBuilder.adapter.authorization is TokenAuth) {
-    }
     val networkResponse: Response = client(
         Request(Method.POST, requestBuilder.adapter.endpoint)
             .let { request ->
               requestBuilder.adapter.authorization
                   ?.let { request.header("Authorization", it.toString()) }
                   ?: request
-            }.query(requestBuilder.type.name.toLowerCase(),
-                obj.toGraphql().replace("[\\s\n\r]".toRegex(), "")
-                  .replace("...on", "... on "))
-            .apply {
-              println(body)
-            })
+            }.query(requestBuilder.type.name.toLowerCase(), obj.toGraphql(false))
+    )
 
 
-    if (networkResponse.status == Status.OK && requestBuilder.successHandler != null) {
-      requestBuilder.successHandler!!.invoke(obj.apply {
-        val result = Parser().parse(networkResponse.body.stream)
-        if (result is JsonObject && result["data"] is JsonObject) {
-          accept(result["data"] as JsonObject)
-        } else if (requestBuilder.errorHandler != null) {
-          requestBuilder.errorHandler!!(400, "Malformed Response: ${networkResponse.body.toString()}")
+    if (networkResponse.status == Status.OK) {
+      obj.apply {
+
+        resolved = Parser().parse(networkResponse.body.stream)
+            ?.let { it as? JsonObject }
+            ?.run { accept(this["data"] as JsonObject) }
+            ?: false
+
+        if (resolved) {
+          requestBuilder.successHandler?.invoke(obj)
+
+        } else {
+          requestBuilder.errorHandler
+              ?.invoke(400, "Malformed Response: ${networkResponse.body}")
         }
-      })
-    } else if (requestBuilder.errorHandler != null) {
-      requestBuilder.errorHandler!!(networkResponse.status.code, networkResponse.toMessage())
+      }
+
+    } else if (networkResponse.status != Status.OK) {
+      obj.resolved = false
+      requestBuilder.errorHandler?.invoke(networkResponse.status.code, networkResponse.toMessage())
     }
+    return obj
   }
 }

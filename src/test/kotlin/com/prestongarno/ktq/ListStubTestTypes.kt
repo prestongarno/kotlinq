@@ -40,5 +40,5 @@ fun main(args: Array<String>) {
       .schema(File("/home/preston/IdeaProjects/ktq/src/test/resources/graphql.schema.graphqls"))
       .packageName("com.prestongarno.ktq.github")
       .compile()
-      .result { println(it) }*/
+      .value { println(it) }*/
 }
