@@ -3,6 +3,7 @@ package com.prestongarno.ktq
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.internal.FragmentProvider
 import java.io.InputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -36,6 +37,7 @@ open class QModel<out T : QSchemaType>(val model: T) {
   fun toGraphql(pretty: Boolean = true): String {
     return when {
       pretty -> prettyPrinted(0)
+      this is FragmentProvider -> fields.joinToString(",", "{", "${fragments.joinToString { it.toGraphql(false) }}}") { it.toRawPayload() }
       else -> fields.joinToString(",", "{", "}") { it.toRawPayload() }
     }
   }
@@ -49,11 +51,7 @@ open class QModel<out T : QSchemaType>(val model: T) {
       fields.joinToString(",", "[", "]") { it.toRawPayload() }
 
   companion object {
-    internal val NONE: QModel<*> = QModel<QSchemaType>(object : QSchemaType {
-      override fun equals(other: Any?): Boolean {
-        return other === this
-      }
-    })
+    internal val NONE: QModel<*> = QModel<QSchemaType>(object : QSchemaType {})
   }
 }
 

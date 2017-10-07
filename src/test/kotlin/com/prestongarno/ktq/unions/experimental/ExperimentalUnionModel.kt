@@ -27,6 +27,7 @@ object Actor : QSchemaUnion by QSchemaUnion.create(Actor) {
 class MyBotModel : QModel<Bot>(Bot) {
   val owner by model.owner.fragment {
     user { MyUserModel() }
+    bot { MyBotModel() }
   }
   val name by model.name
 
@@ -50,6 +51,7 @@ object Query : QSchemaType {
 class ExperimentalUnionModel {
 
   @Test fun testModelStructure() {
+    val botModel2 = MyBotModel()
     val botModel = MyBotModel()
 
     //val botModel2 = MyBotModel()
@@ -72,17 +74,15 @@ class ExperimentalUnionModel {
         }
       }
       """
+    println(botModel.toGraphql(false))
     botModel.onResponse(response)
+    println(botModel.fields)
     require(botModel.owner !== QModel.NONE)
     require(botModel.owner is MyUserModel)
 
     assertTrue(botModel.accept(input))
-    //assertTrue(botModel.foobar.accept(input))
-    //assertTrue(botModel.foobar != NONE)
 
     assertTrue((botModel.owner as MyUserModel).name == "Preston")
-
-    //assertTrue((MyBotModel().apply { (foobar as UnionStubImpl<*>).accept(input2) }.bar as MyUserModel).name == "Garno")
 
     println(botModel.owner)
     println(botModel.toGraphql(false))

@@ -11,13 +11,17 @@ interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
 
 internal class UnionAdapter<out I: QSchemaUnion>(
     override val graphqlName: String,
-    val objectModel: QSchemaUnion
+    val objectModel: I
 ) : QModel<QSchemaUnion>(objectModel),
     Adapter,
     FragmentProvider,
     UnionInitStub<I>,
     UnionStub,
     QSchemaUnion {
+
+  init {
+    println("Hello " + this.hashCode())
+  }
 
   override val args by lazy { mutableMapOf<String, Any>() }
 
@@ -40,7 +44,7 @@ internal class UnionAdapter<out I: QSchemaUnion>(
   @Suppress("UNCHECKED_CAST")
   override fun fragment(
       what: I.() -> QModel<*>
-  ): UnionStub = what(objectModel as I) as? UnionStub?: throw IllegalStateException()
+  ): UnionStub = apply { this.fragmentAccumulator.add { what.invoke(objectModel) }}.also { println(this.fragmentAccumulator) }
 
   override fun toRawPayload(): String = fragments.joinToString(prefix = "__typename,") {
     "... on ${it.graphqlType}${it.toGraphql(false)}"
@@ -54,9 +58,9 @@ internal class UnionAdapter<out I: QSchemaUnion>(
   override fun <R : QModel<*>> provideDelegate(
       inst: R,
       property: KProperty<*>
-  ): UnionStub = UnionAdapter<I>(graphqlName, objectModel)
+  ): UnionStub = UnionAdapter(graphqlName, objectModel).also { inst.fields.add(it) }
 
-  override fun <T : QSchemaUnion> on(init: T.() -> QModel<*>): QModel<*> = apply {
-    @Suppress("UNCHECKED_CAST") (objectModel as? T)?.also { fragmentAccumulator.add { init(it) } }
+  override fun <T : QSchemaUnion> on(init: T.() -> QModel<*>): QModel<*> {
+    @Suppress("UNCHECKED_CAST") return apply { fragmentAccumulator.add { init(this as T) } }
   }
 }
