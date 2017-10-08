@@ -7,6 +7,7 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
+import com.prestongarno.ktq.UnionAdapter
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 import kotlin.test.assertTrue
@@ -20,16 +21,18 @@ class MyUserModel : QModel<User>(User) {
 }
 
 object Actor : QSchemaUnion by QSchemaUnion.create(Actor) {
-  fun user(init: Actor.() -> QModel<User>) = on<Actor> { init() }
-  fun bot(init: Actor.() -> QModel<Bot>) = on<Actor> { init() }
+  fun user(init: () -> QModel<User>) = on(init)
+  fun bot(init: () -> QModel<Bot>) = on(init)
 }
 
 class MyBotModel : QModel<Bot>(Bot) {
+
+  val name by model.name
+
   val owner by model.owner.fragment {
     user { MyUserModel() }
     bot { MyBotModel() }
   }
-  val name by model.name
 
 }
 
@@ -51,10 +54,7 @@ object Query : QSchemaType {
 class ExperimentalUnionModel {
 
   @Test fun testModelStructure() {
-    val botModel2 = MyBotModel()
     val botModel = MyBotModel()
-
-    //val botModel2 = MyBotModel()
 
     val input = JsonObject(mapOf(
         Pair("__typename", "User"),
@@ -74,10 +74,10 @@ class ExperimentalUnionModel {
         }
       }
       """
-    println(botModel.toGraphql(false))
+
+    //println(botModel.toGraphql(false))
     botModel.onResponse(response)
-    println(botModel.fields)
-    require(botModel.owner !== QModel.NONE)
+    require(botModel.owner != null)
     require(botModel.owner is MyUserModel)
 
     assertTrue(botModel.accept(input))
@@ -86,10 +86,7 @@ class ExperimentalUnionModel {
 
     println(botModel.owner)
     println(botModel.toGraphql(false))
-    println(Actor.user { MyUserModel() }.toGraphql(false))
     println(MyUserModel().toGraphql(false))
-    //assertTrue(botModel.foobar.fragments.size == 2)
-    //assertTrue((MyBotModel().foobar as UnionStubImpl<*>).fragments.size == 2)
     assertTrue(botModel.owner !== MyBotModel().owner)
 
 

@@ -59,7 +59,7 @@ internal fun formatAs(value: Any): String {
         .map { formatAs(it ?: "") }
         .filter { it.isNotBlank() }
         .joinToString(", ", "[ ", " ]")
-    else -> throw UnsupportedOperationException()
+    else -> throw UnsupportedOperationException("Unsupported type: $value")
   }
 }
 

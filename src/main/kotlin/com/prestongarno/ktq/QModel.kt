@@ -15,7 +15,7 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   internal var resolved = false
 
-  internal val graphqlType by lazy { model::class.simpleName?: "" }
+  internal val graphqlType by lazy { model::class.simpleName?: throw IllegalStateException("Null type name") }
 
   fun isResolved(): Boolean = resolved
 
@@ -50,9 +50,6 @@ open class QModel<out T : QSchemaType>(val model: T) {
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
       fields.joinToString(",", "[", "]") { it.toRawPayload() }
 
-  companion object {
-    internal val NONE: QModel<*> = QModel<QSchemaType>(object : QSchemaType {})
-  }
 }
 
 private fun QModel<*>.prettyPrinted(indentation: Int): String =

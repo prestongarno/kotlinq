@@ -6,61 +6,65 @@ import com.prestongarno.ktq.internal.FragmentProvider
 import kotlin.reflect.KProperty
 
 interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
-  fun fragment(what: T.() -> QModel<*>): UnionStub
+  fun fragment(what: T.() -> Unit): UnionStub
 }
 
 internal class UnionAdapter<out I: QSchemaUnion>(
     override val graphqlName: String,
-    val objectModel: I
-) : QModel<QSchemaUnion>(objectModel),
+    val objectModel: I,
+    val fragmentProvided: List<() -> QModel<*>> = emptyList()
+) : QModel<I>(objectModel),
     Adapter,
     FragmentProvider,
     UnionInitStub<I>,
     UnionStub,
     QSchemaUnion {
 
-  init {
-    println("Hello " + this.hashCode())
-  }
-
   override val args by lazy { mutableMapOf<String, Any>() }
 
-  internal val fragmentAccumulator by lazy { mutableListOf<() -> QModel<*>>() }
+  private val fragmentAccumulator by lazy { mutableListOf<() -> QModel<*>>().also { it.addAll(fragmentProvided)} }
 
-  override var fragments = emptyList<QModel<*>>()
-    get() = fragmentAccumulator.map { it() }
+  override val fragments by lazy { fragmentAccumulator.map { it() } }
 
-  internal var value: QModel<*> = NONE
+  internal var value: QModel<*>? = null
 
   override fun accept(result: Any?): Boolean {
     return if (result is JsonObject) {
       value = result["__typename"]?.let { resultType ->
-        fragments.find { it.graphqlType == resultType }?: NONE
-      }?: NONE
-      value != NONE && value.accept(result)
+        fragments.find { it.graphqlType == resultType }
+      }
+      return value?.accept(result)?: false
     } else false
   }
 
-  @Suppress("UNCHECKED_CAST")
-  override fun fragment(
-      what: I.() -> QModel<*>
-  ): UnionStub = apply { this.fragmentAccumulator.add { what.invoke(objectModel) }}.also { println(this.fragmentAccumulator) }
+  override fun fragment(what: I.() -> Unit): UnionStub {
+    objectModel.what()
+    return (objectModel.toImmutableStub() as? UnionStub)?: UnionAdapter(graphqlName, objectModel, fragmentAccumulator)
+  }
 
-  override fun toRawPayload(): String = fragments.joinToString(prefix = "__typename,") {
-    "... on ${it.graphqlType}${it.toGraphql(false)}"
+  override fun toRawPayload(): String = fragmentProvided.joinToString(prefix = "__typename,") {
+    "... on ${it().graphqlType}${it().toGraphql(false)}"
   }
 
   override fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QModel<QSchemaType> = value
+  ): QModel<QSchemaType> { return value?: throw IllegalStateException("null") }
+
+  override fun toImmutableStub(): FragmentProvider {
+    return UnionAdapter(graphqlName, objectModel, fragmentAccumulator)
+  }
 
   override fun <R : QModel<*>> provideDelegate(
       inst: R,
       property: KProperty<*>
-  ): UnionStub = UnionAdapter(graphqlName, objectModel).also { inst.fields.add(it) }
+  ): UnionStub {
+    val generated = UnionAdapter(property.name, objectModel)
+    generated.onProvideDelegate(inst)
+    return generated
+  }
 
-  override fun <T : QSchemaUnion> on(init: T.() -> QModel<*>): QModel<*> {
-    @Suppress("UNCHECKED_CAST") return apply { fragmentAccumulator.add { init(this as T) } }
+  override fun on(init: () -> QModel<*>) {
+    fragmentAccumulator.add(init)
   }
 }

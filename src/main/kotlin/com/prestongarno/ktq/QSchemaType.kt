@@ -8,6 +8,7 @@ import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
+import com.prestongarno.ktq.internal.FragmentProvider
 import com.prestongarno.ktq.internal.Grub
 
 /**
@@ -63,8 +64,7 @@ interface QSchemaType {
      * @return Grub<CustomScalarConfigStub<T, A>> the delegate which lazily provides a CustomScalarConfigStub<T, A> */
     fun <T : CustomScalar, A : CustomScalarArgBuilder> configStub(
         arginit: (CustomScalarArgBuilder) -> A
-    ): Grub<CustomScalarConfigStub<T, A>>
-        = Grub { CustomScalarAdapter<T, QScalarMapper<T>, T, A>(it, arginit) }
+    ): Grub<CustomScalarConfigStub<T, A>> = Grub { CustomScalarAdapter<T, QScalarMapper<T>, T, A>(it, arginit) }
   }
 
   /**
@@ -168,7 +168,7 @@ interface QSchemaType {
   }
 
   object QUnion {
-    fun <T : QSchemaUnion> stub(objectModel: T): Grub<UnionInitStub<T>> = Grub { UnionAdapter<T>(it, objectModel) }
+    fun <T : QSchemaUnion> stub(objectModel: T): Grub<UnionInitStub<T>> = Grub { UnionAdapter(it, objectModel) as UnionInitStub<T> }
   }
 }
 
@@ -180,10 +180,12 @@ interface CustomScalar : QSchemaType
 
 interface QSchemaUnion : QSchemaType {
 
-  fun <T: QSchemaUnion> on(init: T.() -> QModel<*>): QModel<*> =  TODO()//init(this as T)
+  fun on(init: () -> QModel<*>): Unit = TODO()
+
+  fun toImmutableStub(): FragmentProvider = TODO("How is this going to work")
 
   companion object {
-    fun create(objectModel: QSchemaUnion) : QSchemaUnion = UnionAdapter<QSchemaUnion>("", objectModel)
+    fun create(objectModel: QSchemaUnion) : QSchemaUnion = UnionAdapter("", objectModel)
   }
 }
 
