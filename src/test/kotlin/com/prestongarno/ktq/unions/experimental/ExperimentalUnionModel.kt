@@ -54,17 +54,8 @@ object Query : QSchemaType {
 class ExperimentalUnionModel {
 
   @Test fun testModelStructure() {
+
     val botModel = MyBotModel()
-
-    val input = JsonObject(mapOf(
-        Pair("__typename", "User"),
-        Pair("name", "Preston")
-    ))
-    val input2 = JsonObject(mapOf(
-        Pair("__typename", "User"),
-        Pair("name", "Garno")
-    ))
-
     @Language("JSON") val response = """
       {
         "name": "some bot or whatever",
@@ -74,18 +65,8 @@ class ExperimentalUnionModel {
         }
       }
       """
-
-    println(botModel.onResponse(response))
-
-    require(botModel.owner != null)
-
+    require(botModel.owner is MyUserModel)
     assertTrue((botModel.owner as MyUserModel).name == "preston")
-
-    println(botModel.owner)
-    println(botModel.toGraphql(false))
-    println(MyUserModel().toGraphql(false))
-
-
   }
 }
 
