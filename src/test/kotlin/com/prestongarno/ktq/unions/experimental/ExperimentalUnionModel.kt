@@ -75,19 +75,15 @@ class ExperimentalUnionModel {
       }
       """
 
-    //println(botModel.toGraphql(false))
-    botModel.onResponse(response)
+    println(botModel.onResponse(response))
+
     require(botModel.owner != null)
-    require(botModel.owner is MyUserModel)
 
-    assertTrue(botModel.accept(input))
-
-    assertTrue((botModel.owner as MyUserModel).name == "Preston")
+    assertTrue((botModel.owner as MyUserModel).name == "preston")
 
     println(botModel.owner)
     println(botModel.toGraphql(false))
     println(MyUserModel().toGraphql(false))
-    assertTrue(botModel.owner !== MyBotModel().owner)
 
 
   }

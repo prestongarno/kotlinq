@@ -168,7 +168,7 @@ interface QSchemaType {
   }
 
   object QUnion {
-    fun <T : QSchemaUnion> stub(objectModel: T): Grub<UnionInitStub<T>> = Grub { UnionAdapter(it, objectModel) as UnionInitStub<T> }
+    fun <T : QSchemaUnion> stub(objectModel: T): Grub<UnionInitStub<T>> = Grub { UnionAdapter(it, objectModel, mutableListOf()) }
   }
 }
 

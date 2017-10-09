@@ -6,8 +6,6 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
-/**
- * TODO extract this to an interface for fragments & unions */
 internal abstract class FieldAdapter(override val graphqlName: String) : Adapter, Payload {
 
   /**

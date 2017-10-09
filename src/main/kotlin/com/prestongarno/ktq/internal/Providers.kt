@@ -4,11 +4,19 @@ package com.prestongarno.ktq.internal
 
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.UnionAdapter
 
 internal interface ModelProvider {
   fun getModel() : QModel<*>
 }
 
 interface FragmentProvider {
-  val fragments: List<QModel<*>>
+  val fragments: Set<FragmentGenerator>
+}
+
+internal data class FragmentProviderImpl(override val fragments: Set<FragmentGenerator>): FragmentProvider {
+}
+
+data class FragmentGenerator(val initializer: () -> QModel<*>) {
+  internal val model by lazy(initializer)
 }

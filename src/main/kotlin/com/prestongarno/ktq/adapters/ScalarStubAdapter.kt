@@ -23,7 +23,7 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
       property.typedValueFrom(result) as T
     else default
 
-    return (value != null)
+    return value != null
   }
 
   var value: T? = null
