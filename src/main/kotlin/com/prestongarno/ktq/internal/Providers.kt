@@ -3,8 +3,6 @@
 package com.prestongarno.ktq.internal
 
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaType
-import com.prestongarno.ktq.UnionAdapter
 
 internal interface ModelProvider {
   fun getModel() : QModel<*>

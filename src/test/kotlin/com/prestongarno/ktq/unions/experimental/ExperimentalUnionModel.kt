@@ -7,7 +7,6 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
-import com.prestongarno.ktq.UnionAdapter
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 import kotlin.test.assertTrue
@@ -65,8 +64,22 @@ class ExperimentalUnionModel {
         }
       }
       """
+    val thread2 = {
+      object : Thread() {
+        override fun start() {
+          for (i in 1..1000) MyBotModel().run { require(this.onResponse(response)); require(resolved) }
+        }
+      }
+    }
+
+    require(botModel.onResponse(response))
     require(botModel.owner is MyUserModel)
+    require(botModel.resolved)
     assertTrue((botModel.owner as MyUserModel).name == "preston")
+
+    for (i in 1..100) {
+      thread2().start()
+    }
   }
 }
 

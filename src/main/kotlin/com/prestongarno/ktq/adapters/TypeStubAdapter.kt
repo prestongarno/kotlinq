@@ -26,9 +26,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     return result is JsonObject
         && value.fields.filterNot { f ->
       f.accept(result[f.graphqlName])
-    }.isEmpty().apply {
-      if (!this) getModel().resolved = false
-    }
+    }.isEmpty() && getModel().resolved
   }
 
   lateinit var value: P

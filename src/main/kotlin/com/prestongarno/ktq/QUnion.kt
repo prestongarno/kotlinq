@@ -3,33 +3,28 @@ package com.prestongarno.ktq
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.internal.FragmentGenerator
-import com.prestongarno.ktq.internal.FragmentProvider
-import com.prestongarno.ktq.internal.FragmentProviderImpl
 import kotlin.reflect.KProperty
 
 interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
   fun fragment(what: T.() -> Unit): UnionStub
 }
 
-internal class UnionAdapter<I: QSchemaUnion>(
+internal open class UnionAdapter<I : QSchemaUnion>(
     override val graphqlName: String,
-    objectModel: I,
-    private val fragmentCollector: MutableList<() -> QModel<*>> = mutableListOf()
+    objectModel: I
 ) : QModel<I>(objectModel),
     Adapter,
     UnionInitStub<I>,
     UnionStub,
     QSchemaUnion {
 
-  private val fragments: Set<FragmentGenerator> = try {
-    model.toImmutableStub().fragments.toHashSet()
-  } catch (ex: Exception) {
-    emptySet()
-  }
+  val fragments = mutableSetOf<FragmentGenerator>()
 
-  init {
-    fragmentCollector.clear()
-  }
+  private val callback = { init: () -> QModel<*> -> fragments += FragmentGenerator(init) }
+
+  /**
+   * Recurse to the base model of the graph */
+  override val queue by lazy { model.queue }
 
   var dispatcher: (I.() -> Unit)? = null
 
@@ -44,8 +39,7 @@ internal class UnionAdapter<I: QSchemaUnion>(
       }
       resolved = value != null
       return value?.accept(result) == true
-    }
-    else false
+    } else false
   }
 
   override fun fragment(what: I.() -> Unit): UnionStub {
@@ -60,24 +54,31 @@ internal class UnionAdapter<I: QSchemaUnion>(
   override fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QModel<QSchemaType> { return value?: throw IllegalStateException("null") }
+  ): QModel<QSchemaType> {
+    return value ?: throw IllegalStateException("null")
+  }
 
-  override fun toImmutableStub(): FragmentProvider =
-      FragmentProviderImpl(fragmentCollector.map { FragmentGenerator(it) }.toHashSet())
-
-  override fun <R : QModel<*>> provideDelegate(
-      inst: R,
-      property: KProperty<*>
-  ): UnionStub {
-    return synchronized(this) {
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub {
+    val next = UnionAdapter(property.name, model)
+    synchronized(queue) {
+      queue.put(this)
       dispatcher?.invoke(model)
-      UnionAdapter(property.name, model, fragmentCollector)
-          .also { it.onProvideDelegate(inst) }
+      queue.pop()
     }
+    next.onProvideDelegate(inst)
+    println(next.toGraphql())
+    return next
   }
 
   override fun on(init: () -> QModel<*>) {
-    this.fragmentCollector.add(init)
+    fragments += FragmentGenerator(init)
   }
 }
 
+internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>("", model) {
+  override val queue: DispatchQueue by lazy { DispatchQueue() }
+
+  override fun on(init: () -> QModel<*>) {
+    queue.get()?.on(init)
+  }
+}

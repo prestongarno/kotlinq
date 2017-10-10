@@ -8,6 +8,7 @@ import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
+import com.prestongarno.ktq.internal.FragmentGenerator
 import com.prestongarno.ktq.internal.FragmentProvider
 import com.prestongarno.ktq.internal.Grub
 
@@ -168,7 +169,7 @@ interface QSchemaType {
   }
 
   object QUnion {
-    fun <T : QSchemaUnion> stub(objectModel: T): Grub<UnionInitStub<T>> = Grub { UnionAdapter(it, objectModel, mutableListOf()) }
+    fun <T : QSchemaUnion> stub(objectModel: T): Grub<UnionInitStub<T>> = Grub { UnionAdapter(it, objectModel) }
   }
 }
 
@@ -182,10 +183,12 @@ interface QSchemaUnion : QSchemaType {
 
   fun on(init: () -> QModel<*>): Unit = TODO()
 
-  fun toImmutableStub(): FragmentProvider = TODO("How is this going to work")
+  val queue: DispatchQueue
+
+  private val foo get() = 1
 
   companion object {
-    fun create(objectModel: QSchemaUnion) : QSchemaUnion = UnionAdapter("", objectModel)
+    fun create(objectModel: QSchemaUnion) : QSchemaUnion = BaseUnionAdapter(objectModel)
   }
 }
 
