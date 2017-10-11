@@ -1,6 +1,5 @@
 package com.prestongarno.ktq.unions.experimental
 
-import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
@@ -67,7 +66,10 @@ class ExperimentalUnionModel {
     val thread2 = {
       object : Thread() {
         override fun start() {
-          for (i in 1..1000) MyBotModel().run { require(this.onResponse(response)); require(resolved) }
+          for (i in 1..1000) MyBotModel().run {
+            require(this.onResponse(response));
+            require(resolved)
+          }
         }
       }
     }
@@ -80,6 +82,7 @@ class ExperimentalUnionModel {
     for (i in 1..100) {
       thread2().start()
     }
+    for (i in 1..1000) assertTrue(Bot.owner === Bot.owner)
   }
 }
 

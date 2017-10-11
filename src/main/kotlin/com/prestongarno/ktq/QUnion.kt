@@ -20,8 +20,6 @@ internal open class UnionAdapter<I : QSchemaUnion>(
 
   val fragments = mutableSetOf<FragmentGenerator>()
 
-  private val callback = { init: () -> QModel<*> -> fragments += FragmentGenerator(init) }
-
   /**
    * Recurse to the base model of the graph */
   override val queue by lazy { model.queue }
@@ -61,16 +59,16 @@ internal open class UnionAdapter<I : QSchemaUnion>(
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub {
     val next = UnionAdapter(property.name, model)
     synchronized(queue) {
-      queue.put(this)
+      queue.put(next)
       dispatcher?.invoke(model)
       queue.pop()
     }
     next.onProvideDelegate(inst)
-    println(next.toGraphql())
     return next
   }
 
   override fun on(init: () -> QModel<*>) {
+    println("On:$init")
     fragments += FragmentGenerator(init)
   }
 }

@@ -183,9 +183,7 @@ interface QSchemaUnion : QSchemaType {
 
   fun on(init: () -> QModel<*>): Unit = TODO()
 
-  val queue: DispatchQueue
-
-  private val foo get() = 1
+  val queue: DispatchQueue get() = TODO()
 
   companion object {
     fun create(objectModel: QSchemaUnion) : QSchemaUnion = BaseUnionAdapter(objectModel)

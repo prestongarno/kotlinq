@@ -19,5 +19,14 @@ import kotlin.reflect.KProperty
  * delegating to. This way, the property name can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 class Grub<out T : SchemaStub>(private val toInit: (String) -> T) {
-  operator fun getValue(inst: QSchemaType, property: KProperty<*>) : T = run { toInit(property.name) }
+
+  private var name: String? = null
+
+  private val value: T by lazy { toInit(name!!) }
+
+  operator fun getValue(inst: QSchemaType, property: KProperty<*>) : T {
+    if (name == null)
+      name = property.name
+    return value
+  }
 }
