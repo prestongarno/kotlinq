@@ -57,6 +57,6 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
   }
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> =
-      apply { super.onProvideDelegate(inst) }
+      apply { super.onDelegate(inst, property) }
 
 }

@@ -27,7 +27,7 @@ internal class NullableStubAdapter<T, out B: ArgBuilder>(
   override fun config(): B = builderInit(NullableStubAdapter<T, B>(property, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
-    return apply { super.onProvideDelegate(inst) }
+    return apply { super.onDelegate(inst, property) }
   }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T? = value

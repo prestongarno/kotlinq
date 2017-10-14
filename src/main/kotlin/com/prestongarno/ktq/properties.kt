@@ -18,22 +18,7 @@ interface Property {
   fun toEnum(name: String): Enum<*>?
 
   companion object {
-    fun from(property: KProperty<*>): Property = PropertyImpl(property)
-    fun from(property: KProperty<*>, typeName: String, isList: Boolean): Property = object : Property {
-      override val graphqlType: PropertyType = PropertyType.from(typeName)
-      override val typeName: String = typeName
-      override val fieldName: String = property.name
-      override val isList: Boolean = isList
-      override val kproperty: KProperty<*> = property
-
-      override fun toEnum(name: String): Enum<*>? {
-        return if (kproperty.returnType.jvmErasure.java.isEnum)
-          kproperty.returnType.jvmErasure.javaObjectType.enumConstants.find {
-            (it as Enum<*>).name == name
-          } as? Enum<*>
-        else null
-      }
-    }
+    fun from(property: KProperty<*>, typeName: String, isList: Boolean): Property = PropertyImpl(typeName, property, isList)
 
     internal val ROOT = object : Property {
       override val kproperty: KProperty<*> = this::fieldName
@@ -46,12 +31,10 @@ interface Property {
   }
 }
 
-private data class PropertyImpl(override val kproperty: KProperty<*>) : Property {
-
-  override val typeName = (kproperty.returnType.arguments.firstOrNull()?.type?.classifier as? KClass<*>)?.simpleName?: "null"
-  override val graphqlType = PropertyType.from(typeName)
-  override val fieldName = kproperty.name
-  override val isList = (kproperty.returnType.classifier as? KClass<*>)?.isSubclassOf(Collection::class) == true
+internal class PropertyImpl(override val typeName: String, property: KProperty<*>, override val isList: Boolean) : Property {
+  override val graphqlType: PropertyType = PropertyType.from(typeName)
+  override val fieldName: String = property.name
+  override val kproperty: KProperty<*> = property
 
   override fun toEnum(name: String): Enum<*>? {
     return if (kproperty.returnType.jvmErasure.java.isEnum)

@@ -47,7 +47,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<Q> = adapter.value
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomScalarListStub<P, Q> {
-    inst.fields.add(this)
+    super.onDelegate(inst, property)
     return this
   }
 

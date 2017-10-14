@@ -2,6 +2,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.internal.ModelProvider
+import kotlin.reflect.KProperty
 
 internal abstract class FieldAdapter(override val property: Property) : Adapter, Payload {
 
@@ -10,8 +11,13 @@ internal abstract class FieldAdapter(override val property: Property) : Adapter,
   override val args by lazy { mutableMapOf<String, Any>() }
 
   /**
+   * The actual property for the delegation set value. does not have to be the same name and/or the same return type
+   */
+  lateinit var targetProperty: KProperty<*>
+
+  /**
    * Notified when this object is being provided as an adapter for a field */
-  override fun onProvideDelegate(inst: QModel<*>) { inst.fields.add(this); }
+  override fun onDelegate(inst: QModel<*>, property: KProperty<*>) { inst.fields.add(this); targetProperty = property }
 
   /**
    * Accept the result of the query */

@@ -41,7 +41,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
   override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.value
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> =
-      apply { super.onProvideDelegate(inst) }
+      apply { super.onDelegate(inst, property) }
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I>
       = apply {  this.value = of() as P } as TypeStub<U, I>

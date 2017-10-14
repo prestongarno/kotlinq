@@ -37,7 +37,7 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> =
-      apply { super.onProvideDelegate(inst) }
+      apply { super.onDelegate(inst, property) }
 
   @Suppress("UNCHECKED_CAST") override fun <T> build(): ListStub<T> = this as ListStub<T>
 

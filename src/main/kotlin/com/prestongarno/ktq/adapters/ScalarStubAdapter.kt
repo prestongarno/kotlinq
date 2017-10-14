@@ -21,7 +21,7 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
 
   override fun accept(result: Any?): Boolean {
     @Suppress("UNCHECKED_CAST")
-    value = if(result != null) property.kproperty.typedValueFrom(result) as? T?: default else default
+    value = if(result != null) targetProperty.typedValueFrom(result) as? T?: default else default
     return value != null
   }
 
@@ -33,7 +33,7 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
   override fun config(): B = builderInit(ScalarStubAdapter<T, B>(property, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> =
-      apply { super.onProvideDelegate(inst) }
+      apply { super.onDelegate(inst, property) }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default ?:
       throw IllegalStateException("property '${property.name}' was null")

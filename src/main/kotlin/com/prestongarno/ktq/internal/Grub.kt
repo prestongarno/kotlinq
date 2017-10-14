@@ -69,10 +69,12 @@ class Grub<out T : SchemaStub>(private val typeName: String, private val isList:
   operator fun getValue(inst: QSchemaType, property: KProperty<*>): T {
     if (prop == null)
       prop = Property.from(property, typeName, isList)
+    println("Grub#getValue (property ${property.name}) = " + value)
     return value
   }
 
-  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Grub<T> = Grub(Property.from(property, typeName, isList), toInit)
+  operator fun provideDelegate(inst: Any, property: KProperty<*>): Grub<T> = Grub(Property.from(property, typeName, isList), toInit)
+      .also { println("Grub#provideDelegate: " + inst::class.simpleName + ".${property.name}")}
 
   companion object {
     val counter = AtomicInteger(0)

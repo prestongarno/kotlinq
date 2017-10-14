@@ -1,5 +1,7 @@
 package com.prestongarno.ktq.unions.experimental
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
@@ -74,6 +76,7 @@ class ExperimentalUnionModel {
         }
       }
     }
+    println(botModel.toGraphql(false))
     require(botModel.onResponse(response))
     require(botModel.ownerModel is MyUserModel)
     require(botModel.resolved)
@@ -87,6 +90,20 @@ class ExperimentalUnionModel {
 
   @Test fun testFragmentGraphTraversal() {
     val bot = MyBotModel()
+    val bor = object : QModel<Bot>(Bot) {
+      val borName by model.name
+    }
+    @Language("JSON") val response = """
+      {
+        "name": "My Bot",
+        "foo": "foo"
+      }
+      """
+    bor.accept(Parser().parse(response.byteInputStream()).also { println(it) } as JsonObject)
+    println(bor.borName)
+    bor.fields.forEach {
+      println("${it.property.fieldName} (${it.property.typeName})")
+    }
     bot.getFragments().forEach { println(it) }
     bot.fields.forEach { println("${it.property.fieldName} (${it.property.typeName})") }
   }

@@ -49,7 +49,7 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
   override fun <R : QModel<*>> provideDelegate(
       inst: R,
       property: KProperty<*>
-  ): CustomStub<P, Q> = apply { inst.fields.add(this) }
+  ): CustomStub<P, Q> = apply { super.onDelegate(inst, property)}
 
   override fun <U : QScalarMapper<A>, A> init(of: U): CustomStub<U, A> = this.build(of)
 
