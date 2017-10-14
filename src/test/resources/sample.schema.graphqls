@@ -18,7 +18,7 @@ type UserFoo implements ActorFoo {
 
 type OrganizationFoo implements ActorFoo SomeConflict {
     owner: UserFoo
-    name: String
+    prop: String
     members: [UserFoo]
     avatar(size: Int): URLY!
     login: String!

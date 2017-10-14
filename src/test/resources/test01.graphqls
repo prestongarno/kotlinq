@@ -3,7 +3,7 @@ interface Food {
 }
 
 type Nation {
-  name: String
+  prop: String
 }
 
 # Test to make sure this fails for wrong type

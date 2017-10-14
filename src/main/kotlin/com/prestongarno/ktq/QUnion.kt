@@ -10,7 +10,7 @@ interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
 }
 
 internal open class UnionAdapter<I : QSchemaUnion>(
-    override val graphqlName: String,
+    override val property: Property,
     objectModel: I
 ) : QModel<I>(objectModel),
     Adapter,
@@ -46,7 +46,7 @@ internal open class UnionAdapter<I : QSchemaUnion>(
   }
 
   override fun toRawPayload(): String = fragments.joinToString(prefix = "__typename,") {
-    "... on ${it.model.graphqlType}${it.model.fields}"//${it.model.toGraphql(false)}"
+    "... on ${it.model.graphqlType}${it.model.fields}"
   }
 
   override fun getValue(
@@ -56,8 +56,12 @@ internal open class UnionAdapter<I : QSchemaUnion>(
     return value ?: throw IllegalStateException("null")
   }
 
+  override fun onProvideDelegate(inst: QModel<*>) {
+    inst.fields.add(this)
+  }
+
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub {
-    val next = UnionAdapter(property.name, model)
+    val next = UnionAdapter(Property.from(property = property), model)
     synchronized(queue) {
       queue.put(next)
       dispatcher?.invoke(model)
@@ -73,7 +77,7 @@ internal open class UnionAdapter<I : QSchemaUnion>(
   }
 }
 
-internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>("", model) {
+internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>(Property.ROOT, model) {
   override val queue: DispatchQueue by lazy { DispatchQueue() }
 
   override fun on(init: () -> QModel<*>) {

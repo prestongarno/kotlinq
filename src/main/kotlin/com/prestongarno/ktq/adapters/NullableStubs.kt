@@ -2,7 +2,9 @@ package com.prestongarno.ktq.adapters
 
 
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.NullableStub
+import com.prestongarno.ktq.Property
 import com.prestongarno.ktq.QConfigStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.Stub
@@ -11,9 +13,9 @@ import kotlin.reflect.KProperty
 /**
  * Adapter for scalar fields */
 internal class NullableStubAdapter<T, out B: ArgBuilder>(
-    fieldName: String,
+    property: Property,
     val builderInit: (ArgBuilder) -> B
-) : FieldAdapter(fieldName),
+) : FieldAdapter(property),
     NullableStub<T>,
     QConfigStub<T, B>,
     ArgBuilder {
@@ -22,10 +24,9 @@ internal class NullableStubAdapter<T, out B: ArgBuilder>(
 
   val value : T? = null
 
-  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlName, builderInit))
+  override fun config(): B = builderInit(NullableStubAdapter<T, B>(property, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
-    this.property = property
     return apply { super.onProvideDelegate(inst) }
   }
 

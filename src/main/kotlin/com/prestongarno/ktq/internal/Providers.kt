@@ -12,9 +12,6 @@ interface FragmentProvider {
   val fragments: Set<FragmentGenerator>
 }
 
-internal data class FragmentProviderImpl(override val fragments: Set<FragmentGenerator>): FragmentProvider {
-}
-
 data class FragmentGenerator(val initializer: () -> QModel<*>) {
   internal val model by lazy(initializer)
 }

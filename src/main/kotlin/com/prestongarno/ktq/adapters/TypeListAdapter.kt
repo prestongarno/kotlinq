@@ -2,8 +2,10 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
+import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
+import com.prestongarno.ktq.Property
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.TypeListArgBuilder
@@ -12,9 +14,9 @@ import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
 internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
-    fieldName: String,
+    property: Property,
     val builderInit: (TypeListArgBuilder) -> B
-) : FieldAdapter(fieldName),
+) : FieldAdapter(property),
     ListInitStub<I>,
     TypeListStub<P, I>,
     ListConfigType<I, B>,
@@ -38,7 +40,7 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
   lateinit var init: () -> P
   val prototype by lazy { init() }
 
-  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(graphqlName, builderInit))
+  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(property, builderInit))
 
   override fun getModel(): QModel<I> = prototype
 
@@ -54,9 +56,7 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
     return results
   }
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> {
-    this.property = property
-    return apply { super.onProvideDelegate(inst) }
-  }
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> =
+      apply { super.onProvideDelegate(inst) }
 
 }

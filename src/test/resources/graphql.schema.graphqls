@@ -3,7 +3,7 @@ input AcceptTopicSuggestionInput {
 
     repositoryId: Id!
 
-    name: String!
+    prop: String!
 }
 
 type AcceptTopicSuggestionPayload {
@@ -64,7 +64,7 @@ input AddProjectColumnInput {
 
     projectId: Id!
 
-    name: String!
+    prop: String!
 }
 
 type AddProjectColumnPayload {
@@ -273,7 +273,7 @@ type CodeOfConduct {
 
     key: String!
 
-    name: String!
+    prop: String!
 
     url: URI
 }
@@ -546,7 +546,7 @@ input CreateProjectInput {
 
     ownerId: Id!
 
-    name: String!
+    prop: String!
 
     body: String
 }
@@ -564,7 +564,7 @@ input DeclineTopicSuggestionInput {
 
     repositoryId: Id!
 
-    name: String!
+    prop: String!
 
     reason: TopicSuggestionDeclineReason!
 }
@@ -862,7 +862,7 @@ type Gist implements Node, Starrable {
 
     isPublic: Boolean!
 
-    name: String!
+    prop: String!
 
     owner: RepositoryOwner
 
@@ -961,7 +961,7 @@ type GitActor {
 
     email: String
 
-    name: String
+    prop: String
 
     user: User
 }
@@ -1352,7 +1352,7 @@ type Label implements Node {
 
     states: [IssueState!]): IssueConnection!
 
-    name: String!
+    prop: String!
 
     pullRequests(
     first: Int
@@ -1408,7 +1408,7 @@ type Language implements Node {
     color: String
     id: Id!
 
-    name: String!
+    prop: String!
 }
 
 type LanguageConnection {
@@ -1646,7 +1646,7 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
 
     before: String): UserConnection!
 
-    name: String!
+    prop: String!
 
     newTeamResourcePath: URI!
 
@@ -1713,7 +1713,7 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -1870,7 +1870,7 @@ type Project implements Node, Updatable {
     databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
     id: Id!
 
-    name: String!
+    prop: String!
 
     number: Int!
 
@@ -1955,7 +1955,7 @@ type ProjectColumn implements Node {
     databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
     id: Id!
 
-    name: String!
+    prop: String!
 
     project: Project!
 
@@ -2060,7 +2060,7 @@ type ProtectedBranch implements Node {
 
     isAdminEnforced: Boolean!
 
-    name: String!
+    prop: String!
 
     pushAllowances(
     first: Int
@@ -2595,7 +2595,7 @@ type Query {
 
     relay: Query!
 
-    repository(owner: String!, name: String!): Repository
+    repository(owner: String!, prop: String!): Repository
 
     repositoryOwner(login: String!): RepositoryOwner
 
@@ -2603,7 +2603,7 @@ type Query {
 
     search(first: Int, after: String, last: Int, before: String, query: String!, type: SearchType!): SearchResultItemConnection!
 
-    topic(name: String!): Topic
+    topic(prop: String!): Topic
 
     user(login: String!): User
 
@@ -2744,7 +2744,7 @@ type Ref implements Node {
     states: [PullRequestState!]): PullRequestConnection!
     id: Id!
 
-    name: String!
+    prop: String!
 
     prefix: String!
 
@@ -2794,7 +2794,7 @@ type Release implements Node, UniformResourceLocatable {
     description: String
     id: Id!
 
-    name: String
+    prop: String
 
     publishedAt: DateTime
 
@@ -2807,7 +2807,7 @@ type Release implements Node, UniformResourceLocatable {
 
     before: String
 
-    name: String!): ReleaseAssetConnection!
+    prop: String!): ReleaseAssetConnection!
 
     releaseAssets(
     first: Int
@@ -2828,7 +2828,7 @@ type Release implements Node, UniformResourceLocatable {
 type ReleaseAsset implements Node {
     id: Id!
 
-    name: String!
+    prop: String!
 
     release: Release
 
@@ -3029,7 +3029,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
     states: [IssueState!]): IssueConnection!
 
     label(
-    name: String!): Label
+    prop: String!): Label
 
     labels(
     first: Int
@@ -3078,7 +3078,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3280,7 +3280,7 @@ interface RepositoryInfo {
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3332,7 +3332,7 @@ type RepositoryInvitationRepository implements RepositoryInfo {
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3423,7 +3423,7 @@ interface RepositoryOwner {
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -3692,7 +3692,7 @@ type Status implements Node {
     commit: Commit
 
     context(
-    name: String!): StatusContext
+    prop: String!): StatusContext
 
     contexts: [StatusContext!]!
     id: Id!
@@ -3786,7 +3786,7 @@ type Tag implements Node, GitObject {
 
     hello: String
 
-    name: String!
+    prop: String!
 
     oid: GitObjectId!
 
@@ -3814,7 +3814,7 @@ type Team implements Node {
 
     before: String): OrganizationInvitationConnection
 
-    name: String!
+    prop: String!
 
     organization: Organization!
 
@@ -3868,7 +3868,7 @@ enum TeamRole {
 type Topic implements Node {
     id: Id!
 
-    name: String!
+    prop: String!
 
     relatedTopics: [Topic!]!
 }
@@ -3901,7 +3901,7 @@ type Tree implements Node, GitObject {
 type TreeEntry {
     mode: Int!
 
-    name: String!
+    prop: String!
 
     object: GitObject
 
@@ -4001,7 +4001,7 @@ input UpdateProjectColumnInput {
 
     projectColumnId: Id!
 
-    name: String!
+    prop: String!
 }
 
 type UpdateProjectColumnPayload {
@@ -4015,7 +4015,7 @@ input UpdateProjectInput {
 
     projectId: Id!
 
-    name: String!
+    prop: String!
 
     body: String
 
@@ -4140,7 +4140,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     before: String): FollowingConnection!
 
     gist(
-    name: String!): Gist
+    prop: String!): Gist
 
     gists(
     first: Int
@@ -4189,7 +4189,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
 
     login: String!
 
-    name: String
+    prop: String
 
     organization(
     login: String!): Organization
@@ -4259,7 +4259,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 

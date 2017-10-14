@@ -19,13 +19,13 @@ scalar BigInteger
 
 # Business model
 type BusinessModel {
-  name: String
+  prop: String
 }
 
 # City
 type City {
-  # Descriptive name for city
-  name: String
+  # Descriptive prop for city
+  prop: String
 }
 
 # Company specific fields and aggregates
@@ -43,8 +43,8 @@ type CompanyPersona {
 
 # Contact information for an employee
 type ContactDetails {
-  # Employee name
-  name: String
+  # Employee prop
+  prop: String
 
   # Organization identifier
   orgId: String
@@ -56,7 +56,7 @@ type ContactDetails {
 # Continent
 type Continent {
   # Name of continent
-  name: String
+  prop: String
 
   # Three character abbreviation for Continent
   iso3: String
@@ -86,8 +86,8 @@ type Employee {
   # Employee Title
   title: String
 
-  # Full name
-  name: String
+  # Full prop
+  prop: String
 }
 
 type EmployeeCount implements FeedEvent {
@@ -164,7 +164,7 @@ type FundingRoundSummary implements Node {
   # Country
   country: String
 
-  # Company name
+  # Company prop
   companyName: String
 
   # Mattermark company Id
@@ -228,7 +228,7 @@ type GrowthScore implements FeedEvent {
 
 # Industry
 type Industry {
-  name: String
+  prop: String
 }
 
 # An IPO record for a single stock exchange
@@ -295,8 +295,8 @@ type InvestorPersona {
 
 # JobTItle
 type JobTitle {
-  # Employee name
-  name: String
+  # Employee prop
+  prop: String
 
   # Employee title
   title: String
@@ -319,8 +319,8 @@ type LinkedinAccount implements SocialAccount {
 
 # A geographic location
 type Location {
-  # Descriptive name for location
-  name: String
+  # Descriptive prop for location
+  prop: String
 
   # City
   city: City
@@ -361,8 +361,8 @@ type Organization implements Node {
   # Unique organization identifier
   id: ID!
 
-  # Organization name
-  name: String
+  # Organization prop
+  prop: String
 
   # Organization description
   description: String
@@ -464,8 +464,8 @@ type OrganizationSummary implements Node {
   # Unique organization identifier
   id: ID!
 
-  # Organization name
-  name: String
+  # Organization prop
+  prop: String
 
   # Organization description
   description: String
@@ -548,7 +548,7 @@ type Platform {
 # Product offered by the organization
 type Product {
   # Product Name
-  name: String
+  prop: String
 
   # Platforms the product is available fragment
   platforms: [Platform]
@@ -568,8 +568,8 @@ type Quota {
 
 # Region
 type Region {
-  # Descriptive name for region (e.g. Bay Area)
-  name: String
+  # Descriptive prop for region (e.g. Bay Area)
+  prop: String
 }
 
 # Root Query Fields. This is the start of the GraphQL query tree.
@@ -608,10 +608,10 @@ type RootQuery {
     queryId: String
   ): OrganizationSummaryQuery
 
-  # Request contact information (email) for a name, organization pair.
+  # Request contact information (email) for a prop, organization pair.
   contactDetails(
-    # Full name
-    name: String!
+    # Full prop
+    prop: String!
 
     # Organization identifier
     orgId: String!
@@ -653,7 +653,7 @@ type RootQuery {
 }
 
 interface SocialAccount {
-  # Service Resource name (e.g. urn:social:facebook)
+  # Service Resource prop (e.g. urn:social:facebook)
   urn: String
   profileUrl: String
   slugHandle: String

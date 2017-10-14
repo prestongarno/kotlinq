@@ -6,6 +6,7 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
+import com.prestongarno.ktq.getFragments
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 import kotlin.test.assertTrue
@@ -73,7 +74,6 @@ class ExperimentalUnionModel {
         }
       }
     }
-
     require(botModel.onResponse(response))
     require(botModel.owner is MyUserModel)
     require(botModel.resolved)
@@ -83,6 +83,12 @@ class ExperimentalUnionModel {
       thread2().start()
     }
     for (i in 1..1000) assertTrue(Bot.owner === Bot.owner)
+  }
+
+  @Test fun testFragmentGraphTraversal() {
+    val bot = MyBotModel()
+    bot.getFragments().forEach { println(it) }
+    bot.fields.forEach { println("${it.property.fieldName} (${it.property.typeName})") }
   }
 }
 

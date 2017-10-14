@@ -1,24 +1,83 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.internal.ModelProvider
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.jvm.jvmErasure
 
 
-internal fun QModel<*>.prettyPrinted(indentation: Int): String =
-    if (model is QSchemaUnion) prettyPrintUnion(indentation) else
-      ((fields.joinToString(separator = ",\n") { it.prettyPrinted() }
-          .indent(1)) + "\n}").prepend("{\n").indent(indentation)
-          .replace("\\s*([(,])".toRegex(), "$1").trim()
+interface Property {
+  val graphqlType: PropertyType
+  val typeName: String
+  val fieldName: String
+  val isList: Boolean
+  @Deprecated("Remove reflection pls") val kproperty: KProperty<*>
 
-internal fun QModel<*>.prettyPrintUnion(indentation: Int) =
-    (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
-      it.prettyPrinted().prepend("... fragment ")
-    }.indent(1)
-        .plus("\n}")
-        .indent(indentation))
-        .replace("\\s*([(,])".toRegex(), "$1").trim()
+  fun toEnum(name: String): Enum<*>?
+
+  companion object {
+    fun from(property: KProperty<*>): Property = PropertyImpl(property)
+
+    internal val ROOT = object : Property {
+      override val kproperty: KProperty<*> = this::fieldName
+      override val graphqlType = PropertyType.OBJECT
+      override val typeName = ""
+      override val fieldName: String = ""
+      override val isList: Boolean = false
+      override fun toEnum(name: String): Enum<*>? = null
+    }
+  }
+}
+
+private data class PropertyImpl(override val kproperty: KProperty<*>) : Property {
+
+  override val typeName = (kproperty.returnType.classifier as? KClass<*>)?.simpleName!!//.let {
+    //if (PropertyType.from(it) != PropertyType.OBJECT) { } }
+  override val graphqlType = PropertyType.from(typeName)
+  override val fieldName = kproperty.name
+  override val isList = (kproperty.returnType.classifier as? KClass<*>)?.isSubclassOf(Collection::class) == true
+
+  override fun toEnum(name: String): Enum<*>? {
+    return if (kproperty.returnType.jvmErasure.java.isEnum)
+      kproperty.returnType.jvmErasure.javaObjectType.enumConstants.find {
+        (it as Enum<*>).name == name
+      } as? Enum<*>
+    else null
+  }
+
+  override fun equals(other: Any?): Boolean {
+    return (other as? Property)?.kproperty == kproperty
+  }
+
+  override fun hashCode(): Int {
+    var result = kproperty.hashCode()
+    result = 31 * result + typeName.hashCode()
+    result = 31 * result + graphqlType.hashCode()
+    result = 31 * result + fieldName.hashCode()
+    result = 31 * result + isList.hashCode()
+    return result
+  }
+}
+
+enum class PropertyType {
+    INT,
+    BOOLEAN,
+    STRING,
+    FLOAT,
+    ENUM,
+    OBJECT,
+    CUSTOM_SCALAR;
+
+    companion object {
+        fun from(name: String): PropertyType = all[name]?: OBJECT
+
+        private val all = PropertyType.values().map { Pair(it.name, it) }.toMap()
+      }
+  }
 
 internal fun KProperty<*>.typedValueFrom(value: Any): Any? {
   return if (this.returnType.jvmErasure == value::class)
@@ -63,15 +122,6 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
   }
 }
 
-fun Adapter.prettyPrinted(): String {
-  throw UnsupportedOperationException()
-}
-
-fun String.indent(times: Int = 1): String =
-    replace("^".toRegex(), Jsonify.INDENT.repeat(times))
-        .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
-
-fun String.prepend(of: String): String = of + this
 
 class DispatchQueue {
   private var value: QSchemaUnion? = null
@@ -84,3 +134,33 @@ class DispatchQueue {
 
   fun get() = value
 }
+
+fun String.indent(times: Int = 1): String =
+    replace("^".toRegex(), Jsonify.INDENT.repeat(times))
+        .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
+
+fun String.prepend(of: String): String = of + this
+
+internal fun QModel<*>.prettyPrinted(indentation: Int): String =
+    if (model is QSchemaUnion) prettyPrintUnion(indentation) else
+      ((fields.joinToString(separator = ",\n") { it.prettyPrinted() }
+          .indent(1)) + "\n}").prepend("{\n").indent(indentation)
+          .replace("\\s*([(,])".toRegex(), "$1").trim()
+
+internal fun QModel<*>.prettyPrintUnion(indentation: Int) =
+    (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
+      it.prettyPrinted().prepend("... fragment ")
+    }.indent(1)
+        .plus("\n}")
+        .indent(indentation))
+        .replace("\\s*([(,])".toRegex(), "$1").trim()
+
+internal fun Adapter.prettyPrinted(): String = property.fieldName +
+    (when {
+      args.isNotEmpty() -> args.entries
+          .joinToString(separator = ",", prefix = "(", postfix = ")") {
+            "${it.key}: ${formatAs(it.value)}" }
+      this is ModelProvider -> getModel().toGraphql()
+      else -> ""
+    }).replace("\\s*([(,])".toRegex(), "$1").trim()
+

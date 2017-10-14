@@ -1,6 +1,8 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.FieldAdapter
+import com.prestongarno.ktq.Property
 import com.prestongarno.ktq.QConfigStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.Stub
@@ -10,16 +12,16 @@ import kotlin.reflect.KProperty
 /**
  * Adapter for scalar fields */
 internal class ScalarStubAdapter<T, out B : ArgBuilder>(
-    fieldName: String,
+    property: Property,
     val builderInit: (ArgBuilder) -> B
-) : FieldAdapter(fieldName),
+) : FieldAdapter(property),
     Stub<T>,
     QConfigStub<T, B>,
     ArgBuilder {
 
   override fun accept(result: Any?): Boolean {
     @Suppress("UNCHECKED_CAST")
-    value = if(result != null) property.typedValueFrom(result) as? T?: default else default
+    value = if(result != null) property.kproperty.typedValueFrom(result) as? T?: default else default
     return value != null
   }
 
@@ -28,12 +30,10 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
 
   override fun withDefault(value: T) = apply { default = value }
 
-  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlName, builderInit))
+  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(property, builderInit))
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
-    this.property = property
-    return apply { super.onProvideDelegate(inst) }
-  }
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> =
+      apply { super.onProvideDelegate(inst) }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default ?:
       throw IllegalStateException("property '${property.name}' was null")

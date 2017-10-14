@@ -42,9 +42,9 @@ interface NullableStub<T> : SchemaStub {
   operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T>
 }
 
-interface TypeStub<U, T> : SchemaStub where  U : QModel<T>, T : QSchemaType {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): U
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<U, T>
+interface TypeStub<T, U> : SchemaStub where  T : QModel<U>, U : QSchemaType {
+  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
+  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<T, U>
 }
 
 interface UnionStub : SchemaStub {

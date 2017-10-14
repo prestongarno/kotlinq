@@ -1,7 +1,9 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
+import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.InitStub
+import com.prestongarno.ktq.Property
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QTypeConfigStub
@@ -13,8 +15,9 @@ import kotlin.reflect.KProperty
 /**
  * This class represents a stub for a non-leaf type (aka an object) fragment a graph */
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(
-    fieldName: String, val builderInit: (TypeArgBuilder) -> B
-) : FieldAdapter(fieldName),
+    property: Property,
+    val builderInit: (TypeArgBuilder) -> B
+) : FieldAdapter(property),
     TypeStub<P, I>,
     InitStub<I>,
     QTypeConfigStub<I, B>,
@@ -25,22 +28,20 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
     getModel().resolved = true
     return result is JsonObject
         && value.fields.filterNot { f ->
-      f.accept(result[f.graphqlName])
+      f.accept(result[f.property.fieldName])
     }.isEmpty() && getModel().resolved
   }
 
   lateinit var value: P
 
-  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(graphqlName, builderInit))
+  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(property, builderInit))
 
   override fun getModel(): QModel<*> = value
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.value
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> {
-    this.property = property
-    return apply { super.onProvideDelegate(inst) }
-  }
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> =
+      apply { super.onProvideDelegate(inst) }
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I>
       = apply {  this.value = of() as P } as TypeStub<U, I>

@@ -1,6 +1,5 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.FieldAdapter
 import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.compiler.asFile

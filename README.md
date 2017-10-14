@@ -54,7 +54,7 @@ in the `model` instance which a concrete query/mutation class delegates its prop
     }
 
     class SimpleBusiness : QModel(Business) {
-      val name:         String  by model.name
+      val prop:         String  by model.prop
       val phoneNumber:  Int     by model.display_phone
       val directUrl:    String  by model.url
     }
@@ -69,7 +69,7 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
         term: "foobar"){
        total,
        business {
-         name,
+         prop,
          display_phone,
          url 
         }
@@ -83,21 +83,21 @@ check out the wiki.
 
 This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
 adds a dependency fragment [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
-describe your model, and execute. This is an example for getting your github name (not shown: compiled github IDL schema):
+describe your model, and execute. This is an example for getting your github prop (not shown: compiled github IDL schema):
 
     class ViewerQuery : QModel<Query>(Query) {
       val me by model.viewer.init { UserModel() }
     }
     
     class UserModel : QModel<User>(User) {
-      val name by model.name
+      val prop by model.prop
     }
 
     GraphQL.initialize("https://api.github.com/graphql").apply {
       authorization = TokenAuth(System.getenv("GITHUB_KEY"))
     }.query { ViewerQuery() }
-        .onSuccess { println("Hello, ${it.me.name}") }
+        .onSuccess { println("Hello, ${it.me.prop}") }
         .execute()
         
         
-The last code block will print "Hello, \<your name here\>"
+The last code block will print "Hello, \<your prop here\>"
