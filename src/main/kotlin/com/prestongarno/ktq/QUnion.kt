@@ -61,7 +61,7 @@ internal open class UnionAdapter<I : QSchemaUnion>(
   }
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub {
-    val next = UnionAdapter(Property.from(property = property), model)
+    val next = UnionAdapter(Property.from(property, this.property.typeName, false), model)
     synchronized(queue) {
       queue.put(next)
       dispatcher?.invoke(model)

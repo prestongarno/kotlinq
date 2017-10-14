@@ -28,7 +28,7 @@ class MyBotModel : QModel<Bot>(Bot) {
 
   val name by model.name
 
-  val owner by model.owner.fragment {
+  val ownerModel by model.owner.fragment {
     user { MyUserModel() }
     bot { MyBotModel() }
   }
@@ -75,9 +75,9 @@ class ExperimentalUnionModel {
       }
     }
     require(botModel.onResponse(response))
-    require(botModel.owner is MyUserModel)
+    require(botModel.ownerModel is MyUserModel)
     require(botModel.resolved)
-    assertTrue((botModel.owner as MyUserModel).name == "preston")
+    assertTrue((botModel.ownerModel as MyUserModel).name == "preston")
 
     for (i in 1..100) {
       thread2().start()

@@ -2,11 +2,9 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.internal.ModelProvider
-import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.jvm.jvmErasure
 
 
@@ -21,6 +19,21 @@ interface Property {
 
   companion object {
     fun from(property: KProperty<*>): Property = PropertyImpl(property)
+    fun from(property: KProperty<*>, typeName: String, isList: Boolean): Property = object : Property {
+      override val graphqlType: PropertyType = PropertyType.from(typeName)
+      override val typeName: String = typeName
+      override val fieldName: String = property.name
+      override val isList: Boolean = isList
+      override val kproperty: KProperty<*> = property
+
+      override fun toEnum(name: String): Enum<*>? {
+        return if (kproperty.returnType.jvmErasure.java.isEnum)
+          kproperty.returnType.jvmErasure.javaObjectType.enumConstants.find {
+            (it as Enum<*>).name == name
+          } as? Enum<*>
+        else null
+      }
+    }
 
     internal val ROOT = object : Property {
       override val kproperty: KProperty<*> = this::fieldName
@@ -35,8 +48,7 @@ interface Property {
 
 private data class PropertyImpl(override val kproperty: KProperty<*>) : Property {
 
-  override val typeName = (kproperty.returnType.classifier as? KClass<*>)?.simpleName!!//.let {
-    //if (PropertyType.from(it) != PropertyType.OBJECT) { } }
+  override val typeName = (kproperty.returnType.arguments.firstOrNull()?.type?.classifier as? KClass<*>)?.simpleName?: "null"
   override val graphqlType = PropertyType.from(typeName)
   override val fieldName = kproperty.name
   override val isList = (kproperty.returnType.classifier as? KClass<*>)?.isSubclassOf(Collection::class) == true
