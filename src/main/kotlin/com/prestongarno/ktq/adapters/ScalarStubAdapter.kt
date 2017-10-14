@@ -33,7 +33,7 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
   override fun config(): B = builderInit(ScalarStubAdapter<T, B>(property, builderInit))
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> =
-      apply { super.onDelegate(inst, property) }
+      apply { super.onDelegate(inst, property).also { println(">>>>>>>>>>>>>>>>>>>>>>Providedelegate${inst.hashCode()}")} }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default ?:
       throw IllegalStateException("property '${property.name}' was null")

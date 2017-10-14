@@ -73,7 +73,7 @@ class Grub<out T : SchemaStub>(private val typeName: String, private val isList:
     return value
   }
 
-  operator fun provideDelegate(inst: Any, property: KProperty<*>): Grub<T> = Grub(Property.from(property, typeName, isList), toInit)
+  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Grub<T> = Grub(Property.from(property, typeName, isList), toInit)
       .also { println("Grub#provideDelegate: " + inst::class.simpleName + ".${property.name}")}
 
   companion object {

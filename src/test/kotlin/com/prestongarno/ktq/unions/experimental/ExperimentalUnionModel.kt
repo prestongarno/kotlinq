@@ -89,10 +89,10 @@ class ExperimentalUnionModel {
   }
 
   @Test fun testFragmentGraphTraversal() {
-    val bot = MyBotModel()
     val bor = object : QModel<Bot>(Bot) {
       val borName by model.name
     }
+    val bot = MyBotModel()
     @Language("JSON") val response = """
       {
         "name": "My Bot",
@@ -102,9 +102,10 @@ class ExperimentalUnionModel {
     bor.accept(Parser().parse(response.byteInputStream()).also { println(it) } as JsonObject)
     println(bor.borName)
     bor.fields.forEach {
-      println("${it.property.fieldName} (${it.property.typeName})")
+      println("prop : ${it.property.fieldName} (${it.property.typeName})")
     }
     bot.getFragments().forEach { println(it) }
+    require(bot.fields.size == 2)
     bot.fields.forEach { println("${it.property.fieldName} (${it.property.typeName})") }
   }
 }
