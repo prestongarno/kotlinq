@@ -2,16 +2,16 @@ package com.prestongarno.ktq.unions.experimental
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
-import com.prestongarno.ktq.getFragments
+import com.prestongarno.ktq.adapters.TypeStubImpl
 import org.intellij.lang.annotations.Language
 import org.junit.Test
+import kotlin.reflect.jvm.isAccessible
 import kotlin.test.assertTrue
 
 /**================================================================*/
@@ -121,8 +121,9 @@ class ExperimentalUnionModel {
       """
     bor.accept(Parser().parse(response.byteInputStream()) as JsonObject)
     // TODO -> this is because `onProvideDelegate` doesn't instantiate a new instance
-    require(bor.borName == "My Bot")
     bot.accept(Parser().parse(botresponse.byteInputStream()) as JsonObject)
+    require(bot::creatorModel.let { it.isAccessible = true; it.getDelegate()!! }::class == TypeStubImpl::class)
+    require(bor.borName == "My Bot")
   }
 }
 

@@ -2,7 +2,7 @@ package com.prestongarno.ktq.adapters
 
 
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.FieldAdapter
+import com.prestongarno.ktq.FieldConfig
 import com.prestongarno.ktq.NullableStub
 import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QConfigStub
@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
 internal class NullableStubAdapter<T, out B: ArgBuilder>(
     property: QProperty,
     val builderInit: (ArgBuilder) -> B
-) : FieldAdapter(property),
+) : FieldConfig(property),
     NullableStub<T>,
     QConfigStub<T, B>,
     ArgBuilder {

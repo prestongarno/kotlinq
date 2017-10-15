@@ -21,8 +21,8 @@ interface QProperty {
         property: KProperty<*>,
         graphqlType: String,
         isList: Boolean = false,
-        graphqlProperty: String = property.name
-    ): QProperty = PropertyImpl(graphqlType, property, isList, graphqlProperty)
+        graphqlName: String = property.name
+    ): QProperty = PropertyImpl(graphqlType, property, isList, graphqlName)
 
     internal val ROOT = object : QProperty {
       override val kproperty: KProperty<*> = this::graphqlName

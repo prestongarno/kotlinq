@@ -5,7 +5,7 @@ import com.prestongarno.ktq.CustomScalarListArgBuilder
 import com.prestongarno.ktq.CustomScalarListConfigStub
 import com.prestongarno.ktq.CustomScalarListInitStub
 import com.prestongarno.ktq.CustomScalarListStub
-import com.prestongarno.ktq.FieldAdapter
+import com.prestongarno.ktq.FieldConfig
 import com.prestongarno.ktq.Payload
 import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QModel
@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty
 internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, Q, out B : CustomScalarListArgBuilder>(
     property: QProperty,
     val builderInit: (CustomScalarListArgBuilder) -> B
-) : FieldAdapter(property),
+) : FieldConfig(property),
     CustomScalarListArgBuilder,
     CustomScalarListConfigStub<E, B>,
     CustomScalarListInitStub<E>,

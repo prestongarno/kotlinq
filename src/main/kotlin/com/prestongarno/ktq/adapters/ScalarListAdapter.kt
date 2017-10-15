@@ -1,6 +1,6 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.FieldAdapter
+import com.prestongarno.ktq.FieldConfig
 import com.prestongarno.ktq.ListArgBuilder
 import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListStub
@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
 internal class ScalarListAdapter<I, out B : ListArgBuilder>(
     property: QProperty,
     val builderInit: (ListArgBuilder) -> B
-) : FieldAdapter(property),
+) : FieldConfig(property),
     ListStub<I>,
     ListConfig<I, B>,
     ListArgBuilder {

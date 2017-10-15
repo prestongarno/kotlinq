@@ -2,7 +2,7 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.FieldAdapter
+import com.prestongarno.ktq.FieldConfig
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.QProperty
@@ -16,7 +16,7 @@ import kotlin.reflect.KProperty
 internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
     property: QProperty,
     val builderInit: (TypeListArgBuilder) -> B
-) : FieldAdapter(property),
+) : FieldConfig(property),
     ListInitStub<I>,
     TypeListStub<P, I>,
     ListConfigType<I, B>,

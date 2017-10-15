@@ -1,7 +1,7 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.FieldAdapter
+import com.prestongarno.ktq.FieldConfig
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QModel
@@ -18,29 +18,27 @@ import kotlin.reflect.KProperty
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(
     property: QProperty,
     val builderInit: (TypeArgBuilder) -> B
-) : FieldAdapter(property),
+) : FieldConfig(property),
     TypeStub<P, I>,
     InitStub<I>,
     QTypeConfigStub<I, B>,
-    TypeArgBuilder,
-    ModelProvider {
+    TypeArgBuilder {
 
-  override fun accept(result: Any?): Boolean {
-    value.resolved = true
-    return result is JsonObject
-        && value.fields.filterNot { f ->
-      f.accept(result[f.graphqlProperty.graphqlName])
-    }.isEmpty() && value.resolved
-  }
-
-  override lateinit var value: P
+  lateinit var value: P
 
   override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(graphqlProperty, builderInit))
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.value
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> =
-      apply { super.onDelegate(inst, property) }
+      TypeStubImpl(QProperty.from(property,
+          this.graphqlProperty.graphqlType,
+          this.graphqlProperty.isList,
+          this.graphqlProperty.graphqlName),
+          value,
+          args.toMap()).also {
+        inst.fields.add(it)
+      }
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I>
       = apply { this.value = of() as P } as TypeStub<U, I>
@@ -52,10 +50,19 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
 
 }
 
-internal data class TypeStub<out I : QSchemaType, out P : QModel<I>>(
+private data class TypeStubImpl<I : QSchemaType, P : QModel<I>>(
     override val graphqlProperty: QProperty,
     override val value: P,
-    override val args: Map<String, Any> = emptyMap()) : Adapter, ModelProvider {
+    override val args: Map<String, Any> = emptyMap()
+) : Adapter,
+    ModelProvider,
+    TypeStub<P, I> {
+
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): P = value
+
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> {
+    throw IllegalStateException()
+  }
 
   override fun accept(result: Any?): Boolean {
     value.resolved = true
@@ -71,7 +78,4 @@ internal data class TypeStub<out I : QSchemaType, out P : QModel<I>>(
             "$key: ${formatAs(value)}"
           } else "" + value.toGraphql(false)
 
-  override fun onDelegate(inst: QModel<*>, property: KProperty<*>) {
-    inst.fields.add(this)
-  }
 }
