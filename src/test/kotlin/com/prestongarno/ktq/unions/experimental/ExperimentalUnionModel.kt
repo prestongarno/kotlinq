@@ -2,6 +2,7 @@ package com.prestongarno.ktq.unions.experimental
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
@@ -18,7 +19,8 @@ import kotlin.test.assertTrue
 /**================================================================*/
 
 class MyUserModel : QModel<User>(User) {
-  val name by model.name
+  val username by model.name
+  val user_email by model.email
 }
 
 object Actor : QSchemaUnion by QSchemaUnion.create(Actor) {
@@ -35,6 +37,8 @@ class MyBotModel : QModel<Bot>(Bot) {
     bot { MyBotModel() }
   }
 
+  val creatorModel by model.creator.init { MyUserModel() }
+
 }
 
 
@@ -42,10 +46,13 @@ object Bot : QSchemaType {
   val name: Stub<String> by QScalar.stub()
 
   val owner by QUnion.stub(Actor)
+
+  val creator by QType.stub<User>()
 }
 
 object User : QSchemaType {
   val name: Stub<String> by QScalar.stub()
+  val email by QScalar.stub<String>()
 }
 
 object Query : QSchemaType {
@@ -76,11 +83,10 @@ class ExperimentalUnionModel {
         }
       }
     }
-    println(botModel.toGraphql(false))
     require(botModel.onResponse(response))
     require(botModel.ownerModel is MyUserModel)
     require(botModel.resolved)
-    assertTrue((botModel.ownerModel as MyUserModel).name == "preston")
+    assertTrue((botModel.ownerModel as MyUserModel).username == "preston")
 
     for (i in 1..100) {
       thread2().start()
@@ -99,14 +105,24 @@ class ExperimentalUnionModel {
         "foo": "foo"
       }
       """
-    bor.accept(Parser().parse(response.byteInputStream()).also { println(it) } as JsonObject)
-    println(bor.borName)
-    bor.fields.forEach {
-      println("prop : ${it.property.fieldName} (${it.property.typeName})")
-    }
-    bot.getFragments().forEach { println(it) }
-    require(bot.fields.size == 2)
-    bot.fields.forEach { println("${it.property.fieldName} (${it.property.typeName})") }
+    @Language("JSON") val botresponse = """
+      {
+        "name": "some bot or whatever",
+        "owner": {
+          "__typename": "User",
+          "name": "preston",
+          "email": "prestongarno@gmail.com"
+        },
+        "creator": {
+          "name": "PRESTON_GARNO",
+          "email": "preston.garno35@gmail.com"
+        }
+      }
+      """
+    bor.accept(Parser().parse(response.byteInputStream()) as JsonObject)
+    // TODO -> this is because `onProvideDelegate` doesn't instantiate a new instance
+    require(bor.borName == "My Bot")
+    bot.accept(Parser().parse(botresponse.byteInputStream()) as JsonObject)
   }
 }
 

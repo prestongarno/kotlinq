@@ -7,7 +7,7 @@ import com.prestongarno.ktq.CustomScalarInitStub
 import com.prestongarno.ktq.CustomStub
 import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.Payload
-import com.prestongarno.ktq.Property
+import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
@@ -15,7 +15,7 @@ import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, out B : CustomScalarArgBuilder>(
-    property: Property,
+    property: QProperty,
     val builderInit: (CustomScalarArgBuilder) -> B
 ) : FieldAdapter(property),
     CustomScalarArgBuilder,
@@ -33,7 +33,7 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
     return true
   }
 
-  override fun config(): B = builderInit(CustomScalarAdapter<E, P, Q, B>(property, builderInit))
+  override fun config(): B = builderInit(CustomScalarAdapter<E, P, Q, B>(graphqlProperty, builderInit))
 
   private lateinit var adapter: QScalarMapper<Q>
 

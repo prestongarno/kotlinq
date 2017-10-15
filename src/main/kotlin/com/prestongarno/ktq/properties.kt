@@ -4,37 +4,44 @@ import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.jvmErasure
 
 
-interface Property {
-  val graphqlType: PropertyType
-  val typeName: String
-  val fieldName: String
+interface QProperty {
+  val typeKind: PropertyType
+  val graphqlType: String
+  val graphqlName: String
   val isList: Boolean
   @Deprecated("Remove reflection pls") val kproperty: KProperty<*>
 
   fun toEnum(name: String): Enum<*>?
 
   companion object {
-    fun from(property: KProperty<*>, typeName: String, isList: Boolean): Property = PropertyImpl(typeName, property, isList)
+    fun from(
+        property: KProperty<*>,
+        graphqlType: String,
+        isList: Boolean = false,
+        graphqlProperty: String = property.name
+    ): QProperty = PropertyImpl(graphqlType, property, isList, graphqlProperty)
 
-    internal val ROOT = object : Property {
-      override val kproperty: KProperty<*> = this::fieldName
-      override val graphqlType = PropertyType.OBJECT
-      override val typeName = ""
-      override val fieldName: String = ""
+    internal val ROOT = object : QProperty {
+      override val kproperty: KProperty<*> = this::graphqlName
+      override val typeKind = PropertyType.OBJECT
+      override val graphqlType = ""
+      override val graphqlName: String = ""
       override val isList: Boolean = false
       override fun toEnum(name: String): Enum<*>? = null
     }
   }
 }
 
-internal class PropertyImpl(override val typeName: String, property: KProperty<*>, override val isList: Boolean) : Property {
-  override val graphqlType: PropertyType = PropertyType.from(typeName)
-  override val fieldName: String = property.name
-  override val kproperty: KProperty<*> = property
+internal class PropertyImpl(
+    override val graphqlType: String,
+    override val kproperty: KProperty<*>,
+    override val isList: Boolean,
+    override val graphqlName: String = kproperty.name
+) : QProperty {
+  override val typeKind: PropertyType = PropertyType.from(graphqlType)
 
   override fun toEnum(name: String): Enum<*>? {
     return if (kproperty.returnType.jvmErasure.java.isEnum)
@@ -45,14 +52,14 @@ internal class PropertyImpl(override val typeName: String, property: KProperty<*
   }
 
   override fun equals(other: Any?): Boolean {
-    return (other as? Property)?.kproperty == kproperty
+    return (other as? QProperty)?.kproperty == kproperty
   }
 
   override fun hashCode(): Int {
     var result = kproperty.hashCode()
-    result = 31 * result + typeName.hashCode()
     result = 31 * result + graphqlType.hashCode()
-    result = 31 * result + fieldName.hashCode()
+    result = 31 * result + typeKind.hashCode()
+    result = 31 * result + graphqlName.hashCode()
     result = 31 * result + isList.hashCode()
     return result
   }
@@ -150,12 +157,12 @@ internal fun QModel<*>.prettyPrintUnion(indentation: Int) =
         .indent(indentation))
         .replace("\\s*([(,])".toRegex(), "$1").trim()
 
-internal fun Adapter.prettyPrinted(): String = property.fieldName +
+internal fun Adapter.prettyPrinted(): String = graphqlProperty.graphqlName +
     (when {
       args.isNotEmpty() -> args.entries
           .joinToString(separator = ",", prefix = "(", postfix = ")") {
             "${it.key}: ${formatAs(it.value)}" }
-      this is ModelProvider -> getModel().toGraphql()
+      this is ModelProvider -> value.toGraphql()
       else -> ""
     }).replace("\\s*([(,])".toRegex(), "$1").trim()
 

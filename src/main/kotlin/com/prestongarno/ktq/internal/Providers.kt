@@ -5,7 +5,7 @@ package com.prestongarno.ktq.internal
 import com.prestongarno.ktq.QModel
 
 internal interface ModelProvider {
-  fun getModel() : QModel<*>
+  val value: QModel<*>
 }
 
 interface FragmentProvider {

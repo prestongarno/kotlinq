@@ -10,7 +10,7 @@ interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
 }
 
 internal open class UnionAdapter<I : QSchemaUnion>(
-    override val property: Property,
+    override val graphqlProperty: QProperty,
     objectModel: I
 ) : QModel<I>(objectModel),
     Adapter,
@@ -46,7 +46,10 @@ internal open class UnionAdapter<I : QSchemaUnion>(
   }
 
   override fun toRawPayload(): String = fragments.joinToString(prefix = "__typename,") {
-    "... on ${it.model.graphqlType}${it.model.fields}"
+    "... on ${it.model.graphqlType}${it.model.fields
+        .joinToString(",", "{", "]") {
+          "${it.graphqlProperty.graphqlType}'${it.graphqlProperty.graphqlName}'"
+        }}"
   }
 
   override fun getValue(
@@ -61,8 +64,14 @@ internal open class UnionAdapter<I : QSchemaUnion>(
   }
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub {
-    println("Union#provideDelegate")
-    val next = UnionAdapter(Property.from(property, this.property.typeName, false), model)
+
+    val next = UnionAdapter(QProperty.from(
+        property,
+        this.graphqlProperty.graphqlType,
+        false,
+        this.graphqlProperty.graphqlName
+    ), model)
+
     synchronized(queue) {
       queue.put(next)
       dispatcher?.invoke(model)
@@ -73,12 +82,11 @@ internal open class UnionAdapter<I : QSchemaUnion>(
   }
 
   override fun on(init: () -> QModel<*>) {
-    println("On:$init")
     fragments += FragmentGenerator(init)
   }
 }
 
-internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>(Property.ROOT, model) {
+internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>(QProperty.ROOT, model) {
   override val queue: DispatchQueue by lazy { DispatchQueue() }
 
   override fun on(init: () -> QModel<*>) {

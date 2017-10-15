@@ -5,7 +5,7 @@ import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
-import com.prestongarno.ktq.Property
+import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.TypeListArgBuilder
@@ -14,7 +14,7 @@ import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
 internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListArgBuilder>(
-    property: Property,
+    property: QProperty,
     val builderInit: (TypeListArgBuilder) -> B
 ) : FieldAdapter(property),
     ListInitStub<I>,
@@ -38,11 +38,9 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
 
   val results = mutableListOf<P>()
   lateinit var init: () -> P
-  val prototype by lazy { init() }
+  override val value: QModel<*> by lazy { init() }
 
-  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(property, builderInit))
-
-  override fun getModel(): QModel<I> = prototype
+  override fun config(): B = builderInit(TypeListAdapter<I, P, B>(graphqlProperty, builderInit))
 
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeListStub<U, T>
       = apply { this.init = init as () -> P } as TypeListStub<U, T>

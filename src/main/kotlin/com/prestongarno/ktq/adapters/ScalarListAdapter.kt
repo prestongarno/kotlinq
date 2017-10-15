@@ -4,13 +4,13 @@ import com.prestongarno.ktq.FieldAdapter
 import com.prestongarno.ktq.ListArgBuilder
 import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListStub
-import com.prestongarno.ktq.Property
+import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.typedListValueFrom
 import kotlin.reflect.KProperty
 
 internal class ScalarListAdapter<I, out B : ListArgBuilder>(
-    property: Property,
+    property: QProperty,
     val builderInit: (ListArgBuilder) -> B
 ) : FieldAdapter(property),
     ListStub<I>,
@@ -21,18 +21,18 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
     if (result != null) {
       if (result is List<*>)
         result.filterNotNull().run {
-          values.addAll((property.kproperty.typedListValueFrom(this))
+          values.addAll((graphqlProperty.kproperty.typedListValueFrom(this))
               .map { it as I })
         }
       else
-        values.addAll(property.kproperty.typedListValueFrom(result).map { it as I })
+        values.addAll(graphqlProperty.kproperty.typedListValueFrom(result).map { it as I })
     }
     return true
   }
 
   val values = mutableListOf<I>()
 
-  override fun config(): B = builderInit(ScalarListAdapter<I, B>(property, builderInit))
+  override fun config(): B = builderInit(ScalarListAdapter<I, B>(graphqlProperty, builderInit))
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
 

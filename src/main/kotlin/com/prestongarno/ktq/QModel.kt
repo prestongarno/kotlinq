@@ -30,7 +30,7 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   internal open fun accept(input: JsonObject): Boolean {
     resolved = fields.filterNot {
-      it.accept(input[it.property.fieldName])
+      it.accept(input[it.graphqlProperty.graphqlName])
     }.isEmpty()
     return resolved
   }
@@ -38,7 +38,7 @@ open class QModel<out T : QSchemaType>(val model: T) {
   internal fun edges() = fields.map {
     when (it) {
       is FragmentProvider -> it.fragments.map { it.model }
-      is ModelProvider -> listOf(it.getModel())
+      is ModelProvider -> listOf(it.value)
       else -> emptyList()
     }
   }.flatten().toSet()

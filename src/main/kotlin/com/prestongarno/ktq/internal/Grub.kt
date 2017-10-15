@@ -14,7 +14,7 @@ import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.ListStub
-import com.prestongarno.ktq.Property
+import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QConfigStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
@@ -42,42 +42,33 @@ import kotlin.reflect.KProperty
  * solves the problem of not knowing the field's GraphQL prop fragment the generated type hierarchy
  * when generating queries/payloads
  *
- * Delegation inception : this property delegate is delegated to in order to get the prop of the
+ * Delegation inception : this graphqlName delegate is delegated to in order to get the prop of the
  * schema field, then passes it off to the backing field, which is another delegate in order for the
  * actual delegation to happen fragment a schema model implementation
  *
  * This class does minimal work in order to reduce added complexity - it simply gets passed a function
  * which, when applied a string, produces the correct schemastub.  When delegated to by schemastub types,
- * fragment `getValue` for the schemastub it simply invokes the function with the prop of the property that it's
- * delegating to. This way, the property prop can be passed to the delegate/schemastub type without having
+ * fragment `getValue` for the schemastub it simply invokes the function with the prop of the graphqlName that it's
+ * delegating to. This way, the graphqlName prop can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
-class Grub<out T : SchemaStub>(private val typeName: String, private val isList: Boolean = false, private val toInit: (property: Property) -> T) {
+class Grub<out T : SchemaStub>(private val typeName: String, private val isList: Boolean = false, private val toInit: (property: QProperty) -> T) {
 
-  constructor(inheritedProperty: Property, toInit: (property: Property) -> T) :
-      this(inheritedProperty.typeName, inheritedProperty.isList, toInit) {
+  constructor(inheritedProperty: QProperty, toInit: (property: QProperty) -> T) :
+      this(inheritedProperty.graphqlType, inheritedProperty.isList, toInit) {
     this.prop = inheritedProperty
   }
 
-  init {
-    println("Hello I am grub #${counter.incrementAndGet()}")
-  }
-
-  private var prop: Property? = null
+  private var prop: QProperty? = null
 
   private val value: T by lazy { toInit(prop!!) }
 
   operator fun getValue(inst: QSchemaType, property: KProperty<*>): T {
     if (prop == null)
-      prop = Property.from(property, typeName, isList)
-    println("Grub#getValue (property ${property.name}) = " + value)
+      prop = QProperty.from(property, typeName, isList)
     return value
   }
 
-  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Grub<T> = Grub(Property.from(property, typeName, isList), toInit)
-      .also { println("Grub#provideDelegate: " + inst::class.simpleName + ".${property.name}")}
-
   companion object {
-    val counter = AtomicInteger(0)
     fun <T> stub(typeName: String): Grub<Stub<T>> =
         Grub(typeName) { ScalarStubAdapter<T, ArgBuilder>(it, { it }) }
 

@@ -15,7 +15,7 @@ private fun getFragments(root: QModel<*>, cache: Set<QModel<*>>): Set<FragmentGe
       .map { it.model }
       .filterNot { cache.contains(it) }
   val models = root.fields.filterIsInstance<ModelProvider>()
-      .map { it.getModel() }
+      .map { it.value }
       .filterNot { cache.contains(it) }
   return fragmentEdges.map { getFragments(it, cache + fragmentEdges + models) }.flatten().toSet()
 }
