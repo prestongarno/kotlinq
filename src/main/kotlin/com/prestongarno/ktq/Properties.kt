@@ -13,7 +13,7 @@ interface QProperty {
   val graphqlType: String
   val graphqlName: String
   val isList: Boolean
-  @Deprecated("Remove reflection pls") val kproperty: KProperty<*>
+  val kproperty: KProperty<*>
 
   fun toEnum(name: String): Enum<*>?
 
@@ -21,8 +21,8 @@ interface QProperty {
     fun from(
         property: KProperty<*>,
         graphqlType: String,
-        isList: Boolean = false,
-        graphqlName: String = property.name
+        isList: Boolean,
+        graphqlName: String
     ): QProperty = PropertyImpl(graphqlType, property, isList, graphqlName)
 
     internal val ROOT = object : QProperty {
@@ -36,7 +36,7 @@ interface QProperty {
   }
 }
 
-internal class PropertyImpl(
+class PropertyImpl(
     override val graphqlType: String,
     override val kproperty: KProperty<*>,
     override val isList: Boolean,
@@ -66,7 +66,7 @@ internal class PropertyImpl(
   }
 
   override fun toString(): String =
-      "PropertyImpl(graphqlType='$graphqlType', graphqlName='$graphqlName', isList=$isList, typeKind=$typeKind)"
+      "Property('$graphqlName:${if (isList) "[$graphqlType]" else "$graphqlType"}' ($typeKind)"
 }
 
 enum class PropertyType {
@@ -109,7 +109,7 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
   val responseType: KClass<*> = if (values.isNotEmpty()) values[0]::class else Any::class
 
   return when (type) {
-  // TODO Take out generic type arguments from the stubs for primitives -> these are BOXED AND UNBOXED every time they're accessed!
+  // TODO Take out generic createTypeStub arguments from the stubs for primitives -> these are BOXED AND UNBOXED every time they're accessed!
     null -> emptyList()
     responseType -> values
     Int::class -> values.mapNotNull { "$it".toIntOrNull() }

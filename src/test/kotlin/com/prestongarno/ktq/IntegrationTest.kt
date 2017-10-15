@@ -40,7 +40,7 @@ class IntegrationTest {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
-          |type Taco {
+          |createTypeStub Taco {
           |  contents: [String]
           |}
           """.trimMargin("|"))
@@ -63,7 +63,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |
-          |type Taco {
+          |createTypeStub Taco {
           |  contents: [String]
           |  weight: Float
           |  orderNumber: Int
@@ -91,7 +91,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |
-          |type Taco {
+          |createTypeStub Taco {
           |  contents: [String]
           |  weight: Float
           |  orderNumber: Int
@@ -117,7 +117,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |
-          |type Burger {
+          |createTypeStub Burger {
           |  addToppingMutation(selection: [String], burger: Burger): Boolean
           |}
           |
@@ -142,7 +142,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |
-          |type User {
+          |createTypeStub User {
           |  friends: [User]
           |}
           |
@@ -176,7 +176,7 @@ class IntegrationTest {
           |  login: String!
           |}
           |
-          |type User implements Actor {
+          |createTypeStub User implements Actor {
           |  login: String!
           |  email: String
           |}
@@ -215,7 +215,7 @@ class IntegrationTest {
           |  uid: String!
           |}
           |
-          |type User implements Actor, Node {
+          |createTypeStub User implements Actor, Node {
           |  login: String!
           |  email: String
           |  uid: String
@@ -250,7 +250,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |
-          |type Foo {
+          |createTypeStub Foo {
           |  url: URL
           |}
           |
@@ -289,7 +289,7 @@ class IntegrationTest {
           |  url: URL
           |}
           |
-          |type Foo implements Bar{
+          |createTypeStub Foo implements Bar{
           |  url: URL
           |}
           |
@@ -331,7 +331,7 @@ class IntegrationTest {
           |  url: URL
           |}
           |
-          |type Foo implements Bar{
+          |createTypeStub Foo implements Bar{
           |  number: Int
           |  url: URL
           |}
@@ -375,7 +375,7 @@ class IntegrationTest {
           |  url: URL
           |}
           |
-          |type Foo implements Bar  {
+          |createTypeStub Foo implements Bar  {
           |  number: Int
           |  url: URL
           |}
@@ -414,7 +414,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |
-          |type Foo {
+          |createTypeStub Foo {
           |
           |  url: URL
           |
@@ -460,7 +460,7 @@ class IntegrationTest {
           |interface Baz {
           |  url: URL
           |}
-          |type Foo implements Bar, Baz {
+          |createTypeStub Foo implements Bar, Baz {
           |  url: URL
           |}
           |
@@ -499,7 +499,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |scalar URL
-          |type Foo {
+          |createTypeStub Foo {
           |  url(shortened: Boolean): URL
           |}
           """.trimMargin("|"))
@@ -536,7 +536,7 @@ class IntegrationTest {
         .packageName(PACK)
         .schema("""
           |scalar URL
-          |type Foo {
+          |createTypeStub Foo {
           |  url(
           |    shortened: Boolean,
           |    encoding: String
@@ -588,7 +588,7 @@ class IntegrationTest {
           |
           |
           |
-          |type Foo {
+          |createTypeStub Foo {
           |  url(
           |    shortened: Boolean,
           |    what: What
@@ -635,7 +635,7 @@ class IntegrationTest {
           |interface Baz {
           |  url(shortened: Boolean): URL
           |}
-          |type Foo implements Bar, Baz {
+          |createTypeStub Foo implements Bar, Baz {
           |  url(shortened: Boolean): URL
           |}
           |
@@ -686,7 +686,7 @@ class IntegrationTest {
           |    encoding: String
           |  ): URL
           |}
-          |type Foo implements Bar, Baz {
+          |createTypeStub Foo implements Bar, Baz {
           |  url(shortened: Boolean,encoding: String): URL
           |}
           |

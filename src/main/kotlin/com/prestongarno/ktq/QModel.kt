@@ -4,7 +4,6 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.internal.FragmentProvider
-import com.prestongarno.ktq.internal.ModelProvider
 import java.io.InputStream
 
 open class QModel<out T : QSchemaType>(val model: T) {

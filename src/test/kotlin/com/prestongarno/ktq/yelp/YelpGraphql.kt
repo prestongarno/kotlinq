@@ -110,7 +110,7 @@ object OpenHours : QSchemaType {
 
 /**
  * Represents the lack of understanding the developer team at yelp had when
- * they used a type system in order to spam strings by tens as args to fields... */
+ * they used a createTypeStub system in order to spam strings by tens as args to fields... */
 object Query : QSchemaType {
   val business: QTypeConfigStub<Business, BusinessArgs> by QType.configStub { BusinessArgs(it) }
 
@@ -261,7 +261,7 @@ object Query : QSchemaType {
 }
 
 /**
- * This type represents a review. You know, like in that one south park episode? */
+ * This createTypeStub represents a review. You know, like in that one south park episode? */
 object Review : QSchemaType {
   /**
    *  The rating that someone gave, ranging 1->5, with 5 being the greatest rating */

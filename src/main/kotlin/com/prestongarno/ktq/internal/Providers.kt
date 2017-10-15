@@ -15,3 +15,5 @@ interface FragmentProvider {
 data class FragmentGenerator(val initializer: () -> QModel<*>) {
   internal val model by lazy(initializer)
 }
+
+fun <T> nullPointer(): () -> T = { throw NullPointerException() }

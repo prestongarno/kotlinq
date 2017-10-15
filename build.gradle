@@ -62,6 +62,17 @@ dependencies {
   testCompile "com.prestongarno.ktq:ktq-gradle:0.2"
   testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
 }
+
+configurations.all {
+  resolutionStrategy {
+    eachDependency { DependencyResolveDetails details ->
+      if (details.requested.group == 'org.jetbrains.kotlin') {
+        details.useVersion(kotlin_version)
+      }
+    }
+  }
+}
+
 compileKotlin {
   kotlinOptions {
     jvmTarget = "1.8"

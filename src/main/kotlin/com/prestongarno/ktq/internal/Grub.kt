@@ -14,6 +14,7 @@ import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.ListStub
+import com.prestongarno.ktq.PropertyImpl
 import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QConfigStub
 import com.prestongarno.ktq.QModel
@@ -38,7 +39,7 @@ import kotlin.reflect.KProperty
 
 /**
  * Grand Unified Bootloader for SchemaType definitions/stubs.
- * solves the problem of not knowing the field's GraphQL prop fragment the generated type hierarchy
+ * solves the problem of not knowing the field's GraphQL prop fragment the generated createTypeStub hierarchy
  * when generating queries/payloads
  *
  * Delegation inception : this graphqlName delegate is delegated to in order to get the prop of the
@@ -48,75 +49,83 @@ import kotlin.reflect.KProperty
  * This class does minimal work in order to reduce added complexity - it simply gets passed a function
  * which, when applied a string, produces the correct schemastub.  When delegated to by schemastub types,
  * fragment `getValue` for the schemastub it simply invokes the function with the prop of the graphqlName that it's
- * delegating to. This way, the graphqlName prop can be passed to the delegate/schemastub type without having
+ * delegating to. This way, the graphqlName prop can be passed to the delegate/schemastub createTypeStub without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
-class Grub<out T : SchemaStub>(private val typeName: String, private val isList: Boolean = false, private val toInit: (property: QProperty) -> T) {
+interface StubLoader<out T : SchemaStub> {
+  operator fun getValue(inst: QSchemaType, property: KProperty<*>): T
+}
 
-  constructor(inheritedProperty: QProperty, toInit: (property: QProperty) -> T) :
-      this(inheritedProperty.graphqlType, inheritedProperty.isList, toInit) {
-    this.prop = inheritedProperty
-  }
+interface StubProvider<out T : SchemaStub> {
+  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): StubLoader<T>
+}
 
-  private var prop: QProperty? = null
+private class StubLoaderImpl<out T : SchemaStub>(
+    val value: T
+) : StubLoader<T> {
+  override operator fun getValue(inst: QSchemaType, property: KProperty<*>): T = value
+}
 
-  private val value: T by lazy { toInit(prop!!) }
+class Grub<out T : SchemaStub>(
+    val typeName: String,
+    val isList: Boolean = false,
+    val toInit: (property: QProperty) -> T
+) : StubProvider<T> {
 
-  operator fun getValue(inst: QSchemaType, property: KProperty<*>): T {
-    if (prop == null)
-      prop = QProperty.from(property, typeName, isList)
-    return value
+  override operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): StubLoader<T> {
+    val value = toInit(PropertyImpl(typeName, property, isList, property.name))
+    return StubLoaderImpl(value)
   }
 
   companion object {
-    fun <T> stub(typeName: String): Grub<Stub<T>> =
-        Grub(typeName) { ScalarStubAdapter<T, ArgBuilder>(it, { it }) }
+    fun <T> createStub(typeName: String): StubProvider<Stub<T>> =
+        Grub(typeName, false) { ScalarStubAdapter<T, ArgBuilder>(it, { it }) }
 
-    fun <T : QSchemaType> type(name: String): Grub<InitStub<T>>
-        = Grub(name) { TypeStubAdapter<T, QModel<T>, TypeArgBuilder>(it, { it }) }
+    fun <T : QSchemaType> createTypeStub(name: String): StubProvider<InitStub<T>>
+        = Grub(name, false) { TypeStubAdapter<T, QModel<T>, TypeArgBuilder>(it, { it }) }
 
-    fun <T : QSchemaUnion> union(objectModel: T, typeName: String): Grub<UnionInitStub<T>>
-        = Grub(typeName) { UnionAdapter.new(it, objectModel) }
+    fun <T : QSchemaUnion> createUnionStub(objectModel: T, typeName: String): StubProvider<UnionInitStub<T>>
+        = Grub(typeName, false) { UnionAdapter.create(it, objectModel) }
 
-    fun <T : Any, A : ArgBuilder> configStub(typeName: String, arginit: (ArgBuilder) -> A): Grub<QConfigStub<T, A>>
-        = Grub(typeName) { ScalarStubAdapter<T, A>(it, arginit) }
+    fun <T : Any, A : ArgBuilder> createConfigStub(typeName: String, arginit: (ArgBuilder) -> A): StubProvider<QConfigStub<T, A>>
+        = Grub(typeName, false) { ScalarStubAdapter<T, A>(it, arginit) }
 
-    fun <T : CustomScalar> customScalar(typeName: String): Grub<CustomScalarInitStub<T>> =
-        Grub(typeName) { CustomScalarAdapter<T, QScalarMapper<T>, T, CustomScalarArgBuilder>(it, { it }) }
+    fun <T : CustomScalar> createCustomScalarStub(typeName: String): StubProvider<CustomScalarInitStub<T>> =
+        Grub(typeName, false) { CustomScalarAdapter<T, QScalarMapper<T>, T, CustomScalarArgBuilder>(it, { it }) }
 
-    fun <T : CustomScalar, A : CustomScalarArgBuilder> customScalarConfig(
+    fun <T : CustomScalar, A : CustomScalarArgBuilder> createCustomScalarConfig(
         typeName: String,
         arginit: (CustomScalarArgBuilder) -> A
-    ): Grub<CustomScalarConfigStub<T, A>> =
-        Grub(typeName) { CustomScalarAdapter<T, QScalarMapper<T>, T, A>(it, arginit) }
+    ): StubProvider<CustomScalarConfigStub<T, A>> =
+        Grub(typeName, false) { CustomScalarAdapter<T, QScalarMapper<T>, T, A>(it, arginit) }
 
-    fun <A : TypeArgBuilder, T : QSchemaType> typeConfig(
+    fun <A : TypeArgBuilder, T : QSchemaType> createTypeConfigStub(
         simpleName: String,
         arginit: (TypeArgBuilder) -> A
-    ): Grub<QTypeConfigStub<T, A>>
-        = Grub(simpleName) { TypeStubAdapter<T, QModel<T>, A>(it, arginit) }
+    ): StubProvider<QTypeConfigStub<T, A>>
+        = Grub(simpleName, false) { TypeStubAdapter<T, QModel<T>, A>(it, arginit) }
 
-    fun <T> scalarList(simpleName: String): Grub<ListStub<T>>
+    fun <T> createScalarListStub(simpleName: String): StubProvider<ListStub<T>>
         = Grub(simpleName, true) { ScalarListAdapter<T, ListArgBuilder>(it, { it }) }
 
-    fun <A : ListArgBuilder, T> scalarListConfig(simpleName: String, arginit: (ListArgBuilder) -> A): Grub<ListConfig<T, A>>
+    fun <A : ListArgBuilder, T> createListConfigStub(simpleName: String, arginit: (ListArgBuilder) -> A): StubProvider<ListConfig<T, A>>
         = Grub(simpleName, true) { ScalarListAdapter<T, A>(it, arginit) }
 
-    fun <T : QSchemaType> typeList(simpleName: String): Grub<ListInitStub<T>> =
+    fun <T : QSchemaType> createTypeListStub(simpleName: String): StubProvider<ListInitStub<T>> =
         Grub(simpleName, true) { TypeListAdapter<T, QModel<T>, TypeListArgBuilder>(it, { it }) }
 
-    fun <A : TypeListArgBuilder, T : QSchemaType> typeListConfig(
+    fun <A : TypeListArgBuilder, T : QSchemaType> createTypeListConfigStub(
         simpleName: String,
         arginit: (TypeListArgBuilder) -> A
-    ): Grub<ListConfigType<T, A>> =
+    ): StubProvider<ListConfigType<T, A>> =
         Grub(simpleName, true) { TypeListAdapter<T, QModel<T>, A>(it, arginit) }
 
-    fun <T : CustomScalar> customScalarList(simpleName: String): Grub<CustomScalarListInitStub<T>>
+    fun <T : CustomScalar> createCustimScalarStub(simpleName: String): StubProvider<CustomScalarListInitStub<T>>
         = Grub(simpleName, true) { CustomScalarListAdapter<T, QScalarListMapper<T>, T, CustomScalarListArgBuilder>(it, { it }) }
 
-    fun <T : CustomScalar, A : CustomScalarListArgBuilder> customScalarListConfig(
+    fun <T : CustomScalar, A : CustomScalarListArgBuilder> createCustomScalarListConfig(
         simpleName: String,
         arginit: (CustomScalarListArgBuilder) -> A
-    ): Grub<CustomScalarListConfigStub<T, A>> =
+    ): StubProvider<CustomScalarListConfigStub<T, A>> =
         Grub(simpleName, true) { CustomScalarListAdapter<T, QScalarListMapper<T>, T, A>(it, arginit) }
   }
 }

@@ -12,17 +12,17 @@ class TestOne : NodeServer() {
 
   @Ignore @Test fun gen() {
     QCompiler.initialize().schema("""
-        |type Query {
+        |createTypeStub Query {
         |  me: Actor
         |}
         |
-        |union Actor = User | Bot
+        |createUnionStub Actor = User | Bot
         |
-        |type User {
+        |createTypeStub User {
         |  name: String
         |}
         |
-        |type Bot {
+        |createTypeStub Bot {
         |  name: String
         |  owner: Actor
         |}
@@ -30,7 +30,7 @@ class TestOne : NodeServer() {
         .compile().result { println(it) }
   }
 
-  // Need to redesign the current union type model in order to
+  // Need to redesign the current createUnionStub createTypeStub model in order to
   // support single fields
   @Ignore @Test fun uglyDesignMistakeOnUnions() {
 

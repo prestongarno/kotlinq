@@ -2,8 +2,6 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaType.QScalar
-import com.prestongarno.ktq.compiler.QCompiler
-import java.io.File
 
 /**
  * Example generated Configuration */
@@ -27,10 +25,9 @@ object ProjImpl : Project {
 }
 
 class ConfigModel : QModel<Configuration>(Configuration) {
-  val depends by model.dependencies
-      .config()
-      .first(20)
-      .build { ProjectModel() }
+  val depends by model.dependencies.config {
+    first(20)
+  }.init { ProjectModel() }
 }
 class ProjectModel : QModel<ProjImpl>(ProjImpl)
 

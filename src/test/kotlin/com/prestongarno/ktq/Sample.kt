@@ -70,13 +70,9 @@ class BasicUserInfo : QModel<OtherUser>(OtherUser) {
   val name by model.name
   val url by model.url.init(StringScalarMapper {it.toInt()})
   val relatedLinks by model.relatedUrls.init(StringScalarListMapper { it.toInt() })
-  val friendsUrls by model.friendsUrls.config()
-      .shortUrls(true)
-      .build(StringScalarListMapper {
-        File(it)
-            .toURI()
-            .toURL()!!
-      })
+  val friendsUrls by model.friendsUrls.config {
+    shortUrls(true)
+  }.init(StringScalarListMapper { File(it).toURI().toURL()!! })
 }
 
 data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser) {
@@ -86,18 +82,19 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
   val enemies: BasicUserInfo by model.enemies
       .init(::BasicUserInfo)
 
-  val address: SimpleAddress by model.address.config()
-      .language(lang)
-      .build { SimpleAddress("7777 HelloWorld Lane") }
+  val address: SimpleAddress by model.address.config {
+    language(lang)
+  }.init { SimpleAddress("7777 HelloWorld Lane") }
 
-  val friends by model.friends.config()
-      .first(limitOfFriends)
-      .build(::BasicUserInfo)
+  val friends by model.friends.config {
+    first(limitOfFriends)
+  }.init(::BasicUserInfo)
 }
 
 class TestSample {
   @Test fun testToGraphQlValid() {
     val foobaz = MyUser(1000, "ENGLISH")
+    println(foobaz.toGraphql(false))
     Truth.assertThat(foobaz.toGraphql())
         .isEqualTo("""
           |{

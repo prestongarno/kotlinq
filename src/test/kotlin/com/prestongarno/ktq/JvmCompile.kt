@@ -96,6 +96,6 @@ internal fun ModelProvider.setValue(value: QModel<*>) {
   when (this) {
     is TypeStubAdapter<*, *, *> -> this.build { value }
     is TypeListAdapter<*, *, *> -> this.build { value }
-    else -> throw IllegalStateException("Bad type")
+    else -> throw IllegalStateException("Bad createTypeStub")
   }
 }

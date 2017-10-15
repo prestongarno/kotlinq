@@ -9,23 +9,25 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.typedListValueFrom
 import kotlin.reflect.KProperty
 
-internal class ScalarListAdapter<I, out B : ListArgBuilder>(
+internal class ScalarListAdapter<I, B : ListArgBuilder>(
     property: QProperty,
-    val builderInit: (ListArgBuilder) -> B
+    val builderInit: (ListArgBuilder) -> B,
+    val config: (B.() -> Unit)? = null
 ) : FieldConfig(property),
     ListStub<I>,
     ListConfig<I, B>,
     ListArgBuilder {
 
-  override fun config(): B = builderInit(ScalarListAdapter<I, B>(graphqlProperty, builderInit))
+  override fun config(provider: B.() -> Unit): ListStub<I> =
+      ScalarListAdapter(graphqlProperty, builderInit, provider)
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<List<I>> =
       ScalarListStubImpl<I>(
           QProperty.from(property,
-          this.graphqlProperty.graphqlType,
-          this.graphqlProperty.isList,
-          this.graphqlProperty.graphqlName),
-          args.toMap()
+              this.graphqlProperty.graphqlType,
+              this.graphqlProperty.isList,
+              this.graphqlProperty.graphqlName),
+          apply { config?.invoke(builderInit(this)) }.args.toMap()
       ).also {
         inst.fields.add(it)
       }
@@ -34,7 +36,11 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
 
   override fun addArg(name: String, value: Any): ListArgBuilder = apply { args.put(name, value) }
 
-  override fun toAdapter(): Adapter<*> = ScalarListStubImpl<I>(graphqlProperty, args.toMap())
+  override fun toAdapter(): Adapter<*> = ScalarListStubImpl<I>(
+      graphqlProperty,
+      apply {
+        config?.invoke(builderInit(this))
+      }.args.toMap())
 }
 
 private data class ScalarListStubImpl<I>(

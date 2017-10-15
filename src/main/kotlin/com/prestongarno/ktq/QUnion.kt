@@ -39,7 +39,7 @@ internal sealed class UnionAdapter<I : QSchemaUnion>(
     return this
   }
 
-  override fun toRawPayload(): String = fragments.joinToString(prefix = "__typename,") {
+  override fun toRawPayload(): String = fragments.joinToString(prefix = "{__typename,", postfix = "}") {
     "... on ${it.model.graphqlType}${it.model.fields
         .joinToString(",", "{", "]") {
           "${it.graphqlProperty.graphqlType}'${it.graphqlProperty.graphqlName}'"
@@ -60,12 +60,14 @@ internal sealed class UnionAdapter<I : QSchemaUnion>(
       dispatcher?.invoke(model)
       queue.pop()
     }
-    val next = UnionStubImpl(QProperty.from(
-        property,
-        this.graphqlProperty.graphqlType,
-        false,
-        this.graphqlProperty.graphqlName
-    ), this.fragments)
+
+    val next = UnionStubImpl(
+        QProperty.from(
+            property,
+            graphqlProperty.graphqlType,
+            false,
+            graphqlProperty.graphqlName
+        ), fragments)
     inst.fields.add(next)
     return next
   }
@@ -75,14 +77,14 @@ internal sealed class UnionAdapter<I : QSchemaUnion>(
   }
 
   companion object {
-    fun <I : QSchemaUnion> new(property: QProperty, objectModel: I): UnionAdapter<I> = UnionAdapterImpl(property, objectModel)
+    fun <I : QSchemaUnion> create(property: QProperty, objectModel: I): UnionAdapter<I> = UnionAdapterImpl(property, objectModel)
   }
 }
 
 internal class UnionAdapterImpl<I : QSchemaUnion>(
     graphqlProperty: QProperty,
     objectModel: I
-): UnionAdapter<I>(graphqlProperty, objectModel)
+) : UnionAdapter<I>(graphqlProperty, objectModel)
 
 
 internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>(QProperty.ROOT, model) {

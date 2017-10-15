@@ -28,10 +28,10 @@ And apply the plugin:
       
 ### About
 
-Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
+Stands for KoTlin Query (language). This is a library which supports concise, createTypeStub-safe models for 
 queries and mutations against a GraphQl schema. 
 
-The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
+The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an equivalent kotlin createTypeStub hierarchy which is used to create and execute queries
 and mutations without ever leaving native code.
 
 For an example of how to build models, see the example below created for the Yelp Graphql API. 

@@ -14,29 +14,38 @@ interface DelegateProvider<out T> : SchemaStub {
 }
 
 interface InitStub<T : QSchemaType> : SchemaStub {
-  fun <U : QModel<T>> init(of: () -> U): TypeStub<U, T>
+  fun <U : QModel<T>> init(init: () -> U): TypeStub<U, T>
 }
+
 interface CustomScalarInitStub<T: CustomScalar> : SchemaStub {
-  fun <U: QScalarMapper<A>, A> init(of: U): CustomStub<U, A>
+  fun <U: QScalarMapper<A>, A> init(init: U): CustomStub<U, A>
 }
 
-
-interface QConfigStub<T, out A : ArgBuilder> : SchemaStub {
-  fun config(): A
-}
-interface QTypeConfigStub<T : QSchemaType, out A : TypeArgBuilder> : SchemaStub {
-  fun config(): A
+interface Configuration<out T, out A: Payload> : SchemaStub {
+  fun config(provider: A.() -> Unit): DelegateProvider<T>
 }
 
-interface CustomScalarConfigStub<T: CustomScalar, out A: CustomScalarArgBuilder> : SchemaStub {
-  fun config(): A
+interface TypeConfiguration<T: QSchemaType, out A: Payload> : SchemaStub {
+  fun config(provider: A.() -> Unit): InitStub<T>
 }
+
+interface CustomScalarConfiguration<T: CustomScalar, out A: CustomScalarArgBuilder> : SchemaStub {
+  fun config(provider: A.() -> Unit): CustomScalarInitStub<T>
+}
+
+interface QConfigStub<T, out A : ArgBuilder> : Configuration<T, A>
+
+interface QTypeConfigStub<T : QSchemaType, out A : TypeArgBuilder> : TypeConfiguration<T, A>
+
+interface CustomScalarConfigStub<T: CustomScalar, out A: CustomScalarArgBuilder> : CustomScalarConfiguration<T, A>
 
 interface Stub<T> : DelegateProvider<T> {
   fun withDefault(value: T): Stub<T>
 }
 
-interface CustomStub<U: QScalarMapper<T>, T> : DelegateProvider<T>
+interface CustomStub<U: QScalarMapper<T>, T> : DelegateProvider<T> {
+  fun withDefault(value: T): CustomStub<U, T>
+}
 
 interface NullableStub<T> : DelegateProvider<T?>
 

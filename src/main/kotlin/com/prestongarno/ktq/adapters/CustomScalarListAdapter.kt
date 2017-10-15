@@ -14,18 +14,20 @@ import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
 import kotlin.reflect.KProperty
 
-internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, Q, out B : CustomScalarListArgBuilder>(
+internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, Q, B : CustomScalarListArgBuilder>(
     property: QProperty,
-    val builderInit: (CustomScalarListArgBuilder) -> B
+    val builderInit: (CustomScalarListArgBuilder) -> B,
+    val adapter: P? = null,
+    val default: Q? = null,
+    val config: (B.() -> Unit)? = null
 ) : FieldConfig(property),
     CustomScalarListArgBuilder,
     CustomScalarListConfigStub<E, B>,
     CustomScalarListInitStub<E>,
     CustomScalarListStub<P, Q> {
 
-  override fun config(): B = builderInit(CustomScalarListAdapter<E, P, Q, B>(graphqlProperty, builderInit))
-
-  internal lateinit var adapter: P
+  override fun config(provider: B.() -> Unit): CustomScalarListInitStub<E> =
+      CustomScalarListAdapter(graphqlProperty, builderInit, adapter, default, provider)
 
   override fun addArg(name: String, value: Any): Payload = apply { this.args.put(name, value) }
 
@@ -34,20 +36,19 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
           this.graphqlProperty.graphqlName),
-          args.toMap(),
-          adapter
+          apply { config?.invoke(builderInit(this)) }.args.toMap(),
+          adapter!!
       ).also {
         inst.fields.add(it)
       }
 
-  override fun <U : QScalarListMapper<A>, A> init(of: U): CustomScalarListStub<U, A> = this.build(of)
+  @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<A>, A> init(of: U): CustomScalarListStub<U, A> =
+      CustomScalarListAdapter<E, U, A, B>(graphqlProperty, builderInit, of, default as A?, config)
 
-  @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T> {
-    this.adapter = init as P
-    return this as CustomScalarListStub<U, T>
-  }
+  @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T> =
+      CustomScalarListAdapter<E, U, T, B>(graphqlProperty, builderInit, init, default as T?, config)
 
-  override fun toAdapter(): Adapter<*> = CustomScalarListStubImpl(graphqlProperty, args.toMap(), adapter)
+  override fun toAdapter(): Adapter<*> = CustomScalarListStubImpl(graphqlProperty, args.toMap(), adapter!!)
 }
 
 private data class CustomScalarListStubImpl<out Q>(

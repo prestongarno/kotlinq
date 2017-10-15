@@ -11,8 +11,6 @@ import java.io.File
 import java.time.Instant
 import java.util.Calendar
 import java.util.Date
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.jvm.isAccessible
 import kotlin.test.assertTrue
 
 class MockResponseCustomScalar {
@@ -92,9 +90,9 @@ class MockResponseCustomScalar {
 
   @Test fun configurableStubMappedToCustomScalarList() {
     val myNote = object : QModel<Note>(Note) {
-      val refIds by model.refIdsConfigurable.config()
-          .first(10)
-          .build(StringScalarListMapper { it.toInt() })
+      val refIds by model.refIdsConfigurable.config {
+        first(10)
+      }.init(StringScalarListMapper { it.toInt() })
     }
     @Language("JSON") val response = """{
         "refIdsConfigurable": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

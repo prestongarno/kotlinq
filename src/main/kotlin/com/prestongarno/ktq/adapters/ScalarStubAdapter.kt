@@ -1,6 +1,7 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.DelegateProvider
 import com.prestongarno.ktq.FieldConfig
 import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QConfigStub
@@ -11,22 +12,23 @@ import kotlin.reflect.KProperty
 
 /**
  * Adapter for scalar fields */
-internal class ScalarStubAdapter<T, out B : ArgBuilder>(
+internal class ScalarStubAdapter<T, B : ArgBuilder>(
     property: QProperty,
-    val builderInit: (ArgBuilder) -> B
+    val builderInit: (ArgBuilder) -> B,
+    var default: T? = null,
+    val config: (B.() -> Unit)? = null
 ) : FieldConfig(property),
     Stub<T>,
     QConfigStub<T, B>,
     ArgBuilder {
 
-  var default: T? = null
+  override fun config(provider: B.() -> Unit): DelegateProvider<T> =
+      ScalarStubAdapter(graphqlProperty, builderInit, default, provider)
 
-  override fun withDefault(value: T) = apply { default = value }
-
-  override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlProperty, builderInit))
+  override fun withDefault(value: T) = ScalarStubAdapter(graphqlProperty, builderInit, value)
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<T> =
-      ScalarStubImpl(QProperty.from(property,
+      ScalarStubImpl<T>(QProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
           this.graphqlProperty.graphqlName),

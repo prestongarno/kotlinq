@@ -1,4 +1,4 @@
-package com.prestongarno.ktq.unions.experimental
+package com.prestongarno.ktq.unions
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
@@ -10,48 +10,44 @@ import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import org.intellij.lang.annotations.Language
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.Test
+import kotlin.properties.Delegates
 import kotlin.reflect.jvm.isAccessible
 import kotlin.test.assertTrue
 
-/**================================================================*/
-/**  Example                                                       */
-/**================================================================*/
-
-class MyUserModel : QModel<User>(User) {
-  val username by model.name
-  val user_email by model.email
+class MyUserModel : QModel<UserObject>(UserObject) {
+  val username by UserObject.name
+  val user_email by UserObject.email
 }
 
 object Actor : QSchemaUnion by QSchemaUnion.create(Actor) {
-  fun user(init: () -> QModel<User>) = on(init)
-  fun bot(init: () -> QModel<Bot>) = on(init)
+  fun user(init: () -> QModel<UserObject>) = on(init)
+  fun bot(init: () -> QModel<BotObject>) = on(init)
 }
 
-class MyBotModel : QModel<Bot>(Bot) {
+class MyBotModel : QModel<BotObject>(BotObject) {
 
-  val name by model.name
+  val name by BotObject.name
 
-  val ownerModel by model.owner.fragment {
+  val ownerModel by BotObject.owner.fragment {
     user { MyUserModel() }
     bot { MyBotModel() }
   }
 
-  val creatorModel by model.creator.init { MyUserModel() }
+  val creatorModel by BotObject.creator.init { MyUserModel() }
 
 }
 
 
-object Bot : QSchemaType {
+object BotObject : QSchemaType {
   val name: Stub<String> by QScalar.stub()
 
   val owner by QUnion.stub(Actor)
 
-  val creator by QType.stub<User>()
+  val creator by QType.stub<UserObject>()
 }
 
-object User : QSchemaType {
+object UserObject : QSchemaType {
   val name: Stub<String> by QScalar.stub()
   val email by QScalar.stub<String>()
 }
@@ -63,8 +59,6 @@ object Query : QSchemaType {
 class ExperimentalUnionModel {
 
   @Test fun testModelStructure() {
-
-    val botModel = MyBotModel()
     @Language("JSON") val response = """
       {
         "name": "some bot or whatever",
@@ -74,32 +68,23 @@ class ExperimentalUnionModel {
         }
       }
       """
-    val thread2 = {
-      object : Thread() {
-        override fun start() {
-          for (i in 1..1000) MyBotModel().run {
-            require(this.onResponse(response))
-            require(resolved)
-          }
-        }
-      }
+    var botModel: MyBotModel by Delegates.notNull()
+    try {
+      botModel = MyBotModel()
+    } catch (ex: Exception) {
+      ex.printStackTrace()
     }
     require(botModel.onResponse(response))
     require(botModel.ownerModel is MyUserModel)
     require(botModel.resolved)
     assertTrue((botModel.ownerModel as MyUserModel).username == "preston")
-
-    for (i in 1..100) {
-      thread2().start()
-    }
-    for (i in 1..1000) assertTrue(Bot.owner === Bot.owner)
   }
 
   @Test fun testFragmentGraphTraversal() {
-    val bor = object : QModel<Bot>(Bot) {
+/*    val bor = object : QModel<Bot>(Bot) {
       val borName by model.name
-    }
-    val bot = MyBotModel()
+    }*/
+    //val bot = MyBotModel()
     @Language("JSON") val response = """
       {
         "name": "My Bot",
@@ -120,15 +105,19 @@ class ExperimentalUnionModel {
         }
       }
       """
-    bor.accept(Parser().parse(response.byteInputStream()) as JsonObject)
-    // TODO -> this is because `onProvideDelegate` doesn't instantiate a new instance
+    println(botresponse)
+    println(QModel<BotObject>(BotObject).toGraphql())
+/*    println(bot.toGraphql())
+    //bor.accept(Parser().parse(response.byteInputStream()) as JsonObject)
+    // TODO -> this is because `onProvideDelegate` doesn't instantiate a create instance
     bot.accept(Parser().parse(botresponse.byteInputStream()) as JsonObject)
     require(bot::creatorModel.let { it.isAccessible = true; it.getDelegate()!! }::class != TypeStubAdapter::class)
     bot.fields.forEach { println(it.graphqlProperty) }
-    require(bor.borName == "My Bot")
+    //require(bor.borName == "My Bot")
+    require(bot.ownerModel is MyUserModel)
     (bot.ownerModel as? MyUserModel)?.user_email.also { email ->
       require(email == "prestongarno@gmail.com")
-    }
+    }*/
   }
 }
 

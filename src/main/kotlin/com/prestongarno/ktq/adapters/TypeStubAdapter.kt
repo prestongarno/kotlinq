@@ -10,52 +10,57 @@ import com.prestongarno.ktq.QTypeConfigStub
 import com.prestongarno.ktq.TypeArgBuilder
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.internal.ModelProvider
+import com.prestongarno.ktq.internal.nullPointer
 import kotlin.reflect.KProperty
 
 /**
- * This class represents a stub for a non-leaf type (aka an object) fragment a graph */
-internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBuilder>(
+ * This class represents a createStub for a non-leaf createTypeStub (aka an object) fragment a graph */
+internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : TypeArgBuilder>(
     property: QProperty,
-    val builderInit: (TypeArgBuilder) -> B
+    val builderInit: (TypeArgBuilder) -> B,
+    val init: () -> P = nullPointer(),
+    val config: (B.() -> Unit)? = null
 ) : FieldConfig(property),
     TypeStub<P, I>,
     InitStub<I>,
     QTypeConfigStub<I, B>,
     TypeArgBuilder {
 
-  lateinit var value: P
-
-  override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(graphqlProperty, builderInit))
+  override fun config(provider: B.() -> Unit): InitStub<I> =
+      TypeStubAdapter(graphqlProperty, builderInit, this.init, provider)
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<P> =
       TypeStubImpl(QProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
           this.graphqlProperty.graphqlName),
-          value,
-          args.toMap()
+          init,
+          apply { config?.invoke(builderInit(this)) }.args.toMap()
       ).also {
         inst.fields.add(it)
       }
 
-  @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeStub<U, I>
-      = apply { this.value = of() as P } as TypeStub<U, I>
+  override fun <U : QModel<I>> init(init: () -> U): TypeStub<U, I> =
+      TypeStubAdapter(graphqlProperty, builderInit, init, config)
 
-  @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeStub<U, T>
-      = apply { this.value = init() as P } as TypeStub<U, T>
+  override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeStub<U, T> =
+      TypeStubAdapter(graphqlProperty, builderInit, init, config)
 
-  override fun toAdapter(): Adapter<*> = TypeStubImpl(this.graphqlProperty, value, args.toMap())
+
+  override fun toAdapter(): Adapter<*> = TypeStubImpl(this.graphqlProperty, init, args.toMap())
 
   override fun addArg(name: String, value: Any): TypeArgBuilder = apply { args.put(name, value) }
 
 }
 
-private data class TypeStubImpl<out I : QSchemaType, P : QModel<I>>(
+private data class TypeStubImpl<out I : QSchemaType, out P : QModel<I>>(
     override val graphqlProperty: QProperty,
-    override val value: P,
+    val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
 ) : Adapter<P>,
     ModelProvider {
+
+  override val value by lazy(init)
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): P = value
 

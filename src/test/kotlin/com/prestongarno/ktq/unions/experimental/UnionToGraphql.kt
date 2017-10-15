@@ -1,4 +1,4 @@
-package com.prestongarno.ktq.unions
+package com.prestongarno.ktq.unions.experimental
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.CustomScalar
@@ -30,34 +30,34 @@ class UnionToGraphql {
           |  login: String
           |}
           |
-          |type User implements Actor {
+          |createTypeStub User implements Actor {
           |  login: String
           |  email: String?
           |  repositories: [Repository]
           |}
           |
-          |type Organization implements Actor {
+          |createTypeStub Organization implements Actor {
           |  login: String
           |  members: [User]
           |  owner: User
           |  repositories: [Repository]
           |}
           |
-          |union Account = User | Bot | Organization
+          |createUnionStub Account = User | Bot | Organization
           |
-          |type Bot implements Actor {
+          |createTypeStub Bot implements Actor {
           |  login: String
           |  owner: User
           |}
           |
           |scalar URL
           |
-          |type Repository {
+          |createTypeStub Repository {
           |  name: String
           |  url: URL
           |}
           |
-          |type Query {
+          |createTypeStub Query {
           |  searchAccounts(first: Int, searchTerm: String!): [Account]
           |}
           |
@@ -81,14 +81,14 @@ class UnionToGraphql {
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by Query.searchAccounts.config()
-          .first(10)
-          .searchTerm("google.com")
-          .build {
-            object : QModel<Account>(Account) {
-              val organizations by Account.Organization.init { organizationModelInitializer() }
-            }
-          }
+      val accountSearch by Query.searchAccounts.config {
+        first(10)
+        searchTerm("google.com")
+      }.init {
+        object : QModel<Account>(Account) {
+          val organizations by Account.Organization.init { organizationModelInitializer() }
+        }
+      }
     }
 
     assertThat(queryModel.toGraphql())
@@ -122,16 +122,16 @@ class UnionToGraphql {
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by Query.searchAccounts.config()
-          .first(10)
-          .searchTerm("google.com")
-          .build {
-            object : QModel<Account>(Account) {
-              val organizations by Account.Organization.init { organizationModelInitializer() }
+      val accountSearch by Query.searchAccounts.config {
+        first(10)
+        searchTerm("google.com")
+      }.init {
+        object : QModel<Account>(Account) {
+          val organizations by Account.Organization.init { organizationModelInitializer() }
 
-              val users by Account.User.init { userModelInitializer() }
-            }
-          }
+          val users by Account.User.init { userModelInitializer() }
+        }
+      }
     }
 
     assertThat(queryModel.toGraphql())
@@ -173,16 +173,16 @@ class UnionToGraphql {
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by Query.searchAccounts.config()
-          .first(10)
-          .searchTerm("google.com")
-          .build {
-            object : QModel<Account>(Account) {
-              val organizations by Account.Organization.init { organizationModelInitializer() }
-              val users by Account.User.init { userModelInitializer() }
-              val bots by Account.Bot.init { botModelInitializer() }
-            }
-          }
+      val accountSearch by Query.searchAccounts.config {
+        first(10)
+        searchTerm("google.com")
+      }.init {
+        object : QModel<Account>(Account) {
+          val organizations by Account.Organization.init { organizationModelInitializer() }
+          val users by Account.User.init { userModelInitializer() }
+          val bots by Account.Bot.init { botModelInitializer() }
+        }
+      }
     }
 
     assertThat(queryModel.toGraphql())
@@ -210,7 +210,7 @@ class UnionToGraphql {
   }
 }
 
-object Account : QSchemaUnion {
+object Account : QSchemaUnion by QSchemaUnion.create(Account) {
   val User: ListInitStub<User> by QTypeList.stub()
 
   val Bot: ListInitStub<Bot> by QTypeList.stub()
