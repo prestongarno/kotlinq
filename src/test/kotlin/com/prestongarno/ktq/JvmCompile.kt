@@ -28,6 +28,7 @@ object JvmCompile {
             it.asFile().exists() && it.asFile().canRead()
           }.joinToString(":")
       noStdlib = true
+      jvmTarget = "1.8"
       noReflect = true
       skipRuntimeVersionCheck = true
       reportPerf = true
@@ -62,7 +63,8 @@ class KtqCompileWrapper(private val root: File) {
 }
 
 internal fun QModel<*>.allGraphQl(): String {
-  model::class.declaredMemberProperties.map { it.call(model) as Adapter }
+  model::class.declaredMemberProperties.map { it.call(model) as FieldConfig }
+      .map { it.toAdapter() }
       .forEach { if (!fields.contains(it)) fields.add(it) }
   return toGraphql()
 }
@@ -70,22 +72,25 @@ internal fun QModel<*>.allGraphQl(): String {
 internal fun QModel<*>.mockGraphql(selectedFields: List<String>) =
     model::class.declaredMemberProperties
         .filter { selectedFields.contains(it.name) }
-        .map { fields.add(it.call(model) as Adapter) }
+        .map { fields.add(it.call(model) as Adapter<*>) }
         .let { toGraphql() }
 
 internal fun QModel<*>.mockInputGraphql(name: String, map: Map<String, Any>): QModel<*> = this.apply {
   model::class.declaredMemberProperties.find { it.name == name }!!
       .call(model)
       .also {
-        ((it as Adapter).args as MutableMap<String, Any>).putAll(map)
-        this.fields.add(it)
+        (it as FieldConfig).args.putAll(map)
+        this.fields.add(it.toAdapter())
       }
 }
 
+internal fun String.compactGraphql(): String = trimMargin("|")
+    .replace("[\\s\\n]*".toRegex(), "")
+    .replace("...on", "... on ")
 
 internal fun QModel<*>.setDelegateProvidingValue(name: String, value: () -> QModel<*>) =
     model::class.declaredMemberProperties.find { it.name == name }!!.call(model)
-        .also { (it as ModelProvider).setValue(value.invoke()); this.fields.add(it as Adapter) }
+        .also { (it as ModelProvider).setValue(value.invoke()); this.fields.add((it as FieldConfig).toAdapter()) }
 
 internal fun ModelProvider.setValue(value: QModel<*>) {
   when (this) {

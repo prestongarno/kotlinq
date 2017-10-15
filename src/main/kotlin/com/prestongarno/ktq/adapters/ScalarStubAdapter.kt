@@ -6,7 +6,6 @@ import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QConfigStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.Stub
-import com.prestongarno.ktq.formatAs
 import com.prestongarno.ktq.typedValueFrom
 import kotlin.reflect.KProperty
 
@@ -26,7 +25,7 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
 
   override fun config(): B = builderInit(ScalarStubAdapter<T, B>(graphqlProperty, builderInit))
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> =
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<T> =
       ScalarStubImpl(QProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -36,21 +35,18 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
         inst.fields.add(it)
       }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): T = //value ?: default ?:
-      throw IllegalStateException("graphqlName '${property.name}' was null")
-
   @Suppress("UNCHECKED_CAST") override fun <T> build(): Stub<T> = this as Stub<T>
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value) }
 
+  override fun toAdapter(): Adapter<*> = ScalarStubImpl(graphqlProperty, default, args.toMap())
 }
 
 private data class ScalarStubImpl<T>(
     override val graphqlProperty: QProperty,
     var default: T? = null,
     override val args: Map<String, Any> = emptyMap()
-) : Stub<T>,
-    Adapter {
+) : Adapter<T> {
 
   var value: T? = null
 
@@ -60,15 +56,10 @@ private data class ScalarStubImpl<T>(
             "$key: ${formatAs(value)}"
           } else ""
 
-  override fun withDefault(value: T): Stub<T> = apply {
-    default = value
-  }
+  // TODO: withDefault(... ) for primitive types
+  //override fun withDefault(value: T): Stub<T> = apply { default = value }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default!!
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T> {
-    throw IllegalStateException()
-  }
 
   override fun accept(result: Any?): Boolean {
     @Suppress("UNCHECKED_CAST")

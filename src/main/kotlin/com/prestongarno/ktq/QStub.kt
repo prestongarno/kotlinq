@@ -1,5 +1,6 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import kotlin.reflect.KProperty
 
@@ -7,6 +8,10 @@ import kotlin.reflect.KProperty
  * Simply a marker interface to group together the different
  * stubbable types for the StubMapper delegate to restrict delegation to */
 interface SchemaStub
+
+interface DelegateProvider<out T> : SchemaStub {
+  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<T>
+}
 
 interface InitStub<T : QSchemaType> : SchemaStub {
   fun <U : QModel<T>> init(of: () -> U): TypeStub<U, T>
@@ -27,27 +32,14 @@ interface CustomScalarConfigStub<T: CustomScalar, out A: CustomScalarArgBuilder>
   fun config(): A
 }
 
-interface Stub<T> : SchemaStub {
+interface Stub<T> : DelegateProvider<T> {
   fun withDefault(value: T): Stub<T>
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Stub<T>
-}
-interface CustomStub<U: QScalarMapper<T>, T> : SchemaStub {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomStub<U, T>
 }
 
-interface NullableStub<T> : SchemaStub {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T?
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T>
-}
+interface CustomStub<U: QScalarMapper<T>, T> : DelegateProvider<T>
 
-interface TypeStub<T, U> : SchemaStub where  T : QModel<U>, U : QSchemaType {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<T, U>
-}
+interface NullableStub<T> : DelegateProvider<T?>
 
-interface UnionStub : SchemaStub {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub
-}
+interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QSchemaType
+
+interface UnionStub : DelegateProvider<QModel<*>?>

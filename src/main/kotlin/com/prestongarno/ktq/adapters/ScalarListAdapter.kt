@@ -6,7 +6,6 @@ import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListStub
 import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.formatAs
 import com.prestongarno.ktq.typedListValueFrom
 import kotlin.reflect.KProperty
 
@@ -20,9 +19,7 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
 
   override fun config(): B = builderInit(ScalarListAdapter<I, B>(graphqlProperty, builderInit))
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = throw IllegalArgumentException()
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> =
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<List<I>> =
       ScalarListStubImpl<I>(
           QProperty.from(property,
           this.graphqlProperty.graphqlType,
@@ -36,20 +33,18 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
   @Suppress("UNCHECKED_CAST") override fun <T> build(): ListStub<T> = this as ListStub<T>
 
   override fun addArg(name: String, value: Any): ListArgBuilder = apply { args.put(name, value) }
+
+  override fun toAdapter(): Adapter<*> = ScalarListStubImpl<I>(graphqlProperty, args.toMap())
 }
 
 private data class ScalarListStubImpl<I>(
     override val graphqlProperty: QProperty,
     override val args: Map<String, Any>
-) : ListStub<I>,
-    Adapter {
+) : Adapter<List<I>> {
 
   private val values = mutableListOf<I>()
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> =
-      throw IllegalStateException()
 
   @Suppress("UNCHECKED_CAST") override fun accept(result: Any?): Boolean {
     if (result != null) {

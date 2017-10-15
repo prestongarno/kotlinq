@@ -9,7 +9,6 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QTypeConfigStub
 import com.prestongarno.ktq.TypeArgBuilder
 import com.prestongarno.ktq.TypeStub
-import com.prestongarno.ktq.formatAs
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
@@ -28,9 +27,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
 
   override fun config(): B = builderInit(TypeStubAdapter<I, P, B>(graphqlProperty, builderInit))
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): P = this.value
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> =
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<P> =
       TypeStubImpl(QProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -47,23 +44,20 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<T>, T : QSchemaType> build(init: () -> U): TypeStub<U, T>
       = apply { this.value = init() as P } as TypeStub<U, T>
 
+  override fun toAdapter(): Adapter<*> = TypeStubImpl(this.graphqlProperty, value, args.toMap())
+
   override fun addArg(name: String, value: Any): TypeArgBuilder = apply { args.put(name, value) }
 
 }
 
-private data class TypeStubImpl<I : QSchemaType, P : QModel<I>>(
+private data class TypeStubImpl<out I : QSchemaType, P : QModel<I>>(
     override val graphqlProperty: QProperty,
     override val value: P,
     override val args: Map<String, Any> = emptyMap()
-) : Adapter,
-    ModelProvider,
-    TypeStub<P, I> {
+) : Adapter<P>,
+    ModelProvider {
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): P = value
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeStub<P, I> {
-    throw IllegalStateException()
-  }
 
   override fun accept(result: Any?): Boolean {
     value.resolved = true

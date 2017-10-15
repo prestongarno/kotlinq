@@ -10,7 +10,6 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.TypeListArgBuilder
 import com.prestongarno.ktq.TypeListStub
-import com.prestongarno.ktq.formatAs
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
@@ -37,29 +36,23 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
   @Suppress("UNCHECKED_CAST") override fun <U : QModel<I>> init(of: () -> U): TypeListStub<U, I>
       = apply { this.init = of as () -> P } as TypeListStub<U, I>
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> {
-    throw IllegalArgumentException("Not initialized")
-  }
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> =
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<List<P>> =
       TypeListStubImpl(QProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
           this.graphqlProperty.graphqlName),
           init,
           args.toMap())
-          .also {
-            inst.fields.add(it)
-          }
+          .also { inst.fields.add(it) }
 
+  override fun toAdapter(): Adapter<*> = TypeListStubImpl(this.graphqlProperty, init, args)
 }
 
-private data class TypeListStubImpl<I : QSchemaType, P : QModel<I>>(
+private data class TypeListStubImpl<P : QModel<*>>(
     override val graphqlProperty: QProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
-) : TypeListStub<P, I>,
-    Adapter {
+) : Adapter<List<P>> {
 
   val results: MutableList<P> = mutableListOf()
 
@@ -72,10 +65,6 @@ private data class TypeListStubImpl<I : QSchemaType, P : QModel<I>>(
           } else "" + value.toGraphql(false)
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> {
-    throw IllegalStateException("Property delegates are final")
-  }
 
   override fun accept(result: Any?): Boolean {
     return if (result is JsonArray<*>) {

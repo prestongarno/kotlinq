@@ -8,7 +8,7 @@ import com.prestongarno.ktq.internal.ModelProvider
 import java.io.InputStream
 
 open class QModel<out T : QSchemaType>(val model: T) {
-  internal val fields by lazy { mutableListOf<Adapter>() }
+  internal val fields by lazy { mutableListOf<Adapter<*>>() }
 
   internal var resolved = false
 

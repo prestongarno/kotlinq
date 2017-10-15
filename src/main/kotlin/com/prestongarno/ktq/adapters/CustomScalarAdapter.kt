@@ -12,7 +12,6 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
-import com.prestongarno.ktq.formatAs
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, out B : CustomScalarArgBuilder>(
@@ -32,15 +31,10 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
       name: String,
       value: Any): Payload = apply { this.args.put(name, value) }
 
-  override fun getValue(
-      inst: QModel<*>,
-      property: KProperty<*>
-  ): Q = adapter.value
-
   override fun <R : QModel<*>> provideDelegate(
       inst: R,
       property: KProperty<*>
-  ): CustomStub<P, Q> = CustomScalarStubImpl<P, Q>(QProperty.from(property,
+  ): Adapter<Q> = CustomScalarStubImpl(QProperty.from(property,
       this.graphqlProperty.graphqlType,
       this.graphqlProperty.isList,
       this.graphqlProperty.graphqlName),
@@ -53,19 +47,19 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
     this.adapter = init as QScalarMapper<Q>
     return this as CustomStub<U, T>
   }
+
+  /**
+   * Utility function for tests/mocking */
+  override fun toAdapter(): Adapter<*> = CustomScalarStubImpl(graphqlProperty, args.toMap(), adapter)
 }
 
-private data class CustomScalarStubImpl<P : QScalarMapper<Q>, Q>(
+private data class CustomScalarStubImpl<out Q>(
     override val graphqlProperty: QProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: QScalarMapper<Q>
-) : Adapter,
-    CustomStub<P, Q> {
+) : Adapter<Q> {
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = adapter.value
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomStub<P, Q> =
-      throw IllegalStateException()
 
   override fun accept(result: Any?): Boolean {
     when (adapter) {

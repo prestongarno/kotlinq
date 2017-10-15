@@ -34,7 +34,6 @@ import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KProperty
 
 /**
@@ -76,7 +75,7 @@ class Grub<out T : SchemaStub>(private val typeName: String, private val isList:
         = Grub(name) { TypeStubAdapter<T, QModel<T>, TypeArgBuilder>(it, { it }) }
 
     fun <T : QSchemaUnion> union(objectModel: T, typeName: String): Grub<UnionInitStub<T>>
-        = Grub(typeName) { UnionAdapter(it, objectModel) }
+        = Grub(typeName) { UnionAdapter.new(it, objectModel) }
 
     fun <T : Any, A : ArgBuilder> configStub(typeName: String, arginit: (ArgBuilder) -> A): Grub<QConfigStub<T, A>>
         = Grub(typeName) { ScalarStubAdapter<T, A>(it, arginit) }

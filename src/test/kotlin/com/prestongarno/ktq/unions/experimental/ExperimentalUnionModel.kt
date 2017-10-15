@@ -10,6 +10,7 @@ import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.Test
 import kotlin.reflect.jvm.isAccessible
 import kotlin.test.assertTrue
@@ -77,7 +78,7 @@ class ExperimentalUnionModel {
       object : Thread() {
         override fun start() {
           for (i in 1..1000) MyBotModel().run {
-            require(this.onResponse(response));
+            require(this.onResponse(response))
             require(resolved)
           }
         }
@@ -125,6 +126,9 @@ class ExperimentalUnionModel {
     require(bot::creatorModel.let { it.isAccessible = true; it.getDelegate()!! }::class != TypeStubAdapter::class)
     bot.fields.forEach { println(it.graphqlProperty) }
     require(bor.borName == "My Bot")
+    (bot.ownerModel as? MyUserModel)?.user_email.also { email ->
+      require(email == "prestongarno@gmail.com")
+    }
   }
 }
 

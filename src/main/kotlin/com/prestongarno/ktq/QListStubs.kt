@@ -1,7 +1,6 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
-import kotlin.reflect.KProperty
 
 interface ListInitStub<T : QSchemaType> : SchemaStub {
   fun <U : QModel<T>> init(of: () -> U): TypeListStub<U, T>
@@ -21,16 +20,8 @@ interface CustomScalarListConfigStub<T: CustomScalar, out A: CustomScalarListArg
   fun config(): A
 }
 
-interface ListStub<T> : SchemaStub {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<T>
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<T>
-}
+interface ListStub<T> : DelegateProvider<List<T>>
 
-interface TypeListStub<U, T> : SchemaStub where U : QModel<T>, T : QSchemaType {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<U>
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<U, T>
-}
-interface CustomScalarListStub<U: QScalarListMapper<T>, T> : SchemaStub {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<T>
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomScalarListStub<U, T>
-}
+interface TypeListStub<U, out T> : DelegateProvider<List<U>> where U : QModel<T>, T : QSchemaType
+
+interface CustomScalarListStub<U: QScalarListMapper<T>, T> : DelegateProvider<List<T>>

@@ -12,7 +12,6 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
-import com.prestongarno.ktq.formatAs
 import kotlin.reflect.KProperty
 
 internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, Q, out B : CustomScalarListArgBuilder>(
@@ -30,10 +29,8 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
 
   override fun addArg(name: String, value: Any): Payload = apply { this.args.put(name, value) }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<Q> = adapter.value
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomScalarListStub<P, Q> =
-      CustomScalarListStubImpl<P, Q>(QProperty.from(property,
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<List<Q>> =
+      CustomScalarListStubImpl(QProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
           this.graphqlProperty.graphqlName),
@@ -49,14 +46,15 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
     this.adapter = init as P
     return this as CustomScalarListStub<U, T>
   }
+
+  override fun toAdapter(): Adapter<*> = CustomScalarListStubImpl(graphqlProperty, args.toMap(), adapter)
 }
 
-private data class CustomScalarListStubImpl<P : QScalarListMapper<Q>, Q>(
+private data class CustomScalarListStubImpl<out Q>(
     override val graphqlProperty: QProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: QScalarListMapper<Q>
-) : CustomScalarListStub<P, Q>,
-    Adapter {
+) : Adapter<List<Q>> {
 
   override fun toRawPayload(): String = graphqlProperty.graphqlName +
       if (args.isNotEmpty()) this.args.entries
@@ -67,9 +65,6 @@ private data class CustomScalarListStubImpl<P : QScalarListMapper<Q>, Q>(
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<Q> {
     return adapter.value
   }
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomScalarListStub<P, Q> =
-      throw IllegalStateException()
 
   override fun accept(result: Any?): Boolean {
     val values = (if (result is List<*>) result else listOf(result)).filterNotNull()

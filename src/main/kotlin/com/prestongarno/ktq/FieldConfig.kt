@@ -1,5 +1,7 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.adapters.Adapter
+
 internal abstract class FieldConfig(val graphqlProperty: QProperty) : Payload {
 
   /**
@@ -21,19 +23,8 @@ internal abstract class FieldConfig(val graphqlProperty: QProperty) : Payload {
     return graphqlProperty.hashCode()
   }
 
+  internal abstract fun toAdapter(): Adapter<*>
+
 }
 
-internal fun formatAs(value: Any): String {
-  return when (value) {
-    is Int, is Boolean, Float -> "$value"
-    is String -> "\\\"$value\\\""
-    is QInput -> value.toPayloadString()
-    is Enum<*> -> value.name
-    is List<*> -> value
-        .map { formatAs(it ?: "") }
-        .filter { it.isNotBlank() }
-        .joinToString(",", "[ ", " ]")
-    else -> throw UnsupportedOperationException("Unsupported type: $value")
-  }
-}
 

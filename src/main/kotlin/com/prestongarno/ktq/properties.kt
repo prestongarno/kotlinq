@@ -1,6 +1,7 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.adapters.formatAs
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -156,13 +157,13 @@ internal fun QModel<*>.prettyPrinted(indentation: Int): String =
 
 internal fun QModel<*>.prettyPrintUnion(indentation: Int) =
     (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
-      it.prettyPrinted().prepend("... fragment ")
+      it.prettyPrinted().prepend("... on ")
     }.indent(1)
         .plus("\n}")
         .indent(indentation))
         .replace("\\s*([(,])".toRegex(), "$1").trim()
 
-internal fun Adapter.prettyPrinted(): String = graphqlProperty.graphqlName +
+internal fun Adapter<*>.prettyPrinted(): String = graphqlProperty.graphqlName +
     (when {
       args.isNotEmpty() -> args.entries
           .joinToString(separator = ",", prefix = "(", postfix = ")") {
