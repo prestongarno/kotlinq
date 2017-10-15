@@ -69,7 +69,7 @@ class MockResponsesNestedTypes {
           .init { BasicUserModel() }
     }
 
-    assertThat(myUser.toGraphql())
+    assertThat(myUser.toGraphql(false))
         .isEqualTo("""
           |{
           |  name,
@@ -79,7 +79,7 @@ class MockResponsesNestedTypes {
           |    isHandicapped
           |  }
           |}
-          """.trimMargin("|"))
+          """.trimMargin("|").replace("[\\s\\n\n]*".toRegex(), ""))
 
     @Language("JSON") val response = """{
       "name": "Chow",
@@ -91,7 +91,6 @@ class MockResponsesNestedTypes {
 
     myUser.run {
       onResponse(response)
-
       assertTrue(myUser.name == "Chow")
       assertEquals(myUser.friendList.size, 2)
       myUser.friendList[0].run { assertTrue(name == "Preston" && age == 22) }

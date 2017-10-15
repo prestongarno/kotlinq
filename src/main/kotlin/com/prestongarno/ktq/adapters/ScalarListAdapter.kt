@@ -6,6 +6,7 @@ import com.prestongarno.ktq.ListConfig
 import com.prestongarno.ktq.ListStub
 import com.prestongarno.ktq.QProperty
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.formatAs
 import com.prestongarno.ktq.typedListValueFrom
 import kotlin.reflect.KProperty
 
@@ -16,6 +17,39 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
     ListStub<I>,
     ListConfig<I, B>,
     ListArgBuilder {
+
+  override fun config(): B = builderInit(ScalarListAdapter<I, B>(graphqlProperty, builderInit))
+
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = throw IllegalArgumentException()
+
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> =
+      ScalarListStubImpl<I>(
+          QProperty.from(property,
+          this.graphqlProperty.graphqlType,
+          this.graphqlProperty.isList,
+          this.graphqlProperty.graphqlName),
+          args.toMap()
+      ).also {
+        inst.fields.add(it)
+      }
+
+  @Suppress("UNCHECKED_CAST") override fun <T> build(): ListStub<T> = this as ListStub<T>
+
+  override fun addArg(name: String, value: Any): ListArgBuilder = apply { args.put(name, value) }
+}
+
+private data class ScalarListStubImpl<I>(
+    override val graphqlProperty: QProperty,
+    override val args: Map<String, Any>
+) : ListStub<I>,
+    Adapter {
+
+  private val values = mutableListOf<I>()
+
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
+
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> =
+      throw IllegalStateException()
 
   @Suppress("UNCHECKED_CAST") override fun accept(result: Any?): Boolean {
     if (result != null) {
@@ -30,16 +64,10 @@ internal class ScalarListAdapter<I, out B : ListArgBuilder>(
     return true
   }
 
-  val values = mutableListOf<I>()
+  override fun toRawPayload(): String = graphqlProperty.graphqlName +
+      if (args.isNotEmpty()) this.args.entries
+          .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
+            "$key: ${formatAs(value)}"
+          } else ""
 
-  override fun config(): B = builderInit(ScalarListAdapter<I, B>(graphqlProperty, builderInit))
-
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<I> = values
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<I> =
-      apply { super.onDelegate(inst, property) }
-
-  @Suppress("UNCHECKED_CAST") override fun <T> build(): ListStub<T> = this as ListStub<T>
-
-  override fun addArg(name: String, value: Any): ListArgBuilder = apply { args.put(name, value) }
 }

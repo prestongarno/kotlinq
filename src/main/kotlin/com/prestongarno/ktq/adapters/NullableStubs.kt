@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
 
 /**
  * Adapter for scalar fields */
-internal class NullableStubAdapter<T, out B: ArgBuilder>(
+/*internal class NullableStubAdapter<T, out B: ArgBuilder>(
     property: QProperty,
     val builderInit: (ArgBuilder) -> B
 ) : FieldConfig(property),
@@ -36,4 +36,4 @@ internal class NullableStubAdapter<T, out B: ArgBuilder>(
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value)  }
 
-}
+}*/

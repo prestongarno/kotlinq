@@ -8,7 +8,7 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
-import com.prestongarno.ktq.adapters.TypeStubImpl
+import com.prestongarno.ktq.adapters.TypeStubAdapter
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 import kotlin.reflect.jvm.isAccessible
@@ -122,7 +122,8 @@ class ExperimentalUnionModel {
     bor.accept(Parser().parse(response.byteInputStream()) as JsonObject)
     // TODO -> this is because `onProvideDelegate` doesn't instantiate a new instance
     bot.accept(Parser().parse(botresponse.byteInputStream()) as JsonObject)
-    require(bot::creatorModel.let { it.isAccessible = true; it.getDelegate()!! }::class == TypeStubImpl::class)
+    require(bot::creatorModel.let { it.isAccessible = true; it.getDelegate()!! }::class != TypeStubAdapter::class)
+    bot.fields.forEach { println(it.graphqlProperty) }
     require(bor.borName == "My Bot")
   }
 }

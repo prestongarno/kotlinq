@@ -10,6 +10,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.TypeListArgBuilder
 import com.prestongarno.ktq.TypeListStub
+import com.prestongarno.ktq.formatAs
 import com.prestongarno.ktq.internal.ModelProvider
 import kotlin.reflect.KProperty
 
@@ -23,20 +24,6 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
     TypeListArgBuilder,
     ModelProvider {
 
-  override fun accept(result: Any?): Boolean {
-    return if (result is JsonArray<*>) {
-      var resolvedOkay = true
-      result.filterIsInstance<JsonObject>().forEach { element ->
-        this.results.add(init().apply {
-          if(!this.accept(element))
-            resolvedOkay = false
-        })
-      }
-      resolvedOkay
-    } else false
-  }
-
-  val results = mutableListOf<P>()
   lateinit var init: () -> P
   override val value: QModel<*> by lazy { init() }
 
@@ -51,10 +38,54 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, out B : TypeListA
       = apply { this.init = of as () -> P } as TypeListStub<U, I>
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> {
-    return results
+    throw IllegalArgumentException("Not initialized")
   }
 
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> =
-      apply { super.onDelegate(inst, property) }
+      TypeListStubImpl(QProperty.from(property,
+          this.graphqlProperty.graphqlType,
+          this.graphqlProperty.isList,
+          this.graphqlProperty.graphqlName),
+          init,
+          args.toMap())
+          .also {
+            inst.fields.add(it)
+          }
+
+}
+
+private data class TypeListStubImpl<I : QSchemaType, P : QModel<I>>(
+    override val graphqlProperty: QProperty,
+    val init: () -> P,
+    override val args: Map<String, Any> = emptyMap()
+) : TypeListStub<P, I>,
+    Adapter {
+
+  val results: MutableList<P> = mutableListOf()
+
+  val value: QModel<*> by lazy { init() }
+
+  override fun toRawPayload(): String = graphqlProperty.graphqlName +
+      if (args.isNotEmpty()) this.args.entries
+          .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
+            "$key: ${formatAs(value)}"
+          } else "" + value.toGraphql(false)
+
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results
+
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<P, I> {
+    throw IllegalStateException("Property delegates are final")
+  }
+
+  override fun accept(result: Any?): Boolean {
+    return if (result is JsonArray<*>) {
+      result.filterIsInstance<JsonObject>().filterNot { element ->
+        init().let {
+          this.results.add(it)
+          it.accept(element)
+        }
+      }.isEmpty()
+    } else false
+  }
 
 }

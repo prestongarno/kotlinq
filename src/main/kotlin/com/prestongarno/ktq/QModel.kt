@@ -17,7 +17,8 @@ open class QModel<out T : QSchemaType>(val model: T) {
   fun isResolved(): Boolean = resolved
 
   fun toGraphql(pretty: Boolean = true): String {
-    return if (pretty) prettyPrinted(0) else fields.joinToString(",", "{", "}") { it.toRawPayload() }
+    return if (pretty) prettyPrinted(0)
+    else fields.joinToString(",", "{", "}") { it.toRawPayload() }
   }
 
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
@@ -34,14 +35,6 @@ open class QModel<out T : QSchemaType>(val model: T) {
     }.isEmpty()
     return resolved
   }
-
-  internal fun edges() = fields.map {
-    when (it) {
-      is FragmentProvider -> it.fragments.map { it.model }
-      is ModelProvider -> listOf(it.value)
-      else -> emptyList()
-    }
-  }.flatten().toSet()
 
   internal fun fragmentsToPayload() = fields.filterIsInstance<FragmentProvider>()
       .flatMap { it.fragments }

@@ -40,12 +40,12 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, ou
   override fun <R : QModel<*>> provideDelegate(
       inst: R,
       property: KProperty<*>
-  ): CustomStub<P, Q> = CustomScalarStubImpl(QProperty.from(property,
+  ): CustomStub<P, Q> = CustomScalarStubImpl<P, Q>(QProperty.from(property,
       this.graphqlProperty.graphqlType,
       this.graphqlProperty.isList,
       this.graphqlProperty.graphqlName),
       args.toMap(),
-      adapter)
+      adapter).also { inst.fields.add(it) }
 
   override fun <U : QScalarMapper<A>, A> init(of: U): CustomStub<U, A> = this.build(of)
 
@@ -64,9 +64,8 @@ private data class CustomScalarStubImpl<P : QScalarMapper<Q>, Q>(
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = adapter.value
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomStub<P, Q> {
-    throw IllegalStateException()
-  }
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomStub<P, Q> =
+      throw IllegalStateException()
 
   override fun accept(result: Any?): Boolean {
     when (adapter) {

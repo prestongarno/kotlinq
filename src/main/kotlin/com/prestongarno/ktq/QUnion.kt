@@ -59,10 +59,6 @@ internal open class UnionAdapter<I : QSchemaUnion>(
     return value ?: throw IllegalStateException("null")
   }
 
-  override fun onDelegate(inst: QModel<*>, property: KProperty<*>) {
-    inst.fields.add(this)
-  }
-
   override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): UnionStub {
 
     val next = UnionAdapter(QProperty.from(
@@ -77,7 +73,7 @@ internal open class UnionAdapter<I : QSchemaUnion>(
       dispatcher?.invoke(model)
       queue.pop()
     }
-    next.onDelegate(inst, property)
+    inst.fields.add(next)
     return next
   }
 

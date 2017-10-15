@@ -1,5 +1,6 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.compiler.asFile
@@ -61,7 +62,7 @@ class KtqCompileWrapper(private val root: File) {
 }
 
 internal fun QModel<*>.allGraphQl(): String {
-  model::class.declaredMemberProperties.map { it.call(model) as FieldConfig }
+  model::class.declaredMemberProperties.map { it.call(model) as Adapter }
       .forEach { if (!fields.contains(it)) fields.add(it) }
   return toGraphql()
 }
@@ -69,14 +70,14 @@ internal fun QModel<*>.allGraphQl(): String {
 internal fun QModel<*>.mockGraphql(selectedFields: List<String>) =
     model::class.declaredMemberProperties
         .filter { selectedFields.contains(it.name) }
-        .map { fields.add(it.call(model) as FieldConfig) }
+        .map { fields.add(it.call(model) as Adapter) }
         .let { toGraphql() }
 
 internal fun QModel<*>.mockInputGraphql(name: String, map: Map<String, Any>): QModel<*> = this.apply {
   model::class.declaredMemberProperties.find { it.name == name }!!
       .call(model)
       .also {
-        (it as FieldConfig).args.putAll(map)
+        ((it as Adapter).args as MutableMap<String, Any>).putAll(map)
         this.fields.add(it)
       }
 }
@@ -84,7 +85,7 @@ internal fun QModel<*>.mockInputGraphql(name: String, map: Map<String, Any>): QM
 
 internal fun QModel<*>.setDelegateProvidingValue(name: String, value: () -> QModel<*>) =
     model::class.declaredMemberProperties.find { it.name == name }!!.call(model)
-        .also { (it as ModelProvider).setValue(value.invoke()); this.fields.add(it as FieldConfig) }
+        .also { (it as ModelProvider).setValue(value.invoke()); this.fields.add(it as Adapter) }
 
 internal fun ModelProvider.setValue(value: QModel<*>) {
   when (this) {

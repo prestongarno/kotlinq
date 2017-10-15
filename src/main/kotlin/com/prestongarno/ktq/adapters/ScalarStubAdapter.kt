@@ -31,7 +31,8 @@ internal class ScalarStubAdapter<T, out B : ArgBuilder>(
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
           this.graphqlProperty.graphqlName),
-          default).also {
+          default
+      ).also {
         inst.fields.add(it)
       }
 

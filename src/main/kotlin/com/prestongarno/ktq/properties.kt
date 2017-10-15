@@ -63,23 +63,26 @@ internal class PropertyImpl(
     result = 31 * result + isList.hashCode()
     return result
   }
+
+  override fun toString(): String =
+      "PropertyImpl(graphqlType='$graphqlType', graphqlName='$graphqlName', isList=$isList, typeKind=$typeKind)"
 }
 
 enum class PropertyType {
-    INT,
-    BOOLEAN,
-    STRING,
-    FLOAT,
-    ENUM,
-    OBJECT,
-    CUSTOM_SCALAR;
+  INT,
+  BOOLEAN,
+  STRING,
+  FLOAT,
+  ENUM,
+  OBJECT,
+  CUSTOM_SCALAR;
 
-    companion object {
-        fun from(name: String): PropertyType = all[name]?: OBJECT
+  companion object {
+    fun from(name: String): PropertyType = all[name.toUpperCase()] ?: OBJECT
 
-        private val all = PropertyType.values().map { Pair(it.name, it) }.toMap()
-      }
+    private val all = PropertyType.values().map { Pair(it.name, it) }.toMap()
   }
+}
 
 internal fun KProperty<*>.typedValueFrom(value: Any): Any? {
   return if (this.returnType.jvmErasure == value::class)
@@ -128,7 +131,9 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
 class DispatchQueue {
   private var value: QSchemaUnion? = null
 
-  internal fun put(value: QSchemaUnion) { this.value = value}
+  internal fun put(value: QSchemaUnion) {
+    this.value = value
+  }
 
   internal fun pop() {
     value = null
@@ -161,7 +166,8 @@ internal fun Adapter.prettyPrinted(): String = graphqlProperty.graphqlName +
     (when {
       args.isNotEmpty() -> args.entries
           .joinToString(separator = ",", prefix = "(", postfix = ")") {
-            "${it.key}: ${formatAs(it.value)}" }
+            "${it.key}: ${formatAs(it.value)}"
+          }
       this is ModelProvider -> value.toGraphql()
       else -> ""
     }).replace("\\s*([(,])".toRegex(), "$1").trim()

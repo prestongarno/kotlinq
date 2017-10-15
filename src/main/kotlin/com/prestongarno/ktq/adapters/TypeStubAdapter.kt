@@ -36,7 +36,8 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, out B : TypeArgBu
           this.graphqlProperty.isList,
           this.graphqlProperty.graphqlName),
           value,
-          args.toMap()).also {
+          args.toMap()
+      ).also {
         inst.fields.add(it)
       }
 

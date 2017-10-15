@@ -22,12 +22,10 @@ class MockedHttpResults {
           |}
           """.trimMargin("|"))
 
-    @Suppress("UNCHECKED_CAST")
-    (firstGoal.fields.find { it.graphqlProperty.graphqlName == "name" }
-        as ScalarStubAdapter<String, ArgBuilder>).value = "1.0 release of this project"
-    @Suppress("UNCHECKED_CAST")
-    (firstGoal.fields.find { it.graphqlProperty.graphqlName == "description" }
-        as ScalarStubAdapter<String, ArgBuilder>).value = "Safe, easy-to-use graphql queries"
+    //@Suppress("UNCHECKED_CAST")
+    //(firstGoal.fields.find { it.graphqlProperty.graphqlName == "name" } as ScalarStubAdapter<String, ArgBuilder>).value = "1.0 release of this project"
+    //@Suppress("UNCHECKED_CAST")
+    //(firstGoal.fields.find { it.graphqlProperty.graphqlName == "description" } as ScalarStubAdapter<String, ArgBuilder>).value = "Safe, easy-to-use graphql queries"
 
     assertThat(firstGoal.name).isEqualTo("1.0 release of this project")
     assertThat(firstGoal.desc).isEqualTo("Safe, easy-to-use graphql queries")

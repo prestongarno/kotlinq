@@ -1,17 +1,10 @@
 package com.prestongarno.ktq
 
-import kotlin.reflect.KProperty
-
 internal abstract class FieldConfig(val graphqlProperty: QProperty) : Payload {
 
   /**
    * A map of arguments for the field (for graphql) */
   val args by lazy { mutableMapOf<String, Any>() }
-
-  /**
-   * The actual graphqlName for the delegation set value. does not have to be the same name and/or the same return type
-   */
-  lateinit var targetProperty: KProperty<*>
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
