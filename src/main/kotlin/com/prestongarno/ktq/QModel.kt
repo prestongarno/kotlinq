@@ -2,91 +2,56 @@ package com.prestongarno.ktq
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.prestongarno.ktq.adapters.FieldAdapter
+import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.internal.FragmentProvider
 import java.io.InputStream
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.starProjectedType
-import kotlin.reflect.jvm.jvmErasure
 
 open class QModel<out T : QSchemaType>(val model: T) {
+  internal val fields by lazy { mutableListOf<Adapter>() }
 
-  internal val fields = mutableListOf<FieldAdapter>()
+  internal var resolved = false
 
-  override fun toString() = this.toGraphql()
+  internal val graphqlType by lazy { "${model::class.simpleName}" }
 
-  fun toGraphql(indentation: Int = 0): String {
-    return if (model is QSchemaUnion) unionToGraphql(indentation) else
-      ((fields.joinToString(separator = ",\n") { it.toRawPayload() }
-          .indent(1)) + "\n}").prepend("{\n").indent(indentation)
-          .replace("\\s*([(,])".toRegex(), "$1").trim()
+  fun isResolved(): Boolean = resolved
+
+  fun toGraphql(pretty: Boolean = true): String {
+    return if (pretty) prettyPrinted(0)
+    else fields.joinToString(",", "{", "}") { it.toRawPayload() }
   }
 
-  private fun unionToGraphql(indentation: Int): String =
-      (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
-        it.toRawPayload().prepend("... on ")
-      }.indent(1)
-          .plus("\n}")
-          .indent(indentation))
-          .replace("\\s*([(,])".toRegex(), "$1").trim()
+  override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
+      fields.joinToString(",", "[", "]") { it.toRawPayload() }
 
-  internal fun onResponse(input: InputStream) {
-    (Parser().parse(input) as JsonObject).run {
-      fields.forEach {
-        it.accept(this[it.fieldName])
-      }
-    }
-  }
+  internal fun onResponse(input: InputStream): Boolean =
+      (Parser().parse(input) as? JsonObject)?.let { accept(it) } == true
 
   internal fun onResponse(input: String) = onResponse(input.byteInputStream())
 
-  internal fun accept(input: JsonObject) = this.fields.forEach { it.accept(input[it.fieldName]) }
-}
+  internal open fun accept(input: JsonObject): Boolean {
+    resolved = fields.filterNot {
+      it.accept(input[it.qproperty.graphqlName])
+    }.isEmpty()
+    return resolved
+  }
 
-fun String.indent(times: Int = 1): String =
-    replace("^".toRegex(), Jsonify.INDENT.repeat(times))
-        .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
 
-fun String.prepend(of: String): String = of + this
+    other as QModel<*>
 
-fun KProperty<*>.typedValueFrom(value: Any): Any? {
-  return if (this.returnType.jvmErasure == value::class)
-    value
-  else when (this.returnType.jvmErasure) {
-    Int::class -> "$value".toIntOrNull()
-    Boolean::class -> "$value".toBoolean()
-    Float::class -> "$value".toFloatOrNull()
-    String::class -> "$value"
-    else -> {
-      if (returnType.jvmErasure.java.isEnum)
-        returnType.jvmErasure.javaObjectType.enumConstants.find {
-          (it as Enum<*>).name == "$value"
-        }
-      else null
-    }
+    if (model != other.model) return false
+    if (resolved != other.resolved) return false
+    if (!fields.containsAll(other.fields)) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = model.hashCode()
+    result = 31 * result + resolved.hashCode()
+    return result
   }
 }
 
-fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
-  val type: KClass<*>? = returnType.arguments[0].type?.classifier as KClass<*>
-  val values = (value as? List<*>)?.filterNotNull() ?: listOf(value)
-  val responseType: KClass<*> = if (values.isNotEmpty()) values[0]::class else Any::class
-
-  return when (type) {
-    null -> emptyList()
-    responseType -> values
-    Int::class -> values.mapNotNull { "$it".toIntOrNull() }
-    Boolean::class -> values.map { "$it".toBoolean() }
-    Float::class -> values.mapNotNull { "$it".toFloatOrNull() }
-    String::class -> values.map { "$it" }
-    else -> {
-      if (type.java.isEnum) {
-        values.mapNotNull {
-          type.java.enumConstants.find { (it as Enum<*>).name == "$it" }
-        }
-      } else {
-        emptyList()
-      }
-    }
-  }
-}

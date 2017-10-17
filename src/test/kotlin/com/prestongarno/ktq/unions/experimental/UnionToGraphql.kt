@@ -1,4 +1,4 @@
-package com.prestongarno.ktq.unions
+package com.prestongarno.ktq.unions.experimental
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.CustomScalar
@@ -7,19 +7,17 @@ import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.compiler.QCompiler
 import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.compiler.QCompiler
 import com.prestongarno.ktq.QSchemaType.QCustomScalar
 import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QType
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.Stub
-import com.prestongarno.ktq.TypeListArgBuilder
-import com.prestongarno.ktq.URL
 import org.junit.Ignore
 import org.junit.Test
-
+/*
 class UnionToGraphql {
 
   @Ignore @Test fun initializeSchemaModelForFile() {
@@ -31,34 +29,34 @@ class UnionToGraphql {
           |  login: String
           |}
           |
-          |type User implements Actor {
+          |createTypeStub User implements Actor {
           |  login: String
           |  email: String?
           |  repositories: [Repository]
           |}
           |
-          |type Organization implements Actor {
+          |createTypeStub Organization implements Actor {
           |  login: String
           |  members: [User]
           |  owner: User
           |  repositories: [Repository]
           |}
           |
-          |union Account = User | Bot | Organization
+          |createUnionStub Account = User | Bot | Organization
           |
-          |type Bot implements Actor {
+          |createTypeStub Bot implements Actor {
           |  login: String
           |  owner: User
           |}
           |
           |scalar URL
           |
-          |type Repository {
+          |createTypeStub Repository {
           |  name: String
           |  url: URL
           |}
           |
-          |type Query {
+          |createTypeStub Query {
           |  searchAccounts(first: Int, searchTerm: String!): [Account]
           |}
           |
@@ -71,32 +69,32 @@ class UnionToGraphql {
 
     val userModelInitializer = {
       object : QModel<User>(User) {
-        val login by model.login
+        val login by User.login
       }
     }
     val organizationModelInitializer = {
       object : QModel<Organization>(Organization) {
-        val login by model.login
-        val members by model.members.init { userModelInitializer() }
+        val login by Organization.login
+        val members by Organization.members.init { userModelInitializer() }
       }
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by model.searchAccounts.config()
-          .first(10)
-          .searchTerm("google.com")
-          .build {
-            object : QModel<Account>(Account) {
-              val organizations by model.Organization.init { organizationModelInitializer() }
-            }
-          }
+      val accountSearch by Query.searchAccounts.config {
+        first(10)
+        searchTerm("google.com")
+      }.init {
+        object : QModel<Account>(Account) {
+          val organizations by Account.Organization.init { organizationModelInitializer() }
+        }
+      }
     }
 
     assertThat(queryModel.toGraphql())
         .isEqualTo("""
           |{
           |  searchAccounts(first: 10,searchTerm: \"google.com\"){
-          |    ... on Organization{
+          |    ... fragment Organization{
           |      login,
           |      members{
           |        login
@@ -108,44 +106,44 @@ class UnionToGraphql {
 
   }
 
-  @Test fun multipleUnionFields() {
+  @Ignore @Test fun multipleUnionFields() {
 
     val userModelInitializer = {
       object : QModel<User>(User) {
-        val login by model.login
+        val login by User.login
       }
     }
     val organizationModelInitializer = {
       object : QModel<Organization>(Organization) {
-        val login by model.login
-        val members by model.members.init { userModelInitializer() }
+        val login by Organization.login
+        val members by Organization.members.init { userModelInitializer() }
       }
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by model.searchAccounts.config()
-          .first(10)
-          .searchTerm("google.com")
-          .build {
-            object : QModel<Account>(Account) {
-              val organizations by model.Organization.init { organizationModelInitializer() }
+      val accountSearch by Query.searchAccounts.config {
+        first(10)
+        searchTerm("google.com")
+      }.init {
+        object : QModel<Account>(Account) {
+          val organizations by Account.Organization.init { organizationModelInitializer() }
 
-              val users by model.User.init { userModelInitializer() }
-            }
-          }
+          val users by Account.User.init { userModelInitializer() }
+        }
+      }
     }
 
     assertThat(queryModel.toGraphql())
         .isEqualTo("""
           |{
           |  searchAccounts(first: 10,searchTerm: \"google.com\"){
-          |    ... on Organization{
+          |    ... fragment Organization{
           |      login,
           |      members{
           |        login
           |      }
           |    },
-          |    ... on User{
+          |    ... fragment User{
           |      login
           |    }
           |  }
@@ -153,53 +151,53 @@ class UnionToGraphql {
           """.trimMargin("|"))
   }
 
-  @Test fun tripleUnionFields() {
+  @Ignore @Test fun tripleUnionFields() {
 
     val userModelInitializer = {
       object : QModel<User>(User) {
-        val login by model.login
+        val login by User.login
       }
     }
     val botModelInitializer = {
       object : QModel<Bot>(Bot) {
-        val login by model.login
-        val owner by model.owner.init { userModelInitializer() }
+        val login by Bot.login
+        val owner by Bot.owner.init { userModelInitializer() }
       }
     }
     val organizationModelInitializer = {
       object : QModel<Organization>(Organization) {
-        val login by model.login
-        val members by model.members.init { userModelInitializer() }
+        val login by Organization.login
+        val members by Organization.members.init { userModelInitializer() }
       }
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by model.searchAccounts.config()
-          .first(10)
-          .searchTerm("google.com")
-          .build {
-            object : QModel<Account>(Account) {
-              val organizations by model.Organization.init { organizationModelInitializer() }
-              val users by model.User.init { userModelInitializer() }
-              val bots by model.Bot.init { botModelInitializer() }
-            }
-          }
+      val accountSearch by Query.searchAccounts.config {
+        first(10)
+        searchTerm("google.com")
+      }.init {
+        object : QModel<Account>(Account) {
+          val organizations by Account.Organization.init { organizationModelInitializer() }
+          val users by Account.User.init { userModelInitializer() }
+          val bots by Account.Bot.init { botModelInitializer() }
+        }
+      }
     }
 
     assertThat(queryModel.toGraphql())
         .isEqualTo("""
           |{
           |  searchAccounts(first: 10,searchTerm: \"google.com\"){
-          |    ... on Organization{
+          |    ... fragment Organization{
           |      login,
           |      members{
           |        login
           |      }
           |    },
-          |    ... on User{
+          |    ... fragment User{
           |      login
           |    },
-          |    ... on Bot{
+          |    ... fragment Bot{
           |      login,
           |      owner{
           |        login
@@ -211,7 +209,7 @@ class UnionToGraphql {
   }
 }
 
-object Account : QSchemaUnion {
+object Account : QSchemaUnion by QSchemaUnion.create(Account) {
   val User: ListInitStub<User> by QTypeList.stub()
 
   val Bot: ListInitStub<Bot> by QTypeList.stub()
@@ -224,13 +222,13 @@ interface Actor : QSchemaType {
 }
 
 object Bot : QSchemaType, Actor {
-  override val login: Stub<String> by QScalar.stub()
+  override val login: Stub<String> by QScalar.stringStub()
 
   val owner: InitStub<User> by QType.stub()
 }
 
 object Organization : QSchemaType, Actor {
-  override val login: Stub<String> by QScalar.stub()
+  override val login: Stub<String> by QScalar.stubPrimitive()
 
   val members: ListInitStub<User> by QTypeList.stub()
 
@@ -249,7 +247,7 @@ object Query : QSchemaType {
 }
 
 object Repository : QSchemaType {
-  val name: Stub<String> by QScalar.stub()
+  val name: Stub<String> by QScalar.stubPrimitive()
 
   val url: CustomScalarInitStub<URL> by QCustomScalar.stub()
 }
@@ -257,9 +255,9 @@ object Repository : QSchemaType {
 object URL : CustomScalar
 
 object User : QSchemaType, Actor {
-  override val login: Stub<String> by QScalar.stub()
+  override val login: Stub<String> by QScalar.stubPrimitive()
 
-  val email: Stub<String> by QScalar.stub()
+  val email: Stub<String> by QScalar.stubPrimitive()
 
   val repositories: ListInitStub<Repository> by QTypeList.stub()
-}
+}*/

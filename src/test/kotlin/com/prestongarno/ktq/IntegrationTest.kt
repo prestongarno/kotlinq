@@ -1,4 +1,4 @@
-package com.prestongarno.ktq
+/*package com.prestongarno.ktq
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.compiler.QCompiler
@@ -36,11 +36,11 @@ class IntegrationTest {
     compileOutputDir.deleteRecursively()
   }
 
-  @Test fun generateSourceToPayload() {
+  @Ignore @Test fun generateSourceToPayload() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
-          |type Taco {
+          |createTypeStub Taco {
           |  contents: [String]
           |}
           """.trimMargin("|"))
@@ -58,12 +58,12 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun generateMultiFieldTypes() {
+  @Ignore @Test fun generateMultiFieldTypes() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |
-          |type Taco {
+          |createTypeStub Taco {
           |  contents: [String]
           |  weight: Float
           |  orderNumber: Int
@@ -86,12 +86,12 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun generateMultiFieldSelected() {
+  @Ignore @Test fun generateMultiFieldSelected() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |
-          |type Taco {
+          |createTypeStub Taco {
           |  contents: [String]
           |  weight: Float
           |  orderNumber: Int
@@ -112,12 +112,12 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun generateMutation() {
+  @Ignore @Test fun generateMutation() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |
-          |type Burger {
+          |createTypeStub Burger {
           |  addToppingMutation(selection: [String], burger: Burger): Boolean
           |}
           |
@@ -137,12 +137,12 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun recursiveTypes() {
+  @Ignore @Test fun recursiveTypes() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |
-          |type User {
+          |createTypeStub User {
           |  friends: [User]
           |}
           |
@@ -166,7 +166,7 @@ class IntegrationTest {
     }
   }
 
-  @Test
+  @Ignore @Test
   fun inheritanceTestSingle() {
     QCompiler.initialize()
         .packageName(PACK)
@@ -176,7 +176,7 @@ class IntegrationTest {
           |  login: String!
           |}
           |
-          |type User implements Actor {
+          |createTypeStub User implements Actor {
           |  login: String!
           |  email: String
           |}
@@ -202,7 +202,7 @@ class IntegrationTest {
 
   }
 
-  @Test fun inheritanceTestMultiple() {
+  @Ignore @Test fun inheritanceTestMultiple() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -215,7 +215,7 @@ class IntegrationTest {
           |  uid: String!
           |}
           |
-          |type User implements Actor, Node {
+          |createTypeStub User implements Actor, Node {
           |  login: String!
           |  email: String
           |  uid: String
@@ -245,12 +245,12 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarTest() {
+  @Ignore @Test fun customScalarTest() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |
-          |type Foo {
+          |createTypeStub Foo {
           |  url: URL
           |}
           |
@@ -280,7 +280,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarInterfaceTest() {
+  @Ignore @Test fun customScalarInterfaceTest() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -289,7 +289,7 @@ class IntegrationTest {
           |  url: URL
           |}
           |
-          |type Foo implements Bar{
+          |createTypeStub Foo implements Bar{
           |  url: URL
           |}
           |
@@ -322,7 +322,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarInterfaceMultipleFields() {
+  @Ignore @Test fun customScalarInterfaceMultipleFields() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -331,7 +331,7 @@ class IntegrationTest {
           |  url: URL
           |}
           |
-          |type Foo implements Bar{
+          |createTypeStub Foo implements Bar{
           |  number: Int
           |  url: URL
           |}
@@ -365,7 +365,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarInheritingMultipleFields() {
+  @Ignore @Test fun customScalarInheritingMultipleFields() {
             QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -375,7 +375,7 @@ class IntegrationTest {
           |  url: URL
           |}
           |
-          |type Foo implements Bar  {
+          |createTypeStub Foo implements Bar  {
           |  number: Int
           |  url: URL
           |}
@@ -409,12 +409,12 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarMultipleCustomFields() {
+  @Ignore @Test fun testCustomScalarMultipleCustomFields() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |
-          |type Foo {
+          |createTypeStub Foo {
           |
           |  url: URL
           |
@@ -448,7 +448,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarMultipleInherited() {
+  @Ignore @Test fun testCustomScalarMultipleInherited() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -460,7 +460,7 @@ class IntegrationTest {
           |interface Baz {
           |  url: URL
           |}
-          |type Foo implements Bar, Baz {
+          |createTypeStub Foo implements Bar, Baz {
           |  url: URL
           |}
           |
@@ -494,12 +494,12 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarFieldWithInput() {
+  @Ignore @Test fun testCustomScalarFieldWithInput() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |scalar URL
-          |type Foo {
+          |createTypeStub Foo {
           |  url(shortened: Boolean): URL
           |}
           """.trimMargin("|"))
@@ -531,12 +531,12 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarFieldWithMultipleInputArgs() {
+  @Ignore @Test fun testCustomScalarFieldWithMultipleInputArgs() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
           |scalar URL
-          |type Foo {
+          |createTypeStub Foo {
           |  url(
           |    shortened: Boolean,
           |    encoding: String
@@ -575,7 +575,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarFieldWithEnumAsArgument() {
+  @Ignore @Test fun testCustomScalarFieldWithEnumAsArgument() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -588,7 +588,7 @@ class IntegrationTest {
           |
           |
           |
-          |type Foo {
+          |createTypeStub Foo {
           |  url(
           |    shortened: Boolean,
           |    what: What
@@ -623,7 +623,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testDiamondTypesWithCustomScalarField() {
+  @Ignore @Test fun testDiamondTypesWithCustomScalarField() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -635,7 +635,7 @@ class IntegrationTest {
           |interface Baz {
           |  url(shortened: Boolean): URL
           |}
-          |type Foo implements Bar, Baz {
+          |createTypeStub Foo implements Bar, Baz {
           |  url(shortened: Boolean): URL
           |}
           |
@@ -672,7 +672,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testDiamondConflictingFieldsCustomScalar() {
+  @Ignore @Test fun testDiamondConflictingFieldsCustomScalar() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -686,7 +686,7 @@ class IntegrationTest {
           |    encoding: String
           |  ): URL
           |}
-          |type Foo implements Bar, Baz {
+          |createTypeStub Foo implements Bar, Baz {
           |  url(shortened: Boolean,encoding: String): URL
           |}
           |
@@ -734,4 +734,4 @@ class IntegrationTest {
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
   }
 }
-
+*/

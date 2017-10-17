@@ -10,15 +10,15 @@ interface SomeConflict {
 
 scalar URLY
 
-type UserFoo implements ActorFoo {
+createTypeStub UserFoo implements ActorFoo {
     avatar(size: Int): URLY!
     login: String!
     url: URLY!
 }
 
-type OrganizationFoo implements ActorFoo SomeConflict {
+createTypeStub OrganizationFoo implements ActorFoo SomeConflict {
     owner: UserFoo
-    name: String
+    prop: String
     members: [UserFoo]
     avatar(size: Int): URLY!
     login: String!
