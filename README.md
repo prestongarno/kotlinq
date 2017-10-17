@@ -6,6 +6,9 @@
  [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.2) ](https://bintray.com/prestongarno/ktq/ktq-client/0.2/link)
 
 
+## Documentation
+
+The documentation has moved to a dedicated site. [Check it out](https://prestongarno.github.io/ktq/)
 
 
 ### Adding dependency from Central or JCenter
@@ -15,7 +18,7 @@ To use in a project, add the dependency to a gradle buildscript:
       compile 'com.prestongarno.ktq:ktq-client:0.2'
       
 Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
- the gradle syntax for configuring compilation of graphql schema IDL as kotlin classes. 
+ the gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
       classpath 'com.prestongarno.ktq:ktq-gradle:0.2'
@@ -40,11 +43,11 @@ in the `model` instance which a concrete query/mutation class delegates its prop
 
     class BusinessQuery(searchTerm: String) : QModel(Query) {
     
-      val value: List<BusinessNodesModel> by model.search
-          .config()
-              .term(searchTerm)
-              .limit(10)
-              .build { BusinessesNodesModel() }
+      val result: List<BusinessNodesModel> by model.search
+          .config {
+            term = searchTerm
+            limit = 10
+          }.init { BusinessesNodesModel() }
           
     }
 
@@ -76,14 +79,14 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
       }
     }
     
-For a complete guide fragment how to use all other graphql types such as Unions and Nullable fields,
+For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
 check out the wiki.
 
 ### How to execute a query or mutation:
 
 This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
-adds a dependency fragment [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
-describe your model, and execute. This is an example for getting your github name (not shown: compiled github IDL schema):
+adds a dependency on [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
+describe your model, and execute. This is an example for getting your github name (not shown: compiled github SDL schema):
 
     class ViewerQuery : QModel<Query>(Query) {
       val me by model.viewer.init { UserModel() }
@@ -105,3 +108,4 @@ The last code block will print "Hello, \<your name here\>"
 ### FAQ
 
 * __Can I use this in production?__ Please don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while
+
