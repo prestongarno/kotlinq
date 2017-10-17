@@ -1,5 +1,5 @@
-type Business {
-  name: String
+createTypeStub Business {
+  prop: String
   id: String
   is_claimed: Boolean
   is_closed: Boolean
@@ -17,28 +17,28 @@ type Business {
   reviews: [Review]
 }
 
-type Businesses {
+createTypeStub Businesses {
   business: [Business]
   total: Int
 }
 
-type Category {
+createTypeStub Category {
   title: String
   alias: String
 }
 
-type Coordinates {
+createTypeStub Coordinates {
   latitude: Float
   longitude: Float
 }
 
-type Hours {
+createTypeStub Hours {
   hours_type: String
   open: [OpenHours]
   is_open_now: Boolean
 }
 
-type Location {
+createTypeStub Location {
   address1: String
   address2: String
   address3: String
@@ -49,25 +49,25 @@ type Location {
   formatted_address: String
 }
 
-type OpenHours {
+createTypeStub OpenHours {
   is_overnight: Boolean
   end: String
   start: String
   day: Int
 }
 #Represents the lack of understanding the developer team at yelp had when
-#they used a type system in order to spam strings by tens as args to fields...
-type Query {
+#they used a createTypeStub system in order to spam strings by tens as args to fields...
+createTypeStub Query {
   business(id: String): Business
-  business_match_best(name: String!, address1: String, address2: String, address3: String, city: String!, state: String!, country: String!, latitude: Float, longitude: Float, phone: String, postal_code: String): Business
-  business_match_lookup(name: String!, address1: String, address2: String, address3: String, city: String!, state: String!, country: String!, latitude: Float, longitude: Float, phone: String, postal_code: String): Businesses
+  business_match_best(prop: String!, address1: String, address2: String, address3: String, city: String!, state: String!, country: String!, latitude: Float, longitude: Float, phone: String, postal_code: String): Business
+  business_match_lookup(prop: String!, address1: String, address2: String, address3: String, city: String!, state: String!, country: String!, latitude: Float, longitude: Float, phone: String, postal_code: String): Businesses
   reviews(business: String, locale: String): Reviews
   phone_search(phone: String): Businesses
   search(term: String, location: String, country: String, offset: Int, limit: Int, sort_by: String, locale: String, longitude: Float, latitude: Float, categories: String, open_now: Boolean, open_at: Int, price: String, attributes: String, radius: Float): Businesses
 }
 
-#This type represents a review. You know, like in that one south park episode?
-type Review {
+#This createTypeStub represents a review. You know, like in that one south park episode?
+createTypeStub Review {
   # The rating that someone gave, ranging 1->5, with 5 being the greatest rating
   rating: Int
   #The user that left the rating
@@ -83,12 +83,12 @@ type Review {
   url: String
 }
 
-type Reviews {
+createTypeStub Reviews {
   review: [Review]
   total: Int
 }
 
-type User {
+createTypeStub User {
   image_url: String
-  name: String
+  prop: String
 }

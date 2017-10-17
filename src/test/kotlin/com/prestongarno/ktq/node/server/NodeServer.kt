@@ -28,6 +28,7 @@ abstract class NodeServer {
   @Before internal fun setUp() {
 
     graphqlServerPs = ProcessBuilder()
+        .inheritIO()
         .command(
             "./src/test/resources/test-server/start-server.sh",
             "$serverNumber",

@@ -1,36 +1,33 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
-import kotlin.reflect.KProperty
 
 interface ListInitStub<T : QSchemaType> : SchemaStub {
   fun <U : QModel<T>> init(of: () -> U): TypeListStub<U, T>
 }
 
-interface ListConfig<out T, out A : ListArgBuilder> : SchemaStub {
-  fun config(): A
-}
-
-interface ListConfigType<out T, out A> : SchemaStub where T: QSchemaType, A: TypeListArgBuilder {
-  fun config(): A
-}
 interface CustomScalarListInitStub<T: CustomScalar> : SchemaStub {
   fun <U: QScalarListMapper<A>, A> init(of: U): CustomScalarListStub<U, A>
 }
+
+interface ListConfiguration<T, out A: ArgBuilder> : SchemaStub {
+  fun config(provider: A.() -> Unit): ListStub<T>
+}
+
+interface ListInitConfiguration<T : QSchemaType, out A: ArgBuilder> : SchemaStub {
+  fun config(provider: A.() -> Unit): ListInitStub<T>
+}
+
 interface CustomScalarListConfigStub<T: CustomScalar, out A: CustomScalarListArgBuilder> : SchemaStub {
-  fun config(): A
+  fun config(provider: A.() -> Unit): CustomScalarListInitStub<T>
 }
 
-interface ListStub<T> : SchemaStub {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<T>
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): ListStub<T>
-}
+interface ListConfig<T, A : ArgBuilder> : ListConfiguration<T, A>
 
-interface TypeListStub<U, T> : SchemaStub where U : QModel<T>, T : QSchemaType {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<U>
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): TypeListStub<U, T>
-}
-interface CustomScalarListStub<U: QScalarListMapper<T>, T> : SchemaStub {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<T>
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): CustomScalarListStub<U, T>
-}
+interface ListConfigType<T, A> : ListInitConfiguration<T, A> where T: QSchemaType, A: ArgBuilder
+
+interface ListStub<T> : DelegateProvider<List<T>>
+
+interface TypeListStub<U, out T> : DelegateProvider<List<U>> where U : QModel<T>, T : QSchemaType
+
+interface CustomScalarListStub<U: QScalarListMapper<T>, T> : DelegateProvider<List<T>>
