@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2017 Martin Donath <martin.donath@prestongarno.com>
+# Copyright (c) 2016-2017 Preston Garno <prestongarno@gmail.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -22,7 +22,7 @@
 site_name: KTQ
 site_description: A Kotlin client for GraphQL
 site_author: Preston Garno
-site_url: http://ktq.github.io/
+site_url: http://prestongarno.github.io/ktq
 
 # Repository
 repo_name: prestongarno/ktq
@@ -38,14 +38,12 @@ docs_dir: docs
 
 # Options
 extra:
-  feature:
-    tabs: true
   palette:
-    primary: indigo
-    accent: indigo
+    primary: cyan
+    accent: pink
   social:
     - type: globe
-      link: http://struct.cc
+      link: http://prestongarno.com
     - type: github-alt
       link: https://github.com/prestongarno
     - type: twitter
@@ -81,18 +79,18 @@ pages:
   - Intro: index.md
   - Getting started: getting-started.md
   - Types:
-    - Paradigms: types/todo.md
-    - Primitives/Scalars: types/todo.md
-    - Custom Scalars: types/todo.md
-    - Objects: types/todo.md
-    - Nullables: types/todo.md
+    - Paradigms: types/paradigms.md
+    - Primitives/Scalars: types/primitives.md
+    - Custom Scalars: types/custom_scalars.md
+    - Objects: types/objects.md
+    - Nullables: types/nullables.md
   - API:
-    - Query: types/todo.md
-    - Mutation: types/todo.md
-    - Subscription: types/todo.md
-  - HTTP: types/todo.md
-  - FAQ: types/todo.md
-  - Release notes: types/todo.md
+    - Query: api/query.md
+    - Mutation: api/mutation.md
+    - Subscription: subscription.md
+  - HTTP: http.md
+  - FAQ: faq.md
+  - Release notes: release_notes.md
   - Contributing: contributing.md
   - License: license.md
 

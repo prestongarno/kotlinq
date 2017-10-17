@@ -19,3 +19,6 @@ graphql.config.json
 graphql.schema.json
 .DS_Store
 *.scratch
+site
+site/
+site/*
