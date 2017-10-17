@@ -10,7 +10,7 @@
         <meta name="description" content="A Kotlin client for GraphQL">
       
       
-        <link rel="canonical" href="http://ktq.github.io/types/todo/">
+        <link rel="canonical" href="http://prestongarno.github.io/ktq/types/custom_scalars/">
       
       
         <meta name="author" content="Preston Garno">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Release notes - KTQ</title>
+        <title>Custom Scalars - KTQ</title>
       
     
     
@@ -51,7 +51,7 @@
   
   
   
-    <body data-md-color-primary="indigo" data-md-color-accent="indigo">
+    <body data-md-color-primary="cyan" data-md-color-accent="pink">
   
     <svg class="md-svg">
       <defs>
@@ -69,7 +69,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="http://ktq.github.io/" title="KTQ" class="md-header-nav__button md-logo">
+        <a href="http://prestongarno.github.io/ktq" title="KTQ" class="md-header-nav__button md-logo">
           
             <i class="md-icon md-icon--home"></i>
           
@@ -83,8 +83,12 @@
           
             
               
+                <span class="md-header-nav__parent">
+                  Types
+                </span>
+              
             
-            Release notes
+            Custom Scalars
           
         </span>
       </div>
@@ -145,64 +149,6 @@
     
     <div class="md-container">
       
-      
-        
-
-<nav class="md-tabs" data-md-component="tabs">
-  <div class="md-tabs__inner md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  <li class="md-tabs__item">
-    
-      <a href="../.." title="Intro" class="md-tabs__link md-tabs__link--active">
-        Intro
-      </a>
-    
-  </li>
-
-      
-        
-      
-        
-  
-  
-    <li class="md-tabs__item">
-      
-        <a href="./" title="Types" class="md-tabs__link">
-          Types
-        </a>
-      
-    </li>
-  
-
-      
-        
-  
-  
-    <li class="md-tabs__item">
-      
-        <a href="./" title="API" class="md-tabs__link">
-          API
-        </a>
-      
-    </li>
-  
-
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    </ul>
-  </div>
-</nav>
       
       <main class="md-main">
         <div class="md-main__inner md-grid" data-md-component="container">
@@ -273,10 +219,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
       Types
@@ -294,7 +242,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="Paradigms" class="md-nav__link">
+    <a href="../paradigms/" title="Paradigms" class="md-nav__link">
       Paradigms
     </a>
   </li>
@@ -306,7 +254,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="Primitives/Scalars" class="md-nav__link">
+    <a href="../primitives/" title="Primitives/Scalars" class="md-nav__link">
       Primitives/Scalars
     </a>
   </li>
@@ -316,11 +264,20 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="./" title="Custom Scalars" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+    <a href="./" title="Custom Scalars" class="md-nav__link md-nav__link--active">
       Custom Scalars
     </a>
+    
   </li>
 
         
@@ -330,7 +287,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="Objects" class="md-nav__link">
+    <a href="../objects/" title="Objects" class="md-nav__link">
       Objects
     </a>
   </li>
@@ -342,7 +299,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="Nullables" class="md-nav__link">
+    <a href="../nullables/" title="Nullables" class="md-nav__link">
       Nullables
     </a>
   </li>
@@ -378,7 +335,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="Query" class="md-nav__link">
+    <a href="../../api/query/" title="Query" class="md-nav__link">
       Query
     </a>
   </li>
@@ -390,7 +347,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="Mutation" class="md-nav__link">
+    <a href="../../api/mutation/" title="Mutation" class="md-nav__link">
       Mutation
     </a>
   </li>
@@ -402,7 +359,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="Subscription" class="md-nav__link">
+    <a href="../../subscription/" title="Subscription" class="md-nav__link">
       Subscription
     </a>
   </li>
@@ -419,7 +376,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="HTTP" class="md-nav__link">
+    <a href="../../http/" title="HTTP" class="md-nav__link">
       HTTP
     </a>
   </li>
@@ -431,7 +388,7 @@
 
 
   <li class="md-nav__item">
-    <a href="./" title="FAQ" class="md-nav__link">
+    <a href="../../faq/" title="FAQ" class="md-nav__link">
       FAQ
     </a>
   </li>
@@ -441,20 +398,11 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
-    
-      
-    
-    
-    <a href="./" title="Release notes" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../release_notes/" title="Release notes" class="md-nav__link">
       Release notes
     </a>
-    
   </li>
 
     
@@ -529,7 +477,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="./" title="FAQ" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../primitives/" title="Primitives/Scalars" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -538,19 +486,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                FAQ
+                Primitives/Scalars
               </span>
             </div>
           </a>
         
         
-          <a href="../../contributing/" title="Contributing" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../objects/" title="Objects" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Contributing
+                Objects
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -581,7 +529,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
-      <a href="http://struct.cc" class="md-footer-social__link fa fa-globe"></a>
+      <a href="http://prestongarno.com" class="md-footer-social__link fa fa-globe"></a>
     
       <a href="https://github.com/prestongarno" class="md-footer-social__link fa fa-github-alt"></a>
     

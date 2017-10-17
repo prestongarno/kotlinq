@@ -22,121 +22,131 @@
         },
         {
             "location": "/getting-started/",
-            "text": "Getting started\n\u00b6\n\n\nTODO(\"getting-started\")",
+            "text": "How to get \nktq\n \n\u00b6\n\n\nTo use in a project, add the dependency to a gradle buildscript:\n\n\n  compile 'com.prestongarno.ktq:ktq-client:0.2'\n\n\n\n\n\nMake sure to include the \n gradle plugin \n and read\nthe gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. \n Add this to project buildscript dependencies block:\n\n\n  \nclasspath\n \n'com.prestongarno.ktq:ktq-gradle:0.2'\n\n\n\n\n\n\nAnd apply the plugin:\n\n\n  plugins {\n    id 'com.prestongarno.ktq' version 0.2\n  }\n\n\n\n\n\nAbout\n\u00b6\n\n\nStands for KoTlin Query (language). This is a library which supports concise, type-safe models for \nqueries and mutations against a GraphQl schema. \n\n\nThe \n gradle plugin \n generates an equivalent kotlin type hierarchy which is used to create and execute queries\nand mutations without ever leaving native code.\n\n\nFor an example of how to build models, see the example below created for the Yelp Graphql API. \nNote that while field types are specified, they are not necessary and can be inferred by the properties\nin the \nmodel\n instance which a concrete query/mutation class delegates its properties to.\n\n\nclass\n \nBusinessQuery\n(\nsearchTerm\n: \nString\n)\n \n:\n \nQModel\n(\nQuery\n)\n \n{\n\n\n  \nval\n \nresult\n: \nList\n<\nBusinessNodesModel\n>\n \nby\n \nmodel\n.\nsearch\n\n      \n.\nconfig\n \n{\n\n        \nterm\n \n=\n \nsearchTerm\n\n        \nlimit\n \n=\n \n10\n\n      \n}.\ninit\n \n{\n \nBusinessesNodesModel\n()\n \n}\n\n\n\n}\n\n\n\nclass\n \nBusinessesNodesModel\n : \nQModel\n(\nBusinesses\n)\n \n{\n\n  \nval\n \nresultCount\n:   \nInt\n                    \nby\n \nmodel\n.\ntotal\n\n  \nval\n \nresultsNodes\n:  \nList\n<\nSimpleBusiness\n>\n   \nby\n \nmodel\n.\nbusiness\n.\ninit\n \n{\n \nSimpleBusiness\n()\n \n}\n\n\n}\n\n\n\nclass\n \nSimpleBusiness\n : \nQModel\n(\nBusiness\n)\n \n{\n\n  \nval\n \nname\n:         \nString\n  \nby\n \nmodel\n.\nname\n\n  \nval\n \nphoneNumber\n:  \nInt\n     \nby\n \nmodel\n.\ndisplay_phone\n\n  \nval\n \ndirectUrl\n:    \nString\n  \nby\n \nmodel\n.\nurl\n\n\n}\n\n\n\n\n\n\nWhen initializing a \nBusinessQuery\n calling the \n.toGraphql\n()\n results in a valid graphql query as a String:\n\n\nE.g. \nBusinessQuery(\"foobar\").toGraphql()\n returns (formatted by default):\n\n\n{\n search(limit: 10,\n    term: \"foobar\"){\n   total,\n   business {\n     name,\n     display_phone,\n     url \n    }\n  }\n}\n\n\n\n\n\nHow it works\n\u00b6\n\n\nThe above is only an example of the syntax \nktq\n supports for describing a GraphQL type system and using it. \nFor a more detailed explanation of the abstractions which make up the design of this library, go on to the next section.",
             "title": "Getting started"
         },
         {
-            "location": "/getting-started/#getting-started",
-            "text": "TODO(\"getting-started\")",
-            "title": "Getting started"
+            "location": "/getting-started/#how-to-get-ktq",
+            "text": "To use in a project, add the dependency to a gradle buildscript:    compile 'com.prestongarno.ktq:ktq-client:0.2'  Make sure to include the   gradle plugin   and read\nthe gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. \n Add this to project buildscript dependencies block:     classpath   'com.prestongarno.ktq:ktq-gradle:0.2'   And apply the plugin:    plugins {\n    id 'com.prestongarno.ktq' version 0.2\n  }",
+            "title": " How to get ktq "
         },
         {
-            "location": "/types/todo/",
+            "location": "/getting-started/#about",
+            "text": "Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for \nqueries and mutations against a GraphQl schema.   The   gradle plugin   generates an equivalent kotlin type hierarchy which is used to create and execute queries\nand mutations without ever leaving native code.  For an example of how to build models, see the example below created for the Yelp Graphql API. \nNote that while field types are specified, they are not necessary and can be inferred by the properties\nin the  model  instance which a concrete query/mutation class delegates its properties to.  class   BusinessQuery ( searchTerm :  String )   :   QModel ( Query )   { \n\n   val   result :  List < BusinessNodesModel >   by   model . search \n       . config   { \n         term   =   searchTerm \n         limit   =   10 \n       }. init   {   BusinessesNodesModel ()   }  }  class   BusinessesNodesModel  :  QModel ( Businesses )   { \n   val   resultCount :    Int                      by   model . total \n   val   resultsNodes :   List < SimpleBusiness >     by   model . business . init   {   SimpleBusiness ()   }  }  class   SimpleBusiness  :  QModel ( Business )   { \n   val   name :          String    by   model . name \n   val   phoneNumber :   Int       by   model . display_phone \n   val   directUrl :     String    by   model . url  }   When initializing a  BusinessQuery  calling the  .toGraphql ()  results in a valid graphql query as a String:  E.g.  BusinessQuery(\"foobar\").toGraphql()  returns (formatted by default):  {\n search(limit: 10,\n    term: \"foobar\"){\n   total,\n   business {\n     name,\n     display_phone,\n     url \n    }\n  }\n}",
+            "title": "About"
+        },
+        {
+            "location": "/getting-started/#how-it-works",
+            "text": "The above is only an example of the syntax  ktq  supports for describing a GraphQL type system and using it. \nFor a more detailed explanation of the abstractions which make up the design of this library, go on to the next section.",
+            "title": "How it works"
+        },
+        {
+            "location": "/types/paradigms/",
             "text": "//TODO\n\u00b6",
             "title": "Paradigms"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/types/paradigms/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/types/primitives/",
             "text": "//TODO\n\u00b6",
             "title": "Primitives/Scalars"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/types/primitives/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/types/custom_scalars/",
             "text": "//TODO\n\u00b6",
             "title": "Custom Scalars"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/types/custom_scalars/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/types/objects/",
             "text": "//TODO\n\u00b6",
             "title": "Objects"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/types/objects/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/types/nullables/",
             "text": "//TODO\n\u00b6",
             "title": "Nullables"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/types/nullables/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/api/query/",
             "text": "//TODO\n\u00b6",
             "title": "Query"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/api/query/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/api/mutation/",
             "text": "//TODO\n\u00b6",
             "title": "Mutation"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/api/mutation/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/subscription/",
             "text": "//TODO\n\u00b6",
             "title": "Subscription"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/subscription/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
+            "location": "/http/",
             "text": "//TODO\n\u00b6",
             "title": "HTTP"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/http/#todo",
             "text": "",
             "title": "//TODO"
         },
         {
-            "location": "/types/todo/",
-            "text": "//TODO\n\u00b6",
+            "location": "/faq/",
+            "text": "Can I use this in production?\n\u00b6\n\n\nPlease don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while",
             "title": "FAQ"
         },
         {
-            "location": "/types/todo/#todo",
-            "text": "",
-            "title": "//TODO"
+            "location": "/faq/#can-i-use-this-in-production",
+            "text": "Please don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while",
+            "title": "Can I use this in production?"
         },
         {
-            "location": "/types/todo/",
+            "location": "/release_notes/",
             "text": "//TODO\n\u00b6",
             "title": "Release notes"
         },
         {
-            "location": "/types/todo/#todo",
+            "location": "/release_notes/#todo",
             "text": "",
             "title": "//TODO"
         },
