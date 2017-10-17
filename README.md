@@ -1,4 +1,4 @@
-*__a kotlin client for GraphQL schema definitions.__*
+*__a kotlin client for type-safe interaction with GraphQL servers__*
 -----------------------------
 
 [![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
