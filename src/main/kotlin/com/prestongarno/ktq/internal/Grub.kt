@@ -85,6 +85,19 @@ class Grub<out T : SchemaStub>(
     fun createBooleanDelegate(): StubProvider<BooleanDelegate<ArgBuilder>> =
         Grub("Boolean", false) { BooleanDelegate(it, { it }) }
 
+    fun <A: ArgBuilder> createStringDelegate(arginit: (ArgBuilder) -> A): StubProvider<StringDelegate<A>> =
+        Grub("String", false) { StringDelegate(it, arginit) }
+
+    fun <A: ArgBuilder> createIntDelegate(arginit: (ArgBuilder) -> A): StubProvider<IntegerDelegate<A>> =
+        Grub("Int", false) { IntegerDelegate(it, arginit) }
+
+    fun <A: ArgBuilder> createFloatDelegate(arginit: (ArgBuilder) -> A): StubProvider<FloatDelegate<A>> =
+        Grub("Float", false) { FloatDelegate(it, arginit) }
+
+    fun <A: ArgBuilder> createBooleanDelegate(arginit: (ArgBuilder) -> A): StubProvider<BooleanDelegate<A>> =
+        Grub("Boolean", false) { BooleanDelegate(it, arginit) }
+
+
     fun <T : QSchemaType> createTypeStub(name: String): StubProvider<InitStub<T>>
         = Grub(name, false) { TypeStubAdapter<T, QModel<T>, ArgBuilder>(it, { it }) }
 

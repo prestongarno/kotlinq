@@ -31,7 +31,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { this.args.put(name, value) }
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): QField<List<Q>> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<Q>> =
       CustomScalarListStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -69,7 +69,7 @@ private data class CustomScalarListStubImpl<out Q>(
   }
 
   override fun accept(result: Any?): Boolean {
-    val values = (if (result is List<*>) result else listOf(result)).filterNotNull()
+    val values = (result as? List<*> ?: listOf(result)).filterNotNull()
     when (adapter) {
       is InputStreamScalarListMapper<*> -> {
         (adapter as InputStreamScalarListMapper<*>).rawValue =

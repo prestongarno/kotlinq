@@ -14,7 +14,6 @@ import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QType
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaUnion
-import com.prestongarno.ktq.Stub
 import org.junit.Ignore
 import org.junit.Test
 /*

@@ -34,6 +34,16 @@ interface QSchemaType {
      * Method which provides a delegate for fields of type [kotlin.Boolean]
      * @return [com.prestongarno.ktq.internal.StubProvider]<BooleanDelegate<ArgBuilder>>] */
     fun booleanStub() = Grub.createBooleanDelegate()
+
+
+    fun <A: ArgBuilder> stringStub(arginit: (ArgBuilder) -> A) = Grub.createStringDelegate(arginit)
+
+    fun <A: ArgBuilder> intStub(arginit: (ArgBuilder) -> A) = Grub.createIntDelegate(arginit)
+
+    fun <A: ArgBuilder> floatStub(arginit: (ArgBuilder) -> A) = Grub.createFloatDelegate(arginit)
+
+    fun <A: ArgBuilder> booleanStub(arginit: (ArgBuilder) -> A) = Grub.createBooleanDelegate(arginit)
+
     /**
      * Method which provides a delegate for fields
      * @param arginit an initializer for the createStub field. <b>Important for auto-generated schema definitions</b>

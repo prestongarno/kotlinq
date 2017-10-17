@@ -29,7 +29,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
   override fun config(provider: B.() -> Unit): InitStub<I> =
       TypeStubAdapter(graphqlProperty, builderInit, this.init, provider)
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): QField<P> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> =
       TypeStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
