@@ -5,8 +5,9 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
  [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.2) ](https://bintray.com/prestongarno/ktq/ktq-client/0.2/link)
 
+## Documentation
 
-
+The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/ktq/)
 
 ### Adding dependency from Central or JCenter
 
