@@ -153,7 +153,7 @@ interface QSchemaType {
      * @param T The createTypeStub argument for the createStub, typedValueFrom a schema-defined CustomScalar createTypeStub
      * @return Grub<CustomScalarListInitStub<T>> the delegate which lazily provides a CustomScalarListInitStub<T> */
     inline fun <reified T> stub(): StubProvider<CustomScalarListInitStub<T>> where T : CustomScalar
-        = Grub.createCustimScalarStub(T::class.simpleName!!)
+        = Grub.createCustomScalarListStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} collection
