@@ -3,10 +3,10 @@ input AcceptTopicSuggestionInput {
 
     repositoryId: Id!
 
-    name: String!
+    prop: String!
 }
 
-type AcceptTopicSuggestionPayload {
+createTypeStub AcceptTopicSuggestionPayload {
     clientMutationId: String
 
     topic: Topic!
@@ -31,7 +31,7 @@ input AddCommentInput {
     body: String!
 }
 
-type AddCommentPayload {
+createTypeStub AddCommentPayload {
     clientMutationId: String
 
     commentEdge: IssueCommentEdge!
@@ -51,7 +51,7 @@ input AddProjectCardInput {
     note: String
 }
 
-type AddProjectCardPayload {
+createTypeStub AddProjectCardPayload {
     cardEdge: ProjectCardEdge!
 
     clientMutationId: String
@@ -64,10 +64,10 @@ input AddProjectColumnInput {
 
     projectId: Id!
 
-    name: String!
+    prop: String!
 }
 
-type AddProjectColumnPayload {
+createTypeStub AddProjectColumnPayload {
     clientMutationId: String
 
     columnEdge: ProjectColumnEdge!
@@ -91,7 +91,7 @@ input AddPullRequestReviewCommentInput {
     inReplyTo: Id
 }
 
-type AddPullRequestReviewCommentPayload {
+createTypeStub AddPullRequestReviewCommentPayload {
     clientMutationId: String
 
     comment: PullRequestReviewComment!
@@ -113,7 +113,7 @@ input AddPullRequestReviewInput {
     comments: [DraftPullRequestReviewComment]
 }
 
-type AddPullRequestReviewPayload {
+createTypeStub AddPullRequestReviewPayload {
     clientMutationId: String
 
     pullRequestReview: PullRequestReview!
@@ -129,7 +129,7 @@ input AddReactionInput {
     content: ReactionContent!
 }
 
-type AddReactionPayload {
+createTypeStub AddReactionPayload {
     clientMutationId: String
 
     reaction: Reaction!
@@ -143,13 +143,13 @@ input AddStarInput {
     starrableId: Id!
 }
 
-type AddStarPayload {
+createTypeStub AddStarPayload {
     clientMutationId: String
 
     starrable: Starrable!
 }
 
-type AddedToProjectEvent implements Node {
+createTypeStub AddedToProjectEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -169,7 +169,7 @@ interface Assignable {
     before: String): UserConnection!
 }
 
-type AssignedEvent implements Node {
+createTypeStub AssignedEvent implements Node {
     actor: Actor
 
     assignable: Assignable!
@@ -180,7 +180,7 @@ type AssignedEvent implements Node {
     user: User
 }
 
-type BaseRefChangedEvent implements Node {
+createTypeStub BaseRefChangedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -189,7 +189,7 @@ type BaseRefChangedEvent implements Node {
     id: Id!
 }
 
-type BaseRefForcePushedEvent implements Node {
+createTypeStub BaseRefForcePushedEvent implements Node {
     actor: Actor
 
     afterCommit: Commit!
@@ -204,11 +204,11 @@ type BaseRefForcePushedEvent implements Node {
     ref: Ref
 }
 
-type Blame {
+createTypeStub Blame {
     ranges: [BlameRange!]!
 }
 
-type BlameRange {
+createTypeStub BlameRange {
     age: Int!
 
     commit: Commit!
@@ -218,7 +218,7 @@ type BlameRange {
     startingLine: Int!
 }
 
-type Blob implements Node, GitObject {
+createTypeStub Blob implements Node, GitObject {
     abbreviatedOid: String!
 
     byteSize: Int!
@@ -239,7 +239,7 @@ type Blob implements Node, GitObject {
     text: String
 }
 
-type Bot implements Node, Actor, UniformResourceLocatable {
+createTypeStub Bot implements Node, Actor, UniformResourceLocatable {
     avatarUrl(
     size: Int): URI!
 
@@ -257,7 +257,7 @@ interface Closable {
     closed: Boolean!
 }
 
-type ClosedEvent implements Node {
+createTypeStub ClosedEvent implements Node {
     actor: Actor
 
     closable: Closable!
@@ -268,12 +268,12 @@ type ClosedEvent implements Node {
     id: Id!
 }
 
-type CodeOfConduct {
+createTypeStub CodeOfConduct {
     body: String
 
     key: String!
 
-    name: String!
+    prop: String!
 
     url: URI
 }
@@ -298,7 +298,7 @@ interface Comment {
 
     publishedAt: DateTime
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     viewerDidAuthor: Boolean!
 }
@@ -329,7 +329,7 @@ enum CommentCannotUpdateReason {
     VERIFIED_EMAIL_REQUIRED
 }
 
-type CommentDeletedEvent implements Node {
+createTypeStub CommentDeletedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -338,7 +338,7 @@ type CommentDeletedEvent implements Node {
     id: Id!
 }
 
-type Commit implements Node, GitObject, Subscribable {
+createTypeStub Commit implements Node, GitObject, Subscribable {
     abbreviatedOid: String!
 
     author: GitActor
@@ -424,7 +424,7 @@ input CommitAuthor {
     emails: [String!]
 }
 
-type CommitComment implements Node, Comment, Deletable, Updatable, UpdatableComment, Reactable, RepositoryNode {
+createTypeStub CommitComment implements Node, Comment, Deletable, Updatable, UpdatableComment, Reactable, RepositoryNode {
     author: Actor
 
     authorAssociation: CommentAuthorAssociation!
@@ -469,7 +469,7 @@ type CommitComment implements Node, Comment, Deletable, Updatable, UpdatableComm
 
     repository: Repository!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     viewerCanDelete: Boolean!
 
@@ -482,7 +482,7 @@ type CommitComment implements Node, Comment, Deletable, Updatable, UpdatableComm
     viewerDidAuthor: Boolean!
 }
 
-type CommitCommentConnection {
+createTypeStub CommitCommentConnection {
     edges: [CommitCommentEdge]
 
     nodes: [CommitComment]
@@ -492,13 +492,13 @@ type CommitCommentConnection {
     totalCount: Int!
 }
 
-type CommitCommentEdge {
+createTypeStub CommitCommentEdge {
     cursor: String!
 
     node: CommitComment
 }
 
-type CommitCommentThread implements Node, RepositoryNode {
+createTypeStub CommitCommentThread implements Node, RepositoryNode {
     comments(
     first: Int
 
@@ -518,13 +518,13 @@ type CommitCommentThread implements Node, RepositoryNode {
     repository: Repository!
 }
 
-type CommitEdge {
+createTypeStub CommitEdge {
     cursor: String!
 
     node: Commit
 }
 
-type CommitHistoryConnection {
+createTypeStub CommitHistoryConnection {
     edges: [CommitEdge]
 
     nodes: [Commit]
@@ -532,7 +532,7 @@ type CommitHistoryConnection {
     pageInfo: PageInfo!
 }
 
-type ConvertedNoteToIssueEvent implements Node {
+createTypeStub ConvertedNoteToIssueEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -546,12 +546,12 @@ input CreateProjectInput {
 
     ownerId: Id!
 
-    name: String!
+    prop: String!
 
     body: String
 }
 
-type CreateProjectPayload {
+createTypeStub CreateProjectPayload {
     clientMutationId: String
 
     project: Project!
@@ -564,12 +564,12 @@ input DeclineTopicSuggestionInput {
 
     repositoryId: Id!
 
-    name: String!
+    prop: String!
 
     reason: TopicSuggestionDeclineReason!
 }
 
-type DeclineTopicSuggestionPayload {
+createTypeStub DeclineTopicSuggestionPayload {
     clientMutationId: String
 
     topic: Topic!
@@ -593,7 +593,7 @@ input DeleteProjectCardInput {
     cardId: Id!
 }
 
-type DeleteProjectCardPayload {
+createTypeStub DeleteProjectCardPayload {
     clientMutationId: String
 
     column: ProjectColumn!
@@ -607,7 +607,7 @@ input DeleteProjectColumnInput {
     columnId: Id!
 }
 
-type DeleteProjectColumnPayload {
+createTypeStub DeleteProjectColumnPayload {
     clientMutationId: String
 
     deletedColumnId: Id!
@@ -621,7 +621,7 @@ input DeleteProjectInput {
     projectId: Id!
 }
 
-type DeleteProjectPayload {
+createTypeStub DeleteProjectPayload {
     clientMutationId: String
 
     owner: ProjectOwner!
@@ -633,13 +633,13 @@ input DeletePullRequestReviewInput {
     pullRequestReviewId: Id!
 }
 
-type DeletePullRequestReviewPayload {
+createTypeStub DeletePullRequestReviewPayload {
     clientMutationId: String
 
     pullRequestReview: PullRequestReview!
 }
 
-type DemilestonedEvent implements Node {
+createTypeStub DemilestonedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -650,7 +650,7 @@ type DemilestonedEvent implements Node {
     subject: MilestoneItem!
 }
 
-type DeployedEvent implements Node {
+createTypeStub DeployedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -665,7 +665,7 @@ type DeployedEvent implements Node {
     ref: Ref
 }
 
-type Deployment implements Node {
+createTypeStub Deployment implements Node {
     commit: Commit
 
     createdAt: DateTime!
@@ -691,7 +691,7 @@ type Deployment implements Node {
     before: String): DeploymentStatusConnection
 }
 
-type DeploymentConnection {
+createTypeStub DeploymentConnection {
     edges: [DeploymentEdge]
 
     nodes: [Deployment]
@@ -701,7 +701,7 @@ type DeploymentConnection {
     totalCount: Int!
 }
 
-type DeploymentEdge {
+createTypeStub DeploymentEdge {
     cursor: String!
 
     node: Deployment
@@ -723,7 +723,7 @@ enum DeploymentState {
     PENDING
 }
 
-type DeploymentStatus implements Node {
+createTypeStub DeploymentStatus implements Node {
     creator: Actor
 
     deployment: Deployment!
@@ -738,7 +738,7 @@ type DeploymentStatus implements Node {
     state: DeploymentStatusState!
 }
 
-type DeploymentStatusConnection {
+createTypeStub DeploymentStatusConnection {
     edges: [DeploymentStatusEdge]
 
     nodes: [DeploymentStatus]
@@ -748,7 +748,7 @@ type DeploymentStatusConnection {
     totalCount: Int!
 }
 
-type DeploymentStatusEdge {
+createTypeStub DeploymentStatusEdge {
     cursor: String!
 
     node: DeploymentStatus
@@ -774,7 +774,7 @@ input DismissPullRequestReviewInput {
     hello: String!
 }
 
-type DismissPullRequestReviewPayload {
+createTypeStub DismissPullRequestReviewPayload {
     clientMutationId: String
 
     pullRequestReview: PullRequestReview!
@@ -788,7 +788,7 @@ input DraftPullRequestReviewComment {
     body: String!
 }
 
-type ExternalIdentity implements Node {
+createTypeStub ExternalIdentity implements Node {
     guid: String!
     id: Id!
 
@@ -801,7 +801,7 @@ type ExternalIdentity implements Node {
     user: User
 }
 
-type ExternalIdentityConnection {
+createTypeStub ExternalIdentityConnection {
     edges: [ExternalIdentityEdge]
 
     nodes: [ExternalIdentity]
@@ -811,21 +811,21 @@ type ExternalIdentityConnection {
     totalCount: Int!
 }
 
-type ExternalIdentityEdge {
+createTypeStub ExternalIdentityEdge {
     cursor: String!
 
     node: ExternalIdentity
 }
 
-type ExternalIdentitySamlAttributes {
+createTypeStub ExternalIdentitySamlAttributes {
     nameId: String
 }
 
-type ExternalIdentityScimAttributes {
+createTypeStub ExternalIdentityScimAttributes {
     username: String
 }
 
-type FollowerConnection {
+createTypeStub FollowerConnection {
     edges: [UserEdge]
 
     nodes: [User]
@@ -835,7 +835,7 @@ type FollowerConnection {
     totalCount: Int!
 }
 
-type FollowingConnection {
+createTypeStub FollowingConnection {
     edges: [UserEdge]
 
     nodes: [User]
@@ -845,7 +845,7 @@ type FollowingConnection {
     totalCount: Int!
 }
 
-type Gist implements Node, Starrable {
+createTypeStub Gist implements Node, Starrable {
     comments(
     first: Int
 
@@ -862,7 +862,7 @@ type Gist implements Node, Starrable {
 
     isPublic: Boolean!
 
-    name: String!
+    prop: String!
 
     owner: RepositoryOwner
 
@@ -877,12 +877,12 @@ type Gist implements Node, Starrable {
 
     orderBy: StarOrder): StargazerConnection!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     viewerHasStarred: Boolean!
 }
 
-type GistComment implements Node, Comment, Deletable, Updatable, UpdatableComment {
+createTypeStub GistComment implements Node, Comment, Deletable, Updatable, UpdatableComment {
     author: Actor
 
     authorAssociation: CommentAuthorAssociation!
@@ -902,7 +902,7 @@ type GistComment implements Node, Comment, Deletable, Updatable, UpdatableCommen
 
     publishedAt: DateTime
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     viewerCanDelete: Boolean!
 
@@ -913,7 +913,7 @@ type GistComment implements Node, Comment, Deletable, Updatable, UpdatableCommen
     viewerDidAuthor: Boolean!
 }
 
-type GistCommentConnection {
+createTypeStub GistCommentConnection {
     edges: [GistCommentEdge]
 
     nodes: [GistComment]
@@ -923,13 +923,13 @@ type GistCommentConnection {
     totalCount: Int!
 }
 
-type GistCommentEdge {
+createTypeStub GistCommentEdge {
     cursor: String!
 
     node: GistComment
 }
 
-type GistConnection {
+createTypeStub GistConnection {
     edges: [GistEdge]
 
     nodes: [Gist]
@@ -939,7 +939,7 @@ type GistConnection {
     totalCount: Int!
 }
 
-type GistEdge {
+createTypeStub GistEdge {
     cursor: String!
 
     node: Gist
@@ -953,7 +953,7 @@ enum GistPrivacy {
     ALL
 }
 
-type GitActor {
+createTypeStub GitActor {
     avatarUrl(
     size: Int): URI!
 
@@ -961,7 +961,7 @@ type GitActor {
 
     email: String
 
-    name: String
+    prop: String
 
     user: User
 }
@@ -1025,7 +1025,7 @@ enum GitSignatureState {
 
 scalar GitTimestamp
 
-type GpgSignature implements GitSignature {
+createTypeStub GpgSignature implements GitSignature {
     email: String!
 
     isValid: Boolean!
@@ -1043,7 +1043,7 @@ type GpgSignature implements GitSignature {
 
 scalar HTML
 
-type HeadRefDeletedEvent implements Node {
+createTypeStub HeadRefDeletedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -1056,7 +1056,7 @@ type HeadRefDeletedEvent implements Node {
     pullRequest: PullRequest!
 }
 
-type HeadRefForcePushedEvent implements Node {
+createTypeStub HeadRefForcePushedEvent implements Node {
     actor: Actor
 
     afterCommit: Commit!
@@ -1071,7 +1071,7 @@ type HeadRefForcePushedEvent implements Node {
     ref: Ref
 }
 
-type HeadRefRestoredEvent implements Node {
+createTypeStub HeadRefRestoredEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -1080,7 +1080,7 @@ type HeadRefRestoredEvent implements Node {
     pullRequest: PullRequest!
 }
 
-type Issue implements Node, Assignable, Closable, Comment, Updatable, UpdatableComment, Labelable, Lockable, Reactable, RepositoryNode, Subscribable, UniformResourceLocatable {
+createTypeStub Issue implements Node, Assignable, Closable, Comment, Updatable, UpdatableComment, Labelable, Lockable, Reactable, RepositoryNode, Subscribable, UniformResourceLocatable {
     assignees(
     first: Int
 
@@ -1182,7 +1182,7 @@ type Issue implements Node, Assignable, Closable, Comment, Updatable, UpdatableC
 
     title: String!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 
@@ -1199,7 +1199,7 @@ type Issue implements Node, Assignable, Closable, Comment, Updatable, UpdatableC
     viewerSubscription: SubscriptionState!
 }
 
-type IssueComment implements Node, Comment, Deletable, Updatable, UpdatableComment, Reactable, RepositoryNode {
+createTypeStub IssueComment implements Node, Comment, Deletable, Updatable, UpdatableComment, Reactable, RepositoryNode {
     author: Actor
 
     authorAssociation: CommentAuthorAssociation!
@@ -1242,7 +1242,7 @@ type IssueComment implements Node, Comment, Deletable, Updatable, UpdatableComme
 
     repository: Repository!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     viewerCanDelete: Boolean!
 
@@ -1255,7 +1255,7 @@ type IssueComment implements Node, Comment, Deletable, Updatable, UpdatableComme
     viewerDidAuthor: Boolean!
 }
 
-type IssueCommentConnection {
+createTypeStub IssueCommentConnection {
     edges: [IssueCommentEdge]
 
     nodes: [IssueComment]
@@ -1265,13 +1265,13 @@ type IssueCommentConnection {
     totalCount: Int!
 }
 
-type IssueCommentEdge {
+createTypeStub IssueCommentEdge {
     cursor: String!
 
     node: IssueComment
 }
 
-type IssueConnection {
+createTypeStub IssueConnection {
     edges: [IssueEdge]
 
     nodes: [Issue]
@@ -1281,13 +1281,13 @@ type IssueConnection {
     totalCount: Int!
 }
 
-type IssueEdge {
+createTypeStub IssueEdge {
     cursor: String!
 
     node: Issue
 }
 
-union IssueOrPullRequest = Issue | PullRequest
+createUnionStub IssueOrPullRequest = Issue | PullRequest
 
 input IssueOrder {
     field: IssueOrderField!
@@ -1315,7 +1315,7 @@ enum IssueState {
     CLOSED
 }
 
-type IssueTimelineConnection {
+createTypeStub IssueTimelineConnection {
     edges: [IssueTimelineItemEdge]
 
     nodes: [IssueTimelineItem]
@@ -1325,15 +1325,15 @@ type IssueTimelineConnection {
     totalCount: Int!
 }
 
-union IssueTimelineItem = Commit | IssueComment | ClosedEvent | ReopenedEvent | SubscribedEvent | UnsubscribedEvent | ReferencedEvent | AssignedEvent | UnassignedEvent | LabeledEvent | UnlabeledEvent | MilestonedEvent | DemilestonedEvent | RenamedTitleEvent | LockedEvent | UnlockedEvent
+createUnionStub IssueTimelineItem = Commit | IssueComment | ClosedEvent | ReopenedEvent | SubscribedEvent | UnsubscribedEvent | ReferencedEvent | AssignedEvent | UnassignedEvent | LabeledEvent | UnlabeledEvent | MilestonedEvent | DemilestonedEvent | RenamedTitleEvent | LockedEvent | UnlockedEvent
 
-type IssueTimelineItemEdge {
+createTypeStub IssueTimelineItemEdge {
     cursor: String!
 
     node: IssueTimelineItem
 }
 
-type Label implements Node {
+createTypeStub Label implements Node {
     color: String!
     id: Id!
 
@@ -1352,7 +1352,7 @@ type Label implements Node {
 
     states: [IssueState!]): IssueConnection!
 
-    name: String!
+    prop: String!
 
     pullRequests(
     first: Int
@@ -1366,7 +1366,7 @@ type Label implements Node {
     repository: Repository!
 }
 
-type LabelConnection {
+createTypeStub LabelConnection {
     edges: [LabelEdge]
 
     nodes: [Label]
@@ -1376,7 +1376,7 @@ type LabelConnection {
     totalCount: Int!
 }
 
-type LabelEdge {
+createTypeStub LabelEdge {
     cursor: String!
 
     node: Label
@@ -1393,7 +1393,7 @@ interface Labelable {
     before: String): LabelConnection
 }
 
-type LabeledEvent implements Node {
+createTypeStub LabeledEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -1404,14 +1404,14 @@ type LabeledEvent implements Node {
     labelable: Labelable!
 }
 
-type Language implements Node {
+createTypeStub Language implements Node {
     color: String
     id: Id!
 
-    name: String!
+    prop: String!
 }
 
-type LanguageConnection {
+createTypeStub LanguageConnection {
     edges: [LanguageEdge]
 
     nodes: [Language]
@@ -1423,7 +1423,7 @@ type LanguageConnection {
     totalSize: Int!
 }
 
-type LanguageEdge {
+createTypeStub LanguageEdge {
     cursor: String!
     node: Language!
 
@@ -1444,7 +1444,7 @@ interface Lockable {
     locked: Boolean!
 }
 
-type LockedEvent implements Node {
+createTypeStub LockedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -1453,7 +1453,7 @@ type LockedEvent implements Node {
     lockable: Lockable!
 }
 
-type MentionedEvent implements Node {
+createTypeStub MentionedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -1470,7 +1470,7 @@ enum MergeableState {
     UNKNOWN
 }
 
-type MergedEvent implements Node, UniformResourceLocatable {
+createTypeStub MergedEvent implements Node, UniformResourceLocatable {
     actor: Actor
 
     commit: Commit
@@ -1489,7 +1489,7 @@ type MergedEvent implements Node, UniformResourceLocatable {
     url: URI!
 }
 
-type Milestone implements Node, UniformResourceLocatable {
+createTypeStub Milestone implements Node, UniformResourceLocatable {
     creator: Actor
 
     description: String
@@ -1510,7 +1510,7 @@ type Milestone implements Node, UniformResourceLocatable {
     url: URI!
 }
 
-type MilestoneConnection {
+createTypeStub MilestoneConnection {
     edges: [MilestoneEdge]
 
     nodes: [Milestone]
@@ -1520,13 +1520,13 @@ type MilestoneConnection {
     totalCount: Int!
 }
 
-type MilestoneEdge {
+createTypeStub MilestoneEdge {
     cursor: String!
 
     node: Milestone
 }
 
-union MilestoneItem = Issue | PullRequest
+createUnionStub MilestoneItem = Issue | PullRequest
 
 enum MilestoneState {
     OPEN
@@ -1534,7 +1534,7 @@ enum MilestoneState {
     CLOSED
 }
 
-type MilestonedEvent implements Node {
+createTypeStub MilestonedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -1555,7 +1555,7 @@ input MoveProjectCardInput {
     afterCardId: Id
 }
 
-type MoveProjectCardPayload {
+createTypeStub MoveProjectCardPayload {
     cardEdge: ProjectCardEdge!
 
     clientMutationId: String
@@ -1569,13 +1569,13 @@ input MoveProjectColumnInput {
     afterColumnId: Id
 }
 
-type MoveProjectColumnPayload {
+createTypeStub MoveProjectColumnPayload {
     clientMutationId: String
 
     columnEdge: ProjectColumnEdge!
 }
 
-type MovedColumnsInProjectEvent implements Node {
+createTypeStub MovedColumnsInProjectEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -1584,7 +1584,7 @@ type MovedColumnsInProjectEvent implements Node {
     id: Id!
 }
 
-type Mutation {
+createTypeStub Mutation {
     acceptTopicSuggestion(input: AcceptTopicSuggestionInput!): AcceptTopicSuggestionPayload
     addComment(input: AddCommentInput!): AddCommentPayload
     addProjectCard(input: AddProjectCardInput!): AddProjectCardPayload
@@ -1626,7 +1626,7 @@ enum OrderDirection {
     DESC
 }
 
-type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, UniformResourceLocatable {
+createTypeStub Organization implements Node, Actor, ProjectOwner, RepositoryOwner, UniformResourceLocatable {
     avatarUrl(
     size: Int): URI!
 
@@ -1646,7 +1646,7 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
 
     before: String): UserConnection!
 
-    name: String!
+    prop: String!
 
     newTeamResourcePath: URI!
 
@@ -1713,7 +1713,7 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -1760,7 +1760,7 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
     viewerIsAMember: Boolean!
 }
 
-type OrganizationConnection {
+createTypeStub OrganizationConnection {
     edges: [OrganizationEdge]
 
     nodes: [Organization]
@@ -1770,13 +1770,13 @@ type OrganizationConnection {
     totalCount: Int!
 }
 
-type OrganizationEdge {
+createTypeStub OrganizationEdge {
     cursor: String!
 
     node: Organization
 }
 
-type OrganizationIdentityProvider implements Node {
+createTypeStub OrganizationIdentityProvider implements Node {
     digestMethod: URI
 
     externalIdentities(
@@ -1800,7 +1800,7 @@ type OrganizationIdentityProvider implements Node {
     ssoUrl: URI
 }
 
-type OrganizationInvitation {
+createTypeStub OrganizationInvitation {
     email: String
     id: Id!
 
@@ -1811,7 +1811,7 @@ type OrganizationInvitation {
     role: OrganizationInvitationRole!
 }
 
-type OrganizationInvitationConnection {
+createTypeStub OrganizationInvitationConnection {
     edges: [OrganizationInvitationEdge]
 
     nodes: [OrganizationInvitation]
@@ -1821,7 +1821,7 @@ type OrganizationInvitationConnection {
     totalCount: Int!
 }
 
-type OrganizationInvitationEdge {
+createTypeStub OrganizationInvitationEdge {
     cursor: String!
 
     node: OrganizationInvitation
@@ -1837,7 +1837,7 @@ enum OrganizationInvitationRole {
     REINSTATE
 }
 
-type PageInfo {
+createTypeStub PageInfo {
     endCursor: String
 
     hasNextPage: Boolean!
@@ -1847,7 +1847,7 @@ type PageInfo {
     startCursor: String
 }
 
-type Project implements Node, Updatable {
+createTypeStub Project implements Node, Updatable {
     body: String
 
     bodyHTML: HTML!
@@ -1870,7 +1870,7 @@ type Project implements Node, Updatable {
     databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
     id: Id!
 
-    name: String!
+    prop: String!
 
     number: Int!
 
@@ -1880,14 +1880,14 @@ type Project implements Node, Updatable {
 
     state: ProjectState!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 
     viewerCanUpdate: Boolean!
 }
 
-type ProjectCard implements Node {
+createTypeStub ProjectCard implements Node {
     column: ProjectColumn
 
     content: ProjectCardItem
@@ -1909,12 +1909,12 @@ type ProjectCard implements Node {
 
     state: ProjectCardState
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 }
 
-type ProjectCardConnection {
+createTypeStub ProjectCardConnection {
     edges: [ProjectCardEdge]
 
     nodes: [ProjectCard]
@@ -1924,13 +1924,13 @@ type ProjectCardConnection {
     totalCount: Int!
 }
 
-type ProjectCardEdge {
+createTypeStub ProjectCardEdge {
     cursor: String!
 
     node: ProjectCard
 }
 
-union ProjectCardItem = Issue | PullRequest
+createUnionStub ProjectCardItem = Issue | PullRequest
 
 enum ProjectCardState {
     CONTENT_ONLY
@@ -1940,7 +1940,7 @@ enum ProjectCardState {
     REDACTED
 }
 
-type ProjectColumn implements Node {
+createTypeStub ProjectColumn implements Node {
     cards(
     first: Int
 
@@ -1955,14 +1955,14 @@ type ProjectColumn implements Node {
     databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
     id: Id!
 
-    name: String!
+    prop: String!
 
     project: Project!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 }
 
-type ProjectColumnConnection {
+createTypeStub ProjectColumnConnection {
     edges: [ProjectColumnEdge]
 
     nodes: [ProjectColumn]
@@ -1972,13 +1972,13 @@ type ProjectColumnConnection {
     totalCount: Int!
 }
 
-type ProjectColumnEdge {
+createTypeStub ProjectColumnEdge {
     cursor: String!
 
     node: ProjectColumn
 }
 
-type ProjectConnection {
+createTypeStub ProjectConnection {
     edges: [ProjectEdge]
 
     nodes: [Project]
@@ -1988,7 +1988,7 @@ type ProjectConnection {
     totalCount: Int!
 }
 
-type ProjectEdge {
+createTypeStub ProjectEdge {
     cursor: String!
 
     node: Project
@@ -2042,7 +2042,7 @@ enum ProjectState {
     CLOSED
 }
 
-type ProtectedBranch implements Node {
+createTypeStub ProtectedBranch implements Node {
     creator: Actor
 
     hasDismissableStaleReviews: Boolean!
@@ -2060,7 +2060,7 @@ type ProtectedBranch implements Node {
 
     isAdminEnforced: Boolean!
 
-    name: String!
+    prop: String!
 
     pushAllowances(
     first: Int
@@ -2085,7 +2085,7 @@ type ProtectedBranch implements Node {
     before: String): ReviewDismissalAllowanceConnection!
 }
 
-type ProtectedBranchConnection {
+createTypeStub ProtectedBranchConnection {
     edges: [ProtectedBranchEdge]
 
     nodes: [ProtectedBranch]
@@ -2095,13 +2095,13 @@ type ProtectedBranchConnection {
     totalCount: Int!
 }
 
-type ProtectedBranchEdge {
+createTypeStub ProtectedBranchEdge {
     cursor: String!
 
     node: ProtectedBranch
 }
 
-type PullRequest implements Node, Assignable, Closable, Comment, Updatable, UpdatableComment, Labelable, Lockable, Reactable, RepositoryNode, Subscribable, UniformResourceLocatable {
+createTypeStub PullRequest implements Node, Assignable, Closable, Comment, Updatable, UpdatableComment, Labelable, Lockable, Reactable, RepositoryNode, Subscribable, UniformResourceLocatable {
     assignees(
     first: Int
 
@@ -2260,7 +2260,7 @@ type PullRequest implements Node, Assignable, Closable, Comment, Updatable, Upda
 
     title: String!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 
@@ -2277,7 +2277,7 @@ type PullRequest implements Node, Assignable, Closable, Comment, Updatable, Upda
     viewerSubscription: SubscriptionState!
 }
 
-type PullRequestCommit implements Node, UniformResourceLocatable {
+createTypeStub PullRequestCommit implements Node, UniformResourceLocatable {
     commit: Commit!
     id: Id!
 
@@ -2288,7 +2288,7 @@ type PullRequestCommit implements Node, UniformResourceLocatable {
     url: URI!
 }
 
-type PullRequestCommitConnection {
+createTypeStub PullRequestCommitConnection {
     edges: [PullRequestCommitEdge]
 
     nodes: [PullRequestCommit]
@@ -2298,13 +2298,13 @@ type PullRequestCommitConnection {
     totalCount: Int!
 }
 
-type PullRequestCommitEdge {
+createTypeStub PullRequestCommitEdge {
     cursor: String!
 
     node: PullRequestCommit
 }
 
-type PullRequestConnection {
+createTypeStub PullRequestConnection {
     edges: [PullRequestEdge]
 
     nodes: [PullRequest]
@@ -2314,7 +2314,7 @@ type PullRequestConnection {
     totalCount: Int!
 }
 
-type PullRequestEdge {
+createTypeStub PullRequestEdge {
     cursor: String!
 
     node: PullRequest
@@ -2328,7 +2328,7 @@ enum PullRequestPubSubTopic {
     HEAD_REF
 }
 
-type PullRequestReview implements Node, Comment, Deletable, Updatable, UpdatableComment, RepositoryNode {
+createTypeStub PullRequestReview implements Node, Comment, Deletable, Updatable, UpdatableComment, RepositoryNode {
     author: Actor
 
     authorAssociation: CommentAuthorAssociation!
@@ -2373,7 +2373,7 @@ type PullRequestReview implements Node, Comment, Deletable, Updatable, Updatable
 
     submittedAt: DateTime
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 
@@ -2386,7 +2386,7 @@ type PullRequestReview implements Node, Comment, Deletable, Updatable, Updatable
     viewerDidAuthor: Boolean!
 }
 
-type PullRequestReviewComment implements Node, Comment, Deletable, Updatable, UpdatableComment, Reactable, RepositoryNode {
+createTypeStub PullRequestReviewComment implements Node, Comment, Deletable, Updatable, UpdatableComment, Reactable, RepositoryNode {
     author: Actor
 
     authorAssociation: CommentAuthorAssociation!
@@ -2462,7 +2462,7 @@ type PullRequestReviewComment implements Node, Comment, Deletable, Updatable, Up
     viewerDidAuthor: Boolean!
 }
 
-type PullRequestReviewCommentConnection {
+createTypeStub PullRequestReviewCommentConnection {
     edges: [PullRequestReviewCommentEdge]
 
     nodes: [PullRequestReviewComment]
@@ -2472,13 +2472,13 @@ type PullRequestReviewCommentConnection {
     totalCount: Int!
 }
 
-type PullRequestReviewCommentEdge {
+createTypeStub PullRequestReviewCommentEdge {
     cursor: String!
 
     node: PullRequestReviewComment
 }
 
-type PullRequestReviewConnection {
+createTypeStub PullRequestReviewConnection {
     edges: [PullRequestReviewEdge]
 
     nodes: [PullRequestReview]
@@ -2488,7 +2488,7 @@ type PullRequestReviewConnection {
     totalCount: Int!
 }
 
-type PullRequestReviewEdge {
+createTypeStub PullRequestReviewEdge {
     cursor: String!
 
     node: PullRequestReview
@@ -2516,7 +2516,7 @@ enum PullRequestReviewState {
     DISMISSED
 }
 
-type PullRequestReviewThread implements Node {
+createTypeStub PullRequestReviewThread implements Node {
     comments(
     first: Int
 
@@ -2538,7 +2538,7 @@ enum PullRequestState {
     MERGED
 }
 
-type PullRequestTimelineConnection {
+createTypeStub PullRequestTimelineConnection {
     edges: [PullRequestTimelineItemEdge]
 
     nodes: [PullRequestTimelineItem]
@@ -2547,24 +2547,24 @@ type PullRequestTimelineConnection {
 
     totalCount: Int!
 }
-union PullRequestTimelineItem = Commit | CommitCommentThread | PullRequestReview | PullRequestReviewThread | PullRequestReviewComment | IssueComment | ClosedEvent | ReopenedEvent | SubscribedEvent | UnsubscribedEvent | MergedEvent | ReferencedEvent | AssignedEvent | UnassignedEvent | LabeledEvent | UnlabeledEvent | MilestonedEvent | DemilestonedEvent | RenamedTitleEvent | LockedEvent | UnlockedEvent | DeployedEvent | HeadRefDeletedEvent | HeadRefRestoredEvent | HeadRefForcePushedEvent | BaseRefForcePushedEvent | ReviewRequestedEvent | ReviewRequestRemovedEvent | ReviewDismissedEvent
+createUnionStub PullRequestTimelineItem = Commit | CommitCommentThread | PullRequestReview | PullRequestReviewThread | PullRequestReviewComment | IssueComment | ClosedEvent | ReopenedEvent | SubscribedEvent | UnsubscribedEvent | MergedEvent | ReferencedEvent | AssignedEvent | UnassignedEvent | LabeledEvent | UnlabeledEvent | MilestonedEvent | DemilestonedEvent | RenamedTitleEvent | LockedEvent | UnlockedEvent | DeployedEvent | HeadRefDeletedEvent | HeadRefRestoredEvent | HeadRefForcePushedEvent | BaseRefForcePushedEvent | ReviewRequestedEvent | ReviewRequestRemovedEvent | ReviewDismissedEvent
 
-type PullRequestTimelineItemEdge {
+createTypeStub PullRequestTimelineItemEdge {
     cursor: String!
 
     node: PullRequestTimelineItem
 }
 
-type PushAllowance implements Node {
+createTypeStub PushAllowance implements Node {
     actor: PushAllowanceActor
     id: Id!
 
     protectedBranch: ProtectedBranch!
 }
 
-union PushAllowanceActor = User | Team
+createUnionStub PushAllowanceActor = User | Team
 
-type PushAllowanceConnection {
+createTypeStub PushAllowanceConnection {
     edges: [PushAllowanceEdge]
 
     nodes: [PushAllowance]
@@ -2574,13 +2574,13 @@ type PushAllowanceConnection {
     totalCount: Int!
 }
 
-type PushAllowanceEdge {
+createTypeStub PushAllowanceEdge {
     cursor: String!
 
     node: PushAllowance
 }
 
-type Query {
+createTypeStub Query {
     codeOfConduct(key: String!): CodeOfConduct
 
     codesOfConduct: [CodeOfConduct]
@@ -2595,22 +2595,22 @@ type Query {
 
     relay: Query!
 
-    repository(owner: String!, name: String!): Repository
+    repository(owner: String!, prop: String!): Repository
 
     repositoryOwner(login: String!): RepositoryOwner
 
     resource(url: URI!): UniformResourceLocatable
 
-    search(first: Int, after: String, last: Int, before: String, query: String!, type: SearchType!): SearchResultItemConnection!
+    search(first: Int, after: String, last: Int, before: String, query: String!, createTypeStub: SearchType!): SearchResultItemConnection!
 
-    topic(name: String!): Topic
+    topic(prop: String!): Topic
 
     user(login: String!): User
 
     viewer: User!
 }
 
-type RateLimit {
+createTypeStub RateLimit {
     cost: Int!
 
     limit: Int!
@@ -2642,7 +2642,7 @@ interface Reactable {
     viewerCanReact: Boolean!
 }
 
-type ReactingUserConnection {
+createTypeStub ReactingUserConnection {
     edges: [ReactingUserEdge]
 
     nodes: [User]
@@ -2652,14 +2652,14 @@ type ReactingUserConnection {
     totalCount: Int!
 }
 
-type ReactingUserEdge {
+createTypeStub ReactingUserEdge {
     cursor: String!
     node: User!
 
     reactedAt: DateTime!
 }
 
-type Reaction implements Node {
+createTypeStub Reaction implements Node {
     content: ReactionContent!
 
     createdAt: DateTime!
@@ -2670,7 +2670,7 @@ type Reaction implements Node {
     user: User
 }
 
-type ReactionConnection {
+createTypeStub ReactionConnection {
     edges: [ReactionEdge]
 
     nodes: [Reaction]
@@ -2696,13 +2696,13 @@ enum ReactionContent {
     HEART
 }
 
-type ReactionEdge {
+createTypeStub ReactionEdge {
     cursor: String!
 
     node: Reaction
 }
 
-type ReactionGroup {
+createTypeStub ReactionGroup {
     content: ReactionContent!
 
     createdAt: DateTime
@@ -2731,7 +2731,7 @@ enum ReactionOrderField {
     CREATED_AT
 }
 
-type Ref implements Node {
+createTypeStub Ref implements Node {
     associatedPullRequests(
     first: Int
 
@@ -2744,7 +2744,7 @@ type Ref implements Node {
     states: [PullRequestState!]): PullRequestConnection!
     id: Id!
 
-    name: String!
+    prop: String!
 
     prefix: String!
 
@@ -2753,7 +2753,7 @@ type Ref implements Node {
     target: GitObject!
 }
 
-type RefConnection {
+createTypeStub RefConnection {
     edges: [RefEdge]
 
     nodes: [Ref]
@@ -2763,13 +2763,13 @@ type RefConnection {
     totalCount: Int!
 }
 
-type RefEdge {
+createTypeStub RefEdge {
     cursor: String!
 
     node: Ref
 }
 
-type ReferencedEvent implements Node {
+createTypeStub ReferencedEvent implements Node {
     actor: Actor
 
     commit: Commit
@@ -2788,13 +2788,13 @@ type ReferencedEvent implements Node {
     subject: ReferencedSubject!
 }
 
-union ReferencedSubject = Issue | PullRequest
+createUnionStub ReferencedSubject = Issue | PullRequest
 
-type Release implements Node, UniformResourceLocatable {
+createTypeStub Release implements Node, UniformResourceLocatable {
     description: String
     id: Id!
 
-    name: String
+    prop: String
 
     publishedAt: DateTime
 
@@ -2807,7 +2807,7 @@ type Release implements Node, UniformResourceLocatable {
 
     before: String
 
-    name: String!): ReleaseAssetConnection!
+    prop: String!): ReleaseAssetConnection!
 
     releaseAssets(
     first: Int
@@ -2825,17 +2825,17 @@ type Release implements Node, UniformResourceLocatable {
     url: URI!
 }
 
-type ReleaseAsset implements Node {
+createTypeStub ReleaseAsset implements Node {
     id: Id!
 
-    name: String!
+    prop: String!
 
     release: Release
 
     url: URI!
 }
 
-type ReleaseAssetConnection {
+createTypeStub ReleaseAssetConnection {
     edges: [ReleaseAssetEdge]
 
     nodes: [ReleaseAsset]
@@ -2845,13 +2845,13 @@ type ReleaseAssetConnection {
     totalCount: Int!
 }
 
-type ReleaseAssetEdge {
+createTypeStub ReleaseAssetEdge {
     cursor: String!
 
     node: ReleaseAsset
 }
 
-type ReleaseConnection {
+createTypeStub ReleaseConnection {
     edges: [ReleaseEdge]
 
     nodes: [Release]
@@ -2861,7 +2861,7 @@ type ReleaseConnection {
     totalCount: Int!
 }
 
-type ReleaseEdge {
+createTypeStub ReleaseEdge {
     cursor: String!
 
     node: Release
@@ -2875,7 +2875,7 @@ input RemoveOutsideCollaboratorInput {
     organizationId: Id!
 }
 
-type RemoveOutsideCollaboratorPayload {
+createTypeStub RemoveOutsideCollaboratorPayload {
     clientMutationId: String
 
     removedUser: User!
@@ -2889,7 +2889,7 @@ input RemoveReactionInput {
     content: ReactionContent!
 }
 
-type RemoveReactionPayload {
+createTypeStub RemoveReactionPayload {
     clientMutationId: String
 
     reaction: Reaction!
@@ -2903,13 +2903,13 @@ input RemoveStarInput {
     starrableId: Id!
 }
 
-type RemoveStarPayload {
+createTypeStub RemoveStarPayload {
     clientMutationId: String
 
     starrable: Starrable!
 }
 
-type RemovedFromProjectEvent implements Node {
+createTypeStub RemovedFromProjectEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -2918,7 +2918,7 @@ type RemovedFromProjectEvent implements Node {
     id: Id!
 }
 
-type RenamedTitleEvent implements Node {
+createTypeStub RenamedTitleEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -2931,9 +2931,9 @@ type RenamedTitleEvent implements Node {
     subject: RenamedTitleSubject!
 }
 
-union RenamedTitleSubject = Issue | PullRequest
+createUnionStub RenamedTitleSubject = Issue | PullRequest
 
-type ReopenedEvent implements Node {
+createTypeStub ReopenedEvent implements Node {
     actor: Actor
 
     closable: Closable!
@@ -2942,7 +2942,7 @@ type ReopenedEvent implements Node {
     id: Id!
 }
 
-type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformResourceLocatable, RepositoryInfo {
+createTypeStub Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformResourceLocatable, RepositoryInfo {
     codeOfConduct: CodeOfConduct
 
     commitComments(
@@ -3029,7 +3029,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
     states: [IssueState!]): IssueConnection!
 
     label(
-    name: String!): Label
+    prop: String!): Label
 
     labels(
     first: Int
@@ -3078,7 +3078,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3195,7 +3195,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
 
     orderBy: StarOrder): StargazerConnection!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 
@@ -3235,7 +3235,7 @@ enum RepositoryCollaboratorAffiliation {
     OUTSIdE
 }
 
-type RepositoryConnection {
+createTypeStub RepositoryConnection {
     edges: [RepositoryEdge]
 
     nodes: [Repository]
@@ -3247,7 +3247,7 @@ type RepositoryConnection {
     totalDiskUsage: Int!
 }
 
-type RepositoryEdge {
+createTypeStub RepositoryEdge {
     cursor: String!
 
     node: Repository
@@ -3280,7 +3280,7 @@ interface RepositoryInfo {
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3290,12 +3290,12 @@ interface RepositoryInfo {
 
     resourcePath: URI!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 }
 
-type RepositoryInvitation implements Node {
+createTypeStub RepositoryInvitation implements Node {
     id: Id!
 
     invitee: User!
@@ -3305,7 +3305,7 @@ type RepositoryInvitation implements Node {
     repository: RepositoryInvitationRepository
 }
 
-type RepositoryInvitationRepository implements RepositoryInfo {
+createTypeStub RepositoryInvitationRepository implements RepositoryInfo {
     createdAt: DateTime!
 
     description: String
@@ -3332,7 +3332,7 @@ type RepositoryInvitationRepository implements RepositoryInfo {
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3342,7 +3342,7 @@ type RepositoryInvitationRepository implements RepositoryInfo {
 
     resourcePath: URI!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 }
@@ -3423,7 +3423,7 @@ interface RepositoryOwner {
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -3436,7 +3436,7 @@ enum RepositoryPrivacy {
     PRIVATE
 }
 
-type RepositoryTopic implements Node, UniformResourceLocatable {
+createTypeStub RepositoryTopic implements Node, UniformResourceLocatable {
     id: Id!
 
     resourcePath: URI!
@@ -3446,7 +3446,7 @@ type RepositoryTopic implements Node, UniformResourceLocatable {
     url: URI!
 }
 
-type RepositoryTopicConnection {
+createTypeStub RepositoryTopicConnection {
     edges: [RepositoryTopicEdge]
 
     nodes: [RepositoryTopic]
@@ -3456,7 +3456,7 @@ type RepositoryTopicConnection {
     totalCount: Int!
 }
 
-type RepositoryTopicEdge {
+createTypeStub RepositoryTopicEdge {
     cursor: String!
 
     node: RepositoryTopic
@@ -3471,10 +3471,10 @@ input RequestReviewsInput {
 
     teamIds: [Id!]
 
-    union: Boolean
+    createUnionStub: Boolean
 }
 
-type RequestReviewsPayload {
+createTypeStub RequestReviewsPayload {
     clientMutationId: String
 
     pullRequest: PullRequest!
@@ -3482,16 +3482,16 @@ type RequestReviewsPayload {
     requestedReviewersEdge: UserEdge!
 }
 
-type ReviewDismissalAllowance implements Node {
+createTypeStub ReviewDismissalAllowance implements Node {
     actor: ReviewDismissalAllowanceActor
     id: Id!
 
     protectedBranch: ProtectedBranch!
 }
 
-union ReviewDismissalAllowanceActor = User | Team
+createUnionStub ReviewDismissalAllowanceActor = User | Team
 
-type ReviewDismissalAllowanceConnection {
+createTypeStub ReviewDismissalAllowanceConnection {
     edges: [ReviewDismissalAllowanceEdge]
 
     nodes: [ReviewDismissalAllowance]
@@ -3501,13 +3501,13 @@ type ReviewDismissalAllowanceConnection {
     totalCount: Int!
 }
 
-type ReviewDismissalAllowanceEdge {
+createTypeStub ReviewDismissalAllowanceEdge {
     cursor: String!
 
     node: ReviewDismissalAllowance
 }
 
-type ReviewDismissedEvent implements Node, UniformResourceLocatable {
+createTypeStub ReviewDismissedEvent implements Node, UniformResourceLocatable {
     actor: Actor
 
     createdAt: DateTime!
@@ -3532,7 +3532,7 @@ type ReviewDismissedEvent implements Node, UniformResourceLocatable {
     url: URI!
 }
 
-type ReviewRequest implements Node {
+createTypeStub ReviewRequest implements Node {
     databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
     id: Id!
 
@@ -3541,7 +3541,7 @@ type ReviewRequest implements Node {
     reviewer: User
 }
 
-type ReviewRequestConnection {
+createTypeStub ReviewRequestConnection {
     edges: [ReviewRequestEdge]
 
     nodes: [ReviewRequest]
@@ -3551,13 +3551,13 @@ type ReviewRequestConnection {
     totalCount: Int!
 }
 
-type ReviewRequestEdge {
+createTypeStub ReviewRequestEdge {
     cursor: String!
 
     node: ReviewRequest
 }
 
-type ReviewRequestRemovedEvent implements Node {
+createTypeStub ReviewRequestRemovedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -3568,7 +3568,7 @@ type ReviewRequestRemovedEvent implements Node {
     subject: User!
 }
 
-type ReviewRequestedEvent implements Node {
+createTypeStub ReviewRequestedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -3579,9 +3579,9 @@ type ReviewRequestedEvent implements Node {
     subject: User!
 }
 
-union SearchResultItem = Issue | PullRequest | Repository | User | Organization
+createUnionStub SearchResultItem = Issue | PullRequest | Repository | User | Organization
 
-type SearchResultItemConnection {
+createTypeStub SearchResultItemConnection {
     codeCount: Int!
 
     edges: [SearchResultItemEdge]
@@ -3599,7 +3599,7 @@ type SearchResultItemConnection {
     wikiCount: Int!
 }
 
-type SearchResultItemEdge {
+createTypeStub SearchResultItemEdge {
     cursor: String!
 
     node: SearchResultItem
@@ -3613,7 +3613,7 @@ enum SearchType {
     USER
 }
 
-type SmimeSignature implements GitSignature {
+createTypeStub SmimeSignature implements GitSignature {
     email: String!
 
     isValid: Boolean!
@@ -3637,7 +3637,7 @@ enum StarOrderField {
     STARRED_AT
 }
 
-type StargazerConnection {
+createTypeStub StargazerConnection {
     edges: [StargazerEdge]
 
     nodes: [User]
@@ -3647,7 +3647,7 @@ type StargazerConnection {
     totalCount: Int!
 }
 
-type StargazerEdge {
+createTypeStub StargazerEdge {
     cursor: String!
     node: User!
 
@@ -3671,7 +3671,7 @@ interface Starrable {
     viewerHasStarred: Boolean!
 }
 
-type StarredRepositoryConnection {
+createTypeStub StarredRepositoryConnection {
     edges: [StarredRepositoryEdge]
 
     nodes: [Repository]
@@ -3681,18 +3681,18 @@ type StarredRepositoryConnection {
     totalCount: Int!
 }
 
-type StarredRepositoryEdge {
+createTypeStub StarredRepositoryEdge {
     cursor: String!
     node: Repository!
 
     starredAt: DateTime!
 }
 
-type Status implements Node {
+createTypeStub Status implements Node {
     commit: Commit
 
     context(
-    name: String!): StatusContext
+    prop: String!): StatusContext
 
     contexts: [StatusContext!]!
     id: Id!
@@ -3700,7 +3700,7 @@ type Status implements Node {
     state: StatusState!
 }
 
-type StatusContext implements Node {
+createTypeStub StatusContext implements Node {
     commit: Commit
 
     context: String!
@@ -3739,7 +3739,7 @@ input SubmitPullRequestReviewInput {
     body: String
 }
 
-type SubmitPullRequestReviewPayload {
+createTypeStub SubmitPullRequestReviewPayload {
     clientMutationId: String
 
     pullRequestReview: PullRequestReview!
@@ -3751,7 +3751,7 @@ interface Subscribable {
     viewerSubscription: SubscriptionState!
 }
 
-type SubscribedEvent implements Node {
+createTypeStub SubscribedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -3768,7 +3768,7 @@ enum SubscriptionState {
     IGNORED
 }
 
-type SuggestedReviewer {
+createTypeStub SuggestedReviewer {
     isAuthor: Boolean!
 
     isCommenter: Boolean!
@@ -3776,7 +3776,7 @@ type SuggestedReviewer {
     reviewer: User!
 }
 
-type Tag implements Node, GitObject {
+createTypeStub Tag implements Node, GitObject {
     abbreviatedOid: String!
 
     commitResourcePath: URI!
@@ -3786,7 +3786,7 @@ type Tag implements Node, GitObject {
 
     hello: String
 
-    name: String!
+    prop: String!
 
     oid: GitObjectId!
 
@@ -3797,7 +3797,7 @@ type Tag implements Node, GitObject {
     target: GitObject!
 }
 
-type Team implements Node {
+createTypeStub Team implements Node {
     description: String
 
     editTeamResourcePath: URI!
@@ -3814,7 +3814,7 @@ type Team implements Node {
 
     before: String): OrganizationInvitationConnection
 
-    name: String!
+    prop: String!
 
     organization: Organization!
 
@@ -3827,7 +3827,7 @@ type Team implements Node {
     url: URI!
 }
 
-type TeamConnection {
+createTypeStub TeamConnection {
     edges: [TeamEdge]
 
     nodes: [Team]
@@ -3837,7 +3837,7 @@ type TeamConnection {
     totalCount: Int!
 }
 
-type TeamEdge {
+createTypeStub TeamEdge {
     cursor: String!
 
     node: Team
@@ -3865,10 +3865,10 @@ enum TeamRole {
     MEMBER
 }
 
-type Topic implements Node {
+createTypeStub Topic implements Node {
     id: Id!
 
-    name: String!
+    prop: String!
 
     relatedTopics: [Topic!]!
 }
@@ -3883,7 +3883,7 @@ enum TopicSuggestionDeclineReason {
     TOO_GENERAL
 }
 
-type Tree implements Node, GitObject {
+createTypeStub Tree implements Node, GitObject {
     abbreviatedOid: String!
 
     commitResourcePath: URI!
@@ -3898,10 +3898,10 @@ type Tree implements Node, GitObject {
     repository: Repository!
 }
 
-type TreeEntry {
+createTypeStub TreeEntry {
     mode: Int!
 
-    name: String!
+    prop: String!
 
     object: GitObject
 
@@ -3909,12 +3909,12 @@ type TreeEntry {
 
     repository: Repository!
 
-    type: String!
+    createTypeStub: String!
 }
 
 scalar URI
 
-type UnassignedEvent implements Node {
+createTypeStub UnassignedEvent implements Node {
     actor: Actor
 
     assignable: Assignable!
@@ -3931,7 +3931,7 @@ interface UniformResourceLocatable {
     url: URI!
 }
 
-type UnknownSignature implements GitSignature {
+createTypeStub UnknownSignature implements GitSignature {
     email: String!
 
     isValid: Boolean!
@@ -3945,7 +3945,7 @@ type UnknownSignature implements GitSignature {
     state: GitSignatureState!
 }
 
-type UnlabeledEvent implements Node {
+createTypeStub UnlabeledEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -3956,7 +3956,7 @@ type UnlabeledEvent implements Node {
     labelable: Labelable!
 }
 
-type UnlockedEvent implements Node {
+createTypeStub UnlockedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -3965,7 +3965,7 @@ type UnlockedEvent implements Node {
     lockable: Lockable!
 }
 
-type UnsubscribedEvent implements Node {
+createTypeStub UnsubscribedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
@@ -3990,7 +3990,7 @@ input UpdateProjectCardInput {
     note: String!
 }
 
-type UpdateProjectCardPayload {
+createTypeStub UpdateProjectCardPayload {
     clientMutationId: String
 
     projectCard: ProjectCard!
@@ -4001,10 +4001,10 @@ input UpdateProjectColumnInput {
 
     projectColumnId: Id!
 
-    name: String!
+    prop: String!
 }
 
-type UpdateProjectColumnPayload {
+createTypeStub UpdateProjectColumnPayload {
     clientMutationId: String
 
     projectColumn: ProjectColumn!
@@ -4015,14 +4015,14 @@ input UpdateProjectInput {
 
     projectId: Id!
 
-    name: String!
+    prop: String!
 
     body: String
 
     state: ProjectState
 }
 
-type UpdateProjectPayload {
+createTypeStub UpdateProjectPayload {
     clientMutationId: String
 
     project: Project!
@@ -4036,7 +4036,7 @@ input UpdatePullRequestReviewCommentInput {
     body: String!
 }
 
-type UpdatePullRequestReviewCommentPayload {
+createTypeStub UpdatePullRequestReviewCommentPayload {
     clientMutationId: String
 
     pullRequestReviewComment: PullRequestReviewComment!
@@ -4050,7 +4050,7 @@ input UpdatePullRequestReviewInput {
     body: String!
 }
 
-type UpdatePullRequestReviewPayload {
+createTypeStub UpdatePullRequestReviewPayload {
     clientMutationId: String
 
     pullRequestReview: PullRequestReview!
@@ -4064,7 +4064,7 @@ input UpdateSubscriptionInput {
     state: SubscriptionState!
 }
 
-type UpdateSubscriptionPayload {
+createTypeStub UpdateSubscriptionPayload {
     clientMutationId: String
 
     subscribable: Subscribable!
@@ -4078,7 +4078,7 @@ input UpdateTopicsInput {
     topicNames: [String!]!
 }
 
-type UpdateTopicsPayload {
+createTypeStub UpdateTopicsPayload {
     clientMutationId: String
 
     invalidTopicNames: [String!]
@@ -4086,7 +4086,7 @@ type UpdateTopicsPayload {
     repository: Repository!
 }
 
-type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
+createTypeStub User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     avatarUrl(
     size: Int): URI!
 
@@ -4140,7 +4140,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     before: String): FollowingConnection!
 
     gist(
-    name: String!): Gist
+    prop: String!): Gist
 
     gists(
     first: Int
@@ -4189,7 +4189,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
 
     login: String!
 
-    name: String
+    prop: String
 
     organization(
     login: String!): Organization
@@ -4259,7 +4259,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -4276,7 +4276,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
 
     orderBy: StarOrder): StarredRepositoryConnection!
 
-    updatedAt: DateTime! @deprecated(reason: "General type updated timestamps will eventually be replaced by other field specific timestamps.")
+    updatedAt: DateTime! @deprecated(reason: "General createTypeStub updated timestamps will eventually be replaced by other field specific timestamps.")
 
     url: URI!
 
@@ -4304,7 +4304,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     websiteUrl: URI
 }
 
-type UserConnection {
+createTypeStub UserConnection {
     edges: [UserEdge]
 
     nodes: [User]
@@ -4314,7 +4314,7 @@ type UserConnection {
     totalCount: Int!
 }
 
-type UserEdge {
+createTypeStub UserEdge {
     cursor: String!
 
     node: User

@@ -1,177 +1,194 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.CustomScalarAdapter
-import com.prestongarno.ktq.adapters.CustomScalarListAdapter
-import com.prestongarno.ktq.adapters.ScalarListAdapter
-import com.prestongarno.ktq.adapters.ScalarStubAdapter
-import com.prestongarno.ktq.adapters.TypeListAdapter
-import com.prestongarno.ktq.adapters.TypeStubAdapter
-import com.prestongarno.ktq.adapters.custom.QScalarListMapper
-import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.internal.Grub
+import com.prestongarno.ktq.internal.StubProvider
 
 /**
- * The root type of all generated schema objects. Nested objects
+ * The root createTypeStub of all generated schema objects. Nested objects
  * provide handles for field declarations
  * @author prestongarno */
 interface QSchemaType {
 
   /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates on
+   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which are regular Scalars (Int, Float, Boolean, String):
-   * {@link com.prestongarno.ktq.QSchemaType.QScalar#stub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QScalar#configStub(arginit)}.*/
+   * {@link com.prestongarno.ktq.QSchemaType.QScalar#createStub()} and
+   * {@link com.prestongarno.ktq.QSchemaType.QScalar#createConfigStub(arginit)}.*/
   object QScalar {
     /**
-     * Method which provides a delegate for fields
-     * @param T The type argument for the stub, one of: {@link kotlin.Int}, {@link kotlin.String},
-     *     {@link kotlin.Float}, {@link kotlin.Boolean}
-     * @return Grub<Stub<T>> the delegate which lazily provides a Stub<T> */
-    fun <T> stub(): Grub<Stub<T>> = Grub { ScalarStubAdapter<T, ArgBuilder>(it, { it }) }
+     * Method which provides a delegate for fields of type [kotlin.String]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<StringDelegate<ArgBuilder>>] */
+    fun stringStub() = Grub.createStringDelegate()
 
     /**
+     * Method which provides a delegate for fields of type [kotlin.Int]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<IntDelegate<ArgBuilder>>] */
+    fun intStub() = Grub.createIntDelegate()
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Float]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<FloatDelegate<ArgBuilder>>] */
+    fun floatStub() = Grub.createFloatDelegate()
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Boolean]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<BooleanDelegate<ArgBuilder>>] */
+    fun booleanStub() = Grub.createBooleanDelegate()
+    /**
      * Method which provides a delegate for fields
-     * @param arginit an initializer for the stub field. <b>Important for auto-generated schema definitions</b>
-     * @param T type argument for the stub, one of: {@link kotlin.Int}, {@link kotlin.String},
-     *     {@link kotlin.Float}, {@link kotlin.Boolean}
-     * @param A type argument for the argument builder class for that given schema field definition
+     * @param arginit an initializer for the createStub field. <b>Important for auto-generated schema definitions</b>
      * @return Grub<QConfigStub<T, A>> the delegate which lazily provides a Stub<T> */
-    fun <T : Any, A : ArgBuilder> configStub(arginit: (ArgBuilder) -> A): Grub<QConfigStub<T, A>>
-        = Grub { ScalarStubAdapter<T, A>(it, arginit) }
+    // TODO add configuration methods for custom arg builders
+    //inline fun <reified T : Any, A : ArgBuilder> configStub(noinline arginit: (ArgBuilder) -> A): StubProvider<QConfigStub<T, A>> = Grub.createConfigStub(T::class.simpleName!!, arginit)
   }
 
   /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates on
+   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which are types typedValueFrom any Schema-defined scalars:
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#stub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#configStub(arginit)}.*/
+   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#createStub()} and
+   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#createConfigStub(arginit)}.*/
   object QCustomScalar {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
-     * on schema-defined scalar types
-     * @param T The type argument for the stub, typedValueFrom a schema-defined CustomScalar type
+     * fragment schema-defined scalar types
+     * @param T The createTypeStub argument for the createStub, typedValueFrom a schema-defined CustomScalar createTypeStub
      * @return Grub<CustomScalarInitStub<T>> the delegate which lazily provides a CustomScalarInitStub<T> */
-    fun <T : CustomScalar> stub(): Grub<CustomScalarInitStub<T>>
-        = Grub { CustomScalarAdapter<T, QScalarMapper<T>, T, CustomScalarArgBuilder>(it, { it }) }
+    inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarInitStub<T>>
+        = Grub.createCustomScalarStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
-     * on schema-defined scalar types which take input arguments
-     * @param arginit an initializer for the stub field. <b>Important for auto-generated schema definitions</b>
-     * @param T type of the custom scalar
-     * @param A type argument for the argument builder class for that given schema field definition
+     * fragment schema-defined scalar types which take input arguments
+     * @param arginit an initializer for the createStub field. <b>Important for auto-generated schema definitions</b>
+     * @param T createTypeStub of the custom scalar
+     * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarConfigStub<T, A>> the delegate which lazily provides a CustomScalarConfigStub<T, A> */
-    fun <T : CustomScalar, A : CustomScalarArgBuilder> configStub(
-        arginit: (CustomScalarArgBuilder) -> A
-    ): Grub<CustomScalarConfigStub<T, A>>
-        = Grub { CustomScalarAdapter<T, QScalarMapper<T>, T, A>(it, arginit) }
+    inline fun <reified T : CustomScalar, A : CustomScalarArgBuilder> configStub(
+        noinline arginit: (CustomScalarArgBuilder) -> A
+    ): StubProvider<CustomScalarConfigStub<T, A>> = Grub.createCustomScalarConfig(T::class.simpleName!!, arginit)
   }
 
   /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates on
-   * fields which are of any type defined in the schema:
-   * {@link com.prestongarno.ktq.QSchemaType.QType#stub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QType#configStub(arginit)}.*/
+   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
+   * fields which are of any createTypeStub defined in the schema:
+   * {@link com.prestongarno.ktq.QSchemaType.QType#createStub()} and
+   * {@link com.prestongarno.ktq.QSchemaType.QType#createConfigStub(arginit)}.*/
   object QType {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QType} fields
-     * @param T The type of the stub which the field is backing
+     * @param T The createTypeStub of the createStub which the field is backing
      * @return Grub<InitStub<T>> the delegate which lazily provides a InitStub<T> */
-    fun <T : QSchemaType> stub(): Grub<InitStub<T>> = Grub { TypeStubAdapter<T, QModel<T>, TypeArgBuilder>(it, { it }) }
+    inline fun <reified T : QSchemaType> stub(): StubProvider<InitStub<T>> = Grub.createTypeStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QType} fields
-     * on schema-defined types which take input arguments
-     * @param arginit an initializer for the stub field
-     * @param T type of the field (schema-defined type)
-     * @param A type argument for the argument builder class for that given schema field definition
+     * fragment schema-defined types which take input arguments
+     * @param arginit an initializer for the createStub field
+     * @param T createTypeStub of the field (schema-defined createTypeStub)
+     * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<QTypeConfigStub<T, A>> the delegate which lazily provides a QTypeConfigStub<T, A> */
-    fun <T : QSchemaType, A : TypeArgBuilder> configStub(
-        arginit: (TypeArgBuilder) -> A
-    ): Grub<QTypeConfigStub<T, A>>
-        = Grub { TypeStubAdapter<T, QModel<T>, A>(it, arginit) }
+    inline fun <reified T : QSchemaType, A : ArgBuilder> configStub(
+        noinline arginit: (ArgBuilder) -> A
+    ): StubProvider<QTypeConfigStub<T, A>>
+        = Grub.createTypeConfigStub(T::class.simpleName!!, arginit)
   }
 
   /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates on
+   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which are lists of any built-in scalar (Int, Float, Boolean, String):
-   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#stub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#configStub(arginit)}.*/
+   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#createStub()} and
+   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#createConfigStub(arginit)}.*/
   object QScalarList {
     /**
      * Method which provides a delegate for lists of built-in scalar types
-     * @param T The type argument for the list stub, one of: {@link kotlin.Int}, {@link kotlin.String},
+     * @param T The createTypeStub argument for the list createStub, one of: {@link kotlin.Int}, {@link kotlin.String},
      *     {@link kotlin.Float}, {@link kotlin.Boolean}
      * @return Grub<ListStub<T>> the delegate which lazily provides a ListStub<T> */
-    fun <T> stub(): Grub<ListStub<T>> = Grub { ScalarListAdapter<T, ListArgBuilder>(it, { it }) }
+    //inline fun <reified T> stub(): StubProvider<ListStub<T>> = Grub.createScalarListStub(T::class.simpleName?: throw NullPointerException())
 
     /**
      * Method which provides a delegate for lists of built-in scalar types which accept input arguments
-     * @param arginit an initializer for the list stub fields
-     * @param T type argument for the stub, one of: {@link kotlin.Int}, {@link kotlin.String},
+     * @param arginit an initializer for the list createStub fields
+     * @param T createTypeStub argument for the createStub, one of: {@link kotlin.Int}, {@link kotlin.String},
      *     {@link kotlin.Float}, {@link kotlin.Boolean}
-     * @param A type argument for the argument builder class for the given schema field definition
+     * @param A createTypeStub argument for the argument builder class for the given schema field definition
      * @return Grub<ListConfig<T, A>> the delegate which lazily provides a ListConfig<T, A> */
-    fun <T : Any, A : ListArgBuilder> configStub(arginit: (ListArgBuilder) -> A): Grub<ListConfig<T, A>>
-        = Grub { ScalarListAdapter<T, A>(it, arginit) }
+    //inline fun <reified T : Any, A : ArgBuilder> configStub( noinline arginit: (ArgBuilder) -> A ): StubProvider<ListConfig<T, A>> = Grub.createListConfigStub(T::class.simpleName!!, arginit)
   }
 
   /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates on
-   * fields which represent lists of any type defined in the schema:
-   * {@link com.prestongarno.ktq.QSchemaType.QTypeList#stub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QTypeList#configStub(arginit)}.*/
+   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
+   * fields which represent lists of any createTypeStub defined in the schema:
+   * {@link com.prestongarno.ktq.QSchemaType.QTypeList#createStub()} and
+   * {@link com.prestongarno.ktq.QSchemaType.QTypeList#createConfigStub(arginit)}.*/
   object QTypeList {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QTypeList} fields
-     * @param T The type of the stub
+     * @param T The createTypeStub of the createStub
      * @return Grub<ListInitStub<T>> the delegate which lazily provides a ListInitStub<T> */
-    fun <T : QSchemaType> stub(): Grub<ListInitStub<T>>
-        = Grub { TypeListAdapter<T, QModel<T>, TypeListArgBuilder>(it, { it }) }
+    inline fun <reified T : QSchemaType> stub(): StubProvider<ListInitStub<T>>
+        = Grub.createTypeListStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QTypeList} fields
-     * on schema-defined types which take input arguments
-     * @param arginit an initializer for the stub field
-     * @param T type of the field (schema-defined type)
-     * @param A type argument for the argument builder class for that given schema field definition
+     * fragment schema-defined types which take input arguments
+     * @param arginit an initializer for the createStub field
+     * @param T createTypeStub of the field (schema-defined createTypeStub)
+     * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<ListConfigType<T, A>> the delegate which lazily provides a ListConfigType<T, A> */
-    fun <T : QSchemaType, A : TypeListArgBuilder> configStub(arginit: (TypeListArgBuilder) -> A): Grub<ListConfigType<T, A>>
-        = Grub { TypeListAdapter<T, QModel<T>, A>(it, arginit) }
+    inline fun <reified T : QSchemaType, A : ArgBuilder> configStub(
+        noinline arginit: (ArgBuilder) -> A
+    ): StubProvider<ListConfigType<T, A>> = Grub.createTypeListConfigStub(T::class.simpleName!!, arginit)
   }
 
   /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates on
-   * fields which represent lists of any custom scalar type defined in the schema:
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalarList#stub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalarList#configStub(arginit)}.*/
+   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
+   * fields which represent lists of any custom scalar createTypeStub defined in the schema:
+   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalarList#createStub()} and
+   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalarList#createConfigStub(arginit)}.*/
   object QCustomScalarList {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} collection
-     * fields on schema-defined scalar types
-     * @param T The type argument for the stub, typedValueFrom a schema-defined CustomScalar type
+     * fields fragment schema-defined scalar types
+     * @param T The createTypeStub argument for the createStub, typedValueFrom a schema-defined CustomScalar createTypeStub
      * @return Grub<CustomScalarListInitStub<T>> the delegate which lazily provides a CustomScalarListInitStub<T> */
-    fun <T> stub(): Grub<CustomScalarListInitStub<T>> where T : CustomScalar
-        = Grub { CustomScalarListAdapter<T, QScalarListMapper<T>, T, CustomScalarListArgBuilder>(it, { it }) }
+    inline fun <reified T> stub(): StubProvider<CustomScalarListInitStub<T>> where T : CustomScalar
+        = Grub.createCustomScalarListStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} collection
-     * fields on schema-defined scalar types which take input arguments
-     * @param arginit an initializer for the stub field.
-     * @param T type of the custom scalar
-     * @param A type argument for the argument builder class for that given schema field definition
+     * fields fragment schema-defined scalar types which take input arguments
+     * @param arginit an initializer for the createStub field.
+     * @param T createTypeStub of the custom scalar
+     * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarListArgBuilder<T, A>> the delegate which lazily provides a CustomScalarListArgBuilder<T, A> */
-    fun <T : CustomScalar, A : CustomScalarListArgBuilder> configStub(
-        arginit: (CustomScalarListArgBuilder) -> A
-    ): Grub<CustomScalarListConfigStub<T, A>> =
-        Grub { CustomScalarListAdapter<T, QScalarListMapper<T>, T, A>(it, arginit) }
+    inline fun <reified T : CustomScalar, A : CustomScalarListArgBuilder> configStub(
+        noinline arginit: (CustomScalarListArgBuilder) -> A
+    ): StubProvider<CustomScalarListConfigStub<T, A>> =
+        Grub.createCustomScalarListConfig(T::class.simpleName!!, arginit)
+  }
+
+  object QUnion {
+    inline fun <reified T : QSchemaUnion> stub(objectModel: T): StubProvider<UnionInitStub<T>> =
+        Grub.createUnionStub(objectModel, T::class.simpleName!!)
   }
 }
 
 /**
- * Interface for all Custom Scalar types on a schema.
+ * Interface for all Custom Scalar types fragment a schema.
  * Supports custom deserialization or mapping to another object by
  * using {@link com.prestongarno.ktq.adapters.custom.QScalarMapper} */
 interface CustomScalar : QSchemaType
 
-interface QSchemaUnion : QSchemaType
+interface QSchemaUnion : QSchemaType {
+
+  fun on(init: () -> QModel<*>)
+
+  val queue: DispatchQueue
+
+  companion object {
+    fun create(objectModel: QSchemaUnion): QSchemaUnion = BaseUnionAdapter(objectModel)
+  }
+}
+
+

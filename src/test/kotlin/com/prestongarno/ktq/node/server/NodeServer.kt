@@ -27,8 +27,6 @@ abstract class NodeServer {
 
   @Before internal fun setUp() {
 
-    Runtime.getRuntime().exec("kill ktq-node >/dev/null").waitFor()
-
     graphqlServerPs = ProcessBuilder()
         .inheritIO()
         .command(
