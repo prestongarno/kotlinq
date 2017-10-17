@@ -12,10 +12,17 @@ private fun getFragments(root: QModel<*>, cache: Set<QModel<*>>): Set<FragmentGe
   val fragmentEdges = root.fields.filterIsInstance<FragmentProvider>()
       .map { it.fragments }
       .flatMap { it }
-      .map { it.model }
-      .filterNot { cache.contains(it) }
+      .filterNot { cache.contains(it.model) }
+      .toSet()
   val models = root.fields.filterIsInstance<ModelProvider>()
       .map { it.value }
       .filterNot { cache.contains(it) }
-  return fragmentEdges.map { getFragments(it, cache + fragmentEdges + models) }.flatten().toSet()
+      .plus(fragmentEdges
+          .map { it.model }
+          .filterNot { cache.contains(it) })
+  return fragmentEdges +
+      models.map {
+        getFragments(it, cache + fragmentEdges.map { it.model } + models)
+      }.flatten()
+          .toSet()
 }

@@ -1,4 +1,4 @@
-package com.prestongarno.ktq
+/*package com.prestongarno.ktq
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.compiler.QCompiler
@@ -36,7 +36,7 @@ class IntegrationTest {
     compileOutputDir.deleteRecursively()
   }
 
-  @Test fun generateSourceToPayload() {
+  @Ignore @Test fun generateSourceToPayload() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -58,7 +58,7 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun generateMultiFieldTypes() {
+  @Ignore @Test fun generateMultiFieldTypes() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -86,7 +86,7 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun generateMultiFieldSelected() {
+  @Ignore @Test fun generateMultiFieldSelected() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -112,7 +112,7 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun generateMutation() {
+  @Ignore @Test fun generateMutation() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -137,7 +137,7 @@ class IntegrationTest {
           """.trimMargin("|"))
   }
 
-  @Test fun recursiveTypes() {
+  @Ignore @Test fun recursiveTypes() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -166,7 +166,7 @@ class IntegrationTest {
     }
   }
 
-  @Test
+  @Ignore @Test
   fun inheritanceTestSingle() {
     QCompiler.initialize()
         .packageName(PACK)
@@ -202,7 +202,7 @@ class IntegrationTest {
 
   }
 
-  @Test fun inheritanceTestMultiple() {
+  @Ignore @Test fun inheritanceTestMultiple() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -245,7 +245,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarTest() {
+  @Ignore @Test fun customScalarTest() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -280,7 +280,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarInterfaceTest() {
+  @Ignore @Test fun customScalarInterfaceTest() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -322,7 +322,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarInterfaceMultipleFields() {
+  @Ignore @Test fun customScalarInterfaceMultipleFields() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -365,7 +365,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun customScalarInheritingMultipleFields() {
+  @Ignore @Test fun customScalarInheritingMultipleFields() {
             QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -409,7 +409,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarMultipleCustomFields() {
+  @Ignore @Test fun testCustomScalarMultipleCustomFields() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -448,7 +448,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarMultipleInherited() {
+  @Ignore @Test fun testCustomScalarMultipleInherited() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -494,7 +494,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarFieldWithInput() {
+  @Ignore @Test fun testCustomScalarFieldWithInput() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -531,7 +531,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarFieldWithMultipleInputArgs() {
+  @Ignore @Test fun testCustomScalarFieldWithMultipleInputArgs() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -575,7 +575,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testCustomScalarFieldWithEnumAsArgument() {
+  @Ignore @Test fun testCustomScalarFieldWithEnumAsArgument() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -623,7 +623,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testDiamondTypesWithCustomScalarField() {
+  @Ignore @Test fun testDiamondTypesWithCustomScalarField() {
     QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -672,7 +672,7 @@ class IntegrationTest {
     }
   }
 
-  @Test fun testDiamondConflictingFieldsCustomScalar() {
+  @Ignore @Test fun testDiamondConflictingFieldsCustomScalar() {
         QCompiler.initialize()
         .packageName(PACK)
         .schema("""
@@ -734,4 +734,4 @@ class IntegrationTest {
     require(JvmCompile.exe(codegenOutputFile, compileOutputDir))
   }
 }
-
+*/

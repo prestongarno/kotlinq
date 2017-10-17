@@ -2,7 +2,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 
-internal abstract class FieldConfig(val graphqlProperty: QProperty) : Payload {
+internal abstract class FieldConfig(val graphqlProperty: GraphQlProperty) : ArgBuilder {
 
   /**
    * A map of arguments for the field (for graphql) */
@@ -23,7 +23,7 @@ internal abstract class FieldConfig(val graphqlProperty: QProperty) : Payload {
     return graphqlProperty.hashCode()
   }
 
-  internal abstract fun toAdapter(): Adapter<*>
+  internal abstract fun toAdapter(): Adapter
 
 }
 

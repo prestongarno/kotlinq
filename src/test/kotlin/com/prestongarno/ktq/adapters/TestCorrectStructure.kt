@@ -1,5 +1,5 @@
 @file:Suppress("unused")
-
+/*
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.CustomStub
@@ -10,6 +10,7 @@ import com.prestongarno.ktq.yelp.Businesses
 import com.prestongarno.ktq.yelp.Query
 import com.prestongarno.ktq.yelp.Reviews
 import com.prestongarno.ktq.yelp.Review
+import org.junit.Ignore
 import org.junit.Test
 
 class BusinessQuery(searchTerm: String) : QModel<Query>(Query) {
@@ -48,7 +49,7 @@ class BusinessBasic : QModel<Business>(Business) {
 }
 
 class TestCorrectStructure {
-  @Test
+  @Ignore @Test
   fun testBusinessBasic() {
     // make sure that a create config & create Model instance is created per invocation
     val one = BusinessQuery("bazfoo")
@@ -57,4 +58,4 @@ class TestCorrectStructure {
     require(one.result != two.result)
     require(one.reviews != two.reviews)
   }
-}
+}*/

@@ -10,11 +10,11 @@ interface CustomScalarListInitStub<T: CustomScalar> : SchemaStub {
   fun <U: QScalarListMapper<A>, A> init(of: U): CustomScalarListStub<U, A>
 }
 
-interface ListConfiguration<T, out A: ListArgBuilder> : SchemaStub {
+interface ListConfiguration<T, out A: ArgBuilder> : SchemaStub {
   fun config(provider: A.() -> Unit): ListStub<T>
 }
 
-interface ListInitConfiguration<T : QSchemaType, out A: TypeListArgBuilder> : SchemaStub {
+interface ListInitConfiguration<T : QSchemaType, out A: ArgBuilder> : SchemaStub {
   fun config(provider: A.() -> Unit): ListInitStub<T>
 }
 
@@ -22,9 +22,9 @@ interface CustomScalarListConfigStub<T: CustomScalar, out A: CustomScalarListArg
   fun config(provider: A.() -> Unit): CustomScalarListInitStub<T>
 }
 
-interface ListConfig<T, A : ListArgBuilder> : ListConfiguration<T, A>
+interface ListConfig<T, A : ArgBuilder> : ListConfiguration<T, A>
 
-interface ListConfigType<T, A> : ListInitConfiguration<T, A> where T: QSchemaType, A: TypeListArgBuilder
+interface ListConfigType<T, A> : ListInitConfiguration<T, A> where T: QSchemaType, A: ArgBuilder
 
 interface ListStub<T> : DelegateProvider<List<T>>
 

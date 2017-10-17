@@ -2,7 +2,9 @@ package com.prestongarno.ktq
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.internal.FragmentGenerator
+import com.prestongarno.ktq.internal.FragmentProvider
 import kotlin.reflect.KProperty
 
 interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
@@ -10,10 +12,9 @@ interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
 }
 
 internal sealed class UnionAdapter<I : QSchemaUnion>(
-    override val graphqlProperty: QProperty,
+    val qproperty: GraphQlProperty,
     objectModel: I
 ) : QModel<I>(objectModel),
-    Adapter<QModel<*>>,
     UnionInitStub<I>,
     UnionStub,
     QSchemaUnion {
@@ -24,36 +25,18 @@ internal sealed class UnionAdapter<I : QSchemaUnion>(
    * Recurse to the base model of the graph */
   override val queue by lazy { model.queue }
 
-  var dispatcher: (I.() -> Unit)? = null
+  private var dispatcher: (I.() -> Unit)? = null
 
-  override val args: Map<String, Any> by lazy { mapOf<String, Any>() }
+  val args: Map<String, Any> by lazy { mapOf<String, Any>() }
 
   internal var value: QModel<*>? = null
-
-  override fun accept(result: Any?): Boolean {
-    return false
-  }
 
   override fun fragment(what: I.() -> Unit): UnionStub {
     dispatcher = what
     return this
   }
 
-  override fun toRawPayload(): String = fragments.joinToString(prefix = "{__typename,", postfix = "}") {
-    "... on ${it.model.graphqlType}${it.model.fields
-        .joinToString(",", "{", "]") {
-          "${it.graphqlProperty.graphqlType}'${it.graphqlProperty.graphqlName}'"
-        }}"
-  }
-
-  override fun getValue(
-      inst: QModel<*>,
-      property: KProperty<*>
-  ): QModel<QSchemaType> {
-    return value ?: throw IllegalStateException("null")
-  }
-
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): Adapter<QModel<*>?> {
+  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): QField<QModel<*>?> {
 
     synchronized(queue) {
       queue.put(this)
@@ -62,11 +45,11 @@ internal sealed class UnionAdapter<I : QSchemaUnion>(
     }
 
     val next = UnionStubImpl(
-        QProperty.from(
+        GraphQlProperty.from(
             property,
-            graphqlProperty.graphqlType,
+            this.qproperty.graphqlType,
             false,
-            graphqlProperty.graphqlName
+            this.qproperty.graphqlName
         ), fragments)
     inst.fields.add(next)
     return next
@@ -77,17 +60,17 @@ internal sealed class UnionAdapter<I : QSchemaUnion>(
   }
 
   companion object {
-    fun <I : QSchemaUnion> create(property: QProperty, objectModel: I): UnionAdapter<I> = UnionAdapterImpl(property, objectModel)
+    fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I): UnionAdapter<I> = UnionAdapterImpl(property, objectModel)
   }
 }
 
 internal class UnionAdapterImpl<I : QSchemaUnion>(
-    graphqlProperty: QProperty,
+    graphqlProperty: GraphQlProperty,
     objectModel: I
 ) : UnionAdapter<I>(graphqlProperty, objectModel)
 
 
-internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>(QProperty.ROOT, model) {
+internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>(GraphQlProperty.ROOT, model) {
   override val queue: DispatchQueue by lazy { DispatchQueue() }
 
   override fun on(init: () -> QModel<*>) {
@@ -96,9 +79,11 @@ internal class BaseUnionAdapter<I : QSchemaUnion>(model: I) : UnionAdapter<I>(QP
 }
 
 private class UnionStubImpl(
-    override val graphqlProperty: QProperty,
-    val fragments: Set<FragmentGenerator>
-) : Adapter<QModel<*>?> {
+    override val qproperty: GraphQlProperty,
+    override val fragments: Set<FragmentGenerator>
+) : Adapter,
+    QField<QModel<*>?>,
+    FragmentProvider {
 
   var value: QModel<*>? = null
 
@@ -113,12 +98,10 @@ private class UnionStubImpl(
     } else false
   }
 
-  override fun toRawPayload(): String = fragments.joinToString(prefix = "__typename,") {
-    "... on ${it.model.graphqlType}${it.model.fields
-        .joinToString(",", "{", "]") {
-          "${it.graphqlProperty.graphqlType}'${it.graphqlProperty.graphqlName}'"
-        }}"
+  override fun toRawPayload(): String = fragments.joinToString(prefix = "{__typename,", postfix = "}") {
+    "... on ${it.model.graphqlType}${it.model.toGraphql(false)}"
   }
+
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>? {
     return value

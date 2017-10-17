@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.jvmErasure
 
 
-interface QProperty {
+interface GraphQlProperty {
   val typeKind: PropertyType
   val graphqlType: String
   val graphqlName: String
@@ -23,9 +23,9 @@ interface QProperty {
         graphqlType: String,
         isList: Boolean,
         graphqlName: String
-    ): QProperty = PropertyImpl(graphqlType, property, isList, graphqlName)
+    ): GraphQlProperty = PropertyImpl(graphqlType, property, isList, graphqlName)
 
-    internal val ROOT = object : QProperty {
+    internal val ROOT = object : GraphQlProperty {
       override val kproperty: KProperty<*> = this::graphqlName
       override val typeKind = PropertyType.OBJECT
       override val graphqlType = ""
@@ -41,7 +41,7 @@ class PropertyImpl(
     override val kproperty: KProperty<*>,
     override val isList: Boolean,
     override val graphqlName: String = kproperty.name
-) : QProperty {
+) : GraphQlProperty {
   override val typeKind: PropertyType = PropertyType.from(graphqlType)
 
   override fun toEnum(name: String): Enum<*>? {
@@ -53,7 +53,7 @@ class PropertyImpl(
   }
 
   override fun equals(other: Any?): Boolean {
-    return (other as? QProperty)?.kproperty == kproperty
+    return (other as? GraphQlProperty)?.kproperty == kproperty
   }
 
   override fun hashCode(): Int {
@@ -163,7 +163,7 @@ internal fun QModel<*>.prettyPrintUnion(indentation: Int) =
         .indent(indentation))
         .replace("\\s*([(,])".toRegex(), "$1").trim()
 
-internal fun Adapter<*>.prettyPrinted(): String = graphqlProperty.graphqlName +
+internal fun Adapter.prettyPrinted(): String = qproperty.graphqlName +
     (when {
       args.isNotEmpty() -> args.entries
           .joinToString(separator = ",", prefix = "(", postfix = ")") {

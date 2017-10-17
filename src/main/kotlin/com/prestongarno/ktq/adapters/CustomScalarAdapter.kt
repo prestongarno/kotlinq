@@ -6,8 +6,8 @@ import com.prestongarno.ktq.CustomScalarConfigStub
 import com.prestongarno.ktq.CustomScalarInitStub
 import com.prestongarno.ktq.CustomStub
 import com.prestongarno.ktq.FieldConfig
-import com.prestongarno.ktq.Payload
-import com.prestongarno.ktq.QProperty
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
@@ -15,7 +15,7 @@ import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B : CustomScalarArgBuilder>(
-    val property: QProperty,
+    val property: GraphQlProperty,
     val builderInit: (CustomScalarArgBuilder) -> B,
     var default: Q? = null,
     val init: P? = null,
@@ -38,12 +38,12 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
   override fun addArg(
       name: String,
       value: Any
-  ): Payload = apply { this.args.put(name, value) }
+  ): ArgBuilder = apply { this.args.put(name, value) }
 
   override fun <R : QModel<*>> provideDelegate(
       inst: R,
       property: KProperty<*>
-  ): Adapter<Q> = CustomScalarStubImpl(QProperty.from(property,
+  ): QField<Q> = CustomScalarStubImpl(GraphQlProperty.from(property,
       this.graphqlProperty.graphqlType,
       this.graphqlProperty.isList,
       this.graphqlProperty.graphqlName),
@@ -64,15 +64,16 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
 
   /**
    * Utility function for tests/mocking */
-  override fun toAdapter(): Adapter<*> = CustomScalarStubImpl(graphqlProperty, args.toMap(), adapter, default)
+  override fun toAdapter(): Adapter = CustomScalarStubImpl(graphqlProperty, args.toMap(), adapter, default)
 }
 
 private data class CustomScalarStubImpl<out Q>(
-    override val graphqlProperty: QProperty,
+    override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: QScalarMapper<Q>,
     val default: Q?
-) : Adapter<Q> {
+) : Adapter,
+    QField<Q> {
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = adapter.value ?: default!!
 
@@ -85,7 +86,7 @@ private data class CustomScalarStubImpl<out Q>(
     return true
   }
 
-  override fun toRawPayload(): String = graphqlProperty.graphqlName +
+  override fun toRawPayload(): String = qproperty.graphqlName +
       if (args.isNotEmpty()) this.args.entries
           .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
             "$key: ${formatAs(value)}"

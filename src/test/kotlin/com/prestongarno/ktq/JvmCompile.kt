@@ -1,4 +1,4 @@
-package com.prestongarno.ktq
+/*package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.TypeListAdapter
@@ -98,4 +98,4 @@ internal fun ModelProvider.setValue(value: QModel<*>) {
     is TypeListAdapter<*, *, *> -> this.build { value }
     else -> throw IllegalStateException("Bad createTypeStub")
   }
-}
+}*/

@@ -7,7 +7,7 @@ import com.prestongarno.ktq.internal.FragmentProvider
 import java.io.InputStream
 
 open class QModel<out T : QSchemaType>(val model: T) {
-  internal val fields by lazy { mutableListOf<Adapter<*>>() }
+  internal val fields by lazy { mutableListOf<Adapter>() }
 
   internal var resolved = false
 
@@ -30,19 +30,10 @@ open class QModel<out T : QSchemaType>(val model: T) {
 
   internal open fun accept(input: JsonObject): Boolean {
     resolved = fields.filterNot {
-      it.accept(input[it.graphqlProperty.graphqlName])
+      it.accept(input[it.qproperty.graphqlName])
     }.isEmpty()
     return resolved
   }
-
-  internal fun fragmentsToPayload() = fields.filterIsInstance<FragmentProvider>()
-      .flatMap { it.fragments }
-      .groupBy { it.model.graphqlType }
-      .map { (type, allOf) ->
-        allOf.mapIndexed { i, generator ->
-          "fragment ${type.toLowerCase()}$i on $type ${generator.model.toGraphql(false)}"
-        }.joinToString { it }
-      }.joinToString { it }
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true

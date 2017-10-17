@@ -2,13 +2,14 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaType.QScalar
+import com.prestongarno.ktq.adapters.StringDelegate
 
 /**
  * Example generated Configuration */
 object Configuration : QSchemaType {
   val dependencies by QTypeList.configStub<ProjImpl, DependenciesArgs> { DependenciesArgs(it) }
 
-  class DependenciesArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
+  class DependenciesArgs(args: ArgBuilder) : ArgBuilder by args {
 
     fun first(value: Int) = apply { addArg("first", value) }
     fun after(value: String) = apply { addArg("after", value) }
@@ -17,11 +18,11 @@ object Configuration : QSchemaType {
 }
 
 interface Project : QSchemaType {
-  val name : Stub<String>
+  val name: StringDelegate<ArgBuilder>
 }
 
 object ProjImpl : Project {
-  override val name: Stub<String> by QScalar.stub<String>()
+  override val name by QScalar.stringStub()
 }
 
 class ConfigModel : QModel<Configuration>(Configuration) {

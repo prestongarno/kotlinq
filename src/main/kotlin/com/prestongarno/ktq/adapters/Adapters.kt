@@ -2,22 +2,22 @@ package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.QInput
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QProperty
+import com.prestongarno.ktq.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface QField<out T> {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
-}
+interface Adapter {
 
-interface Adapter<out T> : QField<T> {
-
-  val graphqlProperty: QProperty
+  val qproperty: GraphQlProperty
 
   val args: Map<String, Any>
 
   fun accept(result: Any?): Boolean
 
   fun toRawPayload(): String
+}
+
+interface QField<out T> {
+  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
 }
 
 
@@ -31,6 +31,6 @@ internal fun formatAs(value: Any): String {
         .map { formatAs(it ?: "") }
         .filter { it.isNotBlank() }
         .joinToString(",", "[ ", " ]")
-    else -> throw UnsupportedOperationException("Unsupported createTypeStub: $value")
+    else -> throw UnsupportedOperationException("Unsupported format for type: ${value::class}")
   }
 }

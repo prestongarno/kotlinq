@@ -1,21 +1,12 @@
 package com.prestongarno.ktq.adapters
 
 
-import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.FieldConfig
-import com.prestongarno.ktq.NullableStub
-import com.prestongarno.ktq.QProperty
-import com.prestongarno.ktq.QConfigStub
-import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.Stub
-import kotlin.reflect.KProperty
-
 /**
  * Adapter for scalar fields */
 /*internal class NullableStubAdapter<T, out B: ArgBuilder>(
-    property: QProperty,
+    qproperty: QProperty,
     val builderInit: (ArgBuilder) -> B
-) : FieldConfig(property),
+) : FieldConfig(qproperty),
     NullableStub<T>,
     QConfigStub<T, B>,
     ArgBuilder {
@@ -24,13 +15,13 @@ import kotlin.reflect.KProperty
 
   val value : T? = null
 
-  override fun config(): B = builderInit(NullableStubAdapter<T, B>(graphqlProperty, builderInit))
+  override fun config(): B = builderInit(NullableStubAdapter<T, B>(qproperty, builderInit))
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): NullableStub<T> {
-    return apply { super.onDelegate(inst, property) }
+  override fun <R : QModel<*>> provideDelegate(inst: R, qproperty: KProperty<*>): NullableStub<T> {
+    return apply { super.onDelegate(inst, qproperty) }
   }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): T? = value
+  override fun getValue(inst: QModel<*>, qproperty: KProperty<*>): T? = value
 
   @Suppress("UNCHECKED_CAST") override fun <T> build() : Stub<T> = this as Stub<T>
 
