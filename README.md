@@ -15,7 +15,7 @@ To use in a project, add the dependency to a gradle buildscript:
       compile 'com.prestongarno.ktq:ktq-client:0.2'
       
 Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
- the gradle syntax for configuring compilation of graphql schema IDL as kotlin classes. 
+ the gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
       classpath 'com.prestongarno.ktq:ktq-gradle:0.2'
@@ -28,10 +28,10 @@ And apply the plugin:
       
 ### About
 
-Stands for KoTlin Query (language). This is a library which supports concise, createTypeStub-safe models for 
+Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
 queries and mutations against a GraphQl schema. 
 
-The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an equivalent kotlin createTypeStub hierarchy which is used to create and execute queries
+The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
 and mutations without ever leaving native code.
 
 For an example of how to build models, see the example below created for the Yelp Graphql API. 
@@ -40,11 +40,11 @@ in the `model` instance which a concrete query/mutation class delegates its prop
 
     class BusinessQuery(searchTerm: String) : QModel(Query) {
     
-      val value: List<BusinessNodesModel> by model.search
-          .config()
-              .term(searchTerm)
-              .limit(10)
-              .build { BusinessesNodesModel() }
+      val result: List<BusinessNodesModel> by model.search
+          .config {
+            term = searchTerm
+            limit = 10
+          }.init { BusinessesNodesModel() }
           
     }
 
@@ -54,7 +54,7 @@ in the `model` instance which a concrete query/mutation class delegates its prop
     }
 
     class SimpleBusiness : QModel(Business) {
-      val prop:         String  by model.prop
+      val name:         String  by model.name
       val phoneNumber:  Int     by model.display_phone
       val directUrl:    String  by model.url
     }
@@ -69,35 +69,39 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
         term: "foobar"){
        total,
        business {
-         prop,
+         name,
          display_phone,
          url 
         }
       }
     }
     
-For a complete guide fragment how to use all other graphql types such as Unions and Nullable fields,
+For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
 check out the wiki.
 
 ### How to execute a query or mutation:
 
 This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
-adds a dependency fragment [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
-describe your model, and execute. This is an example for getting your github prop (not shown: compiled github IDL schema):
+adds a dependency on [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
+describe your model, and execute. This is an example for getting your github name (not shown: compiled github SDL schema):
 
     class ViewerQuery : QModel<Query>(Query) {
       val me by model.viewer.init { UserModel() }
     }
     
     class UserModel : QModel<User>(User) {
-      val prop by model.prop
+      val name by model.name
     }
 
-    GraphQL.initialize("https://api.github.com/graphql").apply {
+    val myFirstQuery = GraphQL.initialize("https://api.github.com/graphql").apply {
       authorization = TokenAuth(System.getenv("GITHUB_KEY"))
     }.query { ViewerQuery() }
-        .onSuccess { println("Hello, ${it.me.prop}") }
-        .execute()
-        
-        
-The last code block will print "Hello, \<your prop here\>"
+        .send()
+    println("Hello ${myFirstQuery.me.name}")
+
+
+The last code block will print "Hello, \<your name here\>"
+
+### FAQ
+
+* __Can I use this in production?__ Please don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while
