@@ -1,22 +1,11 @@
-*__a kotlin client with type-safe DSL generation & runtime support__*
------------------------------
-
-[![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
- [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.2) ](https://bintray.com/prestongarno/ktq/ktq-client/0.2/link)
-
-## Documentation
-
-The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/ktq/)
-
-### Adding dependency from Central or JCenter
+## <span style="color:#f442c2"> How to get **ktq** </span>
 
 To use in a project, add the dependency to a gradle buildscript:
 
       compile 'com.prestongarno.ktq:ktq-client:0.2'
       
 Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
- the gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. 
+the gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
       classpath 'com.prestongarno.ktq:ktq-gradle:0.2'
@@ -27,7 +16,7 @@ And apply the plugin:
         id 'com.prestongarno.ktq' version 0.2
       }
       
-### About
+## <span style="color:#f442c2">About</span>
 
 Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
 queries and mutations against a GraphQl schema. 
@@ -76,33 +65,8 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
         }
       }
     }
-    
-For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
-check out the wiki.
 
-### How to execute a query or mutation:
+## <span style="color:#f442c2">How it works</span>
 
-This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
-adds a dependency on [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
-describe your model, and execute. This is an example for getting your github name (not shown: compiled github SDL schema):
-
-    class ViewerQuery : QModel<Query>(Query) {
-      val me by model.viewer.init { UserModel() }
-    }
-    
-    class UserModel : QModel<User>(User) {
-      val name by model.name
-    }
-
-    val myFirstQuery = GraphQL.initialize("https://api.github.com/graphql").apply {
-      authorization = TokenAuth(System.getenv("GITHUB_KEY"))
-    }.query { ViewerQuery() }
-        .send()
-    println("Hello ${myFirstQuery.me.name}")
-
-
-The last code block will print "Hello, \<your name here\>"
-
-### FAQ
-
-* __Can I use this in production?__ Please don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while
+The above is only an example of the syntax *ktq* supports for describing a GraphQL type system and using it. 
+For a more detailed explanation of the abstractions which make up the design of this library, go on to the next section.
