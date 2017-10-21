@@ -69,7 +69,7 @@ interface QSchemaType {
      * @param arginit an initializer for the createStub field. <b>Important for auto-generated schema definitions</b>
      * @return Grub<QConfigStub<T, A>> the delegate which lazily provides a Stub<T> */
     // TODO add configuration methods for custom arg builders
-    //inline fun <reified T : Any, A : ArgBuilder> configStub(noinline arginit: (ArgBuilder) -> A): StubProvider<QConfigStub<T, A>> = Grub.createConfigStub(T::class.simpleName!!, arginit)
+    //inline fun <reified T : Any, A : ArgBuilder> stub(noinline arginit: (ArgBuilder) -> A): StubProvider<QConfigStub<T, A>> = Grub.createConfigStub(T::class.simpleName!!, arginit)
   }
 
   /**
@@ -93,7 +93,7 @@ interface QSchemaType {
      * @param T createTypeStub of the custom scalar
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarConfigStub<T, A>> the delegate which lazily provides a CustomScalarConfigStub<T, A> */
-    inline fun <reified T : CustomScalar, A : CustomScalarArgBuilder> configStub(
+    inline fun <reified T : CustomScalar, A : CustomScalarArgBuilder> stub(
         noinline arginit: (CustomScalarArgBuilder) -> A
     ): StubProvider<CustomScalarConfigStub<T, A>> = Grub.createCustomScalarConfig(T::class.simpleName!!, arginit)
   }
@@ -117,7 +117,7 @@ interface QSchemaType {
      * @param T createTypeStub of the field (schema-defined createTypeStub)
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<QTypeConfigStub<T, A>> the delegate which lazily provides a QTypeConfigStub<T, A> */
-    inline fun <reified T : QSchemaType, A : ArgBuilder> configStub(
+    inline fun <reified T : QSchemaType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<QTypeConfigStub<T, A>>
         = Grub.createTypeConfigStub(T::class.simpleName!!, arginit)
@@ -143,7 +143,7 @@ interface QSchemaType {
      *     {@link kotlin.Float}, {@link kotlin.Boolean}
      * @param A createTypeStub argument for the argument builder class for the given schema field definition
      * @return Grub<ListConfig<T, A>> the delegate which lazily provides a ListConfig<T, A> */
-    //inline fun <reified T : Any, A : ArgBuilder> configStub( noinline arginit: (ArgBuilder) -> A ): StubProvider<ListConfig<T, A>> = Grub.createListConfigStub(T::class.simpleName!!, arginit)
+    //inline fun <reified T : Any, A : ArgBuilder> stub( noinline arginit: (ArgBuilder) -> A ): StubProvider<ListConfig<T, A>> = Grub.createListConfigStub(T::class.simpleName!!, arginit)
   }
 
   /**
@@ -166,7 +166,7 @@ interface QSchemaType {
      * @param T createTypeStub of the field (schema-defined createTypeStub)
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<ListConfigType<T, A>> the delegate which lazily provides a ListConfigType<T, A> */
-    inline fun <reified T : QSchemaType, A : ArgBuilder> configStub(
+    inline fun <reified T : QSchemaType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<ListConfigType<T, A>> = Grub.createTypeListConfigStub(T::class.simpleName!!, arginit)
   }
@@ -192,7 +192,7 @@ interface QSchemaType {
      * @param T createTypeStub of the custom scalar
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarListArgBuilder<T, A>> the delegate which lazily provides a CustomScalarListArgBuilder<T, A> */
-    inline fun <reified T : CustomScalar, A : CustomScalarListArgBuilder> configStub(
+    inline fun <reified T : CustomScalar, A : CustomScalarListArgBuilder> stub(
         noinline arginit: (CustomScalarListArgBuilder) -> A
     ): StubProvider<CustomScalarListConfigStub<T, A>> =
         Grub.createCustomScalarListConfig(T::class.simpleName!!, arginit)
@@ -200,6 +200,9 @@ interface QSchemaType {
 
   object QUnion {
     inline fun <reified T : QSchemaUnion> stub(objectModel: T): StubProvider<UnionInitStub<T>> =
+        Grub.createUnionStub(objectModel, T::class.simpleName!!)
+
+    inline fun <reified T : QSchemaUnion, A : ArgBuilder> stub(objectModel: T, arginit: (ArgBuilder) -> A): StubProvider<UnionInitStub<T>> =
         Grub.createUnionStub(objectModel, T::class.simpleName!!)
   }
 }

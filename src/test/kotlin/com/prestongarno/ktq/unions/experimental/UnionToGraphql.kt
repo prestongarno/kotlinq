@@ -237,7 +237,7 @@ object Organization : QSchemaType, Actor {
 }
 
 object Query : QSchemaType {
-  val searchAccounts: ListConfigType<Account, SearchAccountsArgs> by QTypeList.configStub { SearchAccountsArgs(it) }
+  val searchAccounts: ListConfigType<Account, SearchAccountsArgs> by QTypeList.stub { SearchAccountsArgs(it) }
 
   class SearchAccountsArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
     fun first(value: Int): SearchAccountsArgs = apply { addArg("first", value) }

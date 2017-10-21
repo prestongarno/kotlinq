@@ -44,14 +44,14 @@ object Location : QSchemaType {
 }
 
 object OtherUser : UniformResourceLocatable, Friendable, QSchemaType {
-  override val friendCount by QScalar.configStub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
+  override val friendCount by QScalar.stub<Int, Friendable.FriendCountArgs> { Friendable.FriendCountArgs(it) }
   val name by QScalar.stubPrimitive<String>()
   val enemies by QType.stub<OtherUser>()
-  override val friends by QTypeList.configStub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
-  val address by QType.configStub<Location, AddressArgs> { AddressArgs(it) }
+  override val friends by QTypeList.stub<OtherUser, Friendable.FriendsArgs> { Friendable.FriendsArgs(it) }
+  val address by QType.stub<Location, AddressArgs> { AddressArgs(it) }
   override val url by QCustomScalar.stub<URL>()
   val relatedUrls by QCustomScalarList.stub<URL>()
-  val friendsUrls: CustomScalarListConfigStub<URL, FriendsUrlsArgs> by QCustomScalarList.configStub { FriendsUrlsArgs(it) }
+  val friendsUrls: CustomScalarListConfigStub<URL, FriendsUrlsArgs> by QCustomScalarList.stub { FriendsUrlsArgs(it) }
 
   class FriendsUrlsArgs(args: CustomScalarListArgBuilder) : CustomScalarListArgBuilder by args{
     fun shortUrls(value: Boolean) = apply { addArg("shortUrls", value) }

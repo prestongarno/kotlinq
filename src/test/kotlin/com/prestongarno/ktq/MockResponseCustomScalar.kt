@@ -119,7 +119,7 @@ object Note : QSchemaType {
   val relatedLinks: CustomScalarListInitStub<URI> by QCustomScalarList.stub()
   val refIds: CustomScalarListInitStub<ID> by QCustomScalarList.stub()
   val refIdsConfigurable: CustomScalarListConfigStub<ID, Note.RefIdsConfigurableArgs>
-      by QCustomScalarList.configStub { RefIdsConfigurableArgs(it) }
+      by QCustomScalarList.stub { RefIdsConfigurableArgs(it) }
 
   class RefIdsConfigurableArgs(args: CustomScalarListArgBuilder) : CustomScalarListArgBuilder by args {
     fun first(value: Int): RefIdsConfigurableArgs = apply { addArg("first", value) }
