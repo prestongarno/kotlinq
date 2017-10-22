@@ -170,29 +170,6 @@ interface QSchemaType {
 
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
-   * fields which are lists of any built-in scalar (Int, Float, Boolean, String):
-   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#createStub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#createConfigStub(arginit)}.*/
-  object QScalarList {
-    /**
-     * Method which provides a delegate for lists of built-in scalar types
-     * @param T The createTypeStub argument for the list createStub, one of: {@link kotlin.Int}, {@link kotlin.String},
-     *     {@link kotlin.Float}, {@link kotlin.Boolean}
-     * @return Grub<ListStub<T>> the delegate which lazily provides a ListStub<T> */
-    //inline fun <reified T> stub(): StubProvider<ListStub<T>> = Grub.createScalarListStub(T::class.simpleName?: throw NullPointerException())
-
-    /**
-     * Method which provides a delegate for lists of built-in scalar types which accept input arguments
-     * @param arginit an initializer for the list createStub fields
-     * @param T createTypeStub argument for the createStub, one of: {@link kotlin.Int}, {@link kotlin.String},
-     *     {@link kotlin.Float}, {@link kotlin.Boolean}
-     * @param A createTypeStub argument for the argument builder class for the given schema field definition
-     * @return Grub<ListConfig<T, A>> the delegate which lazily provides a ListConfig<T, A> */
-    //inline fun <reified T : Any, A : ArgBuilder> stub( noinline arginit: (ArgBuilder) -> A ): StubProvider<ListConfig<T, A>> = Grub.createListConfigStub(T::class.simpleName!!, arginit)
-  }
-
-  /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which represent lists of any createTypeStub defined in the schema:
    * {@link com.prestongarno.ktq.QSchemaType.QTypeList#createStub()} and
    * {@link com.prestongarno.ktq.QSchemaType.QTypeList#createConfigStub(arginit)}.*/
