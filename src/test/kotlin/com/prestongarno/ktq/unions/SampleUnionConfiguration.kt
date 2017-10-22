@@ -6,6 +6,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
 import com.prestongarno.ktq.getFragments
 import org.junit.Test
@@ -30,6 +31,7 @@ object Query : QSchemaType {
 object Thing : QSchemaUnion by QSchemaUnion.create(Thing) {
   fun onCar(init: () -> QModel<Car>) = on(init)
   fun onTaco(init: () -> QModel<Taco>) = on(init)
+  fun onHamburger(init: () -> QModel<Hamburger>) = on(init)
 }
 
 object Car : QSchemaType {
@@ -51,6 +53,7 @@ object Burrito : MexicanFood {
 object Hamburger : FoodIngredient {
   override val name: StringDelegate<ArgBuilder> by QScalar.stringStub()
   override val description by QScalar.stringStub()
+  val numberOfPatties: IntegerArrayDelegate<ArgBuilder> by QScalarArray.intArrayStub()
 }
 
 object Lettuce : FoodIngredient {
@@ -66,7 +69,9 @@ enum class LettuceType : QSchemaType {
   MIXED
 }
 
-class MyHamburger : QModel<FoodIngredient>(Hamburger)
+class MyHamburger : QModel<Hamburger>(Hamburger) {
+  val numberOfPatties by model.numberOfPatties
+}
 
 class MyTaco : QModel<Taco>(Taco) {
   val foo by model.ingredients.init { MyHamburger() }
@@ -91,10 +96,17 @@ class Sample {
       }
     }
 
+    val myHamburger = {
+      object : QModel<Hamburger>(Hamburger) {
+        val numberOfPatties by model.numberOfPatties
+      }
+    }
+
     val myQuery = object : QModel<Query>(Query) {
       val thingSearch by model.searchForThing.fragment {
         onCar(myCarModel)
         onTaco(myTacoModel)
+        onHamburger(myHamburger)
       }
     }
     println(MyTaco().toGraphql(false))
