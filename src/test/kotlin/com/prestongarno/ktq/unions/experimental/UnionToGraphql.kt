@@ -14,7 +14,6 @@ import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QType
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaUnion
-import com.prestongarno.ktq.Stub
 import org.junit.Ignore
 import org.junit.Test
 /*
@@ -238,7 +237,7 @@ object Organization : QSchemaType, Actor {
 }
 
 object Query : QSchemaType {
-  val searchAccounts: ListConfigType<Account, SearchAccountsArgs> by QTypeList.configStub { SearchAccountsArgs(it) }
+  val searchAccounts: ListConfigType<Account, SearchAccountsArgs> by QTypeList.stub { SearchAccountsArgs(it) }
 
   class SearchAccountsArgs(args: TypeListArgBuilder) : TypeListArgBuilder by args {
     fun first(value: Int): SearchAccountsArgs = apply { addArg("first", value) }

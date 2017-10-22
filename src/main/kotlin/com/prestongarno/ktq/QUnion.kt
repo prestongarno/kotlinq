@@ -11,7 +11,7 @@ interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
   fun fragment(what: T.() -> Unit): UnionStub
 }
 
-internal sealed class UnionAdapter<I : QSchemaUnion>(
+internal sealed class UnionAdapter<out I : QSchemaUnion>(
     val qproperty: GraphQlProperty,
     objectModel: I
 ) : QModel<I>(objectModel),
@@ -36,7 +36,7 @@ internal sealed class UnionAdapter<I : QSchemaUnion>(
     return this
   }
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): QField<QModel<*>?> {
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<*>?> {
 
     synchronized(queue) {
       queue.put(this)

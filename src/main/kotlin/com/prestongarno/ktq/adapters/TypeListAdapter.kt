@@ -33,7 +33,7 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
   override fun <U : QModel<I>> init(of: () -> U): TypeListStub<U, I> =
       TypeListAdapter(graphqlProperty, builderInit, of, this.config)
 
-  override fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): QField<List<P>> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
       TypeListStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,

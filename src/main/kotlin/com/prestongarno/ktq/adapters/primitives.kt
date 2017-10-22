@@ -115,7 +115,7 @@ class BooleanDelegate<A : ArgBuilder>(
 
 class StringStub(
     graphqlProperty: GraphQlProperty,
-    var default: String? = null,
+    val default: String? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveStub(graphqlProperty, args) {
 
