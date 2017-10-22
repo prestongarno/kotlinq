@@ -83,7 +83,7 @@ check out the wiki.
 ### How to execute a query or mutation:
 
 This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
-adds a dependency on [http4k](www.http4k.org) and supports end-to-end mutations and queries out of the box. Just 
+adds a dependency on [http4k](http://http4k.org) and supports end-to-end mutations and queries out of the box. Just 
 describe your model, and execute. This is an example for getting your github name (not shown: compiled github SDL schema):
 
     class ViewerQuery : QModel<Query>(Query) {
