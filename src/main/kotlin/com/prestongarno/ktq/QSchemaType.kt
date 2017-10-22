@@ -72,6 +72,10 @@ interface QSchemaType {
     //inline fun <reified T : Any, A : ArgBuilder> stub(noinline arginit: (ArgBuilder) -> A): StubProvider<QConfigStub<T, A>> = Grub.createConfigStub(T::class.simpleName!!, arginit)
   }
 
+  object QScalarArray {
+
+  }
+
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which are types typedValueFrom any Schema-defined scalars:
