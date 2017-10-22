@@ -3,9 +3,10 @@ package com.prestongarno.ktq.adapters
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.SchemaStub
 import kotlin.reflect.KProperty
 
-interface ScalarArrayDelegate<out D: PrimitiveArrayStub> {
+interface ScalarArrayDelegate<out D: PrimitiveArrayStub> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
 }
 

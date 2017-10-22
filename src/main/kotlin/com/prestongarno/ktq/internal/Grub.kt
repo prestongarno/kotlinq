@@ -20,11 +20,15 @@ import com.prestongarno.ktq.QTypeConfigStub
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.UnionAdapter
 import com.prestongarno.ktq.UnionInitStub
+import com.prestongarno.ktq.adapters.BooleanArrayDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegate
 import com.prestongarno.ktq.adapters.CustomScalarAdapter
 import com.prestongarno.ktq.adapters.CustomScalarListAdapter
+import com.prestongarno.ktq.adapters.FloatArrayDelegate
 import com.prestongarno.ktq.adapters.FloatDelegate
+import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.IntegerDelegate
+import com.prestongarno.ktq.adapters.StringArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
 import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
@@ -96,6 +100,31 @@ class Grub<out T : SchemaStub>(
 
     fun <A: ArgBuilder> createBooleanDelegate(arginit: (ArgBuilder) -> A): StubProvider<BooleanDelegate<A>> =
         Grub("Boolean", false) { BooleanDelegate(it, arginit) }
+
+
+    fun createStringArrayDelegate(): StubProvider<StringArrayDelegate<ArgBuilder>> =
+        Grub("String", false) { StringArrayDelegate(it, { it }) }
+
+    fun createIntArrayDelegate(): StubProvider<IntegerArrayDelegate<ArgBuilder>> =
+        Grub("Int", false) { IntegerArrayDelegate(it, { it }) }
+
+    fun createFloatArrayDelegate(): StubProvider<FloatArrayDelegate<ArgBuilder>> =
+        Grub("Float", false) { FloatArrayDelegate(it, { it }) }
+
+    fun createBooleanArrayDelegate(): StubProvider<BooleanArrayDelegate<ArgBuilder>> =
+        Grub("Boolean", false) { BooleanArrayDelegate(it, { it }) }
+
+    fun <A: ArgBuilder> createStringArrayDelegate(arginit: (ArgBuilder) -> A): StubProvider<StringArrayDelegate<A>> =
+        Grub("String", false) { StringArrayDelegate(it, arginit) }
+
+    fun <A: ArgBuilder> createIntArrayDelegate(arginit: (ArgBuilder) -> A): StubProvider<IntegerArrayDelegate<A>> =
+        Grub("Int", false) { IntegerArrayDelegate(it, arginit) }
+
+    fun <A: ArgBuilder> createFloatArrayDelegate(arginit: (ArgBuilder) -> A): StubProvider<FloatArrayDelegate<A>> =
+        Grub("Float", false) { FloatArrayDelegate(it, arginit) }
+
+    fun <A: ArgBuilder> createBooleanArrayDelegate(arginit: (ArgBuilder) -> A): StubProvider<BooleanArrayDelegate<A>> =
+        Grub("Boolean", false) { BooleanArrayDelegate(it, arginit) }
 
 
     fun <T : QSchemaType> createTypeStub(name: String): StubProvider<InitStub<T>>
