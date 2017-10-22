@@ -7,7 +7,7 @@ import com.prestongarno.ktq.adapters.StringDelegate
 /**
  * Example generated Configuration */
 object Configuration : QSchemaType {
-  val dependencies by QTypeList.configStub<ProjImpl, DependenciesArgs> { DependenciesArgs(it) }
+  val dependencies by QTypeList.stub<ProjImpl, DependenciesArgs> { DependenciesArgs(it) }
 
   class DependenciesArgs(args: ArgBuilder) : ArgBuilder by args {
 

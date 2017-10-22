@@ -10,7 +10,7 @@ import kotlin.reflect.KProperty
 interface SchemaStub
 
 interface DelegateProvider<out T> : SchemaStub {
-  operator fun <R : QModel<*>> provideDelegate(inst: R, property: KProperty<*>): QField<T>
+  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
 
 interface InitStub<T : QSchemaType> : SchemaStub {
@@ -38,10 +38,6 @@ interface QConfigStub<T, out A : ArgBuilder> : Configuration<T, A>
 interface QTypeConfigStub<T : QSchemaType, out A : ArgBuilder> : TypeConfiguration<T, A>
 
 interface CustomScalarConfigStub<T: CustomScalar, out A: CustomScalarArgBuilder> : CustomScalarConfiguration<T, A>
-
-interface Stub<T> : DelegateProvider<T> {
-  fun withDefault(value: T): Stub<T>
-}
 
 interface CustomStub<U: QScalarMapper<T>, T> : DelegateProvider<T> {
   fun withDefault(value: T): CustomStub<U, T>

@@ -7,6 +7,7 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.adapters.StringDelegate
+import com.prestongarno.ktq.getFragments
 import org.junit.Test
 
 interface MexicanFood : QSchemaType {
@@ -98,5 +99,6 @@ class Sample {
     }
     println(MyTaco().toGraphql(false))
     println(myQuery.toGraphql(false))
+    myQuery.getFragments().forEachIndexed { i, x -> println("#$i = " + x.model.toGraphql(false)) }
   }
 }

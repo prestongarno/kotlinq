@@ -34,12 +34,87 @@ interface QSchemaType {
      * Method which provides a delegate for fields of type [kotlin.Boolean]
      * @return [com.prestongarno.ktq.internal.StubProvider]<BooleanDelegate<ArgBuilder>>] */
     fun booleanStub() = Grub.createBooleanDelegate()
+
+
     /**
-     * Method which provides a delegate for fields
-     * @param arginit an initializer for the createStub field. <b>Important for auto-generated schema definitions</b>
-     * @return Grub<QConfigStub<T, A>> the delegate which lazily provides a Stub<T> */
-    // TODO add configuration methods for custom arg builders
-    //inline fun <reified T : Any, A : ArgBuilder> configStub(noinline arginit: (ArgBuilder) -> A): StubProvider<QConfigStub<T, A>> = Grub.createConfigStub(T::class.simpleName!!, arginit)
+     * Method which provides a delegate for fields of type [kotlin.String]
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<StringDelegate<ArgBuilder>>] */
+    fun <A: ArgBuilder> stringStub(arginit: (ArgBuilder) -> A) = Grub.createStringDelegate(arginit)
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Int]
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<IntDelegate<A>>] */
+    fun <A: ArgBuilder> intStub(arginit: (ArgBuilder) -> A) = Grub.createIntDelegate(arginit)
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Float]
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<FloatDelegate<A>>] */
+    fun <A: ArgBuilder> floatStub(arginit: (ArgBuilder) -> A) = Grub.createFloatDelegate(arginit)
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Boolean]
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<BooleanDelegate<A>>] */
+    fun <A: ArgBuilder> booleanStub(arginit: (ArgBuilder) -> A) = Grub.createBooleanDelegate(arginit)
+  }
+
+  object QScalarArray {
+    /**
+     * Method which provides a delegate for fields of type [kotlin.String]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<StringArrayDelegate<ArgBuilder>>] */
+    fun stringArrayStub() = Grub.createStringArrayDelegate()
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Int]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<IntArrayDelegate<ArgBuilder>>] */
+    fun intArrayStub() = Grub.createIntArrayDelegate()
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Float]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<FloatArrayDelegate<ArgBuilder>>] */
+    fun floatArrayStub() = Grub.createFloatArrayDelegate()
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.Boolean]
+     * @return [com.prestongarno.ktq.internal.StubProvider]<BooleanArrayDelegate<ArgBuilder>>] */
+    fun booleanArrayStub() = Grub.createBooleanArrayDelegate()
+
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.String] (as an Array)
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<StringArrayDelegate<ArgBuilder>>] */
+    fun <A: ArgBuilder> stringArrayStub(arginit: (ArgBuilder) -> A) = Grub.createStringDelegate(arginit)
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.IntArray]
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<IntArrayDelegate<A>>] */
+    fun <A: ArgBuilder> intArrayStub(arginit: (ArgBuilder) -> A) = Grub.createIntDelegate(arginit)
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.FloatArray]
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<FloatArrayDelegate<A>>] */
+    fun <A: ArgBuilder> floatArrayStub(arginit: (ArgBuilder) -> A) = Grub.createFloatDelegate(arginit)
+
+    /**
+     * Method which provides a delegate for fields of type [kotlin.BooleanArray]
+     * @param A the type of argument (graphql field arguments) builder type this field requires
+     * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
+     * @return [com.prestongarno.ktq.internal.StubProvider]<BooleanArrayDelegate<A>>] */
+    fun <A: ArgBuilder> booleanArrayStub(arginit: (ArgBuilder) -> A) = Grub.createBooleanDelegate(arginit)
+
   }
 
   /**
@@ -63,7 +138,7 @@ interface QSchemaType {
      * @param T createTypeStub of the custom scalar
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarConfigStub<T, A>> the delegate which lazily provides a CustomScalarConfigStub<T, A> */
-    inline fun <reified T : CustomScalar, A : CustomScalarArgBuilder> configStub(
+    inline fun <reified T : CustomScalar, A : CustomScalarArgBuilder> stub(
         noinline arginit: (CustomScalarArgBuilder) -> A
     ): StubProvider<CustomScalarConfigStub<T, A>> = Grub.createCustomScalarConfig(T::class.simpleName!!, arginit)
   }
@@ -87,33 +162,10 @@ interface QSchemaType {
      * @param T createTypeStub of the field (schema-defined createTypeStub)
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<QTypeConfigStub<T, A>> the delegate which lazily provides a QTypeConfigStub<T, A> */
-    inline fun <reified T : QSchemaType, A : ArgBuilder> configStub(
+    inline fun <reified T : QSchemaType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<QTypeConfigStub<T, A>>
         = Grub.createTypeConfigStub(T::class.simpleName!!, arginit)
-  }
-
-  /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
-   * fields which are lists of any built-in scalar (Int, Float, Boolean, String):
-   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#createStub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QScalarList#createConfigStub(arginit)}.*/
-  object QScalarList {
-    /**
-     * Method which provides a delegate for lists of built-in scalar types
-     * @param T The createTypeStub argument for the list createStub, one of: {@link kotlin.Int}, {@link kotlin.String},
-     *     {@link kotlin.Float}, {@link kotlin.Boolean}
-     * @return Grub<ListStub<T>> the delegate which lazily provides a ListStub<T> */
-    //inline fun <reified T> stub(): StubProvider<ListStub<T>> = Grub.createScalarListStub(T::class.simpleName?: throw NullPointerException())
-
-    /**
-     * Method which provides a delegate for lists of built-in scalar types which accept input arguments
-     * @param arginit an initializer for the list createStub fields
-     * @param T createTypeStub argument for the createStub, one of: {@link kotlin.Int}, {@link kotlin.String},
-     *     {@link kotlin.Float}, {@link kotlin.Boolean}
-     * @param A createTypeStub argument for the argument builder class for the given schema field definition
-     * @return Grub<ListConfig<T, A>> the delegate which lazily provides a ListConfig<T, A> */
-    //inline fun <reified T : Any, A : ArgBuilder> configStub( noinline arginit: (ArgBuilder) -> A ): StubProvider<ListConfig<T, A>> = Grub.createListConfigStub(T::class.simpleName!!, arginit)
   }
 
   /**
@@ -136,7 +188,7 @@ interface QSchemaType {
      * @param T createTypeStub of the field (schema-defined createTypeStub)
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<ListConfigType<T, A>> the delegate which lazily provides a ListConfigType<T, A> */
-    inline fun <reified T : QSchemaType, A : ArgBuilder> configStub(
+    inline fun <reified T : QSchemaType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<ListConfigType<T, A>> = Grub.createTypeListConfigStub(T::class.simpleName!!, arginit)
   }
@@ -162,7 +214,7 @@ interface QSchemaType {
      * @param T createTypeStub of the custom scalar
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarListArgBuilder<T, A>> the delegate which lazily provides a CustomScalarListArgBuilder<T, A> */
-    inline fun <reified T : CustomScalar, A : CustomScalarListArgBuilder> configStub(
+    inline fun <reified T : CustomScalar, A : CustomScalarListArgBuilder> stub(
         noinline arginit: (CustomScalarListArgBuilder) -> A
     ): StubProvider<CustomScalarListConfigStub<T, A>> =
         Grub.createCustomScalarListConfig(T::class.simpleName!!, arginit)
@@ -170,6 +222,9 @@ interface QSchemaType {
 
   object QUnion {
     inline fun <reified T : QSchemaUnion> stub(objectModel: T): StubProvider<UnionInitStub<T>> =
+        Grub.createUnionStub(objectModel, T::class.simpleName!!)
+
+    inline fun <reified T : QSchemaUnion, A : ArgBuilder> stub(objectModel: T, arginit: (ArgBuilder) -> A): StubProvider<UnionInitStub<T>> =
         Grub.createUnionStub(objectModel, T::class.simpleName!!)
   }
 }

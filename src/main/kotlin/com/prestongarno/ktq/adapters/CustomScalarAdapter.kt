@@ -40,8 +40,8 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
       value: Any
   ): ArgBuilder = apply { this.args.put(name, value) }
 
-  override fun <R : QModel<*>> provideDelegate(
-      inst: R,
+  override fun provideDelegate(
+      inst: QModel<*>,
       property: KProperty<*>
   ): QField<Q> = CustomScalarStubImpl(GraphQlProperty.from(property,
       this.graphqlProperty.graphqlType,
