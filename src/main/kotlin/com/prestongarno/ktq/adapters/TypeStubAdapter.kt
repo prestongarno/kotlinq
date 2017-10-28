@@ -6,7 +6,7 @@ import com.prestongarno.ktq.BaseFieldAdapter
 import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
-import com.prestongarno.ktq.hooks.TypeConfiguration
+import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.ModelProvider
@@ -23,7 +23,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
 ) : BaseFieldAdapter(property),
     TypeStub<P, I>,
     InitStub<I>,
-    TypeConfiguration<I, B>,
+    TypeConfig<I, B>,
     ArgBuilder {
 
   override fun config(provider: B.() -> Unit): InitStub<I> =

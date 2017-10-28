@@ -1,6 +1,7 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
+import com.prestongarno.ktq.hooks.DelegateProvider
 
 interface ListInitStub<T : QSchemaType> : SchemaStub {
   fun <U : QModel<T>> init(of: () -> U): TypeListStub<U, T>

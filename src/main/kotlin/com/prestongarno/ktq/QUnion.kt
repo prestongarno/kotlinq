@@ -38,6 +38,7 @@ internal sealed class UnionAdapter<out I : QSchemaUnion>(
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<*>?> {
 
+    /* TODO inb4 'more idiomatic to synchronize inside of the DispatchQueue object' */
     synchronized(queue) {
       queue.put(this)
       dispatcher?.invoke(model)
@@ -60,7 +61,9 @@ internal sealed class UnionAdapter<out I : QSchemaUnion>(
   }
 
   companion object {
-    fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I): UnionAdapter<I> = UnionAdapterImpl(property, objectModel)
+    fun <I : QSchemaUnion> create(
+        property: GraphQlProperty, objectModel: I
+    ): UnionAdapter<I> = UnionAdapterImpl(property, objectModel)
   }
 }
 

@@ -1,6 +1,7 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
+import com.prestongarno.ktq.hooks.DelegateProvider
 
 interface CustomScalarInitStub<T: CustomScalar> : SchemaStub {
   fun <U: QScalarMapper<A>, A> init(init: U): CustomStub<U, A>
