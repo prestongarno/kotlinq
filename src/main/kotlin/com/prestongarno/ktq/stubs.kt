@@ -12,3 +12,5 @@ interface NullableStub<T> : DelegateProvider<T?>
 interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QSchemaType
 
 interface UnionStub : DelegateProvider<QModel<*>?>
+
+interface EnumStub<T> : DelegateProvider<T> where T: QSchemaEnum, T: Enum<*>
