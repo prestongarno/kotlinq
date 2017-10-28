@@ -31,7 +31,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { this.args.put(name, value) }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BaseFieldAdapter<List<Q>> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<Q>> =
       CustomScalarListStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -55,7 +55,7 @@ private data class CustomScalarListStubImpl<out Q>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: QScalarListMapper<Q>
-) : BaseFieldAdapter<List<Q>>,
+) : QField<List<Q>>,
     Adapter {
 
   override fun toRawPayload(): String = qproperty.graphqlName +

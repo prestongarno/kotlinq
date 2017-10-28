@@ -16,7 +16,6 @@ import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaUnion
-import com.prestongarno.ktq.QTypeConfigStub
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.UnionAdapter
 import com.prestongarno.ktq.UnionInitStub
@@ -148,7 +147,7 @@ class Grub<out T : SchemaStub>(
     fun <A : ArgBuilder, T : QSchemaType> createTypeConfigStub(
         simpleName: String,
         arginit: (ArgBuilder) -> A
-    ): StubProvider<QTypeConfigStub<T, A>>
+    ): StubProvider<TypeConfiguration<T, A>>
         = Grub(simpleName, false) { TypeStubAdapter<T, QModel<T>, A>(it, arginit) }
 
     //TODO write with new API/DSL hierarchy

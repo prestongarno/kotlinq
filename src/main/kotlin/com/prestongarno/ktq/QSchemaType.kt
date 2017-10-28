@@ -2,6 +2,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.StubProvider
+import com.prestongarno.ktq.hooks.TypeConfiguration
 
 /**
  * The root createTypeStub of all generated schema objects. Nested objects
@@ -164,7 +165,7 @@ interface QSchemaType {
      * @return Grub<QTypeConfigStub<T, A>> the delegate which lazily provides a QTypeConfigStub<T, A> */
     inline fun <reified T : QSchemaType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
-    ): StubProvider<QTypeConfigStub<T, A>>
+    ): StubProvider<TypeConfiguration<T, A>>
         = Grub.createTypeConfigStub(T::class.simpleName!!, arginit)
   }
 

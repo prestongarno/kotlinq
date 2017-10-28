@@ -7,7 +7,7 @@ import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
-import com.prestongarno.ktq.QTypeConfigStub
+import com.prestongarno.ktq.hooks.TypeConfiguration
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.hooks.nullPointer
@@ -23,13 +23,13 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
 ) : BaseFieldAdapter(property),
     TypeStub<P, I>,
     InitStub<I>,
-    QTypeConfigStub<I, B>,
+    TypeConfiguration<I, B>,
     ArgBuilder {
 
   override fun config(provider: B.() -> Unit): InitStub<I> =
       TypeStubAdapter(graphqlProperty, builderInit, this.init, provider)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BaseFieldAdapter<P> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> =
       TypeStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -53,7 +53,7 @@ private data class TypeStubImpl<out I : QSchemaType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
-) : BaseFieldAdapter<P>,
+) : QField<P>,
     Adapter,
     ModelProvider {
 
