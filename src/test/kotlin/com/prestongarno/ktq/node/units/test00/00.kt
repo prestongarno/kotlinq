@@ -37,7 +37,7 @@ class TestZero() : NodeServer() {
     }
 
     val queryMyName = object : QModel<Query>(Query) {
-      val me by Query.me.init { myUserInit() }
+      val me by Query.me.querying { myUserInit() }
     }
 
     runBlocking {
@@ -59,7 +59,7 @@ class TestZero() : NodeServer() {
     }
 
     val queryAll = object : QModel<Query>(Query) {
-      val me by Query.me.init(myUserInit)
+      val me by Query.me.querying(myUserInit)
       val hello by Query.hello
     }
 

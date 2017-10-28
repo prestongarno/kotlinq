@@ -34,13 +34,13 @@ in the `model` instance which a concrete query/mutation class delegates its prop
           .config {
             term = searchTerm
             limit = 10
-          }.init { BusinessesNodesModel() }
+          }.querying { BusinessesNodesModel() }
           
     }
 
     class BusinessesNodesModel : QModel(Businesses) {
       val resultCount:   Int                    by model.total
-      val resultsNodes:  List<SimpleBusiness>   by model.business.init { SimpleBusiness() }
+      val resultsNodes:  List<SimpleBusiness>   by model.business.querying { SimpleBusiness() }
     }
 
     class SimpleBusiness : QModel(Business) {

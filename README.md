@@ -45,13 +45,13 @@ in the `model` instance which a concrete query/mutation class delegates its prop
           .config {
             term = searchTerm
             limit = 10
-          }.init { BusinessesNodesModel() }
+          }.querying { BusinessesNodesModel() }
           
     }
 
     class BusinessesNodesModel : QModel(Businesses) {
       val resultCount:   Int                    by model.total
-      val resultsNodes:  List<SimpleBusiness>   by model.business.init { SimpleBusiness() }
+      val resultsNodes:  List<SimpleBusiness>   by model.business.querying { SimpleBusiness() }
     }
 
     class SimpleBusiness : QModel(Business) {
@@ -87,7 +87,7 @@ adds a dependency on [http4k](http://http4k.org) and supports end-to-end mutatio
 describe your model, and execute. This is an example for getting your github name (not shown: compiled github SDL schema):
 
     class ViewerQuery : QModel<Query>(Query) {
-      val me by model.viewer.init { UserModel() }
+      val me by model.viewer.querying { UserModel() }
     }
     
     class UserModel : QModel<User>(User) {

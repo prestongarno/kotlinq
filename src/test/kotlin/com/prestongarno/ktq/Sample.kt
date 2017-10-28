@@ -69,27 +69,27 @@ class SimpleAddress(exactValue: String) : QModel<Location>(Location) {
 
 class BasicUserInfo : QModel<OtherUser>(OtherUser) {
   val name by model.name
-  val url by model.url.init(StringScalarMapper {it.toInt()})
-  val relatedLinks by model.relatedUrls.init(StringScalarListMapper { it.toInt() })
+  val url by model.url.querying(StringScalarMapper {it.toInt()})
+  val relatedLinks by model.relatedUrls.querying(StringScalarListMapper { it.toInt() })
   val friendsUrls by model.friendsUrls.config {
     shortUrls(true)
-  }.init(StringScalarListMapper { File(it).toURI().toURL()!! })
+  }.querying(StringScalarListMapper { File(it).toURI().toURL()!! })
 }
 
 data class MyUser(private val limitOfFriends: Int, private val lang: String) : QModel<OtherUser>(OtherUser) {
   val username by model.name.withDefault("ageen")
-  val url by model.url.init(StringScalarMapper {it})
+  val url by model.url.querying(StringScalarMapper {it})
 
   val enemies: BasicUserInfo by model.enemies
-      .init(::BasicUserInfo)
+      .querying(::BasicUserInfo)
 
   val address: SimpleAddress by model.address.config {
     language(lang)
-  }.init { SimpleAddress("7777 HelloWorld Lane") }
+  }.querying { SimpleAddress("7777 HelloWorld Lane") }
 
   val friends by model.friends.config {
     first(limitOfFriends)
-  }.init(::BasicUserInfo)
+  }.querying(::BasicUserInfo)
 }
 
 class TestSample {

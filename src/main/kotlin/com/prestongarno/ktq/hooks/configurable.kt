@@ -24,5 +24,5 @@ interface TypeConfiguration<T: QSchemaType, out A: ArgBuilder> : SchemaStub {
 }
 
 interface InitStub<T : QSchemaType> : SchemaStub {
-  fun <U : QModel<T>> init(init: () -> U): TypeStub<U, T>
+  fun <U : QModel<T>> querying(init: () -> U): TypeStub<U, T>
 }

@@ -3,12 +3,12 @@ package com.prestongarno.ktq.adapters
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.BaseFieldAdapter
-import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.hooks.TypeConfiguration
 import com.prestongarno.ktq.TypeStub
+import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty
@@ -40,7 +40,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
         inst.fields.add(it)
       }
 
-  override fun <U : QModel<I>> init(init: () -> U): TypeStub<U, I> =
+  override fun <U : QModel<I>> querying(init: () -> U): TypeStub<U, I> =
       TypeStubAdapter(graphqlProperty, builderInit, init, config)
 
   override fun toAdapter(): Adapter = TypeStubImpl(this.graphqlProperty, init, args.toMap())
