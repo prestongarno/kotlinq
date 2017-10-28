@@ -2,7 +2,7 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.FieldConfig
+import com.prestongarno.ktq.BaseFieldAdapter
 import com.prestongarno.ktq.ListConfigType
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.GraphQlProperty
@@ -10,8 +10,8 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.TypeListStub
-import com.prestongarno.ktq.internal.ModelProvider
-import com.prestongarno.ktq.internal.nullPointer
+import com.prestongarno.ktq.hooks.ModelProvider
+import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty
 
 internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
@@ -19,7 +19,7 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
     val builderInit: (ArgBuilder) -> B,
     val init: (() -> P) = nullPointer(),
     val config: (B.() -> Unit)? = null
-) : FieldConfig(property),
+) : BaseFieldAdapter(property),
     ListInitStub<I>,
     TypeListStub<P, I>,
     ListConfigType<I, B>,
@@ -33,7 +33,7 @@ internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
   override fun <U : QModel<I>> init(of: () -> U): TypeListStub<U, I> =
       TypeListAdapter(graphqlProperty, builderInit, of, this.config)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BaseFieldAdapter<List<P>> =
       TypeListStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -53,7 +53,7 @@ private data class TypeListStubImpl<P : QModel<*>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
-) : QField<List<P>>,
+) : BaseFieldAdapter<List<P>>,
     Adapter,
     ModelProvider {
 

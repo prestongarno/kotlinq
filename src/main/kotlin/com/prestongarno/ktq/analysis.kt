@@ -1,8 +1,8 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.internal.FragmentGenerator
-import com.prestongarno.ktq.internal.FragmentProvider
-import com.prestongarno.ktq.internal.ModelProvider
+import com.prestongarno.ktq.hooks.FragmentGenerator
+import com.prestongarno.ktq.hooks.FragmentProvider
+import com.prestongarno.ktq.hooks.ModelProvider
 
 internal fun QModel<*>.getFragments(): Set<FragmentGenerator> {
   return getFragments(this, hashSetOf(this))

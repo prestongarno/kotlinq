@@ -5,7 +5,7 @@ import com.prestongarno.ktq.CustomScalarArgBuilder
 import com.prestongarno.ktq.CustomScalarConfigStub
 import com.prestongarno.ktq.CustomScalarInitStub
 import com.prestongarno.ktq.CustomStub
-import com.prestongarno.ktq.FieldConfig
+import com.prestongarno.ktq.BaseFieldAdapter
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
@@ -20,7 +20,7 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
     var default: Q? = null,
     val init: P? = null,
     val config: (B.() -> Unit)? = null
-) : FieldConfig(property),
+) : BaseFieldAdapter(property),
     CustomScalarArgBuilder,
     CustomScalarConfigStub<E, B>,
     CustomScalarInitStub<E>,

@@ -2,7 +2,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.formatAs
-import com.prestongarno.ktq.internal.ModelProvider
+import com.prestongarno.ktq.hooks.ModelProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.jvmErasure

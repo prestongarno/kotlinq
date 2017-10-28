@@ -2,15 +2,15 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.FieldConfig
+import com.prestongarno.ktq.BaseFieldAdapter
 import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QTypeConfigStub
 import com.prestongarno.ktq.TypeStub
-import com.prestongarno.ktq.internal.ModelProvider
-import com.prestongarno.ktq.internal.nullPointer
+import com.prestongarno.ktq.hooks.ModelProvider
+import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty
 
 /**
@@ -20,7 +20,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
     val builderInit: (ArgBuilder) -> B,
     val init: () -> P = nullPointer(),
     val config: (B.() -> Unit)? = null
-) : FieldConfig(property),
+) : BaseFieldAdapter(property),
     TypeStub<P, I>,
     InitStub<I>,
     QTypeConfigStub<I, B>,
@@ -29,7 +29,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
   override fun config(provider: B.() -> Unit): InitStub<I> =
       TypeStubAdapter(graphqlProperty, builderInit, this.init, provider)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BaseFieldAdapter<P> =
       TypeStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -53,7 +53,7 @@ private data class TypeStubImpl<out I : QSchemaType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
-) : QField<P>,
+) : BaseFieldAdapter<P>,
     Adapter,
     ModelProvider {
 

@@ -21,8 +21,12 @@ interface CustomScalarInitStub<T: CustomScalar> : SchemaStub {
   fun <U: QScalarMapper<A>, A> init(init: U): CustomStub<U, A>
 }
 
-interface Configuration<out T, out A: ArgBuilder> : SchemaStub {
+interface Config<out T, out A: ArgBuilder> : SchemaStub {
   fun config(provider: A.() -> Unit): DelegateProvider<T>
+}
+
+interface OptionalConfig<out T> : Config<T, ArgBuilder> {
+  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
 
 interface TypeConfiguration<T: QSchemaType, out A: ArgBuilder> : SchemaStub {
@@ -32,8 +36,6 @@ interface TypeConfiguration<T: QSchemaType, out A: ArgBuilder> : SchemaStub {
 interface CustomScalarConfiguration<T: CustomScalar, out A: CustomScalarArgBuilder> : SchemaStub {
   fun config(provider: A.() -> Unit): CustomScalarInitStub<T>
 }
-
-interface QConfigStub<T, out A : ArgBuilder> : Configuration<T, A>
 
 interface QTypeConfigStub<T : QSchemaType, out A : ArgBuilder> : TypeConfiguration<T, A>
 

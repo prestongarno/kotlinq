@@ -2,7 +2,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 
-internal abstract class FieldConfig(val graphqlProperty: GraphQlProperty) : ArgBuilder {
+internal abstract class BaseFieldAdapter(val graphqlProperty: GraphQlProperty) : ArgBuilder {
 
   /**
    * A map of arguments for the field (for graphql) */
@@ -12,7 +12,7 @@ internal abstract class FieldConfig(val graphqlProperty: GraphQlProperty) : ArgB
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as FieldConfig
+    other as BaseFieldAdapter
 
     if (graphqlProperty != other.graphqlProperty) return false
 

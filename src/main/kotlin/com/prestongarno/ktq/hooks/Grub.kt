@@ -1,4 +1,4 @@
-package com.prestongarno.ktq.internal
+package com.prestongarno.ktq.hooks
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.CustomScalar

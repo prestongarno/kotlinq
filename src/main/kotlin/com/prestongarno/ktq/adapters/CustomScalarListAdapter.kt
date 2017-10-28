@@ -5,7 +5,7 @@ import com.prestongarno.ktq.CustomScalarListArgBuilder
 import com.prestongarno.ktq.CustomScalarListConfigStub
 import com.prestongarno.ktq.CustomScalarListInitStub
 import com.prestongarno.ktq.CustomScalarListStub
-import com.prestongarno.ktq.FieldConfig
+import com.prestongarno.ktq.BaseFieldAdapter
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
@@ -20,7 +20,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
     val adapter: P? = null,
     val default: Q? = null,
     val config: (B.() -> Unit)? = null
-) : FieldConfig(property),
+) : BaseFieldAdapter(property),
     CustomScalarListArgBuilder,
     CustomScalarListConfigStub<E, B>,
     CustomScalarListInitStub<E>,
@@ -31,7 +31,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { this.args.put(name, value) }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<Q>> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BaseFieldAdapter<List<Q>> =
       CustomScalarListStubImpl(GraphQlProperty.from(property,
           this.graphqlProperty.graphqlType,
           this.graphqlProperty.isList,
@@ -55,7 +55,7 @@ private data class CustomScalarListStubImpl<out Q>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: QScalarListMapper<Q>
-) : QField<List<Q>>,
+) : BaseFieldAdapter<List<Q>>,
     Adapter {
 
   override fun toRawPayload(): String = qproperty.graphqlName +

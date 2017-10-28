@@ -3,8 +3,8 @@ package com.prestongarno.ktq
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.QField
-import com.prestongarno.ktq.internal.FragmentGenerator
-import com.prestongarno.ktq.internal.FragmentProvider
+import com.prestongarno.ktq.hooks.FragmentGenerator
+import com.prestongarno.ktq.hooks.FragmentProvider
 import kotlin.reflect.KProperty
 
 interface UnionInitStub<out T : QSchemaUnion> : SchemaStub {
