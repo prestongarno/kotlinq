@@ -15,8 +15,6 @@ interface GraphQlProperty {
   val isList: Boolean
   val kproperty: KProperty<*>
 
-  fun toEnum(name: String): Enum<*>?
-
   companion object {
     fun from(
         property: KProperty<*>,
@@ -31,26 +29,17 @@ interface GraphQlProperty {
       override val graphqlType = ""
       override val graphqlName: String = ""
       override val isList: Boolean = false
-      override fun toEnum(name: String): Enum<*>? = null
     }
   }
 }
 
-class PropertyImpl(
+internal data class PropertyImpl(
     override val graphqlType: String,
     override val kproperty: KProperty<*>,
     override val isList: Boolean,
     override val graphqlName: String = kproperty.name
 ) : GraphQlProperty {
   override val typeKind: PropertyType = PropertyType.from(graphqlType)
-
-  override fun toEnum(name: String): Enum<*>? {
-    return if (kproperty.returnType.jvmErasure.java.isEnum)
-      kproperty.returnType.jvmErasure.javaObjectType.enumConstants.find {
-        (it as Enum<*>).name == name
-      } as? Enum<*>
-    else null
-  }
 
   override fun equals(other: Any?): Boolean {
     return (other as? GraphQlProperty)?.kproperty == kproperty
@@ -109,7 +98,6 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
   val responseType: KClass<*> = if (values.isNotEmpty()) values[0]::class else Any::class
 
   return when (type) {
-  // TODO Take out generic createTypeStub arguments from the stubs for primitives -> these are BOXED AND UNBOXED every time they're accessed!
     null -> emptyList()
     responseType -> values
     Int::class -> values.mapNotNull { "$it".toIntOrNull() }
