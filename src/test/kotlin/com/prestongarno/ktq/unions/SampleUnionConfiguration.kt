@@ -74,7 +74,7 @@ class MyHamburger : QModel<Hamburger>(Hamburger) {
 }
 
 class MyTaco : QModel<Taco>(Taco) {
-  val foo by model.ingredients.init { MyHamburger() }
+  val foo by model.ingredients.querying { MyHamburger() }
 }
 
 class Sample {

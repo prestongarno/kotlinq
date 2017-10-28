@@ -28,7 +28,7 @@ object ProjImpl : Project {
 class ConfigModel : QModel<Configuration>(Configuration) {
   val depends by model.dependencies.config {
     first(20)
-  }.init { ProjectModel() }
+  }.querying { ProjectModel() }
 }
 class ProjectModel : QModel<ProjImpl>(ProjImpl)
 

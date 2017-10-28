@@ -42,7 +42,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
         inst.fields.add(it)
       }
 
-  @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<A>, A> init(of: U): CustomScalarListStub<U, A> =
+  @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<A>, A> querying(of: U): CustomScalarListStub<U, A> =
       CustomScalarListAdapter<E, U, A, B>(graphqlProperty, builderInit, of, default as A?, config)
 
   @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T> =
