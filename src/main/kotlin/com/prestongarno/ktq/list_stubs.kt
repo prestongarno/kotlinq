@@ -24,3 +24,5 @@ interface ListConfigType<T, A> : ListInitConfig<T, A> where T: QSchemaType, A: A
 interface TypeListStub<out U, out T> : DelegateProvider<List<U>> where U : QModel<T>, T : QSchemaType
 
 interface CustomScalarListStub<U: QScalarListMapper<T>, out T> : DelegateProvider<List<T>>
+
+interface UnionListStub : DelegateProvider<List<QModel<*>>>

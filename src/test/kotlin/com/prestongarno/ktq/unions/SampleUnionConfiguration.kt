@@ -3,19 +3,21 @@ package com.prestongarno.ktq.unions
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.ListInitStub
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.QSchemaEnum
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.UnionInitStub
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
 import com.prestongarno.ktq.getFragments
 import org.junit.Test
 
-interface MexicanFood : QSchemaType {
+interface Food : QSchemaType {
   val ingredients: ListInitStub<FoodIngredient>
 }
 
-interface FoodIngredient : QSchemaType {
+interface FoodIngredient : QSchemaUnion {
   val name: StringDelegate<ArgBuilder>
   val description: StringDelegate<ArgBuilder>
 }
@@ -41,28 +43,27 @@ object Car : QSchemaType {
 
 enum class CarType { COUPE, SEDAN, MINIVAN, OTHER }
 
-object Taco : MexicanFood {
-  override val ingredients by QTypeList.stub<FoodIngredient>()
+object Taco : Food {
+  override val ingredients by QUnion.stub<FoodIngredient>()
   val weight by QScalar.intStub()
 }
 
-object Burrito : MexicanFood {
+object Burrito : Food {
   override val ingredients by QTypeList.stub<FoodIngredient>()
 }
 
-object Hamburger : FoodIngredient {
-  override val name: StringDelegate<ArgBuilder> by QScalar.stringStub()
-  override val description by QScalar.stringStub()
+object Hamburger : Food {
   val numberOfPatties: IntegerArrayDelegate<ArgBuilder> by QScalarArray.intArrayStub()
+  val whatsOnThisBurger: UnionInitStub<FoodIngredient> by QUnion.stub()
 }
 
 object Lettuce : FoodIngredient {
   override val name by QScalar.stringStub()
   override val description by QScalar.stringStub()
-  //val lettuceKind: Stub<LettuceType> by QScalar.stubPrimitive()
+  val lettuceKind by QEnum.stub<LettuceType>()
 }
 
-enum class LettuceType : QSchemaType {
+enum class LettuceType : QSchemaEnum {
   ICEBERG,
   ROMAINE,
   SPINACH,

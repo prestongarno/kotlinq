@@ -1,5 +1,6 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.adapters.BaseUnionAdapter
 import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.StubProvider
@@ -94,28 +95,28 @@ interface QSchemaType {
      * @param A the type of argument (graphql field arguments) builder type this field requires
      * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<StringArrayDelegate<ArgBuilder>>] */
-    fun <A : ArgBuilder> stringArrayStub(arginit: (ArgBuilder) -> A) = Grub.createStringDelegate(arginit)
+    fun <A : ArgBuilder> stringArrayStub(arginit: (ArgBuilder) -> A) = Grub.createStringArrayDelegate(arginit)
 
     /**
      * Method which provides a delegate for fields of type [kotlin.IntArray]
      * @param A the type of argument (graphql field arguments) builder type this field requires
      * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<IntArrayDelegate<A>>] */
-    fun <A : ArgBuilder> intArrayStub(arginit: (ArgBuilder) -> A) = Grub.createIntDelegate(arginit)
+    fun <A : ArgBuilder> intArrayStub(arginit: (ArgBuilder) -> A) = Grub.createIntArrayDelegate(arginit)
 
     /**
      * Method which provides a delegate for fields of type [kotlin.FloatArray]
      * @param A the type of argument (graphql field arguments) builder type this field requires
      * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<FloatArrayDelegate<A>>] */
-    fun <A : ArgBuilder> floatArrayStub(arginit: (ArgBuilder) -> A) = Grub.createFloatDelegate(arginit)
+    fun <A : ArgBuilder> floatArrayStub(arginit: (ArgBuilder) -> A) = Grub.createFloatArrayDelegate(arginit)
 
     /**
      * Method which provides a delegate for fields of type [kotlin.BooleanArray]
      * @param A the type of argument (graphql field arguments) builder type this field requires
      * @param arginit the initializer for the arguments. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanArrayDelegate<A>>] */
-    fun <A : ArgBuilder> booleanArrayStub(arginit: (ArgBuilder) -> A) = Grub.createBooleanDelegate(arginit)
+    fun <A : ArgBuilder> booleanArrayStub(arginit: (ArgBuilder) -> A) = Grub.createBooleanArrayDelegate(arginit)
 
   }
 
@@ -226,17 +227,27 @@ interface QSchemaType {
     inline fun <reified T : QSchemaUnion> stub(objectModel: T): StubProvider<UnionInitStub<T>> =
         Grub.createUnionStub(objectModel, T::class.simpleName!!)
 
-    inline fun <reified T : QSchemaUnion, A : ArgBuilder> stub(objectModel: T, arginit: (ArgBuilder) -> A): StubProvider<UnionInitStub<T>> =
-        Grub.createUnionStub(objectModel, T::class.simpleName!!)
+    inline fun <reified T : QSchemaUnion, A : ArgBuilder> stub(
+        objectModel: T,
+        noinline arginit: (ArgBuilder) -> A
+    ): StubProvider<UnionConfigStub<T, A>> = Grub.createUnionStub(objectModel, T::class.simpleName!!, arginit)
+  }
+
+  object QUnionList {
+    inline fun <reified T : QSchemaUnion> stub(objectModel: T): StubProvider<UnionInitStub<T>>
+        = TODO()
   }
 
   object QEnum {
-    inline fun <reified T> stub(): StubProvider<EnumStub<T>> where T : Enum<*>, T : QSchemaEnum = TODO()
+    inline fun <reified T> stub(): StubProvider<EnumStub<T>> where T : Enum<*>, T : QSchemaEnum
+        = Grub.createEnumStub(T::class.simpleName.toString(), T::class)
 
     inline fun <reified T, A : ArgBuilder> stub(
-        noinline arginit: A.() -> Unit
-    ): StubProvider<EnumStub<T>> where T : Enum<*>, T : QSchemaEnum = TODO()
+        noinline arginit: (ArgBuilder) -> A
+    ): StubProvider<EnumStub<T>> where T : Enum<*>, T : QSchemaEnum
+        = Grub.createEnumConfigStub(T::class.simpleName.toString(), T::class, arginit)
   }
+
 }
 
 /**

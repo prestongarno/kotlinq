@@ -11,6 +11,10 @@ internal interface ModelProvider {
   val value: QModel<*>
 }
 
+interface DelegateProvider<out T> : SchemaStub {
+  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
+}
+
 interface FragmentProvider {
   val fragments: Set<FragmentGenerator>
 }
@@ -20,6 +24,3 @@ data class FragmentGenerator(val initializer: () -> QModel<*>) {
 }
 
 fun <T> nullPointer(): () -> T = { throw NullPointerException() }
-interface DelegateProvider<out T> : SchemaStub {
-  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
-}

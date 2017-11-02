@@ -115,7 +115,7 @@ class BooleanDelegate<A : ArgBuilder>(
 
 class StringStub(
     graphqlProperty: GraphQlProperty,
-    val default: String? = null,
+    private val default: String? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveStub(graphqlProperty, args) {
 
@@ -141,7 +141,7 @@ class StringStub(
 
 class IntStub(
     property: GraphQlProperty,
-    val default: Int? = null,
+    private val default: Int? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveStub(property, args) {
 
@@ -173,7 +173,7 @@ class IntStub(
 
 class FloatStub(
     property: GraphQlProperty,
-    val default: Float? = null,
+    private val default: Float? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveStub(property, args) {
 
@@ -205,7 +205,7 @@ class FloatStub(
 
 class BooleanStub(
     property: GraphQlProperty,
-    val default: Boolean? = null,
+    private val default: Boolean? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveStub(property, args) {
 

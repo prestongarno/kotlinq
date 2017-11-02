@@ -115,7 +115,7 @@ class BooleanArrayDelegate<A : ArgBuilder>(
 
 class StringArrayStub(
     graphqlProperty: GraphQlProperty,
-    val default: Array<String>? = null,
+    private val default: Array<String>? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(graphqlProperty, args) {
 
@@ -141,7 +141,7 @@ class StringArrayStub(
 
 class IntArrayStub(
     property: GraphQlProperty,
-    val default: IntArray? = null,
+    private val default: IntArray? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(property, args) {
 
@@ -174,7 +174,7 @@ class IntArrayStub(
 
 class FloatArrayStub(
     property: GraphQlProperty,
-    val default: FloatArray? = null,
+    private val default: FloatArray? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(property, args) {
 
@@ -207,7 +207,7 @@ class FloatArrayStub(
 
 class BooleanArrayStub(
     property: GraphQlProperty,
-    val default: BooleanArray? = null,
+    private val default: BooleanArray? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(property, args) {
 

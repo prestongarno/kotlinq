@@ -2,7 +2,7 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.BaseFieldAdapter
+import com.prestongarno.ktq.PreDelegate
 import com.prestongarno.ktq.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
@@ -16,34 +16,25 @@ import kotlin.reflect.KProperty
 /**
  * This class represents a createStub for a non-leaf createTypeStub (aka an object) fragment a graph */
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
-    property: GraphQlProperty,
-    val builderInit: (ArgBuilder) -> B,
+    qproperty: GraphQlProperty,
+    private val builderInit: (ArgBuilder) -> B,
     val init: () -> P = nullPointer(),
     val config: (B.() -> Unit)? = null
-) : BaseFieldAdapter(property),
+) : PreDelegate(qproperty),
     TypeStub<P, I>,
     InitStub<I>,
-    TypeConfig<I, B>,
-    ArgBuilder {
+    TypeConfig<I, B> {
 
   override fun config(provider: B.() -> Unit): InitStub<I> =
-      TypeStubAdapter(graphqlProperty, builderInit, this.init, provider)
+      TypeStubAdapter(qproperty,builderInit, this.init, provider)
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> =
-      TypeStubImpl(GraphQlProperty.from(property,
-          this.graphqlProperty.graphqlType,
-          this.graphqlProperty.isList,
-          this.graphqlProperty.graphqlName),
-          init,
-          apply { config?.invoke(builderInit(this)) }.args.toMap()
-      ).also {
-        inst.fields.add(it)
-      }
+      TypeStubImpl(qproperty, init, apply {
+        config?.invoke(builderInit(this)) }.args.toMap()
+      ).also { inst.fields.add(it) }
 
   override fun <U : QModel<I>> querying(init: () -> U): TypeStub<U, I> =
-      TypeStubAdapter(graphqlProperty, builderInit, init, config)
-
-  override fun toAdapter(): Adapter = TypeStubImpl(this.graphqlProperty, init, args.toMap())
+      TypeStubAdapter(qproperty, builderInit, init, config)
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value) }
 
