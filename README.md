@@ -16,7 +16,7 @@ To use in a project, add the dependency to a gradle buildscript:
       compile 'com.prestongarno.ktq:ktq-client:0.2'
       
 Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
- the gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. 
+ the gradle syntax for configuring compilation of graphql SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
       classpath 'com.prestongarno.ktq:ktq-gradle:0.2'
@@ -84,7 +84,7 @@ check out the wiki.
 
 This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
 adds a dependency on [http4k](http://http4k.org) and supports end-to-end mutations and queries out of the box. Just 
-describe your model, and execute. This is an example for getting your github name (not shown: compiled github SDL schema):
+describe your model, and execute. This is an example for getting your github name (not shown: compiled github schema):
 
     class ViewerQuery : QModel<Query>(Query) {
       val me by model.viewer.init { UserModel() }
