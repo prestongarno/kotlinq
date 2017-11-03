@@ -2,14 +2,13 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.PreDelegate
-import com.prestongarno.ktq.ListConfigType
-import com.prestongarno.ktq.ListInitStub
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.stubs.ListConfigType
+import com.prestongarno.ktq.stubs.ListInitStub
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.TypeListStub
+import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty

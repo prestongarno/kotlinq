@@ -1,9 +1,8 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.PreDelegate
 import com.prestongarno.ktq.EnumStub
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaEnum
 import kotlin.reflect.KClass

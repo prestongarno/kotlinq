@@ -2,12 +2,11 @@ package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.CustomScalar
 import com.prestongarno.ktq.CustomScalarListArgBuilder
-import com.prestongarno.ktq.CustomScalarListConfigStub
-import com.prestongarno.ktq.CustomScalarListInitStub
-import com.prestongarno.ktq.CustomScalarListStub
-import com.prestongarno.ktq.PreDelegate
+import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
+import com.prestongarno.ktq.stubs.CustomScalarListInitStub
+import com.prestongarno.ktq.stubs.CustomScalarListStub
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper

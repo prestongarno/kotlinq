@@ -2,12 +2,12 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.DispatchQueue
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.DispatchQueue
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaUnion
-import com.prestongarno.ktq.UnionConfigStub
-import com.prestongarno.ktq.UnionInitStub
+import com.prestongarno.ktq.stubs.UnionConfigStub
+import com.prestongarno.ktq.stubs.UnionInitStub
 import com.prestongarno.ktq.UnionStub
 import com.prestongarno.ktq.hooks.FragmentGenerator
 import com.prestongarno.ktq.hooks.FragmentProvider
@@ -57,11 +57,12 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
   }
 
   companion object {
+
     fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I)
         : UnionConfigAdapter<I, ArgBuilder> = UnionAdapterImpl(property, objectModel, { it })
 
     fun <I : QSchemaUnion, A : ArgBuilder> create(property: GraphQlProperty, objectModel: I, arginit: (ArgBuilder) -> A)
-        : UnionConfigAdapter<I, ArgBuilder> = UnionAdapterImpl(property, objectModel, arginit)
+        : UnionConfigAdapter<I, A> = UnionAdapterImpl(property, objectModel, arginit)
   }
 }
 

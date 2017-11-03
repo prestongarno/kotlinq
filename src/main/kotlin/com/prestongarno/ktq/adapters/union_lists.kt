@@ -1,12 +1,12 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.DispatchQueue
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.DispatchQueue
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaUnion
-import com.prestongarno.ktq.UnionListInitStub
-import com.prestongarno.ktq.UnionListStub
+import com.prestongarno.ktq.stubs.UnionListInitStub
+import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.FragmentGenerator
 import com.prestongarno.ktq.hooks.FragmentProvider
 import kotlin.reflect.KProperty

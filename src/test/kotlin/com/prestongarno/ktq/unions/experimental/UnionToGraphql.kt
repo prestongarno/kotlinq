@@ -1,21 +1,7 @@
 package com.prestongarno.ktq.unions.experimental
 
-import com.google.common.truth.Truth.assertThat
-import com.prestongarno.ktq.CustomScalar
-import com.prestongarno.ktq.CustomScalarInitStub
 import com.prestongarno.ktq.InitStub
-import com.prestongarno.ktq.ListConfigType
-import com.prestongarno.ktq.ListInitStub
-import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaType
-import com.prestongarno.ktq.compiler.QCompiler
-import com.prestongarno.ktq.QSchemaType.QCustomScalar
-import com.prestongarno.ktq.QSchemaType.QScalar
-import com.prestongarno.ktq.QSchemaType.QType
-import com.prestongarno.ktq.QSchemaType.QTypeList
-import com.prestongarno.ktq.QSchemaUnion
-import org.junit.Ignore
-import org.junit.Test
+
 /*
 class UnionToGraphql {
 

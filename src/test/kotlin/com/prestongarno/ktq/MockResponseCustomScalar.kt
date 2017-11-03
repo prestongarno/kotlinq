@@ -5,6 +5,9 @@ import com.prestongarno.ktq.QSchemaType.QCustomScalarList
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
+import com.prestongarno.ktq.stubs.CustomScalarInitStub
+import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
+import com.prestongarno.ktq.stubs.CustomScalarListInitStub
 import org.intellij.lang.annotations.Language
 import org.junit.Ignore
 import org.junit.Test
@@ -118,7 +121,7 @@ object Note : QSchemaType {
   val webUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
   val relatedLinks: CustomScalarListInitStub<URI> by QCustomScalarList.stub()
   val refIds: CustomScalarListInitStub<ID> by QCustomScalarList.stub()
-  val refIdsConfigurable: CustomScalarListConfigStub<ID, Note.RefIdsConfigurableArgs>
+  val refIdsConfigurable: CustomScalarListConfigStub<ID, RefIdsConfigurableArgs>
       by QCustomScalarList.stub { RefIdsConfigurableArgs(it) }
 
   class RefIdsConfigurableArgs(args: CustomScalarListArgBuilder) : CustomScalarListArgBuilder by args {

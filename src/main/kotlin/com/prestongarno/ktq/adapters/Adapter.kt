@@ -1,8 +1,8 @@
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.QInput
+import com.prestongarno.ktq.input.QInput
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
 interface Adapter {

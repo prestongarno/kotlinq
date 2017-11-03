@@ -2,7 +2,7 @@
 /*
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.CustomStub
+import com.prestongarno.ktq.stubs.CustomStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.URL
 import com.prestongarno.ktq.yelp.Business

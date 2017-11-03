@@ -1,4 +1,7 @@
-package com.prestongarno.ktq
+package com.prestongarno.ktq.adapters
+
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.properties.GraphQlProperty
 
 /**
  * Base class for all objects who produce immutable field delegates */

@@ -1,13 +1,13 @@
 package com.prestongarno.ktq.unions
 
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.ListInitStub
+import com.prestongarno.ktq.stubs.ListInitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaEnum
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QSchemaUnion
-import com.prestongarno.ktq.UnionInitStub
+import com.prestongarno.ktq.stubs.UnionInitStub
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
 import com.prestongarno.ktq.getFragments
