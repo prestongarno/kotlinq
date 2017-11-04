@@ -81,3 +81,6 @@ internal fun Adapter.prettyPrinted(): String = qproperty.graphqlName +
       else -> ""
     }).replace("\\s*([(,])".toRegex(), "$1").trim()
 
+internal object Jsonify {
+  val INDENT = "  "
+}
