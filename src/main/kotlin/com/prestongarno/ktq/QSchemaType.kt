@@ -1,5 +1,6 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.hooks.TypeConfig
@@ -21,6 +22,7 @@ import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeConfigStub
 import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeListConfigStub
 import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeListStub
 import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeStub
+import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionListStub
 import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionStub
 import com.prestongarno.ktq.stubs.CustomScalarConfigStub
 import com.prestongarno.ktq.stubs.CustomScalarInitStub
@@ -30,6 +32,7 @@ import com.prestongarno.ktq.stubs.ListConfigType
 import com.prestongarno.ktq.stubs.ListInitStub
 import com.prestongarno.ktq.stubs.UnionConfigStub
 import com.prestongarno.ktq.stubs.UnionInitStub
+import com.prestongarno.ktq.stubs.UnionListInitStub
 
 /**
  * The root createTypeStub of all generated schema objects. Nested objects
@@ -261,8 +264,9 @@ interface QSchemaType {
   }
 
   object QUnionList {
-    inline fun <reified T : QSchemaUnion> stub(objectModel: T): StubProvider<UnionInitStub<T>>
-        = TODO()
+    //TODO quality control
+    inline fun <reified T : QSchemaUnion> stub(): StubProvider<UnionListInitStub<T>> =
+        createUnionListStub(T::class.objectInstance!!)
   }
 
   object QEnum {

@@ -3,6 +3,7 @@ package com.prestongarno.ktq.adapters
 import com.prestongarno.ktq.input.QInput
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.properties.GraphQlProperty
+import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 interface Adapter {

@@ -1,29 +1,39 @@
 package com.prestongarno.ktq.unions
 
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.stubs.ListInitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaEnum
 import com.prestongarno.ktq.QSchemaType
-import com.prestongarno.ktq.QSchemaType.*
+import com.prestongarno.ktq.QSchemaType.QEnum
+import com.prestongarno.ktq.QSchemaType.QScalar
+import com.prestongarno.ktq.QSchemaType.QScalarArray
+import com.prestongarno.ktq.QSchemaType.QUnionList
 import com.prestongarno.ktq.QSchemaUnion
-import com.prestongarno.ktq.stubs.UnionInitStub
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
-import com.prestongarno.ktq.getFragments
+import com.prestongarno.ktq.hooks.FragmentProvider
+import com.prestongarno.ktq.stubs.UnionListInitStub
 import org.junit.Test
+import kotlin.reflect.jvm.isAccessible
 
+//#############################################################
+// Example Stub/Generated API
+//#############################################################
 interface Food : QSchemaType {
-  val ingredients: ListInitStub<FoodIngredient>
+  val ingredients: UnionListInitStub<IngredientType>
 }
 
-interface FoodIngredient : QSchemaUnion {
+interface FoodIngredient : QSchemaType {
   val name: StringDelegate<ArgBuilder>
   val description: StringDelegate<ArgBuilder>
 }
 
+object IngredientType : QSchemaUnion by QSchemaUnion.create(IngredientType) {
+  fun onLettuce(init: () -> QModel<Lettuce>) = on(init)
+}
+
 object Query : QSchemaType {
-  val searchForThing by QUnion.stub(Thing)
+  val searchForThing by QUnionList.stub<Thing>()
 
   class SearchForThingArgs(args: ArgBuilder) : ArgBuilder by args {
     fun term(value: String) = addArg("term", value)
@@ -44,17 +54,17 @@ object Car : QSchemaType {
 enum class CarType { COUPE, SEDAN, MINIVAN, OTHER }
 
 object Taco : Food {
-  override val ingredients by QUnion.stub<FoodIngredient>()
+  override val ingredients by QUnionList.stub<IngredientType>()
   val weight by QScalar.intStub()
 }
 
 object Burrito : Food {
-  override val ingredients by QTypeList.stub<FoodIngredient>()
+  override val ingredients by QUnionList.stub<IngredientType>()
 }
 
 object Hamburger : Food {
   val numberOfPatties: IntegerArrayDelegate<ArgBuilder> by QScalarArray.intArrayStub()
-  val whatsOnThisBurger: UnionInitStub<FoodIngredient> by QUnion.stub()
+  override val ingredients by QUnionList.stub<IngredientType>()
 }
 
 object Lettuce : FoodIngredient {
@@ -70,17 +80,26 @@ enum class LettuceType : QSchemaEnum {
   MIXED
 }
 
+
+//#############################################################
+// Example API Usage
+//#############################################################
 class MyHamburger : QModel<Hamburger>(Hamburger) {
   val numberOfPatties by model.numberOfPatties
 }
 
+class MyLettuceModel : QModel<Lettuce>(Lettuce) {
+
+}
+
 class MyTaco : QModel<Taco>(Taco) {
-  val foo by model.ingredients.querying { MyHamburger() }
+  val foo by model.ingredients.fragment {
+    onLettuce { MyLettuceModel() }
+  }
 }
 
 class Sample {
   @Test fun testClassEvenLoads() {
-
     val myCarModel = {
       object : QModel<Car>(Car) {
         val make by model.make
@@ -91,15 +110,16 @@ class Sample {
         val weightInKg by model.weight
             .withDefault(100000000)
             .config {
-              this.addArg("Hello", "World")
-              println("Hello world")
+              addArg("Hello", "World") // can arbitrarily add arguments to graphql queries
             }
       }
     }
 
     val myHamburger = {
       object : QModel<Hamburger>(Hamburger) {
-        val numberOfPatties by model.numberOfPatties
+        val numberOfPatties by model.numberOfPatties {
+          println("Hello DSLs")
+        }
       }
     }
 
@@ -110,8 +130,15 @@ class Sample {
         onHamburger(myHamburger)
       }
     }
-    println(MyTaco().toGraphql(false))
-    println(myQuery.toGraphql(false))
-    myQuery.getFragments().forEachIndexed { i, x -> println("#$i = " + x.model.toGraphql(false)) }
+    println(MyTaco().toGraphql(true))
+    println(myTacoModel().toGraphql(false))
+    println(myQuery.toGraphql(true))
+    myQuery::thingSearch.apply { isAccessible = true }.getDelegate().let {
+      (it as? FragmentProvider)?.run {
+        fragments.forEachIndexed {
+          i, x -> println("#$i = " + x.model.toGraphql(true))
+        }
+      }
+    }
   }
 }

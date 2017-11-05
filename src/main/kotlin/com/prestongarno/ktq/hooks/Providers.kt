@@ -5,6 +5,7 @@ package com.prestongarno.ktq.hooks
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.QField
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 internal interface ModelProvider {
@@ -23,4 +24,7 @@ data class FragmentGenerator(val initializer: () -> QModel<*>) {
   internal val model by lazy(initializer)
 }
 
-fun <T> nullPointer(): () -> T = { throw NullPointerException() }
+internal fun <T> nullPointer() = object: ReadOnlyProperty<Any, T> {
+  override operator fun getValue(thisRef: Any, property: KProperty<*>): T =
+    throw NullPointerException("Null: ${property.name}")
+}

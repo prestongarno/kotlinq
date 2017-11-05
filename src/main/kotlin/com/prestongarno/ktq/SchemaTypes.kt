@@ -1,6 +1,6 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.BaseUnionAdapter
+import com.prestongarno.ktq.adapters.UnionConfigAdapter
 import com.prestongarno.ktq.hooks.DelegateProvider
 import com.prestongarno.ktq.properties.DispatchQueue
 
@@ -29,7 +29,7 @@ interface QSchemaUnion : QSchemaType {
   val queue: DispatchQueue
 
   companion object {
-    fun create(objectModel: QSchemaUnion): QSchemaUnion = BaseUnionAdapter(objectModel)
+    fun create(objectModel: QSchemaUnion): QSchemaUnion = UnionConfigAdapter.baseObject(objectModel)
   }
 }
 

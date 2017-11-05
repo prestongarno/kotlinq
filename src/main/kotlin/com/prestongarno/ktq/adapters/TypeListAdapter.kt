@@ -10,13 +10,12 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.hooks.ModelProvider
-import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty
 
 internal class TypeListAdapter<I : QSchemaType, out P : QModel<I>, B : ArgBuilder>(
     qproperty: GraphQlProperty,
     private val builderInit: (ArgBuilder) -> B,
-    val init: (() -> P) = nullPointer(),
+    val init: (() -> P)? = null,
     val config: (B.() -> Unit)? = null
 ) : PreDelegate(qproperty),
     ListInitStub<I>,
@@ -32,11 +31,18 @@ internal class TypeListAdapter<I : QSchemaType, out P : QModel<I>, B : ArgBuilde
   override fun <U : QModel<I>> querying(of: () -> U): TypeListStub<U, I> =
       TypeListAdapter(qproperty, builderInit, of, this.config)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
-      TypeListStubImpl(qproperty, init,
-          apply { config?.invoke(builderInit(this)) }.args.toMap()
-      ).also { inst.fields.add(it) }
-          .also { inst.fields.add(it) }
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> {
+
+    // This won't be null, the interface flow requires `querying(of: () -> P) to be called
+    // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
+    val initializer: () -> P = this.init!!
+
+    return TypeListStubImpl(qproperty, initializer, apply {
+      config?.invoke(builderInit(this))
+    }.args.toMap()).also {
+      inst.fields.add(it)
+    }
+  }
 
 }
 

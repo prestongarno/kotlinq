@@ -24,7 +24,9 @@ internal class EnumAdapter<T, out A>(
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
       EnumFieldImpl(enumClass, qproperty, apply {
             config?.invoke(builderInit(this))
-          }.args.toMap())
+          }.args.toMap()).also {
+        inst.fields.add(it)
+      }
 
   fun config(config: A.() -> Unit) = EnumAdapter(qproperty, enumClass, builderInit, config)
 

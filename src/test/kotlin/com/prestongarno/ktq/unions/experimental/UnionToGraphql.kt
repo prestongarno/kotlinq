@@ -1,6 +1,5 @@
 package com.prestongarno.ktq.unions.experimental
 
-import com.prestongarno.ktq.InitStub
 
 /*
 class UnionToGraphql {

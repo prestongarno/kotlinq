@@ -37,6 +37,8 @@ sealed class ScalarArrayDelegateImpl<T : ArgBuilder, out D : PrimitiveArrayStub>
 
   abstract fun config(config: T.() -> Unit): ScalarArrayDelegate<D>
 
+  operator fun invoke(literal: ScalarArrayDelegate<D>.() -> Unit): ScalarArrayDelegate<D> = apply { literal.invoke(this) }
+
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
 }

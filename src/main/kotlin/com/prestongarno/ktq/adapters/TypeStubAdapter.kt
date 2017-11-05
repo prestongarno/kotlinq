@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
     qproperty: GraphQlProperty,
     private val builderInit: (ArgBuilder) -> B,
-    val init: () -> P = nullPointer(),
+    val init: (() -> P)? = null,
     val config: (B.() -> Unit)? = null
 ) : PreDelegate(qproperty),
     TypeStub<P, I>,
@@ -27,10 +27,16 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
   override fun config(provider: B.() -> Unit): InitStub<I> =
       TypeStubAdapter(qproperty,builderInit, this.init, provider)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> =
-      TypeStubImpl(qproperty, init, apply {
-        config?.invoke(builderInit(this)) }.args.toMap()
-      ).also { inst.fields.add(it) }
+  /**
+   * For the possible possibly nullable initializer ->
+   * see [com.prestongarno.ktq.adapters.TypeListAdapter.provideDelegate]
+   */
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> {
+    val initializer: () -> P = this.init!!
+    return TypeStubImpl(qproperty, init, apply {
+      config?.invoke(builderInit(this)) }.args.toMap()
+    ).also { inst.fields.add(it) }
+  }
 
   override fun <U : QModel<I>> querying(init: () -> U): TypeStub<U, I> =
       TypeStubAdapter(qproperty, builderInit, init, config)

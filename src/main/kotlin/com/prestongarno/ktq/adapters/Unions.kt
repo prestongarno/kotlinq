@@ -42,12 +42,13 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<*>?> {
     /* TODO inb4 'more idiomatic to synchronize inside of the DispatchQueue object' */
     synchronized(queue) {
-      queue.put(this)
+      require(model.queue.get() === this.model)
+      model.queue.put(this)
       dispatcher?.invoke(model)
-      queue.pop()
+      model.queue.pop()
     }
     config?.invoke(arginit(this))
-    val next = UnionStubImpl(qproperty, fragments, args)
+    val next = UnionStubImpl(qproperty, fragments.toSet(), args)
     inst.fields.add(next)
     return next
   }
@@ -58,6 +59,9 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
 
   companion object {
 
+    fun <I: QSchemaUnion> baseObject(objectModel: I): UnionConfigAdapter<I, ArgBuilder> =
+        BaseUnionAdapter(objectModel)
+
     fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I)
         : UnionConfigAdapter<I, ArgBuilder> = UnionAdapterImpl(property, objectModel, { it })
 
@@ -66,7 +70,7 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
   }
 }
 
-internal class UnionAdapterImpl<out I : QSchemaUnion, A : ArgBuilder>(
+private class UnionAdapterImpl<out I : QSchemaUnion, A : ArgBuilder>(
     graphqlProperty: GraphQlProperty,
     objectModel: I,
     arginit: (ArgBuilder) -> A,
@@ -80,13 +84,13 @@ internal class UnionAdapterImpl<out I : QSchemaUnion, A : ArgBuilder>(
   }
 }
 
-internal class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
-  : UnionConfigAdapter<I, ArgBuilder>(GraphQlProperty.ROOT, model, { throw UnsupportedOperationException() }) {
+private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
+  : UnionConfigAdapter<I, ArgBuilder>(GraphQlProperty.ROOT, model, { it }) {
 
   override val queue: DispatchQueue = DispatchQueue()
 
   override fun on(init: () -> QModel<*>) {
-    queue.get()?.on(init)
+    queue.get()?.on(init)?: throw IllegalStateException("No object in the queue")
   }
 
   override fun addArg(name: String, value: Any): ArgBuilder = this
