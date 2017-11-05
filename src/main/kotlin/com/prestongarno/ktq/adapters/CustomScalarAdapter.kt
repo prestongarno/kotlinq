@@ -2,12 +2,11 @@ package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.CustomScalar
 import com.prestongarno.ktq.CustomScalarArgBuilder
-import com.prestongarno.ktq.CustomScalarConfigStub
-import com.prestongarno.ktq.CustomScalarInitStub
-import com.prestongarno.ktq.CustomStub
-import com.prestongarno.ktq.FieldConfig
+import com.prestongarno.ktq.stubs.CustomScalarConfigStub
+import com.prestongarno.ktq.stubs.CustomScalarInitStub
+import com.prestongarno.ktq.stubs.CustomStub
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
@@ -15,12 +14,12 @@ import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B : CustomScalarArgBuilder>(
-    val property: GraphQlProperty,
-    val builderInit: (CustomScalarArgBuilder) -> B,
-    var default: Q? = null,
+    qproperty: GraphQlProperty,
+    private val builderInit: (CustomScalarArgBuilder) -> B,
+    private var default: Q? = null,
     val init: P? = null,
     val config: (B.() -> Unit)? = null
-) : FieldConfig(property),
+) : PreDelegate(qproperty),
     CustomScalarArgBuilder,
     CustomScalarConfigStub<E, B>,
     CustomScalarInitStub<E>,
@@ -28,10 +27,10 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
 
 
   override fun withDefault(value: Q): CustomStub<P, Q> =
-      CustomScalarAdapter<E, P, Q, B>(property, builderInit, value, init, config)
+      CustomScalarAdapter<E, P, Q, B>(qproperty,builderInit, value, init, config)
 
   override fun config(provider: B.() -> Unit): CustomScalarInitStub<E> =
-      CustomScalarAdapter(property, builderInit, default, init, provider)
+      CustomScalarAdapter(qproperty, builderInit, default, init, provider)
 
   private lateinit var adapter: QScalarMapper<Q>
 
@@ -43,28 +42,22 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
   override fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QField<Q> = CustomScalarStubImpl(GraphQlProperty.from(property,
-      this.graphqlProperty.graphqlType,
-      this.graphqlProperty.isList,
-      this.graphqlProperty.graphqlName),
-      apply { config?.invoke(builderInit(this)) }.args.toMap(),
-      adapter,
-      default).also { inst.fields.add(it) }
+  ): QField<Q> = CustomScalarStubImpl(qproperty, apply {
+    config?.invoke(builderInit(this))
+  }.args.toMap(), adapter, default).also {
+    inst.fields.add(it) }
 
   @Suppress("UNCHECKED_CAST")
   override fun <U : QScalarMapper<A>, A> init(init: U): CustomStub<U, A> =
-      CustomScalarAdapter<E, U, A, B>(property, builderInit, default?.let {
+      CustomScalarAdapter<E, U, A, B>(qproperty,builderInit, default?.let {
         if (it != null && it as? A == true) it as A else null
       }, init, config)
 
   @Suppress("UNCHECKED_CAST") override fun <U : QScalarMapper<T>, T> build(init: U): CustomStub<U, T> =
-    CustomScalarAdapter<E, U, T, B>(property, builderInit, default?.let {
-      if (it != null && it as? T == true) it as T else null
-    }, init, config)
+      CustomScalarAdapter<E, U, T, B>(qproperty,builderInit, default?.let {
+        if (it != null && it as? T == true) it as T else null
+      }, init, config)
 
-  /**
-   * Utility function for tests/mocking */
-  override fun toAdapter(): Adapter = CustomScalarStubImpl(graphqlProperty, args.toMap(), adapter, default)
 }
 
 private data class CustomScalarStubImpl<out Q>(

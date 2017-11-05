@@ -5,6 +5,9 @@ import com.prestongarno.ktq.QSchemaType.QCustomScalarList
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
+import com.prestongarno.ktq.stubs.CustomScalarInitStub
+import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
+import com.prestongarno.ktq.stubs.CustomScalarListInitStub
 import org.intellij.lang.annotations.Language
 import org.junit.Ignore
 import org.junit.Test
@@ -48,7 +51,7 @@ class MockResponseCustomScalar {
   @Ignore @Test fun multipleFieldCustomScalarListedMappings() {
     val myNote = object : QModel<Note>(Note) {
       val webUrl by model.webUrl.init(StringScalarMapper { File(it).toURI() })
-      val related by model.relatedLinks.init(StringScalarListMapper { File(it) })
+      val related by model.relatedLinks.querying(StringScalarListMapper { File(it) })
     }
     @Language("JSON") val response = """{
         "webUrl": "/dev/null",
@@ -67,8 +70,8 @@ class MockResponseCustomScalar {
   @Ignore @Test fun multipleCustomScalarLists() {
     val myNote = object : QModel<Note>(Note) {
       val webUrl by model.webUrl.init(StringScalarMapper { File(it).toURI() })
-      val related by model.relatedLinks.init(StringScalarListMapper { File(it) })
-      val refIds by model.refIds.init(StringScalarListMapper { it.toInt() })
+      val related by model.relatedLinks.querying(StringScalarListMapper { File(it) })
+      val refIds by model.refIds.querying(StringScalarListMapper { it.toInt() })
     }
     @Language("JSON") val response = """{
         "webUrl": "/dev/null",
@@ -93,7 +96,7 @@ class MockResponseCustomScalar {
     val myNote = object : QModel<Note>(Note) {
       val refIds by model.refIdsConfigurable.config {
         first(10)
-      }.init(StringScalarListMapper { it.toInt() })
+      }.querying(StringScalarListMapper { it.toInt() })
     }
     @Language("JSON") val response = """{
         "refIdsConfigurable": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -118,7 +121,7 @@ object Note : QSchemaType {
   val webUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
   val relatedLinks: CustomScalarListInitStub<URI> by QCustomScalarList.stub()
   val refIds: CustomScalarListInitStub<ID> by QCustomScalarList.stub()
-  val refIdsConfigurable: CustomScalarListConfigStub<ID, Note.RefIdsConfigurableArgs>
+  val refIdsConfigurable: CustomScalarListConfigStub<ID, RefIdsConfigurableArgs>
       by QCustomScalarList.stub { RefIdsConfigurableArgs(it) }
 
   class RefIdsConfigurableArgs(args: CustomScalarListArgBuilder) : CustomScalarListArgBuilder by args {

@@ -2,88 +2,11 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.formatAs
-import com.prestongarno.ktq.internal.ModelProvider
+import com.prestongarno.ktq.hooks.ModelProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.jvmErasure
 
-
-interface GraphQlProperty {
-  val typeKind: PropertyType
-  val graphqlType: String
-  val graphqlName: String
-  val isList: Boolean
-  val kproperty: KProperty<*>
-
-  fun toEnum(name: String): Enum<*>?
-
-  companion object {
-    fun from(
-        property: KProperty<*>,
-        graphqlType: String,
-        isList: Boolean,
-        graphqlName: String
-    ): GraphQlProperty = PropertyImpl(graphqlType, property, isList, graphqlName)
-
-    internal val ROOT = object : GraphQlProperty {
-      override val kproperty: KProperty<*> = this::graphqlName
-      override val typeKind = PropertyType.OBJECT
-      override val graphqlType = ""
-      override val graphqlName: String = ""
-      override val isList: Boolean = false
-      override fun toEnum(name: String): Enum<*>? = null
-    }
-  }
-}
-
-class PropertyImpl(
-    override val graphqlType: String,
-    override val kproperty: KProperty<*>,
-    override val isList: Boolean,
-    override val graphqlName: String = kproperty.name
-) : GraphQlProperty {
-  override val typeKind: PropertyType = PropertyType.from(graphqlType)
-
-  override fun toEnum(name: String): Enum<*>? {
-    return if (kproperty.returnType.jvmErasure.java.isEnum)
-      kproperty.returnType.jvmErasure.javaObjectType.enumConstants.find {
-        (it as Enum<*>).name == name
-      } as? Enum<*>
-    else null
-  }
-
-  override fun equals(other: Any?): Boolean {
-    return (other as? GraphQlProperty)?.kproperty == kproperty
-  }
-
-  override fun hashCode(): Int {
-    var result = kproperty.hashCode()
-    result = 31 * result + graphqlType.hashCode()
-    result = 31 * result + typeKind.hashCode()
-    result = 31 * result + graphqlName.hashCode()
-    result = 31 * result + isList.hashCode()
-    return result
-  }
-
-  override fun toString(): String =
-      "Property('$graphqlName:${if (isList) "[$graphqlType]" else "$graphqlType"}' ($typeKind)"
-}
-
-enum class PropertyType {
-  INT,
-  BOOLEAN,
-  STRING,
-  FLOAT,
-  ENUM,
-  OBJECT,
-  CUSTOM_SCALAR;
-
-  companion object {
-    fun from(name: String): PropertyType = all[name.toUpperCase()] ?: OBJECT
-
-    private val all = PropertyType.values().map { Pair(it.name, it) }.toMap()
-  }
-}
 
 internal fun KProperty<*>.typedValueFrom(value: Any): Any? {
   return if (this.returnType.jvmErasure == value::class)
@@ -109,7 +32,6 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
   val responseType: KClass<*> = if (values.isNotEmpty()) values[0]::class else Any::class
 
   return when (type) {
-  // TODO Take out generic createTypeStub arguments from the stubs for primitives -> these are BOXED AND UNBOXED every time they're accessed!
     null -> emptyList()
     responseType -> values
     Int::class -> values.mapNotNull { "$it".toIntOrNull() }
@@ -128,20 +50,6 @@ internal fun KProperty<*>.typedListValueFrom(value: Any): List<Any> {
   }
 }
 
-
-class DispatchQueue {
-  private var value: QSchemaUnion? = null
-
-  internal fun put(value: QSchemaUnion) {
-    this.value = value
-  }
-
-  internal fun pop() {
-    value = null
-  }
-
-  fun get() = value
-}
 
 fun String.indent(times: Int = 1): String =
     replace("^".toRegex(), Jsonify.INDENT.repeat(times))
@@ -173,3 +81,6 @@ internal fun Adapter.prettyPrinted(): String = qproperty.graphqlName +
       else -> ""
     }).replace("\\s*([(,])".toRegex(), "$1").trim()
 
+internal object Jsonify {
+  val INDENT = "  "
+}

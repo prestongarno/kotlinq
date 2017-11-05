@@ -25,7 +25,7 @@ class MockResponsesNestedTypes {
       val name by model.name
       val age by model.age
       val number by model.number
-      val forEmergency by model.emergencyContact.init { nestedUser }
+      val forEmergency by model.emergencyContact.querying { nestedUser }
     }
 
     assertThat(myUserModel.toGraphql())
@@ -68,7 +68,7 @@ class MockResponsesNestedTypes {
     val myUser = object : QModel<User>(User) {
       val name by model.name
       val friendList by model.friends
-          .init { BasicUserModel() }
+          .querying { BasicUserModel() }
     }
 
     assertThat(myUser.toGraphql(false))
@@ -104,7 +104,7 @@ class MockResponsesNestedTypes {
     val myUser = object : QModel<User>(User) {
       val name by model.name
       val friendList by model.friends
-          .init { BasicUserModel() }
+          .querying { BasicUserModel() }
     }
     assertThat(myUser.toGraphql())
         .isEqualTo("""

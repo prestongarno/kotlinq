@@ -2,7 +2,7 @@
 /*
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.CustomStub
+import com.prestongarno.ktq.stubs.CustomStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.URL
 import com.prestongarno.ktq.yelp.Business
@@ -17,17 +17,17 @@ class BusinessQuery(searchTerm: String) : QModel<Query>(Query) {
   val result by model.search.config {
     term(searchTerm)
     limit(10)
-  }.init { BusinessesNodesModel() }
+  }.querying { BusinessesNodesModel() }
 
   val reviews by model.reviews.config {
     locale("ENGLISH")
     business("Wal-Mart")
-  }.init { ReviewsHolder() }
+  }.querying { ReviewsHolder() }
 }
 
 class ReviewsHolder : QModel<Reviews>(Reviews) {
   val all by model.review
-      .init { ReviewModel() }
+      .querying { ReviewModel() }
 }
 
 class ReviewModel : QModel<Review>(Review) {
@@ -39,7 +39,7 @@ class ReviewModel : QModel<Review>(Review) {
 class BusinessesNodesModel : QModel<Businesses>(Businesses) {
   val resultCount by model.total
   val resultsNodes by model.business
-      .init { BusinessBasic() }
+      .querying { BusinessBasic() }
 }
 
 class BusinessBasic : QModel<Business>(Business) {

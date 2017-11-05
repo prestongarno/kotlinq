@@ -3,10 +3,12 @@ package com.prestongarno.ktq
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.ktq.adapters.Adapter
-import com.prestongarno.ktq.internal.FragmentProvider
 import java.io.InputStream
 
 open class QModel<out T : QSchemaType>(val model: T) {
+
+  // TODO(preston) make this a map, because gql symbols
+  // by name need to be constantly looked up
   internal val fields by lazy { mutableListOf<Adapter>() }
 
   internal var resolved = false
@@ -16,14 +18,12 @@ open class QModel<out T : QSchemaType>(val model: T) {
   fun isResolved(): Boolean = resolved
 
   fun toGraphql(pretty: Boolean = true): String {
-    return if (pretty) prettyPrinted(0)
-    else fields.joinToString(",", "{", "}") { it.toRawPayload() }
+    return if (pretty) prettyPrinted(0) else fields.joinToString(",", "{", "}") {
+      it.toRawPayload()
+    }
   }
 
-  override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
-      fields.joinToString(",", "[", "]") { it.toRawPayload() }
-
-  internal fun onResponse(input: InputStream): Boolean =
+  private fun onResponse(input: InputStream): Boolean =
       (Parser().parse(input) as? JsonObject)?.let { accept(it) } == true
 
   internal fun onResponse(input: String) = onResponse(input.byteInputStream())
@@ -53,5 +53,9 @@ open class QModel<out T : QSchemaType>(val model: T) {
     result = 31 * result + resolved.hashCode()
     return result
   }
+
+  override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
+      fields.joinToString(",", "[", "]") { it.toRawPayload() }
+
 }
 

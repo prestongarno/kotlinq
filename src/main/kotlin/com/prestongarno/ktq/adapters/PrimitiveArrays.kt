@@ -2,7 +2,7 @@ package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.SchemaStub
 import kotlin.reflect.KProperty
 
@@ -36,6 +36,8 @@ sealed class ScalarArrayDelegateImpl<T : ArgBuilder, out D : PrimitiveArrayStub>
   val args by lazy { mutableMapOf<String, Any>() }
 
   abstract fun config(config: T.() -> Unit): ScalarArrayDelegate<D>
+
+  operator fun invoke(literal: ScalarArrayDelegate<D>.() -> Unit): ScalarArrayDelegate<D> = apply { literal.invoke(this) }
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
@@ -115,7 +117,7 @@ class BooleanArrayDelegate<A : ArgBuilder>(
 
 class StringArrayStub(
     graphqlProperty: GraphQlProperty,
-    val default: Array<String>? = null,
+    private val default: Array<String>? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(graphqlProperty, args) {
 
@@ -141,7 +143,7 @@ class StringArrayStub(
 
 class IntArrayStub(
     property: GraphQlProperty,
-    val default: IntArray? = null,
+    private val default: IntArray? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(property, args) {
 
@@ -174,7 +176,7 @@ class IntArrayStub(
 
 class FloatArrayStub(
     property: GraphQlProperty,
-    val default: FloatArray? = null,
+    private val default: FloatArray? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(property, args) {
 
@@ -207,7 +209,7 @@ class FloatArrayStub(
 
 class BooleanArrayStub(
     property: GraphQlProperty,
-    val default: BooleanArray? = null,
+    private val default: BooleanArray? = null,
     args: Map<String, Any> = emptyMap()
 ) : PrimitiveArrayStub(property, args) {
 

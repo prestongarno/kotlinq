@@ -2,6 +2,8 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
+import com.prestongarno.ktq.stubs.CustomScalarListStub
+import com.prestongarno.ktq.stubs.CustomStub
 
 interface ArgBuilder {
   fun addArg(name: String, value: Any) : ArgBuilder

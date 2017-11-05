@@ -1,7 +1,6 @@
 package com.prestongarno.ktq.node.units.test00
 
 import com.google.common.truth.Truth.assertThat
-import com.prestongarno.ktq.InitStub
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.node.server.NodeServer
@@ -37,7 +36,7 @@ class TestZero() : NodeServer() {
     }
 
     val queryMyName = object : QModel<Query>(Query) {
-      val me by Query.me.init { myUserInit() }
+      val me by Query.me.querying { myUserInit() }
     }
 
     runBlocking {
@@ -59,7 +58,7 @@ class TestZero() : NodeServer() {
     }
 
     val queryAll = object : QModel<Query>(Query) {
-      val me by Query.me.init(myUserInit)
+      val me by Query.me.querying(myUserInit)
       val hello by Query.hello
     }
 

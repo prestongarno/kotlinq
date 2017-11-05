@@ -2,51 +2,48 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.FieldConfig
-import com.prestongarno.ktq.ListConfigType
-import com.prestongarno.ktq.ListInitStub
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.stubs.ListConfigType
+import com.prestongarno.ktq.stubs.ListInitStub
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.TypeListStub
-import com.prestongarno.ktq.internal.ModelProvider
-import com.prestongarno.ktq.internal.nullPointer
+import com.prestongarno.ktq.stubs.TypeListStub
+import com.prestongarno.ktq.hooks.ModelProvider
 import kotlin.reflect.KProperty
 
-internal class TypeListAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
-    property: GraphQlProperty,
-    val builderInit: (ArgBuilder) -> B,
-    val init: (() -> P) = nullPointer(),
+internal class TypeListAdapter<I : QSchemaType, out P : QModel<I>, B : ArgBuilder>(
+    qproperty: GraphQlProperty,
+    private val builderInit: (ArgBuilder) -> B,
+    val init: (() -> P)? = null,
     val config: (B.() -> Unit)? = null
-) : FieldConfig(property),
+) : PreDelegate(qproperty),
     ListInitStub<I>,
     TypeListStub<P, I>,
     ListConfigType<I, B>,
     ArgBuilder {
 
   override fun config(provider: B.() -> Unit): ListInitStub<I> =
-      TypeListAdapter(graphqlProperty, builderInit, this.init, provider)
+      TypeListAdapter(qproperty, builderInit, this.init, provider)
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value) }
 
-  override fun <U : QModel<I>> init(of: () -> U): TypeListStub<U, I> =
-      TypeListAdapter(graphqlProperty, builderInit, of, this.config)
+  override fun <U : QModel<I>> querying(of: () -> U): TypeListStub<U, I> =
+      TypeListAdapter(qproperty, builderInit, of, this.config)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
-      TypeListStubImpl(GraphQlProperty.from(property,
-          this.graphqlProperty.graphqlType,
-          this.graphqlProperty.isList,
-          this.graphqlProperty.graphqlName),
-          init,
-          let {
-            config?.invoke(builderInit(it))
-            it.args.toMap()
-          })
-          .also { inst.fields.add(it) }
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> {
 
+    // This won't be null, the interface flow requires `querying(of: () -> P) to be called
+    // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
+    val initializer: () -> P = this.init!!
 
-  override fun toAdapter(): Adapter = TypeListStubImpl(this.graphqlProperty, init, args)
+    return TypeListStubImpl(qproperty, initializer, apply {
+      config?.invoke(builderInit(this))
+    }.args.toMap()).also {
+      inst.fields.add(it)
+    }
+  }
+
 }
 
 private data class TypeListStubImpl<P : QModel<*>>(

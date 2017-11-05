@@ -2,48 +2,44 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.FieldConfig
-import com.prestongarno.ktq.InitStub
-import com.prestongarno.ktq.GraphQlProperty
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
-import com.prestongarno.ktq.QTypeConfigStub
+import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.TypeStub
-import com.prestongarno.ktq.internal.ModelProvider
-import com.prestongarno.ktq.internal.nullPointer
+import com.prestongarno.ktq.hooks.InitStub
+import com.prestongarno.ktq.hooks.ModelProvider
+import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty
 
 /**
  * This class represents a createStub for a non-leaf createTypeStub (aka an object) fragment a graph */
 internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
-    property: GraphQlProperty,
-    val builderInit: (ArgBuilder) -> B,
-    val init: () -> P = nullPointer(),
+    qproperty: GraphQlProperty,
+    private val builderInit: (ArgBuilder) -> B,
+    val init: (() -> P)? = null,
     val config: (B.() -> Unit)? = null
-) : FieldConfig(property),
+) : PreDelegate(qproperty),
     TypeStub<P, I>,
     InitStub<I>,
-    QTypeConfigStub<I, B>,
-    ArgBuilder {
+    TypeConfig<I, B> {
 
   override fun config(provider: B.() -> Unit): InitStub<I> =
-      TypeStubAdapter(graphqlProperty, builderInit, this.init, provider)
+      TypeStubAdapter(qproperty,builderInit, this.init, provider)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> =
-      TypeStubImpl(GraphQlProperty.from(property,
-          this.graphqlProperty.graphqlType,
-          this.graphqlProperty.isList,
-          this.graphqlProperty.graphqlName),
-          init,
-          apply { config?.invoke(builderInit(this)) }.args.toMap()
-      ).also {
-        inst.fields.add(it)
-      }
+  /**
+   * For the possible possibly nullable initializer ->
+   * see [com.prestongarno.ktq.adapters.TypeListAdapter.provideDelegate]
+   */
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> {
+    val initializer: () -> P = this.init!!
+    return TypeStubImpl(qproperty, init, apply {
+      config?.invoke(builderInit(this)) }.args.toMap()
+    ).also { inst.fields.add(it) }
+  }
 
-  override fun <U : QModel<I>> init(init: () -> U): TypeStub<U, I> =
-      TypeStubAdapter(graphqlProperty, builderInit, init, config)
-
-  override fun toAdapter(): Adapter = TypeStubImpl(this.graphqlProperty, init, args.toMap())
+  override fun <U : QModel<I>> querying(init: () -> U): TypeStub<U, I> =
+      TypeStubAdapter(qproperty, builderInit, init, config)
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value) }
 
