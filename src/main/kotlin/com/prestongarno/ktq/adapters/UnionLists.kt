@@ -1,7 +1,6 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.DispatchQueue
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
@@ -21,11 +20,11 @@ internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
     UnionListStub,
     QSchemaUnion {
 
-  open val fragments = mutableSetOf<FragmentGenerator>()
+  private val fragments = mutableListOf<FragmentGenerator>()
 
   /**
    * Recurse to the base model of the graph */
-  override val queue by lazy { model.queue }
+  override val queue: DispatchQueue get() = model.queue
 
   private var dispatcher: (I.() -> Unit)? = null
 
@@ -33,25 +32,17 @@ internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
 
   internal var value: List<QModel<*>> = mutableListOf()
 
-  override fun fragment(what: I.() -> Unit): UnionListStub = apply {
-    println(what)
-    dispatcher = what
-  }
+  override fun fragment(what: I.() -> Unit): UnionListStub = apply { dispatcher = what }
 
   override fun on(init: () -> QModel<*>) {
-    fragments += FragmentGenerator(init)
+    //fragments += FragmentGenerator(init)
+    queue.addFragment(FragmentGenerator(init))
   }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<*>>> {
-    synchronized(queue) {
-      queue.put(this)
-      dispatcher?.invoke(model)
-      queue.pop()
-    }
-    return UnionListStubImpl(qproperty, fragments.toSet()).also {
-      inst.fields.add(it)
-    }
-  }
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<*>>> =
+      queue(model, dispatcher!!, {
+        UnionListStubImpl(qproperty, queue.reset().toSet())
+      })
 
   companion object {
 
@@ -59,7 +50,9 @@ internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
      * TODO(preston) add generic argument for the type of ArgBuilder on a field like this
      * also TODO => get rid of the property parameter, this is only for creating type defs*/
     fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I)
-        : UnionListConfigAdapter<I> = MutableUnionListAdapter(property, objectModel, emptySet<FragmentGenerator>())
+        : UnionListConfigAdapter<I> {
+      return MutableUnionListAdapter(property, objectModel)
+    }
   }
 }
 
@@ -67,14 +60,9 @@ internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
  * any configuration is done here on a delegate */
 private class MutableUnionListAdapter<out I : QSchemaUnion>(
     qproperty: GraphQlProperty,
-    objectModel: I,
-    fragments: Set<FragmentGenerator>
+    objectModel: I
 ) : UnionListConfigAdapter<I>(qproperty, objectModel),
-    DelegateProvider<List<QModel<*>>> {
-
-  override val fragments = fragments.toMutableSet()
-
-}
+    DelegateProvider<List<QModel<*>>>
 
 private class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
@@ -118,7 +106,7 @@ private class UnionListStubImpl(
 private class BaseUnionListAdapter<out I : QSchemaUnion>(model: I)
   : UnionListConfigAdapter<I>(GraphQlProperty.ROOT, model) {
 
-  override val queue: DispatchQueue by lazy { DispatchQueue() }
+  override val queue: DispatchQueue = DispatchQueue()
 
   override fun on(init: () -> QModel<*>) {
     queue.get()?.on(init)

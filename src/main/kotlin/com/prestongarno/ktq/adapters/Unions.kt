@@ -29,37 +29,29 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
 
   /**
    * Recurse to the base model of the graph */
-  override val queue by lazy { model.queue }
+  override val queue: DispatchQueue get() = model.queue
 
   private var dispatcher: (I.() -> Unit)? = null
 
   protected val args: MutableMap<String, Any> = mutableMapOf()
 
-  internal var value: QModel<*>? = null
-
   override fun fragment(what: I.() -> Unit): UnionStub = apply { dispatcher = what }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<*>?> {
-    /* TODO inb4 'more idiomatic to synchronize inside of the DispatchQueue object' */
-    synchronized(queue) {
-      require(model.queue.get() === this.model)
-      model.queue.put(this)
-      dispatcher?.invoke(model)
-      model.queue.pop()
-    }
-    config?.invoke(arginit(this))
-    val next = UnionStubImpl(qproperty, fragments.toSet(), args)
-    inst.fields.add(next)
-    return next
-  }
+  override fun provideDelegate(
+      inst: QModel<*>,
+      property: KProperty<*>
+  ): QField<QModel<*>?> = queue(model, {}, {
+    UnionStubImpl(qproperty, reset().toSet(), args.toMap()) as QField<QModel<*>>
+  }) as QField<QModel<*>?>
 
   override fun on(init: () -> QModel<*>) {
-    fragments += FragmentGenerator(init)
+    queue.addFragment(FragmentGenerator(init))
+    //fragments += FragmentGenerator(init)
   }
 
   companion object {
 
-    fun <I: QSchemaUnion> baseObject(objectModel: I): UnionConfigAdapter<I, ArgBuilder> =
+    fun <I : QSchemaUnion> baseObject(objectModel: I): UnionConfigAdapter<I, ArgBuilder> =
         BaseUnionAdapter(objectModel)
 
     fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I)
@@ -90,7 +82,7 @@ private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
   override val queue: DispatchQueue = DispatchQueue()
 
   override fun on(init: () -> QModel<*>) {
-    queue.get()?.on(init)?: throw IllegalStateException("No object in the queue")
+    queue.get()?.on(init)//?: throw IllegalStateException("No object in the queue")
   }
 
   override fun addArg(name: String, value: Any): ArgBuilder = this

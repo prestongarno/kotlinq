@@ -24,12 +24,13 @@ interface CustomScalar : QSchemaType
 
 interface QSchemaUnion : QSchemaType {
 
-  fun on(init: () -> QModel<*>)
-
   val queue: DispatchQueue
 
+  fun on(init: () -> QModel<*>)
+
   companion object {
-    fun create(objectModel: QSchemaUnion): QSchemaUnion = UnionConfigAdapter.baseObject(objectModel)
+    fun create(objectModel: QSchemaUnion): QSchemaUnion =
+        UnionConfigAdapter.baseObject(objectModel)
   }
 }
 

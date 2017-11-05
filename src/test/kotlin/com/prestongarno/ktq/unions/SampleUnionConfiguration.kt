@@ -94,7 +94,13 @@ class MyLettuceModel : QModel<Lettuce>(Lettuce) {
 
 class MyTaco : QModel<Taco>(Taco) {
   val foo by model.ingredients.fragment {
+    println("$this + ${super.fields}")
     onLettuce { MyLettuceModel() }
+    println("$this + ${(this.queue.reset().also {
+      for (fragmentGenerator in it) {
+        queue.addFragment(fragmentGenerator)
+      }
+    })}")
   }
 }
 
@@ -130,13 +136,14 @@ class Sample {
         onHamburger(myHamburger)
       }
     }
-    println(MyTaco().toGraphql(true))
+    println(MyTaco().toGraphql(false))
     println(myTacoModel().toGraphql(false))
-    println(myQuery.toGraphql(true))
+    println(myQuery.toGraphql(false))
+    println(myHamburger().toGraphql(false))
     myQuery::thingSearch.apply { isAccessible = true }.getDelegate().let {
       (it as? FragmentProvider)?.run {
-        fragments.forEachIndexed {
-          i, x -> println("#$i = " + x.model.toGraphql(true))
+        fragments.forEachIndexed { i, x ->
+          println("#$i = " + x.model.toGraphql(true))
         }
       }
     }
