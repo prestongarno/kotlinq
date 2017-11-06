@@ -2,8 +2,7 @@ package com.prestongarno.ktq.properties
 
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.adapters.QField
-import com.prestongarno.ktq.hooks.FragmentGenerator
-import com.prestongarno.ktq.hooks.FragmentProvider
+import com.prestongarno.ktq.hooks.Fragment
 
 /**
  * TODO -> Use [java.util.concurrent.atomic.AtomicReference] instead
@@ -13,33 +12,22 @@ import com.prestongarno.ktq.hooks.FragmentProvider
  *
  * I still have no idea how this works */
 @Deprecated("Just my own version of an AtomicReference<QSchemaUnion>")
-class DispatchQueue {
+class FragmentProvider {
 
-  @Volatile private var value: QSchemaUnion? = null
-  private var collector = mutableListOf<FragmentGenerator>()
+  private var collector = mutableListOf<Fragment>()
 
-  operator fun <I: QSchemaUnion, T : Any> invoke(
+  @Synchronized inline operator fun <I: QSchemaUnion, T : Any> invoke(
       target: I,
       dispatch: I.() -> Unit,
-      callback: DispatchQueue.() -> QField<T>): QField<T> {
-
-    synchronized(this) {
+      callback: FragmentProvider.() -> QField<T>
+  ): QField<T> {
       dispatch(target)
       return callback(this)
-    }
   }
 
   internal fun reset() = collector.toList().also { collector.clear() }
 
-  internal fun addFragment(init: FragmentGenerator) { collector.add(init) }
-
-  @Synchronized internal fun put(value: QSchemaUnion) {
-    this.value = value
-  }
-
-  @Synchronized internal fun pop() {
-    value = null
-  }
-
-  fun get() = value
+  /**
+   * MUST only be called from a context of this.invoke! (indirectly, ofc...) */
+  internal fun addFragment(init: Fragment) { collector.add(init) }
 }

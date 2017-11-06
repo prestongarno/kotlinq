@@ -2,7 +2,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.UnionConfigAdapter
 import com.prestongarno.ktq.hooks.DelegateProvider
-import com.prestongarno.ktq.properties.DispatchQueue
+import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
  * Simply a marker interface to group together the different
@@ -24,7 +24,7 @@ interface CustomScalar : QSchemaType
 
 interface QSchemaUnion : QSchemaType {
 
-  val queue: DispatchQueue
+  val queue: FragmentProvider
 
   fun on(init: () -> QModel<*>)
 

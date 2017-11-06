@@ -1,5 +1,7 @@
 package com.prestongarno.ktq.unions
 
+import com.beust.klaxon.json
+import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaEnum
@@ -9,10 +11,13 @@ import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QScalarArray
 import com.prestongarno.ktq.QSchemaType.QUnionList
 import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
+import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.adapters.StringDelegate
-import com.prestongarno.ktq.hooks.FragmentProvider
+import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.stubs.UnionListInitStub
+import org.intellij.lang.annotations.Language
 import org.junit.Test
 import kotlin.reflect.jvm.isAccessible
 
@@ -136,16 +141,28 @@ class Sample {
         onHamburger(myHamburger)
       }
     }
-    println(MyTaco().toGraphql(false))
-    println(myTacoModel().toGraphql(false))
-    println(myQuery.toGraphql(false))
-    println(myHamburger().toGraphql(false))
     myQuery::thingSearch.apply { isAccessible = true }.getDelegate().let {
-      (it as? FragmentProvider)?.run {
-        fragments.forEachIndexed { i, x ->
-          println("#$i = " + x.model.toGraphql(true))
-        }
+
+      (it as? Adapter)?.let {
+        it.qproperty.graphqlName + "[${it.qproperty.graphqlType}] => " + it.toRawPayload()
       }
+          .also { println(it) }
     }
+
+    @Language("JSON") val jsonResponse = """
+        {
+          "searchForThing": [
+            {
+              "__typename": "Car",
+              "model": "Mitsubishi"
+            }
+          ]
+        }
+      """
+
+    myQuery.onResponse(jsonResponse)
+    assertThat(
+        myQuery.thingSearch.first().model
+    ).isEqualTo(Car)
   }
 }

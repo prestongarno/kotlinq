@@ -16,11 +16,11 @@ interface DelegateProvider<out T> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
 
-interface FragmentProvider {
-  val fragments: Set<FragmentGenerator>
+interface FragmentContext {
+  val fragments: Set<Fragment>
 }
 
-data class FragmentGenerator(val initializer: () -> QModel<*>) {
+data class Fragment(val initializer: () -> QModel<*>) {
   internal val model by lazy(initializer)
 }
 

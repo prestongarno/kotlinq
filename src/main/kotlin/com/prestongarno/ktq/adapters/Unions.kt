@@ -2,15 +2,15 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.properties.DispatchQueue
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.stubs.UnionConfigStub
 import com.prestongarno.ktq.stubs.UnionInitStub
 import com.prestongarno.ktq.UnionStub
-import com.prestongarno.ktq.hooks.FragmentGenerator
-import com.prestongarno.ktq.hooks.FragmentProvider
+import com.prestongarno.ktq.hooks.Fragment
+import com.prestongarno.ktq.hooks.FragmentContext
+import com.prestongarno.ktq.properties.FragmentProvider
 import kotlin.reflect.KProperty
 
 internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
@@ -25,11 +25,11 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
     ArgBuilder,
     QSchemaUnion {
 
-  open val fragments = mutableSetOf<FragmentGenerator>()
+  open val fragments = mutableSetOf<Fragment>()
 
   /**
    * Recurse to the base model of the graph */
-  override val queue: DispatchQueue get() = model.queue
+  override val queue: FragmentProvider get() = model.queue
 
   private var dispatcher: (I.() -> Unit)? = null
 
@@ -40,13 +40,12 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
   override fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QField<QModel<*>?> = queue(model, {}, {
+  ): QField<QModel<*>?> = queue(model, dispatcher?: { /* nothing ... */ }, {
     UnionStubImpl(qproperty, reset().toSet(), args.toMap()) as QField<QModel<*>>
-  }) as QField<QModel<*>?>
+  })
 
   override fun on(init: () -> QModel<*>) {
-    queue.addFragment(FragmentGenerator(init))
-    //fragments += FragmentGenerator(init)
+    queue.addFragment(Fragment(init))
   }
 
   companion object {
@@ -79,11 +78,7 @@ private class UnionAdapterImpl<out I : QSchemaUnion, A : ArgBuilder>(
 private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
   : UnionConfigAdapter<I, ArgBuilder>(GraphQlProperty.ROOT, model, { it }) {
 
-  override val queue: DispatchQueue = DispatchQueue()
-
-  override fun on(init: () -> QModel<*>) {
-    queue.get()?.on(init)//?: throw IllegalStateException("No object in the queue")
-  }
+  override val queue = FragmentProvider()
 
   override fun addArg(name: String, value: Any): ArgBuilder = this
 
@@ -92,11 +87,11 @@ private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
 
 private class UnionStubImpl(
     override val qproperty: GraphQlProperty,
-    override val fragments: Set<FragmentGenerator>,
+    override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
 ) : Adapter,
     QField<QModel<*>?>,
-    FragmentProvider {
+    FragmentContext {
 
   var value: QModel<*>? = null
 
@@ -110,10 +105,10 @@ private class UnionStubImpl(
     } else false
   }
 
-  override fun toRawPayload(): String = fragments.joinToString(
-      prefix = "{__typename,", postfix = "}"
-  ) {
-    it.model.run { "... on $graphqlType${toGraphql(false)}" }
+  override fun toRawPayload(): String = fragments.joinToString( prefix = "{__typename,", postfix = "}") {
+    it.model.run {
+      "... on " + graphqlType + toGraphql(false)
+    }
   }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>? = value
