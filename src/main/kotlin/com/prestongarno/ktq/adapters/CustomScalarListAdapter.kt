@@ -11,6 +11,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
+import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
 internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, out Q, B : CustomScalarListArgBuilder>(
@@ -49,6 +50,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
 
 }
 
+@CollectionDelegate(Any::class)
 private data class CustomScalarListStubImpl<out Q>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),

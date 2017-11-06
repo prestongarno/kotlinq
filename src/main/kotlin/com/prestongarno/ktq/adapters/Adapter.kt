@@ -17,6 +17,10 @@ interface Adapter {
   fun toRawPayload(): String
 }
 
+/**
+ * Public API delegate representing an object which holds
+ * the backing field information about a GraphQL property
+ * @param T : The type of object or value which this provides */
 interface QField<out T> {
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
 }

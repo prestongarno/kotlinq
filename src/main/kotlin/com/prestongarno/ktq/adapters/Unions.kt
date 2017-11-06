@@ -10,6 +10,7 @@ import com.prestongarno.ktq.stubs.UnionInitStub
 import com.prestongarno.ktq.UnionStub
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
+import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.FragmentProvider
 import kotlin.reflect.KProperty
 
@@ -85,6 +86,8 @@ private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
   override fun config(on: ArgBuilder.() -> Unit): UnionInitStub<I> = this
 }
 
+
+@ValueDelegate(QModel::class)
 private class UnionStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,

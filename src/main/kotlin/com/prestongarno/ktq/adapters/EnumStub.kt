@@ -5,6 +5,7 @@ import com.prestongarno.ktq.EnumStub
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaEnum
+import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -34,6 +35,7 @@ internal class EnumAdapter<T, out A>(
 
 }
 
+@ValueDelegate(Enum::class)
 private data class EnumFieldImpl<T>(
     private val enumClass: KClass<T>,
     override val qproperty: GraphQlProperty,

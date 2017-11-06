@@ -10,6 +10,7 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.hooks.ModelProvider
+import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
 internal class TypeListAdapter<I : QSchemaType, out P : QModel<I>, B : ArgBuilder>(
@@ -46,6 +47,7 @@ internal class TypeListAdapter<I : QSchemaType, out P : QModel<I>, B : ArgBuilde
 
 }
 
+@CollectionDelegate(QModel::class)
 private data class TypeListStubImpl<P : QModel<*>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,

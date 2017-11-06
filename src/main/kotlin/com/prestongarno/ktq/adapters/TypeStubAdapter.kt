@@ -9,7 +9,7 @@ import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.ModelProvider
-import com.prestongarno.ktq.hooks.nullPointer
+import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty
 
 /**
@@ -45,6 +45,7 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
 
 }
 
+@ValueDelegate(QModel::class)
 private data class TypeStubImpl<out I : QSchemaType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,

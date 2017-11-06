@@ -9,6 +9,7 @@ import com.prestongarno.ktq.stubs.UnionListInitStub
 import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
+import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
 internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
@@ -50,9 +51,7 @@ internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
      * TODO(preston) add generic argument for the type of ArgBuilder on a field like this
      * also TODO => get rid of the property parameter, this is only for creating type defs*/
     fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I)
-        : UnionListConfigAdapter<I> {
-      return MutableUnionListAdapter(property, objectModel)
-    }
+        : UnionListConfigAdapter<I> = MutableUnionListAdapter(property, objectModel)
   }
 }
 
@@ -64,6 +63,7 @@ private class MutableUnionListAdapter<out I : QSchemaUnion>(
 ) : UnionListConfigAdapter<I>(qproperty, objectModel),
     DelegateProvider<List<QModel<*>>>
 
+@CollectionDelegate(QModel::class)
 private class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>
@@ -71,7 +71,7 @@ private class UnionListStubImpl(
     QField<List<QModel<*>>>,
     FragmentContext {
 
-  var value: List<QModel<*>> = mutableListOf()
+  private var value: List<QModel<*>> = mutableListOf()
 
   override val args = emptyMap<String, Any>()
 

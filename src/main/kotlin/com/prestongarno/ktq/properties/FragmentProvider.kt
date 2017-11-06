@@ -11,7 +11,6 @@ import com.prestongarno.ktq.hooks.Fragment
  * be able to call a 'SomeUnionObjectType.() -> Unit' on the correct object
  *
  * I still have no idea how this works */
-@Deprecated("Just my own version of an AtomicReference<QSchemaUnion>")
 class FragmentProvider {
 
   private var collector = mutableListOf<Fragment>()

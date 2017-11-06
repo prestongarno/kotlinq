@@ -16,7 +16,7 @@ sealed class QScalarMapper<out A> : QSchemaType {
  * Adapter/Mapper class for creating user-defined objects
  * typedValueFrom a raw byte InputStream typedValueFrom the value of a field */
 class InputStreamScalarMapper<out A>(adapter: (InputStream) -> A) : QScalarMapper<A>() {
-  override val value: A by lazy { adapter.invoke(rawValue) }
+  override val value: A by lazy { adapter(rawValue) }
 
   internal lateinit var rawValue: InputStream
 }
@@ -26,7 +26,7 @@ class InputStreamScalarMapper<out A>(adapter: (InputStream) -> A) : QScalarMappe
  * Adapter/Mapper class for creating user-defined objects
  * typedValueFrom the string value of a field */
 class StringScalarMapper<out A>(adapter: (String) -> A) : QScalarMapper<A>() {
-  override val value: A by lazy { adapter.invoke(rawValue) }
+  override val value: A by lazy { adapter(rawValue) }
 
   internal lateinit var rawValue: String
 }
@@ -43,7 +43,7 @@ sealed class QScalarListMapper<out A> : QScalarMapper<List<A>>() {
  * typedValueFrom a raw byte InputStream typedValueFrom the values of a field */
 class InputStreamScalarListMapper<out A>(adapter: (InputStream) -> A) : QScalarListMapper<A>() {
 
-  override val value: List<A> by lazy { rawValue.map { adapter.invoke(it) } }
+  override val value: List<A> by lazy { rawValue.map { adapter(it) } }
 
   internal lateinit var rawValue: List<InputStream>
 }
@@ -54,7 +54,7 @@ class InputStreamScalarListMapper<out A>(adapter: (InputStream) -> A) : QScalarL
  * objects typedValueFrom the string values of a field */
 class StringScalarListMapper<out A>(adapter: (String) -> A) : QScalarListMapper<A>() {
 
-  override val value: List<A> by lazy { rawValue.map { adapter.invoke(it) } }
+  override val value: List<A> by lazy { rawValue.map { adapter(it) } }
 
   internal lateinit var rawValue: List<String>
 }

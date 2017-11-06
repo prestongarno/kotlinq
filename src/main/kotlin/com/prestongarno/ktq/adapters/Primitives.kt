@@ -4,12 +4,14 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.SchemaStub
+import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty
 
 interface ScalarDelegate<out D : PrimitiveStub> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
 }
 
+@ValueDelegate(Any::class)
 sealed class PrimitiveStub(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>
@@ -113,6 +115,7 @@ class BooleanDelegate<A : ArgBuilder>(
       BooleanDelegate(graphqlProperty, arginit, config)
 }
 
+@ValueDelegate(String::class)
 class StringStub(
     graphqlProperty: GraphQlProperty,
     private val default: String? = null,
@@ -139,6 +142,7 @@ class StringStub(
 
 }
 
+@ValueDelegate(Int::class)
 class IntStub(
     property: GraphQlProperty,
     private val default: Int? = null,
@@ -171,6 +175,7 @@ class IntStub(
   }
 }
 
+@ValueDelegate(Float::class)
 class FloatStub(
     property: GraphQlProperty,
     private val default: Float? = null,
@@ -203,6 +208,7 @@ class FloatStub(
   }
 }
 
+@ValueDelegate(Boolean::class)
 class BooleanStub(
     property: GraphQlProperty,
     private val default: Boolean? = null,

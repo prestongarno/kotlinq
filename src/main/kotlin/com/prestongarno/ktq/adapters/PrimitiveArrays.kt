@@ -4,6 +4,7 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.SchemaStub
+import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
 interface ScalarArrayDelegate<out D: PrimitiveArrayStub> : SchemaStub {
@@ -115,6 +116,7 @@ class BooleanArrayDelegate<A : ArgBuilder>(
       BooleanArrayDelegate(graphqlProperty, arginit, config)
 }
 
+@CollectionDelegate(Array<String>::class)
 class StringArrayStub(
     graphqlProperty: GraphQlProperty,
     private val default: Array<String>? = null,
@@ -141,6 +143,7 @@ class StringArrayStub(
 
 }
 
+@CollectionDelegate(IntArray::class)
 class IntArrayStub(
     property: GraphQlProperty,
     private val default: IntArray? = null,
@@ -174,6 +177,7 @@ class IntArrayStub(
   }
 }
 
+@CollectionDelegate(FloatArray::class)
 class FloatArrayStub(
     property: GraphQlProperty,
     private val default: FloatArray? = null,
@@ -207,6 +211,7 @@ class FloatArrayStub(
   }
 }
 
+@CollectionDelegate(BooleanArray::class)
 class BooleanArrayStub(
     property: GraphQlProperty,
     private val default: BooleanArray? = null,
