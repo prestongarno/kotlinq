@@ -6,6 +6,13 @@ import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
+/**
+ * Reflective object which provides the information needed
+ * to generate the correct representation of the GraphQL field query
+ *
+ * Base type of all delegates - this is the internal side of a property.
+ * This class (internal API) and [com.prestongarno.ktq.adapters.QField] (public API delegate)
+ * generally are both implemented on a property delegate */
 interface Adapter {
 
   val qproperty: GraphQlProperty

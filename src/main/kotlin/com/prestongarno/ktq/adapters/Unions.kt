@@ -41,7 +41,7 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
   override fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QField<QModel<*>?> = queue(model, dispatcher?: { /* nothing ... */ }, {
+  ): QField<QModel<*>?> = queue(model, dispatcher ?: { /* nothing ... */ }, {
     UnionStubImpl(qproperty, reset().toSet(), args.toMap()) as QField<QModel<*>>
   })
 
@@ -108,11 +108,12 @@ private class UnionStubImpl(
     } else false
   }
 
-  override fun toRawPayload(): String = fragments.joinToString( prefix = "{__typename,", postfix = "}") {
-    it.model.run {
-      "... on " + graphqlType + toGraphql(false)
-    }
-  }
+  override fun toRawPayload(): String =
+      fragments.joinToString(prefix = "{__typename,", postfix = "}") {
+        it.model.run {
+          "... on " + graphqlType + toGraphql(false)
+        }
+      }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>? = value
 }

@@ -1,10 +1,9 @@
 package com.prestongarno.ktq.unions
 
-import com.beust.klaxon.json
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaEnum
+import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.QEnum
 import com.prestongarno.ktq.QSchemaType.QScalar
@@ -13,9 +12,7 @@ import com.prestongarno.ktq.QSchemaType.QUnionList
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
-import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.adapters.StringDelegate
-import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.stubs.UnionListInitStub
 import org.intellij.lang.annotations.Language
 import org.junit.Test
@@ -78,7 +75,7 @@ object Lettuce : FoodIngredient {
   val lettuceKind by QEnum.stub<LettuceType>()
 }
 
-enum class LettuceType : QSchemaEnum {
+enum class LettuceType : QEnumType {
   ICEBERG,
   ROMAINE,
   SPINACH,

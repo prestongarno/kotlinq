@@ -1,6 +1,5 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.hooks.TypeConfig
@@ -270,12 +269,12 @@ interface QSchemaType {
   }
 
   object QEnum {
-    inline fun <reified T> stub(): StubProvider<EnumStub<T>> where T : Enum<*>, T : QSchemaEnum
+    inline fun <reified T> stub(): StubProvider<EnumStub<T>> where T : Enum<*>, T : QEnumType
         = createEnumStub(T::class.simpleName.toString(), T::class)
 
     inline fun <reified T, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
-    ): StubProvider<EnumStub<T>> where T : Enum<*>, T : QSchemaEnum
+    ): StubProvider<EnumStub<T>> where T : Enum<*>, T : QEnumType
         = createEnumConfigStub(T::class.simpleName.toString(), T::class, arginit)
   }
 
