@@ -19,20 +19,27 @@ internal class InterfaceFragmentAdapter<out T : QInterfaceType, A : ArgBuilder>(
     val arginit: (ArgBuilder) -> A,
     val config: (A.() -> Unit)? = null
 ) : InterfaceFragment<T>,
-    InterfaceStub<T> {
+    InterfaceStub<T>,
+    ArgBuilder {
+
+  val args = mutableMapOf<String, Any>()
+
+  override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
   override fun fragment(on: T.() -> Unit): InterfaceStub<T> {
     TODO("not implemented")
   }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<T>?> {
-    TODO("preston")
+    return InterfaceDelegateImpl(qproperty, args,
+        TODO("Infix function on a type argument for FragmentContext<T> " +
+            "and change DSL invoke to FragmentContext<T>.() -> Unit?"))
   }
 
 }
 
 @ValueDelegate(QModel::class)
-private class InterfaceStub<T : QInterfaceType>(
+private class InterfaceDelegateImpl<T : QInterfaceType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
