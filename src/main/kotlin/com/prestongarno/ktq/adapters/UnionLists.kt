@@ -12,9 +12,10 @@ import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
-internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
+internal sealed class UnionListConfigAdapter<I : QSchemaUnion>(
     val qproperty: GraphQlProperty,
-    objectModel: I
+    objectModel: I,
+    val dispatcher: (I.() -> Unit)? = null
 ) : QModel<I>(objectModel),
     UnionListInitStub<I>,
     UnionListStub,
@@ -26,13 +27,11 @@ internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
    * Recurse to the base model of the graph */
   override val queue: com.prestongarno.ktq.properties.FragmentProvider get() = model.queue
 
-  private var dispatcher: (I.() -> Unit)? = null
-
   val args: Map<String, Any> by lazy { mapOf<String, Any>() }
 
   internal var value: List<QModel<*>> = mutableListOf()
 
-  override fun fragment(what: I.() -> Unit): UnionListStub = apply { dispatcher = what }
+  override fun fragment(what: I.() -> Unit): UnionListStub = MutableUnionListAdapter(qproperty, model, what)
 
   override fun on(init: () -> QModel<*>) {
     queue.addFragment(Fragment(init))
@@ -57,10 +56,11 @@ internal sealed class UnionListConfigAdapter<out I : QSchemaUnion>(
 
 /**
  * any configuration is done here on a delegate */
-private class MutableUnionListAdapter<out I : QSchemaUnion>(
+private class MutableUnionListAdapter<I : QSchemaUnion>(
     qproperty: GraphQlProperty,
-    objectModel: I
-) : UnionListConfigAdapter<I>(qproperty, objectModel),
+    objectModel: I,
+    dispatcher: (I.() -> Unit)? = null
+) : UnionListConfigAdapter<I>(qproperty, objectModel, dispatcher),
     DelegateProvider<List<QModel<*>>>
 
 @CollectionDelegate(QModel::class)

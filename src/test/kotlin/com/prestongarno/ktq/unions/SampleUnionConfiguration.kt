@@ -13,6 +13,7 @@ import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
+import com.prestongarno.ktq.adapters.UnionListConfigAdapter
 import com.prestongarno.ktq.stubs.UnionListInitStub
 import org.intellij.lang.annotations.Language
 import org.junit.Test
@@ -107,6 +108,18 @@ class MyTaco : QModel<Taco>(Taco) {
 }
 
 class Sample {
+
+  @Test fun `make sure that fragment is unique to property & instance`() {
+
+    Query.searchForThing.fragment { println("Hello") }
+
+    val myQuery = object : QModel<Query>(Query) {
+      val results by model.searchForThing.apply {
+        require((this as UnionListConfigAdapter).dispatcher == null)
+      }.fragment {}
+    }
+  }
+
   @Test fun testClassEvenLoads() {
     val myCarModel = {
       object : QModel<Car>(Car) {
