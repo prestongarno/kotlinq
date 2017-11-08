@@ -4,6 +4,7 @@ import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.SchemaType
 import com.prestongarno.ktq.QSchemaUnion
 import com.prestongarno.ktq.stubs.UnionConfigStub
 import com.prestongarno.ktq.stubs.UnionInitStub
@@ -87,14 +88,13 @@ private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
 }
 
 
-@ValueDelegate(QModel::class)
-private class UnionStubImpl(
+@ValueDelegate(QModel::class) private class UnionStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
 ) : Adapter,
     QField<QModel<*>?>,
-    FragmentContext {
+    FragmentContext<SchemaType> {
 
   var value: QModel<*>? = null
 

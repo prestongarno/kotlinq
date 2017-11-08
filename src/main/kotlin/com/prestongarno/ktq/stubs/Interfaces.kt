@@ -4,11 +4,12 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.InterfaceStub
 import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.SchemaStub
+import com.prestongarno.ktq.hooks.FragmentScope
 
-interface InterfaceFragment<out T : QInterfaceType> : SchemaStub {
-  fun fragment(on: T.() -> Unit): InterfaceStub<T>
+interface InterfaceFragment<T : QInterfaceType, out A : ArgBuilder> : SchemaStub {
+  operator fun invoke(context: FragmentScope<T, A>.() -> Unit): InterfaceStub<T>
 }
 
-interface  InterfaceFragmentConfig<out T : QInterfaceType, out A : ArgBuilder> : SchemaStub {
+interface  InterfaceFragmentConfig<T : QInterfaceType, out A : ArgBuilder> : SchemaStub {
   fun config(on: A.() -> Unit): InterfaceFragment<T>
 }

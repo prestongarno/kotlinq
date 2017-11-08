@@ -25,6 +25,12 @@ interface EnumStub<T> : DelegateProvider<T> where T: QEnumType, T: Enum<*>
 interface CustomScalar : QSchemaType
 
 /**
+ * Interface representing a <b>concrete<\b> type on a graphql schema.
+ * *Fix* for restricting bounds on interface types to require
+ * a QType instead of possibly another interface type */
+interface QType : QSchemaType
+
+/**
  * Supertype of an object representing
  * a GraphQL Interface definitions */
 interface QInterfaceType : QSchemaType
