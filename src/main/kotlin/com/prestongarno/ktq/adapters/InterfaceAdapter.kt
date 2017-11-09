@@ -5,36 +5,43 @@ import com.prestongarno.ktq.InterfaceStub
 import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.hooks.Fragment
-import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.GraphQlProperty
+import com.prestongarno.ktq.stubs.FragmentContext
+import com.prestongarno.ktq.stubs.FragmentScope
 import com.prestongarno.ktq.stubs.InterfaceFragment
 import kotlin.reflect.KProperty
 
 /**
  * Base type of a R.H.S. delegate provider
  */
-internal class InterfaceFragmentAdapter<out T : QInterfaceType, A : ArgBuilder>(
+internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
     val qproperty: GraphQlProperty,
-    val arginit: (ArgBuilder) -> A,
-    val config: (A.() -> Unit)? = null
-) : InterfaceFragment<T>,
-    InterfaceStub<T>,
+    private val arginit: (ArgBuilder) -> A
+) : InterfaceFragment<I, A>,
+    FragmentScope<I, A>,
+    InterfaceStub<I>,
     ArgBuilder {
 
   val args = mutableMapOf<String, Any>()
 
+  private val fragments = mutableSetOf<Fragment>()
+
+  override fun <T : I> on(initializer: () -> QModel<T>) {
+    fragments += Fragment(initializer)
+  }
+
+  override fun config(scope: A.() -> Unit) {
+    arginit(this).scope()
+  }
+
+  override fun invoke(context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
+      InterfaceFragmentAdapter<I, A>(qproperty, arginit).apply(context)
+
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
-  override fun fragment(on: T.() -> Unit): InterfaceStub<T> {
-    TODO("not implemented")
-  }
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<T>?> {
-    return InterfaceDelegateImpl(qproperty, args,
-        TODO("Infix function on a type argument for FragmentContext<T> " +
-            "and change DSL invoke to FragmentContext<T>.() -> Unit?"))
-  }
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
+      InterfaceDelegateImpl(qproperty, args, fragments.toSet())
 
 }
 
@@ -43,11 +50,10 @@ private class InterfaceDelegateImpl<T : QInterfaceType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
-) : QField<QModel<T>>,
-    Adapter,
-    FragmentContext {
+) : Adapter,
+    FragmentContext<T> {
 
-  lateinit var value: QModel<T>
+  var value: QModel<T>? = null
 
   override fun accept(result: Any?): Boolean {
     TODO("not implemented")
@@ -63,5 +69,5 @@ private class InterfaceDelegateImpl<T : QInterfaceType>(
   override operator fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QModel<T> = value
+  ): QModel<T>? = value
 }

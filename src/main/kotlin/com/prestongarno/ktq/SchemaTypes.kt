@@ -11,7 +11,7 @@ interface SchemaStub
 
 interface NullableStub<T> : DelegateProvider<T?>
 
-interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QSchemaType
+interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QType
 
 interface UnionStub : DelegateProvider<QModel<*>?>
 
@@ -28,7 +28,7 @@ interface CustomScalar : QSchemaType
  * Interface representing a <b>concrete<\b> type on a graphql schema.
  * *Fix* for restricting bounds on interface types to require
  * a QType instead of possibly another interface type */
-interface QType : QSchemaType
+interface QType : QInterfaceType
 
 /**
  * Supertype of an object representing

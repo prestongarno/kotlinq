@@ -19,20 +19,6 @@ interface DelegateProvider<out T> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
 
-/**
- * Scope of fragmenting on a GraphQL field
- * @param I : the interface type that this fragment represents*/
-interface FragmentScope<in I : QInterfaceType, out A : ArgBuilder> {
-  /**
-   * Create a fragment on an field
-   * @param T The concrete type. Bounded by [I] and [QType]*/
-  infix fun <T : I> Any.on(initializer: () -> QModel<T>)
-}
-
-internal interface FragmentContext<in I : QInterfaceType, out A : ArgBuilder> : FragmentScope<I, A> {
-  val fragments: Set<Fragment>
-}
-
 data class Fragment(val initializer: () -> QModel<*>) {
   internal val model by lazy(initializer)
 }
