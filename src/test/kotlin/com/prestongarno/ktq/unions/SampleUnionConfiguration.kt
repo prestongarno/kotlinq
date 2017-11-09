@@ -1,38 +1,41 @@
 package com.prestongarno.ktq.unions
 
+import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaEnum
-import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QSchemaType.QEnum
 import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QScalarArray
 import com.prestongarno.ktq.QSchemaType.QUnionList
-import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.QUnionType
+import com.prestongarno.ktq.QType
+import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
-import com.prestongarno.ktq.hooks.FragmentProvider
+import com.prestongarno.ktq.adapters.UnionListConfigAdapter
 import com.prestongarno.ktq.stubs.UnionListInitStub
+import org.intellij.lang.annotations.Language
 import org.junit.Test
 import kotlin.reflect.jvm.isAccessible
 
 //#############################################################
 // Example Stub/Generated API
 //#############################################################
-interface Food : QSchemaType {
+interface Food : QType {
   val ingredients: UnionListInitStub<IngredientType>
 }
 
-interface FoodIngredient : QSchemaType {
+interface FoodIngredient : QType {
   val name: StringDelegate<ArgBuilder>
   val description: StringDelegate<ArgBuilder>
 }
 
-object IngredientType : QSchemaUnion by QSchemaUnion.create(IngredientType) {
+object IngredientType : QUnionType by QUnionType.create(IngredientType) {
   fun onLettuce(init: () -> QModel<Lettuce>) = on(init)
 }
 
-object Query : QSchemaType {
+object Query : QType {
   val searchForThing by QUnionList.stub<Thing>()
 
   class SearchForThingArgs(args: ArgBuilder) : ArgBuilder by args {
@@ -40,13 +43,13 @@ object Query : QSchemaType {
   }
 }
 
-object Thing : QSchemaUnion by QSchemaUnion.create(Thing) {
+object Thing : QUnionType by QUnionType.create(Thing) {
   fun onCar(init: () -> QModel<Car>) = on(init)
   fun onTaco(init: () -> QModel<Taco>) = on(init)
   fun onHamburger(init: () -> QModel<Hamburger>) = on(init)
 }
 
-object Car : QSchemaType {
+object Car : QType {
   val make by QScalar.stringStub()
   //val carType by QScalar.stubPrimitive<CarType>()
 }
@@ -73,7 +76,7 @@ object Lettuce : FoodIngredient {
   val lettuceKind by QEnum.stub<LettuceType>()
 }
 
-enum class LettuceType : QSchemaEnum {
+enum class LettuceType : QEnumType {
   ICEBERG,
   ROMAINE,
   SPINACH,
@@ -94,11 +97,29 @@ class MyLettuceModel : QModel<Lettuce>(Lettuce) {
 
 class MyTaco : QModel<Taco>(Taco) {
   val foo by model.ingredients.fragment {
+    println("$this + ${super.fields}")
     onLettuce { MyLettuceModel() }
+    println("$this + ${(this.queue.reset().also {
+      for (fragmentGenerator in it) {
+        queue.addFragment(fragmentGenerator)
+      }
+    })}")
   }
 }
 
 class Sample {
+
+  @Test fun `make sure that fragment is unique to property & instance`() {
+
+    Query.searchForThing.fragment { println("Hello") }
+
+    val myQuery = object : QModel<Query>(Query) {
+      val results by model.searchForThing.apply {
+        require((this as UnionListConfigAdapter).dispatcher == null)
+      }.fragment {}
+    }
+  }
+
   @Test fun testClassEvenLoads() {
     val myCarModel = {
       object : QModel<Car>(Car) {
@@ -130,15 +151,28 @@ class Sample {
         onHamburger(myHamburger)
       }
     }
-    println(MyTaco().toGraphql(true))
-    println(myTacoModel().toGraphql(false))
-    println(myQuery.toGraphql(true))
     myQuery::thingSearch.apply { isAccessible = true }.getDelegate().let {
-      (it as? FragmentProvider)?.run {
-        fragments.forEachIndexed {
-          i, x -> println("#$i = " + x.model.toGraphql(true))
-        }
+
+      (it as? Adapter)?.let {
+        it.qproperty.graphqlName + "[${it.qproperty.graphqlType}] => " + it.toRawPayload()
       }
+          .also { println(it) }
     }
+
+    @Language("JSON") val jsonResponse = """
+        {
+          "searchForThing": [
+            {
+              "__typename": "Car",
+              "model": "Mitsubishi"
+            }
+          ]
+        }
+      """
+
+    myQuery.onResponse(jsonResponse)
+    assertThat(
+        myQuery.thingSearch.first().model
+    ).isEqualTo(Car)
   }
 }

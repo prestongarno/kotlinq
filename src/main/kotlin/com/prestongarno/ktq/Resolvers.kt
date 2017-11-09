@@ -58,7 +58,7 @@ fun String.indent(times: Int = 1): String =
 fun String.prepend(of: String): String = of + this
 
 internal fun QModel<*>.prettyPrinted(indentation: Int): String =
-    if (model is QSchemaUnion) prettyPrintUnion(indentation) else
+    if (model is QUnionType) prettyPrintUnion(indentation) else
       ((fields.joinToString(separator = ",\n") { it.prettyPrinted() }
           .indent(1)) + "\n}").prepend("{\n").indent(indentation)
           .replace("\\s*([(,])".toRegex(), "$1").trim()

@@ -1,6 +1,5 @@
 package com.prestongarno.ktq.properties
 
-import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty
 
 /**
@@ -53,7 +52,7 @@ interface GraphQlProperty {
      * types design kind of relies on a meaningless object. Is it better to
      * be explicit about any nullability even if it's done like this? */
     internal val ROOT = object : GraphQlProperty {
-      override val kproperty by nullPointer<KProperty<*>>()
+      override val kproperty by lazy { throw NullPointerException() }
       override val typeKind = PropertyType.OBJECT
       override val graphqlType = "null"
       override val graphqlName: String = "null"
@@ -69,8 +68,6 @@ private data class PropertyImpl @JvmOverloads constructor(
     override val graphqlName: String = kproperty.name,
     override val typeKind: PropertyType = PropertyType.from(graphqlType)
 ) : GraphQlProperty {
-
-
 
   override fun equals(other: Any?): Boolean {
     return (other as? GraphQlProperty)?.kproperty == kproperty

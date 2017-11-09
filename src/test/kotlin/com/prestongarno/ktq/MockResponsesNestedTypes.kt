@@ -1,15 +1,5 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.QSchemaType.QScalar
-import com.prestongarno.ktq.QSchemaType.QType
-import com.prestongarno.ktq.QSchemaType.QTypeList
-import com.google.common.truth.Truth.assertThat
-import org.intellij.lang.annotations.Language
-import org.junit.Ignore
-import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-
 
 /*
 class MockResponsesNestedTypes {

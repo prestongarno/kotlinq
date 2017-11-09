@@ -4,7 +4,8 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.EnumStub
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaEnum
+import com.prestongarno.ktq.QEnumType
+import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -17,7 +18,7 @@ internal class EnumAdapter<T, out A>(
     EnumStub<T>
 
     where T : Enum<*>,
-          T : QSchemaEnum,
+          T : QEnumType,
           A : ArgBuilder {
 
 
@@ -34,11 +35,12 @@ internal class EnumAdapter<T, out A>(
 
 }
 
+@ValueDelegate(Enum::class)
 private data class EnumFieldImpl<T>(
     private val enumClass: KClass<T>,
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap()
-) : QField<T>, Adapter where T : Enum<*>, T : QSchemaEnum {
+) : QField<T>, Adapter where T : Enum<*>, T : QEnumType {
 
   var value: T? = null
 

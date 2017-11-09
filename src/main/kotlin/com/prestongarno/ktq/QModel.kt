@@ -5,7 +5,8 @@ import com.beust.klaxon.Parser
 import com.prestongarno.ktq.adapters.Adapter
 import java.io.InputStream
 
-open class QModel<out T : QSchemaType>(val model: T) {
+@kotlin.Suppress("AddVarianceModifier")
+open class QModel<out T : QInterfaceType>(val model: T) {
 
   // TODO(preston) make this a map, because gql symbols
   // by name need to be constantly looked up

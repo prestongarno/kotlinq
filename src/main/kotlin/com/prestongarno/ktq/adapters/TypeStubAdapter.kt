@@ -4,17 +4,17 @@ import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.ModelProvider
-import com.prestongarno.ktq.hooks.nullPointer
+import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty
 
 /**
  * This class represents a createStub for a non-leaf createTypeStub (aka an object) fragment a graph */
-internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
+internal class TypeStubAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
     qproperty: GraphQlProperty,
     private val builderInit: (ArgBuilder) -> B,
     val init: (() -> P)? = null,
@@ -45,7 +45,8 @@ internal class TypeStubAdapter<I : QSchemaType, P : QModel<I>, B : ArgBuilder>(
 
 }
 
-private data class TypeStubImpl<out I : QSchemaType, out P : QModel<I>>(
+@ValueDelegate(QModel::class)
+private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()

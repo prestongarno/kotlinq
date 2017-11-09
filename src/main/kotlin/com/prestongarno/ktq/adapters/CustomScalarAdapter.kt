@@ -11,6 +11,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
+import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B : CustomScalarArgBuilder>(
@@ -60,6 +61,7 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
 
 }
 
+@CollectionDelegate(Any::class)
 private data class CustomScalarStubImpl<out Q>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),

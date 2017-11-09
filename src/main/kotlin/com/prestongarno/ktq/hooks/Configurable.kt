@@ -1,8 +1,9 @@
 package com.prestongarno.ktq.hooks
 
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.DelegateProvider
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaType
+import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.TypeStub
 
@@ -20,7 +21,7 @@ interface Config<out T, out A: ArgBuilder> : SchemaStub {
  * a 'config { //arguments }' on a delegate initialization
  * @param T : The type of QSchemaType (object) which provides a delegate type <T>
  * @param A : The type of ArgBuilder which configures on this field */
-interface TypeConfig<T: QSchemaType, out A: ArgBuilder> : SchemaStub {
+interface TypeConfig<T: QType, out A: ArgBuilder> : SchemaStub {
   fun config(provider: A.() -> Unit): InitStub<T>
 }
 
@@ -28,7 +29,7 @@ interface TypeConfig<T: QSchemaType, out A: ArgBuilder> : SchemaStub {
  * A terminal delegate type that enforces a '() -> U' initializer for creating the object type
  *
  * @param T : The type of QSchemaType (object) which provides a delegate type <T> */
-interface InitStub<T : QSchemaType> : SchemaStub {
+interface InitStub<T : QType> : SchemaStub {
   /**
    * Function to pass a function which returns the immutable delegate object for this field
    * @param init : a function which returns the model instance for the GraphQL query or mutation

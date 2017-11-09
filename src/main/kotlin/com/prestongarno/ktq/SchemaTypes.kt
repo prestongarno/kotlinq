@@ -1,39 +1,44 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.UnionConfigAdapter
-import com.prestongarno.ktq.hooks.DelegateProvider
-import com.prestongarno.ktq.properties.DispatchQueue
+import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
- * Simply a marker interface to group together the different
- * stubbable types for the StubMapper delegate to restrict delegation to */
-interface SchemaStub
+ * Interface representing a *concrete* type on a graphql schema.
+ * TODO(preston) **Fix** for restricting bounds on interface types to
+ * require a QType instead of possibly another interface type
+ * (because GraphQL doesn't allow >1 levels of inheritance
+ */
+interface QType : QInterfaceType
 
-interface NullableStub<T> : DelegateProvider<T?>
+/**
+ * Supertype of an object representing
+ * a GraphQL Interface definitions */
+interface QInterfaceType : QSchemaType
 
-interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QSchemaType
+/**
+ * Supertype of a GraphQL Enum definition
+ *
+ * This isn't forced to be an actual native enum. However,
+ * the API entrypoints require multiple bounds, one of which being [kotlin.Enum] */
+interface QEnumType : QSchemaType
 
-interface UnionStub : DelegateProvider<QModel<*>?>
-
-interface EnumStub<T> : DelegateProvider<T> where T: QSchemaEnum, T: Enum<*>
 /**
  * Interface for all Custom Scalar types fragment a schema.
  * Supports custom deserialization or mapping to another object by
- * using {@link com.prestongarno.ktq.adapters.custom.QScalarMapper} */
+ * using {@link com.prestongarno.ktq.adapters.custom.QScalarMapper}
+ */
 interface CustomScalar : QSchemaType
 
-interface QSchemaUnion : QSchemaType {
+interface QUnionType : QInterfaceType {
 
-  fun on(init: () -> QModel<*>)
+  val queue: FragmentProvider
 
-  val queue: DispatchQueue
+  fun on(init: () -> QModel<QType>)
 
   companion object {
-    fun create(objectModel: QSchemaUnion): QSchemaUnion = UnionConfigAdapter.baseObject(objectModel)
+    fun create(objectModel: QUnionType): QUnionType =
+        UnionConfigAdapter.baseObject(objectModel)
   }
 }
 
-/**
- * This isn't forced to be an actual native enum. However,
- * the API entrypoints require multiple bounds, one of which being [kotlin.Enum] */
-interface QSchemaEnum : QSchemaType

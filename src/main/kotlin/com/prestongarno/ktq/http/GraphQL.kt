@@ -12,7 +12,5 @@ object GraphQL {
 
 internal class GraphHttpImpl(override val endpoint: String) : GraphHttpAdapter {
   override var authorization: Authorization? = null
-
-  internal val queue = mutableListOf<RequestBuilder<*>>()
 }
 
