@@ -5,8 +5,6 @@ import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.hooks.Fragment
 
 /**
- * TODO -> Use [java.util.concurrent.atomic.AtomicReference] instead
- *
  * This is simply a hook into the generated API interface to
  * be able to call a 'SomeUnionObjectType.() -> Unit' on the correct object
  *

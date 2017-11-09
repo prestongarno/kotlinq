@@ -7,7 +7,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
-import com.prestongarno.ktq.hooks.DelegateProvider
+import com.prestongarno.ktq.DelegateProvider
 
 interface ListInitStub<T : QType> : SchemaStub, ArgBuilder {
   fun <U : QModel<T>> querying(of: () -> U): TypeListStub<U, T>
