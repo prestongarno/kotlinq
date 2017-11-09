@@ -27,7 +27,7 @@ internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
 
   private val fragments = mutableSetOf<Fragment>()
 
-  override fun <T : I> on(initializer: () -> QModel<out T>) {
+  override fun <T : I> on(initializer: () -> QModel<T>) {
     fragments += Fragment(initializer)
   }
 
@@ -40,7 +40,7 @@ internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<out I>?> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
       InterfaceDelegateImpl(qproperty, args, fragments.toSet())
 
 }
@@ -53,7 +53,7 @@ private class InterfaceDelegateImpl<T : QInterfaceType>(
 ) : Adapter,
     FragmentContext<T> {
 
-  var value: QModel<out T>? = null
+  var value: QModel<T>? = null
 
   override fun accept(result: Any?): Boolean {
     TODO("not implemented")
@@ -69,5 +69,5 @@ private class InterfaceDelegateImpl<T : QInterfaceType>(
   override operator fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QModel<out T>? = value
+  ): QModel<T>? = value
 }

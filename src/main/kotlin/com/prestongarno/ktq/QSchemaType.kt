@@ -178,12 +178,12 @@ interface QSchemaType {
    * fields which are of any createTypeStub defined in the schema:
    * {@link com.prestongarno.ktq.QSchemaType.QType#createStub()} and
    * {@link com.prestongarno.ktq.QSchemaType.QType#createConfigStub(arginit)}.*/
-  object QType {
+  object QConcreteTypes {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QType} fields
      * @param T The createTypeStub of the createStub which the field is backing
      * @return Grub<InitStub<T>> the delegate which lazily provides a InitStub<T> */
-    inline fun <reified T : QSchemaType> stub(): StubProvider<InitStub<T>> = createTypeStub(T::class.simpleName!!)
+    inline fun <reified T : QType> stub(): StubProvider<InitStub<T>> = createTypeStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QType} fields
@@ -192,7 +192,7 @@ interface QSchemaType {
      * @param T createTypeStub of the field (schema-defined createTypeStub)
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<QTypeConfigStub<T, A>> the delegate which lazily provides a QTypeConfigStub<T, A> */
-    inline fun <reified T : QSchemaType, A : ArgBuilder> stub(
+    inline fun <reified T : QType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<TypeConfig<T, A>>
         = createTypeConfigStub(T::class.simpleName!!, arginit)
@@ -201,14 +201,14 @@ interface QSchemaType {
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which represent lists of any createTypeStub defined in the schema:
-   * {@link com.prestongarno.ktq.QSchemaType.QTypeList#createStub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QTypeList#createConfigStub(arginit)}.*/
+   * {@link com.prestongarno.ktq.QType.QTypeList#createStub()} and
+   * {@link com.prestongarno.ktq.QType.QTypeList#createConfigStub(arginit)}.*/
   object QTypeList {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QTypeList} fields
      * @param T The createTypeStub of the createStub
      * @return Grub<ListInitStub<T>> the delegate which lazily provides a ListInitStub<T> */
-    inline fun <reified T : QSchemaType> stub(): StubProvider<ListInitStub<T>>
+    inline fun <reified T : QType> stub(): StubProvider<ListInitStub<T>>
         = createTypeListStub(T::class.simpleName!!)
 
     /**
@@ -218,7 +218,7 @@ interface QSchemaType {
      * @param T createTypeStub of the field (schema-defined createTypeStub)
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<ListConfigType<T, A>> the delegate which lazily provides a ListConfigType<T, A> */
-    inline fun <reified T : QSchemaType, A : ArgBuilder> stub(
+    inline fun <reified T : QType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<ListConfigType<T, A>> = createTypeListConfigStub(T::class.simpleName!!, arginit)
   }
@@ -226,8 +226,8 @@ interface QSchemaType {
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which represent lists of any custom scalar createTypeStub defined in the schema:
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalarList#createStub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalarList#createConfigStub(arginit)}.*/
+   * {@link com.prestongarno.ktq.QType.QCustomScalarList#createStub()} and
+   * {@link com.prestongarno.ktq.QType.QCustomScalarList#createConfigStub(arginit)}.*/
   object QCustomScalarList {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} collection
@@ -252,10 +252,10 @@ interface QSchemaType {
 
   object QUnion {
 
-    inline fun <reified T : QSchemaUnion> stub(objectModel: T): StubProvider<UnionInitStub<T>> =
+    inline fun <reified T : QUnionType> stub(objectModel: T): StubProvider<UnionInitStub<T>> =
         createUnionStub(objectModel, T::class.simpleName!!)
 
-    inline fun <reified T : QSchemaUnion, A : ArgBuilder> stub(
+    inline fun <reified T : QUnionType, A : ArgBuilder> stub(
         objectModel: T,
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<UnionConfigStub<T, A>> = createUnionStub(objectModel, T::class.simpleName!!, arginit)
@@ -264,7 +264,7 @@ interface QSchemaType {
 
   object QUnionList {
     //TODO quality control
-    inline fun <reified T : QSchemaUnion> stub(): StubProvider<UnionListInitStub<T>> =
+    inline fun <reified T : QUnionType> stub(): StubProvider<UnionListInitStub<T>> =
         createUnionListStub(T::class.objectInstance!!)
   }
 

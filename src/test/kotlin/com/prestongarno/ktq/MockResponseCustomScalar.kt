@@ -116,7 +116,7 @@ object DateTime : CustomScalar
 
 object URI : CustomScalar
 
-object Note : QSchemaType {
+object Note : QType {
   val dateCreated: CustomScalarInitStub<DateTime> by QCustomScalar.stub()
   val webUrl: CustomScalarInitStub<URI> by QCustomScalar.stub()
   val relatedLinks: CustomScalarListInitStub<URI> by QCustomScalarList.stub()

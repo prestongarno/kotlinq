@@ -1,6 +1,6 @@
 package com.prestongarno.ktq.properties
 
-import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.QUnionType
 import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.hooks.Fragment
 
@@ -15,7 +15,7 @@ class FragmentProvider {
 
   private var collector = mutableListOf<Fragment>()
 
-  @Synchronized inline operator fun <I: QSchemaUnion, T : Any> invoke(
+  @Synchronized inline operator fun <I: QUnionType, T : Any> invoke(
       target: I,
       dispatch: I.() -> Unit,
       callback: FragmentProvider.() -> QField<T>

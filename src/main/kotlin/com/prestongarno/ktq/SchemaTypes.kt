@@ -15,7 +15,7 @@ interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QType
 
 interface UnionStub : DelegateProvider<QModel<*>?>
 
-interface InterfaceStub<out T : QInterfaceType> : DelegateProvider<QModel<out T>?>
+interface InterfaceStub<out T : QInterfaceType> : DelegateProvider<QModel<T>?>
 
 interface EnumStub<T> : DelegateProvider<T> where T: QEnumType, T: Enum<*>
 /**
@@ -42,14 +42,14 @@ interface QInterfaceType : QSchemaType
  * the API entrypoints require multiple bounds, one of which being [kotlin.Enum] */
 interface QEnumType : QSchemaType
 
-interface QSchemaUnion : QSchemaType {
+interface QUnionType : QInterfaceType {
 
   val queue: FragmentProvider
 
-  fun on(init: () -> QModel<*>)
+  fun on(init: () -> QModel<QType>)
 
   companion object {
-    fun create(objectModel: QSchemaUnion): QSchemaUnion =
+    fun create(objectModel: QUnionType): QUnionType =
         UnionConfigAdapter.baseObject(objectModel)
   }
 }

@@ -17,13 +17,13 @@ interface InterfaceFragment<T : QInterfaceType, out A : ArgBuilder> : SchemaStub
  * Scope of fragmenting on a GraphQL field
  * @param I : the interface type that this fragment represents*/
 @kotlin.Suppress("AddVarianceModifier")
-interface FragmentScope<I : QInterfaceType, out A : ArgBuilder> {
+interface FragmentScope<in I : QInterfaceType, out A : ArgBuilder> {
 
   /**
    * Create a fragment on an field
    * @param T The concrete type. Bounded by [I] and [QType]
    */
-  fun <T : I> on(initializer: () -> QModel<out T>)
+  fun <T : I> on(initializer: () -> QModel<T>)
 
   /**
    * Configuration block for adding arguments to  the GraphQL query
@@ -35,7 +35,11 @@ interface FragmentScope<I : QInterfaceType, out A : ArgBuilder> {
  * Implemented by concrete field-backing delegates
  */
 @kotlin.Suppress("AddVarianceModifier")
-internal interface FragmentContext<T : QInterfaceType> : QField<QModel<out T>?> {
+internal interface FragmentContext<T : QInterfaceType> : QField<QModel<T>?> {
   val fragments: Set<Fragment>
 }
 
+@kotlin.Suppress("AddVarianceModifier")
+internal interface FragmentCollectionContext<T : QInterfaceType> : QField<List<QModel<T>>> {
+  val fragments: Set<Fragment>
+}

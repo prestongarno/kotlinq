@@ -1,6 +1,5 @@
 package com.prestongarno.ktq.properties
 
-import com.prestongarno.ktq.hooks.nullPointer
 import kotlin.reflect.KProperty
 
 /**

@@ -1,25 +1,27 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
+import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.QUnionType
+import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.DelegateProvider
 import com.prestongarno.ktq.stubs.UnionListInitStub
 import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.Fragment
-import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.stubs.FragmentCollectionContext
 import kotlin.reflect.KProperty
 
-internal sealed class UnionListConfigAdapter<I : QSchemaUnion>(
+internal sealed class UnionListConfigAdapter<I : QUnionType>(
     val qproperty: GraphQlProperty,
     objectModel: I,
     val dispatcher: (I.() -> Unit)? = null
 ) : QModel<I>(objectModel),
     UnionListInitStub<I>,
     UnionListStub,
-    QSchemaUnion {
+    QUnionType {
 
   private val fragments = mutableListOf<Fragment>()
 
@@ -33,7 +35,7 @@ internal sealed class UnionListConfigAdapter<I : QSchemaUnion>(
 
   override fun fragment(what: I.() -> Unit): UnionListStub = MutableUnionListAdapter(qproperty, model, what)
 
-  override fun on(init: () -> QModel<*>) {
+  override fun on(init: () -> QModel<QType>) {
     queue.addFragment(Fragment(init))
   }
 
@@ -49,14 +51,14 @@ internal sealed class UnionListConfigAdapter<I : QSchemaUnion>(
     /**
      * TODO(preston) add generic argument for the type of ArgBuilder on a field like this
      * also TODO => get rid of the property parameter, this is only for creating type defs*/
-    fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I)
+    fun <I : QUnionType> create(property: GraphQlProperty, objectModel: I)
         : UnionListConfigAdapter<I> = MutableUnionListAdapter(property, objectModel)
   }
 }
 
 /**
  * any configuration is done here on a delegate */
-private class MutableUnionListAdapter<I : QSchemaUnion>(
+private class MutableUnionListAdapter<I : QUnionType>(
     qproperty: GraphQlProperty,
     objectModel: I,
     dispatcher: (I.() -> Unit)? = null
@@ -68,10 +70,9 @@ private class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>
 ) : Adapter,
-    QField<List<QModel<*>>>,
-    FragmentContext {
+    FragmentCollectionContext<QInterfaceType> {
 
-  private var value: List<QModel<*>> = mutableListOf()
+  private var value: List<QModel<QType>> = mutableListOf()
 
   override val args = emptyMap<String, Any>()
 
@@ -81,14 +82,14 @@ private class UnionListStubImpl(
           .mapNotNull {
             it["__typename"]?.let { resultType ->
               fragments.find {
-                it.model.graphqlType == resultType
+                it.model.graphqlType == resultType && (it.model as? QModel<QType>) != null
               }
             }?.to(it)
           }.let {
-        value = it.map { (gen, json) ->
+        value = it.mapNotNull { (gen, json) ->
           gen.initializer().apply {
             accept(json)
-          }
+          } as? QModel<QType>
         }
       }
       return true

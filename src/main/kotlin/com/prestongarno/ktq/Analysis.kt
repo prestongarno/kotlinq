@@ -1,15 +1,15 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.hooks.Fragment
-import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.hooks.ModelProvider
+import com.prestongarno.ktq.stubs.FragmentContext
 
 internal fun QModel<*>.getFragments(): Set<Fragment> {
   return getFragments(this, hashSetOf(this))
 }
 
 private fun getFragments(root: QModel<*>, cache: Set<QModel<*>>): Set<Fragment> {
-  val fragmentEdges = root.fields.filterIsInstance<FragmentContext>()
+  val fragmentEdges = root.fields.filterIsInstance<FragmentContext<*>>()
       .map { it.fragments }
       .flatMap { it }
       .filterNot { cache.contains(it.model) }

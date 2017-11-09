@@ -4,18 +4,18 @@ import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.SchemaType
-import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.QUnionType
+import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.stubs.UnionConfigStub
 import com.prestongarno.ktq.stubs.UnionInitStub
 import com.prestongarno.ktq.UnionStub
 import com.prestongarno.ktq.hooks.Fragment
-import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.FragmentProvider
+import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
-internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
+internal sealed class UnionConfigAdapter<out I : QUnionType, A : ArgBuilder>(
     val qproperty: GraphQlProperty,
     objectModel: I,
     val arginit: (ArgBuilder) -> A,
@@ -25,7 +25,7 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
     UnionConfigStub<I, A>,
     UnionStub,
     ArgBuilder,
-    QSchemaUnion {
+    QUnionType {
 
   open val fragments = mutableSetOf<Fragment>()
 
@@ -43,27 +43,25 @@ internal sealed class UnionConfigAdapter<out I : QSchemaUnion, A : ArgBuilder>(
       inst: QModel<*>,
       property: KProperty<*>
   ): QField<QModel<*>?> = queue(model, dispatcher ?: { /* nothing ... */ }, {
-    UnionStubImpl(qproperty, reset().toSet(), args.toMap()) as QField<QModel<*>>
+    UnionStubImpl(qproperty, reset().toSet(), args.toMap()) as QField<QModel<*>> // Bug?
   })
 
-  override fun on(init: () -> QModel<*>) {
-    queue.addFragment(Fragment(init))
-  }
+  override fun on(init: () -> QModel<QType>) { queue.addFragment(Fragment(init)) }
 
   companion object {
 
-    fun <I : QSchemaUnion> baseObject(objectModel: I): UnionConfigAdapter<I, ArgBuilder> =
+    fun <I : QUnionType> baseObject(objectModel: I): UnionConfigAdapter<I, ArgBuilder> =
         BaseUnionAdapter(objectModel)
 
-    fun <I : QSchemaUnion> create(property: GraphQlProperty, objectModel: I)
+    fun <I : QUnionType> create(property: GraphQlProperty, objectModel: I)
         : UnionConfigAdapter<I, ArgBuilder> = UnionAdapterImpl(property, objectModel, { it })
 
-    fun <I : QSchemaUnion, A : ArgBuilder> create(property: GraphQlProperty, objectModel: I, arginit: (ArgBuilder) -> A)
+    fun <I : QUnionType, A : ArgBuilder> create(property: GraphQlProperty, objectModel: I, arginit: (ArgBuilder) -> A)
         : UnionConfigAdapter<I, A> = UnionAdapterImpl(property, objectModel, arginit)
   }
 }
 
-private class UnionAdapterImpl<out I : QSchemaUnion, A : ArgBuilder>(
+private class UnionAdapterImpl<out I : QUnionType, A : ArgBuilder>(
     graphqlProperty: GraphQlProperty,
     objectModel: I,
     arginit: (ArgBuilder) -> A,
@@ -77,7 +75,7 @@ private class UnionAdapterImpl<out I : QSchemaUnion, A : ArgBuilder>(
   }
 }
 
-private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
+private class BaseUnionAdapter<out I : QUnionType>(model: I)
   : UnionConfigAdapter<I, ArgBuilder>(GraphQlProperty.ROOT, model, { it }) {
 
   override val queue = FragmentProvider()
@@ -93,16 +91,17 @@ private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
 ) : Adapter,
-    QField<QModel<*>?>,
-    FragmentContext<SchemaType> {
+    FragmentContext<QType> {
 
-  var value: QModel<*>? = null
+  var value: QModel<QType>? = null
 
 
   override fun accept(result: Any?): Boolean {
     return if (result is JsonObject) {
       value = result["__typename"]?.let { resultType ->
-        fragments.find { it.model.graphqlType == resultType }?.model
+        fragments.find {
+          it.model.graphqlType == resultType
+        }?.initializer?.invoke() as? QModel<QType>
       }
       return value?.accept(result) == true
     } else false
@@ -115,6 +114,6 @@ private class BaseUnionAdapter<out I : QSchemaUnion>(model: I)
         }
       }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>? = value
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<QType>? = value
 }
 

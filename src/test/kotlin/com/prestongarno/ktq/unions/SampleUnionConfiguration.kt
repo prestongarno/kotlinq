@@ -4,12 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
-import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.QEnum
 import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QSchemaType.QScalarArray
 import com.prestongarno.ktq.QSchemaType.QUnionList
-import com.prestongarno.ktq.QSchemaUnion
+import com.prestongarno.ktq.QUnionType
+import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
@@ -22,20 +22,20 @@ import kotlin.reflect.jvm.isAccessible
 //#############################################################
 // Example Stub/Generated API
 //#############################################################
-interface Food : QSchemaType {
+interface Food : QType {
   val ingredients: UnionListInitStub<IngredientType>
 }
 
-interface FoodIngredient : QSchemaType {
+interface FoodIngredient : QType {
   val name: StringDelegate<ArgBuilder>
   val description: StringDelegate<ArgBuilder>
 }
 
-object IngredientType : QSchemaUnion by QSchemaUnion.create(IngredientType) {
+object IngredientType : QUnionType by QUnionType.create(IngredientType) {
   fun onLettuce(init: () -> QModel<Lettuce>) = on(init)
 }
 
-object Query : QSchemaType {
+object Query : QType {
   val searchForThing by QUnionList.stub<Thing>()
 
   class SearchForThingArgs(args: ArgBuilder) : ArgBuilder by args {
@@ -43,13 +43,13 @@ object Query : QSchemaType {
   }
 }
 
-object Thing : QSchemaUnion by QSchemaUnion.create(Thing) {
+object Thing : QUnionType by QUnionType.create(Thing) {
   fun onCar(init: () -> QModel<Car>) = on(init)
   fun onTaco(init: () -> QModel<Taco>) = on(init)
   fun onHamburger(init: () -> QModel<Hamburger>) = on(init)
 }
 
-object Car : QSchemaType {
+object Car : QType {
   val make by QScalar.stringStub()
   //val carType by QScalar.stubPrimitive<CarType>()
 }
