@@ -16,18 +16,18 @@ import kotlin.reflect.KProperty
  * Base type of a R.H.S. delegate provider
  */
 internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
-    val qproperty: GraphQlProperty,
+    qproperty: GraphQlProperty,
     private val arginit: (ArgBuilder) -> A
-) : InterfaceFragment<I, A>,
+    // TODO -> Separate required arguments as data class here from inner optional config block
+) : PreDelegate(qproperty),
+    InterfaceFragment<I, A>,
     FragmentScope<I, A>,
     InterfaceStub<I>,
     ArgBuilder {
 
-  val args = mutableMapOf<String, Any>()
-
   private val fragments = mutableSetOf<Fragment>()
 
-  override fun <T : I> on(initializer: () -> QModel<T>) {
+  override fun <T : I> on(initializer: () -> QModel<out T>) {
     fragments += Fragment(initializer)
   }
 
@@ -40,7 +40,7 @@ internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<out I>?> =
       InterfaceDelegateImpl(qproperty, args, fragments.toSet())
 
 }
@@ -53,7 +53,7 @@ private class InterfaceDelegateImpl<T : QInterfaceType>(
 ) : Adapter,
     FragmentContext<T> {
 
-  var value: QModel<T>? = null
+  var value: QModel<out T>? = null
 
   override fun accept(result: Any?): Boolean {
     TODO("not implemented")
@@ -69,5 +69,5 @@ private class InterfaceDelegateImpl<T : QInterfaceType>(
   override operator fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QModel<T>? = value
+  ): QModel<out T>? = value
 }

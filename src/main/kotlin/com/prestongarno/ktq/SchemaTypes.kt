@@ -15,7 +15,7 @@ interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QType
 
 interface UnionStub : DelegateProvider<QModel<*>?>
 
-interface InterfaceStub<out T : QInterfaceType> : DelegateProvider<QModel<T>?>
+interface InterfaceStub<out T : QInterfaceType> : DelegateProvider<QModel<out T>?>
 
 interface EnumStub<T> : DelegateProvider<T> where T: QEnumType, T: Enum<*>
 /**
