@@ -5,6 +5,7 @@ import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.hooks.providers.EnumProvider.createEnumConfigStub
 import com.prestongarno.ktq.hooks.providers.EnumProvider.createEnumStub
+import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createInterfaceStub
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createBooleanArrayDelegate
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createBooleanDelegate
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarConfig
@@ -27,6 +28,7 @@ import com.prestongarno.ktq.stubs.CustomScalarConfigStub
 import com.prestongarno.ktq.stubs.CustomScalarInitStub
 import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
 import com.prestongarno.ktq.stubs.CustomScalarListInitStub
+import com.prestongarno.ktq.stubs.InterfaceFragment
 import com.prestongarno.ktq.stubs.ListConfigType
 import com.prestongarno.ktq.stubs.ListInitStub
 import com.prestongarno.ktq.stubs.UnionConfigStub
@@ -42,8 +44,8 @@ interface QSchemaType {
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which are regular Scalars (Int, Float, Boolean, String):
-   * {@link com.prestongarno.ktq.QSchemaType.QScalar#createStub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QScalar#createConfigStub(arginit)}.*/
+   * QScalar#createStub()} and
+   * QScalar#createConfigStub(arginit)}.*/
   object QScalar {
     /**
      * Method which provides a delegate for fields of type [kotlin.String]
@@ -150,8 +152,8 @@ interface QSchemaType {
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which are types typedValueFrom any Schema-defined scalars:
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#createStub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QCustomScalar#createConfigStub(arginit)}.*/
+   * QCustomScalar#createStub()} and
+   * QCustomScalar#createConfigStub(arginit)}.*/
   object QCustomScalar {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
@@ -175,15 +177,14 @@ interface QSchemaType {
 
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
-   * fields which are of any createTypeStub defined in the schema:
-   * {@link com.prestongarno.ktq.QSchemaType.QType#createStub()} and
-   * {@link com.prestongarno.ktq.QSchemaType.QType#createConfigStub(arginit)}.*/
-  object QConcreteTypes {
+   * fields which are of any createTypeStub defined in the schema
+   */
+  object QObject {
     /**
-     * Method which provides a delegate for {@link com.prestongarno.ktq.QType} fields
+     * Method which provides a delegate for [QType] fields
      * @param T The createTypeStub of the createStub which the field is backing
-     * @return Grub<InitStub<T>> the delegate which lazily provides a InitStub<T> */
-    inline fun <reified T : QType> stub(): StubProvider<InitStub<T>> = createTypeStub(T::class.simpleName!!)
+     * @return Grub<[InitStub]<[T]>> the delegate which lazily provides a InitStub<T> */
+    inline fun <reified T : QType> stub(): StubProvider<InitStub<out T>> = createTypeStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QType} fields
@@ -194,15 +195,20 @@ interface QSchemaType {
      * @return Grub<QTypeConfigStub<T, A>> the delegate which lazily provides a QTypeConfigStub<T, A> */
     inline fun <reified T : QType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
-    ): StubProvider<TypeConfig<T, A>>
+    ): StubProvider<TypeConfig<out T, A>>
         = createTypeConfigStub(T::class.simpleName!!, arginit)
+  }
+
+  object QInterfaces {
+    inline fun <reified T : QInterfaceType> stub(): StubProvider<InterfaceFragment<T, ArgBuilder>> =
+        createInterfaceStub<T>(name = "${T::class.simpleName}")
   }
 
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which represent lists of any createTypeStub defined in the schema:
-   * {@link com.prestongarno.ktq.QType.QTypeList#createStub()} and
-   * {@link com.prestongarno.ktq.QType.QTypeList#createConfigStub(arginit)}.*/
+   * QTypeList#createStub()} and
+   * QTypeList#createConfigStub(arginit)}.*/
   object QTypeList {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QTypeList} fields
@@ -225,9 +231,8 @@ interface QSchemaType {
 
   /**
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
-   * fields which represent lists of any custom scalar createTypeStub defined in the schema:
-   * {@link com.prestongarno.ktq.QType.QCustomScalarList#createStub()} and
-   * {@link com.prestongarno.ktq.QType.QCustomScalarList#createConfigStub(arginit)}.*/
+   * fields which represent lists stub defined in the schema by: [QCustomScalarList.stub]
+   */
   object QCustomScalarList {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} collection

@@ -13,7 +13,7 @@ import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
-internal class TypeListAdapter<I : QType, out P : QModel<I>, B : ArgBuilder>(
+internal class TypeListAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
     qproperty: GraphQlProperty,
     private val builderInit: (ArgBuilder) -> B,
     val init: (() -> P)? = null,

@@ -27,7 +27,7 @@ interface CustomScalarListConfigStub<T: CustomScalar, out A: CustomScalarListArg
 
 interface ListConfigType<T, A> : ListInitConfig<T, A> where T: QType, A: ArgBuilder
 
-interface TypeListStub<out U, out T> : DelegateProvider<List<U>> where T : QType, U : QModel<T>
+interface TypeListStub<U, T> : DelegateProvider<List<U>> where T : QType, U : QModel<T>
 
 interface CustomScalarListStub<U: QScalarListMapper<T>, out T> : DelegateProvider<List<T>>
 

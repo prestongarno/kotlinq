@@ -46,7 +46,7 @@ internal class TypeStubAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
 }
 
 @ValueDelegate(QModel::class)
-private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
+private data class TypeStubImpl<I : QType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()

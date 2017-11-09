@@ -72,7 +72,7 @@ private class UnionListStubImpl(
 ) : Adapter,
     FragmentCollectionContext<QInterfaceType> {
 
-  private var value: List<QModel<QType>> = mutableListOf()
+  private var value: List<QModel<QInterfaceType>> = mutableListOf()
 
   override val args = emptyMap<String, Any>()
 
@@ -89,7 +89,7 @@ private class UnionListStubImpl(
         value = it.mapNotNull { (gen, json) ->
           gen.initializer().apply {
             accept(json)
-          } as? QModel<QType>
+          } as? QModel<QInterfaceType>
         }
       }
       return true

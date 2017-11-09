@@ -1,5 +1,6 @@
 package com.prestongarno.ktq.adapters
 
+import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.InterfaceStub
 import com.prestongarno.ktq.QInterfaceType
@@ -38,36 +39,61 @@ internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
   override fun invoke(context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
       InterfaceFragmentAdapter<I, A>(qproperty, arginit).apply(context)
 
+  override fun provideDelegate(
+      inst: QModel<*>,
+      property: KProperty<*>
+  ): QField<QModel<I>?> = InterfaceDelegateImpl<I>(qproperty, args, fragments.toSet()).apply {
+    inst.fields.add(this)
+  }
+
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
-      InterfaceDelegateImpl(qproperty, args, fragments.toSet())
 
 }
 
 @ValueDelegate(QModel::class)
-private class InterfaceDelegateImpl<T : QInterfaceType>(
+private class InterfaceDelegateImpl<I : QInterfaceType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
 ) : Adapter,
-    FragmentContext<T> {
+    FragmentContext<I> {
 
-  var value: QModel<T>? = null
+  var value: QModel<I>? = null
 
   override fun accept(result: Any?): Boolean {
-    TODO("not implemented")
+    println(result!!::class)
+    if (result !is JsonObject) return false
+
+    (result as JsonObject)
+    value = fragments.find { it.model.graphqlType == result[it.model.graphqlType] }
+        ?.initializer?.invoke()?.run {
+      accept(result)
+      result as? QModel<I>
+    }
+    return result is QModel<*>
   }
 
-  override fun toRawPayload(): String =
-      fragments.joinToString(prefix = "{__typename,", postfix = "}") {
-        it.model.run {
-          "... on " + graphqlType + toGraphql(false)
-        }
-      }
+  override fun toRawPayload(): String {
+    return StringBuilder(fragments.size * 10).apply {
+      this add qproperty.graphqlName add
+          (if (args.isEmpty())
+            ""
+          else
+            args.entries.joinToString(prefix = "(", postfix = ")") { (key, value) ->
+              "\\\"$key\\\": " + formatAs(value)
+            }) add
+          fragments.joinToString(prefix = "{__typename,", postfix = "}") {
+            "... on " + it.model.graphqlType + it.model.toGraphql(false)
+          }
+    }.toString()
+  }
 
   override operator fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QModel<T>? = value
+  ): QModel<I>? = value
+
+  private infix fun StringBuilder.add(value: String) = this.append(value)
+
 }

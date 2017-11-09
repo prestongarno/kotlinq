@@ -15,7 +15,7 @@ import com.prestongarno.ktq.properties.FragmentProvider
 import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
-internal sealed class UnionConfigAdapter<out I : QUnionType, A : ArgBuilder>(
+internal sealed class UnionConfigAdapter<I : QUnionType, A : ArgBuilder>(
     val qproperty: GraphQlProperty,
     objectModel: I,
     val arginit: (ArgBuilder) -> A,
@@ -61,7 +61,7 @@ internal sealed class UnionConfigAdapter<out I : QUnionType, A : ArgBuilder>(
   }
 }
 
-private class UnionAdapterImpl<out I : QUnionType, A : ArgBuilder>(
+private class UnionAdapterImpl<I : QUnionType, A : ArgBuilder>(
     graphqlProperty: GraphQlProperty,
     objectModel: I,
     arginit: (ArgBuilder) -> A,
@@ -75,7 +75,7 @@ private class UnionAdapterImpl<out I : QUnionType, A : ArgBuilder>(
   }
 }
 
-private class BaseUnionAdapter<out I : QUnionType>(model: I)
+private class BaseUnionAdapter<I : QUnionType>(model: I)
   : UnionConfigAdapter<I, ArgBuilder>(GraphQlProperty.ROOT, model, { it }) {
 
   override val queue = FragmentProvider()
