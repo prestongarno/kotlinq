@@ -3,6 +3,7 @@ package com.prestongarno.ktq.adapters
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.InterfaceStub
+import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
@@ -13,18 +14,30 @@ import com.prestongarno.ktq.stubs.FragmentScope
 import com.prestongarno.ktq.stubs.InterfaceFragment
 import kotlin.reflect.KProperty
 
+internal data class InterfaceStubImpl<I, A : ArgBuilder>(
+    private val qproperty: GraphQlProperty,
+    private val arginit: (ArgBuilder) -> A
+): InterfaceFragment<I, A>
+    where I : QType,
+          I : QInterface {
+  override fun invoke(context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
+      InterfaceFragmentAdapter<I, A>(qproperty, arginit).apply(context)
+}
+
 /**
  * Base type of a R.H.S. delegate provider
  */
-internal class InterfaceFragmentAdapter<I : QType, out A : ArgBuilder>(
+internal class InterfaceFragmentAdapter<I, out A : ArgBuilder>(
     qproperty: GraphQlProperty,
     private val arginit: (ArgBuilder) -> A
     // TODO -> Separate required arguments as data class here from inner optional config block
 ) : PreDelegate(qproperty),
-    InterfaceFragment<I, A>,
     FragmentScope<I, A>,
     InterfaceStub<I>,
-    ArgBuilder {
+    ArgBuilder
+    where I : QType,
+          I : QInterface {
+
 
   private val fragments = mutableSetOf<Fragment>()
 
@@ -35,9 +48,6 @@ internal class InterfaceFragmentAdapter<I : QType, out A : ArgBuilder>(
   override fun config(scope: A.() -> Unit) {
     arginit(this).scope()
   }
-
-  override fun invoke(context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
-      InterfaceFragmentAdapter<I, A>(qproperty, arginit).apply(context)
 
   override fun provideDelegate(
       inst: QModel<*>,
@@ -54,19 +64,19 @@ private class InterfaceDelegateImpl<I : QType>(
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
 ) : Adapter,
+    QField<QModel<I>?>,
     FragmentContext<I> {
 
   var value: QModel<I>? = null
 
   override fun accept(result: Any?): Boolean {
-    println(result!!::class)
     if (result !is JsonObject) return false
-    value = fragments.find { it.model.graphqlType == result[it.model.graphqlType] }
-        ?.initializer?.invoke()?.run {
-      accept(result)
-      result as? QModel<I>
+    value = fragments.find { it.model.graphqlType == result["__typename"] }
+        ?.initializer?.invoke()?.let {
+      it.accept(result)
+      it as? QModel<I>
     }
-    return result is QModel<*>
+    return value?.isResolved() == true
   }
 
   override fun toRawPayload(): String {

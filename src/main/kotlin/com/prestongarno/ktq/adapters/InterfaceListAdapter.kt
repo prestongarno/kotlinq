@@ -1,22 +1,40 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
+import com.prestongarno.ktq.AbstractCollectionStub
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.properties.GraphQlProperty
-import com.prestongarno.ktq.stubs.FragmentCollectionContext
+import com.prestongarno.ktq.stubs.CollectionFragment
+import com.prestongarno.ktq.stubs.FragmentContext
 import com.prestongarno.ktq.stubs.FragmentScope
 import com.prestongarno.ktq.stubs.TypeListStub
 import kotlin.reflect.KProperty
 
-internal class InterfaceFragmentListAdapter<I : QType, A : ArgBuilder>(
+internal data class InterfaceListStub<I, A : ArgBuilder>(
+    private val qproperty: GraphQlProperty,
+    private val arginit: (ArgBuilder) -> A
+) : CollectionFragment<I, A>
+    where I : QType,
+          I : QInterface {
+  override fun invoke(context: FragmentScope<I, A>.() -> Unit): AbstractCollectionStub<I> {
+    return InterfaceFragmentListAdapter<I, A>(qproperty, arginit).apply(context)
+  }
+}
+
+internal class InterfaceFragmentListAdapter<I, A : ArgBuilder>(
     qproperty: GraphQlProperty,
     private val arginit: (ArgBuilder) -> A
 ) : PreDelegate(qproperty),
     TypeListStub<QModel<I>, I>,
-    FragmentScope<I, A> {
+    AbstractCollectionStub<I>,
+    FragmentScope<I, A>
+
+    where I : QType,
+          I : QInterface {
 
   private val fragments = mutableSetOf<Fragment>()
 
@@ -24,7 +42,9 @@ internal class InterfaceFragmentListAdapter<I : QType, A : ArgBuilder>(
     fragments += Fragment(initializer)
   }
 
-  override fun config(scope: A.() -> Unit) { arginit(this).scope() }
+  override fun config(scope: A.() -> Unit) {
+    arginit(this).scope()
+  }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<I>>> =
       CollectionDelegateImpl<I>(qproperty, args.toMap(), fragments.toSet()).apply { inst.fields.add(this) }
@@ -37,7 +57,8 @@ private class CollectionDelegateImpl<I : QType>(
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
 ) : Adapter,
-    FragmentCollectionContext<I> {
+    QField<List<QModel<I>>>,
+    FragmentContext<I> {
 
   private var value = emptyList<QModel<I>>()
 
@@ -52,7 +73,8 @@ private class CollectionDelegateImpl<I : QType>(
             }?.to(it)
           }.let {
         value = it.mapNotNull { (gen, json) ->
-          @Suppress("UNCHECKED_CAST") gen.initializer().apply {
+          @Suppress("UNCHECKED_CAST")
+          gen.initializer().apply {
             accept(json)
           } as? QModel<I>
         }

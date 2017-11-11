@@ -1,15 +1,25 @@
 package com.prestongarno.ktq.stubs
 
+import com.prestongarno.ktq.AbstractCollectionStub
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.InterfaceStub
+import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.hooks.Fragment
 
-interface InterfaceFragment<T : QType, out A : ArgBuilder> : SchemaStub {
+interface InterfaceFragment<T, A : ArgBuilder> : SchemaStub
+    where T : QType,
+          T : QInterface {
   operator fun invoke(context: FragmentScope<T, A>.() -> Unit): InterfaceStub<T>
+}
+
+interface CollectionFragment<T, out A : ArgBuilder> : SchemaStub
+    where T : QType,
+          T : QInterface {
+  operator fun invoke(context: FragmentScope<T, A>.() -> Unit): AbstractCollectionStub<T>
 }
 
 /**
@@ -34,11 +44,7 @@ interface FragmentScope<I : QType, out A : ArgBuilder> {
  * Implemented by concrete field-backing delegates
  */
 @kotlin.Suppress("AddVarianceModifier")
-internal interface FragmentContext<T : QType> : QField<QModel<T>?> {
+internal interface FragmentContext<T : QType> {
   val fragments: Set<Fragment>
 }
 
-@kotlin.Suppress("AddVarianceModifier")
-internal interface FragmentCollectionContext<T : QType> : QField<List<QModel<T>>> {
-  val fragments: Set<Fragment>
-}

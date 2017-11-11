@@ -5,6 +5,8 @@ import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.hooks.providers.EnumProvider.createEnumConfigStub
 import com.prestongarno.ktq.hooks.providers.EnumProvider.createEnumStub
+import com.prestongarno.ktq.hooks.providers.InterfaceProvider
+import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createCollectionStub
 import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createInterfaceStub
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createBooleanArrayDelegate
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createBooleanDelegate
@@ -24,6 +26,7 @@ import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeListStub
 import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeStub
 import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionListStub
 import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionStub
+import com.prestongarno.ktq.stubs.CollectionFragment
 import com.prestongarno.ktq.stubs.CustomScalarConfigStub
 import com.prestongarno.ktq.stubs.CustomScalarInitStub
 import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
@@ -200,13 +203,27 @@ interface QSchemaType {
   }
 
   object QInterfaces {
-    inline fun <reified T : QType> stub(): StubProvider<InterfaceFragment<T, ArgBuilder>> =
-        createInterfaceStub<T>(name = "${T::class.simpleName}")
+    inline fun <reified T> stub(): StubProvider<InterfaceFragment<T, ArgBuilder>>
+        where T : QType, T : QInterface =
+        createInterfaceStub("${T::class.simpleName}")
 
-    inline fun <reified T : QType, A : ArgBuilder> stub(
+    inline fun <reified T, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
-    ): StubProvider<InterfaceFragment<T, ArgBuilder>> =
+    ): StubProvider<InterfaceFragment<T, ArgBuilder>>
+        where T : QType, T : QInterface =
         createInterfaceStub("${T::class.simpleName}", arginit)
+  }
+
+  object QInterfaceLists {
+    inline fun <reified T> stub(): StubProvider<CollectionFragment<T, ArgBuilder>>
+        where T : QType, T : QInterface =
+        createCollectionStub(name = "${T::class.simpleName}")
+
+    inline fun <reified T, A : ArgBuilder> stub(
+        noinline arginit: (ArgBuilder) -> A
+    ): StubProvider<CollectionFragment<T, A>>
+        where T : QType, T : QInterface =
+        createCollectionStub("${T::class.simpleName}", arginit)
   }
 
   /**

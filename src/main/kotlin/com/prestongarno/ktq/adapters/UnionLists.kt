@@ -10,7 +10,7 @@ import com.prestongarno.ktq.stubs.UnionListInitStub
 import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.stubs.FragmentCollectionContext
+import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
 internal sealed class UnionListConfigAdapter<I : QUnionType>(
@@ -69,7 +69,8 @@ private class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>
 ) : Adapter,
-    FragmentCollectionContext<QType> {
+    QField<List<QModel<*>>>,
+    FragmentContext<QType> {
 
   private var value: List<QModel<QType>> = mutableListOf()
 

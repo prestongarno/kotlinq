@@ -12,6 +12,8 @@ import kotlin.reflect.KProperty
  */
 interface SchemaStub
 
+interface QInterface
+
 interface DelegateProvider<out T> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
@@ -22,7 +24,9 @@ interface DelegateProvider<out T> : SchemaStub {
  */
 interface NullableStub<out T> : DelegateProvider<T?>
 
-interface InterfaceStub<T : QType> : DelegateProvider<QModel<T>?>
+interface InterfaceStub<T> : DelegateProvider<QModel<T>?> where T : QType, T : QInterface
+
+interface AbstractCollectionStub<T> : DelegateProvider<List<QModel<T>>> where T : QType, T : QInterface
 
 interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QType
 

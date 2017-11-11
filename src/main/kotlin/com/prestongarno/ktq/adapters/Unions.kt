@@ -91,6 +91,7 @@ private class BaseUnionAdapter<I : QUnionType>(model: I)
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
 ) : Adapter,
+    QField<QModel<QType>?>,
     FragmentContext<QType> {
 
   var value: QModel<QType>? = null
