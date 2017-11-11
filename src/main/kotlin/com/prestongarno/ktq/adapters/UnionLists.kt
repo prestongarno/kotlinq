@@ -1,7 +1,6 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QUnionType
@@ -70,9 +69,9 @@ private class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>
 ) : Adapter,
-    FragmentCollectionContext<QInterfaceType> {
+    FragmentCollectionContext<QType> {
 
-  private var value: List<QModel<QInterfaceType>> = mutableListOf()
+  private var value: List<QModel<QType>> = mutableListOf()
 
   override val args = emptyMap<String, Any>()
 
@@ -89,7 +88,7 @@ private class UnionListStubImpl(
         value = it.mapNotNull { (gen, json) ->
           gen.initializer().apply {
             accept(json)
-          } as? QModel<QInterfaceType>
+          } as? QModel<QType>
         }
       }
       return true

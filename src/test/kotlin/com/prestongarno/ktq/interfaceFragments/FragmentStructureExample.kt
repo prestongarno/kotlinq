@@ -2,7 +2,6 @@ package com.prestongarno.ktq.interfaceFragments
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
@@ -11,7 +10,7 @@ import org.intellij.lang.annotations.Language
 import org.junit.Test
 
 
-interface Object : QInterfaceType {
+interface Object : QType {
   val value : IntegerDelegate<ArgBuilder>
 }
 object SubObject : QType, Object {
@@ -54,7 +53,7 @@ class TestFragmentsBasic {
 
     }
     assertThat(query.toGraphql(false)).isEqualTo("""
-      {get(\"Hello\": \"World\"){__typename,... on Object{value}}}
+      {get(\"Hello\": \"World\"){__typename,... on SubObject{value}}}
     """.trimIndent())
 
     @Language("JSON") val response = """
@@ -62,13 +61,14 @@ class TestFragmentsBasic {
         "get": [
           {
             "__typename": "Object",
-            "value": "Hello, World!"
+            "value": "35"
           }
         ]
       }
       """
 
-    require(query.onResponse(response))
+    query.onResponse(response)
+    println((query.field as? MyObject)?.result == 35)
   }
 
 }

@@ -3,8 +3,8 @@ package com.prestongarno.ktq.adapters
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.InterfaceStub
-import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.GraphQlProperty
@@ -16,7 +16,7 @@ import kotlin.reflect.KProperty
 /**
  * Base type of a R.H.S. delegate provider
  */
-internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
+internal class InterfaceFragmentAdapter<I : QType, out A : ArgBuilder>(
     qproperty: GraphQlProperty,
     private val arginit: (ArgBuilder) -> A
     // TODO -> Separate required arguments as data class here from inner optional config block
@@ -49,7 +49,7 @@ internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
 }
 
 @ValueDelegate(QModel::class)
-private class InterfaceDelegateImpl<I : QInterfaceType>(
+private class InterfaceDelegateImpl<I : QType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
@@ -61,8 +61,6 @@ private class InterfaceDelegateImpl<I : QInterfaceType>(
   override fun accept(result: Any?): Boolean {
     println(result!!::class)
     if (result !is JsonObject) return false
-
-    (result as JsonObject)
     value = fragments.find { it.model.graphqlType == result[it.model.graphqlType] }
         ?.initializer?.invoke()?.run {
       accept(result)

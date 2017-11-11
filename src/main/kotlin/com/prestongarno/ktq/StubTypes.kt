@@ -22,9 +22,7 @@ interface DelegateProvider<out T> : SchemaStub {
  */
 interface NullableStub<out T> : DelegateProvider<T?>
 
-interface InterfaceStub<T : QInterfaceType> : DelegateProvider<QModel<T>?>
-
-interface CollectionStub<T : QInterfaceType> : DelegateProvider<List<QModel<T>>>
+interface InterfaceStub<T : QType> : DelegateProvider<QModel<T>?>
 
 interface TypeStub<T, U> : DelegateProvider<T> where  T : QModel<U>, U : QType
 

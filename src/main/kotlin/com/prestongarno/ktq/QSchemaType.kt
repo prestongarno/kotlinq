@@ -200,10 +200,10 @@ interface QSchemaType {
   }
 
   object QInterfaces {
-    inline fun <reified T : QInterfaceType> stub(): StubProvider<InterfaceFragment<T, ArgBuilder>> =
+    inline fun <reified T : QType> stub(): StubProvider<InterfaceFragment<T, ArgBuilder>> =
         createInterfaceStub<T>(name = "${T::class.simpleName}")
 
-    inline fun <reified T : QInterfaceType, A : ArgBuilder> stub(
+    inline fun <reified T : QType, A : ArgBuilder> stub(
         noinline arginit: (ArgBuilder) -> A
     ): StubProvider<InterfaceFragment<T, ArgBuilder>> =
         createInterfaceStub("${T::class.simpleName}", arginit)

@@ -9,12 +9,7 @@ import com.prestongarno.ktq.properties.FragmentProvider
  * require a QType instead of possibly another interface type
  * (because GraphQL doesn't allow >1 levels of inheritance
  */
-interface QType : QInterfaceType
-
-/**
- * Supertype of an object representing
- * a GraphQL Interface definitions */
-interface QInterfaceType : QSchemaType
+interface QType : QSchemaType
 
 /**
  * Supertype of a GraphQL Enum definition
@@ -30,7 +25,7 @@ interface QEnumType : QSchemaType
  */
 interface CustomScalar : QSchemaType
 
-interface QUnionType : QInterfaceType {
+interface QUnionType : QType {
 
   val queue: FragmentProvider
 
