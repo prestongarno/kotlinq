@@ -82,7 +82,7 @@ private class UnionListStubImpl(
           .mapNotNull {
             it["__typename"]?.let { resultType ->
               fragments.find {
-                it.model.graphqlType == resultType && (it.model as? QModel<QType>) != null
+                it.model.graphqlType == resultType && (it.model as? QModel<*>) != null
               }
             }?.to(it)
           }.let {

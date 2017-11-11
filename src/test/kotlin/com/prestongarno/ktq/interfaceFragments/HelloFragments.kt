@@ -1,24 +1,33 @@
 package com.prestongarno.ktq.interfaceFragments
 
 import com.google.common.truth.Truth.assertThat
+import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
+import com.prestongarno.ktq.adapters.IntegerDelegate
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 
 
-object Object : QInterfaceType {
-  val value by QScalar.intStub()
+interface Object : QInterfaceType {
+  val value : IntegerDelegate<ArgBuilder>
 }
+object SubObject : QType, Object {
+  override val value by QScalar.intStub()
+}
+
+object UnrelatedObject : QType
+
+class UnrelatedModel : QModel<UnrelatedObject>(UnrelatedObject)
 
 object Query : QType {
   val get by QInterfaces.stub<Object>()
 }
 
 
-class MyObject : QModel<Object>(Object) {
+class MyObject : QModel<SubObject>(SubObject) {
   val result by model.value.withDefault(100)
 }
 

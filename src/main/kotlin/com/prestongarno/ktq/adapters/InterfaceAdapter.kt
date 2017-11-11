@@ -42,13 +42,10 @@ internal class InterfaceFragmentAdapter<I : QInterfaceType, out A : ArgBuilder>(
   override fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QField<QModel<I>?> = InterfaceDelegateImpl<I>(qproperty, args, fragments.toSet()).apply {
-    inst.fields.add(this)
-  }
+  ): QField<QModel<I>?> =
+      InterfaceDelegateImpl<I>(qproperty, args, fragments.toSet()).apply { inst.fields.add(this) }
 
   override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
-
-
 }
 
 @ValueDelegate(QModel::class)

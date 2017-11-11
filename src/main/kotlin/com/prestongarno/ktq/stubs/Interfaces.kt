@@ -17,7 +17,7 @@ interface InterfaceFragment<T : QInterfaceType, out A : ArgBuilder> : SchemaStub
  * Scope of fragmenting on a GraphQL field
  * @param I : the interface type that this fragment represents*/
 @kotlin.Suppress("AddVarianceModifier")
-interface FragmentScope<in I : QInterfaceType, out A : ArgBuilder> {
+interface FragmentScope<I : QInterfaceType, out A : ArgBuilder> {
 
   /**
    * Create a fragment on an field
