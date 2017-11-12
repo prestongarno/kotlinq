@@ -64,7 +64,7 @@ class UnionToGraphql {
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by Query.searchAccounts.config {
+      val accountSearch by Query.searchAccounts.scope {
         first(10)
         searchTerm("google.com")
       }.querying {
@@ -105,7 +105,7 @@ class UnionToGraphql {
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by Query.searchAccounts.config {
+      val accountSearch by Query.searchAccounts.scope {
         first(10)
         searchTerm("google.com")
       }.querying {
@@ -156,7 +156,7 @@ class UnionToGraphql {
     }
 
     val queryModel = object : QModel<Query>(Query) {
-      val accountSearch by Query.searchAccounts.config {
+      val accountSearch by Query.searchAccounts.scope {
         first(10)
         searchTerm("google.com")
       }.querying {

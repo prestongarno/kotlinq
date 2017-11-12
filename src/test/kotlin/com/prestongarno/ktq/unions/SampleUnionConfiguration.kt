@@ -131,7 +131,7 @@ class Sample {
         val weightInKg by model.weight
             .withDefault(100000000)
             .config {
-              addArg("Hello", "World") // can arbitrarily add arguments to graphql queries
+              addArg("Hello", "World") // can arbitrarily add argBuilder to graphql queries
             }
       }
     }

@@ -7,19 +7,34 @@ import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.SchemaStub
-import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.hooks.Fragment
 
-interface InterfaceFragment<T, A : ArgBuilder> : SchemaStub
+interface InterfaceFragment<T> : SchemaStub
     where T : QType,
           T : QInterface {
-  operator fun invoke(context: FragmentScope<T, A>.() -> Unit): InterfaceStub<T>
+  operator fun invoke(context: FragmentScope<T, ArgBuilder>.() -> Unit): InterfaceStub<T>
 }
 
-interface CollectionFragment<T, out A : ArgBuilder> : SchemaStub
+interface InterfaceConfigFragment<T, in A : ArgBuilder> : SchemaStub
     where T : QType,
           T : QInterface {
-  operator fun invoke(context: FragmentScope<T, A>.() -> Unit): AbstractCollectionStub<T>
+  operator fun invoke(arguments: A, context: FragmentScope<T, ArgBuilder>.() -> Unit): InterfaceStub<T>
+}
+
+interface CollectionFragment<T> : SchemaStub
+    where T : QType,
+          T : QInterface {
+  operator fun invoke(context: FragmentScope<T, ArgBuilder>.() -> Unit): AbstractCollectionStub<T>
+}
+
+interface CollectionConfigFragment<T, in A : ArgBuilder> : SchemaStub
+    where T : QType,
+          T : QInterface {
+
+  operator fun invoke(
+      arguments: A,
+      context: FragmentScope<T, ArgBuilder>.() -> Unit
+  ): AbstractCollectionStub<T>
 }
 
 /**
@@ -35,7 +50,7 @@ interface FragmentScope<I : QType, out A : ArgBuilder> {
   fun <T : I> on(initializer: () -> QModel<T>)
 
   /**
-   * Configuration block for adding arguments to  the GraphQL query
+   * Configuration block for adding argBuilder to  the GraphQL query
    */
   fun config(scope: A.() -> Unit)
 }

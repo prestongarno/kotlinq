@@ -8,27 +8,40 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.properties.GraphQlProperty
+import com.prestongarno.ktq.stubs.CollectionConfigFragment
 import com.prestongarno.ktq.stubs.CollectionFragment
 import com.prestongarno.ktq.stubs.FragmentContext
 import com.prestongarno.ktq.stubs.FragmentScope
 import com.prestongarno.ktq.stubs.TypeListStub
 import kotlin.reflect.KProperty
 
-internal data class InterfaceListStub<I, A : ArgBuilder>(
-    private val qproperty: GraphQlProperty,
-    private val arginit: (ArgBuilder) -> A
-) : CollectionFragment<I, A>
+internal data class InterfaceListStub<I>(
+    private val qproperty: GraphQlProperty
+) : CollectionFragment<I>
     where I : QType,
           I : QInterface {
-  override fun invoke(context: FragmentScope<I, A>.() -> Unit): AbstractCollectionStub<I> {
-    return InterfaceFragmentListAdapter<I, A>(qproperty, arginit).apply(context)
-  }
+  override fun invoke(context: FragmentScope<I, ArgBuilder>.() -> Unit): AbstractCollectionStub<I> =
+      InterfaceFragmentListAdapter<I, ArgBuilder>(qproperty).apply(context)
+}
+
+internal data class InterfaceListConfigStub<I, in A : ArgBuilder>(
+    private val qproperty: GraphQlProperty
+) : CollectionConfigFragment<I, A>
+    where I : QType,
+          I : QInterface {
+
+  override fun invoke(
+      arguments: A,
+      context: FragmentScope<I, ArgBuilder>.() -> Unit
+  ): AbstractCollectionStub<I> =
+      InterfaceFragmentListAdapter<I, A>(qproperty, arguments).apply(context)
+
 }
 
 internal class InterfaceFragmentListAdapter<I, A : ArgBuilder>(
     qproperty: GraphQlProperty,
-    private val arginit: (ArgBuilder) -> A
-) : PreDelegate(qproperty),
+    argBuilder: ArgBuilder? = null
+) : PreDelegate(qproperty, argBuilder),
     TypeListStub<QModel<I>, I>,
     AbstractCollectionStub<I>,
     FragmentScope<I, A>
@@ -43,13 +56,16 @@ internal class InterfaceFragmentListAdapter<I, A : ArgBuilder>(
   }
 
   override fun config(scope: A.() -> Unit) {
-    arginit(this).scope()
+    TODO()
   }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<I>>> =
-      CollectionDelegateImpl<I>(qproperty, args.toMap(), fragments.toSet()).apply { inst.fields.add(this) }
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
+      CollectionDelegateImpl<I>(qproperty,
+          argBuilder?.arguments?.getAll()?.toMap() ?: emptyMap(),
+          fragments.toSet()
+      ).apply {
+        inst.fields.add(this)
+      }
 }
 
 private class CollectionDelegateImpl<I : QType>(

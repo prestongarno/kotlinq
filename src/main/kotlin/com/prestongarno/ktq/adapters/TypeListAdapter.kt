@@ -13,24 +13,21 @@ import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
-internal class TypeListAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
+internal class TypeListAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
     qproperty: GraphQlProperty,
-    private val builderInit: (ArgBuilder) -> B,
-    val init: (() -> P)? = null,
-    val config: (B.() -> Unit)? = null
+    val arguments: A? = null,
+    val scope: (A.() -> Unit)? = null,
+    val init: (() -> P)? = null
 ) : PreDelegate(qproperty),
-    ListInitStub<I>,
+    ListInitStub<I, A>,
     TypeListStub<P, I>,
-    ListConfigType<I, B>,
-    ArgBuilder {
-
-  override fun config(provider: B.() -> Unit): ListInitStub<I> =
-      TypeListAdapter(qproperty, builderInit, this.init, provider)
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value) }
+    ListConfigType<I, A> {
 
   override fun <U : QModel<I>> querying(of: () -> U): TypeListStub<U, I> =
-      TypeListAdapter(qproperty, builderInit, of, this.config)
+      TypeListAdapter(qproperty, arguments, scope, of)
+
+  override fun invoke(arguments: A, scope: (A.() -> Unit)?): ListInitStub<I, A> =
+      TypeListAdapter(qproperty, arguments, scope, init)
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> {
 
@@ -38,9 +35,11 @@ internal class TypeListAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
     // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
     val initializer: () -> P = this.init!!
 
-    return TypeListStubImpl(qproperty, initializer, apply {
-      config?.invoke(builderInit(this))
-    }.args.toMap()).also {
+    return TypeListStubImpl(
+        qproperty,
+        initializer,
+        arguments?.arguments?.getAll()?.toMap()?: emptyMap()
+    ).also {
       inst.fields.add(it)
     }
   }

@@ -32,8 +32,8 @@ interface GraphQlProperty {
   val isList: Boolean
 
   /** TODO Get it out. */
-  @Deprecated("leaky abstraction which literally makes this interface pointless")
-  val kproperty: KProperty<*>
+  //@Deprecated("leaky abstraction which literally makes this interface pointless")
+  //val kproperty: KProperty<*>
 
   companion object {
 
@@ -52,7 +52,6 @@ interface GraphQlProperty {
      * types design kind of relies on a meaningless object. Is it better to
      * be explicit about any nullability even if it's done like this? */
     internal val ROOT = object : GraphQlProperty {
-      override val kproperty by lazy { throw NullPointerException() }
       override val typeKind = PropertyType.OBJECT
       override val graphqlType = "null"
       override val graphqlName: String = "null"
@@ -63,15 +62,11 @@ interface GraphQlProperty {
 
 private data class PropertyImpl @JvmOverloads constructor(
     override val graphqlType: String,
-    override val kproperty: KProperty<*>,
+    private val kproperty: KProperty<*>,
     override val isList: Boolean,
     override val graphqlName: String = kproperty.name,
     override val typeKind: PropertyType = PropertyType.from(graphqlType)
 ) : GraphQlProperty {
-
-  override fun equals(other: Any?): Boolean {
-    return (other as? GraphQlProperty)?.kproperty == kproperty
-  }
 
   override fun hashCode(): Int {
 
@@ -87,4 +82,19 @@ private data class PropertyImpl @JvmOverloads constructor(
 
   override fun toString(): String =
       "Property('$graphqlName:${if (isList) "[$graphqlType]" else graphqlType}' ($typeKind)"
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as PropertyImpl
+
+    if (graphqlType != other.graphqlType) return false
+    if (kproperty != other.kproperty) return false
+    if (isList != other.isList) return false
+    if (graphqlName != other.graphqlName) return false
+    if (typeKind != other.typeKind) return false
+
+    return true
+  }
 }

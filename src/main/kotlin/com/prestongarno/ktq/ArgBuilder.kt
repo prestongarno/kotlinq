@@ -1,17 +1,29 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.custom.QScalarListMapper
-import com.prestongarno.ktq.adapters.custom.QScalarMapper
-import com.prestongarno.ktq.stubs.CustomScalarListStub
-import com.prestongarno.ktq.stubs.CustomStub
+import kotlin.reflect.KProperty
 
-interface ArgBuilder {
-  fun addArg(name: String, value: Any) : ArgBuilder
+open class ArgBuilder {
+  /*protected*/ val arguments = PropertyMapper()
 }
 
-interface CustomScalarArgBuilder : ArgBuilder {
-  fun <U: QScalarMapper<T>, T> build(init: U): CustomStub<U, T>
+class PropertyMapper {
+
+  private val values = mutableMapOf<String, Any?>()
+
+  operator fun <T> getValue(inst: Any, property: KProperty<*>): T? =
+      values[property.name]?.let {
+        @Suppress("UNCHECKED_CAST")
+        it as? T
+      }
+
+  operator fun <T> setValue(inst: Any, property: KProperty<*>, value: T) {
+    values[property.name] = value
+  }
+
+  internal fun getAll(): Sequence<Pair<String, Any>> = values.entries
+      .mapNotNull { (key, value) -> value?.let { key to it } }
+      .asSequence()
 }
-interface CustomScalarListArgBuilder : ArgBuilder {
-  fun <U: QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T>
-}
+
+// interface CustomScalarArgBuilder : ArgBuilder { fun <U: QScalarMapper<T>, T> build(init: U): CustomStub<U, T> }
+//interface CustomScalarListArgBuilder : ArgBuilder { fun <U: QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T> }

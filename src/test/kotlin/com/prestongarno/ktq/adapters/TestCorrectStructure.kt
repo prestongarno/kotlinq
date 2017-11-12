@@ -14,12 +14,12 @@ import org.junit.Ignore
 import org.junit.Test
 
 class BusinessQuery(searchTerm: String) : QModel<Query>(Query) {
-  val result by model.search.config {
+  val result by model.search.scope {
     term(searchTerm)
     limit(10)
   }.querying { BusinessesNodesModel() }
 
-  val reviews by model.reviews.config {
+  val reviews by model.reviews.scope {
     locale("ENGLISH")
     business("Wal-Mart")
   }.querying { ReviewsHolder() }
@@ -51,7 +51,7 @@ class BusinessBasic : QModel<Business>(Business) {
 class TestCorrectStructure {
   @Ignore @Test
   fun testBusinessBasic() {
-    // make sure that a create config & create Model instance is created per invocation
+    // make sure that a create scope & create Model instance is created per invocation
     val one = BusinessQuery("bazfoo")
     val two = BusinessQuery("foobar")
     require(one.fields != two.fields)

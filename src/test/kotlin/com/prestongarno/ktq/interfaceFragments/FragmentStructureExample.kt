@@ -12,8 +12,9 @@ import org.junit.Test
 
 
 interface Object : QType, QInterface {
-  val value : IntegerDelegate<ArgBuilder>
+  val value: IntegerDelegate<ArgBuilder>
 }
+
 object SubObject : QType, Object {
   override val value by QScalar.intStub()
 }
@@ -45,13 +46,12 @@ class TestFragmentsBasic {
     val query = object : QModel<Query>(Query) {
 
       val field by model.objectValue {
-        on { MyObject() }
-        config { addArg("Hello", "World") }
+        //on { MyObject() }
+        //config { addArg("Hello", "World") }
       }
 
-      val list by model.objectValueList {
-        on { MyObject() }
-      }
+      val list by model.objectValueList
+        //on { MyObject() } }
 
     }
 
@@ -81,10 +81,7 @@ class TestFragmentsBasic {
     require(query.onResponse(response))
     require(query.field is MyObject)
     require((query.field as? MyObject)?.result == 35)
-    query.list.filterIsInstance<MyObject>()
-        .forEachIndexed { index, myObject ->
-          require(myObject.result == index)
-        }
+    //query.list.filterIsInstance<MyObject>().forEachIndexed { index, obj -> require(obj.result == index) }
   }
 
 }

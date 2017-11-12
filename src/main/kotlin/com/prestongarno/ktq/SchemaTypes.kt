@@ -32,8 +32,8 @@ interface QUnionType : QType {
   fun on(init: () -> QModel<QType>)
 
   companion object {
-    fun create(objectModel: QUnionType): QUnionType =
-        UnionConfigAdapter.baseObject(objectModel)
+    fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType =
+        UnionConfigAdapter.baseObject<U, A>(objectModel)
   }
 }
 

@@ -12,8 +12,8 @@ import kotlin.reflect.KProperty
 internal class EnumAdapter<T, out A>(
     qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
-    private val builderInit: (ArgBuilder) -> A,
-    private val config: (A.() -> Unit)? = null
+    private val argBuilder: A? = null,
+    private val argumentScope: (A.() -> Unit)? = null
 ) : PreDelegate(qproperty),
     EnumStub<T>
 
@@ -23,15 +23,13 @@ internal class EnumAdapter<T, out A>(
 
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(enumClass, qproperty, apply {
-            config?.invoke(builderInit(this))
-          }.args.toMap()).also {
+      EnumFieldImpl(enumClass, qproperty, argumentScope?.let {
+        argBuilder?.it(); argBuilder
+      }?.arguments?.getAll()?.toMap() ?: emptyMap()).also {
         inst.fields.add(it)
       }
 
-  fun config(config: A.() -> Unit) = EnumAdapter(qproperty, enumClass, builderInit, config)
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
+  fun config(config: A.() -> Unit) = EnumAdapter(qproperty, enumClass, argBuilder, config)
 
 }
 

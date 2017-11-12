@@ -5,7 +5,6 @@ import com.prestongarno.ktq.EnumStub
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.adapters.EnumAdapter
 import com.prestongarno.ktq.hooks.Grub
-import com.prestongarno.ktq.hooks.Grub.Companion.standardGenerator
 import com.prestongarno.ktq.hooks.StubProvider
 import kotlin.reflect.KClass
 
@@ -17,15 +16,14 @@ import kotlin.reflect.KClass
   ): StubProvider<EnumStub<T>>
       where T : QEnumType,
             T : Enum<*> =
-      Grub(typeName) { EnumAdapter(it, clazz, standardGenerator) }
+      Grub(typeName) { EnumAdapter<T, ArgBuilder>(it, clazz) }
 
   @JvmStatic fun <T, A : ArgBuilder> createEnumConfigStub(
       typeName: String,
-      clazz: KClass<T>,
-      arginit: (ArgBuilder) -> A
+      clazz: KClass<T>
   ): StubProvider<EnumStub<T>>
       where T : QEnumType,
             T : Enum<*> =
-      Grub(typeName, true) { EnumAdapter(it, clazz, arginit) }
+      Grub(typeName, true) { EnumAdapter<T, A>(it, clazz) }
 }
 

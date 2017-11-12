@@ -30,89 +30,80 @@ sealed class PrimitiveStub(
 
 sealed class ScalarDelegateImpl<T : ArgBuilder, out D : PrimitiveStub>(
     val graphqlProperty: GraphQlProperty,
-    val arginit: (ArgBuilder) -> T,
     val config: (T.() -> Unit)? = null
-) : ArgBuilder,
-    ScalarDelegate<D> {
+) : ScalarDelegate<D> {
 
   val args by lazy { mutableMapOf<String, Any>() }
 
   abstract fun config(config: T.() -> Unit): ScalarDelegate<D>
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
-
 }
 
 class StringDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, StringStub>(schemaProperty, arginit, config) {
+) : ScalarDelegateImpl<A, StringStub>(schemaProperty, config) {
 
   var default: String? = null
 
   fun withDefault(value: String): ScalarDelegateImpl<A, StringStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringStub =
-      StringStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
+      StringStub(graphqlProperty, default, apply {  }.args.toMap())
           .apply { inst.fields.add(this) }
 
   override fun config(config: A.() -> Unit): StringDelegate<A> =
-      StringDelegate(graphqlProperty, arginit, config)
+      StringDelegate(graphqlProperty, config)
 }
 
 class IntegerDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, IntStub>(schemaProperty, arginit, config) {
+) : ScalarDelegateImpl<A, IntStub>(schemaProperty, config) {
 
   var default: Int? = null
 
   fun withDefault(value: Int): ScalarDelegateImpl<A, IntStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntStub =
-      IntStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
+      IntStub(graphqlProperty, default, apply {}.args.toMap())
           .apply { inst.fields.add(this) }
 
   override fun config(config: A.() -> Unit): IntegerDelegate<A> =
-      IntegerDelegate(graphqlProperty, arginit, config)
+      IntegerDelegate(graphqlProperty, config)
 }
 
 class FloatDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, FloatStub>(schemaProperty, arginit, config) {
+) : ScalarDelegateImpl<A, FloatStub>(schemaProperty, config) {
 
   var default: Float? = null
 
   fun withDefault(value: Float): ScalarDelegateImpl<A, FloatStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatStub =
-      FloatStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
+      FloatStub(graphqlProperty, default, apply {}.args.toMap())
           .apply { inst.fields.add(this) }
 
   override fun config(config: A.() -> Unit): FloatDelegate<A> =
-      FloatDelegate(graphqlProperty, arginit, config)
+      FloatDelegate(graphqlProperty, config)
 }
 
 class BooleanDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, BooleanStub>(schemaProperty, arginit, config) {
+) : ScalarDelegateImpl<A, BooleanStub>(schemaProperty, config) {
 
   var default: Boolean? = null
 
   fun withDefault(value: Boolean): ScalarDelegateImpl<A, BooleanStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BooleanStub =
-      BooleanStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
+      BooleanStub(graphqlProperty, default, apply {}.args.toMap())
           .apply { inst.fields.add(this) }
 
   override fun config(config: A.() -> Unit): BooleanDelegate<A> =
-      BooleanDelegate(graphqlProperty, arginit, config)
+      BooleanDelegate(graphqlProperty, config)
 }
 
 @ValueDelegate(String::class)

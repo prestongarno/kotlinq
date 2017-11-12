@@ -12,20 +12,28 @@ import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty
 
+internal class TypeConfigStub<T : QType, A : ArgBuilder>(
+    private val qproperty: GraphQlProperty
+) : TypeConfig<T, A> {
+
+  override fun invoke(arguments: A, scope: (A.() -> Unit)?): InitStub<T, A> {
+    return TypeStubAdapter(qproperty, arguments, scope)
+  }
+}
+
 /**
  * This class represents a createStub for a non-leaf createTypeStub (aka an object) fragment a graph */
-internal class TypeStubAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
+internal class TypeStubAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
     qproperty: GraphQlProperty,
-    private val builderInit: (ArgBuilder) -> B,
-    val init: (() -> P)? = null,
-    val config: (B.() -> Unit)? = null
+    val argBuilder: A? = null,
+    val config: (A.() -> Unit)? = null,
+    val init: (() -> P)? = null
 ) : PreDelegate(qproperty),
-    TypeStub<P, I>,
-    InitStub<I>,
-    TypeConfig<I, B> {
+    InitStub<I, A>,
+    TypeStub<P, I> {
 
-  override fun config(provider: B.() -> Unit): InitStub<I> =
-      TypeStubAdapter(qproperty,builderInit, this.init, provider)
+  override fun invoke(arguments: A, scope: (A.() -> Unit)?): InitStub<I, A> =
+      TypeStubAdapter(qproperty, arguments, scope ?: config, init)
 
   /**
    * For the possible possibly nullable initializer ->
@@ -33,20 +41,17 @@ internal class TypeStubAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
    */
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> {
     val initializer: () -> P = this.init!!
-    return TypeStubImpl(qproperty, init, apply {
-      config?.invoke(builderInit(this)) }.args.toMap()
-    ).also { inst.fields.add(it) }
+    return TypeStubImpl(qproperty, initializer, argBuilder?.arguments?.getAll()?.toMap() ?: emptyMap())
+        .also { inst.fields.add(it) }
   }
 
   override fun <U : QModel<I>> querying(init: () -> U): TypeStub<U, I> =
-      TypeStubAdapter(qproperty, builderInit, init, config)
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value) }
+      TypeStubAdapter(qproperty, argBuilder, config, init)
 
 }
 
 @ValueDelegate(QModel::class)
-private data class TypeStubImpl<I : QType, out P : QModel<I>>(
+private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
