@@ -100,6 +100,7 @@ class TestFragmentsBasic {
       require(obj.max == 100_000_000)
       require(obj.result == index)
     }
+    println(query.toGraphql(false))
   }
 
 }

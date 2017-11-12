@@ -7,18 +7,23 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.adapters.QField
-import kotlin.reflect.KCallable
 import kotlin.reflect.KProperty
 
 /**
  * Represents an intermediate object that enforces passing of an [ArgBuilder]
  * instance to the object. This is for GraphQL fields with one or more non-null
  * arguments specified in the schema
- * @param T : The type of SchemaStub which will provide a delegate type <T>
+ *
+ *
+ * This interface enforces passing of arguments by not having the standard operator
+ * function like [OptionalConfig.provideDelegate]
+ *
+ *
+ * @param D : The type of SchemaStub which will provide a delegate type <T>
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface Configurable<out T : DelegateProvider<*>, in A: ArgBuilder> : SchemaStub {
-  operator fun invoke(arguments: A, scope: (T.() -> Unit)? = null): T
+interface Configurable<out D : DelegateProvider<*>, in A: ArgBuilder> : SchemaStub {
+  operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
   companion object {
     fun <T : DelegateProvider<*>, A : ArgBuilder> new(
@@ -40,6 +45,12 @@ interface OptionalConfig<out D : DelegateProvider<T>, out T : Any?, in A: ArgBui
 
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
       invoke().provideDelegate(inst, property)
+
+  companion object {
+    fun <D : DelegateProvider<T>, T : Any?, A : ArgBuilder> new(
+        constructor: (A?, (D.() -> Unit)?) -> D
+    ): OptionalConfig<D, T, A> = DefaultOptionalConfig(constructor)
+  }
 }
 
 /**
@@ -49,11 +60,17 @@ interface OptionalConfig<out D : DelegateProvider<T>, out T : Any?, in A: ArgBui
  * This interface exists to support adding arguments arbitrarily to GraphQL queries/mutations
  * @param D : The type of [DelegateProvider] which this field supplies
  */
-interface NoArgDelegate<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
+interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
   operator fun invoke(arguments: ArgBuilder? = ArgBuilder(), scope: (D.() -> Unit)? = null): D
 
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
       invoke().provideDelegate(inst, property)
+
+  companion object {
+    fun <D : DelegateProvider<T>, T : Any?> new(
+        constructor: (ArgBuilder?, (D.() -> Unit)?) -> D
+    ): NoArgConfig<D, T> = DefaultNoArgConfig(constructor)
+  }
 }
 
 /**
@@ -89,7 +106,29 @@ interface InitStub<T : QType, A : ArgBuilder> : SchemaStub {
 private class DefaultConfigurable<out T : DelegateProvider<*>, in A : ArgBuilder>(
     private val constructor: (A, (T.() -> Unit)?) -> T
 ) : Configurable<T, A> {
+
   override operator fun invoke(arguments: A, scope: (T.() -> Unit)?): T =
       constructor.invoke(arguments, scope)
 }
 
+/**
+ * Default [OptionalConfig] class for dynamic class-level delegation by schema stub types
+ * @param T : The type of [DelegateProvider] that this function returns
+ * @param A : The type of [ArgBuilder] that this DelegateProvider takes
+ * @param constructor a function that constructs a new [DelegateProvider]
+ */
+private class DefaultOptionalConfig<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder>(
+    private val constructor: (A?, (D.() -> Unit)?) -> D
+) : OptionalConfig<D, T, A> {
+
+  override fun invoke(arguments: A?, scope: (D.() -> Unit)?): D =
+      constructor(arguments, scope)
+}
+
+private class DefaultNoArgConfig<out D : DelegateProvider<T>, out T : Any?>(
+    private val constructor: (ArgBuilder?, (D.() -> Unit)?) -> D
+) : NoArgConfig<D, T> {
+
+  override fun invoke(arguments: ArgBuilder?, scope: (D.() -> Unit)?): D =
+      constructor(arguments, scope)
+}
