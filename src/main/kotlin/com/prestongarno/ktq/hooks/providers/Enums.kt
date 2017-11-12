@@ -13,17 +13,17 @@ import kotlin.reflect.KClass
   @JvmStatic fun <T> createEnumStub(
       typeName: String,
       clazz: KClass<T>
-  ): StubProvider<EnumStub<T>>
+  ): StubProvider<EnumStub<T, ArgBuilder>>
       where T : QEnumType,
             T : Enum<*> =
-      Grub(typeName) { EnumAdapterImpl<T, ArgBuilder>(it, clazz) }
+      Grub(typeName) { EnumAdapterImpl<T, ArgBuilder>(it, clazz, ArgBuilder(), null) }
 
   @JvmStatic fun <T, A : ArgBuilder> createEnumConfigStub(
       typeName: String,
       clazz: KClass<T>
-  ): StubProvider<EnumStub<T>>
+  ): StubProvider<EnumStub<T, A>>
       where T : QEnumType,
-            T : Enum<*> =
-      Grub(typeName, true) { EnumAdapterImpl<T, A>(it, clazz) }
+            T : Enum<*> = TODO("These are moved to companion object on the enum stub definition itself")
+      //Grub(typeName, true) { EnumAdapterImpl<T, A>(it, clazz) }
 }
 

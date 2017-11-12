@@ -4,6 +4,8 @@ import com.prestongarno.ktq.adapters.BooleanArrayDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegateConfig
 import com.prestongarno.ktq.adapters.EnumAdapterImpl
+import com.prestongarno.ktq.adapters.EnumConfigStubImpl
+import com.prestongarno.ktq.adapters.EnumNoArgStub
 import com.prestongarno.ktq.adapters.FloatArrayDelegate
 import com.prestongarno.ktq.adapters.FloatDelegate
 import com.prestongarno.ktq.adapters.FloatDelegateConfig
@@ -14,6 +16,7 @@ import com.prestongarno.ktq.adapters.StringArrayDelegate
 import com.prestongarno.ktq.adapters.StringDelegate
 import com.prestongarno.ktq.adapters.StringDelegateConfig
 import com.prestongarno.ktq.adapters.UnionConfigAdapter
+import com.prestongarno.ktq.hooks.Configurable
 import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.StubProvider
@@ -287,12 +290,12 @@ interface QSchemaType {
   }
 
   object QEnum {
-    inline fun <reified T> stub(): StubProvider<EnumStub<T>> where T : Enum<*>, T : QEnumType
+    inline fun <reified T> stub(): StubProvider<EnumStub<T, ArgBuilder>> where T : Enum<*>, T : QEnumType
         = createEnumStub(T::class.simpleName.toString(), T::class)
 
     inline fun <reified T, A : ArgBuilder> configStub(
-    ): StubProvider<EnumStub<T>> where T : Enum<*>, T : QEnumType
-        = Grub("${T::class.simpleName}", true) { EnumAdapterImpl<T, A>(it, T::class) }
+    ): StubProvider<Configurable<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
+        = Grub("${T::class.simpleName}", true) { EnumConfigStubImpl<T, A>(it, T::class) }
   }
 
 }

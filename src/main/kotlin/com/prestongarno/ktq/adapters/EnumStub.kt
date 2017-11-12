@@ -9,18 +9,14 @@ import com.prestongarno.ktq.hooks.Configurable
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-
+// Kotlin/Intellij bug??? can't move the `where` clause up to this line!
 @PublishedApi internal class EnumConfigStubImpl<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
-) : Configurable<EnumStub<T, A>, A>
-    where T : Enum<*>,
-          T : QEnumType,
-          A : ArgBuilder {
-
-  override fun invoke(arguments: A, scope: (EnumStub<T, A>.() -> Unit)?): EnumStub<T, A> =
-      EnumAdapterImpl(qproperty, enumClass, arguments, null).applyNotNull(scope)
-}
+) : Configurable<EnumStub<T, A>, A> by Configurable.new({ arguments, scope ->
+  EnumAdapterImpl(qproperty, enumClass, arguments, null).applyNotNull(scope)
+})
+    where T : Enum<*>, T : QEnumType, A : ArgBuilder
 
 @PublishedApi internal class EnumNoArgStub<T>(
     private val qproperty: GraphQlProperty,

@@ -9,7 +9,6 @@ import com.prestongarno.ktq.adapters.TypeConfigStub
 import com.prestongarno.ktq.adapters.TypeListAdapter
 import com.prestongarno.ktq.adapters.TypeStubAdapter
 import com.prestongarno.ktq.hooks.Grub
-import com.prestongarno.ktq.hooks.Grub.Companion.standardGenerator
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.hooks.TypeConfig

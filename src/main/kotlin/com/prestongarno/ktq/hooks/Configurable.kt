@@ -7,6 +7,7 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.adapters.QField
+import kotlin.reflect.KCallable
 import kotlin.reflect.KProperty
 
 /**
@@ -18,6 +19,12 @@ import kotlin.reflect.KProperty
  */
 interface Configurable<out T : DelegateProvider<*>, in A: ArgBuilder> : SchemaStub {
   operator fun invoke(arguments: A, scope: (T.() -> Unit)? = null): T
+
+  companion object {
+    fun <T : DelegateProvider<*>, A : ArgBuilder> new(
+        constructor: (A, (T.() -> Unit)?) -> T
+    ): Configurable<T, A> = DefaultConfigurable(constructor)
+  }
 }
 
 /**
@@ -72,3 +79,17 @@ interface InitStub<T : QType, A : ArgBuilder> : SchemaStub {
    * */
   fun <U : QModel<T>> querying(init: () -> U): TypeStub<U, T>
 }
+
+/**
+ * Default [Configurable] class for dynamic class-level delegation by schema stub types
+ * @param T : The type of [DelegateProvider] that this function returns
+ * @param A : The type of [ArgBuilder] that this DelegateProvider takes
+ * @param constructor a function that constructs a new [DelegateProvider]
+ */
+private class DefaultConfigurable<out T : DelegateProvider<*>, in A : ArgBuilder>(
+    private val constructor: (A, (T.() -> Unit)?) -> T
+) : Configurable<T, A> {
+  override operator fun invoke(arguments: A, scope: (T.() -> Unit)?): T =
+      constructor.invoke(arguments, scope)
+}
+
