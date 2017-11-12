@@ -11,6 +11,7 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 internal class TypeListAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
@@ -35,11 +36,7 @@ internal class TypeListAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
     // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
     val initializer: () -> P = this.init!!
 
-    return TypeListStubImpl(
-        qproperty,
-        initializer,
-        arguments?.arguments?.getAll()?.toMap()?: emptyMap()
-    ).also {
+    return TypeListStubImpl(qproperty, initializer, toArgumentMap(arguments, scope)).also {
       inst.fields.add(it)
     }
   }

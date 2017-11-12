@@ -27,14 +27,14 @@ sealed class PrimitiveArrayStub(
   }
 }
 
-sealed class ScalarArrayDelegateImpl<T : ArgBuilder, out D : PrimitiveArrayStub>(
+sealed class ScalarArrayDelegateImpl<A : ArgBuilder, out D : PrimitiveArrayStub>(
     val graphqlProperty: GraphQlProperty,
-    val config: (T.() -> Unit)? = null
+    val config: (A.() -> Unit)? = null
 ) : ScalarArrayDelegate<D> {
 
   val args by lazy { mutableMapOf<String, Any>() }
 
-  abstract fun config(config: T.() -> Unit): ScalarArrayDelegate<D>
+  abstract fun config(config: A.() -> Unit): ScalarArrayDelegate<D>
 
   operator fun invoke(literal: ScalarArrayDelegate<D>.() -> Unit): ScalarArrayDelegate<D> = apply { literal.invoke(this) }
 

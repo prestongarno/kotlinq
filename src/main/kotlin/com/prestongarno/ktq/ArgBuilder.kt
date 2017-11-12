@@ -4,7 +4,20 @@ import kotlin.reflect.KProperty
 
 open class ArgBuilder {
   /*protected*/ val arguments = PropertyMapper()
+
+  infix fun String.with(value: Any) {
+    arguments.put(this, value)
+  }
 }
+
+@Suppress("UNCHECKED_CAST")
+internal fun <A : ArgBuilder> toArgumentMap(
+    args: A?,
+    scope: (A.() -> Unit)?
+): Map<String, Any> =
+    args?.apply { scope?.invoke(this) }?.arguments?.invoke()
+        ?: (ArgBuilder() as? A)?.apply { scope?.invoke(this) }?.arguments?.invoke()
+        ?: emptyMap()
 
 class PropertyMapper {
 
@@ -20,9 +33,13 @@ class PropertyMapper {
     values[property.name] = value
   }
 
-  internal fun getAll(): Sequence<Pair<String, Any>> = values.entries
-      .mapNotNull { (key, value) -> value?.let { key to it } }
-      .asSequence()
+  internal operator fun invoke(): Map<String, Any> = values.mapNotNull { (key, value) ->
+    value?.let { key to it }
+  }.toMap()
+
+  internal fun put(key: String, value: Any) {
+    values[key] = value
+  }
 }
 
 // interface CustomScalarArgBuilder : ArgBuilder { fun <U: QScalarMapper<T>, T> build(init: U): CustomStub<U, T> }

@@ -9,7 +9,7 @@ import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal class EnumAdapter<T, out A>(
+@PublishedApi internal class EnumAdapter<T, out A>(
     qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
     private val argBuilder: A? = null,
@@ -22,12 +22,12 @@ internal class EnumAdapter<T, out A>(
           A : ArgBuilder {
 
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(enumClass, qproperty, argumentScope?.let {
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> = TODO()
+/*      EnumFieldImpl(enumClass, qproperty, argumentScope?.let {
         argBuilder?.it(); argBuilder
       }?.arguments?.getAll()?.toMap() ?: emptyMap()).also {
         inst.fields.add(it)
-      }
+      }*/
 
   fun config(config: A.() -> Unit) = EnumAdapter(qproperty, enumClass, argBuilder, config)
 

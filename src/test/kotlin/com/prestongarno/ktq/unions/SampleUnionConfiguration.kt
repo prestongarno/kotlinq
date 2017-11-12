@@ -1,5 +1,5 @@
 package com.prestongarno.ktq.unions
-
+/*
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
@@ -175,4 +175,4 @@ class Sample {
         myQuery.thingSearch.first().model
     ).isEqualTo(Car)
   }
-}
+}*/

@@ -70,7 +70,7 @@ private class UnionListStubImpl(
     override val fragments: Set<Fragment>
 ) : Adapter,
     QField<List<QModel<*>>>,
-    FragmentContext<QType> {
+    FragmentContext {
 
   private var value: List<QModel<QType>> = mutableListOf()
 

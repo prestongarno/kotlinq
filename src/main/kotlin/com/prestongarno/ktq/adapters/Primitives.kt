@@ -5,10 +5,28 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.internal.ValueDelegate
+import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 interface ScalarDelegate<out D : PrimitiveStub> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
+}
+
+class StringDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
+  fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)): StringDelegate<A> =
+      StringDelegate(qproperty, arguments).apply(scope)
+}
+class IntegerDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
+  fun invoke(arguments: A, scope: IntegerDelegate<A>.() -> Unit): IntegerDelegate<A> =
+      IntegerDelegate(qproperty, arguments).apply(scope)
+}
+class FloatDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
+  fun invoke(arguments: A, scope: FloatDelegate<A>.() -> Unit): FloatDelegate<A> =
+      FloatDelegate(qproperty, arguments).apply(scope)
+}
+class BooleanDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
+  fun invoke(arguments: A, scope: BooleanDelegate<A>.() -> Unit): BooleanDelegate<A> =
+      BooleanDelegate(qproperty, arguments).apply(scope)
 }
 
 @ValueDelegate(Any::class)
@@ -20,100 +38,112 @@ sealed class PrimitiveStub(
 
   val isResolved get() = resolved
 
-  override fun toRawPayload(): String {
-    return qproperty.graphqlName +
-        if (args.isNotEmpty())
-          args.entries.joinToString(",", "(", ")") { "${it.key}: ${formatAs(it.value)}" }
-        else ""
+  override fun toRawPayload(): String = qproperty.graphqlName +
+      if (args.isNotEmpty())
+        args.entries.joinToString(",", "(", ")") { "\"${it.key}\": \"${formatAs(it.value)}\"" }
+      else ""
+}
+
+sealed class ScalarDelegateImpl<A : ArgBuilder, D : PrimitiveStub>(
+    internal val qproperty: GraphQlProperty,
+    internal var argBuilder: A? = null,
+    internal var config: (A.() -> Unit)? = null
+) : ScalarDelegate<D> {
+
+  abstract fun config(config: A.() -> Unit)
+
+  abstract internal fun toPrimitiveStub(): D
+
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D = toPrimitiveStub().apply {
+    inst.fields.add(this)
   }
 }
 
-sealed class ScalarDelegateImpl<T : ArgBuilder, out D : PrimitiveStub>(
-    val graphqlProperty: GraphQlProperty,
-    val config: (T.() -> Unit)? = null
-) : ScalarDelegate<D> {
-
-  val args by lazy { mutableMapOf<String, Any>() }
-
-  abstract fun config(config: T.() -> Unit): ScalarDelegate<D>
-}
-
 class StringDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
+    qproperty: GraphQlProperty,
+    argBuilder: A? = null,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, StringStub>(schemaProperty, config) {
+) : ScalarDelegateImpl<A, StringStub>(qproperty, argBuilder, config) {
+
+  override fun toPrimitiveStub(): StringStub {
+    return StringStub(qproperty, toArgumentMap(argBuilder, config), default)
+  }
 
   var default: String? = null
 
-  fun withDefault(value: String): ScalarDelegateImpl<A, StringStub> = apply { this.default = value }
+  override fun config(config: A.() -> Unit) {
+    this.config = config
+  }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringStub =
-      StringStub(graphqlProperty, default, apply {  }.args.toMap())
-          .apply { inst.fields.add(this) }
+  operator fun invoke(scope: StringDelegate<A>.() -> Unit) = apply(scope)
 
-  override fun config(config: A.() -> Unit): StringDelegate<A> =
-      StringDelegate(graphqlProperty, config)
 }
 
 class IntegerDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
+    qproperty: GraphQlProperty,
+    argBuilder: A? = null,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, IntStub>(schemaProperty, config) {
+) : ScalarDelegateImpl<A, IntStub>(qproperty, argBuilder, config) {
 
-  var default: Int? = null
+  var default = 0
 
-  fun withDefault(value: Int): ScalarDelegateImpl<A, IntStub> = apply { this.default = value }
+  override fun config(config: A.() -> Unit) {
+    this.config = config
+  }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntStub =
-      IntStub(graphqlProperty, default, apply {}.args.toMap())
-          .apply { inst.fields.add(this) }
+  override fun toPrimitiveStub(): IntStub {
+    return IntStub(qproperty, toArgumentMap(argBuilder, config), default)
+  }
 
-  override fun config(config: A.() -> Unit): IntegerDelegate<A> =
-      IntegerDelegate(graphqlProperty, config)
+  operator fun invoke(scope: IntegerDelegate<A>.() -> Unit) = apply(scope)
 }
 
 class FloatDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
+    qproperty: GraphQlProperty,
+    argBuilder: A? = null,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, FloatStub>(schemaProperty, config) {
+) : ScalarDelegateImpl<A, FloatStub>(qproperty, argBuilder, config) {
 
-  var default: Float? = null
+  var default = 0f
 
-  fun withDefault(value: Float): ScalarDelegateImpl<A, FloatStub> = apply { this.default = value }
+  override fun config(config: A.() -> Unit) {
+    this.config = config
+  }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatStub =
-      FloatStub(graphqlProperty, default, apply {}.args.toMap())
-          .apply { inst.fields.add(this) }
+  override fun toPrimitiveStub(): FloatStub {
+    return FloatStub(qproperty, toArgumentMap(argBuilder, config), default)
+  }
 
-  override fun config(config: A.() -> Unit): FloatDelegate<A> =
-      FloatDelegate(graphqlProperty, config)
+  operator fun invoke(scope: FloatDelegate<A>.() -> Unit) = apply(scope)
 }
 
 class BooleanDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
+    qproperty: GraphQlProperty,
+    argBuilder: A? = null,
     config: (A.() -> Unit)? = null
-) : ScalarDelegateImpl<A, BooleanStub>(schemaProperty, config) {
+) : ScalarDelegateImpl<A, BooleanStub>(qproperty, argBuilder, config) {
 
-  var default: Boolean? = null
+  var default: Boolean = false
 
-  fun withDefault(value: Boolean): ScalarDelegateImpl<A, BooleanStub> = apply { this.default = value }
+  override fun config(config: A.() -> Unit) {
+    this.config = config
+  }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BooleanStub =
-      BooleanStub(graphqlProperty, default, apply {}.args.toMap())
-          .apply { inst.fields.add(this) }
+  override fun toPrimitiveStub(): BooleanStub {
+    return BooleanStub(qproperty, toArgumentMap(argBuilder, config), default)
+  }
 
-  override fun config(config: A.() -> Unit): BooleanDelegate<A> =
-      BooleanDelegate(graphqlProperty, config)
+  operator fun invoke(scope: BooleanDelegate<A>.() -> Unit) = apply(scope)
 }
 
 @ValueDelegate(String::class)
 class StringStub(
     graphqlProperty: GraphQlProperty,
-    private val default: String? = null,
-    args: Map<String, Any> = emptyMap()
+    args: Map<String, Any> = emptyMap(),
+    var default: String? = null
 ) : PrimitiveStub(graphqlProperty, args) {
 
-  var value: String? = null
+  private var value: String? = null
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): String {
     return value ?: default ?: throw NullPointerException(
@@ -136,15 +166,14 @@ class StringStub(
 @ValueDelegate(Int::class)
 class IntStub(
     property: GraphQlProperty,
-    private val default: Int? = null,
-    args: Map<String, Any> = emptyMap()
+    args: Map<String, Any> = emptyMap(),
+    private val default: Int
 ) : PrimitiveStub(property, args) {
 
   var value = 0
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): Int {
-    return if (isResolved) value else default ?: throw NullPointerException(
-        "Graphql qproperty ${this.qproperty.graphqlName} was null (kotlin qproperty $property)")
+    return if (isResolved) value else default
   }
 
   override fun accept(result: Any?): Boolean {
@@ -169,15 +198,14 @@ class IntStub(
 @ValueDelegate(Float::class)
 class FloatStub(
     property: GraphQlProperty,
-    private val default: Float? = null,
-    args: Map<String, Any> = emptyMap()
+    args: Map<String, Any> = emptyMap(),
+    private val default: Float = 0.0f
 ) : PrimitiveStub(property, args) {
 
-  var value = 0f
+  private var value = 0f
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): Float {
-    return if (isResolved) value else default ?: throw NullPointerException(
-        "Graphql property ${this.qproperty.graphqlName} was null (kotlin property $property)")
+    return if (isResolved) value else default
   }
 
   override fun accept(result: Any?): Boolean {
@@ -202,15 +230,14 @@ class FloatStub(
 @ValueDelegate(Boolean::class)
 class BooleanStub(
     property: GraphQlProperty,
-    private val default: Boolean? = null,
-    args: Map<String, Any> = emptyMap()
+    args: Map<String, Any> = emptyMap(),
+    private val default: Boolean = false
 ) : PrimitiveStub(property, args) {
 
-  var value: Boolean = false
+  private var value: Boolean = false
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): Boolean {
-    return if (isResolved) value else default ?: throw NullPointerException(
-        "Graphql property ${this.qproperty.graphqlName} was null (kotlin property $property)")
+    return if (isResolved) value else default
   }
 
   override fun accept(result: Any?): Boolean {

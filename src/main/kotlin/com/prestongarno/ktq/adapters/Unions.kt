@@ -15,7 +15,7 @@ import com.prestongarno.ktq.properties.FragmentProvider
 import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
-internal sealed class UnionConfigAdapter<out I : QUnionType, A : ArgBuilder>(
+@PublishedApi internal sealed class UnionConfigAdapter<out I : QUnionType, A : ArgBuilder>(
     val qproperty: GraphQlProperty,
     objectModel: I,
     val config: (A.() -> Unit)? = null
@@ -64,6 +64,10 @@ private class UnionAdapterImpl<out I : QUnionType, A : ArgBuilder>(
     config: (A.() -> Unit)? = null
 ) : UnionConfigAdapter<I, A>(graphqlProperty, objectModel, config) {
 
+  override fun invoke(arguments: A, scope: I.() -> Unit): UnionStub {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
   override fun invoke(scope: I.() -> Unit): UnionStub {
     return UnionAdapterImpl<I, A>(qproperty, model, config)
   }
@@ -73,6 +77,10 @@ private class UnionAdapterImpl<out I : QUnionType, A : ArgBuilder>(
 
 private class BaseUnionAdapter<out I : QUnionType>(model: I)
   : UnionConfigAdapter<I, ArgBuilder>(GraphQlProperty.ROOT, model) {
+
+  override fun invoke(arguments: ArgBuilder, scope: I.() -> Unit): UnionStub {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
 
   override fun invoke(scope: I.() -> Unit): UnionStub {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -90,7 +98,7 @@ private class BaseUnionAdapter<out I : QUnionType>(model: I)
     override val args: Map<String, Any> = emptyMap()
 ) : Adapter,
     QField<QModel<QType>?>,
-    FragmentContext<QType> {
+    FragmentContext {
 
   var value: QModel<QType>? = null
 

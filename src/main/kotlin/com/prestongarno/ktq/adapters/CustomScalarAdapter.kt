@@ -11,6 +11,7 @@ import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B : ArgBuilder>(
@@ -36,9 +37,14 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
   override fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
-  ): QField<Q> = CustomScalarStubImpl(qproperty, argBuilder?.apply {
-    config?.invoke(this)
-  }?.arguments?.getAll()?.toMap()?: emptyMap(), adapter, default).also { inst.fields.add(it) }
+  ): QField<Q> = CustomScalarStubImpl(
+      qproperty,
+      toArgumentMap(argBuilder, config),
+      adapter,
+      default
+  ).also {
+    inst.fields.add(it)
+  }
 
   @Suppress("UNCHECKED_CAST")
   override fun <U : QScalarMapper<A>, A> init(init: U): CustomStub<U, A> =

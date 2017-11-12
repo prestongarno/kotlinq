@@ -15,10 +15,10 @@ interface InterfaceFragment<T> : SchemaStub
   operator fun invoke(context: FragmentScope<T, ArgBuilder>.() -> Unit): InterfaceStub<T>
 }
 
-interface InterfaceConfigFragment<T, in A : ArgBuilder> : SchemaStub
+interface InterfaceConfigFragment<T, A : ArgBuilder> : SchemaStub
     where T : QType,
           T : QInterface {
-  operator fun invoke(arguments: A, context: FragmentScope<T, ArgBuilder>.() -> Unit): InterfaceStub<T>
+  operator fun invoke(arguments: A, context: FragmentScope<T, A>.() -> Unit): InterfaceStub<T>
 }
 
 interface CollectionFragment<T> : SchemaStub
@@ -27,21 +27,21 @@ interface CollectionFragment<T> : SchemaStub
   operator fun invoke(context: FragmentScope<T, ArgBuilder>.() -> Unit): AbstractCollectionStub<T>
 }
 
-interface CollectionConfigFragment<T, in A : ArgBuilder> : SchemaStub
+interface CollectionConfigFragment<T, A : ArgBuilder> : SchemaStub
     where T : QType,
           T : QInterface {
 
   operator fun invoke(
       arguments: A,
-      context: FragmentScope<T, ArgBuilder>.() -> Unit
+      context: FragmentScope<T, A>.() -> Unit
   ): AbstractCollectionStub<T>
 }
 
 /**
  * Scope of fragmenting on a GraphQL field
  * @param I : the interface type that this fragment represents*/
-@kotlin.Suppress("AddVarianceModifier")
-interface FragmentScope<I : QType, out A : ArgBuilder> {
+//@kotlin.Suppress("AddVarianceModifier")
+interface FragmentScope<in I : QType, out A : ArgBuilder> {
 
   /**
    * Create a fragment on an field
@@ -59,7 +59,7 @@ interface FragmentScope<I : QType, out A : ArgBuilder> {
  * Implemented by concrete field-backing delegates
  */
 @kotlin.Suppress("AddVarianceModifier")
-internal interface FragmentContext<T : QType> {
+internal interface FragmentContext {
   val fragments: Set<Fragment>
 }
 

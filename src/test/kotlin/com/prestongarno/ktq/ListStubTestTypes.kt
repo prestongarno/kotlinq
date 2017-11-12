@@ -1,5 +1,5 @@
 package com.prestongarno.ktq
-
+/*
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.adapters.StringDelegate
@@ -39,4 +39,4 @@ fun main(args: Array<String>) {
       .packageName("com.prestongarno.ktq.github")
       .compile()
       .value { println(it) }*/
-}
+}*/

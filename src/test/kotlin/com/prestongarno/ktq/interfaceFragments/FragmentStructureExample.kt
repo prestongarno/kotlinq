@@ -7,6 +7,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.adapters.IntegerDelegate
+import com.prestongarno.ktq.stubs.FragmentContext
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 
@@ -30,31 +31,31 @@ object Query : QType {
 
 
 class MyObject : QModel<SubObject>(SubObject) {
-  val result by model.value.withDefault(100)
+  val result by model.value {
+    default = 3000
+  }
 }
 
 class TestFragmentsBasic {
 
   @Test fun `make sure fragment is possible`() {
-
-    require(MyObject().result == 100)
-
-    require(MyObject().apply {
-      onResponse("{\"value\": 69}")
-    }.result == 69)
+    require(MyObject().result == 3000)
+    require(MyObject().apply { onResponse("{\"value\": 69}") }.result == 69)
 
     val query = object : QModel<Query>(Query) {
 
       val field by model.objectValue {
-        //on { MyObject() }
-        //config { addArg("Hello", "World") }
+        on { MyObject() }
+        config { "Hello" with "World" }
       }
 
-      val list by model.objectValueList
-        //on { MyObject() } }
+      val list by model.objectValueList {
+        on { MyObject() }
+      }
 
     }
 
+    println(query.toGraphql(false))
     assertThat(query.toGraphql(false)).isEqualTo("""
       {objectValue(\"Hello\": \"World\"){__typename,... on SubObject{value}},objectValueList{__typename,... on SubObject{value}}}
     """.trimIndent())

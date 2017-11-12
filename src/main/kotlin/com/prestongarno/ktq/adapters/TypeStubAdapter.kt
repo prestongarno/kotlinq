@@ -10,6 +10,7 @@ import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.ValueDelegate
+import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 internal class TypeConfigStub<T : QType, A : ArgBuilder>(
@@ -41,7 +42,7 @@ internal class TypeStubAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
    */
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> {
     val initializer: () -> P = this.init!!
-    return TypeStubImpl(qproperty, initializer, argBuilder?.arguments?.getAll()?.toMap() ?: emptyMap())
+    return TypeStubImpl(qproperty, initializer, toArgumentMap(argBuilder, config))
         .also { inst.fields.add(it) }
   }
 

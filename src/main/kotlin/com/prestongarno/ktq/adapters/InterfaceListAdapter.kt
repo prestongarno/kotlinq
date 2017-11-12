@@ -13,6 +13,7 @@ import com.prestongarno.ktq.stubs.CollectionFragment
 import com.prestongarno.ktq.stubs.FragmentContext
 import com.prestongarno.ktq.stubs.FragmentScope
 import com.prestongarno.ktq.stubs.TypeListStub
+import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 internal data class InterfaceListStub<I>(
@@ -24,7 +25,7 @@ internal data class InterfaceListStub<I>(
       InterfaceFragmentListAdapter<I, ArgBuilder>(qproperty).apply(context)
 }
 
-internal data class InterfaceListConfigStub<I, in A : ArgBuilder>(
+internal data class InterfaceListConfigStub<I, A : ArgBuilder>(
     private val qproperty: GraphQlProperty
 ) : CollectionConfigFragment<I, A>
     where I : QType,
@@ -32,16 +33,16 @@ internal data class InterfaceListConfigStub<I, in A : ArgBuilder>(
 
   override fun invoke(
       arguments: A,
-      context: FragmentScope<I, ArgBuilder>.() -> Unit
+      context: FragmentScope<I, A>.() -> Unit
   ): AbstractCollectionStub<I> =
       InterfaceFragmentListAdapter<I, A>(qproperty, arguments).apply(context)
 
 }
 
-internal class InterfaceFragmentListAdapter<I, A : ArgBuilder>(
+internal class InterfaceFragmentListAdapter<I, out A : ArgBuilder>(
     qproperty: GraphQlProperty,
-    argBuilder: ArgBuilder? = null
-) : PreDelegate(qproperty, argBuilder),
+    val argBuilder: A? = null
+) : PreDelegate(qproperty),
     TypeListStub<QModel<I>, I>,
     AbstractCollectionStub<I>,
     FragmentScope<I, A>
@@ -51,30 +52,32 @@ internal class InterfaceFragmentListAdapter<I, A : ArgBuilder>(
 
   private val fragments = mutableSetOf<Fragment>()
 
+  private var config: (A.() -> Unit)? = null
+
   override fun <T : I> on(initializer: () -> QModel<T>) {
     fragments += Fragment(initializer)
   }
 
   override fun config(scope: A.() -> Unit) {
-    TODO()
+    this.config = config
   }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<I>>> =
       CollectionDelegateImpl<I>(qproperty,
-          argBuilder?.arguments?.getAll()?.toMap() ?: emptyMap(),
+          toArgumentMap(argBuilder, config),
           fragments.toSet()
       ).apply {
         inst.fields.add(this)
       }
 }
 
-private class CollectionDelegateImpl<I : QType>(
+private class CollectionDelegateImpl<out I : QType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
 ) : Adapter,
     QField<List<QModel<I>>>,
-    FragmentContext<I> {
+    FragmentContext {
 
   private var value = emptyList<QModel<I>>()
 

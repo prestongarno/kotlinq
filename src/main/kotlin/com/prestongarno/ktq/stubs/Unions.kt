@@ -9,7 +9,8 @@ interface UnionFragment<out T : QUnionType> : SchemaStub {
   operator fun invoke(scope: T.() -> Unit): UnionStub
 }
 
-interface UnionConfigStub<out T : QUnionType, out A : ArgBuilder> : SchemaStub {
+interface UnionConfigStub<out T : QUnionType, in A : ArgBuilder> : SchemaStub {
+  operator fun invoke(arguments: A, scope: T.() -> Unit): UnionStub
 }
 
 interface UnionListInitStub<out T : QUnionType> : SchemaStub {
