@@ -5,12 +5,11 @@ import com.beust.klaxon.Parser
 import com.prestongarno.ktq.adapters.Adapter
 import java.io.InputStream
 
-@kotlin.Suppress("AddVarianceModifier")
 open class QModel<out T : QType>(val model: T) {
 
   // TODO(preston) make this a map, because gql symbols
   // by name need to be constantly looked up
-  internal val fields by lazy { mutableListOf<Adapter>() }
+  internal val fields = mutableMapOf<String, Adapter>()
 
   internal var resolved = false
 
@@ -19,8 +18,8 @@ open class QModel<out T : QType>(val model: T) {
   fun isResolved(): Boolean = resolved
 
   fun toGraphql(pretty: Boolean = true): String {
-    return if (pretty) prettyPrinted(0) else fields.joinToString(",", "{", "}") {
-      it.toRawPayload()
+    return if (pretty) prettyPrinted(0) else fields.entries.joinToString(",", "{", "}") {
+      it.value.toRawPayload()
     }
   }
 
@@ -31,7 +30,7 @@ open class QModel<out T : QType>(val model: T) {
 
   internal open fun accept(input: JsonObject): Boolean {
     resolved = fields.filterNot {
-      it.accept(input[it.qproperty.graphqlName])
+      it.value.accept(input[it.value.qproperty.graphqlName])
     }.isEmpty()
     return resolved
   }
@@ -44,7 +43,7 @@ open class QModel<out T : QType>(val model: T) {
 
     if (model != other.model) return false
     if (resolved != other.resolved) return false
-    if (!fields.containsAll(other.fields)) return false
+    if (!fields.entries.containsAll(other.fields.entries)) return false
 
     return true
   }
@@ -56,7 +55,17 @@ open class QModel<out T : QType>(val model: T) {
   }
 
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
-      fields.joinToString(",", "[", "]") { it.toRawPayload() }
+      fields.entries.joinToString(",", "[", "]") { it.value.qproperty.toString() }
+
+  /**
+   * Add the field to the instance of this model
+   * @param field the Adapter to bind
+   * @return the field
+   */
+  internal fun <T : Adapter> register(field: T): T {
+    fields[field.qproperty.graphqlName] = field
+    return field
+  }
 
 }
 

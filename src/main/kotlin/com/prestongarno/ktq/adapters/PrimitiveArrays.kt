@@ -50,8 +50,7 @@ class StringArrayDelegate<A : ArgBuilder>(
   fun withDefault(value: Array<String>): ScalarArrayDelegateImpl<A, StringArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringArrayStub =
-      StringArrayStub(graphqlProperty, default, apply {}.args.toMap())
-          .apply { inst.fields.add(this) }
+      StringArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): StringArrayDelegate<A> =
       StringArrayDelegate(graphqlProperty, config)
@@ -67,8 +66,7 @@ class IntegerArrayDelegate<A : ArgBuilder>(
   fun withDefault(value: IntArray): ScalarArrayDelegateImpl<A, IntArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntArrayStub =
-      IntArrayStub(graphqlProperty, default, apply {}.args.toMap())
-          .apply { inst.fields.add(this) }
+      IntArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): IntegerArrayDelegate<A> =
       IntegerArrayDelegate(graphqlProperty, config)
@@ -84,8 +82,7 @@ class FloatArrayDelegate<A : ArgBuilder>(
   fun withDefault(value: FloatArray): ScalarArrayDelegateImpl<A, FloatArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatArrayStub =
-      FloatArrayStub(graphqlProperty, default, apply {}.args.toMap())
-          .apply { inst.fields.add(this) }
+      FloatArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): FloatArrayDelegate<A> =
       FloatArrayDelegate(graphqlProperty, config)
@@ -101,8 +98,7 @@ class BooleanArrayDelegate<A : ArgBuilder>(
   fun withDefault(value: BooleanArray): ScalarArrayDelegateImpl<A, BooleanArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BooleanArrayStub =
-      BooleanArrayStub(graphqlProperty, default, apply {}.args.toMap())
-          .apply { inst.fields.add(this) }
+      BooleanArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): BooleanArrayDelegate<A> =
       BooleanArrayDelegate(graphqlProperty, config)

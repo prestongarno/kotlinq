@@ -36,9 +36,7 @@ internal class TypeListAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
     // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
     val initializer: () -> P = this.init!!
 
-    return TypeListStubImpl(qproperty, initializer, toArgumentMap(arguments, scope)).also {
-      inst.fields.add(it)
-    }
+    return TypeListStubImpl(qproperty, initializer, toArgumentMap(arguments, scope)).bind(inst)
   }
 
 }

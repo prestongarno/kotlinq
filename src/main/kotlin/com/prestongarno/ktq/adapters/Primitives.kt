@@ -16,14 +16,17 @@ class StringDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : Sch
   operator fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)): StringDelegate<A> =
       StringDelegate(qproperty, arguments).apply(scope)
 }
+
 class IntegerDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
   operator fun invoke(arguments: A, scope: IntegerDelegate<A>.() -> Unit): IntegerDelegate<A> =
       IntegerDelegate(qproperty, arguments).apply(scope)
 }
+
 class FloatDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
   operator fun invoke(arguments: A, scope: FloatDelegate<A>.() -> Unit): FloatDelegate<A> =
       FloatDelegate(qproperty, arguments).apply(scope)
 }
+
 class BooleanDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
   operator fun invoke(arguments: A, scope: BooleanDelegate<A>.() -> Unit): BooleanDelegate<A> =
       BooleanDelegate(qproperty, arguments).apply(scope)
@@ -54,9 +57,8 @@ sealed class ScalarDelegateImpl<A : ArgBuilder, D : PrimitiveStub>(
 
   abstract internal fun toPrimitiveStub(): D
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D = toPrimitiveStub().apply {
-    inst.fields.add(this)
-  }
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D =
+      toPrimitiveStub().bind(inst)
 }
 
 class StringDelegate<A : ArgBuilder>(

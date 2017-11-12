@@ -40,8 +40,4 @@ private class StubLoaderImpl<out T : SchemaStub>(val value: T) : StubLoader<T> {
 
   override operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): StubLoader<T> =
       StubLoaderImpl(toInit(GraphQlProperty.from(property, typeName, isList, property.name)))
-
-  companion object {
-    internal val standardGenerator: (ArgBuilder) -> ArgBuilder = { it }
-  }
 }

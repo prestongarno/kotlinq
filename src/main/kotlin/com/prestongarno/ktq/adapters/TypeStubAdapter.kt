@@ -40,11 +40,8 @@ internal class TypeStubAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
    * For the possible possibly nullable initializer ->
    * see [com.prestongarno.ktq.adapters.TypeListAdapter.provideDelegate]
    */
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> {
-    val initializer: () -> P = this.init!!
-    return TypeStubImpl(qproperty, initializer, toArgumentMap(argBuilder, config))
-        .also { inst.fields.add(it) }
-  }
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> =
+      TypeStubImpl(qproperty, init!!, toArgumentMap(argBuilder, config)).bind(inst)
 
   override fun <U : QModel<I>> querying(init: () -> U): TypeStub<U, I> =
       TypeStubAdapter(qproperty, argBuilder, config, init)
@@ -68,7 +65,7 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     value.resolved = true
     return result is JsonObject
         && value.fields.filterNot { f ->
-      f.accept(result[f.qproperty.graphqlName])
+      f.value.accept(result[f.value.qproperty.graphqlName])
     }.isEmpty() && value.resolved
   }
 

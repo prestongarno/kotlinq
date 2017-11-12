@@ -25,8 +25,7 @@ import kotlin.reflect.KProperty
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> = TODO()
 /*      EnumFieldImpl(enumClass, qproperty, argumentScope?.let {
         argBuilder?.it(); argBuilder
-      }?.arguments?.getAll()?.toMap() ?: emptyMap()).also {
-        inst.fields.add(it)
+      }?.arguments?.getAll()?.toMap() ?: emptyMap()).bind(inst)
       }*/
 
   fun config(config: A.() -> Unit) = EnumAdapter(qproperty, enumClass, argBuilder, config)

@@ -42,9 +42,7 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
       toArgumentMap(argBuilder, config),
       adapter,
       default
-  ).also {
-    inst.fields.add(it)
-  }
+  ).bind(inst)
 
   @Suppress("UNCHECKED_CAST")
   override fun <U : QScalarMapper<A>, A> init(init: U): CustomStub<U, A> =

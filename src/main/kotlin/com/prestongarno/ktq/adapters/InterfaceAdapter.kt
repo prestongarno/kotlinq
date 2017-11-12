@@ -69,9 +69,7 @@ internal class InterfaceFragmentAdapter<I, A : ArgBuilder>(
           qproperty,
           toArgumentMap(arguments, config),
           fragments.toSet()
-      ).apply {
-        inst.fields.add(this)
-      }
+      ).bind(inst)
 }
 
 @ValueDelegate(QModel::class)

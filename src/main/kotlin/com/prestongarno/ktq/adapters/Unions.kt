@@ -58,21 +58,21 @@ import kotlin.reflect.KProperty
   }
 }
 
-private class UnionAdapterImpl<out I : QUnionType, A : ArgBuilder>(
+private class UnionAdapterImpl<I : QUnionType, A : ArgBuilder>(
     graphqlProperty: GraphQlProperty,
     objectModel: I,
+    val scope: (I.() -> Unit)? = null,
+    val arguments: A? = null,
     config: (A.() -> Unit)? = null
 ) : UnionConfigAdapter<I, A>(graphqlProperty, objectModel, config) {
 
   override fun invoke(arguments: A, scope: I.() -> Unit): UnionStub {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    return UnionAdapterImpl(qproperty, model, scope, arguments, config)
   }
 
   override fun invoke(scope: I.() -> Unit): UnionStub {
-    return UnionAdapterImpl<I, A>(qproperty, model, config)
+    return UnionAdapterImpl(qproperty, model, scope, arguments, config)
   }
-
-  //override fun scope(on: A.() -> Unit): UnionFragment<I> {}
 }
 
 private class BaseUnionAdapter<out I : QUnionType>(model: I)
@@ -87,8 +87,6 @@ private class BaseUnionAdapter<out I : QUnionType>(model: I)
   }
 
   override val queue = FragmentProvider()
-
-  //override fun scope(on: ArgBuilder.() -> Unit): UnionFragment<I> = this
 }
 
 

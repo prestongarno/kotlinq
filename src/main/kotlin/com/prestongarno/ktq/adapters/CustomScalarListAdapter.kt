@@ -35,9 +35,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
           this.qproperty.graphqlName),
           toArgumentMap(argBuilder, config),
           adapter!!
-      ).also {
-        inst.fields.add(it)
-      }
+      ).bind(inst)
 
   @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<A>, A> querying(of: U): CustomScalarListStub<U, A> =
       CustomScalarListAdapter<E, U, A, B>(qproperty, of, argBuilder, default as A?, config)

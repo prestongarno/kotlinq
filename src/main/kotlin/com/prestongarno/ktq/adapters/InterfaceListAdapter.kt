@@ -66,9 +66,7 @@ internal class InterfaceFragmentListAdapter<I, out A : ArgBuilder>(
       CollectionDelegateImpl<I>(qproperty,
           toArgumentMap(argBuilder, config),
           fragments.toSet()
-      ).apply {
-        inst.fields.add(this)
-      }
+      ).bind(inst)
 }
 
 private class CollectionDelegateImpl<out I : QType>(
