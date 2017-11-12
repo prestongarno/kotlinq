@@ -57,6 +57,9 @@ open class QModel<out T : QType>(val model: T) {
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
       fields.entries.joinToString(",", "[", "]") { it.value.qproperty.toString() }
 
+  internal fun getFields(): Sequence<Adapter> =
+      fields.entries.asSequence().map { it.value }
+
   /**
    * Add the field to the instance of this model
    * @param field the Adapter to bind

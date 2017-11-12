@@ -9,17 +9,16 @@ internal fun QModel<*>.getFragments(): Set<Fragment> {
 }
 
 private fun getFragments(root: QModel<*>, cache: Set<QModel<*>>): Set<Fragment> {
-  val fragmentEdges = root.fields.filterIsInstance<FragmentContext>()
-      .map { it.fragments }
-      .flatMap { it }
+  val fragmentEdges = root.getFields().filterIsInstance<FragmentContext>()
+      .flatMap { it.fragments.asSequence() }
       .filterNot { cache.contains(it.model) }
       .toSet()
-  val models = root.fields.filterIsInstance<ModelProvider>()
+  val models = root.getFields().filterIsInstance<ModelProvider>()
+      .filterNot { cache.contains(it.value) }
       .map { it.value }
-      .filterNot { cache.contains(it) }
       .plus(fragmentEdges
-          .map { it.model }
-          .filterNot { cache.contains(it) })
+          .filterNot { cache.contains(it.model) }
+          .map { it.model })
   return fragmentEdges +
       models.map {
         getFragments(it, cache + fragmentEdges.map { it.model } + models)
