@@ -62,32 +62,37 @@ interface QSchemaType {
     /**
      * Method which provides a delegate for fields of type [kotlin.String]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<StringDelegate<ArgBuilder>>] */
-    fun stringStub() = Grub("String") { StringDelegate<ArgBuilder>(it) }
+    fun stringStub(): StubProvider<StringDelegate<ArgBuilder>> =
+        Grub("String") { StringDelegate<ArgBuilder>(it) }
 
 
     /**
      * Method which provides a delegate for fields of type [kotlin.Int]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<IntDelegate<ArgBuilder>>] */
-    fun intStub() = Grub("Int") { IntegerDelegate<ArgBuilder>(it) }
+    fun intStub() : StubProvider<IntegerDelegate<ArgBuilder>>
+        = Grub("Int") { IntegerDelegate<ArgBuilder>(it) }
 
 
     /**
      * Method which provides a delegate for fields of type [kotlin.Float]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<FloatDelegate<ArgBuilder>>] */
-    fun floatStub() = Grub("Float") { FloatDelegate<ArgBuilder>(it) }
+    fun floatStub() : StubProvider<FloatDelegate<ArgBuilder>> =
+        Grub("Float") { FloatDelegate<ArgBuilder>(it) }
 
 
     /**
      * Method which provides a delegate for fields of type [kotlin.Boolean]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanDelegate<ArgBuilder>>] */
-    fun booleanStub() = Grub("Boolean") { BooleanDelegate<ArgBuilder>(it) }
+    fun booleanStub() : StubProvider<BooleanDelegate<ArgBuilder>> =
+        Grub("Boolean") { BooleanDelegate<ArgBuilder>(it) }
 
 
     /**
      * Method which provides a delegate for fields of type [kotlin.String]
      * @param A the type of argument (graphql field argBuilder) builder type this field requires
      * @return [com.prestongarno.ktq.hooks.StubProvider]<StringDelegate<ArgBuilder>>] */
-    fun <A : ArgBuilder> stringConfigStub() = Grub("String") { StringDelegateConfig<A>(it) }
+    fun <A : ArgBuilder> stringConfigStub(): StubProvider<StringDelegateConfig<A>> =
+        Grub("String") { StringDelegateConfig<A>(it) }
 
 
     /**
@@ -95,7 +100,8 @@ interface QSchemaType {
      * @param A the type of argument (graphql field argBuilder) builder type this field requires
      * @param arginit the initializer for the argBuilder. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<IntDelegate<A>>] */
-    fun <A : ArgBuilder> intConfigStub() = Grub("Int") { IntegerDelegateConfig<A>(it) }
+    fun <A : ArgBuilder> intConfigStub() : StubProvider<IntegerDelegateConfig<A>> =
+        Grub("Int") { IntegerDelegateConfig<A>(it) }
 
 
     /**
@@ -103,36 +109,42 @@ interface QSchemaType {
      * @param A the type of argument (graphql field argBuilder) builder type this field requires
      * @param arginit the initializer for the argBuilder. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<FloatDelegate<A>>] */
-    fun <A : ArgBuilder> floatConfigStub() = Grub("Float") { FloatDelegateConfig<A>(it) }
+    fun <A : ArgBuilder> floatConfigStub() : StubProvider<FloatDelegateConfig<A>> =
+        Grub("Float") { FloatDelegateConfig<A>(it) }
 
     /**
      * Method which provides a delegate for fields of type [kotlin.Boolean]
      * @param A the type of argument (graphql field argBuilder) builder type this field requires
      * @param arginit the initializer for the argBuilder. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanDelegate<A>>] */
-    fun <A : ArgBuilder> booleanStub(arginit: (ArgBuilder) -> A) = Grub("Boolean") { BooleanDelegateConfig<A>(it) }
+    fun <A : ArgBuilder> booleanStub(arginit: (ArgBuilder) -> A) : StubProvider<BooleanDelegateConfig<A>> =
+        Grub("Boolean") { BooleanDelegateConfig<A>(it) }
   }
 
   object QScalarArray {
     /**
      * Method which provides a delegate for fields of type [kotlin.String]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<StringArrayDelegate<ArgBuilder>>] */
-    fun stringArrayStub() = Grub("String", true) { StringArrayDelegate<ArgBuilder>(it) }
+    fun stringArrayStub() : StubProvider<StringArrayDelegate<ArgBuilder>> =
+        Grub("String", true) { StringArrayDelegate<ArgBuilder>(it) }
 
     /**
      * Method which provides a delegate for fields of type [kotlin.Int]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<IntArrayDelegate<ArgBuilder>>] */
-    fun intArrayStub() = Grub("Int", true) { IntegerArrayDelegate<ArgBuilder>(it) }
+    fun intArrayStub() : StubProvider<IntegerArrayDelegate<ArgBuilder>> =
+        Grub("Int", true) { IntegerArrayDelegate<ArgBuilder>(it) }
 
     /**
      * Method which provides a delegate for fields of type [kotlin.Float]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<FloatArrayDelegate<ArgBuilder>>] */
-    fun floatArrayStub() = Grub("Float", true) { FloatArrayDelegate<ArgBuilder>(it) }
+    fun floatArrayStub() : StubProvider<FloatArrayDelegate<ArgBuilder>> =
+        Grub("Float", true) { FloatArrayDelegate<ArgBuilder>(it) }
 
     /**
      * Method which provides a delegate for fields of type [kotlin.Boolean]
      * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanArrayDelegate<ArgBuilder>>] */
-    fun booleanArrayStub() = Grub("Boolean", true) { BooleanArrayDelegate<ArgBuilder>(it) }
+    fun booleanArrayStub() : StubProvider<BooleanArrayDelegate<ArgBuilder>> =
+        Grub("Boolean", true) { BooleanArrayDelegate<ArgBuilder>(it) }
 
   }
 

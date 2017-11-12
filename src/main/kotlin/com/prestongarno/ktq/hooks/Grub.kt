@@ -32,7 +32,7 @@ private class StubLoaderImpl<out T : SchemaStub>(val value: T) : StubLoader<T> {
  * fragment `getValue` for the schemastub it simply invokes the function with the prop of the graphqlName that it's
  * delegating to. This way, the graphqlName prop can be passed to the delegate/schemastub createTypeStub without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
-class Grub<out T : SchemaStub>(
+@PublishedApi internal class Grub<out T : SchemaStub>(
     private val typeName: String,
     private val isList: Boolean = false,
     private val toInit: (property: GraphQlProperty) -> T
