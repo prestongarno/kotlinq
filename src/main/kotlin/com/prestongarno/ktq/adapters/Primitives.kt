@@ -182,14 +182,8 @@ class IntStub(
       value = result
       resolved = true
     } else {
-      val secondary = result?.toString()?.toIntOrNull() ?: default
-      if (secondary != null) {
-        resolved = true
-        value = secondary
-      } else if (default != null) {
-        resolved = true
-        value = default
-      }
+      value = result?.toString()?.toIntOrNull() ?: default
+      resolved = true
     }
     return resolved
   }
@@ -205,23 +199,16 @@ class FloatStub(
   private var value = 0f
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): Float {
-    return if (isResolved) value else default
+    return value
   }
 
   override fun accept(result: Any?): Boolean {
-    resolved = false
     if (result is Float) {
       value = result
       resolved = true
     } else {
-      val secondary = result?.toString()?.toFloatOrNull() ?: default
-      if (secondary != null) {
-        resolved = true
-        value = secondary
-      } else if (default != null) {
-        resolved = true
-        value = default
-      }
+      value = result?.toString()?.toFloatOrNull() ?: default
+      resolved = true
     }
     return resolved
   }
@@ -254,7 +241,7 @@ class BooleanStub(
       if (secondary != null) {
         resolved = true
         value = secondary
-      } else if (default != null) {
+      } else {
         resolved = true
         value = default
       }
