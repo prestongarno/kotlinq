@@ -11,6 +11,8 @@ import com.prestongarno.ktq.properties.FragmentProvider
  */
 interface QType : QSchemaType
 
+interface QInterface
+
 /**
  * Supertype of a GraphQL Enum definition
  *
@@ -36,4 +38,3 @@ interface QUnionType : QType {
         UnionConfigAdapter.baseObject<U, A>(objectModel)
   }
 }
-

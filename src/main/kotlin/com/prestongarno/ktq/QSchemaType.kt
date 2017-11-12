@@ -3,7 +3,7 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.adapters.BooleanArrayDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegateConfig
-import com.prestongarno.ktq.adapters.EnumAdapter
+import com.prestongarno.ktq.adapters.EnumAdapterImpl
 import com.prestongarno.ktq.adapters.FloatArrayDelegate
 import com.prestongarno.ktq.adapters.FloatDelegate
 import com.prestongarno.ktq.adapters.FloatDelegateConfig
@@ -292,7 +292,7 @@ interface QSchemaType {
 
     inline fun <reified T, A : ArgBuilder> configStub(
     ): StubProvider<EnumStub<T>> where T : Enum<*>, T : QEnumType
-        = Grub("${T::class.simpleName}", true) { EnumAdapter<T, A>(it, T::class) }
+        = Grub("${T::class.simpleName}", true) { EnumAdapterImpl<T, A>(it, T::class) }
   }
 
 }

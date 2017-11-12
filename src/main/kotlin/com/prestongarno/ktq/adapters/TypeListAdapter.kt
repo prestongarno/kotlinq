@@ -30,15 +30,10 @@ internal class TypeListAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
   override fun invoke(arguments: A, scope: (A.() -> Unit)?): ListInitStub<I, A> =
       TypeListAdapter(qproperty, arguments, scope, init)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> {
-
-    // This won't be null, the interface flow requires `querying(of: () -> P) to be called
-    // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
-    val initializer: () -> P = this.init!!
-
-    return TypeListStubImpl(qproperty, initializer, toArgumentMap(arguments, scope)).bind(inst)
-  }
-
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
+      // This won't be null, the interface flow requires `querying(of: () -> P) to be called
+      // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
+      TypeListStubImpl(qproperty, init!!, toArgumentMap(arguments, scope)).bind(inst)
 }
 
 @CollectionDelegate(QModel::class)

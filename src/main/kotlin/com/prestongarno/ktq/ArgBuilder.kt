@@ -8,6 +8,8 @@ open class ArgBuilder {
   infix fun String.with(value: Any) {
     arguments.put(this, value)
   }
+
+  fun addArgument(key: String, value: Any) = apply { arguments.put(key, value) }
 }
 
 @Suppress("UNCHECKED_CAST")
