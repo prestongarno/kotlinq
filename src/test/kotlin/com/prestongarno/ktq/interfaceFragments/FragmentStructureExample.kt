@@ -7,7 +7,6 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.adapters.IntegerDelegate
-import com.prestongarno.ktq.stubs.FragmentContext
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 
@@ -18,6 +17,12 @@ interface Object : QType, QInterface {
 
 object SubObject : QType, Object {
   override val value by QScalar.intStub()
+
+  val maximum by QScalar.intConfigStub<MaximumArgs>()
+
+  class MaximumArgs : ArgBuilder() {
+    var factor: Int? by arguments
+  }
 }
 
 object UnrelatedObject : QType
@@ -33,6 +38,11 @@ object Query : QType {
 class MyObject : QModel<SubObject>(SubObject) {
   val result by model.value {
     default = 3000
+  }
+
+  val max by model.maximum(SubObject.MaximumArgs()) {
+    default = 100_000_000
+    config { factor = 100 }
   }
 }
 
@@ -55,10 +65,14 @@ class TestFragmentsBasic {
 
     }
 
-    println(query.toGraphql(false))
-    assertThat(query.toGraphql(false)).isEqualTo("""
-      {objectValue(\"Hello\": \"World\"){__typename,... on SubObject{value}},objectValueList{__typename,... on SubObject{value}}}
-    """.trimIndent())
+    assertThat(query.toGraphql(false)).isEqualTo("{objectValue(Hello: \\\"World\\\"){" +
+        "__typename," +
+          "... on SubObject{value,maximum(factor: 100)}" +
+        "}," +
+        "objectValueList{" +
+          "__typename," +
+          "... on SubObject{value,maximum(factor: 100)}" +
+        "}}")
 
     @Language("JSON") val response = """
       {
@@ -82,7 +96,10 @@ class TestFragmentsBasic {
     require(query.onResponse(response))
     require(query.field is MyObject)
     require((query.field as? MyObject)?.result == 35)
-    //query.list.filterIsInstance<MyObject>().forEachIndexed { index, obj -> require(obj.result == index) }
+    query.list.filterIsInstance<MyObject>().forEachIndexed { index, obj ->
+      require(obj.max == 100_000_000)
+      require(obj.result == index)
+    }
   }
 
 }

@@ -18,7 +18,7 @@ import kotlin.reflect.KProperty
 
 internal data class InterfaceStubImpl<I>(
     private val qproperty: GraphQlProperty
-): InterfaceFragment<I>
+) : InterfaceFragment<I>
     where I : QType,
           I : QInterface {
 
@@ -28,7 +28,7 @@ internal data class InterfaceStubImpl<I>(
 
 internal data class InterfaceConfigStubImpl<I, A : ArgBuilder>(
     private val qproperty: GraphQlProperty
-): InterfaceConfigFragment<I, A>
+) : InterfaceConfigFragment<I, A>
     where I : QType,
           I : QInterface {
   override fun invoke(arguments: A, context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
@@ -95,26 +95,18 @@ private class InterfaceDelegateImpl<I : QType>(
     return value?.isResolved() == true
   }
 
-  override fun toRawPayload(): String {
-    return StringBuilder(fragments.size * 10).apply {
-      this add qproperty.graphqlName add
-          (if (args.isEmpty())
-            ""
-          else
-            args.entries.joinToString(prefix = "(", postfix = ")") { (key, value) ->
-              "\\\"$key\\\": " + formatAs(value)
-            }) add
-          fragments.joinToString(prefix = "{__typename,", postfix = "}") {
-            "... on " + it.model.graphqlType + it.model.toGraphql(false)
-          }
-    }.toString()
-  }
+  override fun toRawPayload(): String =
+      qproperty.graphqlName + (if (args.isEmpty()) "" else args.entries.joinToString(
+          prefix = "(", postfix = ")") { (key, value) ->
+        "$key: " + formatAs(value)
+      }) + fragments.joinToString(
+          prefix = "{__typename,",
+          postfix = "}",
+          transform = Fragment::toString)
 
   override operator fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
   ): QModel<I>? = value
-
-  private infix fun StringBuilder.add(value: String) = this.append(value)
 
 }

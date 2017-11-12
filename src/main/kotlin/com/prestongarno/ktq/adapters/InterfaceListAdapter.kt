@@ -105,7 +105,7 @@ private class CollectionDelegateImpl<out I : QType>(
   override fun toRawPayload(): String {
     return qproperty.graphqlName + (if (args.isEmpty()) "" else args.entries.joinToString(
         prefix = "(", postfix = ")") { (key, value) ->
-      "\\\"$key\\\": " + formatAs(value)
+      "$key: " + formatAs(value)
     }) +
         fragments.joinToString(prefix = "{__typename,", postfix = "}") {
           "... on " + it.model.graphqlType + it.model.toGraphql(false)

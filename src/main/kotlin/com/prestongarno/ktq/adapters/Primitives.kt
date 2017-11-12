@@ -13,19 +13,19 @@ interface ScalarDelegate<out D : PrimitiveStub> : SchemaStub {
 }
 
 class StringDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
-  fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)): StringDelegate<A> =
+  operator fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)): StringDelegate<A> =
       StringDelegate(qproperty, arguments).apply(scope)
 }
 class IntegerDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
-  fun invoke(arguments: A, scope: IntegerDelegate<A>.() -> Unit): IntegerDelegate<A> =
+  operator fun invoke(arguments: A, scope: IntegerDelegate<A>.() -> Unit): IntegerDelegate<A> =
       IntegerDelegate(qproperty, arguments).apply(scope)
 }
 class FloatDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
-  fun invoke(arguments: A, scope: FloatDelegate<A>.() -> Unit): FloatDelegate<A> =
+  operator fun invoke(arguments: A, scope: FloatDelegate<A>.() -> Unit): FloatDelegate<A> =
       FloatDelegate(qproperty, arguments).apply(scope)
 }
 class BooleanDelegateConfig<A : ArgBuilder>(val qproperty: GraphQlProperty) : SchemaStub {
-  fun invoke(arguments: A, scope: BooleanDelegate<A>.() -> Unit): BooleanDelegate<A> =
+  operator fun invoke(arguments: A, scope: BooleanDelegate<A>.() -> Unit): BooleanDelegate<A> =
       BooleanDelegate(qproperty, arguments).apply(scope)
 }
 
@@ -40,7 +40,7 @@ sealed class PrimitiveStub(
 
   override fun toRawPayload(): String = qproperty.graphqlName +
       if (args.isNotEmpty())
-        args.entries.joinToString(",", "(", ")") { "\"${it.key}\": \"${formatAs(it.value)}\"" }
+        args.entries.joinToString(",", "(", ")") { "${it.key}: ${formatAs(it.value)}" }
       else ""
 }
 
