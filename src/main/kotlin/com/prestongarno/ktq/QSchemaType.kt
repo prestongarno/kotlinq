@@ -121,7 +121,7 @@ interface QSchemaType {
      * @param A the type of argument (graphql field argBuilder) builder type this field requires
      * @param arginit the initializer for the argBuilder. Generally this is auto-generated so don't worry about it
      * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanDelegate<A>>] */
-    fun <A : ArgBuilder> booleanStub(arginit: (ArgBuilder) -> A) : StubProvider<BooleanDelegateConfig<A>> =
+    fun <A : ArgBuilder> booleanConfigStub() : StubProvider<BooleanDelegateConfig<A>> =
         Grub("Boolean") { BooleanDelegateConfig<A>(it) }
   }
 
@@ -215,8 +215,7 @@ interface QSchemaType {
         where T : QType, T : QInterface =
         createCollectionStub(name = "${T::class.simpleName}")
 
-    inline fun <reified T, A : ArgBuilder> stub(
-        noinline arginit: (ArgBuilder) -> A
+    inline fun <reified T, A : ArgBuilder> configStub(
     ): StubProvider<CollectionConfigFragment<T, A>>
         where T : QType, T : QInterface =
         createCollectionConfigStub("${T::class.simpleName}")

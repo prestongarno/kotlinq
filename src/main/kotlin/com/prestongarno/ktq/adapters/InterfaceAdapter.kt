@@ -88,6 +88,7 @@ private class InterfaceDelegateImpl<I : QType>(
     value = fragments.find { it.model.graphqlType == result["__typename"] }
         ?.initializer?.invoke()?.let {
       it.accept(result)
+      @Suppress("UNCHECKED_CAST")
       it as? QModel<I>
     }
     return value?.isResolved() == true

@@ -68,9 +68,9 @@ private data class EnumFieldImpl<T>(
     private val default: T? = null
 ) : QField<T>, Adapter where T : Enum<*>, T : QEnumType {
 
-  var value: T? = null
+  var value: T? = default
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>) = value!!
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default!!
 
   override fun accept(result: Any?): Boolean {
     // TODO don't call the java reflection type - use kotlin enums only

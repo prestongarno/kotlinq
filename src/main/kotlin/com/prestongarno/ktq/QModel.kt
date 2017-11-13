@@ -72,3 +72,6 @@ open class QModel<out T : QType>(val model: T) {
 
 }
 
+inline fun <reified T : QType> graphQl(model: T, scope: QModel<T>.() -> Unit) =
+    (object : QModel<T>(model) { }).apply(scope)
+

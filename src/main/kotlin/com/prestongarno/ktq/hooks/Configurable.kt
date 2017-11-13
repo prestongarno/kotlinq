@@ -62,6 +62,7 @@ interface OptionalConfig<out D : DelegateProvider<T>, out T : Any?, in A: ArgBui
  * @param D : The type of [DelegateProvider] which this field supplies
  */
 interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
+
   operator fun invoke(arguments: ArgBuilder? = ArgBuilder(), scope: (D.() -> Unit)? = null): D
 
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =

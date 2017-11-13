@@ -51,14 +51,16 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): Configurable<EnumStub<T, A>, A>
-        where T : QEnumType, T : Enum<*>, A : ArgBuilder =
+        where T : QEnumType,
+              T : Enum<*>, A : ArgBuilder =
         EnumConfigStubImpl(qproperty, enumClass)
 
     @PublishedApi internal fun <T, A> optionalArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): OptionalConfig<EnumStub<T, A>, T, A>
-        where T : QEnumType, T : Enum<*>, A : ArgBuilder =
+        where T : QEnumType,
+              T : Enum<*>, A : ArgBuilder =
         EnumOptionalArgStub(qproperty, enumClass)
   }
 }
