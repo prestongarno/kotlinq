@@ -51,7 +51,7 @@
   
   
   
-    <body data-md-color-primary="cyan" data-md-color-accent="pink">
+    <body data-md-color-primary="none" data-md-color-accent="pink">
   
     <svg class="md-svg">
       <defs>
@@ -228,8 +228,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-to-get-ktq" title=" How to get ktq " class="md-nav__link">
-     How to get ktq 
+  <a href="#how-to-objectvalue-ktq" title=" How to objectValue ktq " class="md-nav__link">
+     How to objectValue ktq 
   </a>
   
 </li>
@@ -237,13 +237,6 @@
         <li class="md-nav__item">
   <a href="#about" title="About" class="md-nav__link">
     About
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" title="How it works" class="md-nav__link">
-    How it works
   </a>
   
 </li>
@@ -480,8 +473,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-to-get-ktq" title=" How to get ktq " class="md-nav__link">
-     How to get ktq 
+  <a href="#how-to-objectvalue-ktq" title=" How to objectValue ktq " class="md-nav__link">
+     How to objectValue ktq 
   </a>
   
 </li>
@@ -489,13 +482,6 @@
         <li class="md-nav__item">
   <a href="#about" title="About" class="md-nav__link">
     About
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" title="How it works" class="md-nav__link">
-    How it works
   </a>
   
 </li>
@@ -517,7 +503,7 @@
                 
                   <h1>Getting started</h1>
                 
-                <h2 id="how-to-get-ktq"><span style="color:#f442c2"> How to get <strong>ktq</strong> </span><a class="headerlink" href="#how-to-get-ktq" title="Permanent link">&para;</a></h2>
+                <h2 id="how-to-objectvalue-ktq"><span style="color:#f442c2"> How to objectValue <strong>ktq</strong> </span><a class="headerlink" href="#how-to-objectvalue-ktq" title="Permanent link">&para;</a></h2>
 <p>To use in a project, add the dependency to a gradle buildscript:</p>
 <div class="codehilite"><pre><span></span>  compile &#39;com.prestongarno.ktq:ktq-client:0.2&#39;
 </pre></div>
@@ -542,37 +528,36 @@ the gradle syntax for configuring compilation of graphql schema SDL as kotlin cl
 queries and mutations against a GraphQl schema. </p>
 <p>The <a href="https://github.com/prestongarno/ktq-gradle"> gradle plugin </a> generates an equivalent kotlin type hierarchy which is used to create and execute queries
 and mutations without ever leaving native code.</p>
-<p>For an example of how to build models, see the example below created for the Yelp Graphql API. 
-Note that while field types are specified, they are not necessary and can be inferred by the properties
-in the <code class="codehilite">model</code> instance which a concrete query/mutation class delegates its properties to.</p>
+<p>For an example of how to build models, see the example below created for the Yelp Graphql API. </p>
 <div class="codehilite"><pre><span></span><span class="kr">class</span> <span class="nx">BusinessQuery</span><span class="p">(</span><span class="nx">searchTerm</span>: <span class="kt">String</span><span class="p">)</span> <span class="o">:</span> <span class="nx">QModel</span><span class="p">(</span><span class="nx">Query</span><span class="p">)</span> <span class="p">{</span>
 
-  <span class="nx">val</span> <span class="nx">result</span>: <span class="kt">List</span><span class="o">&lt;</span><span class="nx">BusinessNodesModel</span><span class="o">&gt;</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">search</span>
-      <span class="p">.</span><span class="nx">config</span> <span class="p">{</span>
+  <span class="nx">val</span> <span class="nx">result</span>: <span class="kt">List</span><span class="o">&lt;</span><span class="nx">BusinessNodes</span><span class="o">&gt;</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="o">::</span><span class="nx">BusinessesNodes</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">config</span> <span class="p">{</span>
         <span class="nx">term</span> <span class="o">=</span> <span class="nx">searchTerm</span>
         <span class="nx">limit</span> <span class="o">=</span> <span class="mi">10</span>
-      <span class="p">}.</span><span class="nx">init</span> <span class="p">{</span> <span class="nx">BusinessesNodesModel</span><span class="p">()</span> <span class="p">}</span>
-
+      <span class="p">}</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">class</span> <span class="nx">BusinessesNodesModel</span> : <span class="kt">QModel</span><span class="p">(</span><span class="nx">Businesses</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">val</span> <span class="nx">resultCount</span>:   <span class="kt">Int</span>                    <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">total</span>
-  <span class="nx">val</span> <span class="nx">resultsNodes</span>:  <span class="kt">List</span><span class="o">&lt;</span><span class="nx">SimpleBusiness</span><span class="o">&gt;</span>   <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">business</span><span class="p">.</span><span class="nx">init</span> <span class="p">{</span> <span class="nx">SimpleBusiness</span><span class="p">()</span> <span class="p">}</span>
+<span class="kr">class</span> <span class="nx">BusinessesNodes</span> : <span class="kt">QModel</span><span class="p">(</span><span class="nx">Businesses</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">val</span> <span class="nx">resultCount</span>: <span class="kt">Int</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">total</span>
+  <span class="nx">val</span> <span class="nx">resultsNodes</span>: <span class="kt">List</span><span class="o">&lt;</span><span class="nx">BusinessQuery</span><span class="o">&gt;</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">business</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="o">::</span><span class="nx">BusinessQuery</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">class</span> <span class="nx">SimpleBusiness</span> : <span class="kt">QModel</span><span class="p">(</span><span class="nx">Business</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">val</span> <span class="nx">name</span>:         <span class="kt">String</span>  <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">val</span> <span class="nx">phoneNumber</span>:  <span class="kt">Int</span>     <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">display_phone</span>
-  <span class="nx">val</span> <span class="nx">directUrl</span>:    <span class="kt">String</span>  <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">url</span>
+<span class="kr">class</span> <span class="nx">BusinessQuery</span> : <span class="kt">QModel</span><span class="p">(</span><span class="nx">Business</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">val</span> <span class="nx">name</span>: <span class="kt">String</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">val</span> <span class="nx">phoneNumber</span>: <span class="kt">Int</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">display_phone</span>
+  <span class="nx">val</span> <span class="nx">directUrl</span>: <span class="kt">String</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">url</span>
 <span class="p">}</span>
 </pre></div>
 
 
+<p>Note that while field types are specified, they are not necessary and can be inferred by the properties
+in the <code class="codehilite">model</code> instance which a concrete query/mutation class delegates its properties to.</p>
 <p>When initializing a <code class="codehilite">BusinessQuery</code> calling the <code class="codehilite"><span class="na">.toGraphql</span><span class="p">()</span></code> results in a valid graphql query as a String:</p>
 <p>E.g. <code class="codehilite">BusinessQuery(&quot;foobar&quot;).toGraphql()</code> returns (formatted by default):</p>
 <div class="codehilite"><pre><span></span>{
- search(limit: 10,
-    term: &quot;foobar&quot;){
+ search(limit: 10, term: &quot;foobar&quot;){
    total,
    business {
      name,
@@ -584,9 +569,12 @@ in the <code class="codehilite">model</code> instance which a concrete query/mut
 </pre></div>
 
 
-<h2 id="how-it-works"><span style="color:#f442c2">How it works</span><a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>The above is only an example of the syntax <em>ktq</em> supports for describing a GraphQL type system and using it. 
-For a more detailed explanation of the abstractions which make up the design of this library, go on to the next section.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><font size="+0.4">Delegated properties should be considered <em>uninitialized</em> until resolved!
+Call <code class="codehilite">model.resolved</code> (<code class="codehilite">Boolean</code> property) to figure this out. 
+Otherwise, all primitive/scalar types will be set to their default value, and all nullable fields will be null.</font></p>
+</div>
                 
                   
                 

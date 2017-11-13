@@ -51,7 +51,7 @@
   
   
   
-    <body data-md-color-primary="cyan" data-md-color-accent="pink">
+    <body data-md-color-primary="none" data-md-color-accent="pink">
   
     <svg class="md-svg">
       <defs>
@@ -512,7 +512,7 @@
 <p>This project is a <a href="http://github.com/prestongarno/ktq-gradle">compiler</a> and <a href="http://github.com/prestongarno/ktq">runtime</a> for type-safe DSLs modeling a <a href="http://graphql.org">GraphQL</a> API.</p>
 <p>GraphQL is a rigorously tested and thoroughly defined <a href="http://facebook.github.io/graphql">specification</a> which defines
 its architecture as structured data which conforms to a simple type system.<br />
-GraphQL is a natural way to describe <strong><em>things</em></strong> and their <strong><em>relationships to other things</em></strong>
+GraphQL is a natural way to describe <strong><em>data types</em></strong> and their <strong><em>relationships to other types</em></strong>
 (also known as a graph, where nodes and edges describe a confined set of data). You can read more
 about it <a href="http://graphql.org/learn/">here</a></p>
 <p>Ktq has the goal of making GraphQL easy to setup and use while taking advantage of
@@ -530,17 +530,20 @@ the both pragmatic and type-safe nature of Kotlin. </p>
 }
 </pre></div>
 
-<p><a href="">Resolve the model</a>, and then get the results:</p>
+<p>You now have a GraphQL Query ready to go!</p>
+<div class="codehilite"><pre><span></span>helloQuery.toGraphQL()
+</pre></div>
+
+<p>Prints:
+<div class="codehilite"><pre><span></span>  {
+    hello
+  }
+</pre></div></p>
+<p><a href="">Resolve the model</a>, by fetching from your endpoint, and then get the results:</p>
 <div class="codehilite"><pre><span></span>println(helloQuery.hello)
 </pre></div>
 
-<p>Simple, right? It gets even better.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The paradigms it is built on to model a GraphQL API may seem confusing at first.
-It utilizes many Kotlin's unique language constructs, and are documented 
-<a href="https://google.com">here</a> if you want to know more.</p>
-</div>
+<p>Simple, right? It gets even better!</p>
                 
                   
                 
