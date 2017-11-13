@@ -39,7 +39,7 @@ docs_dir: docs
 # Options
 extra:
   palette:
-    primary: cyan
+    primary: #003366
     accent: pink
   social:
     - type: globe
