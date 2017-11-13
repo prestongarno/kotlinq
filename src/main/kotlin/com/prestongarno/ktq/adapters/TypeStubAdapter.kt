@@ -5,48 +5,27 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.TypeStub
-import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty
 
-/**
- * This class represents a createStub for a non-leaf createTypeStub (aka an object) fragment a graph */
-internal class TypeStubAdapter<I : QType, P : QModel<I>, B : ArgBuilder>(
-    qproperty: GraphQlProperty,
-    private val builderInit: (ArgBuilder) -> B,
-    val init: (() -> P)? = null,
-    val config: (B.() -> Unit)? = null
-) : PreDelegate(qproperty),
-    TypeStub<P, I>,
-    InitStub<I>,
-    TypeConfig<I, B> {
+internal class TypeStubAdapter<out T : QModel<U>, out U : QType, out A : ArgBuilder>(
+    private val qproperty: GraphQlProperty,
+    private val init: () -> T,
+    private val argBuilder: A?
+) : TypeStub<T, U, A> {
 
-  override fun config(provider: B.() -> Unit): InitStub<I> =
-      TypeStubAdapter(qproperty,builderInit, this.init, provider)
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+      TypeStubImpl(qproperty, init, argBuilder?.arguments?.invoke() ?: emptyMap()).bind(inst)
 
-  /**
-   * For the possible possibly nullable initializer ->
-   * see [com.prestongarno.ktq.adapters.TypeListAdapter.provideDelegate]
-   */
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<P> {
-    val initializer: () -> P = this.init!!
-    return TypeStubImpl(qproperty, init, apply {
-      config?.invoke(builderInit(this)) }.args.toMap()
-    ).also { inst.fields.add(it) }
+  override fun config(argumentScope: A.() -> Unit) {
+    argBuilder?.apply(argumentScope)
   }
-
-  override fun <U : QModel<I>> querying(init: () -> U): TypeStub<U, I> =
-      TypeStubAdapter(qproperty, builderInit, init, config)
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args.put(name, value) }
-
 }
 
 @ValueDelegate(QModel::class)
-private data class TypeStubImpl<I : QType, out P : QModel<I>>(
+private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
@@ -62,14 +41,15 @@ private data class TypeStubImpl<I : QType, out P : QModel<I>>(
     value.resolved = true
     return result is JsonObject
         && value.fields.filterNot { f ->
-      f.accept(result[f.qproperty.graphqlName])
+      f.value.accept(result[f.value.qproperty.graphqlName])
     }.isEmpty() && value.resolved
   }
 
   override fun toRawPayload(): String = qproperty.graphqlName +
-      if (args.isNotEmpty()) this.args.entries
-          .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
-            "$key: ${formatAs(value)}"
-          } else "" + value.toGraphql(false)
+      (if (args.isNotEmpty())
+        (args.entries.joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
+          "$key: ${formatAs(value)}"
+        }) else "") +
+      value.toGraphql(false)
 
 }

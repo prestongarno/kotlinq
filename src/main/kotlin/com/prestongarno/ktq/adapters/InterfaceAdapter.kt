@@ -11,51 +11,65 @@ import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.stubs.FragmentContext
 import com.prestongarno.ktq.stubs.FragmentScope
+import com.prestongarno.ktq.stubs.InterfaceConfigFragment
 import com.prestongarno.ktq.stubs.InterfaceFragment
+import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
-internal data class InterfaceStubImpl<I, A : ArgBuilder>(
-    private val qproperty: GraphQlProperty,
-    private val arginit: (ArgBuilder) -> A
-): InterfaceFragment<I, A>
+internal data class InterfaceStubImpl<I>(
+    private val qproperty: GraphQlProperty
+) : InterfaceFragment<I>
     where I : QType,
           I : QInterface {
-  override fun invoke(context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
-      InterfaceFragmentAdapter<I, A>(qproperty, arginit).apply(context)
+
+  override fun invoke(context: FragmentScope<I, ArgBuilder>.() -> Unit): InterfaceStub<I> =
+      InterfaceFragmentAdapter<I, ArgBuilder>(qproperty).apply(context)
+}
+
+internal data class InterfaceConfigStubImpl<I, A : ArgBuilder>(
+    private val qproperty: GraphQlProperty
+) : InterfaceConfigFragment<I, A>
+    where I : QType,
+          I : QInterface {
+  override fun invoke(arguments: A, context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
+      InterfaceFragmentAdapter<I, A>(qproperty, arguments).apply(context)
 }
 
 /**
  * Base type of a R.H.S. delegate provider
  */
-internal class InterfaceFragmentAdapter<I, out A : ArgBuilder>(
+internal class InterfaceFragmentAdapter<I, A : ArgBuilder>(
     qproperty: GraphQlProperty,
-    private val arginit: (ArgBuilder) -> A
-    // TODO -> Separate required arguments as data class here from inner optional config block
+    val arguments: A? = null
 ) : PreDelegate(qproperty),
     FragmentScope<I, A>,
-    InterfaceStub<I>,
-    ArgBuilder
+    InterfaceStub<I>
+
     where I : QType,
           I : QInterface {
 
 
   private val fragments = mutableSetOf<Fragment>()
 
+  private var config: (A.() -> Unit)? = null
+
   override fun <T : I> on(initializer: () -> QModel<T>) {
     fragments += Fragment(initializer)
   }
 
   override fun config(scope: A.() -> Unit) {
-    arginit(this).scope()
+    this.config = scope
   }
 
   override fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
   ): QField<QModel<I>?> =
-      InterfaceDelegateImpl<I>(qproperty, args, fragments.toSet()).apply { inst.fields.add(this) }
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
+      InterfaceDelegateImpl<I>(
+          qproperty,
+          toArgumentMap(arguments, config),
+          fragments.toSet()
+      ).bind(inst)
 }
 
 @ValueDelegate(QModel::class)
@@ -65,7 +79,7 @@ private class InterfaceDelegateImpl<I : QType>(
     override val fragments: Set<Fragment>
 ) : Adapter,
     QField<QModel<I>?>,
-    FragmentContext<I> {
+    FragmentContext {
 
   var value: QModel<I>? = null
 
@@ -74,31 +88,24 @@ private class InterfaceDelegateImpl<I : QType>(
     value = fragments.find { it.model.graphqlType == result["__typename"] }
         ?.initializer?.invoke()?.let {
       it.accept(result)
+      @Suppress("UNCHECKED_CAST")
       it as? QModel<I>
     }
     return value?.isResolved() == true
   }
 
-  override fun toRawPayload(): String {
-    return StringBuilder(fragments.size * 10).apply {
-      this add qproperty.graphqlName add
-          (if (args.isEmpty())
-            ""
-          else
-            args.entries.joinToString(prefix = "(", postfix = ")") { (key, value) ->
-              "\\\"$key\\\": " + formatAs(value)
-            }) add
-          fragments.joinToString(prefix = "{__typename,", postfix = "}") {
-            "... on " + it.model.graphqlType + it.model.toGraphql(false)
-          }
-    }.toString()
-  }
+  override fun toRawPayload(): String =
+      qproperty.graphqlName + (if (args.isEmpty()) "" else args.entries.joinToString(
+          prefix = "(", postfix = ")") { (key, value) ->
+        "$key: " + formatAs(value)
+      }) + fragments.joinToString(
+          prefix = "{__typename,",
+          postfix = "}",
+          transform = Fragment::toString)
 
   override operator fun getValue(
       inst: QModel<*>,
       property: KProperty<*>
   ): QModel<I>? = value
-
-  private infix fun StringBuilder.add(value: String) = this.append(value)
 
 }

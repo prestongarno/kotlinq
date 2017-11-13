@@ -5,50 +5,76 @@ import com.prestongarno.ktq.EnumStub
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
+import com.prestongarno.ktq.hooks.Configurable
+import com.prestongarno.ktq.hooks.NoArgConfig
+import com.prestongarno.ktq.hooks.OptionalConfig
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+// Kotlin/Intellij bug??? can't move the `where` clause up to this line!
+@PublishedApi internal class EnumConfigStubImpl<T, A>(
+    private val qproperty: GraphQlProperty,
+    private val enumClass: KClass<T>
+) : Configurable<EnumStub<T, A>, A> by Configurable.new({
+  EnumAdapterImpl(qproperty, enumClass, it)
+})
+    where T : Enum<*>, T : QEnumType, A : ArgBuilder
 
-internal class EnumAdapter<T, out A>(
+@PublishedApi internal class EnumOptionalArgStub<T, A>(
+    private val qproperty: GraphQlProperty,
+    private val enumClass: KClass<T>
+) : OptionalConfig<EnumStub<T, A>, T, A> by OptionalConfig.new({
+  EnumAdapterImpl(qproperty, enumClass, it)
+})
+    where T : Enum<*>, T : QEnumType, A : ArgBuilder
+
+@PublishedApi internal class EnumNoArgStub<T>(
+    private val qproperty: GraphQlProperty,
+    private val enumClass: KClass<T>
+) : NoArgConfig<EnumStub<T, ArgBuilder>, T> by NoArgConfig.new({
+  EnumAdapterImpl(qproperty, enumClass, it ?: ArgBuilder())
+})
+    where T : Enum<*>, T : QEnumType
+
+private class EnumAdapterImpl<T, out A>(
     qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
-    private val builderInit: (ArgBuilder) -> A,
-    private val config: (A.() -> Unit)? = null
+    private val argBuilder: A?
 ) : PreDelegate(qproperty),
-    EnumStub<T>
+    EnumStub<T, A>
 
     where T : Enum<*>,
           T : QEnumType,
           A : ArgBuilder {
 
+  override var default: T? = null
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(enumClass, qproperty, apply {
-            config?.invoke(builderInit(this))
-          }.args.toMap()).also {
-        inst.fields.add(it)
-      }
+      EnumFieldImpl(qproperty, enumClass, argBuilder?.arguments?.invoke()?: emptyMap(), default).bind(inst)
 
-  fun config(config: A.() -> Unit) = EnumAdapter(qproperty, enumClass, builderInit, config)
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
-
+  /**
+   * TODO:: currently if no [ArgBuilder] is passed in, then the config() block is empty
+   * Easy way to do this is create one instance of the argclass reflectively (since [OptionalConfig]
+   * delegate should have a no-arg constructor
+   */
+  override fun config(argumentScope: A.() -> Unit) = argBuilder?.argumentScope()?: Unit
 }
 
 @ValueDelegate(Enum::class)
 private data class EnumFieldImpl<T>(
-    private val enumClass: KClass<T>,
     override val qproperty: GraphQlProperty,
-    override val args: Map<String, Any> = emptyMap()
+    private val enumClass: KClass<T>,
+    override val args: Map<String, Any> = emptyMap(),
+    private val default: T? = null
 ) : QField<T>, Adapter where T : Enum<*>, T : QEnumType {
 
-  var value: T? = null
+  var value: T? = default
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>) = value!!
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default!!
 
   override fun accept(result: Any?): Boolean {
     // TODO don't call the java reflection type - use kotlin enums only
-    value = enumClass.java.enumConstants?.find { it.name == "$result" }
+    value = enumClass.java.enumConstants?.find { it.name == "$result" } ?: default
     return value != null
   }
 

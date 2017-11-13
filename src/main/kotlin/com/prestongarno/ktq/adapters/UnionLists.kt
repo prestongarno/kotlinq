@@ -40,9 +40,7 @@ internal sealed class UnionListConfigAdapter<I : QUnionType>(
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<*>>> =
       queue(model, dispatcher?: { /* nothing */}, {
-        val stub = UnionListStubImpl(qproperty, queue.reset().toSet())
-        inst.fields.add(stub)
-        stub
+        UnionListStubImpl(qproperty, queue.reset().toSet()).bind(inst)
       })
 
   companion object {
@@ -70,7 +68,7 @@ private class UnionListStubImpl(
     override val fragments: Set<Fragment>
 ) : Adapter,
     QField<List<QModel<*>>>,
-    FragmentContext<QType> {
+    FragmentContext {
 
   private var value: List<QModel<QType>> = mutableListOf()
 

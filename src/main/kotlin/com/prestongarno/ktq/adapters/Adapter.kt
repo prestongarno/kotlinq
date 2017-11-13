@@ -34,7 +34,8 @@ interface QField<out T> {
 
 internal fun formatAs(value: Any): String {
   return when (value) {
-    is Int, is Boolean, Float -> "$value"
+    is Int, is Boolean -> "$value"
+    is Float -> "${value}f"
     is String -> "\\\"$value\\\""
     is QInput -> value.toPayloadString()
     is Enum<*> -> value.name

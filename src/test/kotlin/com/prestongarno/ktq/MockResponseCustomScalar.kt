@@ -1,5 +1,5 @@
 package com.prestongarno.ktq
-
+/*
 import com.prestongarno.ktq.QSchemaType.QCustomScalar
 import com.prestongarno.ktq.QSchemaType.QCustomScalarList
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
@@ -129,4 +129,4 @@ object Note : QType {
   }
 }
 
-object ID : CustomScalar
+object ID : CustomScalar*/

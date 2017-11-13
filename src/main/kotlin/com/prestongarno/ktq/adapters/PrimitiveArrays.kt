@@ -27,93 +27,81 @@ sealed class PrimitiveArrayStub(
   }
 }
 
-sealed class ScalarArrayDelegateImpl<T : ArgBuilder, out D : PrimitiveArrayStub>(
+sealed class ScalarArrayDelegateImpl<A : ArgBuilder, out D : PrimitiveArrayStub>(
     val graphqlProperty: GraphQlProperty,
-    val arginit: (ArgBuilder) -> T,
-    val config: (T.() -> Unit)? = null
-) : ArgBuilder,
-    ScalarArrayDelegate<D> {
+    val config: (A.() -> Unit)? = null
+) : ScalarArrayDelegate<D> {
 
   val args by lazy { mutableMapOf<String, Any>() }
 
-  abstract fun config(config: T.() -> Unit): ScalarArrayDelegate<D>
+  abstract fun config(config: A.() -> Unit): ScalarArrayDelegate<D>
 
   operator fun invoke(literal: ScalarArrayDelegate<D>.() -> Unit): ScalarArrayDelegate<D> = apply { literal.invoke(this) }
-
-  override fun addArg(name: String, value: Any): ArgBuilder = apply { args[name] = value }
 
 }
 
 class StringArrayDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, StringArrayStub>(schemaProperty, arginit, config) {
+) : ScalarArrayDelegateImpl<A, StringArrayStub>(schemaProperty, config) {
 
   var default: Array<String>? = null
 
   fun withDefault(value: Array<String>): ScalarArrayDelegateImpl<A, StringArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringArrayStub =
-      StringArrayStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
-          .apply { inst.fields.add(this) }
+      StringArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): StringArrayDelegate<A> =
-      StringArrayDelegate(graphqlProperty, arginit, config)
+      StringArrayDelegate(graphqlProperty, config)
 }
 
 class IntegerArrayDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, IntArrayStub>(schemaProperty, arginit, config) {
+) : ScalarArrayDelegateImpl<A, IntArrayStub>(schemaProperty, config) {
 
   var default: IntArray? = null
 
   fun withDefault(value: IntArray): ScalarArrayDelegateImpl<A, IntArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntArrayStub =
-      IntArrayStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
-          .apply { inst.fields.add(this) }
+      IntArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): IntegerArrayDelegate<A> =
-      IntegerArrayDelegate(graphqlProperty, arginit, config)
+      IntegerArrayDelegate(graphqlProperty, config)
 }
 
 class FloatArrayDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, FloatArrayStub>(schemaProperty, arginit, config) {
+) : ScalarArrayDelegateImpl<A, FloatArrayStub>(schemaProperty, config) {
 
   var default: FloatArray? = null
 
   fun withDefault(value: FloatArray): ScalarArrayDelegateImpl<A, FloatArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatArrayStub =
-      FloatArrayStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
-          .apply { inst.fields.add(this) }
+      FloatArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): FloatArrayDelegate<A> =
-      FloatArrayDelegate(graphqlProperty, arginit, config)
+      FloatArrayDelegate(graphqlProperty, config)
 }
 
 class BooleanArrayDelegate<A : ArgBuilder>(
     schemaProperty: GraphQlProperty,
-    arginit: (ArgBuilder) -> A,
     config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, BooleanArrayStub>(schemaProperty, arginit, config) {
+) : ScalarArrayDelegateImpl<A, BooleanArrayStub>(schemaProperty, config) {
 
   var default: BooleanArray? = null
 
   fun withDefault(value: BooleanArray): ScalarArrayDelegateImpl<A, BooleanArrayStub> = apply { this.default = value }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BooleanArrayStub =
-      BooleanArrayStub(graphqlProperty, default, apply { config?.invoke(arginit(this)) }.args.toMap())
-          .apply { inst.fields.add(this) }
+      BooleanArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
 
   override fun config(config: A.() -> Unit): BooleanArrayDelegate<A> =
-      BooleanArrayDelegate(graphqlProperty, arginit, config)
+      BooleanArrayDelegate(graphqlProperty, config)
 }
 
 @CollectionDelegate(Array<String>::class)

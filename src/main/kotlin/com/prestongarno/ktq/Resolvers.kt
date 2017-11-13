@@ -59,12 +59,12 @@ fun String.prepend(of: String): String = of + this
 
 internal fun QModel<*>.prettyPrinted(indentation: Int): String =
     if (model is QUnionType) prettyPrintUnion(indentation) else
-      ((fields.joinToString(separator = ",\n") { it.prettyPrinted() }
+      ((getFields().joinToString(separator = ",\n") { it.prettyPrinted() }
           .indent(1)) + "\n}").prepend("{\n").indent(indentation)
           .replace("\\s*([(,])".toRegex(), "$1").trim()
 
 internal fun QModel<*>.prettyPrintUnion(indentation: Int) =
-    (fields.joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
+    (getFields().joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
       it.prettyPrinted().prepend("... on ")
     }.indent(1)
         .plus("\n}")
