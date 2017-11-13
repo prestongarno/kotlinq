@@ -1,5 +1,5 @@
 package com.prestongarno.ktq.unions
-
+/*
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
@@ -131,7 +131,7 @@ class Sample {
         val weightInKg by model.weight
             .withDefault(100000000)
             .config {
-              addArg("Hello", "World") // can arbitrarily add arguments to graphql queries
+              addArg("Hello", "World") // can arbitrarily add argBuilder to graphql queries
             }
       }
     }
@@ -175,4 +175,4 @@ class Sample {
         myQuery.thingSearch.first().model
     ).isEqualTo(Car)
   }
-}
+}*/

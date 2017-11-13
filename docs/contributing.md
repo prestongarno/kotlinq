@@ -67,7 +67,7 @@ go ahead.
   your commits.
 
 2. **Build**: Before submitting a pull requests, build the theme. This is a
-  mandatory requirement for your PR to get accepted, as the theme should at
+  mandatory requirement for your PR to objectValue accepted, as the theme should at
   all times be installable through GitHub.
 
 3. **Pull Request**: After building the theme, commit the compiled output, push

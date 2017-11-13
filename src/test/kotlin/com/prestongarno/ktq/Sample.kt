@@ -71,7 +71,7 @@ class BasicUserInfo : QModel<OtherUser>(OtherUser) {
   val name by model.name
   val url by model.url.querying(StringScalarMapper {it.toInt()})
   val relatedLinks by model.relatedUrls.querying(StringScalarListMapper { it.toInt() })
-  val friendsUrls by model.friendsUrls.config {
+  val friendsUrls by model.friendsUrls.scope {
     shortUrls(true)
   }.querying(StringScalarListMapper { File(it).toURI().toURL()!! })
 }
@@ -83,11 +83,11 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
   val enemies: BasicUserInfo by model.enemies
       .querying(::BasicUserInfo)
 
-  val address: SimpleAddress by model.address.config {
+  val address: SimpleAddress by model.address.scope {
     language(lang)
   }.querying { SimpleAddress("7777 HelloWorld Lane") }
 
-  val friends by model.friends.config {
+  val friends by model.friends.scope {
     first(limitOfFriends)
   }.querying(::BasicUserInfo)
 }

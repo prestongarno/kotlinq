@@ -31,7 +31,7 @@ val helloQuery = object : QModel(Query) {
 }
 ```
 
-[Resolve the model][6], and then get the results:
+[Resolve the model][6], and then objectValue the results:
 
 ```
 println(helloQuery.hello)

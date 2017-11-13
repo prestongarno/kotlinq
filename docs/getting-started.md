@@ -1,4 +1,4 @@
-## <span style="color:#f442c2"> How to get **ktq** </span>
+## <span style="color:#f442c2"> How to objectValue **ktq** </span>
 
 To use in a project, add the dependency to a gradle buildscript:
 

@@ -5,16 +5,10 @@ import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
  * Interface representing a *concrete* type on a graphql schema.
- * TODO(preston) **Fix** for restricting bounds on interface types to
- * require a QType instead of possibly another interface type
- * (because GraphQL doesn't allow >1 levels of inheritance
  */
-interface QType : QInterfaceType
+interface QType : QSchemaType
 
-/**
- * Supertype of an object representing
- * a GraphQL Interface definitions */
-interface QInterfaceType : QSchemaType
+interface QInterface
 
 /**
  * Supertype of a GraphQL Enum definition
@@ -30,15 +24,14 @@ interface QEnumType : QSchemaType
  */
 interface CustomScalar : QSchemaType
 
-interface QUnionType : QInterfaceType {
+interface QUnionType : QType {
 
   val queue: FragmentProvider
 
   fun on(init: () -> QModel<QType>)
 
   companion object {
-    fun create(objectModel: QUnionType): QUnionType =
-        UnionConfigAdapter.baseObject(objectModel)
+    fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType =
+        UnionConfigAdapter.baseObject<U, A>(objectModel)
   }
 }
-

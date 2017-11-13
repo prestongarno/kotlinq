@@ -1,7 +1,6 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.QInterfaceType
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QUnionType
@@ -11,7 +10,7 @@ import com.prestongarno.ktq.stubs.UnionListInitStub
 import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.stubs.FragmentCollectionContext
+import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
 internal sealed class UnionListConfigAdapter<I : QUnionType>(
@@ -41,9 +40,7 @@ internal sealed class UnionListConfigAdapter<I : QUnionType>(
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<*>>> =
       queue(model, dispatcher?: { /* nothing */}, {
-        val stub = UnionListStubImpl(qproperty, queue.reset().toSet())
-        inst.fields.add(stub)
-        stub
+        UnionListStubImpl(qproperty, queue.reset().toSet()).bind(inst)
       })
 
   companion object {
@@ -70,7 +67,8 @@ private class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>
 ) : Adapter,
-    FragmentCollectionContext<QInterfaceType> {
+    QField<List<QModel<*>>>,
+    FragmentContext {
 
   private var value: List<QModel<QType>> = mutableListOf()
 
@@ -82,7 +80,7 @@ private class UnionListStubImpl(
           .mapNotNull {
             it["__typename"]?.let { resultType ->
               fragments.find {
-                it.model.graphqlType == resultType && (it.model as? QModel<QType>) != null
+                it.model.graphqlType == resultType && (it.model as? QModel<*>) != null
               }
             }?.to(it)
           }.let {
