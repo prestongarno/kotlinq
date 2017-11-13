@@ -19,6 +19,7 @@ import com.prestongarno.ktq.adapters.UnionConfigAdapter
 import com.prestongarno.ktq.hooks.Configurable
 import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.InitStub
+import com.prestongarno.ktq.hooks.NoArgConfig
 import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.hooks.providers.EnumProvider.createEnumStub
@@ -290,8 +291,8 @@ interface QSchemaType {
   }
 
   object QEnum {
-    inline fun <reified T> stub(): StubProvider<EnumStub<T, ArgBuilder>> where T : Enum<*>, T : QEnumType
-        = createEnumStub(T::class.simpleName.toString(), T::class)
+    inline fun <reified T> stub(): StubProvider<NoArgConfig<EnumStub<T, ArgBuilder>, T>> where T : Enum<*>, T : QEnumType
+        = Grub("${T::class.simpleName}") { EnumStub.noArgStub(it, T::class) }
 
     inline fun <reified T, A : ArgBuilder> configStub(
     ): StubProvider<Configurable<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType

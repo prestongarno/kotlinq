@@ -7,6 +7,7 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.TypeStub
 import com.prestongarno.ktq.adapters.QField
+import com.prestongarno.ktq.adapters.applyNotNull
 import kotlin.reflect.KProperty
 
 /**
@@ -27,7 +28,7 @@ interface Configurable<out D : DelegateProvider<*>, in A: ArgBuilder> : SchemaSt
 
   companion object {
     fun <T : DelegateProvider<*>, A : ArgBuilder> new(
-        constructor: (A, (T.() -> Unit)?) -> T
+        constructor: (A) -> T
     ): Configurable<T, A> = DefaultConfigurable(constructor)
   }
 }
@@ -41,14 +42,14 @@ interface Configurable<out D : DelegateProvider<*>, in A: ArgBuilder> : SchemaSt
  * @param A : The type of ArgBuilder which configures on this field
  */
 interface OptionalConfig<out D : DelegateProvider<T>, out T : Any?, in A: ArgBuilder> : SchemaStub {
-  operator fun invoke(arguments: A? = null, scope: (D.() -> Unit)? = null): D
 
-  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      invoke().provideDelegate(inst, property)
+  operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
+
+  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 
   companion object {
     fun <D : DelegateProvider<T>, T : Any?, A : ArgBuilder> new(
-        constructor: (A?, (D.() -> Unit)?) -> D
+        constructor: (A?) -> D
     ): OptionalConfig<D, T, A> = DefaultOptionalConfig(constructor)
   }
 }
@@ -68,7 +69,7 @@ interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
 
   companion object {
     fun <D : DelegateProvider<T>, T : Any?> new(
-        constructor: (ArgBuilder?, (D.() -> Unit)?) -> D
+        constructor: (ArgBuilder?) -> D
     ): NoArgConfig<D, T> = DefaultNoArgConfig(constructor)
   }
 }
@@ -104,11 +105,11 @@ interface InitStub<T : QType, A : ArgBuilder> : SchemaStub {
  * @param constructor a function that constructs a new [DelegateProvider]
  */
 private class DefaultConfigurable<out T : DelegateProvider<*>, in A : ArgBuilder>(
-    private val constructor: (A, (T.() -> Unit)?) -> T
+    private val constructor: (A) -> T
 ) : Configurable<T, A> {
 
   override operator fun invoke(arguments: A, scope: (T.() -> Unit)?): T =
-      constructor.invoke(arguments, scope)
+      constructor.invoke(arguments).applyNotNull(scope)
 }
 
 /**
@@ -118,17 +119,20 @@ private class DefaultConfigurable<out T : DelegateProvider<*>, in A : ArgBuilder
  * @param constructor a function that constructs a new [DelegateProvider]
  */
 private class DefaultOptionalConfig<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder>(
-    private val constructor: (A?, (D.() -> Unit)?) -> D
+    private val constructor: (A?) -> D
 ) : OptionalConfig<D, T, A> {
 
-  override fun invoke(arguments: A?, scope: (D.() -> Unit)?): D =
-      constructor(arguments, scope)
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+      constructor(null).provideDelegate(inst, property)
+
+  override fun invoke(arguments: A, scope: (D.() -> Unit)?): D =
+      constructor(arguments).applyNotNull(scope)
 }
 
 private class DefaultNoArgConfig<out D : DelegateProvider<T>, out T : Any?>(
-    private val constructor: (ArgBuilder?, (D.() -> Unit)?) -> D
+    private val constructor: (ArgBuilder?) -> D
 ) : NoArgConfig<D, T> {
 
   override fun invoke(arguments: ArgBuilder?, scope: (D.() -> Unit)?): D =
-      constructor(arguments, scope)
+      constructor(arguments).applyNotNull(scope)
 }

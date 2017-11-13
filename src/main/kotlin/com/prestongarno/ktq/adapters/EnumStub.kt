@@ -6,6 +6,8 @@ import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.hooks.Configurable
+import com.prestongarno.ktq.hooks.NoArgConfig
+import com.prestongarno.ktq.hooks.OptionalConfig
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -13,41 +15,31 @@ import kotlin.reflect.KProperty
 @PublishedApi internal class EnumConfigStubImpl<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
-) : Configurable<EnumStub<T, A>, A> by Configurable.new({ arguments, scope ->
-  EnumAdapterImpl(qproperty, enumClass, arguments, null).applyNotNull(scope)
+) : Configurable<EnumStub<T, A>, A> by Configurable.new({
+  EnumAdapterImpl(qproperty, enumClass, it)
+})
+    where T : Enum<*>, T : QEnumType, A : ArgBuilder
+
+@PublishedApi internal class EnumOptionalArgStub<T, A>(
+    private val qproperty: GraphQlProperty,
+    private val enumClass: KClass<T>
+) : OptionalConfig<EnumStub<T, A>, T, A> by OptionalConfig.new({
+  EnumAdapterImpl(qproperty, enumClass, it)
 })
     where T : Enum<*>, T : QEnumType, A : ArgBuilder
 
 @PublishedApi internal class EnumNoArgStub<T>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
-) : EnumStub<T, ArgBuilder>
-    where T : Enum<*>,
-          T : QEnumType {
+) : NoArgConfig<EnumStub<T, ArgBuilder>, T> by NoArgConfig.new({
+  EnumAdapterImpl(qproperty, enumClass, it ?: ArgBuilder())
+})
+    where T : Enum<*>, T : QEnumType
 
-  private var arguments: ArgBuilder? = null
-
-  override fun config(argumentScope: ArgBuilder.() -> Unit) {
-    arguments = arguments?.apply(argumentScope)?: ArgBuilder().apply(argumentScope)
-  }
-
-  override var default: T? = null
-
-  operator fun invoke(
-      arguments: ArgBuilder = ArgBuilder(),
-      scope: (EnumAdapterImpl<T, ArgBuilder>.() -> Unit)?
-  ): EnumAdapterImpl<T, ArgBuilder> =
-      EnumAdapterImpl(qproperty, enumClass, arguments, default).applyNotNull(scope)
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(qproperty, enumClass, arguments?.arguments?.invoke()?: emptyMap())
-}
-
-@PublishedApi internal class EnumAdapterImpl<T, out A>(
+private class EnumAdapterImpl<T, out A>(
     qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
-    private val argBuilder: A,
-    override var default: T?
+    private val argBuilder: A?
 ) : PreDelegate(qproperty),
     EnumStub<T, A>
 
@@ -55,10 +47,17 @@ import kotlin.reflect.KProperty
           T : QEnumType,
           A : ArgBuilder {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(qproperty, enumClass, argBuilder.arguments(), default)
+  override var default: T? = null
 
-  override fun config(argumentScope: A.() -> Unit) = argBuilder.argumentScope()
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+      EnumFieldImpl(qproperty, enumClass, argBuilder?.arguments?.invoke()?: emptyMap(), default)
+
+  /**
+   * TODO:: currently if no [ArgBuilder] is passed in, then the config() block is empty
+   * Easy way to do this is create one instance of the argclass reflectively (since [OptionalConfig]
+   * delegate should have a no-arg constructor
+   */
+  override fun config(argumentScope: A.() -> Unit) = argBuilder?.argumentScope()?: Unit
 }
 
 @ValueDelegate(Enum::class)
