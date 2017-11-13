@@ -46,9 +46,10 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
   }
 
   override fun toRawPayload(): String = qproperty.graphqlName +
-      if (args.isNotEmpty()) this.args.entries
-          .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
-            "$key: ${formatAs(value)}"
-          } else "" + value.toGraphql(false)
+      (if (args.isNotEmpty())
+        (args.entries.joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
+          "$key: ${formatAs(value)}"
+        }) else "") +
+      value.toGraphql(false)
 
 }

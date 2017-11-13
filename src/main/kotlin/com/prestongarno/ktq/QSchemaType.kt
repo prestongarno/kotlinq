@@ -3,9 +3,6 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.adapters.BooleanArrayDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegateConfig
-import com.prestongarno.ktq.adapters.EnumConfigStubImpl
-import com.prestongarno.ktq.adapters.EnumNoArgStub
-import com.prestongarno.ktq.adapters.EnumOptionalArgStub
 import com.prestongarno.ktq.adapters.FloatArrayDelegate
 import com.prestongarno.ktq.adapters.FloatDelegate
 import com.prestongarno.ktq.adapters.FloatDelegateConfig
@@ -18,11 +15,9 @@ import com.prestongarno.ktq.adapters.StringDelegateConfig
 import com.prestongarno.ktq.adapters.UnionConfigAdapter
 import com.prestongarno.ktq.hooks.Configurable
 import com.prestongarno.ktq.hooks.Grub
-import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.NoArgConfig
 import com.prestongarno.ktq.hooks.OptionalConfig
 import com.prestongarno.ktq.hooks.StubProvider
-import com.prestongarno.ktq.hooks.TypeConfig
 import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createCollectionConfigStub
 import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createCollectionStub
 import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createInterfaceConfigStub
@@ -31,10 +26,6 @@ import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalar
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarListConfig
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarListStub
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarStub
-import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeConfigStub
-import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeListConfigStub
-import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeListStub
-import com.prestongarno.ktq.hooks.providers.TypeProvider.createTypeStub
 import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionListStub
 import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionStub
 import com.prestongarno.ktq.stubs.CollectionConfigFragment
@@ -182,21 +173,16 @@ interface QSchemaType {
    * Object which provides 2 convenience methods for generated schemas to create delegates fragment
    * fields which are of any createTypeStub defined in the schema
    */
-  object QObject {
-    /**
-     * Method which provides a delegate for [QType] fields
-     * @param T The createTypeStub of the createStub which the field is backing
-     * @return Grub<[InitStub]<[T]>> the delegate which lazily provides a InitStub<T> */
-    inline fun <reified T : QType> stub(): StubProvider<InitStub<out T, ArgBuilder>> = createTypeStub(T::class.simpleName!!)
+  object QTypes {
 
-    /**
-     * Method which provides a delegate for {@link com.prestongarno.ktq.QType} fields
-     * fragment schema-defined types which take input argBuilder
-     * @param T createTypeStub of the field (schema-defined createTypeStub)
-     * @param A createTypeStub argument for the argument builder class for that given schema field definition
-     * @return Grub<QTypeConfigStub<T, A>> the delegate which lazily provides a QTypeConfigStub<T, A> */
-    inline fun <reified T : QType, A : ArgBuilder> configStub(): StubProvider<TypeConfig<out T, A>>
-        = createTypeConfigStub(T::class.simpleName!!)
+    inline fun <reified T : QType> stub(): StubProvider<TypeStub.Query<T>> =
+        Grub("${T::class.simpleName}") { TypeStub.noArgStub<T>(it) }
+
+    inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub(): StubProvider<TypeStub.OptionalConfigQuery<T, A>> =
+        Grub("${T::class.simpleName}") { TypeStub.optionalArgStub<T, A>(it) }
+
+    inline fun <reified T : QType, A : ArgBuilder> configStub(): StubProvider<TypeStub.ConfigurableQuery<T, A>> =
+        Grub("${T::class.simpleName}") { TypeStub.argStub<T, A>(it) }
   }
 
   object QInterfaces {
@@ -232,7 +218,7 @@ interface QSchemaType {
      * @param T The createTypeStub of the createStub
      * @return Grub<ListInitStub<T>> the delegate which lazily provides a ListInitStub<T> */
     inline fun <reified T : QType> stub(): StubProvider<ListInitStub<T, ArgBuilder>>
-        = createTypeListStub(T::class.simpleName!!)
+        = TODO()
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.QTypeList} fields
@@ -242,7 +228,7 @@ interface QSchemaType {
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<ListConfigType<T, A>> the delegate which lazily provides a ListConfigType<T, A> */
     inline fun <reified T : QType, A : ArgBuilder> configStub(): StubProvider<ListConfigType<T, A>> =
-        createTypeListConfigStub(T::class.simpleName!!)
+        TODO()
   }
 
   /**
@@ -290,16 +276,16 @@ interface QSchemaType {
   }
 
   object QEnum {
-    inline fun <reified T, A : ArgBuilder> configStub(
-    ): StubProvider<Configurable<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
-        = Grub("${T::class.simpleName}") { EnumStub.argStub<T, A>(it, T::class) }
+    inline fun <reified T> stub(): StubProvider<NoArgConfig<EnumStub<T, ArgBuilder>, T>> where T : Enum<*>, T : QEnumType
+        = Grub("${T::class.simpleName}") { EnumStub.noArgStub(it, T::class) }
 
     inline fun <reified T, A : ArgBuilder> optionalConfigStub(
     ): StubProvider<OptionalConfig<EnumStub<T, A>, T, A>> where T : Enum<*>, T : QEnumType
         = Grub("${T::class.simpleName}") { EnumStub.optionalArgStub<T, A>(it, T::class) }
 
-    inline fun <reified T> stub(): StubProvider<NoArgConfig<EnumStub<T, ArgBuilder>, T>> where T : Enum<*>, T : QEnumType
-        = Grub("${T::class.simpleName}") { EnumStub.noArgStub(it, T::class) }
+    inline fun <reified T, A : ArgBuilder> configStub(
+    ): StubProvider<Configurable<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
+        = Grub("${T::class.simpleName}") { EnumStub.argStub<T, A>(it, T::class) }
   }
 
 }

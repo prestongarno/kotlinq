@@ -5,9 +5,6 @@ import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
  * Interface representing a *concrete* type on a graphql schema.
- * TODO(preston) **Fix** for restricting bounds on interface types to
- * require a QType instead of possibly another interface type
- * (because GraphQL doesn't allow >1 levels of inheritance
  */
 interface QType : QSchemaType
 
