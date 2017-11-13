@@ -292,7 +292,7 @@ interface QSchemaType {
   object QEnum {
     inline fun <reified T, A : ArgBuilder> configStub(
     ): StubProvider<Configurable<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
-        = Grub("${T::class.simpleName}") { EnumConfigStubImpl<T, A>(it, T::class) }
+        = Grub("${T::class.simpleName}") { EnumStub.argStub<T, A>(it, T::class) }
 
     inline fun <reified T, A : ArgBuilder> optionalConfigStub(
     ): StubProvider<OptionalConfig<EnumStub<T, A>, T, A>> where T : Enum<*>, T : QEnumType

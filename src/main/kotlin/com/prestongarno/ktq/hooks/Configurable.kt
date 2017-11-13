@@ -76,30 +76,6 @@ interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
 }
 
 /**
- * Represents an intermediate object that enforces
- * a 'scope { //argBuilder }' on a delegate initialization
- * @param T : The type of QSchemaType (object) which provides a delegate type <T>
- * @param A : The type of ArgBuilder which configures on this field */
-interface TypeConfig<T: QType, A: ArgBuilder> : SchemaStub {
-  operator fun invoke(arguments: A, scope: (A.() -> Unit)? = null): InitStub<T, A>
-}
-
-/**
- * A terminal delegate type that enforces a '() -> U' initializer for creating the object type
- *
- * @param T : The type of QSchemaType (object) which provides a delegate type <T> */
-interface InitStub<T : QType, A : ArgBuilder> : SchemaStub {
-
-  operator fun invoke(arguments: A, scope: (A.() -> Unit)? = null): InitStub<T, A>
-  /**
-   * Function to pass a function which returns the immutable delegate object for this field
-   * @param init : a function which returns the model instance for the GraphQL query or mutation
-   * @return an immutable [com.prestongarno.ktq.TypeStub]<U, T> which provides an instance of U when resolved
-   * */
-  fun <U : QModel<T>> querying(init: () -> U): TypeStub<U, T>
-}
-
-/**
  * Default [Configurable] class for dynamic class-level delegation by schema stub types
  * @param T : The type of [DelegateProvider] that this function returns
  * @param A : The type of [ArgBuilder] that this DelegateProvider takes
