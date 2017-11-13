@@ -3,9 +3,9 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.adapters.BooleanArrayDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegate
 import com.prestongarno.ktq.adapters.BooleanDelegateConfig
-import com.prestongarno.ktq.adapters.EnumAdapterImpl
 import com.prestongarno.ktq.adapters.EnumConfigStubImpl
 import com.prestongarno.ktq.adapters.EnumNoArgStub
+import com.prestongarno.ktq.adapters.EnumOptionalArgStub
 import com.prestongarno.ktq.adapters.FloatArrayDelegate
 import com.prestongarno.ktq.adapters.FloatDelegate
 import com.prestongarno.ktq.adapters.FloatDelegateConfig
@@ -20,9 +20,9 @@ import com.prestongarno.ktq.hooks.Configurable
 import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.InitStub
 import com.prestongarno.ktq.hooks.NoArgConfig
+import com.prestongarno.ktq.hooks.OptionalConfig
 import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.hooks.TypeConfig
-import com.prestongarno.ktq.hooks.providers.EnumProvider.createEnumStub
 import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createCollectionConfigStub
 import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createCollectionStub
 import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createInterfaceConfigStub
@@ -291,12 +291,16 @@ interface QSchemaType {
   }
 
   object QEnum {
-    inline fun <reified T> stub(): StubProvider<NoArgConfig<EnumStub<T, ArgBuilder>, T>> where T : Enum<*>, T : QEnumType
-        = Grub("${T::class.simpleName}") { EnumStub.noArgStub(it, T::class) }
-
     inline fun <reified T, A : ArgBuilder> configStub(
     ): StubProvider<Configurable<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
-        = Grub("${T::class.simpleName}", true) { EnumConfigStubImpl<T, A>(it, T::class) }
+        = Grub("${T::class.simpleName}") { EnumConfigStubImpl<T, A>(it, T::class) }
+
+    inline fun <reified T, A : ArgBuilder> optionalConfigStub(
+    ): StubProvider<OptionalConfig<EnumStub<T, A>, T, A>> where T : Enum<*>, T : QEnumType
+        = Grub("${T::class.simpleName}") { EnumStub.optionalArgStub<T, A>(it, T::class) }
+
+    inline fun <reified T> stub(): StubProvider<NoArgConfig<EnumStub<T, ArgBuilder>, T>> where T : Enum<*>, T : QEnumType
+        = Grub("${T::class.simpleName}") { EnumStub.noArgStub(it, T::class) }
   }
 
 }
