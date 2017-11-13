@@ -1,21 +1,7 @@
 package com.prestongarno.ktq.adapters
 
-import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.AbstractCollectionStub
-import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.QInterface
-import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.hooks.Fragment
-import com.prestongarno.ktq.properties.GraphQlProperty
-import com.prestongarno.ktq.stubs.CollectionConfigFragment
-import com.prestongarno.ktq.stubs.CollectionFragment
-import com.prestongarno.ktq.stubs.FragmentContext
-import com.prestongarno.ktq.stubs.FragmentScope
-import com.prestongarno.ktq.stubs.TypeListStub
-import com.prestongarno.ktq.toArgumentMap
-import kotlin.reflect.KProperty
-
+/*
+TODO -> other API model
 internal data class InterfaceListStub<I>(
     private val qproperty: GraphQlProperty
 ) : CollectionFragment<I>
@@ -44,8 +30,8 @@ internal class InterfaceFragmentListAdapter<I, out A : ArgBuilder>(
     val argBuilder: A? = null
 ) : PreDelegate(qproperty),
     TypeListStub<QModel<I>, I>,
-    AbstractCollectionStub<I>,
-    FragmentScope<I, A>
+    AbstractCollectionStub<I>
+
 
     where I : QType,
           I : QInterface {
@@ -54,13 +40,9 @@ internal class InterfaceFragmentListAdapter<I, out A : ArgBuilder>(
 
   private var config: (A.() -> Unit)? = null
 
-  override fun <T : I> on(initializer: () -> QModel<T>) {
-    fragments += Fragment(initializer)
-  }
+  //override fun <T : I> on(initializer: () -> QModel<T>) { fragments += Fragment(initializer) }
 
-  override fun config(scope: A.() -> Unit) {
-    this.config = config
-  }
+  //override fun config(scope: A.() -> Unit) { this.config = config }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<I>>> =
       CollectionDelegateImpl<I>(qproperty,
@@ -112,4 +94,4 @@ private class CollectionDelegateImpl<out I : QType>(
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<QModel<I>> = value
 
-}
+}*/

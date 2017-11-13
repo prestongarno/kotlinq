@@ -1,8 +1,8 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.hooks.Fragment
+import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.hooks.ModelProvider
-import com.prestongarno.ktq.stubs.FragmentContext
 
 internal fun QModel<*>.getFragments(): Set<Fragment> {
   return getFragments(this, hashSetOf(this))

@@ -10,9 +10,9 @@ import com.prestongarno.ktq.stubs.UnionConfigStub
 import com.prestongarno.ktq.stubs.UnionFragment
 import com.prestongarno.ktq.UnionStub
 import com.prestongarno.ktq.hooks.Fragment
+import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.FragmentProvider
-import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
 @PublishedApi internal sealed class UnionConfigAdapter<out I : QUnionType, A : ArgBuilder>(

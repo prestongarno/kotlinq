@@ -18,24 +18,16 @@ import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.NoArgConfig
 import com.prestongarno.ktq.hooks.OptionalConfig
 import com.prestongarno.ktq.hooks.StubProvider
-import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createCollectionConfigStub
-import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createCollectionStub
-import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createInterfaceConfigStub
-import com.prestongarno.ktq.hooks.providers.InterfaceProvider.createInterfaceStub
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarConfig
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarListConfig
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarListStub
 import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarStub
 import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionListStub
 import com.prestongarno.ktq.hooks.providers.UnionProvider.createUnionStub
-import com.prestongarno.ktq.stubs.CollectionConfigFragment
-import com.prestongarno.ktq.stubs.CollectionFragment
 import com.prestongarno.ktq.stubs.CustomScalarConfigStub
 import com.prestongarno.ktq.stubs.CustomScalarInitStub
 import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
 import com.prestongarno.ktq.stubs.CustomScalarListInitStub
-import com.prestongarno.ktq.stubs.InterfaceConfigFragment
-import com.prestongarno.ktq.stubs.InterfaceFragment
 import com.prestongarno.ktq.stubs.ListConfigType
 import com.prestongarno.ktq.stubs.ListInitStub
 import com.prestongarno.ktq.stubs.UnionConfigStub
@@ -186,25 +178,22 @@ interface QSchemaType {
   }
 
   object QInterfaces {
-    inline fun <reified T> stub(): StubProvider<InterfaceFragment<T>>
+    inline fun <reified T> stub(): StubProvider<InterfaceStub.Query<T>>
         where T : QType, T : QInterface =
-        createInterfaceStub("${T::class.simpleName}")
+        Grub("${T::class.simpleName}") { InterfaceStub.noArgStub<T>(it) }
 
-    inline fun <reified T, A : ArgBuilder> configStub(
-    ): StubProvider<InterfaceConfigFragment<T, A>>
-        where T : QType, T : QInterface =
-        createInterfaceConfigStub<T, A>("${T::class.simpleName}")
+    inline fun <reified T, A> optionalConfigStub(): StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
+        where T : QType, T : QInterface, A : ArgBuilder =
+        Grub("${T::class.simpleName}") { InterfaceStub.optionalArgStub<T, A>(it) }
+
+    inline fun <reified T, A> configStub(): StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
+        where T : QType, T : QInterface, A : ArgBuilder =
+        Grub("${T::class.simpleName}") { InterfaceStub.argStub<T, A>(it) }
+
   }
 
   object QInterfaceLists {
-    inline fun <reified T> stub(): StubProvider<CollectionFragment<T>>
-        where T : QType, T : QInterface =
-        createCollectionStub(name = "${T::class.simpleName}")
-
-    inline fun <reified T, A : ArgBuilder> configStub(
-    ): StubProvider<CollectionConfigFragment<T, A>>
-        where T : QType, T : QInterface =
-        createCollectionConfigStub("${T::class.simpleName}")
+    // redacted/refactored :/
   }
 
   /**

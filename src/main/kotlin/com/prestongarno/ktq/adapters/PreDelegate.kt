@@ -11,5 +11,7 @@ internal abstract class PreDelegate(val qproperty: GraphQlProperty)
 
 internal fun <T> T.bind(inst: QModel<*>): T where T : Adapter = apply { inst.register(this) }
 
-internal fun <T : Any> T.applyNotNull(scope: (T.() -> Unit)?): T = scope?.let { this.apply(it) }?: this
+internal fun <T : Any> T.applyNotNull(scope: (T.() -> Unit)?): T {
+  return scope?.let { this.apply(it) }?: this
+}
 

@@ -9,8 +9,8 @@ import com.prestongarno.ktq.DelegateProvider
 import com.prestongarno.ktq.stubs.UnionListInitStub
 import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.Fragment
+import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
 internal sealed class UnionListConfigAdapter<I : QUnionType>(

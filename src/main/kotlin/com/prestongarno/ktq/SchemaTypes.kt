@@ -8,7 +8,7 @@ import com.prestongarno.ktq.properties.FragmentProvider
  */
 interface QType : QSchemaType
 
-interface QInterface
+interface QInterface : QSchemaType
 
 /**
  * Supertype of a GraphQL Enum definition

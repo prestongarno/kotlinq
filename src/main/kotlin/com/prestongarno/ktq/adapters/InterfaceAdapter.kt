@@ -7,43 +7,20 @@ import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
+import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.GraphQlProperty
-import com.prestongarno.ktq.stubs.FragmentContext
-import com.prestongarno.ktq.stubs.FragmentScope
-import com.prestongarno.ktq.stubs.InterfaceConfigFragment
-import com.prestongarno.ktq.stubs.InterfaceFragment
 import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
-
-internal data class InterfaceStubImpl<I>(
-    private val qproperty: GraphQlProperty
-) : InterfaceFragment<I>
-    where I : QType,
-          I : QInterface {
-
-  override fun invoke(context: FragmentScope<I, ArgBuilder>.() -> Unit): InterfaceStub<I> =
-      InterfaceFragmentAdapter<I, ArgBuilder>(qproperty).apply(context)
-}
-
-internal data class InterfaceConfigStubImpl<I, A : ArgBuilder>(
-    private val qproperty: GraphQlProperty
-) : InterfaceConfigFragment<I, A>
-    where I : QType,
-          I : QInterface {
-  override fun invoke(arguments: A, context: FragmentScope<I, A>.() -> Unit): InterfaceStub<I> =
-      InterfaceFragmentAdapter<I, A>(qproperty, arguments).apply(context)
-}
 
 /**
  * Base type of a R.H.S. delegate provider
  */
-internal class InterfaceFragmentAdapter<I, A : ArgBuilder>(
+internal class InterfaceAdapterImpl<I, out A : ArgBuilder>(
     qproperty: GraphQlProperty,
     val arguments: A? = null
 ) : PreDelegate(qproperty),
-    FragmentScope<I, A>,
-    InterfaceStub<I>
+    InterfaceStub<I, A>
 
     where I : QType,
           I : QInterface {
@@ -51,25 +28,17 @@ internal class InterfaceFragmentAdapter<I, A : ArgBuilder>(
 
   private val fragments = mutableSetOf<Fragment>()
 
-  private var config: (A.() -> Unit)? = null
-
   override fun <T : I> on(initializer: () -> QModel<T>) {
     fragments += Fragment(initializer)
   }
 
   override fun config(scope: A.() -> Unit) {
-    this.config = scope
+    arguments?.scope()
   }
 
-  override fun provideDelegate(
-      inst: QModel<*>,
-      property: KProperty<*>
-  ): QField<QModel<I>?> =
-      InterfaceDelegateImpl<I>(
-          qproperty,
-          toArgumentMap(arguments, config),
-          fragments.toSet()
-      ).bind(inst)
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
+      InterfaceDelegateImpl<I>(qproperty, arguments?.arguments?.invoke()?: emptyMap(), fragments.toSet())
+          .bind(inst)
 }
 
 @ValueDelegate(QModel::class)
@@ -78,8 +47,8 @@ private class InterfaceDelegateImpl<I : QType>(
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
 ) : Adapter,
-    QField<QModel<I>?>,
-    FragmentContext {
+    FragmentContext,
+    QField<QModel<I>?> {
 
   var value: QModel<I>? = null
 
@@ -99,7 +68,7 @@ private class InterfaceDelegateImpl<I : QType>(
           prefix = "(", postfix = ")") { (key, value) ->
         "$key: " + formatAs(value)
       }) + fragments.joinToString(
-          prefix = "{__typename,",
+          prefix = "{__typename, ",
           postfix = "}",
           transform = Fragment::toString)
 
