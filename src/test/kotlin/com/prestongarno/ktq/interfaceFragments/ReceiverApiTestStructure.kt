@@ -1,5 +1,5 @@
 package com.prestongarno.ktq.interfaceFragments
-
+/*
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.EnumStub
@@ -8,7 +8,6 @@ import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.adapters.StringDelegate
 import com.prestongarno.ktq.hooks.NoArgConfig
 import org.intellij.lang.annotations.Language
 import org.junit.Test
@@ -85,4 +84,4 @@ class ReceiverApiTestStructure {
         .isEqualTo(ConceptType.INTANGIBLE)
 
   }
-}
+}*/

@@ -29,8 +29,6 @@ interface QUnionType : QType {
 
   fun on(init: () -> QModel<QType>)
 
-  fun <A : ArgBuilder> config(scope: A.() -> Unit)
-
   companion object {
     fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType = TODO()
   }

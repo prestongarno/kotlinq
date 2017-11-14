@@ -1,17 +1,9 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.BooleanArrayDelegate
-import com.prestongarno.ktq.adapters.BooleanDelegate
-import com.prestongarno.ktq.adapters.BooleanDelegateConfig
 import com.prestongarno.ktq.adapters.FloatArrayDelegate
-import com.prestongarno.ktq.adapters.FloatDelegate
-import com.prestongarno.ktq.adapters.FloatDelegateConfig
 import com.prestongarno.ktq.adapters.IntegerArrayDelegate
-import com.prestongarno.ktq.adapters.IntegerDelegate
-import com.prestongarno.ktq.adapters.IntegerDelegateConfig
 import com.prestongarno.ktq.adapters.StringArrayDelegate
-import com.prestongarno.ktq.adapters.StringDelegate
-import com.prestongarno.ktq.adapters.StringDelegateConfig
 import com.prestongarno.ktq.hooks.Configurable
 import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.NoArgConfig
@@ -27,6 +19,7 @@ import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
 import com.prestongarno.ktq.stubs.CustomScalarListInitStub
 import com.prestongarno.ktq.stubs.ListConfigType
 import com.prestongarno.ktq.stubs.ListInitStub
+import com.prestongarno.ktq.stubs.StringDelegate
 
 /**
  * The root createTypeStub of all generated schema objects. Nested objects
@@ -40,60 +33,6 @@ interface QSchemaType {
    * QScalar#createStub()} and
    * QScalar#createConfigStub(arginit)}.*/
   object QScalar {
-    /**
-     * Method which provides a delegate for fields of type [kotlin.String]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<StringDelegate<ArgBuilder>>] */
-    fun stringStub(): StubProvider<StringDelegate<ArgBuilder>> =
-        Grub("String") { StringDelegate<ArgBuilder>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Int]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<IntDelegate<ArgBuilder>>] */
-    fun intStub(): StubProvider<IntegerDelegate<ArgBuilder>>
-        = Grub("Int") { IntegerDelegate<ArgBuilder>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Float]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<FloatDelegate<ArgBuilder>>] */
-    fun floatStub(): StubProvider<FloatDelegate<ArgBuilder>> =
-        Grub("Float") { FloatDelegate<ArgBuilder>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Boolean]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanDelegate<ArgBuilder>>] */
-    fun booleanStub(): StubProvider<BooleanDelegate<ArgBuilder>> =
-        Grub("Boolean") { BooleanDelegate<ArgBuilder>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.String]
-     * @param A the type of argument (graphql field argBuilder) builder type this field requires
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<StringDelegate<ArgBuilder>>] */
-    fun <A : ArgBuilder> stringConfigStub(): StubProvider<StringDelegateConfig<A>> =
-        Grub("String") { StringDelegateConfig<A>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Int]
-     * @param A the type of argument (graphql field argBuilder) builder type this field requires
-     * @param arginit the initializer for the argBuilder. Generally this is auto-generated so don't worry about it
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<IntDelegate<A>>] */
-    fun <A : ArgBuilder> intConfigStub(): StubProvider<IntegerDelegateConfig<A>> =
-        Grub("Int") { IntegerDelegateConfig<A>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Float]
-     * @param A the type of argument (graphql field argBuilder) builder type this field requires
-     * @param arginit the initializer for the argBuilder. Generally this is auto-generated so don't worry about it
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<FloatDelegate<A>>] */
-    fun <A : ArgBuilder> floatConfigStub(): StubProvider<FloatDelegateConfig<A>> =
-        Grub("Float") { FloatDelegateConfig<A>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Boolean]
-     * @param A the type of argument (graphql field argBuilder) builder type this field requires
-     * @param arginit the initializer for the argBuilder. Generally this is auto-generated so don't worry about it
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanDelegate<A>>] */
-    fun <A : ArgBuilder> booleanConfigStub(): StubProvider<BooleanDelegateConfig<A>> =
-        Grub("Boolean") { BooleanDelegateConfig<A>(it) }
   }
 
   object QScalarArray {

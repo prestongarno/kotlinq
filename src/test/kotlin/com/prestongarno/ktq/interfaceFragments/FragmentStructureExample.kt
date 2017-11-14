@@ -1,12 +1,11 @@
 package com.prestongarno.ktq.interfaceFragments
-
+/*
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.adapters.IntegerDelegate
 import org.intellij.lang.annotations.Language
 import org.junit.Ignore
 import org.junit.Test
@@ -37,9 +36,7 @@ object Query : QType {
 
 
 class MyObject : QModel<SubObject>(SubObject) {
-  val result by model.value {
-    default = 3000
-  }
+  val result by model.value// { default = 3000 }
 
   val max by model.maximum(SubObject.MaximumArgs()) {
     default = 100_000_000
@@ -99,4 +96,4 @@ class TestFragmentsBasic {
     println(query.toGraphql(false))
   }
 
-}
+}*/

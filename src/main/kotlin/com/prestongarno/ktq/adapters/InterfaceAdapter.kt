@@ -31,8 +31,8 @@ internal class InterfaceAdapterImpl<I, out A : ArgBuilder>(
     fragments += Fragment(initializer)
   }
 
-  override fun config(scope: A.() -> Unit) {
-    arguments?.scope()
+  override fun config(argumentScope: A.() -> Unit) {
+    arguments?.argumentScope()
   }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
