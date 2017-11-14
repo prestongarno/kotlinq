@@ -57,7 +57,7 @@ class IntStub(
     default: Int = 0
 ) : PrimitiveStub(property, args) {
 
-  var value = default
+  private var value = default
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): Int = value
 
@@ -75,7 +75,7 @@ class FloatStub(
     default: Float = 0f
 ) : PrimitiveStub(property, args) {
 
-  var value = default
+  private var value = default
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): Float = value
 

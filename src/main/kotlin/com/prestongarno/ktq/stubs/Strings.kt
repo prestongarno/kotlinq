@@ -47,7 +47,6 @@ interface StringDelegate<out A : ArgBuilder> : ScalarDelegate<StringStub> {
         scope: (StringDelegate<A>.() -> Unit)? = null
     ): StringDelegate<A>
   }
-
 }
 
 private class StringDelegateImpl<out A : ArgBuilder>(
