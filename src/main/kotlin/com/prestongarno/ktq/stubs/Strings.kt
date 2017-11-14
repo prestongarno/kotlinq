@@ -47,6 +47,25 @@ interface StringDelegate<out A : ArgBuilder> : ScalarDelegate<StringStub> {
         scope: (StringDelegate<A>.() -> Unit)? = null
     ): StringDelegate<A>
   }
+
+  private class QueryImpl(val qproperty: GraphQlProperty) : StringDelegate.Query {
+    override fun invoke(arguments: ArgBuilder?, scope: (StringDelegate<ArgBuilder>.() -> Unit)?
+    ) = StringDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+  }
+
+  private class OptionalQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfig<A> {
+
+    override fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)?): StringDelegate<A> =
+        StringDelegateImpl(qproperty, arguments).applyNotNull(scope)
+
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringStub = StringStub(qproperty).bind(inst)
+  }
+
+  private class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+
+    override fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)?): StringDelegate<A> =
+        StringDelegateImpl(qproperty, arguments).applyNotNull(scope)
+  }
 }
 
 private class StringDelegateImpl<out A : ArgBuilder>(
@@ -64,21 +83,4 @@ private class StringDelegateImpl<out A : ArgBuilder>(
       StringStub(qproperty, argBuilder.toMap(), default).bind(inst)
 }
 
-private class QueryImpl(val qproperty: GraphQlProperty) : StringDelegate.Query {
-  override fun invoke(arguments: ArgBuilder?, scope: (StringDelegate<ArgBuilder>.() -> Unit)?
-  ) = StringDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
-}
 
-private class OptionalQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : StringDelegate.OptionalConfig<A> {
-
-  override fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)?): StringDelegate<A> =
-      StringDelegateImpl(qproperty, arguments).applyNotNull(scope)
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringStub = StringStub(qproperty).bind(inst)
-}
-
-private class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : StringDelegate.ConfigurableQuery<A> {
-
-  override fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)?): StringDelegate<A> =
-      StringDelegateImpl(qproperty, arguments).applyNotNull(scope)
-}

@@ -2,6 +2,7 @@ package com.prestongarno.ktq.stubs
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.adapters.applyNotNull
 import com.prestongarno.ktq.adapters.bind
 import com.prestongarno.ktq.adapters.toMap
 import com.prestongarno.ktq.properties.GraphQlProperty
@@ -45,6 +46,26 @@ interface StringArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<StringAr
         arguments: A,
         scope: (StringArrayDelegate<A>.() -> Unit)? = null
     ): StringArrayDelegate<A>
+  }
+
+  private class QueryImpl(val qproperty: GraphQlProperty) : Query {
+    override fun invoke(arguments: ArgBuilder?, scope: (StringArrayDelegate<ArgBuilder>.() -> Unit)?
+    ) = StringArrayDelegateImpl<ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+  }
+
+  private class OptionalQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfig<A> {
+
+    override fun invoke(arguments: A, scope: (StringArrayDelegate<A>.() -> Unit)?): StringArrayDelegate<A> =
+        StringArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
+
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringArrayStub = StringArrayStub(qproperty).bind(inst)
+  }
+
+
+  private class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+
+    override fun invoke(arguments: A, scope: (StringArrayDelegate<A>.() -> Unit)?): StringArrayDelegate<A> =
+        StringArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
   }
 }
 
