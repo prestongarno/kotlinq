@@ -45,4 +45,16 @@ interface InterfaceListStub<I, out A> :
       newInterfaceListStub<I, A>(qproperty, null).apply(scope)
   }
 
+  private class ConfigurableQueryImpl<I, A>(
+      val qproperty: GraphQlProperty
+  ): ConfigurableQuery<I, A>
+      where I : QInterface,
+            I : QType,
+            A : ArgBuilder {
+
+    override fun invoke(
+        arguments: A, scope: InterfaceListStub<I, A>.() -> Unit
+    ): InterfaceListStub<I, A> =
+        newInterfaceListStub<I, A>(qproperty, arguments).apply(scope)
+  }
 }
