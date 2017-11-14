@@ -15,19 +15,19 @@ import kotlin.reflect.KProperty
  *
  *
  * This interface enforces passing of arguments by not having the standard operator
- * function like [OptionalConfigQuery.provideDelegate]
+ * function like [OptionalConfiguration.provideDelegate]
  *
  *
  * @param D : The type of SchemaStub which will provide a delegate type <T>
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface ConfigurableQuery<out D : DelegateProvider<*>, in A: ArgBuilder> : SchemaStub {
+interface ConfiguredQuery<out D : DelegateProvider<*>, in A: ArgBuilder> : SchemaStub {
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
   companion object {
     fun <T : DelegateProvider<*>, A : ArgBuilder> new(
         constructor: (A) -> T
-    ): ConfigurableQuery<T, A> = DefaultConfigurableQuery(constructor)
+    ): ConfiguredQuery<T, A> = DefaultConfigurableQuery(constructor)
   }
 }
 
@@ -39,7 +39,7 @@ interface ConfigurableQuery<out D : DelegateProvider<*>, in A: ArgBuilder> : Sch
  * @param D : The type of [DelegateProvider] which this field supplies
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface OptionalConfigQuery<out D : DelegateProvider<T>, out T : Any?, in A: ArgBuilder> : SchemaStub {
+interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A: ArgBuilder> : SchemaStub {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
@@ -48,7 +48,7 @@ interface OptionalConfigQuery<out D : DelegateProvider<T>, out T : Any?, in A: A
   companion object {
     fun <D : DelegateProvider<T>, T : Any?, A : ArgBuilder> new(
         constructor: (A?) -> D
-    ): OptionalConfigQuery<D, T, A> = DefaultOptionalConfigQuery(constructor)
+    ): OptionalConfiguration<D, T, A> = DefaultOptionalConfiguration(constructor)
   }
 }
 
@@ -74,28 +74,28 @@ interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
 }
 
 /**
- * Default [ConfigurableQuery] class for dynamic class-level delegation by schema stub types
+ * Default [ConfiguredQuery] class for dynamic class-level delegation by schema stub types
  * @param T : The type of [DelegateProvider] that this function returns
  * @param A : The type of [ArgBuilder] that this DelegateProvider takes
  * @param constructor a function that constructs a new [DelegateProvider]
  */
 private class DefaultConfigurableQuery<out T : DelegateProvider<*>, in A : ArgBuilder>(
     private val constructor: (A) -> T
-) : ConfigurableQuery<T, A> {
+) : ConfiguredQuery<T, A> {
 
   override operator fun invoke(arguments: A, scope: (T.() -> Unit)?): T =
       constructor.invoke(arguments).applyNotNull(scope)
 }
 
 /**
- * Default [OptionalConfigQuery] class for dynamic class-level delegation by schema stub types
+ * Default [OptionalConfiguration] class for dynamic class-level delegation by schema stub types
  * @param T : The type of [DelegateProvider] that this function returns
  * @param A : The type of [ArgBuilder] that this DelegateProvider takes
  * @param constructor a function that constructs a new [DelegateProvider]
  */
-private class DefaultOptionalConfigQuery<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder>(
+private class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder>(
     private val constructor: (A?) -> D
-) : OptionalConfigQuery<D, T, A> {
+) : OptionalConfiguration<D, T, A> {
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
       constructor(null).provideDelegate(inst, property)

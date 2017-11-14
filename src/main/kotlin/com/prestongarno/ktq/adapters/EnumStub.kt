@@ -5,9 +5,9 @@ import com.prestongarno.ktq.EnumStub
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
-import com.prestongarno.ktq.hooks.ConfigurableQuery
+import com.prestongarno.ktq.hooks.ConfiguredQuery
 import com.prestongarno.ktq.hooks.NoArgConfig
-import com.prestongarno.ktq.hooks.OptionalConfigQuery
+import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
 @PublishedApi internal class EnumConfigStubImpl<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
-) : ConfigurableQuery<EnumStub<T, A>, A> by ConfigurableQuery.new({
+) : ConfiguredQuery<EnumStub<T, A>, A> by ConfiguredQuery.new({
   EnumAdapterImpl(qproperty, enumClass, it)
 })
     where T : Enum<*>, T : QEnumType, A : ArgBuilder
@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
 @PublishedApi internal class EnumOptionalArgStubQuery<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
-) : OptionalConfigQuery<EnumStub<T, A>, T, A> by OptionalConfigQuery.new({
+) : OptionalConfiguration<EnumStub<T, A>, T, A> by OptionalConfiguration.new({
   EnumAdapterImpl(qproperty, enumClass, it)
 })
     where T : Enum<*>, T : QEnumType, A : ArgBuilder

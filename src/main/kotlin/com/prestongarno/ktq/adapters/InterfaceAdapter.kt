@@ -2,7 +2,7 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.InterfaceStub
+import com.prestongarno.ktq.stubs.InterfaceStub
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType

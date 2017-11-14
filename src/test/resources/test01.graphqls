@@ -2,11 +2,11 @@ interface Food {
   associatedCulture: Nation
 }
 
-createTypeStub Nation {
+type Nation {
   prop: String
 }
 
-# Test to make sure this fails for wrong createTypeStub
-createTypeStub Burrito      implements        Food {
+# Test to make sure this fails for wrong type
+type Burrito      implements        Food {
   associatedCulture: Int
 }

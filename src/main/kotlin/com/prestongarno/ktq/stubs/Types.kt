@@ -45,7 +45,7 @@ interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where
   }
 
   interface OptionalConfigQuery<U : QType, A : ArgBuilder> : SchemaStub {
-    fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.OptionalConfigQuery<TypeStub<T, U, A>, T, A>
+    fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.OptionalConfiguration<TypeStub<T, U, A>, T, A>
 
     companion object {
       @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
@@ -54,13 +54,13 @@ interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where
     }
 
     private class OptionalConfigQueryImpl<U : QType, A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<U, A> {
-      override fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.OptionalConfigQuery<TypeStub<T, U, A>, T, A> =
-          com.prestongarno.ktq.hooks.OptionalConfigQuery.new { TypeStubAdapter(qproperty, init, it) }
+      override fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.OptionalConfiguration<TypeStub<T, U, A>, T, A> =
+          com.prestongarno.ktq.hooks.OptionalConfiguration.new { TypeStubAdapter(qproperty, init, it) }
     }
   }
 
   interface ConfigurableQuery<U : QType, A : ArgBuilder> : SchemaStub {
-    fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.ConfigurableQuery<TypeStub<T, U, A>, A>
+    fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.ConfiguredQuery<TypeStub<T, U, A>, A>
 
     companion object {
       @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
@@ -69,8 +69,8 @@ interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where
     }
 
     private class ConfigurableTypeQueryImpl<U : QType, A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<U, A> {
-      override fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.ConfigurableQuery<TypeStub<T, U, A>, A> =
-          com.prestongarno.ktq.hooks.ConfigurableQuery.new { TypeStubAdapter(qproperty, init, it) }
+      override fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.ConfiguredQuery<TypeStub<T, U, A>, A> =
+          com.prestongarno.ktq.hooks.ConfiguredQuery.new { TypeStubAdapter(qproperty, init, it) }
     }
   }
 }

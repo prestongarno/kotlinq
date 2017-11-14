@@ -6,7 +6,7 @@ import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QUnionType
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.UnionStub
+import com.prestongarno.ktq.stubs.UnionStub
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
