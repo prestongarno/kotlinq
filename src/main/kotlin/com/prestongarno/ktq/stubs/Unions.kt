@@ -2,8 +2,8 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.adapters.newUnionField
-import com.prestongarno.ktq.hooks.Configurable
-import com.prestongarno.ktq.hooks.OptionalConfig
+import com.prestongarno.ktq.hooks.ConfigurableQuery
+import com.prestongarno.ktq.hooks.OptionalConfigQuery
 import com.prestongarno.ktq.properties.GraphQlProperty
 
 /**
@@ -25,9 +25,9 @@ interface UnionStub<T : QUnionType, out A : ArgBuilder> : DelegateProvider<QMode
     operator fun invoke(arguments: ArgBuilder? = null, scope: U.() -> Unit): QField<QModel<*>?>
   }
 
-  interface OptionalConfigQuery<U : QUnionType, A : ArgBuilder> : OptionalConfig<UnionStub<U, A>, QModel<*>?, A>
+  interface OptionalConfigQueryQuery<U : QUnionType, A : ArgBuilder> : OptionalConfigQuery<UnionStub<U, A>, QModel<*>?, A>
 
-  interface ConfigurableQuery<U : QUnionType, A : ArgBuilder> : Configurable<UnionStub<U, A>, A>
+  interface ConfigurableQueryQuery<U : QUnionType, A : ArgBuilder> : ConfigurableQuery<UnionStub<U, A>, A>
 
   private class QueryImpl<U : QUnionType>(
       val qproperty: GraphQlProperty, val model: U

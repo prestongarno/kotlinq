@@ -5,7 +5,7 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.TypeStub
+import com.prestongarno.ktq.stubs.TypeStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty

@@ -1,25 +1,13 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.BooleanArrayDelegate
-import com.prestongarno.ktq.adapters.FloatArrayDelegate
-import com.prestongarno.ktq.adapters.IntegerArrayDelegate
-import com.prestongarno.ktq.adapters.StringArrayDelegate
-import com.prestongarno.ktq.hooks.Configurable
+import com.prestongarno.ktq.hooks.ConfigurableQuery
 import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.NoArgConfig
-import com.prestongarno.ktq.hooks.OptionalConfig
+import com.prestongarno.ktq.hooks.OptionalConfigQuery
 import com.prestongarno.ktq.hooks.StubProvider
-import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarConfig
-import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarListConfig
-import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarListStub
-import com.prestongarno.ktq.hooks.providers.PrimitiveProvider.createCustomScalarStub
-import com.prestongarno.ktq.stubs.CustomScalarConfigStub
-import com.prestongarno.ktq.stubs.CustomScalarInitStub
-import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
-import com.prestongarno.ktq.stubs.CustomScalarListInitStub
 import com.prestongarno.ktq.stubs.ListConfigType
 import com.prestongarno.ktq.stubs.ListInitStub
-import com.prestongarno.ktq.stubs.StringDelegate
+import com.prestongarno.ktq.stubs.TypeStub
 
 /**
  * The root createTypeStub of all generated schema objects. Nested objects
@@ -36,29 +24,6 @@ interface QSchemaType {
   }
 
   object QScalarArray {
-    /**
-     * Method which provides a delegate for fields of type [kotlin.String]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<StringArrayDelegate<ArgBuilder>>] */
-    fun stringArrayStub(): StubProvider<StringArrayDelegate<ArgBuilder>> =
-        Grub("String", true) { StringArrayDelegate<ArgBuilder>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Int]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<IntArrayDelegate<ArgBuilder>>] */
-    fun intArrayStub(): StubProvider<IntegerArrayDelegate<ArgBuilder>> =
-        Grub("Int", true) { IntegerArrayDelegate<ArgBuilder>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Float]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<FloatArrayDelegate<ArgBuilder>>] */
-    fun floatArrayStub(): StubProvider<FloatArrayDelegate<ArgBuilder>> =
-        Grub("Float", true) { FloatArrayDelegate<ArgBuilder>(it) }
-
-    /**
-     * Method which provides a delegate for fields of type [kotlin.Boolean]
-     * @return [com.prestongarno.ktq.hooks.StubProvider]<BooleanArrayDelegate<ArgBuilder>>] */
-    fun booleanArrayStub(): StubProvider<BooleanArrayDelegate<ArgBuilder>> =
-        Grub("Boolean", true) { BooleanArrayDelegate<ArgBuilder>(it) }
 
   }
 
@@ -73,8 +38,7 @@ interface QSchemaType {
      * fragment schema-defined scalar types
      * @param T The createTypeStub argument for the createStub, typedValueFrom a schema-defined CustomScalar createTypeStub
      * @return Grub<CustomScalarInitStub<T>> the delegate which lazily provides a CustomScalarInitStub<T> */
-    inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarInitStub<T>>
-        = createCustomScalarStub(T::class.simpleName!!)
+    //inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarInitStub<T>> = createCustomScalarStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
@@ -83,9 +47,7 @@ interface QSchemaType {
      * @param T createTypeStub of the custom scalar
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarConfigStub<T, A>> the delegate which lazily provides a CustomScalarConfigStub<T, A> */
-    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub():
-        StubProvider<CustomScalarConfigStub<T, A>> =
-        createCustomScalarConfig(T::class.simpleName!!)
+    //inline fun <reified T : CustomScalar, A : ArgBuilder> configStub(): StubProvider<CustomScalarConfigStub<T, A>> = createCustomScalarConfig(T::class.simpleName!!)
   }
 
   /**
@@ -109,11 +71,11 @@ interface QSchemaType {
         where T : QType, T : QInterface =
         Grub("${T::class.simpleName}") { InterfaceStub.noArgStub<T>(it) }
 
-    inline fun <reified T, A> optionalConfigStub(): StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
+    inline fun <reified T, A> optionalConfigStub(): StubProvider<InterfaceStub.OptionalConfigQueryQuery<T, A>>
         where T : QType, T : QInterface, A : ArgBuilder =
         Grub("${T::class.simpleName}") { InterfaceStub.optionalArgStub<T, A>(it) }
 
-    inline fun <reified T, A> configStub(): StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
+    inline fun <reified T, A> configStub(): StubProvider<InterfaceStub.ConfigurableQueryQuery<T, A>>
         where T : QType, T : QInterface, A : ArgBuilder =
         Grub("${T::class.simpleName}") { InterfaceStub.argStub<T, A>(it) }
 
@@ -157,8 +119,7 @@ interface QSchemaType {
      * fields fragment schema-defined scalar types
      * @param T The createTypeStub argument for the createStub, typedValueFrom a schema-defined CustomScalar createTypeStub
      * @return Grub<CustomScalarListInitStub<T>> the delegate which lazily provides a CustomScalarListInitStub<T> */
-    inline fun <reified T> stub(): StubProvider<CustomScalarListInitStub<T>> where T : CustomScalar
-        = createCustomScalarListStub(T::class.simpleName!!)
+    //inline fun <reified T> stub(): StubProvider<CustomScalarListInitStub<T>> where T : CustomScalar = createCustomScalarListStub(T::class.simpleName!!)
 
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} collection
@@ -167,8 +128,7 @@ interface QSchemaType {
      * @param T createTypeStub of the custom scalar
      * @param A createTypeStub argument for the argument builder class for that given schema field definition
      * @return Grub<CustomScalarListArgBuilder<T, A>> the delegate which lazily provides a CustomScalarListArgBuilder<T, A> */
-    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub(): StubProvider<CustomScalarListConfigStub<T, A>> =
-        createCustomScalarListConfig(T::class.simpleName!!)
+    //inline fun <reified T : CustomScalar, A : ArgBuilder> configStub(): StubProvider<CustomScalarListConfigStub<T, A>> = createCustomScalarListConfig(T::class.simpleName!!)
 
     object QUnion {
 
@@ -188,12 +148,12 @@ interface QSchemaType {
         = Grub("${T::class.simpleName}") { EnumStub.noArgStub(it, T::class) }
 
     inline fun <reified T, A : ArgBuilder> optionalConfigStub(
-    ): StubProvider<OptionalConfig<EnumStub<T, A>, T, A>> where T : Enum<*>, T : QEnumType =
+    ): StubProvider<OptionalConfigQuery<EnumStub<T, A>, T, A>> where T : Enum<*>, T : QEnumType =
         Grub("${T::class.simpleName}") {
           EnumStub.optionalArgStub<T, A>(it, T::class)
         }
 
-    inline fun <reified T, A : ArgBuilder> configStub(): StubProvider<Configurable<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
+    inline fun <reified T, A : ArgBuilder> configStub(): StubProvider<ConfigurableQuery<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
         = Grub("${T::class.simpleName}") { EnumStub.argStub<T, A>(it, T::class) }
   }
 

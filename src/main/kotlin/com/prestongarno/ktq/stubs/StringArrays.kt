@@ -26,7 +26,7 @@ interface StringArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<StringAr
     ): StringArrayStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfig<A : ArgBuilder> {
+  interface OptionalConfigQuery<A : ArgBuilder> {
 
     operator fun invoke(
         arguments: A,
@@ -53,14 +53,13 @@ interface StringArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<StringAr
     ) = StringArrayDelegateImpl<ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfig<A> {
+  private class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (StringArrayDelegate<A>.() -> Unit)?): StringArrayDelegate<A> =
         StringArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
 
     override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringArrayStub = StringArrayStub(qproperty).bind(inst)
   }
-
 
   private class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 

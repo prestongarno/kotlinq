@@ -27,7 +27,7 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
     ): IntStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfig<A : ArgBuilder> {
+  interface OptionalConfigQuery<A : ArgBuilder> {
 
     operator fun invoke(
         arguments: A,
@@ -54,7 +54,7 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
     ) = IntDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : IntDelegate.OptionalConfig<A> {
+  private class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : IntDelegate.OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (IntDelegate<A>.() -> Unit)?): IntDelegate<A> =
         IntDelegateImpl(qproperty, arguments).applyNotNull(scope)

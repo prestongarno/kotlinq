@@ -27,7 +27,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): BooleanStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfig<A : ArgBuilder> {
+  interface OptionalConfigQuery<A : ArgBuilder> {
 
     operator fun invoke(
         arguments: A,
@@ -54,7 +54,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ) = BooleanDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : BooleanDelegate.OptionalConfig<A> {
+  private class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : BooleanDelegate.OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (BooleanDelegate<A>.() -> Unit)?): BooleanDelegate<A> =
         BooleanDelegateImpl(qproperty, arguments).applyNotNull(scope)

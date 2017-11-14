@@ -2,10 +2,10 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.EnumConfigStubImpl
 import com.prestongarno.ktq.adapters.EnumNoArgStub
-import com.prestongarno.ktq.adapters.EnumOptionalArgStub
-import com.prestongarno.ktq.hooks.Configurable
+import com.prestongarno.ktq.adapters.EnumOptionalArgStubQuery
+import com.prestongarno.ktq.hooks.ConfigurableQuery
 import com.prestongarno.ktq.hooks.NoArgConfig
-import com.prestongarno.ktq.hooks.OptionalConfig
+import com.prestongarno.ktq.hooks.OptionalConfigQuery
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KClass
 
@@ -26,7 +26,7 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
     @PublishedApi internal fun <T, A> argStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
-    ): Configurable<EnumStub<T, A>, A>
+    ): ConfigurableQuery<EnumStub<T, A>, A>
         where T : QEnumType,
               T : Enum<*>, A : ArgBuilder =
         EnumConfigStubImpl(qproperty, enumClass)
@@ -34,9 +34,9 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
     @PublishedApi internal fun <T, A> optionalArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
-    ): OptionalConfig<EnumStub<T, A>, T, A>
+    ): OptionalConfigQuery<EnumStub<T, A>, T, A>
         where T : QEnumType,
               T : Enum<*>, A : ArgBuilder =
-        EnumOptionalArgStub(qproperty, enumClass)
+        EnumOptionalArgStubQuery(qproperty, enumClass)
   }
 }

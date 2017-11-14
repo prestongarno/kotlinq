@@ -3,9 +3,9 @@ package com.prestongarno.ktq
 import com.prestongarno.ktq.adapters.InterfaceAdapterImpl
 import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.adapters.applyNotNull
-import com.prestongarno.ktq.hooks.Configurable
+import com.prestongarno.ktq.hooks.ConfigurableQuery
 import com.prestongarno.ktq.hooks.NoArgConfig
-import com.prestongarno.ktq.hooks.OptionalConfig
+import com.prestongarno.ktq.hooks.OptionalConfigQuery
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
@@ -24,23 +24,23 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
 
     @PublishedApi internal fun <I, A> optionalArgStub(
         qproperty: GraphQlProperty
-    ): OptionalConfigQuery<I, A>
+    ): OptionalConfigQueryQuery<I, A>
         where I : QInterface, I : QType, A : ArgBuilder =
-        OptionalConfigQueryImpl(qproperty)
+        OptionalConfigQueryQueryImpl(qproperty)
 
     @PublishedApi internal fun <I, A> argStub(
         qproperty: GraphQlProperty
-    ): ConfigurableQuery<I, A>
+    ): ConfigurableQueryQuery<I, A>
         where I : QInterface, I : QType, A : ArgBuilder =
-        ConfigurableQueryImpl(qproperty)
+        ConfigurableQueryQueryImpl(qproperty)
   }
 
   interface Query<I> : NoArgConfig<InterfaceStub<I, ArgBuilder>, QModel<I>?> where I : QInterface, I : QType
 
-  interface OptionalConfigQuery<I, A> : OptionalConfig<InterfaceStub<I, A>, QModel<I>?, A>
+  interface OptionalConfigQueryQuery<I, A> : OptionalConfigQuery<InterfaceStub<I, A>, QModel<I>?, A>
       where I : QInterface, I : QType, A : ArgBuilder
 
-  interface ConfigurableQuery<I, A> : Configurable<InterfaceStub<I, A>, A>
+  interface ConfigurableQueryQuery<I, A> : ConfigurableQuery<InterfaceStub<I, A>, A>
       where I : QInterface, I : QType, A : ArgBuilder
 
 
@@ -49,7 +49,7 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
         InterfaceAdapterImpl<I, ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalConfigQueryImpl<I, A>(val qproperty: GraphQlProperty) : OptionalConfigQuery<I, A>
+  private class OptionalConfigQueryQueryImpl<I, A>(val qproperty: GraphQlProperty) : OptionalConfigQueryQuery<I, A>
       where I : QInterface, I : QType, A : ArgBuilder {
 
     // TODO factory method on delegate straight to the QField instance to reduce object overhead
@@ -60,7 +60,7 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
         InterfaceAdapterImpl<I, A>(qproperty, arguments).applyNotNull(scope)
   }
 
-  private class ConfigurableQueryImpl<I, A>(val qproperty: GraphQlProperty) : ConfigurableQuery<I, A>
+  private class ConfigurableQueryQueryImpl<I, A>(val qproperty: GraphQlProperty) : ConfigurableQueryQuery<I, A>
       where I : QInterface, I : QType, A : ArgBuilder {
     override fun invoke(arguments: A, scope: (InterfaceStub<I, A>.() -> Unit)?): InterfaceStub<I, A> =
         InterfaceAdapterImpl<I, A>(qproperty, arguments).applyNotNull(scope)
