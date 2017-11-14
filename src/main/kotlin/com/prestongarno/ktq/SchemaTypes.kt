@@ -1,6 +1,5 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.UnionConfigAdapter
 import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
@@ -30,8 +29,9 @@ interface QUnionType : QType {
 
   fun on(init: () -> QModel<QType>)
 
+  fun <A : ArgBuilder> config(scope: A.() -> Unit)
+
   companion object {
-    fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType =
-        UnionConfigAdapter.baseObject<U, A>(objectModel)
+    fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType = TODO()
   }
 }

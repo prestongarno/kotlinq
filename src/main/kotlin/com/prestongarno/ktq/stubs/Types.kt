@@ -1,0 +1,74 @@
+package com.prestongarno.ktq
+
+import com.prestongarno.ktq.adapters.TypeStubAdapter
+import com.prestongarno.ktq.hooks.Configurable
+import com.prestongarno.ktq.hooks.NoArgConfig
+import com.prestongarno.ktq.hooks.OptionalConfig
+import com.prestongarno.ktq.properties.GraphQlProperty
+
+// TODO add something like enum class GraphQL.ResolutionStrategy
+// (for something like one of 'STRICT' or 'PERMISSIVE' for how to handle invalid responses)
+interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where  T : QModel<U>, U : QType {
+
+  fun config(argumentScope: A.() -> Unit)
+
+  companion object {
+    @PublishedApi internal fun <U : QType> noArgStub(
+        qproperty: GraphQlProperty
+    ): Query<U> = Query.create(qproperty)
+
+    @PublishedApi internal fun <U : QType, A : ArgBuilder> optionalArgStub(
+        qproperty: GraphQlProperty
+    ): OptionalConfigQuery<U, A> = OptionalConfigQuery.create(qproperty)
+
+    @PublishedApi internal fun <U : QType, A : ArgBuilder> argStub(
+        qproperty: GraphQlProperty
+    ): ConfigurableQuery<U, A> = ConfigurableQuery.create(qproperty)
+  }
+
+  interface Query<U : QType> : SchemaStub {
+    fun <T : QModel<U>> query(init: () -> T): NoArgConfig<TypeStub<T, U, ArgBuilder>, T>
+
+    companion object {
+      @PublishedApi internal fun <U : QType> create(
+          qproperty: GraphQlProperty
+      ): Query<U> = QueryImpl(qproperty)
+    }
+
+    private class QueryImpl<U : QType>(val qproperty: GraphQlProperty) : Query<U> {
+      override fun <T : QModel<U>> query(init: () -> T): NoArgConfig<TypeStub<T, U, ArgBuilder>, T> =
+          NoArgConfig.new { TypeStubAdapter(qproperty, init, it) }
+    }
+  }
+
+  interface OptionalConfigQuery<U : QType, A : ArgBuilder> : SchemaStub {
+    fun <T : QModel<U>> query(init: () -> T): OptionalConfig<TypeStub<T, U, A>, T, A>
+
+    companion object {
+      @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
+          qproperty: GraphQlProperty
+      ): OptionalConfigQuery<U, A> = OptionalConfigQueryImpl(qproperty)
+    }
+
+    private class OptionalConfigQueryImpl<U : QType, A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<U, A> {
+      override fun <T : QModel<U>> query(init: () -> T): OptionalConfig<TypeStub<T, U, A>, T, A> =
+          OptionalConfig.new { TypeStubAdapter(qproperty, init, it) }
+    }
+  }
+
+  interface ConfigurableQuery<U : QType, A : ArgBuilder> : SchemaStub {
+    fun <T : QModel<U>> query(init: () -> T): Configurable<TypeStub<T, U, A>, A>
+
+    companion object {
+      @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
+          qproperty: GraphQlProperty
+      ): ConfigurableQuery<U, A> = ConfigurableTypeQueryImpl(qproperty)
+    }
+
+    private class ConfigurableTypeQueryImpl<U : QType, A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<U, A> {
+      override fun <T : QModel<U>> query(init: () -> T): Configurable<TypeStub<T, U, A>, A> {
+        return Configurable.new { TypeStubAdapter(qproperty, init, it) }
+      }
+    }
+  }
+}

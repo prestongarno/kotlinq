@@ -10,7 +10,6 @@ import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
 import com.prestongarno.ktq.properties.GraphQlProperty
-import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 /**
