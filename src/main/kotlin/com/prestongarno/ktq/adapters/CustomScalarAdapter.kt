@@ -11,7 +11,6 @@ import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B : ArgBuilder>(
@@ -39,7 +38,7 @@ internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B 
       property: KProperty<*>
   ): QField<Q> = CustomScalarStubImpl(
       qproperty,
-      toArgumentMap(argBuilder, config),
+      argBuilder.toMap(),
       adapter,
       default
   ).bind(inst)

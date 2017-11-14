@@ -36,8 +36,7 @@ internal class InterfaceAdapterImpl<I, out A : ArgBuilder>(
   }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
-      InterfaceDelegateImpl<I>(qproperty, arguments?.arguments?.invoke()?: emptyMap(), fragments.toSet())
-          .bind(inst)
+      InterfaceDelegateImpl<I>(qproperty, arguments.toMap(), fragments.toSet()).bind(inst)
 }
 
 @ValueDelegate(QModel::class)

@@ -50,7 +50,7 @@ private class EnumAdapterImpl<T, out A>(
   override var default: T? = null
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(qproperty, enumClass, argBuilder?.arguments?.invoke()?: emptyMap(), default).bind(inst)
+      EnumFieldImpl(qproperty, enumClass, argBuilder.toMap(), default).bind(inst)
 
   override fun config(argumentScope: A.() -> Unit) = argBuilder?.argumentScope()?: Unit
 }
