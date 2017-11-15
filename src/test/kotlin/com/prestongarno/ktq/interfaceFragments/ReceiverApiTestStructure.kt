@@ -9,6 +9,7 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.NoArgConfig
+import com.prestongarno.ktq.stubs.StringDelegate
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 
@@ -19,19 +20,19 @@ enum class ConceptType : QEnumType {
 
 interface Concept : QType, QInterface {
   // TODO -> 3-factor API with argbuilders
-  val name : StringDelegate<ArgBuilder>
+  val name : StringDelegate.Query
 
   val type : NoArgConfig<EnumStub<ConceptType, ArgBuilder>, ConceptType>
 }
 
 object Persistence : Concept {
-  override val name by QScalar.stringStub()
+  override val name by QScalar.String.stub()
 
   override val type by QEnum.stub<ConceptType>()
 }
 
 object Timber : Concept {
-  override val name by QScalar.stringStub()
+  override val name by QScalar.String.stub()
 
   override val type by QEnum.stub<ConceptType>()
 }
