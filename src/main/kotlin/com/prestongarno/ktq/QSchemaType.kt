@@ -5,11 +5,17 @@ import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.NoArgConfig
 import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.hooks.StubProvider
+import com.prestongarno.ktq.stubs.BooleanDelegate
 import com.prestongarno.ktq.stubs.EnumStub
+import com.prestongarno.ktq.stubs.FloatDelegate
+import com.prestongarno.ktq.stubs.IntDelegate
+import com.prestongarno.ktq.stubs.IntStub
 import com.prestongarno.ktq.stubs.InterfaceListStub
 import com.prestongarno.ktq.stubs.InterfaceStub
+import com.prestongarno.ktq.stubs.StringDelegate
 import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.stubs.TypeStub
+import kotlin.reflect.KClass
 
 /**
  * The root type of all generated schema objects. Nested objects
@@ -18,6 +24,53 @@ import com.prestongarno.ktq.stubs.TypeStub
 interface QSchemaType {
 
   object QScalar {
+    object String {
+
+      fun stub(): StubProvider<StringDelegate.Query> = Grub("String") { StringDelegate.noArgStub(it) }
+
+      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<StringDelegate.OptionalConfigQuery<A>> =
+          Grub("String") { StringDelegate.optionalArgStub<A>(it) }
+
+      fun <A : ArgBuilder> configStub(): StubProvider<StringDelegate.ConfigurableQuery<A>> =
+          Grub("String") { StringDelegate.argStub<A>(it) }
+
+    }
+
+    object Int {
+
+      fun stub(): StubProvider<IntDelegate.Query> = Grub("Int") { IntDelegate.noArgStub(it) }
+
+      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<IntDelegate.OptionalConfigQuery<A>> =
+          Grub("Int") { IntDelegate.optionalArgStub<A>(it) }
+
+      fun <A : ArgBuilder> configStub(): StubProvider<IntDelegate.ConfigurableQuery<A>> =
+          Grub("Int") { IntDelegate.argStub<A>(it) }
+
+    }
+
+    object Float {
+
+      fun stub(): StubProvider<FloatDelegate.Query> = Grub("Float") { FloatDelegate.noArgStub(it) }
+
+      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<FloatDelegate.OptionalConfigQuery<A>> =
+          Grub("Float") { FloatDelegate.optionalArgStub<A>(it) }
+
+      fun <A : ArgBuilder> configStub(): StubProvider<FloatDelegate.ConfigurableQuery<A>> =
+          Grub("Float") { FloatDelegate.argStub<A>(it) }
+
+    }
+
+    object Boolean {
+
+      fun stub(): StubProvider<BooleanDelegate.Query> = Grub("Boolean") { BooleanDelegate.noArgStub(it) }
+
+      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<BooleanDelegate.OptionalConfigQuery<A>> =
+          Grub("Boolean") { BooleanDelegate.optionalArgStub<A>(it) }
+
+      fun <A : ArgBuilder> configStub(): StubProvider<BooleanDelegate.ConfigurableQuery<A>> =
+          Grub("Boolean") { BooleanDelegate.argStub<A>(it) }
+
+    }
   }
 
   object QScalarArray {
@@ -54,7 +107,7 @@ interface QSchemaType {
         Grub("${T::class.simpleName}") { TypeStub.optionalArgStub<T, A>(it) }
 
     inline fun <reified T : QType, A : ArgBuilder> configStub(): StubProvider<TypeStub.ConfigurableQuery<T, A>> =
-        Grub("${T::class.simpleName}") { TypeStub.argStub<T, A>(it) }
+        Grub(T::class.meaningfulName()) { TypeStub.argStub<T, A>(it) }
   }
 
   object QInterfaces {
@@ -152,3 +205,7 @@ interface QSchemaType {
   }
 
 }
+
+/**
+ * TODO -> if anonymous class, crawl up the type hierarchy to find one, shouldn't really need it though */
+@Suppress("NOTHING_TO_INLINE") @PublishedApi internal inline fun <T: Any> KClass<T>.meaningfulName() = "${this.simpleName}"

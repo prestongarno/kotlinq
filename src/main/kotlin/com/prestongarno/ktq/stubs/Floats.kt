@@ -2,6 +2,7 @@ package com.prestongarno.ktq.stubs
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.applyNotNull
 import com.prestongarno.ktq.adapters.bind
 import com.prestongarno.ktq.adapters.toMap
@@ -14,7 +15,25 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
 
   fun config(scope: A.() -> Unit)
 
-  interface Query {
+  companion object {
+
+    @PublishedApi internal fun noArgStub(
+        qproperty: GraphQlProperty
+    ): FloatDelegate.Query = QueryImpl(qproperty)
+
+    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+        qproperty: GraphQlProperty
+    ): FloatDelegate.OptionalConfigQuery<A> =
+        OptionalConfigQueryImpl(qproperty)
+
+    @PublishedApi internal fun <A : ArgBuilder> argStub(
+        qproperty: GraphQlProperty
+    ): FloatDelegate.ConfigurableQuery<A> =
+        ConfigurableQueryImpl(qproperty)
+
+  }
+
+  interface Query : SchemaStub {
 
     operator fun invoke(
         arguments: ArgBuilder? = null,
@@ -27,7 +46,7 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
     ): FloatStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgBuilder> {
+  interface OptionalConfigQuery<A : ArgBuilder> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -40,7 +59,7 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
     ): FloatStub
   }
 
-  interface ConfigurableQuery<A : ArgBuilder> {
+  interface ConfigurableQuery<A : ArgBuilder> : SchemaStub {
 
     operator fun invoke(
         arguments: A,

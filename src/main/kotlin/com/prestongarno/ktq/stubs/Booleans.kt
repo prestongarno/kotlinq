@@ -2,6 +2,7 @@ package com.prestongarno.ktq.stubs
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.applyNotNull
 import com.prestongarno.ktq.adapters.bind
 import com.prestongarno.ktq.adapters.toMap
@@ -14,7 +15,25 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
 
   fun config(scope: A.() -> Unit)
 
-  interface Query {
+  companion object {
+
+    @PublishedApi internal fun noArgStub(
+        qproperty: GraphQlProperty
+    ): BooleanDelegate.Query = QueryImpl(qproperty)
+
+    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+        qproperty: GraphQlProperty
+    ): BooleanDelegate.OptionalConfigQuery<A> =
+        OptionalConfigQueryImpl(qproperty)
+
+    @PublishedApi internal fun <A : ArgBuilder> argStub(
+        qproperty: GraphQlProperty
+    ): BooleanDelegate.ConfigurableQuery<A> =
+        ConfigurableQueryImpl(qproperty)
+
+  }
+
+  interface Query : SchemaStub {
 
     operator fun invoke(
         arguments: ArgBuilder? = null,
@@ -27,7 +46,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): BooleanStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgBuilder> {
+  interface OptionalConfigQuery<A : ArgBuilder> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -40,7 +59,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): BooleanStub
   }
 
-  interface ConfigurableQuery<A : ArgBuilder> {
+  interface ConfigurableQuery<A : ArgBuilder> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
