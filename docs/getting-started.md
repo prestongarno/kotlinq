@@ -25,38 +25,38 @@ The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an e
 and mutations without ever leaving native code.
 
 For an example of how to build models, see the example below created for the Yelp Graphql API. 
-Note that while field types are specified, they are not necessary and can be inferred by the properties
-in the `model` instance which a concrete query/mutation class delegates its properties to.
 
     class BusinessQuery(searchTerm: String) : QModel(Query) {
     
-      val result: List<BusinessNodesModel> by model.search
-          .config {
+      val result: List<BusinessNodes> by model.search(::BusinessesNodes) {
+          config {
             term = searchTerm
             limit = 10
-          }.querying { BusinessesNodesModel() }
-          
+          }
+      }
     }
 
-    class BusinessesNodesModel : QModel(Businesses) {
-      val resultCount:   Int                    by model.total
-      val resultsNodes:  List<SimpleBusiness>   by model.business.querying { SimpleBusiness() }
+    class BusinessesNodes : QModel(Businesses) {
+      val resultCount: Int by model.total
+      val resultsNodes: List<BusinessQuery> by model.business.query(::BusinessQuery)
     }
 
-    class SimpleBusiness : QModel(Business) {
-      val name:         String  by model.name
-      val phoneNumber:  Int     by model.display_phone
-      val directUrl:    String  by model.url
+    class BusinessQuery : QModel(Business) {
+      val name: String by model.name
+      val phoneNumber: Int by model.display_phone
+      val directUrl: String by model.url
     }
     
+
+Note that while field types are specified, they are not necessary and can be inferred by the properties
+in the `model` instance which a concrete query/mutation class delegates its properties to.
 
 When initializing a `BusinessQuery` calling the `.toGraphql()` results in a valid graphql query as a String:
 
 E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
 
     {
-     search(limit: 10,
-        term: "foobar"){
+     search(limit: 10, term: "foobar"){
        total,
        business {
          name,
@@ -66,7 +66,7 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
       }
     }
 
-## <span style="color:#f442c2">How it works</span>
-
-The above is only an example of the syntax *ktq* supports for describing a GraphQL type system and using it. 
-For a more detailed explanation of the abstractions which make up the design of this library, go on to the next section.
+!!! warning
+    <font size="+0.4">Delegated properties should be considered *uninitialized* until resolved!
+    Call `model.resolved` (`Boolean` property) to figure this out. 
+    Otherwise, all primitive/scalar types will be set to their default value, and all nullable fields will be null.</font>

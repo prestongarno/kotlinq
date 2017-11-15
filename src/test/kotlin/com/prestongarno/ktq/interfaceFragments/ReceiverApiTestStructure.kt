@@ -1,5 +1,5 @@
 package com.prestongarno.ktq.interfaceFragments
-/*
+
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.stubs.EnumStub
@@ -69,7 +69,7 @@ class ReceiverApiTestStructure {
       {
         "getRandomConcept": {
           "__typename": "Persistence",
-          "name": "Pretty sure this isn't how you would use GraphQL but whatever",
+          "name": "Pretty sure this isn't how a GraphQL API would be but whatever",
           "type": "INTANGIBLE"
         }
       }
@@ -80,9 +80,9 @@ class ReceiverApiTestStructure {
     assertThat((query.result as QModel<*>).model)
         .isEqualTo(Persistence)
     assertThat((query.result as MyPersistence).name)
-        .isEqualTo("Pretty sure this isn't how you would use GraphQL but whatever")
+        .isEqualTo("Pretty sure this isn't how a GraphQL API would be but whatever")
     assertThat((query.result as MyPersistence).type)
         .isEqualTo(ConceptType.INTANGIBLE)
 
   }
-}*/
+}

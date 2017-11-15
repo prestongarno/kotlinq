@@ -41,23 +41,23 @@ in the `model` instance which a concrete query/mutation class delegates its prop
 
     class BusinessQuery(searchTerm: String) : QModel(Query) {
     
-      val result: List<BusinessNodesModel> by model.search
-          .config {
+      val result: List<BusinessNodes> by model.search(::BusinessesNodes) {
+          config {
             term = searchTerm
             limit = 10
-          }.querying { BusinessesNodesModel() }
-          
+          }
+      }
     }
 
-    class BusinessesNodesModel : QModel(Businesses) {
-      val resultCount:   Int                    by model.total
-      val resultsNodes:  List<SimpleBusiness>   by model.business.querying { SimpleBusiness() }
+    class BusinessesNodes : QModel(Businesses) {
+      val resultCount: Int by model.total
+      val resultsNodes: List<BusinessQuery> by model.business.query(::BusinessQuery)
     }
 
-    class SimpleBusiness : QModel(Business) {
-      val name:         String  by model.name
-      val phoneNumber:  Int     by model.display_phone
-      val directUrl:    String  by model.url
+    class BusinessQuery : QModel(Business) {
+      val name: String by model.name
+      val phoneNumber: Int by model.display_phone
+      val directUrl: String by model.url
     }
     
 
