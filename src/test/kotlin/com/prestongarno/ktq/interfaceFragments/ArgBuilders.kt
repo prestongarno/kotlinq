@@ -2,6 +2,7 @@ package com.prestongarno.ktq.interfaceFragments
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.adapters.toMap
 import org.junit.Ignore
 import org.junit.Test
 
@@ -22,6 +23,6 @@ class ArgBuilders {
   @Ignore @Test fun fooBar() {
     val foo = GeneratedFieldArgBuilder("Hello").apply { foo() }
     assertThat(foo.run { "$requiredArgument, $property!" })
-        .isEqualTo(foo.arguments().values.joinToString(postfix = "!") { it.toString() })
+        .isEqualTo(foo.toMap().values.joinToString(postfix = "!") { it.toString() })
   }
 }

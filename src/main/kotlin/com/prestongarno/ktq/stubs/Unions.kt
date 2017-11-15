@@ -7,6 +7,7 @@ import com.prestongarno.ktq.QUnionType
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.adapters.newUnionField
+import com.prestongarno.ktq.adapters.toMap
 import com.prestongarno.ktq.hooks.ConfiguredQuery
 import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.properties.GraphQlProperty
@@ -38,7 +39,7 @@ interface UnionStub<T : QUnionType, out A : ArgBuilder> : DelegateProvider<QMode
       val qproperty: GraphQlProperty, val model: U
   ) : Query<U> {
     override fun invoke(arguments: ArgBuilder?, scope: U.() -> Unit): QField<QModel<*>?> =
-        model.queue(model, scope) { newUnionField(qproperty, reset(), arguments?.arguments?.invoke()) }
+        model.queue(model, scope) { newUnionField(qproperty, reset(), arguments.toMap()) }
   }
 
 }

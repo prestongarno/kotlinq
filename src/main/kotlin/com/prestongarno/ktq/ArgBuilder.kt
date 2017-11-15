@@ -8,13 +8,15 @@ import kotlin.reflect.KProperty
  * while properties are GraphQL optional arguments
  */
 open class ArgBuilder {
-  /*protected*/ val arguments = PropertyMapper()
+  protected val arguments = PropertyMapper()
 
   infix fun String.with(value: Any) {
     arguments.put(this, value)
   }
 
   fun addArgument(key: String, value: Any) = apply { arguments.put(key, value) }
+
+  internal fun getArguments() = arguments
 }
 
 class PropertyMapper {

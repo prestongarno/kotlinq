@@ -1,5 +1,8 @@
-package com.prestongarno.ktq
+package com.prestongarno.ktq.stubs
 
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.DelegateProvider
+import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.adapters.EnumConfigStubImpl
 import com.prestongarno.ktq.adapters.EnumNoArgStub
 import com.prestongarno.ktq.adapters.EnumOptionalArgStubQuery

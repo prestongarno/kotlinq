@@ -5,9 +5,10 @@ import com.prestongarno.ktq.hooks.Grub
 import com.prestongarno.ktq.hooks.NoArgConfig
 import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.hooks.StubProvider
+import com.prestongarno.ktq.stubs.EnumStub
+import com.prestongarno.ktq.stubs.InterfaceListStub
 import com.prestongarno.ktq.stubs.InterfaceStub
-import com.prestongarno.ktq.stubs.ListConfigType
-import com.prestongarno.ktq.stubs.ListInitStub
+import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.stubs.TypeStub
 
 /**
@@ -16,23 +17,12 @@ import com.prestongarno.ktq.stubs.TypeStub
  * @author prestongarno */
 interface QSchemaType {
 
-  /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
-   * fields which are regular Scalars (Int, Float, Boolean, String):
-   * QScalar#createStub()} and
-   * QScalar#createConfigStub(arginit)}.*/
   object QScalar {
   }
 
   object QScalarArray {
-
   }
 
-  /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
-   * fields which are types typedValueFrom any Schema-defined scalars:
-   * QCustomScalar#createStub()} and
-   * QCustomScalar#createConfigStub(arginit)}.*/
   object QCustomScalar {
     /**
      * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
@@ -68,6 +58,7 @@ interface QSchemaType {
   }
 
   object QInterfaces {
+
     inline fun <reified T> stub(): StubProvider<InterfaceStub.Query<T>>
         where T : QType, T : QInterface =
         Grub("${T::class.simpleName}") { InterfaceStub.noArgStub<T>(it) }
@@ -83,31 +74,33 @@ interface QSchemaType {
   }
 
   object QInterfaceLists {
-    // redacted/refactored :/
+
+    inline fun <reified T> stub(): StubProvider<InterfaceListStub.Query<T>>
+        where T : QType, T : QInterface =
+        Grub("${T::class.simpleName}") { InterfaceListStub.noArgStub<T>(it) }
+
+    inline fun <reified T, A> optionalConfigStub(): StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
+        where T : QType, T : QInterface, A : ArgBuilder =
+        Grub("${T::class.simpleName}") { InterfaceListStub.optionalArgStub<T, A>(it) }
+
+    inline fun <reified T, A> configStub(): StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
+        where T : QType, T : QInterface, A : ArgBuilder =
+        Grub("${T::class.simpleName}") { InterfaceListStub.argStub<T, A>(it) }
   }
 
-  /**
-   * Object which provides 2 convenience methods for generated schemas to create delegates fragment
-   * fields which represent lists of any type defined in the schema:
-   * QTypeList#createStub()} and
-   * QTypeList#createConfigStub(arginit)}.*/
   object QTypeList {
-    /**
-     * Method which provides a delegate for {@link com.prestongarno.ktq.QTypeList} fields
-     * @param T The type of the createStub
-     * @return Grub<ListInitStub<T>> the delegate which lazily provides a ListInitStub<T> */
-    inline fun <reified T : QType> stub(): StubProvider<ListInitStub<T, ArgBuilder>>
-        = TODO()
 
-    /**
-     * Method which provides a delegate for {@link com.prestongarno.ktq.QTypeList} fields
-     * fragment schema-defined types which take input argBuilder
-     * @param arginit an initializer for the createStub field
-     * @param T type of the field (schema-defined type)
-     * @param A type argument for the argument builder class for that given schema field definition
-     * @return Grub<ListConfigType<T, A>> the delegate which lazily provides a ListConfigType<T, A> */
-    inline fun <reified T : QType, A : ArgBuilder> configStub(): StubProvider<ListConfigType<T, A>> =
-        TODO()
+    inline fun <reified T : QType> stub()
+        : StubProvider<TypeListStub.Query<T>> =
+        Grub("${T::class.simpleName}") { TypeListStub.noArgStub<T>(it) }
+
+    inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub()
+        : StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
+        Grub("${T::class.simpleName}") { TypeListStub.optionalArgStub<T, A>(it) }
+
+    inline fun <reified T : QType, A : ArgBuilder> configStub()
+        : StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
+        Grub("${T::class.simpleName}") { TypeListStub.argStub<T, A>(it) }
   }
 
   /**

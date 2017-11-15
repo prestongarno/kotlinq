@@ -14,8 +14,7 @@ import kotlin.reflect.KProperty
 
 fun newUnionField(
     qproperty: GraphQlProperty, fragments: Set<Fragment>, args: Map<String, Any>?
-) : QField<QModel<*>?> =
-    UnionStubImpl(qproperty, fragments, args ?: emptyMap())
+) : QField<QModel<*>?> = UnionStubImpl(qproperty, fragments, args ?: emptyMap())
 
 @PublishedApi internal class UnionAdapterImpl<I : QUnionType, out A : ArgBuilder>(
     val qproperty: GraphQlProperty,
@@ -23,9 +22,10 @@ fun newUnionField(
     val arguments: A? = null
 ) : UnionStub<I, A> {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<*>?> {
-    return newUnionField(qproperty, fragments, arguments?.arguments?.invoke())
-  }
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<*>?> =
+      newUnionField(qproperty, fragments, arguments.toMap()).apply {
+        (this as? Adapter)?.bind(inst)
+      }
 
   override fun config(scope: A.() -> Unit) {
     arguments?.apply(scope)

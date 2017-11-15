@@ -2,7 +2,7 @@ package com.prestongarno.ktq.interfaceFragments
 /*
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.EnumStub
+import com.prestongarno.ktq.stubs.EnumStub
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel

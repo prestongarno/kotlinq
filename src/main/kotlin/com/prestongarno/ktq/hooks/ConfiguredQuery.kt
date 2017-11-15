@@ -22,6 +22,7 @@ import kotlin.reflect.KProperty
  * @param A : The type of ArgBuilder which configures on this field
  */
 interface ConfiguredQuery<out D : DelegateProvider<*>, in A: ArgBuilder> : SchemaStub {
+
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
   companion object {

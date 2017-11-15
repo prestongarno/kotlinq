@@ -2,7 +2,6 @@ package com.prestongarno.ktq.stubs
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.DelegateProvider
-import com.prestongarno.ktq.FragmentStub
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType

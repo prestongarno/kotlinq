@@ -1,4 +1,8 @@
-package com.prestongarno.ktq
+package com.prestongarno.ktq.stubs
+
+import com.prestongarno.ktq.QInterface
+import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.QType
 
 /**
  * To support no arguments on optional query and restricting use of config { } block

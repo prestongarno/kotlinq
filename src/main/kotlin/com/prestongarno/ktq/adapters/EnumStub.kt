@@ -1,7 +1,7 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.EnumStub
+import com.prestongarno.ktq.stubs.EnumStub
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
