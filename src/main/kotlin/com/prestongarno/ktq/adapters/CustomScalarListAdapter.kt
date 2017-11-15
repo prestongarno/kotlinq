@@ -11,7 +11,6 @@ import com.prestongarno.ktq.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.toArgumentMap
 import kotlin.reflect.KProperty
 
 internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, out Q, B : ArgBuilder>(
@@ -33,7 +32,7 @@ internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q
           this.qproperty.graphqlType,
           this.qproperty.isList,
           this.qproperty.graphqlName),
-          toArgumentMap(argBuilder, config),
+          argBuilder.toMap(),
           adapter!!
       ).bind(inst)
 

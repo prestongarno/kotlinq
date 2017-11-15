@@ -5,7 +5,7 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.TypeStub
+import com.prestongarno.ktq.stubs.TypeStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty
@@ -17,7 +17,7 @@ internal class TypeStubAdapter<out T : QModel<U>, out U : QType, out A : ArgBuil
 ) : TypeStub<T, U, A> {
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      TypeStubImpl(qproperty, init, argBuilder?.arguments?.invoke() ?: emptyMap()).bind(inst)
+      TypeStubImpl(qproperty, init, argBuilder.toMap() ?: emptyMap()).bind(inst)
 
   override fun config(argumentScope: A.() -> Unit) {
     argBuilder?.apply(argumentScope)

@@ -1,15 +1,19 @@
-package com.prestongarno.ktq.adapters
+package com.prestongarno.ktq.stubs
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.SchemaStub
+import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.adapters.bind
+import com.prestongarno.ktq.adapters.formatAs
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
 interface ScalarArrayDelegate<out D: PrimitiveArrayStub> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
 }
+
 
 sealed class PrimitiveArrayStub(
     override val qproperty: GraphQlProperty,
@@ -25,83 +29,6 @@ sealed class PrimitiveArrayStub(
           args.entries.joinToString(",", "(", ")") { "${it.key}: ${formatAs(it.value)}" }
         else ""
   }
-}
-
-sealed class ScalarArrayDelegateImpl<A : ArgBuilder, out D : PrimitiveArrayStub>(
-    val graphqlProperty: GraphQlProperty,
-    val config: (A.() -> Unit)? = null
-) : ScalarArrayDelegate<D> {
-
-  val args by lazy { mutableMapOf<String, Any>() }
-
-  abstract fun config(config: A.() -> Unit): ScalarArrayDelegate<D>
-
-  operator fun invoke(literal: ScalarArrayDelegate<D>.() -> Unit): ScalarArrayDelegate<D> = apply { literal.invoke(this) }
-
-}
-
-class StringArrayDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
-    config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, StringArrayStub>(schemaProperty, config) {
-
-  var default: Array<String>? = null
-
-  fun withDefault(value: Array<String>): ScalarArrayDelegateImpl<A, StringArrayStub> = apply { this.default = value }
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringArrayStub =
-      StringArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
-
-  override fun config(config: A.() -> Unit): StringArrayDelegate<A> =
-      StringArrayDelegate(graphqlProperty, config)
-}
-
-class IntegerArrayDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
-    config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, IntArrayStub>(schemaProperty, config) {
-
-  var default: IntArray? = null
-
-  fun withDefault(value: IntArray): ScalarArrayDelegateImpl<A, IntArrayStub> = apply { this.default = value }
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntArrayStub =
-      IntArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
-
-  override fun config(config: A.() -> Unit): IntegerArrayDelegate<A> =
-      IntegerArrayDelegate(graphqlProperty, config)
-}
-
-class FloatArrayDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
-    config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, FloatArrayStub>(schemaProperty, config) {
-
-  var default: FloatArray? = null
-
-  fun withDefault(value: FloatArray): ScalarArrayDelegateImpl<A, FloatArrayStub> = apply { this.default = value }
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatArrayStub =
-      FloatArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
-
-  override fun config(config: A.() -> Unit): FloatArrayDelegate<A> =
-      FloatArrayDelegate(graphqlProperty, config)
-}
-
-class BooleanArrayDelegate<A : ArgBuilder>(
-    schemaProperty: GraphQlProperty,
-    config: (A.() -> Unit)? = null
-) : ScalarArrayDelegateImpl<A, BooleanArrayStub>(schemaProperty, config) {
-
-  var default: BooleanArray? = null
-
-  fun withDefault(value: BooleanArray): ScalarArrayDelegateImpl<A, BooleanArrayStub> = apply { this.default = value }
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BooleanArrayStub =
-      BooleanArrayStub(graphqlProperty, default, apply {}.args.toMap()).bind(inst)
-
-  override fun config(config: A.() -> Unit): BooleanArrayDelegate<A> =
-      BooleanArrayDelegate(graphqlProperty, config)
 }
 
 @CollectionDelegate(Array<String>::class)

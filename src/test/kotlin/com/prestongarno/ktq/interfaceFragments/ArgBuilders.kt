@@ -1,21 +1,28 @@
 package com.prestongarno.ktq.interfaceFragments
 
+import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.adapters.toMap
+import org.junit.Ignore
+import org.junit.Test
 
 class GeneratedFieldArgBuilder(val requiredArgument: String) : ArgBuilder() {
+
+  init {
+    "requiredArgument" with requiredArgument
+  }
 
   var property: String? by arguments
 
   fun foo() {
-    property = "Hello world"
+    property = "World"
   }
 }
 
-fun main(args: Array<String>) {
-  val foo = GeneratedFieldArgBuilder("Hello")
-  println(foo.property)
-  foo.foo()
-  println(foo.property)
-  println(foo.requiredArgument)
-  //foo.apply { argBuilder.argBuilder().forEach { println("${it.first}==${it.second}") }}
+class ArgBuilders {
+  @Ignore @Test fun fooBar() {
+    val foo = GeneratedFieldArgBuilder("Hello").apply { foo() }
+    assertThat(foo.run { "$requiredArgument, $property!" })
+        .isEqualTo(foo.toMap().values.joinToString(postfix = "!") { it.toString() })
+  }
 }

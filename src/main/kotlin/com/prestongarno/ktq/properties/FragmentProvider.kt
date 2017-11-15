@@ -11,9 +11,9 @@ import com.prestongarno.ktq.hooks.Fragment
  * I still have no idea how this works */
 class FragmentProvider {
 
-  private var collector = mutableListOf<Fragment>()
+  private val collector = mutableListOf<Fragment>()
 
-  @Synchronized inline operator fun <I: QUnionType, T : Any> invoke(
+  @Synchronized operator fun <I: QUnionType, T : Any?> invoke(
       target: I,
       dispatch: I.() -> Unit,
       callback: FragmentProvider.() -> QField<T>
@@ -22,7 +22,7 @@ class FragmentProvider {
       return callback(this)
   }
 
-  internal fun reset() = collector.toList().also { collector.clear() }
+  internal fun reset(): Set<Fragment> = collector.toSet().also { collector.clear() }
 
   /**
    * MUST only be called from a context of this.invoke! (indirectly, ofc...) */

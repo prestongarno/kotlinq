@@ -13,13 +13,13 @@ class UnionToGraphql {
           |  login: String
           |}
           |
-          |createTypeStub User implements Actor {
+          |type User implements Actor {
           |  login: String
           |  email: String?
           |  repositories: [Repository]
           |}
           |
-          |createTypeStub Organization implements Actor {
+          |type Organization implements Actor {
           |  login: String
           |  members: [User]
           |  owner: User
@@ -28,19 +28,19 @@ class UnionToGraphql {
           |
           |createUnionStub Account = User | Bot | Organization
           |
-          |createTypeStub Bot implements Actor {
+          |type Bot implements Actor {
           |  login: String
           |  owner: User
           |}
           |
           |scalar URL
           |
-          |createTypeStub Repository {
+          |type Repository {
           |  name: String
           |  url: URL
           |}
           |
-          |createTypeStub Query {
+          |type Query {
           |  searchAccounts(first: Int, searchTerm: String!): [Account]
           |}
           |

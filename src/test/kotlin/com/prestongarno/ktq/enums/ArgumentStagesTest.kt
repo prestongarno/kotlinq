@@ -8,52 +8,8 @@ import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QType
 import org.junit.Test
 
-object Class : QType {
-  val classLevel by QSchemaType.QEnum.stub<ClassLevel>()
-
-  val classLevelWithArgs by QSchemaType.QEnum.configStub<ClassLevel, ClassLevelArgs>()
-
-  val classLevelOptionalArgs by QSchemaType.QEnum.optionalConfigStub<ClassLevel, OptionalClassLevelArgs>()
-
-  class OptionalClassLevelArgs : ArgBuilder() {
-    var intArgument: Int? by arguments
-    var stringArgument: String? by arguments
-  }
-  class ClassLevelArgs(
-      requiredInteger: Int,
-      requiredString: String,
-      requiredFloat: Float,
-      requiredBoolean: Boolean
-  ) : ArgBuilder() {
-
-    init {
-      "requiredInteger" with requiredInteger
-      "requiredString" with requiredString
-      "requiredFloat" with requiredFloat
-      "requiredBoolean" with requiredBoolean
-    }
-    var integer: Int? by arguments
-    var string: String? by arguments
-    var float: Float? by arguments
-    var boolean: Boolean? by arguments
-  }
-}
-
-enum class ClassLevel : QEnumType {
-  ELEMENTARY,
-  MIDDLE_SCHOOL,
-  HIGH_SCHOOL,
-  UNDERGRADUATE,
-  GRADUATE
-}
-
-class ClassQuery1 : QModel<Class>(Class) {
-  val level by model.classLevel {
-    default = ClassLevel.UNDERGRADUATE
-  }
-}
-
 class ArgumentStagesTest {
+
   @Test fun sampleConfiguration() {
     assertThat(ClassQuery1().toGraphql(false))
         .isEqualTo("{classLevel}")
@@ -62,7 +18,6 @@ class ArgumentStagesTest {
   }
 
   @Test fun `config block on NoArg stub shows up`() {
-
     val query = object : QModel<Class>(Class) {
       val level by model.classLevel {
         config { "Hello" with "World" }
@@ -144,4 +99,49 @@ class ArgumentStagesTest {
 
   private fun String.flatLine() = this.replace("\\s*\\n\\s*".toRegex(RegexOption.MULTILINE), "")
 }
+object Class : QType {
+  val classLevel by QSchemaType.QEnum.stub<ClassLevel>()
+
+  val classLevelWithArgs by QSchemaType.QEnum.configStub<ClassLevel, ClassLevelArgs>()
+
+  val classLevelOptionalArgs by QSchemaType.QEnum.optionalConfigStub<ClassLevel, OptionalClassLevelArgs>()
+
+  class OptionalClassLevelArgs : ArgBuilder() {
+    var intArgument: Int? by arguments
+    var stringArgument: String? by arguments
+  }
+  class ClassLevelArgs(
+      requiredInteger: Int,
+      requiredString: String,
+      requiredFloat: Float,
+      requiredBoolean: Boolean
+  ) : ArgBuilder() {
+
+    init {
+      "requiredInteger" with requiredInteger
+      "requiredString" with requiredString
+      "requiredFloat" with requiredFloat
+      "requiredBoolean" with requiredBoolean
+    }
+    var integer: Int? by arguments
+    var string: String? by arguments
+    var float: Float? by arguments
+    var boolean: Boolean? by arguments
+  }
+}
+
+enum class ClassLevel : QEnumType {
+  ELEMENTARY,
+  MIDDLE_SCHOOL,
+  HIGH_SCHOOL,
+  UNDERGRADUATE,
+  GRADUATE
+}
+
+class ClassQuery1 : QModel<Class>(Class) {
+  val level by model.classLevel {
+    default = ClassLevel.UNDERGRADUATE
+  }
+}
+
 

@@ -31,10 +31,6 @@ interface GraphQlProperty {
    * Used for Boxing/generics on the JVM */
   val isList: Boolean
 
-  /** TODO Get it out. */
-  //@Deprecated("leaky abstraction which literally makes this interface pointless")
-  //val kproperty: KProperty<*>
-
   companion object {
 
     /**

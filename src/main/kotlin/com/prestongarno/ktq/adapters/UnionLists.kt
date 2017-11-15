@@ -6,11 +6,10 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QUnionType
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.DelegateProvider
-import com.prestongarno.ktq.stubs.UnionListInitStub
 import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.Fragment
+import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.stubs.FragmentContext
 import kotlin.reflect.KProperty
 
 internal sealed class UnionListConfigAdapter<I : QUnionType>(
@@ -18,7 +17,7 @@ internal sealed class UnionListConfigAdapter<I : QUnionType>(
     objectModel: I,
     val dispatcher: (I.() -> Unit)? = null
 ) : QModel<I>(objectModel),
-    UnionListInitStub<I>,
+    //UnionListInitStub<I>,
     UnionListStub,
     QUnionType {
 
@@ -32,7 +31,7 @@ internal sealed class UnionListConfigAdapter<I : QUnionType>(
 
   internal var value: List<QModel<*>> = mutableListOf()
 
-  override fun fragment(what: I.() -> Unit): UnionListStub = MutableUnionListAdapter(qproperty, model, what)
+  //override fun fragment(what: I.() -> Unit): UnionListStub = MutableUnionListAdapter(qproperty, model, what)
 
   override fun on(init: () -> QModel<QType>) {
     queue.addFragment(Fragment(init))

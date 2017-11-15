@@ -8,23 +8,16 @@ import kotlin.reflect.KProperty
  * while properties are GraphQL optional arguments
  */
 open class ArgBuilder {
-  /*protected*/ val arguments = PropertyMapper()
+  protected val arguments = PropertyMapper()
 
   infix fun String.with(value: Any) {
     arguments.put(this, value)
   }
 
   fun addArgument(key: String, value: Any) = apply { arguments.put(key, value) }
-}
 
-@Suppress("UNCHECKED_CAST")
-internal fun <A : ArgBuilder> toArgumentMap(
-    args: A?,
-    scope: (A.() -> Unit)?
-): Map<String, Any> =
-    args?.apply { scope?.invoke(this) }?.arguments?.invoke()
-        ?: (ArgBuilder() as? A)?.apply { scope?.invoke(this) }?.arguments?.invoke()
-        ?: emptyMap()
+  internal fun getArguments() = arguments
+}
 
 class PropertyMapper {
 
@@ -49,5 +42,3 @@ class PropertyMapper {
   }
 }
 
-// interface CustomScalarArgBuilder : ArgBuilder { fun <U: QScalarMapper<T>, T> build(init: U): CustomStub<U, T> }
-//interface CustomScalarListArgBuilder : ArgBuilder { fun <U: QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T> }

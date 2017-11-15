@@ -2,38 +2,28 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.stubs.ListConfigType
-import com.prestongarno.ktq.stubs.ListInitStub
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.toArgumentMap
+import com.prestongarno.ktq.stubs.TypeListStub
 import kotlin.reflect.KProperty
 
-internal class TypeListAdapter<I : QType, P : QModel<I>, A : ArgBuilder>(
+internal class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgBuilder>(
     qproperty: GraphQlProperty,
-    val arguments: A? = null,
-    val scope: (A.() -> Unit)? = null,
-    val init: (() -> P)? = null
+    val init: () -> P,
+    val argBuilder: A? = null
 ) : PreDelegate(qproperty),
-    ListInitStub<I, A>,
-    TypeListStub<P, I>,
-    ListConfigType<I, A> {
+    TypeListStub<P, I, A> {
 
-  override fun <U : QModel<I>> querying(of: () -> U): TypeListStub<U, I> =
-      TypeListAdapter(qproperty, arguments, scope, of)
-
-  override fun invoke(arguments: A, scope: (A.() -> Unit)?): ListInitStub<I, A> =
-      TypeListAdapter(qproperty, arguments, scope, init)
+  override fun config(scope: A.() -> Unit) {
+    TODO("Not Implemented")
+  }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
-      // This won't be null, the interface flow requires `querying(of: () -> P) to be called
-      // in order to be exposed to an object which has the `operator function provideDelegate(...): QField<List<P>>`
-      TypeListStubImpl(qproperty, init!!, toArgumentMap(arguments, scope)).bind(inst)
+      TypeListStubImpl(qproperty, init, argBuilder.toMap()).bind(inst)
 }
 
 @CollectionDelegate(QModel::class)

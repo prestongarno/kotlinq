@@ -1,5 +1,5 @@
 package com.prestongarno.ktq.type
-
+/*
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QEnumType
@@ -208,4 +208,4 @@ class TypeStubQuery {
     assertThat(query.destinationAddress.lineOne)
         .isEqualTo("1234 GraphQL")
   }
-}
+}*/

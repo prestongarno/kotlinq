@@ -6,7 +6,7 @@ schema {
 }
 
 # Record of acquisition
-createTypeStub Acquisition {
+type Acquisition {
   # Date of acquisition
   date: Date
 
@@ -18,18 +18,18 @@ createTypeStub Acquisition {
 scalar BigInteger
 
 # Business model
-createTypeStub BusinessModel {
+type BusinessModel {
   prop: String
 }
 
 # City
-createTypeStub City {
+type City {
   # Descriptive prop for city
   prop: String
 }
 
 # Company specific fields and aggregates
-createTypeStub CompanyPersona {
+type CompanyPersona {
   # Stage of the company (Series A, B, C, etc)
   companyStage: String
   monthsSinceLastFunding: Int
@@ -42,7 +42,7 @@ createTypeStub CompanyPersona {
 }
 
 # Contact information for an employee
-createTypeStub ContactDetails {
+type ContactDetails {
   # Employee prop
   prop: String
 
@@ -54,7 +54,7 @@ createTypeStub ContactDetails {
 }
 
 # Continent
-createTypeStub Continent {
+type Continent {
   # Name of continent
   prop: String
 
@@ -63,12 +63,12 @@ createTypeStub Continent {
 }
 
 # Country
-createTypeStub Country {
+type Country {
   # Three character abbreviation for country
   iso3: String
 }
 
-createTypeStub CurrencyValue {
+type CurrencyValue {
   value: Long
 
   # Currency
@@ -82,7 +82,7 @@ scalar Date
 # ISO8601 DateTime
 scalar DateTime
 
-createTypeStub Employee {
+type Employee {
   # Employee Title
   title: String
 
@@ -90,7 +90,7 @@ createTypeStub Employee {
   prop: String
 }
 
-createTypeStub EmployeeCount implements FeedEvent {
+type EmployeeCount implements FeedEvent {
   # The kind of event represented 
   eventType: String!
 
@@ -107,7 +107,7 @@ createTypeStub EmployeeCount implements FeedEvent {
   oldEmployeeCount: Int
 }
 
-createTypeStub FacebookAccount implements SocialAccount {
+type FacebookAccount implements SocialAccount {
   urn: String
   profileUrl: String
   slugHandle: String
@@ -119,7 +119,7 @@ createTypeStub FacebookAccount implements SocialAccount {
   talking: TimeSeriesMetric
 }
 
-createTypeStub FeedBase {
+type FeedBase {
   # Feed events
   events: [FeedEvent]
 }
@@ -133,7 +133,7 @@ interface FeedEvent {
 }
 
 # A collection of investments forming a round of funding
-createTypeStub FundingRound {
+type FundingRound {
   # Series designation (seed, A, B, etc)
   series: String
 
@@ -148,7 +148,7 @@ createTypeStub FundingRound {
 }
 
 # A collection of investments forming a round of funding
-createTypeStub FundingRoundSummary implements Node {
+type FundingRoundSummary implements Node {
   # Unique funding identifier
   id: ID!
 
@@ -190,7 +190,7 @@ createTypeStub FundingRoundSummary implements Node {
 }
 
 # A connection to a list of items.
-createTypeStub FundingRoundSummaryConnection {
+type FundingRoundSummaryConnection {
   edges: [FundingRoundSummaryEdge]
   pageInfo: PageInfo!
   totalResults: Int
@@ -199,17 +199,17 @@ createTypeStub FundingRoundSummaryConnection {
 }
 
 # An edge in a connection.
-createTypeStub FundingRoundSummaryEdge {
+type FundingRoundSummaryEdge {
   # The item at the end of the edge
   node: FundingRoundSummary
   cursor: String!
 }
 
-createTypeStub FundingRoundSummaryQuery {
+type FundingRoundSummaryQuery {
   fundingRounds(before: String, after: String, first: Int, last: Int): FundingRoundSummaryConnection
 }
 
-createTypeStub GrowthScore implements FeedEvent {
+type GrowthScore implements FeedEvent {
   # The kind of event represented 
   eventType: String!
 
@@ -227,12 +227,12 @@ createTypeStub GrowthScore implements FeedEvent {
 }
 
 # Industry
-createTypeStub Industry {
+type Industry {
   prop: String
 }
 
 # An IPO record for a single stock exchange
-createTypeStub InitialPublicOffering {
+type InitialPublicOffering {
   # Amount of public funds raised in the IPO
   amountRaised: CurrencyValue
 
@@ -247,7 +247,7 @@ createTypeStub InitialPublicOffering {
 }
 
 # Web domain
-createTypeStub InternetDomain {
+type InternetDomain {
   # Example: mattermark.com
   domain: String!
 
@@ -262,7 +262,7 @@ createTypeStub InternetDomain {
 }
 
 # Web domain
-createTypeStub InternetDomainSummary {
+type InternetDomainSummary {
   # Example: mattermark.com
   domain: String!
 
@@ -271,7 +271,7 @@ createTypeStub InternetDomainSummary {
 }
 
 # Investment made by an organization
-createTypeStub Investment {
+type Investment {
   # Investment amount
   amount: CurrencyValue
 
@@ -280,7 +280,7 @@ createTypeStub Investment {
 }
 
 # Investor specific fields and aggregates
-createTypeStub InvestorPersona {
+type InvestorPersona {
   # Type of investor (seed, venture, pe)
   investorType: String
   threeYearFundsOffered: CurrencyValue
@@ -294,7 +294,7 @@ createTypeStub InvestorPersona {
 }
 
 # JobTItle
-createTypeStub JobTitle {
+type JobTitle {
   # Employee prop
   prop: String
 
@@ -308,7 +308,7 @@ createTypeStub JobTitle {
   seniority: String
 }
 
-createTypeStub LinkedinAccount implements SocialAccount {
+type LinkedinAccount implements SocialAccount {
   urn: String
   profileUrl: String
   slugHandle: String
@@ -318,7 +318,7 @@ createTypeStub LinkedinAccount implements SocialAccount {
 }
 
 # A geographic location
-createTypeStub Location {
+type Location {
   # Descriptive prop for location
   prop: String
 
@@ -341,7 +341,7 @@ createTypeStub Location {
   region: Region
 }
 
-# Long createTypeStub
+# Long type
 scalar Long
 
 # An object with an ID
@@ -351,13 +351,13 @@ interface Node {
 }
 
 # An organization's office location
-createTypeStub Office {
+type Office {
   # A geographic location
   location: Location
 }
 
 # A public or private organization
-createTypeStub Organization implements Node {
+type Organization implements Node {
   # Unique organization identifier
   id: ID!
 
@@ -445,7 +445,7 @@ createTypeStub Organization implements Node {
 }
 
 # Collection of organizational metrics
-createTypeStub OrganizationMetrics {
+type OrganizationMetrics {
   # Mattermark Growth Score
   growthScore: TimeSeriesMetric
 
@@ -460,7 +460,7 @@ createTypeStub OrganizationMetrics {
 }
 
 # A public or private organization
-createTypeStub OrganizationSummary implements Node {
+type OrganizationSummary implements Node {
   # Unique organization identifier
   id: ID!
 
@@ -493,7 +493,7 @@ createTypeStub OrganizationSummary implements Node {
 }
 
 # A connection to a list of items.
-createTypeStub OrganizationSummaryConnection {
+type OrganizationSummaryConnection {
   edges: [OrganizationSummaryEdge]
   pageInfo: PageInfo!
 
@@ -508,18 +508,18 @@ createTypeStub OrganizationSummaryConnection {
 }
 
 # An edge in a connection.
-createTypeStub OrganizationSummaryEdge {
+type OrganizationSummaryEdge {
   # The item at the end of the edge
   node: OrganizationSummary
   cursor: String!
 }
 
-createTypeStub OrganizationSummaryQuery {
+type OrganizationSummaryQuery {
   organizations(before: String, after: String, first: Int, last: Int): OrganizationSummaryConnection
 }
 
 # Information about pagination in a connection.
-createTypeStub PageInfo {
+type PageInfo {
   # When paginating forwards, are there more items?
   hasNextPage: Boolean!
 
@@ -534,7 +534,7 @@ createTypeStub PageInfo {
 }
 
 # Platform instance of a Product
-createTypeStub Platform {
+type Platform {
   # Platform Identifier
   urn: String
 
@@ -546,7 +546,7 @@ createTypeStub Platform {
 }
 
 # Product offered by the organization
-createTypeStub Product {
+type Product {
   # Product Name
   prop: String
 
@@ -555,7 +555,7 @@ createTypeStub Product {
 }
 
 # Current user's quota
-createTypeStub Quota {
+type Quota {
   # limit
   limit: Int!
 
@@ -567,13 +567,13 @@ createTypeStub Quota {
 }
 
 # Region
-createTypeStub Region {
+type Region {
   # Descriptive prop for region (e.g. Bay Area)
   prop: String
 }
 
 # Root Query Fields. This is the start of the GraphQL query tree.
-createTypeStub RootQuery {
+type RootQuery {
   # Fetches an object given its ID
   node(
     # The ID of an object
@@ -660,13 +660,13 @@ interface SocialAccount {
 }
 
 # State
-createTypeStub State {
+type State {
   # Two character abbreviation (e.g. CA, AZ, etc)
   iso2: String
 }
 
 # Summary metrics as well as raw data points
-createTypeStub TimeSeriesMetric {
+type TimeSeriesMetric {
   # Current metric value
   current: Int
 
@@ -699,7 +699,7 @@ createTypeStub TimeSeriesMetric {
 }
 
 # Raw metric data point
-createTypeStub TimeSeriesMetricPoint {
+type TimeSeriesMetricPoint {
   # Value record
   value: Int
 
@@ -707,7 +707,7 @@ createTypeStub TimeSeriesMetricPoint {
   at: DateTime
 }
 
-createTypeStub TwitterAccount implements SocialAccount {
+type TwitterAccount implements SocialAccount {
   urn: String
   profileUrl: String
   slugHandle: String
@@ -717,7 +717,7 @@ createTypeStub TwitterAccount implements SocialAccount {
 }
 
 # Current user's identity
-createTypeStub Viewer {
+type Viewer {
   # Account ID
   id: ID!
 
@@ -738,7 +738,7 @@ createTypeStub Viewer {
 }
 
 # US Zip Code
-createTypeStub Zip {
+type Zip {
   # Zip Code
   code: String
 }

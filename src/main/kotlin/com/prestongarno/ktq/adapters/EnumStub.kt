@@ -1,13 +1,13 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.EnumStub
+import com.prestongarno.ktq.stubs.EnumStub
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
-import com.prestongarno.ktq.hooks.Configurable
+import com.prestongarno.ktq.hooks.ConfiguredQuery
 import com.prestongarno.ktq.hooks.NoArgConfig
-import com.prestongarno.ktq.hooks.OptionalConfig
+import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -15,15 +15,15 @@ import kotlin.reflect.KProperty
 @PublishedApi internal class EnumConfigStubImpl<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
-) : Configurable<EnumStub<T, A>, A> by Configurable.new({
+) : ConfiguredQuery<EnumStub<T, A>, A> by ConfiguredQuery.new({
   EnumAdapterImpl(qproperty, enumClass, it)
 })
     where T : Enum<*>, T : QEnumType, A : ArgBuilder
 
-@PublishedApi internal class EnumOptionalArgStub<T, A>(
+@PublishedApi internal class EnumOptionalArgStubQuery<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
-) : OptionalConfig<EnumStub<T, A>, T, A> by OptionalConfig.new({
+) : OptionalConfiguration<EnumStub<T, A>, T, A> by OptionalConfiguration.new({
   EnumAdapterImpl(qproperty, enumClass, it)
 })
     where T : Enum<*>, T : QEnumType, A : ArgBuilder
@@ -50,13 +50,8 @@ private class EnumAdapterImpl<T, out A>(
   override var default: T? = null
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(qproperty, enumClass, argBuilder?.arguments?.invoke()?: emptyMap(), default).bind(inst)
+      EnumFieldImpl(qproperty, enumClass, argBuilder.toMap(), default).bind(inst)
 
-  /**
-   * TODO:: currently if no [ArgBuilder] is passed in, then the config() block is empty
-   * Easy way to do this is create one instance of the argclass reflectively (since [OptionalConfig]
-   * delegate should have a no-arg constructor
-   */
   override fun config(argumentScope: A.() -> Unit) = argBuilder?.argumentScope()?: Unit
 }
 

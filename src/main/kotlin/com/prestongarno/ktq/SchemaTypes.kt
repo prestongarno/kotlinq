@@ -1,6 +1,5 @@
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.adapters.UnionConfigAdapter
 import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
@@ -8,7 +7,7 @@ import com.prestongarno.ktq.properties.FragmentProvider
  */
 interface QType : QSchemaType
 
-interface QInterface
+interface QInterface : QSchemaType
 
 /**
  * Supertype of a GraphQL Enum definition
@@ -31,7 +30,6 @@ interface QUnionType : QType {
   fun on(init: () -> QModel<QType>)
 
   companion object {
-    fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType =
-        UnionConfigAdapter.baseObject<U, A>(objectModel)
+    fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType = TODO()
   }
 }
