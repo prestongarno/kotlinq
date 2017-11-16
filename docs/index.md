@@ -6,7 +6,7 @@ This project is a [compiler][5] and [runtime][4] for type-safe DSLs modeling a [
 
 GraphQL is a rigorously tested and thoroughly defined [specification][2] which defines
 its architecture as structured data which conforms to a simple type system.  
-GraphQL is a natural way to describe ***things*** and their ***relationships to other things***
+GraphQL is a natural way to describe ***data types*** and their ***relationships to other types***
 (also known as a graph, where nodes and edges describe a confined set of data). You can read more
 about it [here][3]
 
@@ -31,18 +31,26 @@ val helloQuery = object : QModel(Query) {
 }
 ```
 
-[Resolve the model][6], and then objectValue the results:
+You now have a GraphQL Query ready to go!
+
+```
+helloQuery.toGraphQL()
+```
+
+Prints:
+```
+  {
+    hello
+  }
+```
+
+[Resolve the model][6], by fetching from your endpoint, and then get the results:
 
 ```
 println(helloQuery.hello)
 ```
 
-Simple, right? It gets even better.
-
-!!! note
-    The paradigms it is built on to model a GraphQL API may seem confusing at first.
-    It utilizes many Kotlin's unique language constructs, and are documented 
-    [here](https://google.com) if you want to know more.
+Simple, right? It gets even better!
 
   [1]: http://graphql.org
   [2]: http://facebook.github.io/graphql
