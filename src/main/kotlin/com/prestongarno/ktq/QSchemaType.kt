@@ -7,6 +7,7 @@ import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.stubs.BooleanArrayDelegate
 import com.prestongarno.ktq.stubs.BooleanDelegate
+import com.prestongarno.ktq.stubs.EnumListStub
 import com.prestongarno.ktq.stubs.EnumStub
 import com.prestongarno.ktq.stubs.FloatArrayDelegate
 import com.prestongarno.ktq.stubs.FloatDelegate
@@ -220,12 +221,25 @@ interface QSchemaType {
 
     inline fun <reified T, A : ArgBuilder> configStub(): StubProvider<ConfiguredQuery<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
         = Grub(T::class.graphQlName()) { EnumStub.argStub<T, A>(it, T::class) }
+
   }
 
-  object QEnumLists
+  object QEnumLists {
+
+    inline fun <reified T> stub() : StubProvider<EnumListStub.Query<T>>
+        where T : Enum<*>, T : QEnumType =
+        Grub(T::class.graphQlName(), true) { EnumListStub.noArgStub(it, T::class) }
+
+    inline fun <reified T, A> optionalConfigStub() : StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
+        where T : Enum<*>, T : QEnumType, A : ArgBuilder =
+        Grub(T::class.graphQlName(), true) { EnumListStub.optionalArgStub<T, A>(it, T::class) }
+
+    inline fun <reified T, A> configStub() : StubProvider<EnumListStub.ConfigurableQuery<T, A>>
+        where T : Enum<*>, T : QEnumType, A : ArgBuilder =
+        Grub(T::class.graphQlName(), true) { EnumListStub.argStub<T, A>(it, T::class) }
+
+  }
 
 }
 
-/**
- * TODO -> if anonymous class, crawl up the type hierarchy to find one, shouldn't really need it though */
 @Suppress("NOTHING_TO_INLINE") @PublishedApi internal inline fun <T : Any> KClass<T>.graphQlName() = "${this.simpleName}"
