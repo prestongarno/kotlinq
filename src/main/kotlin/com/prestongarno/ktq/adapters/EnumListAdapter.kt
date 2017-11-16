@@ -1,5 +1,7 @@
 package com.prestongarno.ktq.adapters
 
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QModel
@@ -30,14 +32,17 @@ private data class EnumListStubImpl<T, out A>(
           T : QEnumType,
           A : ArgBuilder {
 
+  override var default: T? = null
+
   override fun config(scope: A.() -> Unit) {
     arguments?.scope()
   }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<T>> =
+  override fun provideDelegate(
+      inst: QModel<*>,
+      property: KProperty<*>
+  ): QField<List<T>> =
       EnumListAdapterImpl<T>(qproperty, arguments.toMap(), enumClass).bind(inst)
-
-  override var default: T? = null
 
 }
 
@@ -57,7 +62,15 @@ private data class EnumListAdapterImpl<T>(
       ) { "${it.key}: ${formatAs(it)}" }
 
   override fun accept(result: Any?): Boolean {
-    TODO("Not Implemented")
+    if (result is JsonArray<*>)
+      result.filterIsInstance<String>().mapNotNull { str ->
+        enumClass.java.enumConstants.find {
+          it.name == str
+        }
+      }.let { transformed ->
+        value.addAll(transformed)
+      }
+    return result is JsonArray<*>
   }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<T> = value
