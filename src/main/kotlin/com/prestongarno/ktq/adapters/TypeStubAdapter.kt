@@ -17,7 +17,7 @@ internal class TypeStubAdapter<out T : QModel<U>, out U : QType, out A : ArgBuil
 ) : TypeStub<T, U, A> {
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      TypeStubImpl(qproperty, init, argBuilder.toMap() ?: emptyMap()).bind(inst)
+      TypeStubImpl(qproperty, init, argBuilder.toMap()).bind(inst)
 
   override fun config(argumentScope: A.() -> Unit) {
     argBuilder?.apply(argumentScope)

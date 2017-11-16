@@ -2,6 +2,7 @@ package com.prestongarno.ktq.stubs
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.applyNotNull
 import com.prestongarno.ktq.adapters.bind
 import com.prestongarno.ktq.adapters.toMap
@@ -14,7 +15,24 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 
   fun config(scope: A.() -> Unit)
 
-  interface Query {
+  companion object {
+
+    @PublishedApi internal fun noArgStub(
+        qproperty: GraphQlProperty
+    ): IntArrayDelegate.Query = QueryImpl(qproperty)
+
+    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+        qproperty: GraphQlProperty
+    ): IntArrayDelegate.OptionalConfigQuery<A> =
+        OptionalConfigQueryImpl(qproperty)
+
+    @PublishedApi internal fun <A : ArgBuilder> argStub(
+        qproperty: GraphQlProperty
+    ): IntArrayDelegate.ConfigurableQuery<A> =
+        ConfigurableQueryImpl(qproperty)
+  }
+
+  interface Query : SchemaStub {
     operator fun invoke(
         arguments: ArgBuilder? = null,
         scope: (IntArrayDelegate<ArgBuilder>.() -> Unit)? = null
@@ -26,7 +44,7 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
     ): IntArrayStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgBuilder> {
+  interface OptionalConfigQuery<A : ArgBuilder> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -40,7 +58,7 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 
   }
 
-  interface ConfigurableQuery<A : ArgBuilder> {
+  interface ConfigurableQuery<A : ArgBuilder> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -50,7 +68,7 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 
   private class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgBuilder?, scope: (IntArrayDelegate<ArgBuilder>.() -> Unit)?
-    ) = IntArrayDelegateImpl<ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+    ) = IntArrayDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
