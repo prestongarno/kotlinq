@@ -127,24 +127,6 @@ interface QSchemaType {
     }
   }
 
-  object QCustomScalar {
-    /**
-     * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
-     * fragment schema-defined scalar types
-     * @param T The type argument for the createStub, typedValueFrom a schema-defined CustomScalar type
-     * @return Grub<CustomScalarInitStub<T>> the delegate which lazily provides a CustomScalarInitStub<T> */
-    //inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarInitStub<T>> = createCustomScalarStub(T::class.simpleName!!)
-
-    /**
-     * Method which provides a delegate for {@link com.prestongarno.ktq.CustomScalar} fields
-     * fragment schema-defined scalar types which take input argBuilder
-     * @param arginit an initializer for the createStub field. <b>Important for auto-generated schema definitions</b>
-     * @param T type of the custom scalar
-     * @param A type argument for the argument builder class for that given schema field definition
-     * @return Grub<CustomScalarConfigStub<T, A>> the delegate which lazily provides a CustomScalarConfigStub<T, A> */
-    //inline fun <reified T : CustomScalar, A : ArgBuilder> configStub(): StubProvider<CustomScalarConfigStub<T, A>> = createCustomScalarConfig(T::class.simpleName!!)
-  }
-
   object QTypes {
 
     inline fun <reified T : QType> stub(): StubProvider<TypeStub.Query<T>> =
@@ -155,6 +137,23 @@ interface QSchemaType {
 
     inline fun <reified T : QType, A : ArgBuilder> configStub(): StubProvider<TypeStub.ConfigurableQuery<T, A>> =
         Grub(T::class.graphQlName()) { TypeStub.argStub<T, A>(it) }
+
+  }
+
+  object QTypeList {
+
+    inline fun <reified T : QType> stub()
+        : StubProvider<TypeListStub.Query<T>> =
+        Grub(T::class.graphQlName(), true) { TypeListStub.noArgStub<T>(it) }
+
+    inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub()
+        : StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
+        Grub(T::class.graphQlName(), true) { TypeListStub.optionalArgStub<T, A>(it) }
+
+    inline fun <reified T : QType, A : ArgBuilder> configStub()
+        : StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
+        Grub(T::class.graphQlName(), true) { TypeListStub.argStub<T, A>(it) }
+
   }
 
   object QInterfaces {
@@ -186,28 +185,8 @@ interface QSchemaType {
     inline fun <reified T, A> configStub(): StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
         where T : QType, T : QInterface, A : ArgBuilder =
         Grub(T::class.graphQlName(), true) { InterfaceListStub.argStub<T, A>(it) }
+
   }
-
-  object QTypeList {
-
-    inline fun <reified T : QType> stub()
-        : StubProvider<TypeListStub.Query<T>> =
-        Grub(T::class.graphQlName(), true) { TypeListStub.noArgStub<T>(it) }
-
-    inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub()
-        : StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
-        Grub(T::class.graphQlName(), true) { TypeListStub.optionalArgStub<T, A>(it) }
-
-    inline fun <reified T : QType, A : ArgBuilder> configStub()
-        : StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
-        Grub(T::class.graphQlName(), true) { TypeListStub.argStub<T, A>(it) }
-  }
-
-  object QCustomScalarList
-
-  object QUnion
-
-  object QUnionList
 
   object QEnum {
     inline fun <reified T> stub(): StubProvider<NoArgConfig<EnumStub<T, ArgBuilder>, T>> where T : Enum<*>, T : QEnumType
@@ -239,6 +218,14 @@ interface QSchemaType {
         Grub(T::class.graphQlName(), true) { EnumListStub.argStub<T, A>(it, T::class) }
 
   }
+
+  object QCustomScalar
+
+  object QCustomScalarList
+
+  object QUnion
+
+  object QUnionList
 
 }
 

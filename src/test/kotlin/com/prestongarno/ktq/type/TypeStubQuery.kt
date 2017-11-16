@@ -1,5 +1,5 @@
 package com.prestongarno.ktq.type
-/*
+
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QEnumType
@@ -30,17 +30,17 @@ object Order : QType {
 }
 
 object Person : QType {
-  val name by QScalar.stringStub()
+  val name by QScalar.String.stub()
 }
 
 object Address : QType {
-  val line1 by QScalar.stringStub()
+  val line1 by QScalar.String.stub()
 
-  val city by QScalar.stringStub()
+  val city by QScalar.String.stub()
 
   val state by QEnum.stub<State>()
 
-  val zip by QScalar.intStub()
+  val zip by QScalar.Int.stub()
 }
 
 enum class ContactAddressType : QEnumType {
@@ -53,7 +53,7 @@ enum class State : QEnumType {
   CA
 }
 
-class TypeStubQuery {
+class TypeStubQueryable {
 
   class Me : QModel<Person>(Person) {
     val name by model.name {
@@ -208,4 +208,4 @@ class TypeStubQuery {
     assertThat(query.destinationAddress.lineOne)
         .isEqualTo("1234 GraphQL")
   }
-}*/
+}

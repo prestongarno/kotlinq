@@ -2,6 +2,7 @@ package com.prestongarno.ktq
 
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.adapters.formatAs
+import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.hooks.ModelProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -58,8 +59,7 @@ fun String.indent(times: Int = 1): String =
 fun String.prepend(of: String): String = of + this
 
 internal fun QModel<*>.prettyPrinted(indentation: Int): String =
-    if (model is QUnionType) prettyPrintUnion(indentation) else
-      ((getFields().joinToString(separator = ",\n") { it.prettyPrinted() }
+    ((getFields().joinToString(separator = ",\n") { it.prettyPrinted() }
           .indent(1)) + "\n}").prepend("{\n").indent(indentation)
           .replace("\\s*([(,])".toRegex(), "$1").trim()
 
@@ -78,6 +78,9 @@ internal fun Adapter.prettyPrinted(): String = qproperty.graphqlName +
             "${it.key}: ${formatAs(it.value)}"
           }
       this is ModelProvider -> value.toGraphql()
+      this is FragmentContext -> fragments.joinToString("\n") {
+        "... on ${qproperty.graphqlType} ${it.model.toGraphql(true)}"
+      }
       else -> ""
     }).replace("\\s*([(,])".toRegex(), "$1").trim()
 

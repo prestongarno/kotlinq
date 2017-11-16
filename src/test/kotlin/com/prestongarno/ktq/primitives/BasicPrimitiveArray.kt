@@ -106,5 +106,6 @@ class BasicPrimitiveArray {
     query.toGraphql(false) eq
         """{studentNames(Hello: \"World\"),studentAges(NumberArgument: 9000),""" +
           """studentGpa(BooleanArgument: true),studentPassing(FloatArgument: 5.005f)}"""
+    println(query.toGraphql())
   }
 }
