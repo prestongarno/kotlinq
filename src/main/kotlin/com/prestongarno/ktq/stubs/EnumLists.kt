@@ -13,7 +13,10 @@ import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-interface EnumListStub<T, out A> : DelegateProvider<List<T>> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+interface EnumListStub<T, out A> : DelegateProvider<List<T>>
+    where T : Enum<*>,
+          T : QEnumType,
+          A : ArgBuilder {
 
   var default : T?
 
@@ -42,7 +45,9 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>> where T : Enum<*>, 
         ConfigurableQueryImpl(qproperty, enumClass)
   }
 
-  interface Query<T> : DelegateProvider<List<T>> where T : Enum<*>, T : QEnumType {
+  interface Query<T> : DelegateProvider<List<T>>
+      where T : Enum<*>,
+            T : QEnumType {
 
     operator fun invoke(
         arguments: ArgBuilder? = null,
@@ -63,10 +68,17 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>> where T : Enum<*>, 
         arguments: ArgBuilder?,
         scope: (EnumListStub<T, ArgBuilder>.() -> Unit)?
     ): EnumListStub<T, ArgBuilder> =
-        newEnumListDelegate<T, ArgBuilder>(qproperty, arguments ?: ArgBuilder(), enumClass).applyNotNull(scope)
+        newEnumListDelegate<T, ArgBuilder>(
+            qproperty,
+            arguments ?: ArgBuilder(),
+            enumClass
+        ).applyNotNull(scope)
   }
 
-  interface OptionalConfigQuery<T, A> : DelegateProvider<List<T>> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+  interface OptionalConfigQuery<T, A> : DelegateProvider<List<T>>
+      where T : Enum<*>,
+            T : QEnumType,
+            A : ArgBuilder {
 
     operator fun invoke(
         arguments: A,
@@ -94,7 +106,10 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>> where T : Enum<*>, 
 
   }
 
-  interface ConfigurableQuery<T, A> : SchemaStub where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+  interface ConfigurableQuery<T, A> : SchemaStub
+      where T : Enum<*>,
+            T : QEnumType,
+            A : ArgBuilder {
 
     operator fun invoke(
         arguments: A,
