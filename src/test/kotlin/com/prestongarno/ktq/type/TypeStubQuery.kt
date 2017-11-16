@@ -53,7 +53,7 @@ enum class State : QEnumType {
   CA
 }
 
-class TypeStubQuery {
+class TypeStubQueryable {
 
   class Me : QModel<Person>(Person) {
     val name by model.name {
