@@ -29,7 +29,4 @@ interface QUnionType : QType {
 
   fun on(init: () -> QModel<QType>)
 
-  companion object {
-    fun <U : QUnionType, A : ArgBuilder> create(objectModel: U): QUnionType = TODO()
-  }
 }
