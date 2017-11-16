@@ -37,6 +37,16 @@ interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : Deleg
           qproperty: GraphQlProperty
       ): Query<U> = QueryImpl(qproperty)
     }
+
+    private class QueryImpl<U : QType>(val qproperty: GraphQlProperty) : TypeListStub.Query<U> {
+
+      override fun <T : QModel<U>> query(
+          init: () -> T
+      ): NoArgConfig<TypeListStub<T, U, ArgBuilder>, List<T>> =
+          NoArgConfig.new { args -> TypeListAdapter(qproperty, init, args) }
+
+    }
+
   }
 
   interface OptionalConfigQuery<U : QType, A : ArgBuilder> : SchemaStub {
@@ -46,6 +56,17 @@ interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : Deleg
       @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
           qproperty: GraphQlProperty
       ): OptionalConfigQuery<U, A> = OptionalConfigQueryImpl(qproperty)
+    }
+
+    private class OptionalConfigQueryImpl<U : QType, A : ArgBuilder>(
+        val qproperty: GraphQlProperty
+    ) : TypeListStub.OptionalConfigQuery<U, A> {
+
+      override fun <T : QModel<U>> query(
+          init: () -> T
+      ): OptionalConfiguration<TypeListStub<T, U, A>, List<T>, A> =
+          OptionalConfiguration.new { args -> TypeListAdapter(qproperty, init, args) }
+
     }
   }
 
@@ -57,38 +78,18 @@ interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : Deleg
           qproperty: GraphQlProperty
       ): ConfigurableQuery<U, A> = ConfigurableQueryImpl(qproperty)
     }
+
+    private class ConfigurableQueryImpl<U : QType, A : ArgBuilder>(
+        val qproperty: GraphQlProperty
+    ) : TypeListStub.ConfigurableQuery<U, A> {
+
+      override fun <T : QModel<U>> query(
+          init: () -> T
+      ): ConfiguredQuery<TypeListStub<T, U, A>, A> =
+          ConfiguredQuery.new { args -> TypeListAdapter(qproperty, init, args) }
+
+    }
   }
 }
 
-private class QueryImpl<U : QType>(val qproperty: GraphQlProperty) : TypeListStub.Query<U> {
-
-  override fun <T : QModel<U>> query(
-      init: () -> T
-  ): NoArgConfig<TypeListStub<T, U, ArgBuilder>, List<T>> =
-      NoArgConfig.new { args -> TypeListAdapter(qproperty, init, args) }
-
-}
-
-private class OptionalConfigQueryImpl<U : QType, A : ArgBuilder>(
-    val qproperty: GraphQlProperty
-) : TypeListStub.OptionalConfigQuery<U, A> {
-
-  override fun <T : QModel<U>> query(
-      init: () -> T
-  ): OptionalConfiguration<TypeListStub<T, U, A>, List<T>, A> =
-      OptionalConfiguration.new { args -> TypeListAdapter(qproperty, init, args) }
-
-}
-
-
-private class ConfigurableQueryImpl<U : QType, A : ArgBuilder>(
-    val qproperty: GraphQlProperty
-) : TypeListStub.ConfigurableQuery<U, A> {
-
-  override fun <T : QModel<U>> query(
-      init: () -> T
-  ): ConfiguredQuery<TypeListStub<T, U, A>, A> =
-      ConfiguredQuery.new { args -> TypeListAdapter(qproperty, init, args) }
-
-}
 

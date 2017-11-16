@@ -222,6 +222,8 @@ interface QSchemaType {
         = Grub(T::class.graphQlName()) { EnumStub.argStub<T, A>(it, T::class) }
   }
 
+  object QEnumLists
+
 }
 
 /**
