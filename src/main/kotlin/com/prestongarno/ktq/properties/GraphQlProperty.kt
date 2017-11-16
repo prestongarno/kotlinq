@@ -10,7 +10,7 @@ import kotlin.reflect.KProperty
  *
  * <b>** NOTE ** </b>: This property does NOT represent the field name & type on the property that
  * the adapter holding this object represents!!! It references the information defined in
- * the GraphQL Schema. The name of the property it returns to does not need to be the same as [graphqlName]! */
+ * the GraphQL Schema. The name of the property it returns may not be the same as the property on the actual model! */
 interface GraphQlProperty {
 
   /**
