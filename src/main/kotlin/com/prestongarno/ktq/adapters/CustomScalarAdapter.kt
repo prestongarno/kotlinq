@@ -1,9 +1,6 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.CustomScalar
-import com.prestongarno.ktq.stubs.CustomScalarConfigStub
-import com.prestongarno.ktq.stubs.CustomScalarInitStub
-import com.prestongarno.ktq.stubs.CustomStub
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
@@ -11,52 +8,35 @@ import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.stubs.CustomScalarStub
 import kotlin.reflect.KProperty
 
-internal class CustomScalarAdapter<E : CustomScalar, P : QScalarMapper<Q>, Q, B : ArgBuilder>(
+fun <E : CustomScalar, P : QScalarMapper<Q>, Q, A : ArgBuilder> newScalarDelegate(
     qproperty: GraphQlProperty,
-    private var default: Q? = null,
-    private val argBuilder: B? = null,
-    val init: P? = null,
-    val config: (B.() -> Unit)? = null
+    mapper: P,
+    arguments: A?
+): CustomScalarStub<E, Q, A> = CustomScalarAdapter<E, P, Q, A>(qproperty, mapper, arguments)
+
+private class CustomScalarAdapter<E : CustomScalar, out P : QScalarMapper<Q>, Q, out B : ArgBuilder>(
+    qproperty: GraphQlProperty,
+    val mapper: P,
+    val arguments: B? = null
 ) : PreDelegate(qproperty),
-    CustomScalarConfigStub<E, B>,
-    CustomScalarInitStub<E>,
-    CustomStub<P, Q> {
+    CustomScalarStub<E, Q, B> {
 
+  override var default: Q? = null
 
-  override fun withDefault(value: Q): CustomStub<P, Q> =
-      CustomScalarAdapter<E, P, Q, B>(qproperty, value, argBuilder, init, config)
+  override fun config(scope: B.() -> Unit) {
+    arguments?.scope()
+  }
 
-  override fun config(provider: B.() -> Unit): CustomScalarInitStub<E> =
-      CustomScalarAdapter(qproperty, default, argBuilder, init, provider)
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<Q> =
+      CustomScalarFieldImpl(qproperty, arguments.toMap(), mapper, default)
 
-  private lateinit var adapter: QScalarMapper<Q>
-
-  override fun provideDelegate(
-      inst: QModel<*>,
-      property: KProperty<*>
-  ): QField<Q> = CustomScalarStubImpl(
-      qproperty,
-      argBuilder.toMap(),
-      adapter,
-      default
-  ).bind(inst)
-
-  @Suppress("UNCHECKED_CAST")
-  override fun <U : QScalarMapper<A>, A> init(init: U): CustomStub<U, A> =
-      CustomScalarAdapter<E, U, A, B>(qproperty, default?.let {
-        if (it != null && it as? A == true) it as A else null
-      }, argBuilder, init, config)
-
-  //@Suppress("UNCHECKED_CAST") override fun <U : QScalarMapper<T>, T> build(init: U): CustomStub<U, T> =
-  //CustomScalarAdapter<E, U, T, B>(qproperty, default?.let {
-  //  if (it != null && it as? T == true) it as T else null
-  //}, argBuilder, init, scope)
 }
 
 @CollectionDelegate(Any::class)
-private data class CustomScalarStubImpl<out Q>(
+private data class CustomScalarFieldImpl<out Q>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: QScalarMapper<Q>,

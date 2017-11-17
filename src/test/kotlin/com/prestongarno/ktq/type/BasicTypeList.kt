@@ -3,7 +3,6 @@ package com.prestongarno.ktq.type
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.primitives.eq
