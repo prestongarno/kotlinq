@@ -1,8 +1,6 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.CustomScalar
-import com.prestongarno.ktq.stubs.CustomScalarListConfigStub
-import com.prestongarno.ktq.stubs.CustomScalarListInitStub
 import com.prestongarno.ktq.stubs.CustomScalarListStub
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
@@ -13,41 +11,31 @@ import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
 import com.prestongarno.ktq.internal.CollectionDelegate
 import kotlin.reflect.KProperty
 
-internal class CustomScalarListAdapter<E : CustomScalar, P : QScalarListMapper<Q>, out Q, B : ArgBuilder>(
-    property: GraphQlProperty,
-    val adapter: P? = null,
-    val argBuilder: B? = null,
-    private val default: Q? = null,
-    val config: (B.() -> Unit)? = null
-) : PreDelegate(property),
-    CustomScalarListConfigStub<E, B>,
-    CustomScalarListInitStub<E>,
-    CustomScalarListStub<P, Q> {
+internal fun <E : CustomScalar, P : QScalarListMapper<Q>, Q, A : ArgBuilder> newCustomScalarListField(
+    qproperty: GraphQlProperty,
+    mapper: P,
+    arguments: A?
+): CustomScalarListStub<E, Q, A> = CustomScalarListAdapter(qproperty, mapper, arguments)
 
-  override fun config(provider: B.() -> Unit): CustomScalarListInitStub<E> =
-      CustomScalarListAdapter(qproperty, adapter, argBuilder, default, provider)
+private class CustomScalarListAdapter<E : CustomScalar, out P : QScalarListMapper<Q>, Q, out A : ArgBuilder>(
+    qproperty: GraphQlProperty,
+    val mapper: P,
+    val arguments: A?
+) : PreDelegate(qproperty),
+    CustomScalarListStub<E, Q, A> {
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<Q>> =
-      CustomScalarListStubImpl(GraphQlProperty.from(property,
-          this.qproperty.graphqlType,
-          this.qproperty.isList,
-          this.qproperty.graphqlName),
-          argBuilder.toMap(),
-          adapter!!
-      ).bind(inst)
+      CustomScalarListStubImpl(qproperty, mapper, arguments.toMap())
 
-  @Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<A>, A> querying(of: U): CustomScalarListStub<U, A> =
-      CustomScalarListAdapter<E, U, A, B>(qproperty, of, argBuilder, default as A?, config)
-
-  //@Suppress("UNCHECKED_CAST") override fun <U : QScalarListMapper<T>, T> build(init: U): CustomScalarListStub<U, T> = CustomScalarListAdapter<E, U, T, B>(qproperty, init, default as T?, scope)
+  override fun config(scope: A.() -> Unit) { arguments?.scope() }
 
 }
 
 @CollectionDelegate(Any::class)
 private data class CustomScalarListStubImpl<out Q>(
     override val qproperty: GraphQlProperty,
-    override val args: Map<String, Any> = emptyMap(),
-    val adapter: QScalarListMapper<Q>
+    val adapter: QScalarListMapper<Q>,
+    override val args: Map<String, Any>
 ) : QField<List<Q>>,
     Adapter {
 

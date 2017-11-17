@@ -7,6 +7,8 @@ import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.stubs.BooleanArrayDelegate
 import com.prestongarno.ktq.stubs.BooleanDelegate
+import com.prestongarno.ktq.stubs.CustomScalarListStub
+import com.prestongarno.ktq.stubs.CustomScalarStub
 import com.prestongarno.ktq.stubs.EnumListStub
 import com.prestongarno.ktq.stubs.EnumStub
 import com.prestongarno.ktq.stubs.FloatArrayDelegate
@@ -219,9 +221,35 @@ interface QSchemaType {
 
   }
 
-  object QCustomScalar
+  object QCustomScalar {
 
-  object QCustomScalarList
+    inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarStub.Query<T>> =
+        Grub(T::class.graphQlName()) { CustomScalarStub.noArgStub<T>(it) }
+
+    inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
+        : StubProvider<CustomScalarStub.OptionalConfigQuery<T, A>> =
+        Grub(T::class.graphQlName()) { CustomScalarStub.optionalArgStub<T, A>(it) }
+
+    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub():
+        StubProvider<CustomScalarStub.ConfigurableQuery<T, A>> =
+        Grub(T::class.graphQlName()) { CustomScalarStub.argStub<T, A>(it) }
+
+  }
+
+  object QCustomScalarList {
+
+    inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarListStub.Query<T>> =
+        Grub(T::class.graphQlName()) { CustomScalarListStub.noArgStub<T>(it) }
+
+    inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
+        : StubProvider<CustomScalarListStub.OptionalConfigQuery<T, A>> =
+        Grub(T::class.graphQlName()) { CustomScalarListStub.optionalArgStub<T, A>(it) }
+
+    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub():
+        StubProvider<CustomScalarListStub.ConfigurableQuery<T, A>> =
+        Grub(T::class.graphQlName()) { CustomScalarListStub.argStub<T, A>(it) }
+
+  }
 
   object QUnion
 

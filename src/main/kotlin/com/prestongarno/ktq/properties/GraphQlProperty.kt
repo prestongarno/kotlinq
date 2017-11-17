@@ -43,16 +43,6 @@ interface GraphQlProperty {
         typeKind: PropertyType = PropertyType.from(graphqlType)
     ): GraphQlProperty = PropertyImpl(graphqlType, property, isList, graphqlName, typeKind)
 
-    /**
-     * TODO -> get rid of this thing. Although the union
-     * types design kind of relies on a meaningless object. Is it better to
-     * be explicit about any nullability even if it's done like this? */
-    internal val ROOT = object : GraphQlProperty {
-      override val typeKind = PropertyType.OBJECT
-      override val graphqlType = "null"
-      override val graphqlName: String = "null"
-      override val isList: Boolean = false
-    }
   }
 }
 
@@ -65,9 +55,6 @@ private data class PropertyImpl @JvmOverloads constructor(
 ) : GraphQlProperty {
 
   override fun hashCode(): Int {
-
-    if (this === GraphQlProperty.ROOT) return 0
-
     var result = kproperty.hashCode()
     result = 31 * result + graphqlType.hashCode()
     result = 31 * result + typeKind.hashCode()

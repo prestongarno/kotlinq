@@ -1,0 +1,61 @@
+package com.prestongarno.ktq.type
+
+import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.QEnumType
+import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.QSchemaType.*
+import com.prestongarno.ktq.QType
+import com.prestongarno.ktq.primitives.eq
+import org.junit.Test
+
+object Team : QType {
+
+  val members by QTypeList.stub<Person>()
+
+  val configMembers by QTypeList.configStub<Person, ConfigMembersArgs>()
+
+  class ConfigMembersArgs(limit: Int) : ArgBuilder() {
+
+    init {
+      "limit" with limit
+    }
+
+    var first : Int? = null
+    var orderBy : ListOrder? = null
+  }
+
+}
+
+enum class ListOrder : QEnumType {
+  ASCENDING, DESCENDING
+}
+
+class BasicTypeList {
+
+  class PersonModel : QModel<Person>(Person) {
+    val name by model.name
+    val age by model.age
+  }
+
+  @Test fun `type list field is possible`() {
+    
+    val query = object : QModel<Team>(Team) {
+      val teamMembers by model.members.query(::PersonModel)
+    }
+
+    query::teamMembers.returnType.arguments
+        .firstOrNull()?.type?.classifier eq PersonModel::class
+    query.toGraphql(false) eq "{members{name,age}}"
+  }
+
+  @Test fun `configured type list field is possible`() {
+
+    val query = object : QModel<Team>(Team) {
+      val members by model.configMembers
+          .query(::PersonModel)(Team.ConfigMembersArgs(100))
+    }
+    query::members.returnType.arguments
+        .firstOrNull()?.type?.classifier eq PersonModel::class
+    query.toGraphql(false) eq "{configMembers(limit: 100){name,age}}"
+  }
+}
