@@ -31,7 +31,7 @@ private class CustomScalarAdapter<E : CustomScalar, out P : QScalarMapper<Q>, Q,
   }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<Q> =
-      CustomScalarFieldImpl(qproperty, arguments.toMap(), mapper, default)
+      CustomScalarFieldImpl(qproperty, arguments.toMap(), mapper, default).bind(inst)
 
 }
 

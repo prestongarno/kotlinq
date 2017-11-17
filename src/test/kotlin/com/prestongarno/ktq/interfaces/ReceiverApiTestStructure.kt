@@ -1,4 +1,4 @@
-package com.prestongarno.ktq.interfaceFragments
+package com.prestongarno.ktq.interfaces
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder

@@ -40,7 +40,7 @@ interface InterfaceListStub<I, out A> :
   interface Query<I> : SchemaStub where I : QInterface, I : QType {
 
     operator fun invoke(
-        arguments: ArgBuilder?,
+        arguments: ArgBuilder? = null,
         scope: InterfaceListStub<I, ArgBuilder>.() -> Unit
     ) : InterfaceListStub<I, ArgBuilder>
 
