@@ -1,9 +1,5 @@
 package com.prestongarno.ktq.http
 
-import com.prestongarno.ktq.QModel
-import java.util.*
-
-
 object GraphQL {
   /**
    * The entry point for a ktq/GraphQL application*/

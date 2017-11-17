@@ -73,17 +73,30 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
     ) = FloatDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : FloatDelegate.OptionalConfigQuery<A> {
+  private class OptionalConfigQueryImpl<A : ArgBuilder>(
+      val qproperty: GraphQlProperty
+  ) : FloatDelegate.OptionalConfigQuery<A> {
 
-    override fun invoke(arguments: A, scope: (FloatDelegate<A>.() -> Unit)?): FloatDelegate<A> =
+    override fun invoke(
+        arguments: A,
+        scope: (FloatDelegate<A>.() -> Unit)?
+    ): FloatDelegate<A> =
         FloatDelegateImpl(qproperty, arguments).applyNotNull(scope)
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatStub = FloatStub(qproperty).bind(inst)
+    override fun provideDelegate(
+        inst: QModel<*>,
+        property: KProperty<*>
+    ): FloatStub = FloatStub(qproperty).bind(inst)
   }
 
-  private class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : FloatDelegate.ConfigurableQuery<A> {
+  private class ConfigurableQueryImpl<A : ArgBuilder>(
+      val qproperty: GraphQlProperty
+  ) : FloatDelegate.ConfigurableQuery<A> {
 
-    override fun invoke(arguments: A, scope: (FloatDelegate<A>.() -> Unit)?): FloatDelegate<A> =
+    override fun invoke(
+        arguments: A,
+        scope: (FloatDelegate<A>.() -> Unit)?
+    ): FloatDelegate<A> =
         FloatDelegateImpl(qproperty, arguments).applyNotNull(scope)
   }
 }

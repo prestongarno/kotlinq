@@ -25,7 +25,7 @@ private class CustomScalarListAdapter<E : CustomScalar, out P : QScalarListMappe
     CustomScalarListStub<E, Q, A> {
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<Q>> =
-      CustomScalarListStubImpl(qproperty, mapper, arguments.toMap())
+      CustomScalarListStubImpl(qproperty, mapper, arguments.toMap()).bind(inst)
 
   override fun config(scope: A.() -> Unit) { arguments?.scope() }
 
@@ -45,9 +45,7 @@ private data class CustomScalarListStubImpl<out Q>(
             "$key: ${formatAs(value)}"
           } else ""
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<Q> {
-    return adapter.value
-  }
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<Q> = adapter.value
 
   override fun accept(result: Any?): Boolean {
     val values = (result as? List<*> ?: listOf(result)).filterNotNull()

@@ -59,8 +59,7 @@ dependencies {
   testCompile "com.google.truth:truth:0.28"
   testCompile "com.prestongarno.ktq:ktq-gradle:0.2"
   testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
-  // TODO duplicate runtime fails the tests
-  //testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: "$kotlin_version"
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: "$kotlin_version"
 }
 
 configurations.all {

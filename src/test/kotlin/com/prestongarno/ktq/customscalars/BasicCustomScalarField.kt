@@ -2,7 +2,6 @@ package com.prestongarno.ktq.customscalars
 
 import com.prestongarno.ktq.CustomScalar
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QSchemaType.*
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper

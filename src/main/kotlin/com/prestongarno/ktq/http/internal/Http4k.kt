@@ -4,7 +4,6 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.http.RequestBuilder
-import com.prestongarno.ktq.http.TokenAuth
 import org.http4k.client.OkHttp
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
