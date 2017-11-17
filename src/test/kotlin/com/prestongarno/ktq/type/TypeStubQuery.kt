@@ -31,6 +31,10 @@ object Order : QType {
 
 object Person : QType {
   val name by QScalar.String.stub()
+
+  val age by QScalar.Int.stub()
+
+  val address by QTypes.stub<Address>()
 }
 
 object Address : QType {

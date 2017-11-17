@@ -19,7 +19,7 @@ internal class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgBuilder>
     TypeListStub<P, I, A> {
 
   override fun config(scope: A.() -> Unit) {
-    TODO("Not Implemented")
+    argBuilder?.scope()
   }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
@@ -30,7 +30,7 @@ internal class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgBuilder>
 private data class TypeListStubImpl<P : QModel<*>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
-    override val args: Map<String, Any> = emptyMap()
+    override val args: Map<String, Any>
 ) : QField<List<P>>,
     Adapter,
     ModelProvider {
@@ -40,10 +40,10 @@ private data class TypeListStubImpl<P : QModel<*>>(
   override val value: QModel<*> by lazy { init() }
 
   override fun toRawPayload(): String = qproperty.graphqlName +
-      if (args.isNotEmpty()) this.args.entries
+      (if (args.isNotEmpty()) args.entries
           .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
             "$key: ${formatAs(value)}"
-          } else "" + value.toGraphql(false)
+          } else "") + value.toGraphql(false)
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results
 
