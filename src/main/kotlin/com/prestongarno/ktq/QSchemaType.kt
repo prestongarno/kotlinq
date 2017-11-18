@@ -21,6 +21,7 @@ import com.prestongarno.ktq.stubs.StringArrayDelegate
 import com.prestongarno.ktq.stubs.StringDelegate
 import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.stubs.TypeStub
+import com.prestongarno.ktq.stubs.UnionStub
 import kotlin.reflect.KClass
 
 /**
@@ -207,15 +208,15 @@ interface QSchemaType {
 
   object QEnumLists {
 
-    inline fun <reified T> stub() : StubProvider<EnumListStub.Query<T>>
+    inline fun <reified T> stub(): StubProvider<EnumListStub.Query<T>>
         where T : Enum<*>, T : QEnumType =
         Grub(T::class.graphQlName(), true) { EnumListStub.noArgStub(it, T::class) }
 
-    inline fun <reified T, A> optionalConfigStub() : StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
+    inline fun <reified T, A> optionalConfigStub(): StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
         where T : Enum<*>, T : QEnumType, A : ArgBuilder =
         Grub(T::class.graphQlName(), true) { EnumListStub.optionalArgStub<T, A>(it, T::class) }
 
-    inline fun <reified T, A> configStub() : StubProvider<EnumListStub.ConfigurableQuery<T, A>>
+    inline fun <reified T, A> configStub(): StubProvider<EnumListStub.ConfigurableQuery<T, A>>
         where T : Enum<*>, T : QEnumType, A : ArgBuilder =
         Grub(T::class.graphQlName(), true) { EnumListStub.argStub<T, A>(it, T::class) }
 
@@ -251,7 +252,20 @@ interface QSchemaType {
 
   }
 
-  object QUnion
+  object QUnion {
+    fun <T : QUnionType> stub(union: T): StubProvider<UnionStub.Query<T>> =
+        Grub(union::class.graphQlName()) { UnionStub.noArgStub<T>(it, union) }
+
+    fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T
+    ): StubProvider<UnionStub.OptionalConfigQuery<T, A>> = Grub(union::class.graphQlName()) {
+      UnionStub.optionalArgStub<T, A>(it, union)
+    }
+
+    fun <T : QUnionType, A : ArgBuilder> configStub(union: T
+    ): StubProvider<UnionStub.ConfigurableQuery<T, A>> = Grub(union::class.graphQlName()) {
+      UnionStub.argStub<T, A>(it, union)
+    }
+  }
 
   object QUnionList
 

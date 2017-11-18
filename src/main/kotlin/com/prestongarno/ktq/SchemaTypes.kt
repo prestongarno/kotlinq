@@ -1,5 +1,6 @@
 package com.prestongarno.ktq
 
+import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
@@ -29,4 +30,16 @@ interface QUnionType : QType {
 
   fun on(init: () -> QModel<QType>)
 
+  companion object {
+    fun create(): QUnionType = QUnionTypeImpl()
+  }
+
+  private class QUnionTypeImpl() : QUnionType {
+
+    override val queue: FragmentProvider = FragmentProvider()
+
+    override fun on(init: () -> QModel<QType>) {
+      queue.addFragment(Fragment(init))
+    }
+  }
 }

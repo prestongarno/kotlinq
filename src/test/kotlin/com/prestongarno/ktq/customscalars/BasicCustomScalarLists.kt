@@ -4,7 +4,6 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
-import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.prestongarno.ktq.primitives.eq
 import org.junit.Test
 

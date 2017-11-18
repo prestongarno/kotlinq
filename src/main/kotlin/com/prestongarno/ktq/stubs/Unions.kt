@@ -5,41 +5,93 @@ import com.prestongarno.ktq.DelegateProvider
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QUnionType
 import com.prestongarno.ktq.SchemaStub
-import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.adapters.newUnionField
-import com.prestongarno.ktq.adapters.toMap
-import com.prestongarno.ktq.hooks.ConfiguredQuery
-import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.properties.GraphQlProperty
 
-/**
- * TODO(Mon Nov 13 18:22:30 CST 2017) try to figure out a safe way to collect fragments *and* arguments
- * TODO(cont)  |  without type casting interface to internal type or some other hack
- */
-interface UnionStub<T : QUnionType, out A : ArgBuilder> : DelegateProvider<QModel<*>?> {
+interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<QModel<*>?> {
 
   fun config(scope: A.() -> Unit)
 
-  @kotlin.Suppress("AddVarianceModifier")
-  interface Query<U : QUnionType> : SchemaStub {
-    /**
-     * Invoke function enforces a scoped block to encourage creating fragments for the field
-     * If no fragments are specified, this field will not be included in the query
-     * @param arguments : The Arguments to pass to the field. Not required for this type of query
-     * @param scope : the block for resolving GraphQL fragments to [QModel] types
-     */
-    operator fun invoke(arguments: ArgBuilder? = null, scope: U.() -> Unit): QField<QModel<*>?>
+  fun fragment(scope: T.() -> Unit)
+
+  companion object {
+
+    @PublishedApi internal fun <T : QUnionType> noArgStub(
+        qproperty: GraphQlProperty,
+        unionObject: T
+    ): UnionStub.Query<T> = QueryImpl(qproperty, unionObject)
+
+    @PublishedApi internal fun <T : QUnionType, A : ArgBuilder> optionalArgStub(
+        qproperty: GraphQlProperty,
+        unionObject: T
+    ): UnionStub.OptionalConfigQuery<T, A> = OptionalConfigQueryImpl(qproperty, unionObject)
+
+    @PublishedApi internal fun <T : QUnionType, A : ArgBuilder> argStub(
+        qproperty: GraphQlProperty,
+        unionObject: T
+    ): UnionStub.ConfigurableQuery<T, A> = ConfigurableQueryImpl(qproperty, unionObject)
   }
 
-  interface OptionalConfigQuery<U : QUnionType, A : ArgBuilder> : OptionalConfiguration<UnionStub<U, A>, QModel<*>?, A>
+  interface Query<out T : QUnionType> : SchemaStub {
 
-  interface ConfigurableQuery<U : QUnionType, A : ArgBuilder> : ConfiguredQuery<UnionStub<U, A>, A>
+    operator fun invoke(
+        arguments: ArgBuilder? = null,
+        scope: UnionStub<T, ArgBuilder>.() -> Unit
+    ): UnionStub<T, ArgBuilder>
 
-  private class QueryImpl<U : QUnionType>(
-      val qproperty: GraphQlProperty, val model: U
-  ) : Query<U> {
-    override fun invoke(arguments: ArgBuilder?, scope: U.() -> Unit): QField<QModel<*>?> =
-        model.queue(model, scope) { newUnionField(qproperty, reset(), arguments.toMap()) }
+  }
+
+  interface OptionalConfigQuery<out T : QUnionType, A : ArgBuilder> : ConfigurableQuery<T, A> {
+
+    operator fun invoke(
+        scope: UnionStub<T, ArgBuilder>.() -> Unit
+    ): UnionStub<T, ArgBuilder>
+
+  }
+
+  interface ConfigurableQuery<out T : QUnionType, A : ArgBuilder> : SchemaStub {
+
+    operator fun invoke(
+        arguments: A,
+        scope: UnionStub<T, A>.() -> Unit
+    ): UnionStub<T, ArgBuilder>
+
+  }
+
+  private class QueryImpl<out T : QUnionType>(
+      val qproperty: GraphQlProperty,
+      val unionObject: T
+  ) : Query<T> {
+
+    override fun invoke(
+        arguments: ArgBuilder?,
+        scope: UnionStub<T, ArgBuilder>.() -> Unit
+    ): UnionStub<T, ArgBuilder> =
+        newUnionField(qproperty, unionObject, arguments ?: ArgBuilder()).apply(scope)
+
+  }
+
+  private class OptionalConfigQueryImpl<out T : QUnionType, A : ArgBuilder>(
+      val qproperty: GraphQlProperty,
+      val unionObject: T
+  ) : OptionalConfigQuery<T, A> {
+
+    override fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit) =
+        newUnionField(qproperty, unionObject, arguments).apply(scope)
+
+    override fun invoke(scope: UnionStub<T, ArgBuilder>.() -> Unit) =
+        newUnionField(qproperty, unionObject, ArgBuilder()).apply(scope)
+
+  }
+
+  private class ConfigurableQueryImpl<out T : QUnionType, A : ArgBuilder>(
+      val qproperty: GraphQlProperty,
+      val unionObject: T
+  ) : ConfigurableQuery<T, A> {
+
+    override fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit): UnionStub<T, ArgBuilder> =
+        newUnionField(qproperty, unionObject, arguments).apply(scope)
+
   }
 
 }

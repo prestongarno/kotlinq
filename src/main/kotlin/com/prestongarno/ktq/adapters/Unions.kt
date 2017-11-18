@@ -12,20 +12,26 @@ import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
 import kotlin.reflect.KProperty
 
-fun newUnionField(
-    qproperty: GraphQlProperty, fragments: Set<Fragment>, args: Map<String, Any>?
-) : QField<QModel<*>?> = UnionStubImpl(qproperty, fragments, args ?: emptyMap())
+fun <T : QUnionType, A : ArgBuilder> newUnionField(
+    qproperty: GraphQlProperty,
+    unionObject: T,
+    arguments: A?
+): UnionStub<T, A> = UnionAdapterImpl(qproperty, unionObject, arguments)
 
-@PublishedApi internal class UnionAdapterImpl<I : QUnionType, out A : ArgBuilder>(
+private class UnionAdapterImpl<T : QUnionType, out A : ArgBuilder>(
     val qproperty: GraphQlProperty,
-    private val fragments: Set<Fragment>,
+    val unionObject: T,
     val arguments: A? = null
-) : UnionStub<I, A> {
+) : UnionStub<T, A> {
+
+  private var mutableFragments: Set<Fragment>? = null
+
+  override fun fragment(scope: T.() -> Unit) = unionObject.queue(unionObject, scope) {
+    mutableFragments = reset()
+  }
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<*>?> =
-      newUnionField(qproperty, fragments, arguments.toMap()).apply {
-        (this as? Adapter)?.bind(inst)
-      }
+      UnionStubImpl(qproperty, mutableFragments ?: emptySet(), arguments.toMap()).bind(inst)
 
   override fun config(scope: A.() -> Unit) {
     arguments?.apply(scope)
@@ -55,7 +61,10 @@ fun newUnionField(
     } else false
   }
 
-  override fun toRawPayload(): String =
+  override fun toRawPayload(): String = qproperty.graphqlName +
+      (if (args.isEmpty()) "" else args.entries.joinToString(
+          prefix = "(", postfix = ")", separator = ","
+      ) { (key, value) -> "$key: ${formatAs(value)}" }) +
       fragments.joinToString(prefix = "{__typename,", postfix = "}") {
         it.model.run {
           "... on " + graphqlType + toGraphql(false)
