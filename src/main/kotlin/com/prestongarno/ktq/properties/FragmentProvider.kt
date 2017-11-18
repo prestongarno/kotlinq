@@ -13,13 +13,13 @@ class FragmentProvider {
 
   private val collector = mutableListOf<Fragment>()
 
-  @Synchronized operator fun <I: QUnionType, T : Any?> invoke(
+  @Synchronized operator fun <I: QUnionType> invoke(
       target: I,
       dispatch: I.() -> Unit,
-      callback: FragmentProvider.() -> QField<T>
-  ): QField<T> {
+      callback: FragmentProvider.() -> Unit
+  ) {
       dispatch(target)
-      return callback(this)
+      callback(this)
   }
 
   internal fun reset(): Set<Fragment> = collector.toSet().also { collector.clear() }
