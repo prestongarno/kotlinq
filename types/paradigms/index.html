@@ -247,12 +247,49 @@
     
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
     
-      
     
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Paradigms
+      </label>
     
     <a href="./" title="Paradigms" class="md-nav__link md-nav__link--active">
       Paradigms
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-graphql-object" title="Creating a GraphQL Object" class="md-nav__link">
+    Creating a GraphQL Object
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-fields-to-your-graphql-models" title="Adding fields to your GraphQL models" class="md-nav__link">
+    Adding fields to your GraphQL models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-values-on-scalar-fields" title="Default values on scalar fields" class="md-nav__link">
+    Default values on scalar fields
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -444,8 +481,34 @@
 <nav class="md-nav md-nav--secondary">
   
   
-    
   
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-graphql-object" title="Creating a GraphQL Object" class="md-nav__link">
+    Creating a GraphQL Object
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-fields-to-your-graphql-models" title="Adding fields to your GraphQL models" class="md-nav__link">
+    Adding fields to your GraphQL models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-values-on-scalar-fields" title="Default values on scalar fields" class="md-nav__link">
+    Default values on scalar fields
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
   
 </nav>
                   </div>
@@ -458,7 +521,71 @@
               
                 
                 
-                <h1 id="todo">//TODO<a class="headerlink" href="#todo" title="Permanent link">&para;</a></h1>
+                  <h1>Paradigms</h1>
+                
+                <h2 id="creating-a-graphql-object">Creating a GraphQL Object<a class="headerlink" href="#creating-a-graphql-object" title="Permanent link">&para;</a></h2>
+<p>The compiler creates the structure of the GraphQL schema with an object for each type. 
+Each field on a type is created as a variable which, depending on the type of GraphQL field, 
+is able to provide a <a href="https://kotlinlang.org/docs/reference/delegated-properties.html">delegated property</a> 
+to any GraphQL model which chooses to include that field in their query.</p>
+<p>To create a GraphQL object, subclass the <code class="codehilite">QModel</code> class, and add as the type argument for the class the 
+GraphQL type which you want to use for your model. For example, consider the following schema:</p>
+<div class="codehilite"><pre><span></span>    type Person {
+      name: String
+    }
+</pre></div>
+
+<p>To make a GraphQL query on this type, here is how you would do it:</p>
+<div class="codehilite"><pre><span></span>    object : QModel&lt;Person&gt;(Person)
+</pre></div>
+
+<p>Thats it!</p>
+<h2 id="adding-fields-to-your-graphql-models">Adding fields to your GraphQL models<a class="headerlink" href="#adding-fields-to-your-graphql-models" title="Permanent link">&para;</a></h2>
+<p>To add a field, you will need to add a property to your <code class="codehilite">QModel</code> object 
+which delegates to the generated GraphQL object. Here is an example. GraphQL schema:</p>
+<div class="codehilite"><pre><span></span>    type Person {
+      name: String
+    }
+</pre></div>
+
+<p>Kotlin code:</p>
+<div class="codehilite"><pre><span></span>    object : QModel&lt;Person&gt;(Person) {
+
+      val personName by model.name
+
+    }
+</pre></div>
+
+<p>Note that this is the same as declaring an actual class like so:</p>
+<div class="codehilite"><pre><span></span>    <span class="k">class</span> <span class="n">PersonModel</span> : <span class="n">QModel</span><span class="s">&lt;Person&gt;</span>(<span class="n">Person</span>) {
+
+      <span class="n">val</span> <span class="n">personName</span> <span class="nb">by</span> <span class="n">model</span>.<span class="nb">name</span>
+
+    }
+</pre></div>
+
+<p>The property <code class="codehilite">personName</code> gets its type information from the <code class="codehilite">Person</code> object property delegate provider.
+In this case, it is of type <code class="codehilite">kotlin.String</code>. You can also explicitly declare its type like so:</p>
+<div class="codehilite"><pre><span></span>val personName: String by model.name
+</pre></div>
+
+
+<h2 id="default-values-on-scalar-fields">Default values on scalar fields<a class="headerlink" href="#default-values-on-scalar-fields" title="Permanent link">&para;</a></h2>
+<p>If you try to access the <code class="codehilite">personName</code> field in the previous section you will throw a <code class="codehilite">NullPointerException</code>
+since the query has not been executed! In order to make this avoidable, the library allows you to invoke 
+all scalar GraphQL properties and declare default values for the field.</p>
+<p>To do this in your model declaration, declare your GraphQL model for <code class="codehilite">Person</code> like in the previous sections,
+but this time adding a code block on the field and assigning a default value to the property:</p>
+<div class="codehilite"><pre><span></span>    <span class="k">class</span> <span class="n">PersonModel</span> : <span class="n">QModel</span><span class="s">&lt;Person&gt;</span>(<span class="n">Person</span>) {
+
+      <span class="n">val</span> <span class="n">personName</span> <span class="nb">by</span> <span class="n">model</span>.<span class="nb">name</span> {
+        <span class="k">default</span> = <span class="s">&quot;Me&quot;</span>
+      }
+
+    }
+</pre></div>
+
+<p>Now, calling <code class="codehilite">PersonModel().personName</code> returns <code class="codehilite">&quot;Me&quot;</code>!</p>
                 
                   
                 

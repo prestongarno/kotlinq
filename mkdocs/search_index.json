@@ -37,13 +37,23 @@
         },
         {
             "location": "/types/paradigms/",
-            "text": "//TODO\n\u00b6",
+            "text": "Creating a GraphQL Object\n\u00b6\n\n\nThe compiler creates the structure of the GraphQL schema with an object for each type. \nEach field on a type is created as a variable which, depending on the type of GraphQL field, \nis able to provide a \ndelegated property\n \nto any GraphQL model which chooses to include that field in their query.\n\n\nTo create a GraphQL object, subclass the \nQModel\n class, and add as the type argument for the class the \nGraphQL type which you want to use for your model. For example, consider the following schema:\n\n\n    type Person {\n      name: String\n    }\n\n\n\n\nTo make a GraphQL query on this type, here is how you would do it:\n\n\n    object : QModel<Person>(Person)\n\n\n\n\nThats it!\n\n\nAdding fields to your GraphQL models\n\u00b6\n\n\nTo add a field, you will need to add a property to your \nQModel\n object \nwhich delegates to the generated GraphQL object. Here is an example. GraphQL schema:\n\n\n    type Person {\n      name: String\n    }\n\n\n\n\nKotlin code:\n\n\n    object : QModel<Person>(Person) {\n\n      val personName by model.name\n\n    }\n\n\n\n\nNote that this is the same as declaring an actual class like so:\n\n\n    \nclass\n \nPersonModel\n : \nQModel\n<Person>\n(\nPerson\n) {\n\n      \nval\n \npersonName\n \nby\n \nmodel\n.\nname\n\n\n    }\n\n\n\n\nThe property \npersonName\n gets its type information from the \nPerson\n object property delegate provider.\nIn this case, it is of type \nkotlin.String\n. You can also explicitly declare its type like so:\n\n\nval personName: String by model.name\n\n\n\n\n\nDefault values on scalar fields\n\u00b6\n\n\nIf you try to access the \npersonName\n field in the previous section you will throw a \nNullPointerException\n\nsince the query has not been executed! In order to make this avoidable, the library allows you to invoke \nall scalar GraphQL properties and declare default values for the field.\n\n\nTo do this in your model declaration, declare your GraphQL model for \nPerson\n like in the previous sections,\nbut this time adding a code block on the field and assigning a default value to the property:\n\n\n    \nclass\n \nPersonModel\n : \nQModel\n<Person>\n(\nPerson\n) {\n\n      \nval\n \npersonName\n \nby\n \nmodel\n.\nname\n {\n        \ndefault\n = \n\"Me\"\n\n      }\n\n    }\n\n\n\n\nNow, calling \nPersonModel().personName\n returns \n\"Me\"\n!",
             "title": "Paradigms"
         },
         {
-            "location": "/types/paradigms/#todo",
-            "text": "",
-            "title": "//TODO"
+            "location": "/types/paradigms/#creating-a-graphql-object",
+            "text": "The compiler creates the structure of the GraphQL schema with an object for each type. \nEach field on a type is created as a variable which, depending on the type of GraphQL field, \nis able to provide a  delegated property  \nto any GraphQL model which chooses to include that field in their query.  To create a GraphQL object, subclass the  QModel  class, and add as the type argument for the class the \nGraphQL type which you want to use for your model. For example, consider the following schema:      type Person {\n      name: String\n    }  To make a GraphQL query on this type, here is how you would do it:      object : QModel<Person>(Person)  Thats it!",
+            "title": "Creating a GraphQL Object"
+        },
+        {
+            "location": "/types/paradigms/#adding-fields-to-your-graphql-models",
+            "text": "To add a field, you will need to add a property to your  QModel  object \nwhich delegates to the generated GraphQL object. Here is an example. GraphQL schema:      type Person {\n      name: String\n    }  Kotlin code:      object : QModel<Person>(Person) {\n\n      val personName by model.name\n\n    }  Note that this is the same as declaring an actual class like so:       class   PersonModel  :  QModel <Person> ( Person ) {\n\n       val   personName   by   model . name \n\n    }  The property  personName  gets its type information from the  Person  object property delegate provider.\nIn this case, it is of type  kotlin.String . You can also explicitly declare its type like so:  val personName: String by model.name",
+            "title": "Adding fields to your GraphQL models"
+        },
+        {
+            "location": "/types/paradigms/#default-values-on-scalar-fields",
+            "text": "If you try to access the  personName  field in the previous section you will throw a  NullPointerException \nsince the query has not been executed! In order to make this avoidable, the library allows you to invoke \nall scalar GraphQL properties and declare default values for the field.  To do this in your model declaration, declare your GraphQL model for  Person  like in the previous sections,\nbut this time adding a code block on the field and assigning a default value to the property:       class   PersonModel  :  QModel <Person> ( Person ) {\n\n       val   personName   by   model . name  {\n         default  =  \"Me\" \n      }\n\n    }  Now, calling  PersonModel().personName  returns  \"Me\" !",
+            "title": "Default values on scalar fields"
         },
         {
             "location": "/types/primitives/",
