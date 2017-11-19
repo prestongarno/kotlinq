@@ -21,6 +21,7 @@ import com.prestongarno.ktq.stubs.StringArrayDelegate
 import com.prestongarno.ktq.stubs.StringDelegate
 import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.stubs.TypeStub
+import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.stubs.UnionStub
 import kotlin.reflect.KClass
 
@@ -86,10 +87,10 @@ interface QSchemaType {
       fun stub(): StubProvider<StringArrayDelegate.Query> = Grub("String", true) { StringArrayDelegate.noArgStub(it) }
 
       fun <A : ArgBuilder> optionalConfigStub(): StubProvider<StringArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("String") { StringArrayDelegate.optionalArgStub<A>(it) }
+          Grub("String", true) { StringArrayDelegate.optionalArgStub<A>(it) }
 
       fun <A : ArgBuilder> configStub(): StubProvider<StringArrayDelegate.ConfigurableQuery<A>> =
-          Grub("String") { StringArrayDelegate.argStub<A>(it) }
+          Grub("String", true) { StringArrayDelegate.argStub<A>(it) }
 
     }
 
@@ -98,7 +99,7 @@ interface QSchemaType {
       fun stub(): StubProvider<IntArrayDelegate.Query> = Grub("Int", true) { IntArrayDelegate.noArgStub(it) }
 
       fun <A : ArgBuilder> optionalConfigStub(): StubProvider<IntArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("Int") { IntArrayDelegate.optionalArgStub<A>(it) }
+          Grub("Int", true) { IntArrayDelegate.optionalArgStub<A>(it) }
 
       fun <A : ArgBuilder> configStub(): StubProvider<IntArrayDelegate.ConfigurableQuery<A>> =
           Grub("Int", true) { IntArrayDelegate.argStub<A>(it) }
@@ -240,15 +241,15 @@ interface QSchemaType {
   object QCustomScalarList {
 
     inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarListStub.Query<T>> =
-        Grub(T::class.graphQlName()) { CustomScalarListStub.noArgStub<T>(it) }
+        Grub(T::class.graphQlName(), true) { CustomScalarListStub.noArgStub<T>(it) }
 
     inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
         : StubProvider<CustomScalarListStub.OptionalConfigQuery<T, A>> =
-        Grub(T::class.graphQlName()) { CustomScalarListStub.optionalArgStub<T, A>(it) }
+        Grub(T::class.graphQlName(), true) { CustomScalarListStub.optionalArgStub<T, A>(it) }
 
     inline fun <reified T : CustomScalar, A : ArgBuilder> configStub():
         StubProvider<CustomScalarListStub.ConfigurableQuery<T, A>> =
-        Grub(T::class.graphQlName()) { CustomScalarListStub.argStub<T, A>(it) }
+        Grub(T::class.graphQlName(), true) { CustomScalarListStub.argStub<T, A>(it) }
 
   }
 
@@ -267,7 +268,22 @@ interface QSchemaType {
     }
   }
 
-  object QUnionList
+  object QUnionList {
+
+    fun <T : QUnionType> stub(union: T): StubProvider<UnionListStub.Query<T>> =
+        Grub(union::class.graphQlName(), true) { UnionListStub.noArgStub<T>(it, union) }
+
+    fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T
+    ): StubProvider<UnionListStub.OptionalConfigQuery<T, A>> = Grub(union::class.graphQlName(), true) {
+      UnionListStub.optionalArgStub<T, A>(it, union)
+    }
+
+    fun <T : QUnionType, A : ArgBuilder> configStub(union: T
+    ): StubProvider<UnionListStub.ConfigurableQuery<T, A>> = Grub(union::class.graphQlName(), true) {
+      UnionListStub.argStub<T, A>(it, union)
+    }
+
+  }
 
 }
 
