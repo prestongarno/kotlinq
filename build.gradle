@@ -51,7 +51,7 @@ def getVersion = { Project project ->
           project.property("release") == "true") {
     return "0.2.1"
   } else {
-    return "0.2.1-SNAPSHOT"
+    return "0.3-SNAPSHOT"
   }
 }
 
