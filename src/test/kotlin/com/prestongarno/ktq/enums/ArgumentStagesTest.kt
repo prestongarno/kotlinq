@@ -121,7 +121,7 @@ object Class : QType {
 
   val classLevelWithArgs by QSchemaType.QEnum.configStub<ClassLevel, ClassLevelArgs>()
 
-  val classLevelOptionalArgs by QSchemaType.QEnum.optionalArgStub<ClassLevel, OptionalClassLevelArgs>()
+  val classLevelOptionalArgs by QSchemaType.QEnum.optionalConfigStub<ClassLevel, OptionalClassLevelArgs>()
 
   class OptionalClassLevelArgs : ArgBuilder() {
     var intArgument: Int? by arguments
