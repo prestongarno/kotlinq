@@ -47,7 +47,7 @@ private class StubLoaderImpl<out T : SchemaStub>(val value: T) : StubLoader<T> {
  * This class does minimal work in order to reduce added complexity - it simply gets passed a function
  * which, when applied a string, produces the correct schemastub.  When delegated to by schemastub types,
  * fragment `getValue` for the schemastub it simply invokes the function with the prop of the graphqlName that it's
- * delegating to. This way, the graphqlName prop can be passed to the delegate/schemastub type without having
+ * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 @PublishedApi internal class Grub<out T : SchemaStub>(
     private val typeName: String,
