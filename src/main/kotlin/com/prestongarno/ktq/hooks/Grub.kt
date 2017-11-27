@@ -40,7 +40,7 @@ private class StubLoaderImpl<out T : SchemaStub>(val value: T) : StubLoader<T> {
  * solves the problem of not knowing the field's GraphQL property name from the generated type hierarchy
  * when generating queries/payloads
  *
- * Delegation inception : this graphqlName delegate is delegated to in order to get the property name and type of the
+ * Delegation inception : this property delegate is delegated to in order to get the property name and type of the
  * schema field, then passes it off to the backing field, which is another delegate in order for the
  * actual delegation to happen fragment a schema model implementation
  *
