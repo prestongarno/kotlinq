@@ -20,14 +20,16 @@ package com.prestongarno.ktq.stubs
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.DelegateProvider
 import com.prestongarno.ktq.QEnumType
+import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.EnumConfigStubImpl
 import com.prestongarno.ktq.adapters.EnumNoArgStub
 import com.prestongarno.ktq.adapters.EnumOptionalArgStubQuery
-import com.prestongarno.ktq.hooks.ConfiguredQuery
-import com.prestongarno.ktq.hooks.NoArgConfig
-import com.prestongarno.ktq.hooks.OptionalConfiguration
+import com.prestongarno.ktq.adapters.QField
+import com.prestongarno.ktq.internal.empty
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumType, T : Enum<*> {
   var default: T?
@@ -39,14 +41,14 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
     @PublishedApi internal fun <T> noArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
-    ): NoArgConfig<EnumStub<T, ArgBuilder>, T>
+    ): EnumNoArgStub<T>
         where T : QEnumType, T : Enum<*> =
         EnumNoArgStub(qproperty, enumClass)
 
     @PublishedApi internal fun <T, A> argStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
-    ): ConfiguredQuery<EnumStub<T, A>, A>
+    ): EnumStub.ConfigurableQuery<T, A>
         where T : QEnumType,
               T : Enum<*>, A : ArgBuilder =
         EnumConfigStubImpl(qproperty, enumClass)
@@ -54,9 +56,46 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
     @PublishedApi internal fun <T, A> optionalArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
-    ): OptionalConfiguration<EnumStub<T, A>, T, A>
+    ): EnumStub.OptionalConfigQuery<T, A>
         where T : QEnumType,
               T : Enum<*>, A : ArgBuilder =
         EnumOptionalArgStubQuery(qproperty, enumClass)
   }
+
+  interface Query<T> : SchemaStub where T : QEnumType, T : Enum<*> {
+
+    operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+        invoke(scope = empty()).provideDelegate(inst, property)
+
+    operator fun invoke(
+        arguments: ArgBuilder = ArgBuilder(),
+        scope: EnumStub<T, ArgBuilder>.() -> Unit = empty()
+    ): EnumStub<T, ArgBuilder>
+  }
+
+  interface OptionalConfigQuery<T, A> : SchemaStub where T : QEnumType, T : Enum<*>, A : ArgBuilder {
+
+    operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+        invoke(empty()).provideDelegate(inst, property)
+
+    operator fun invoke(
+        arguments: A,
+        scope: EnumStub<T, A>.() -> Unit = empty()
+    ): EnumStub<T, A>
+
+    operator fun invoke(
+        scope: EnumStub<T, ArgBuilder>.() -> Unit
+    ): EnumStub<T, ArgBuilder>
+  }
+
+
+  interface ConfigurableQuery<T, A> : SchemaStub where T : QEnumType, T : Enum<*>, A : ArgBuilder {
+
+    operator fun invoke(
+        arguments: A,
+        scope: EnumStub<T, A>.() -> Unit = empty()
+    ): EnumStub<T, A>
+
+  }
+
 }

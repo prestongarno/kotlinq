@@ -18,14 +18,14 @@
 package com.prestongarno.ktq.interfaces
 
 import com.google.common.truth.Truth.assertThat
-import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.stubs.EnumStub
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QSchemaType.*
+import com.prestongarno.ktq.QSchemaType.QEnum
+import com.prestongarno.ktq.QSchemaType.QInterfaces
+import com.prestongarno.ktq.QSchemaType.QScalar
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.hooks.NoArgConfig
+import com.prestongarno.ktq.stubs.EnumStub
 import com.prestongarno.ktq.stubs.StringDelegate
 import org.intellij.lang.annotations.Language
 import org.junit.Test
@@ -39,7 +39,7 @@ interface Concept : QType, QInterface {
   // TODO -> 3-factor API with argbuilders
   val name : StringDelegate.Query
 
-  val type : NoArgConfig<EnumStub<ConceptType, ArgBuilder>, ConceptType>
+  val type : EnumStub.Query<ConceptType>
 }
 
 object Persistence : Concept {

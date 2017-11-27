@@ -17,7 +17,7 @@
  */
 
 buildscript {
-  ext.kotlin_version = '1.1.60'
+  ext.kotlin_version = '1.1.61'
   ext.sourceCompatibility = 1.8
   ext.clientId = 'ktq-client'
   ext.projectDescription = 'a kotlin client for graphql'
@@ -76,7 +76,7 @@ dependencies {
   testCompile "com.google.truth:truth:0.28"
   testCompile "com.prestongarno.ktq:ktq-gradle:0.2"
   testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
-  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler', version: "$kotlin_version"
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable', version: "$kotlin_version"
 }
 
 configurations.all {
