@@ -210,16 +210,16 @@ interface QSchemaType {
   }
 
   object QEnum {
-    inline fun <reified T> stub(): StubProvider<NoArgConfig<EnumStub<T, ArgBuilder>, T>> where T : Enum<*>, T : QEnumType
+    inline fun <reified T> stub(): StubProvider<EnumStub.Query<T>> where T : Enum<*>, T : QEnumType
         = Grub(T::class.graphQlName()) { EnumStub.noArgStub(it, T::class) }
 
-    inline fun <reified T, A : ArgBuilder> optionalConfigStub(
-    ): StubProvider<OptionalConfiguration<EnumStub<T, A>, T, A>> where T : Enum<*>, T : QEnumType =
-        Grub(T::class.graphQlName()) {
-          EnumStub.optionalArgStub<T, A>(it, T::class)
-        }
+    inline fun <reified T, A : ArgBuilder> optionalArgStub(
+    ): StubProvider<EnumStub.OptionalConfigQuery<T, A>> where T : Enum<*>, T : QEnumType =
+        Grub(T::class.graphQlName()) { EnumStub.optionalArgStub<T, A>(it, T::class) }
 
-    inline fun <reified T, A : ArgBuilder> configStub(): StubProvider<ConfiguredQuery<EnumStub<T, A>, A>> where T : Enum<*>, T : QEnumType
+    inline fun <reified T, A : ArgBuilder> configStub(): StubProvider<EnumStub.ConfigurableQuery<T, A>>
+        where T : Enum<*>,
+              T : QEnumType
         = Grub(T::class.graphQlName()) { EnumStub.argStub<T, A>(it, T::class) }
 
   }

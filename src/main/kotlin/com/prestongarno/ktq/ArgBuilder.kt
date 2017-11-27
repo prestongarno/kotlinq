@@ -43,7 +43,7 @@ class PropertyMapper {
   operator fun <T> getValue(inst: Any, property: KProperty<*>): T? =
       values[property.name]?.let {
         @Suppress("UNCHECKED_CAST")
-        it as? T
+        it as? T ?: throw NullPointerException("Property '${property.name} was 'null'")
       }
 
   operator fun <T> setValue(inst: Any, property: KProperty<*>, value: T) {
