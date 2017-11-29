@@ -54,6 +54,6 @@ class BasicInterfaceLists {
 
     query::things.returnType.arguments
         .firstOrNull()?.type?.classifier eq Thing::class
-    query.toGraphql(false) eq "{getThings{__typename, ... on Concrete{name}}}"
+    query.toGraphql() eq "{getThings{__typename, ... on Concrete{name}}}"
   }
 }

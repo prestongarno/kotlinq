@@ -62,7 +62,7 @@ class BasicTypeList {
 
     query::teamMembers.returnType.arguments
         .firstOrNull()?.type?.classifier eq PersonModel::class
-    query.toGraphql(false) eq "{members{name,age}}"
+    query.toGraphql() eq "{members{name,age}}"
   }
 
   @Test fun `configured type list field is possible`() {
@@ -73,6 +73,6 @@ class BasicTypeList {
     }
     query::members.returnType.arguments
         .firstOrNull()?.type?.classifier eq PersonModel::class
-    query.toGraphql(false) eq "{configMembers(limit: 100){name,age}}"
+    query.toGraphql() eq "{configMembers(limit: 100){name,age}}"
   }
 }

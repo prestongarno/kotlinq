@@ -112,7 +112,7 @@ data class MyUser(private val limitOfFriends: Int, private val lang: String) : Q
 class TestSample {
   @Ignore @Test fun testToGraphQlValid() {
     val foobaz = MyUser(1000, "ENGLISH")
-    println(foobaz.toGraphql(false))
+    println(foobaz.toGraphql())
     Truth.assertThat(foobaz.toGraphql())
         .isEqualTo("""
           |{

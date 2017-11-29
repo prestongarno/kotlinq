@@ -78,7 +78,7 @@ class MockResponsesNestedTypes {
           .querying { BasicUserModel() }
     }
 
-    assertThat(myUser.toGraphql(false))
+    assertThat(myUser.toGraphql())
         .isEqualTo("""
           |{
           |  name,

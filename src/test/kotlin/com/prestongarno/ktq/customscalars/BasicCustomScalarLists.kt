@@ -38,6 +38,6 @@ class BasicCustomScalarLists {
     }
     query::urls.returnType.arguments
         .firstOrNull()?.type?.classifier eq String::class
-    query.toGraphql(false) eq "{urls}"
+    query.toGraphql() eq "{urls}"
   }
 }

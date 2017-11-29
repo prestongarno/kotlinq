@@ -41,7 +41,7 @@ class BasicCustomScalarField {
 
     query::url.returnType.classifier eq String::class
     query::url.returnType.isMarkedNullable eq false
-    query.toGraphql(false) eq "{url}"
+    query.toGraphql() eq "{url}"
   }
 
   @Test fun `custom scalar field is possible 2`() {
@@ -52,6 +52,6 @@ class BasicCustomScalarField {
 
     query::url.returnType.classifier eq Int::class
     query::url.returnType.isMarkedNullable eq true
-    query.toGraphql(false) eq "{url}"
+    query.toGraphql() eq "{url}"
   }
 }

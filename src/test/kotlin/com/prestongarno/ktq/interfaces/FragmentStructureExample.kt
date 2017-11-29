@@ -78,7 +78,7 @@ class TestFragmentsBasic {
 
     }
 
-    assertThat(query.toGraphql(false)).isEqualTo("{objectValue(Hello: \\\"World\\\"){" +
+    assertThat(query.toGraphql()).isEqualTo("{objectValue(Hello: \\\"World\\\"){" +
         "__typename," +
           "... on SubObject{value,maximum(factor: 100)}" +
         "}," +
@@ -110,7 +110,7 @@ class TestFragmentsBasic {
     require(query.field is MyObject)
     require((query.field as? MyObject)?.result == 35)
     //query.list.filterIsInstance<MyObject>().forEachIndexed { index, obj -> require(obj.max == 100_000_000) require(obj.result == index) }
-    println(query.toGraphql(false))
+    println(query.toGraphql())
   }
 
 }*/

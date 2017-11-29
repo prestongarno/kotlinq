@@ -28,7 +28,7 @@ import org.junit.Test
 class ArgumentStagesTest {
 
   @Test fun sampleConfiguration() {
-    assertThat(ClassQuery1().toGraphql(false))
+    assertThat(ClassQuery1().toGraphql())
         .isEqualTo("{classLevel}")
     assertThat(ClassQuery1().level)
         .isEqualTo(ClassLevel.UNDERGRADUATE)
@@ -41,7 +41,7 @@ class ArgumentStagesTest {
       }
     }
 
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("""{classLevel(Hello: \"World\")}""")
   }
 
@@ -60,7 +60,7 @@ class ArgumentStagesTest {
         }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("""
           {classLevelWithArgs(
             requiredInteger: 100,
@@ -78,7 +78,7 @@ class ArgumentStagesTest {
     val query = object : QModel<Class>(Class) {
       val levelNoArgs by model.classLevelOptionalArgs
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{${Class::classLevelOptionalArgs.name}}")
   }
 
@@ -92,7 +92,7 @@ class ArgumentStagesTest {
         }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("""{${Class::classLevelOptionalArgs.name}
           |(${Class.OptionalClassLevelArgs::intArgument.name}: 3535,
           |${Class.OptionalClassLevelArgs::stringArgument.name}: \"Hello, World!\"
@@ -108,7 +108,7 @@ class ArgumentStagesTest {
         }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("""{${Class::classLevelOptionalArgs.name}
           |(${Class.OptionalClassLevelArgs::intArgument.name}: 353535
           |)}""".trimMargin().flatLine())
