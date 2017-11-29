@@ -67,6 +67,6 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
         (args.entries.joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
           "$key: ${formatAs(value)}"
         }) else "") +
-      value.toGraphql(false)
+      value.toGraphql()
 
 }

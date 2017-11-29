@@ -36,18 +36,18 @@ interface InterfaceListStub<I, out A> :
   fun config(argumentScope: A.() -> Unit)
 
   companion object {
-    @PublishedApi internal fun <I> noArgStub(
+    internal fun <I> noArgStub(
         qproperty: GraphQlProperty
     ): Query<I> where I : QInterface, I : QType =
         QueryImpl(qproperty)
 
-    @PublishedApi internal fun <I, A> optionalArgStub(
+    internal fun <I, A> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<I, A>
         where I : QInterface, I : QType, A : ArgBuilder =
         OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <I, A> argStub(
+    internal fun <I, A> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<I, A>
         where I : QInterface, I : QType, A : ArgBuilder =

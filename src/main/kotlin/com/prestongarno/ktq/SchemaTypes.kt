@@ -25,6 +25,12 @@ import com.prestongarno.ktq.properties.FragmentProvider
  */
 interface QType : QSchemaType
 
+/**
+ * Interface API entry for a fragment requires
+ * type intersection with [QInterface] type and a [QType]
+ *
+ * Not perfect but does the job
+ */
 interface QInterface : QSchemaType
 
 /**
@@ -41,6 +47,10 @@ interface QEnumType : QSchemaType
  */
 interface CustomScalar : QSchemaType
 
+/**
+ * Union type. Generated object class-level delegates to the private implementation below.
+ * Only way to hook into a fragmenting method for graphql union fragments on queries
+ */
 interface QUnionType : QType {
 
   val queue: FragmentProvider

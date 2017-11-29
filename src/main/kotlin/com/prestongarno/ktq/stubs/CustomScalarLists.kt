@@ -34,15 +34,15 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
 
   companion object {
 
-    @PublishedApi internal fun <T : CustomScalar> noArgStub(
+    internal fun <T : CustomScalar> noArgStub(
         qproperty: GraphQlProperty
     ): Query<T> = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <T : CustomScalar, A : ArgBuilder> optionalArgStub(
+    internal fun <T : CustomScalar, A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<T, A> = OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <T : CustomScalar, A : ArgBuilder> argStub(
+    internal fun <T : CustomScalar, A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<T, A> = ConfigurableQueryImpl(qproperty)
 

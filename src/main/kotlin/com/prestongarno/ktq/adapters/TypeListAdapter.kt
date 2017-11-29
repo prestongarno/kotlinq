@@ -60,7 +60,7 @@ private data class TypeListStubImpl<P : QModel<*>>(
       (if (args.isNotEmpty()) args.entries
           .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
             "$key: ${formatAs(value)}"
-          } else "") + value.toGraphql(false)
+          } else "") + value.toGraphql()
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results
 

@@ -41,20 +41,20 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
 
   companion object {
 
-    @PublishedApi internal fun <T> noArgStub(
+    internal fun <T> noArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): EnumListStub.Query<T> where T : Enum<*>, T : QEnumType =
         QueryImpl<T>(qproperty, enumClass)
 
-    @PublishedApi internal fun <T, A> optionalArgStub(
+    internal fun <T, A> optionalArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): EnumListStub.OptionalConfigQuery<T, A>
         where T : Enum<*>, T : QEnumType, A : ArgBuilder =
         OptionalConfigQueryImpl(qproperty, enumClass)
 
-    @PublishedApi internal fun <T, A> argStub(
+    internal fun <T, A> argStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): EnumListStub.ConfigurableQuery<T, A>

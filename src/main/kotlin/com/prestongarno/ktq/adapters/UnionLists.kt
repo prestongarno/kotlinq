@@ -102,7 +102,7 @@ private class UnionListStubImpl(
       ) { (key, value) -> "$key: ${formatAs(value)}" }) +
       fragments.joinToString(prefix = "{__typename,", postfix = "}") {
         it.model.run {
-          "... on " + graphqlType + toGraphql(false)
+          "... on " + graphqlType + toGraphql()
         }
       }
 

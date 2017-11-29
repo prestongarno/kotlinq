@@ -34,16 +34,16 @@ interface BooleanArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<Boolean
 
   companion object {
 
-    @PublishedApi internal fun noArgStub(
+    internal fun noArgStub(
         qproperty: GraphQlProperty
     ): BooleanArrayDelegate.Query = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+    internal fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): BooleanArrayDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> argStub(
+    internal fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): BooleanArrayDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)

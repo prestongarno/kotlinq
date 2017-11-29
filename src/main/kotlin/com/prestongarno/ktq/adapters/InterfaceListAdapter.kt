@@ -99,7 +99,7 @@ private data class InterfaceListField<out I>(
       "$key: " + formatAs(value)
     }) +
         fragments.joinToString(prefix = "{__typename,", postfix = "}") {
-          "... on " + it.model.graphqlType + it.model.toGraphql(false)
+          "... on " + it.model.graphqlType + it.model.toGraphql()
         }
   }
 

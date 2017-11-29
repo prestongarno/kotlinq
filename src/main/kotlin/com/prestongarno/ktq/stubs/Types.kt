@@ -33,15 +33,15 @@ interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where
   fun config(argumentScope: A.() -> Unit)
 
   companion object {
-    @PublishedApi internal fun <U : QType> noArgStub(
+    internal fun <U : QType> noArgStub(
         qproperty: GraphQlProperty
     ): Query<U> = Query.create(qproperty)
 
-    @PublishedApi internal fun <U : QType, A : ArgBuilder> optionalArgStub(
+    internal fun <U : QType, A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<U, A> = OptionalConfigQuery.create(qproperty)
 
-    @PublishedApi internal fun <U : QType, A : ArgBuilder> argStub(
+    internal fun <U : QType, A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<U, A> = ConfigurableQuery.create(qproperty)
   }
@@ -50,7 +50,7 @@ interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where
     fun <T : QModel<U>> query(init: () -> T): NoArgConfig<TypeStub<T, U, ArgBuilder>, T>
 
     companion object {
-      @PublishedApi internal fun <U : QType> create(
+      internal fun <U : QType> create(
           qproperty: GraphQlProperty
       ): Query<U> = QueryImpl(qproperty)
     }
@@ -65,7 +65,7 @@ interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where
     fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.OptionalConfiguration<TypeStub<T, U, A>, T, A>
 
     companion object {
-      @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
+      internal fun <U : QType, A : ArgBuilder> create(
           qproperty: GraphQlProperty
       ): OptionalConfigQuery<U, A> = OptionalConfigQueryImpl(qproperty)
     }
@@ -80,7 +80,7 @@ interface TypeStub<out T, out U, out A : ArgBuilder> : DelegateProvider<T> where
     fun <T : QModel<U>> query(init: () -> T): com.prestongarno.ktq.hooks.ConfiguredQuery<TypeStub<T, U, A>, A>
 
     companion object {
-      @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
+      internal fun <U : QType, A : ArgBuilder> create(
           qproperty: GraphQlProperty
       ): ConfigurableQuery<U, A> = ConfigurableTypeQueryImpl(qproperty)
     }

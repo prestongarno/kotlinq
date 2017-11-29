@@ -509,7 +509,8 @@ import kotlin.reflect.KClass
     }
   }
 
-  @Suppress("NOTHING_TO_INLINE") internal fun <T : Any> KClass<T>.graphQlName() = "${this.simpleName}"
+  internal
+  fun <T : Any> KClass<T>.graphQlName() = "${this.simpleName}"
 
 }
 

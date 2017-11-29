@@ -33,48 +33,52 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
 
   companion object {
 
-    @PublishedApi internal fun <T : QUnionType> noArgStub(
-        qproperty: GraphQlProperty,
-        unionObject: T
-    ): UnionStub.Query<T> = QueryImpl(qproperty, unionObject)
+    internal
+    fun <T : QUnionType> noArgStub(qproperty: GraphQlProperty, unionObject: T)
+        :
+        UnionStub.Query<T> =
+        QueryImpl(qproperty, unionObject)
 
-    @PublishedApi internal fun <T : QUnionType, A : ArgBuilder> optionalArgStub(
-        qproperty: GraphQlProperty,
-        unionObject: T
-    ): UnionStub.OptionalConfigQuery<T, A> = OptionalConfigQueryImpl(qproperty, unionObject)
+    internal
+    fun <T : QUnionType, A : ArgBuilder> optionalArgStub(qproperty: GraphQlProperty, unionObject: T)
+        :
+        UnionStub.OptionalConfigQuery<T, A> =
+        OptionalConfigQueryImpl(qproperty, unionObject)
 
-    @PublishedApi internal fun <T : QUnionType, A : ArgBuilder> argStub(
-        qproperty: GraphQlProperty,
-        unionObject: T
-    ): UnionStub.ConfigurableQuery<T, A> = ConfigurableQueryImpl(qproperty, unionObject)
+    internal
+    fun <T : QUnionType, A : ArgBuilder> argStub(qproperty: GraphQlProperty,unionObject: T)
+        :
+        UnionStub.ConfigurableQuery<T, A> =
+        ConfigurableQueryImpl(qproperty, unionObject)
   }
 
   interface Query<out T : QUnionType> : SchemaStub {
 
-    operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: UnionStub<T, ArgBuilder>.() -> Unit
-    ): UnionStub<T, ArgBuilder>
+    operator fun invoke(arguments: ArgBuilder? = null, scope: UnionStub<T, ArgBuilder>.() -> Unit)
+        :
+        UnionStub<T, ArgBuilder>
 
   }
 
   interface OptionalConfigQuery<out T : QUnionType, A : ArgBuilder> : ConfigurableQuery<T, A> {
 
-    operator fun invoke(
-        scope: UnionStub<T, ArgBuilder>.() -> Unit
-    ): UnionStub<T, ArgBuilder>
+    operator fun invoke(scope: UnionStub<T, ArgBuilder>.() -> Unit)
+        :
+        UnionStub<T, ArgBuilder>
 
   }
 
   interface ConfigurableQuery<out T : QUnionType, A : ArgBuilder> : SchemaStub {
 
-    operator fun invoke(
-        arguments: A,
-        scope: UnionStub<T, A>.() -> Unit
-    ): UnionStub<T, A>
+    operator fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit)
+        :
+        UnionStub<T, A>
 
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl<out T : QUnionType>(
       val qproperty: GraphQlProperty,
       val unionObject: T
@@ -106,7 +110,9 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
       val unionObject: T
   ) : ConfigurableQuery<T, A> {
 
-    override fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit): UnionStub<T, A> =
+    override fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit)
+        :
+        UnionStub<T, A> =
         newUnionField(qproperty, unionObject, arguments).apply(scope)
 
   }

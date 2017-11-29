@@ -33,39 +33,38 @@ interface UnionListStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvid
 
   companion object {
 
-    @PublishedApi internal fun <T : QUnionType> noArgStub(
-        qproperty: GraphQlProperty,
-        unionObject: T
-    ): UnionListStub.Query<T> =
+    internal fun <T : QUnionType> noArgStub(qproperty: GraphQlProperty, unionObject: T)
+        :
+        UnionListStub.Query<T> =
         QueryImpl(qproperty, unionObject)
 
-    @PublishedApi internal fun <T : QUnionType, A : ArgBuilder> optionalArgStub(
-        qproperty: GraphQlProperty,
-        unionObject: T
-    ): UnionListStub.OptionalConfigQuery<T, A> =
+    internal
+    fun <T : QUnionType, A : ArgBuilder> optionalArgStub(qproperty: GraphQlProperty, unionObject: T)
+        :
+        UnionListStub.OptionalConfigQuery<T, A> =
         OptionalConfigQueryImpl(qproperty, unionObject)
 
-    @PublishedApi internal fun <T : QUnionType, A : ArgBuilder> argStub(
-        qproperty: GraphQlProperty,
-        unionObject: T
-    ): UnionListStub.ConfigurableQuery<T, A> =
+    internal
+    fun <T : QUnionType, A : ArgBuilder> argStub(qproperty: GraphQlProperty, unionObject: T)
+        :
+        UnionListStub.ConfigurableQuery<T, A> =
         ConfigurableQueryImpl(qproperty, unionObject)
 
   }
 
   interface Query<out T : QUnionType> : SchemaStub {
-    operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: UnionListStub<T, ArgBuilder>.() -> Unit
-    ): UnionListStub<T, ArgBuilder>
+
+    operator fun invoke(arguments: ArgBuilder? = null, scope: UnionListStub<T, ArgBuilder>.() -> Unit)
+        :
+        UnionListStub<T, ArgBuilder>
 
   }
 
   interface OptionalConfigQuery<out T : QUnionType, A : ArgBuilder> : ConfigurableQuery<T, A> {
 
-    operator fun invoke(
-        scope: UnionListStub<T, ArgBuilder>.() -> Unit
-    ): UnionListStub<T, ArgBuilder>
+    operator fun invoke(scope: UnionListStub<T, ArgBuilder>.() -> Unit)
+        :
+        UnionListStub<T, ArgBuilder>
 
   }
 
@@ -78,6 +77,9 @@ interface UnionListStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvid
 
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl<out T : QUnionType>(
       val qproperty: GraphQlProperty,
       val union: T

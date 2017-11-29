@@ -60,7 +60,7 @@ internal fun Adapter.prettyPrinted(): String = qproperty.graphqlName +
           }
       this is ModelProvider -> value.toGraphql()
       this is FragmentContext -> fragments.joinToString("\n") {
-        "... on ${qproperty.graphqlType} ${it.model.toGraphql(true)}"
+        "... on ${qproperty.graphqlType} ${it.model.toGraphql()}"
       }
       else -> ""
     }).replace("\\s*([(,])".toRegex(), "$1").trim()

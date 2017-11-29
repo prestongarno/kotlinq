@@ -84,7 +84,7 @@ private class UnionAdapterImpl<T : QUnionType, out A : ArgBuilder>(
       ) { (key, value) -> "$key: ${formatAs(value)}" }) +
       fragments.joinToString(prefix = "{__typename,", postfix = "}") {
         it.model.run {
-          "... on " + graphqlType + toGraphql(false)
+          "... on " + graphqlType + toGraphql()
         }
       }
 

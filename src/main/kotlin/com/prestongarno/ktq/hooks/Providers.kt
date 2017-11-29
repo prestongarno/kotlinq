@@ -38,7 +38,7 @@ data class Fragment(val initializer: () -> QModel<QType>) {
   internal val model by lazy(initializer)
 
   override fun toString(): String {
-    return "... on ${model.graphqlType}${model.toGraphql(false)}"
+    return "... on ${model.graphqlType}${model.toGraphql()}"
   }
 }
 
