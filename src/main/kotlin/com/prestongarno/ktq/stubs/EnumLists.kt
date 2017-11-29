@@ -35,7 +35,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
           T : QEnumType,
           A : ArgBuilder {
 
-  var default : T?
+  var default: T?
 
   fun config(scope: A.() -> Unit)
 
@@ -104,10 +104,13 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
 
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class OptionalConfigQueryImpl<T, A>(
       val qproperty: GraphQlProperty,
       val enumClass: KClass<T>
-  ): OptionalConfigQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+  ) : OptionalConfigQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
 
     override fun provideDelegate(
         inst: QModel<*>,
@@ -138,7 +141,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
   private class ConfigurableQueryImpl<T, A>(
       val qproperty: GraphQlProperty,
       val enumClass: KClass<T>
-  ): ConfigurableQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+  ) : ConfigurableQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
 
     override fun invoke(
         arguments: A,

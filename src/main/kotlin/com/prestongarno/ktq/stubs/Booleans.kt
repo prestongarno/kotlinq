@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 
 interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
 
-  var default : Boolean
+  var default: Boolean
 
   fun config(scope: A.() -> Unit)
 
@@ -84,6 +84,9 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): BooleanDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : BooleanDelegate.Query {
     override fun invoke(
         arguments: ArgBuilder?, scope: (BooleanDelegate<ArgBuilder>.() -> Unit)?

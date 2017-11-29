@@ -65,6 +65,9 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
     ): ConfiguredQuery<CustomScalarListStub<T, V, ArgBuilder>, A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl<T : CustomScalar>(val qproperty: GraphQlProperty) : Query<T> {
 
     override fun <U : QScalarListMapper<V>, V> map(
@@ -75,7 +78,7 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
         }
   }
 
-  private class OptionalConfigQueryImpl<T : CustomScalar, A : ArgBuilder>(
+  private class OptionalConfigQueryImpl<T : CustomScalar, in A : ArgBuilder>(
       val qproperty: GraphQlProperty
   ) : OptionalConfigQuery<T, A> {
 
@@ -88,7 +91,7 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
 
   }
 
-  private class ConfigurableQueryImpl<T : CustomScalar, A : ArgBuilder>(
+  private class ConfigurableQueryImpl<T : CustomScalar, in A : ArgBuilder>(
       val qproperty: GraphQlProperty
   ) : ConfigurableQuery<T, A> {
 

@@ -84,6 +84,10 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
     ): FloatArrayDelegate<A>
   }
 
+
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgBuilder?, scope: (FloatArrayDelegate<ArgBuilder>.() -> Unit)?
     ) = FloatArrayDelegateImpl<ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
@@ -108,13 +112,15 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
 private class FloatArrayDelegateImpl<out A : ArgBuilder>(
     private val qproperty: GraphQlProperty,
     private val argBuilder: A?
-) : FloatArrayDelegate<A>  {
+) : FloatArrayDelegate<A> {
 
   override var default: FloatArray? = null
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatArrayStub =
       FloatArrayStub(qproperty, default, argBuilder.toMap()).bind(inst)
 
-  override fun config(scope: A.() -> Unit) { argBuilder?.scope() }
+  override fun config(scope: A.() -> Unit) {
+    argBuilder?.scope()
+  }
 }
 

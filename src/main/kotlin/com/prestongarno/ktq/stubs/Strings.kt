@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 
 interface StringDelegate<out A : ArgBuilder> : ScalarDelegate<StringStub> {
 
-  var default : String?
+  var default: String?
 
   fun config(scope: A.() -> Unit)
 
@@ -84,6 +84,9 @@ interface StringDelegate<out A : ArgBuilder> : ScalarDelegate<StringStub> {
     ): StringDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : StringDelegate.Query {
     override fun invoke(arguments: ArgBuilder?, scope: (StringDelegate<ArgBuilder>.() -> Unit)?
     ) = StringDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)

@@ -84,6 +84,9 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
     ): IntDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : IntDelegate.Query {
     override fun invoke(
         arguments: ArgBuilder?, scope: (IntDelegate<ArgBuilder>.() -> Unit)?

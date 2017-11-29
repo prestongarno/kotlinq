@@ -46,7 +46,7 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
         OptionalConfigQueryImpl(qproperty, unionObject)
 
     internal
-    fun <T : QUnionType, A : ArgBuilder> argStub(qproperty: GraphQlProperty,unionObject: T)
+    fun <T : QUnionType, A : ArgBuilder> argStub(qproperty: GraphQlProperty, unionObject: T)
         :
         UnionStub.ConfigurableQuery<T, A> =
         ConfigurableQueryImpl(qproperty, unionObject)

@@ -83,6 +83,9 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
     ): IntArrayDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgBuilder?, scope: (IntArrayDelegate<ArgBuilder>.() -> Unit)?
     ) = IntArrayDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
@@ -107,13 +110,15 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 private class IntArrayDelegateImpl<out A : ArgBuilder>(
     private val qproperty: GraphQlProperty,
     private val argBuilder: A?
-) : IntArrayDelegate<A>  {
+) : IntArrayDelegate<A> {
 
   override var default: IntArray? = null
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntArrayStub =
       IntArrayStub(qproperty, default, argBuilder.toMap()).bind(inst)
 
-  override fun config(scope: A.() -> Unit) { argBuilder?.scope() }
+  override fun config(scope: A.() -> Unit) {
+    argBuilder?.scope()
+  }
 }
 

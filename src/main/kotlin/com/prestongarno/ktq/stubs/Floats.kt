@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 
 interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
 
-  var default : Float
+  var default: Float
 
   fun config(scope: A.() -> Unit)
 
@@ -84,6 +84,9 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
     ): FloatDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : FloatDelegate.Query {
     override fun invoke(
         arguments: ArgBuilder?, scope: (FloatDelegate<ArgBuilder>.() -> Unit)?

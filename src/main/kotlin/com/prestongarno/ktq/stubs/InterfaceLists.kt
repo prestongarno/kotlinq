@@ -59,7 +59,7 @@ interface InterfaceListStub<I, out A> :
     operator fun invoke(
         arguments: ArgBuilder? = null,
         scope: InterfaceListStub<I, ArgBuilder>.() -> Unit
-    ) : InterfaceListStub<I, ArgBuilder>
+    ): InterfaceListStub<I, ArgBuilder>
 
   }
 
@@ -71,7 +71,7 @@ interface InterfaceListStub<I, out A> :
     /** Create stub for field without any arguments */
     operator fun invoke(
         scope: FragmentStub<I>.() -> Unit
-    ) : InterfaceListStub<I, A>
+    ): InterfaceListStub<I, A>
 
   }
 
@@ -83,10 +83,13 @@ interface InterfaceListStub<I, out A> :
     operator fun invoke(
         arguments: A,
         scope: InterfaceListStub<I, A>.() -> Unit
-    ) : InterfaceListStub<I, A>
+    ): InterfaceListStub<I, A>
 
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl<I>(val qproperty: GraphQlProperty) : Query<I> where I : QInterface, I : QType {
     override fun invoke(arguments: ArgBuilder?, scope: InterfaceListStub<I, ArgBuilder>.() -> Unit)
         : InterfaceListStub<I, ArgBuilder> =
@@ -104,12 +107,12 @@ interface InterfaceListStub<I, out A> :
         newInterfaceListStub<I, A>(qproperty, arguments).apply(scope)
 
     override fun invoke(scope: FragmentStub<I>.() -> Unit): InterfaceListStub<I, A> =
-      newInterfaceListStub<I, A>(qproperty, null).apply(scope)
+        newInterfaceListStub<I, A>(qproperty, null).apply(scope)
   }
 
   private class ConfigurableQueryImpl<I, A>(
       val qproperty: GraphQlProperty
-  ): ConfigurableQuery<I, A>
+  ) : ConfigurableQuery<I, A>
       where I : QInterface,
             I : QType,
             A : ArgBuilder {

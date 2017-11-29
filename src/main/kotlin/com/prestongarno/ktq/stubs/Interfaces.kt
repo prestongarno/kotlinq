@@ -29,7 +29,9 @@ import com.prestongarno.ktq.properties.GraphQlProperty
 /**
  * Remember -> compile generate all interface types to be *both* [QType] ***and*** [QInterface]
  */
-interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvider<QModel<I>?> where I : QInterface, I : QType {
+interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvider<QModel<I>?>
+    where I : QInterface,
+          I : QType {
 
   fun config(argumentScope: A.() -> Unit)
 
@@ -82,6 +84,9 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
   }
 
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl<I>(val qproperty: GraphQlProperty) : Query<I> where I : QInterface, I : QType {
 
     override fun invoke(arguments: ArgBuilder?, scope: InterfaceStub<I, ArgBuilder>.() -> Unit): InterfaceStub<I, ArgBuilder> =
