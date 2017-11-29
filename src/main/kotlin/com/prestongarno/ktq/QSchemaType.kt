@@ -17,11 +17,8 @@
 
 package com.prestongarno.ktq
 
-import com.prestongarno.ktq.hooks.ConfiguredQuery
-import com.prestongarno.ktq.hooks.Grub
-import com.prestongarno.ktq.hooks.NoArgConfig
-import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.hooks.StubProvider
+import com.prestongarno.ktq.hooks.StubProvider.Companion.delegationContext
 import com.prestongarno.ktq.stubs.BooleanArrayDelegate
 import com.prestongarno.ktq.stubs.BooleanDelegate
 import com.prestongarno.ktq.stubs.CustomScalarListStub
@@ -40,268 +37,393 @@ import com.prestongarno.ktq.stubs.TypeListStub
 import com.prestongarno.ktq.stubs.TypeStub
 import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.stubs.UnionStub
-import kotlin.reflect.KClass
 
 /**
- * The root type of all generated schema objects. Nested objects
- * provide handles for field declarations
- * @author prestongarno */
+ * The root type of all generated schema objects. Nested objects provide
+ * handles for field declarations to obtain a delegation provider for class declarations
+ * @author prestongarno
+ */
 interface QSchemaType {
 
   object QScalar {
+
     object String {
 
-      fun stub(): StubProvider<StringDelegate.Query> = Grub("String") { StringDelegate.noArgStub(it) }
+      fun stub()
+          :
+          StubProvider<StringDelegate.Query> =
+          delegationContext.stringScalar.stub()
 
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<StringDelegate.OptionalConfigQuery<A>> =
-          Grub("String") { StringDelegate.optionalArgStub<A>(it) }
+      fun <A : ArgBuilder> optionalConfigStub()
+          :
+          StubProvider<StringDelegate.OptionalConfigQuery<A>> =
+          delegationContext.stringScalar.optionalConfigStub()
 
-      fun <A : ArgBuilder> configStub(): StubProvider<StringDelegate.ConfigurableQuery<A>> =
-          Grub("String") { StringDelegate.argStub<A>(it) }
+      fun <A : ArgBuilder> configStub()
+          :
+          StubProvider<StringDelegate.ConfigurableQuery<A>> =
+          delegationContext.stringScalar.configStub()
 
     }
 
     object Int {
 
-      fun stub(): StubProvider<IntDelegate.Query> = Grub("Int") { IntDelegate.noArgStub(it) }
+      fun stub()
+          :
+          StubProvider<IntDelegate.Query> =
+          delegationContext.intScalar.stub()
 
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<IntDelegate.OptionalConfigQuery<A>> =
-          Grub("Int") { IntDelegate.optionalArgStub<A>(it) }
 
-      fun <A : ArgBuilder> configStub(): StubProvider<IntDelegate.ConfigurableQuery<A>> =
-          Grub("Int") { IntDelegate.argStub<A>(it) }
+      fun <A : ArgBuilder> optionalConfigStub()
+          :
+          StubProvider<IntDelegate.OptionalConfigQuery<A>> =
+          delegationContext.intScalar.optionalConfigStub()
 
-    }
-
-    object Float {
-
-      fun stub(): StubProvider<FloatDelegate.Query> = Grub("Float") { FloatDelegate.noArgStub(it) }
-
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<FloatDelegate.OptionalConfigQuery<A>> =
-          Grub("Float") { FloatDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgBuilder> configStub(): StubProvider<FloatDelegate.ConfigurableQuery<A>> =
-          Grub("Float") { FloatDelegate.argStub<A>(it) }
-
-    }
-
-    object Boolean {
-
-      fun stub(): StubProvider<BooleanDelegate.Query> = Grub("Boolean") { BooleanDelegate.noArgStub(it) }
-
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<BooleanDelegate.OptionalConfigQuery<A>> =
-          Grub("Boolean") { BooleanDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgBuilder> configStub(): StubProvider<BooleanDelegate.ConfigurableQuery<A>> =
-          Grub("Boolean") { BooleanDelegate.argStub<A>(it) }
-
-    }
-  }
-
-  object QScalarArray {
-    object String {
-
-      fun stub(): StubProvider<StringArrayDelegate.Query> = Grub("String", true) { StringArrayDelegate.noArgStub(it) }
-
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<StringArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("String", true) { StringArrayDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgBuilder> configStub(): StubProvider<StringArrayDelegate.ConfigurableQuery<A>> =
-          Grub("String", true) { StringArrayDelegate.argStub<A>(it) }
-
-    }
-
-    object Int {
-
-      fun stub(): StubProvider<IntArrayDelegate.Query> = Grub("Int", true) { IntArrayDelegate.noArgStub(it) }
-
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<IntArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("Int", true) { IntArrayDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgBuilder> configStub(): StubProvider<IntArrayDelegate.ConfigurableQuery<A>> =
-          Grub("Int", true) { IntArrayDelegate.argStub<A>(it) }
+      fun <A : ArgBuilder> configStub()
+          :
+          StubProvider<IntDelegate.ConfigurableQuery<A>> =
+          delegationContext.intScalar.configStub()
 
     }
 
     object Float {
 
-      fun stub(): StubProvider<FloatArrayDelegate.Query> = Grub("Float", true) { FloatArrayDelegate.noArgStub(it) }
+      fun stub()
+          :
+          StubProvider<FloatDelegate.Query> =
+          delegationContext.floatScalar.stub()
 
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<FloatArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("Float", true) { FloatArrayDelegate.optionalArgStub<A>(it) }
 
-      fun <A : ArgBuilder> configStub(): StubProvider<FloatArrayDelegate.ConfigurableQuery<A>> =
-          Grub("Float", true) { FloatArrayDelegate.argStub<A>(it) }
+      fun <A : ArgBuilder> optionalConfigStub()
+          :
+          StubProvider<FloatDelegate.OptionalConfigQuery<A>> =
+          delegationContext.floatScalar.optionalConfigStub()
+
+      fun <A : ArgBuilder> configStub()
+          :
+          StubProvider<FloatDelegate.ConfigurableQuery<A>> =
+          delegationContext.floatScalar.configStub()
 
     }
 
     object Boolean {
 
-      fun stub(): StubProvider<BooleanArrayDelegate.Query> = Grub("Boolean", true) { BooleanArrayDelegate.noArgStub(it) }
+      fun stub()
+          :
+          StubProvider<BooleanDelegate.Query> =
+          delegationContext.booleanScalar.stub()
 
-      fun <A : ArgBuilder> optionalConfigStub(): StubProvider<BooleanArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("Boolean", true) { BooleanArrayDelegate.optionalArgStub<A>(it) }
+      fun <A : ArgBuilder> optionalConfigStub()
+          :
+          StubProvider<BooleanDelegate.OptionalConfigQuery<A>> =
+          delegationContext.booleanScalar.optionalConfigStub()
 
-      fun <A : ArgBuilder> configStub(): StubProvider<BooleanArrayDelegate.ConfigurableQuery<A>> =
-          Grub("Boolean", true) { BooleanArrayDelegate.argStub<A>(it) }
+      fun <A : ArgBuilder> configStub()
+          :
+          StubProvider<BooleanDelegate.ConfigurableQuery<A>> =
+          delegationContext.booleanScalar.configStub()
 
+    }
+
+    object List {
+
+      object String {
+
+        fun stub()
+            :
+            StubProvider<StringArrayDelegate.Query> =
+            delegationContext.stringScalar.list.stub()
+
+        fun <A : ArgBuilder> optionalConfigStub()
+            :
+            StubProvider<StringArrayDelegate.OptionalConfigQuery<A>> =
+            delegationContext.stringScalar.list.optionalConfigStub()
+
+        fun <A : ArgBuilder> configStub()
+            :
+            StubProvider<StringArrayDelegate.ConfigurableQuery<A>> =
+            delegationContext.stringScalar.list.configStub()
+
+      }
+
+      object Int {
+
+        fun stub()
+            :
+            StubProvider<IntArrayDelegate.Query> =
+            delegationContext.intScalar.list.stub()
+
+        fun <A : ArgBuilder> optionalConfigStub()
+            :
+            StubProvider<IntArrayDelegate.OptionalConfigQuery<A>> =
+            delegationContext.intScalar.list.optionalConfigStub()
+
+        fun <A : ArgBuilder> configStub()
+            :
+            StubProvider<IntArrayDelegate.ConfigurableQuery<A>> =
+            delegationContext.intScalar.list.configStub()
+
+      }
+
+      object Float {
+
+        fun stub()
+            :
+            StubProvider<FloatArrayDelegate.Query> =
+            delegationContext.floatScalar.list.stub()
+
+        fun <A : ArgBuilder> optionalConfigStub()
+            :
+            StubProvider<FloatArrayDelegate.OptionalConfigQuery<A>> =
+            delegationContext.floatScalar.list.optionalConfigStub()
+
+        fun <A : ArgBuilder> configStub()
+            :
+            StubProvider<FloatArrayDelegate.ConfigurableQuery<A>> =
+            delegationContext.floatScalar.list.configStub()
+
+      }
+
+      object Boolean {
+
+        fun stub()
+            :
+            StubProvider<BooleanArrayDelegate.Query> =
+            delegationContext.booleanScalar.list.stub()
+
+        fun <A : ArgBuilder> optionalConfigStub()
+            :
+            StubProvider<BooleanArrayDelegate.OptionalConfigQuery<A>> =
+            delegationContext.booleanScalar.list.optionalConfigStub()
+
+        fun <A : ArgBuilder> configStub()
+            :
+            StubProvider<BooleanArrayDelegate.ConfigurableQuery<A>> =
+            delegationContext.booleanScalar.list.configStub()
+
+      }
     }
   }
 
   object QTypes {
 
-    inline fun <reified T : QType> stub(): StubProvider<TypeStub.Query<T>> =
-        Grub(T::class.graphQlName()) { TypeStub.noArgStub<T>(it) }
-
-    inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub(): StubProvider<TypeStub.OptionalConfigQuery<T, A>> =
-        Grub(T::class.graphQlName()) { TypeStub.optionalArgStub<T, A>(it) }
-
-    inline fun <reified T : QType, A : ArgBuilder> configStub(): StubProvider<TypeStub.ConfigurableQuery<T, A>> =
-        Grub(T::class.graphQlName()) { TypeStub.argStub<T, A>(it) }
-
-  }
-
-  object QTypeList {
-
     inline fun <reified T : QType> stub()
-        : StubProvider<TypeListStub.Query<T>> =
-        Grub(T::class.graphQlName(), true) { TypeListStub.noArgStub<T>(it) }
+        :
+        StubProvider<TypeStub.Query<T>> =
+        delegationContext.type.query(T::class)
 
     inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub()
-        : StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
-        Grub(T::class.graphQlName(), true) { TypeListStub.optionalArgStub<T, A>(it) }
+        :
+        StubProvider<TypeStub.OptionalConfigQuery<T, A>> =
+        delegationContext.type.optionalConfigStub(T::class)
 
     inline fun <reified T : QType, A : ArgBuilder> configStub()
-        : StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
-        Grub(T::class.graphQlName(), true) { TypeListStub.argStub<T, A>(it) }
+        :
+        StubProvider<TypeStub.ConfigurableQuery<T, A>> =
+        delegationContext.type.configStub(T::class)
 
+
+    object List {
+
+      inline fun <reified T : QType> stub()
+          :
+          StubProvider<TypeListStub.Query<T>> =
+          delegationContext.type.list.query(T::class)
+
+      inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub()
+          :
+          StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
+          delegationContext.type.list.optionalConfigStub(T::class)
+
+      inline fun <reified T : QType, A : ArgBuilder> configStub()
+          :
+          StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
+          delegationContext.type.list.configStub(T::class)
+    }
   }
 
   object QInterfaces {
 
-    inline fun <reified T> stub(): StubProvider<InterfaceStub.Query<T>>
-        where T : QType, T : QInterface =
-        Grub(T::class.graphQlName()) { InterfaceStub.noArgStub<T>(it) }
+    inline fun <reified T> stub()
+        :
+        StubProvider<InterfaceStub.Query<T>>
+        where T : QType,
+              T : QInterface =
+        delegationContext.iface.stub(T::class)
 
-    inline fun <reified T, A> optionalConfigStub(): StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
-        where T : QType, T : QInterface, A : ArgBuilder =
-        Grub(T::class.graphQlName()) { InterfaceStub.optionalArgStub<T, A>(it) }
+    inline fun <reified T, A> optionalConfigStub()
+        :
+        StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
+        where T : QType,
+              T : QInterface,
+              A : ArgBuilder =
+        delegationContext.iface.optionalConfigStub(T::class)
 
-    inline fun <reified T, A> configStub(): StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
-        where T : QType, T : QInterface, A : ArgBuilder =
-        Grub(T::class.graphQlName()) { InterfaceStub.argStub<T, A>(it) }
 
-  }
+    inline fun <reified T, A> configStub()
+        :
+        StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
+        where T : QType,
+              T : QInterface,
+              A : ArgBuilder =
+        delegationContext.iface.configStub(T::class)
 
-  object QInterfaceLists {
 
-    inline fun <reified T> stub(): StubProvider<InterfaceListStub.Query<T>>
-        where T : QType, T : QInterface =
-        Grub(T::class.graphQlName(), true) { InterfaceListStub.noArgStub<T>(it) }
+    object List {
 
-    inline fun <reified T, A> optionalConfigStub(): StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
-        where T : QType, T : QInterface, A : ArgBuilder =
-        Grub(T::class.graphQlName(), true) { InterfaceListStub.optionalArgStub<T, A>(it) }
+      inline fun <reified T> stub()
+          :
+          StubProvider<InterfaceListStub.Query<T>>
+          where T : QType,
+                T : QInterface =
+          delegationContext.iface.list.stub(T::class)
 
-    inline fun <reified T, A> configStub(): StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
-        where T : QType, T : QInterface, A : ArgBuilder =
-        Grub(T::class.graphQlName(), true) { InterfaceListStub.argStub<T, A>(it) }
+      inline fun <reified T, A> optionalConfigStub()
+          :
+          StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
+          where T : QType,
+                T : QInterface,
+                A : ArgBuilder =
+          delegationContext.iface.list.optionalConfigStub(T::class)
 
+      inline fun <reified T, A> configStub()
+          :
+          StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
+          where T : QType,
+                T : QInterface,
+                A : ArgBuilder =
+          delegationContext.iface.list.configStub(T::class)
+    }
   }
 
   object QEnum {
-    inline fun <reified T> stub(): StubProvider<EnumStub.Query<T>> where T : Enum<*>, T : QEnumType
-        = Grub(T::class.graphQlName()) { EnumStub.noArgStub(it, T::class) }
 
-    inline fun <reified T, A : ArgBuilder> optionalConfigStub(
-    ): StubProvider<EnumStub.OptionalConfigQuery<T, A>> where T : Enum<*>, T : QEnumType =
-        Grub(T::class.graphQlName()) { EnumStub.optionalArgStub<T, A>(it, T::class) }
-
-    inline fun <reified T, A : ArgBuilder> configStub(): StubProvider<EnumStub.ConfigurableQuery<T, A>>
+    inline fun <reified T> stub()
+        :
+        StubProvider<EnumStub.Query<T>>
         where T : Enum<*>,
-              T : QEnumType
-        = Grub(T::class.graphQlName()) { EnumStub.argStub<T, A>(it, T::class) }
+              T : QEnumType =
+        delegationContext.enum.stub(T::class)
 
-  }
+    inline fun <reified T, A : ArgBuilder> optionalConfigStub()
+        :
+        StubProvider<EnumStub.OptionalConfigQuery<T, A>>
+        where T : Enum<*>,
+              T : QEnumType =
+        delegationContext.enum.optionalConfigStub(T::class)
 
-  object QEnumLists {
 
-    inline fun <reified T> stub(): StubProvider<EnumListStub.Query<T>>
-        where T : Enum<*>, T : QEnumType =
-        Grub(T::class.graphQlName(), true) { EnumListStub.noArgStub(it, T::class) }
+    inline fun <reified T, A : ArgBuilder> configStub()
+        :
+        StubProvider<EnumStub.ConfigurableQuery<T, A>>
+        where T : Enum<*>,
+              T : QEnumType =
+        delegationContext.enum.configStub(T::class)
 
-    inline fun <reified T, A> optionalConfigStub(): StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
-        where T : Enum<*>, T : QEnumType, A : ArgBuilder =
-        Grub(T::class.graphQlName(), true) { EnumListStub.optionalArgStub<T, A>(it, T::class) }
 
-    inline fun <reified T, A> configStub(): StubProvider<EnumListStub.ConfigurableQuery<T, A>>
-        where T : Enum<*>, T : QEnumType, A : ArgBuilder =
-        Grub(T::class.graphQlName(), true) { EnumListStub.argStub<T, A>(it, T::class) }
+    object List {
+
+      inline fun <reified T> stub()
+          :
+          StubProvider<EnumListStub.Query<T>>
+          where T : Enum<*>,
+                T : QEnumType =
+          delegationContext.enum.list.stub(T::class)
+
+      inline fun <reified T, A> optionalConfigStub()
+          :
+          StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
+          where T : Enum<*>,
+                T : QEnumType,
+                A : ArgBuilder =
+          delegationContext.enum.list.optionalConfigStub(T::class)
+
+      inline fun <reified T, A> configStub()
+          :
+          StubProvider<EnumListStub.ConfigurableQuery<T, A>>
+          where T : Enum<*>,
+                T : QEnumType,
+                A : ArgBuilder =
+          delegationContext.enum.list.configStub(T::class)
+
+    }
 
   }
 
   object QCustomScalar {
 
-    inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarStub.Query<T>> =
-        Grub(T::class.graphQlName()) { CustomScalarStub.noArgStub<T>(it) }
+    inline fun <reified T : CustomScalar> stub()
+        :
+        StubProvider<CustomScalarStub.Query<T>> =
+        delegationContext.scalar.stub(T::class)
 
     inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
-        : StubProvider<CustomScalarStub.OptionalConfigQuery<T, A>> =
-        Grub(T::class.graphQlName()) { CustomScalarStub.optionalArgStub<T, A>(it) }
+        :
+        StubProvider<CustomScalarStub.OptionalConfigQuery<T, A>> =
+        delegationContext.scalar.optionalConfigStub(T::class)
 
-    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub():
+    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub()
+        :
         StubProvider<CustomScalarStub.ConfigurableQuery<T, A>> =
-        Grub(T::class.graphQlName()) { CustomScalarStub.argStub<T, A>(it) }
+        delegationContext.scalar.configStub(T::class)
 
-  }
 
-  object QCustomScalarList {
+    object List {
 
-    inline fun <reified T : CustomScalar> stub(): StubProvider<CustomScalarListStub.Query<T>> =
-        Grub(T::class.graphQlName(), true) { CustomScalarListStub.noArgStub<T>(it) }
+      inline fun <reified T : CustomScalar> stub()
+          :
+          StubProvider<CustomScalarListStub.Query<T>> =
+          delegationContext.scalar.list.stub(T::class)
 
-    inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
-        : StubProvider<CustomScalarListStub.OptionalConfigQuery<T, A>> =
-        Grub(T::class.graphQlName(), true) { CustomScalarListStub.optionalArgStub<T, A>(it) }
+      inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
+          :
+          StubProvider<CustomScalarListStub.OptionalConfigQuery<T, A>> =
+          delegationContext.scalar.list.optionalConfigStub(T::class)
 
-    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub():
-        StubProvider<CustomScalarListStub.ConfigurableQuery<T, A>> =
-        Grub(T::class.graphQlName(), true) { CustomScalarListStub.argStub<T, A>(it) }
-
+      inline fun <reified T : CustomScalar, A : ArgBuilder> configStub()
+          :
+          StubProvider<CustomScalarListStub.ConfigurableQuery<T, A>> =
+          delegationContext.scalar.list.configStub(T::class)
+    }
   }
 
   object QUnion {
-    fun <T : QUnionType> stub(union: T): StubProvider<UnionStub.Query<T>> =
-        Grub(union::class.graphQlName()) { UnionStub.noArgStub<T>(it, union) }
 
-    fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T
-    ): StubProvider<UnionStub.OptionalConfigQuery<T, A>> = Grub(union::class.graphQlName()) {
-      UnionStub.optionalArgStub<T, A>(it, union)
+    fun <T : QUnionType> stub(union: T)
+        :
+        StubProvider<UnionStub.Query<T>> =
+        delegationContext.union.stub(union)
+
+    fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T)
+        :
+        StubProvider<UnionStub.OptionalConfigQuery<T, A>> =
+        delegationContext.union.optionalConfigStub(union)
+
+
+    fun <T : QUnionType, A : ArgBuilder> configStub(union: T)
+        :
+        StubProvider<UnionStub.ConfigurableQuery<T, A>> =
+        delegationContext.union.configStub(union)
+
+    object List {
+
+      fun <T : QUnionType> stub(union: T)
+          :
+          StubProvider<UnionListStub.Query<T>> =
+          delegationContext.union.list.stub(union)
+
+      fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T)
+          :
+          StubProvider<UnionListStub.OptionalConfigQuery<T, A>> =
+          delegationContext.union.list.optionalConfigStub(union)
+
+      fun <T : QUnionType, A : ArgBuilder> configStub(union: T)
+          :
+          StubProvider<UnionListStub.ConfigurableQuery<T, A>> =
+          delegationContext.union.list.configStub(union)
+
     }
 
-    fun <T : QUnionType, A : ArgBuilder> configStub(union: T
-    ): StubProvider<UnionStub.ConfigurableQuery<T, A>> = Grub(union::class.graphQlName()) {
-      UnionStub.argStub<T, A>(it, union)
-    }
   }
-
-  object QUnionList {
-
-    fun <T : QUnionType> stub(union: T): StubProvider<UnionListStub.Query<T>> =
-        Grub(union::class.graphQlName(), true) { UnionListStub.noArgStub<T>(it, union) }
-
-    fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T
-    ): StubProvider<UnionListStub.OptionalConfigQuery<T, A>> = Grub(union::class.graphQlName(), true) {
-      UnionListStub.optionalArgStub<T, A>(it, union)
-    }
-
-    fun <T : QUnionType, A : ArgBuilder> configStub(union: T
-    ): StubProvider<UnionListStub.ConfigurableQuery<T, A>> = Grub(union::class.graphQlName(), true) {
-      UnionListStub.argStub<T, A>(it, union)
-    }
-
-  }
-
 }
 
-@Suppress("NOTHING_TO_INLINE") @PublishedApi internal inline fun <T : Any> KClass<T>.graphQlName() = "${this.simpleName}"

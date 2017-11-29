@@ -34,16 +34,16 @@ interface BooleanArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<Boolean
 
   companion object {
 
-    @PublishedApi internal fun noArgStub(
+    internal fun noArgStub(
         qproperty: GraphQlProperty
     ): BooleanArrayDelegate.Query = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+    internal fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): BooleanArrayDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> argStub(
+    internal fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): BooleanArrayDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -84,6 +84,9 @@ interface BooleanArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<Boolean
     ): BooleanArrayDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgBuilder?, scope: (BooleanArrayDelegate<ArgBuilder>.() -> Unit)?
     ) = BooleanArrayDelegateImpl<ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
@@ -108,13 +111,15 @@ interface BooleanArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<Boolean
 private class BooleanArrayDelegateImpl<out A : ArgBuilder>(
     private val qproperty: GraphQlProperty,
     private val argBuilder: A?
-) : BooleanArrayDelegate<A>  {
+) : BooleanArrayDelegate<A> {
 
   override var default: BooleanArray? = null
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BooleanArrayStub =
       BooleanArrayStub(qproperty, default, argBuilder.toMap()).bind(inst)
 
-  override fun config(scope: A.() -> Unit) { argBuilder?.scope() }
+  override fun config(scope: A.() -> Unit) {
+    argBuilder?.scope()
+  }
 }
 

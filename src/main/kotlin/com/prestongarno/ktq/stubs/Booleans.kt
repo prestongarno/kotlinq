@@ -28,22 +28,22 @@ import kotlin.reflect.KProperty
 
 interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
 
-  var default : Boolean
+  var default: Boolean
 
   fun config(scope: A.() -> Unit)
 
   companion object {
 
-    @PublishedApi internal fun noArgStub(
+    internal fun noArgStub(
         qproperty: GraphQlProperty
     ): BooleanDelegate.Query = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+    internal fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): BooleanDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> argStub(
+    internal fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): BooleanDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -84,6 +84,9 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): BooleanDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : BooleanDelegate.Query {
     override fun invoke(
         arguments: ArgBuilder?, scope: (BooleanDelegate<ArgBuilder>.() -> Unit)?

@@ -28,20 +28,20 @@ import com.prestongarno.ktq.hooks.NoArgConfig
 import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.properties.GraphQlProperty
 
-interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : DelegateProvider<List<T>> {
+interface TypeListStub<out T : QModel<U>, out U : QType, out A : ArgBuilder> : DelegateProvider<List<T>> {
 
   fun config(scope: A.() -> Unit)
 
   companion object {
-    @PublishedApi internal fun <U : QType> noArgStub(
+    internal fun <U : QType> noArgStub(
         qproperty: GraphQlProperty
     ): Query<U> = Query.create(qproperty)
 
-    @PublishedApi internal fun <U : QType, A : ArgBuilder> optionalArgStub(
+    internal fun <U : QType, A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<U, A> = OptionalConfigQuery.create(qproperty)
 
-    @PublishedApi internal fun <U : QType, A : ArgBuilder> argStub(
+    internal fun <U : QType, A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<U, A> = ConfigurableQuery.create(qproperty)
   }
@@ -50,7 +50,7 @@ interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : Deleg
     fun <T : QModel<U>> query(init: () -> T): NoArgConfig<TypeListStub<T, U, ArgBuilder>, List<T>>
 
     companion object {
-      @PublishedApi internal fun <U : QType> create(
+      internal fun <U : QType> create(
           qproperty: GraphQlProperty
       ): Query<U> = QueryImpl(qproperty)
     }
@@ -70,7 +70,7 @@ interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : Deleg
     fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<TypeListStub<T, U, A>, List<T>, A>
 
     companion object {
-      @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
+      internal fun <U : QType, A : ArgBuilder> create(
           qproperty: GraphQlProperty
       ): OptionalConfigQuery<U, A> = OptionalConfigQueryImpl(qproperty)
     }
@@ -91,7 +91,7 @@ interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : Deleg
     fun <T : QModel<U>> query(init: () -> T): ConfiguredQuery<TypeListStub<T, U, A>, A>
 
     companion object {
-      @PublishedApi internal fun <U : QType, A : ArgBuilder> create(
+      internal fun <U : QType, A : ArgBuilder> create(
           qproperty: GraphQlProperty
       ): ConfigurableQuery<U, A> = ConfigurableQueryImpl(qproperty)
     }

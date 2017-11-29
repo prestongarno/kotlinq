@@ -23,7 +23,6 @@ import com.prestongarno.ktq.QType
 
 /**
  * To support no arguments on optional query and restricting use of config { } block
- * TODO add this as supertype for single field interface stub also
  */
 interface FragmentStub<in I> where I : QType, I : QInterface {
   /**

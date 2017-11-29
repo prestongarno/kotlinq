@@ -47,7 +47,7 @@ internal object Http4k {
               requestBuilder.adapter.authorization
                   ?.let { request.header("Authorization", it.toString()) }
                   ?: request
-            }.query(requestBuilder.type.name.toLowerCase(), obj.toGraphql(false))
+            }.query(requestBuilder.type.name.toLowerCase(), obj.toGraphql())
     )
 
 

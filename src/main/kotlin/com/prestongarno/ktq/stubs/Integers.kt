@@ -34,16 +34,16 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
 
   companion object {
 
-    @PublishedApi internal fun noArgStub(
+    internal fun noArgStub(
         qproperty: GraphQlProperty
     ): IntDelegate.Query = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+    internal fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): IntDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> argStub(
+    internal fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): IntDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -84,6 +84,9 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
     ): IntDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : IntDelegate.Query {
     override fun invoke(
         arguments: ArgBuilder?, scope: (IntDelegate<ArgBuilder>.() -> Unit)?

@@ -26,7 +26,7 @@ import org.intellij.lang.annotations.Language
 import org.junit.Test
 
 object Data : QType {
-  val numberEnums by QEnumLists.stub<Kind>()
+  val numberEnums by QEnum.List.stub<Kind>()
 }
 
 enum class Kind(val num: Int) : QEnumType {
@@ -55,7 +55,7 @@ class BasicEnumLists {
     }
     query::numbers.returnType
         .arguments.firstOrNull()?.type?.classifier eq Kind::class
-    query.toGraphql(false) eq "{numberEnums}"
+    query.toGraphql() eq "{numberEnums}"
   }
 
   @Test fun `enum list from response is valid`() {
@@ -63,7 +63,7 @@ class BasicEnumLists {
     val query = object : QModel<Data>(Data) {
       val numbers by model.numberEnums
     }
-    query.toGraphql(false) eq "{numberEnums}"
+    query.toGraphql() eq "{numberEnums}"
 
     @Language("JSON") val response = """
       {

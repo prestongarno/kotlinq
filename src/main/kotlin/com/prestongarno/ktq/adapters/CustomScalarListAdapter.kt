@@ -26,6 +26,8 @@ import com.prestongarno.ktq.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.ktq.adapters.custom.QScalarListMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import kotlin.reflect.KProperty
 
 internal fun <E : CustomScalar, P : QScalarListMapper<Q>, Q, A : ArgBuilder> newCustomScalarListField(
@@ -56,11 +58,7 @@ private data class CustomScalarListStubImpl<out Q>(
 ) : QField<List<Q>>,
     Adapter {
 
-  override fun toRawPayload(): String = qproperty.graphqlName +
-      if (args.isNotEmpty()) this.args.entries
-          .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
-            "$key: ${formatAs(value)}"
-          } else ""
+  override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<Q> = adapter.value
 

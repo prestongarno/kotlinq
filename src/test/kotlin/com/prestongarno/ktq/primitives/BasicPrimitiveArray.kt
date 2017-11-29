@@ -29,16 +29,16 @@ import org.junit.Test
 object AnonymousClassroom : QType {
 
   val studentNames: StringArrayDelegate.Query
-      by QScalarArray.String.stub()
+      by QScalar.List.String.stub()
 
   val studentAges: IntArrayDelegate.Query
-      by QScalarArray.Int.stub()
+      by QScalar.List.Int.stub()
 
   val studentGpa: FloatArrayDelegate.Query
-      by QScalarArray.Float.stub()
+      by QScalar.List.Float.stub()
 
   val studentPassing: BooleanArrayDelegate.Query
-      by QScalarArray.Boolean.stub()
+      by QScalar.List.Boolean.stub()
 }
 
 class BasicPrimitiveArray {
@@ -50,7 +50,7 @@ class BasicPrimitiveArray {
     }
 
     query::names.returnType.classifier eq Array<String>::class
-    query.toGraphql(false) eq "{studentNames}"
+    query.toGraphql() eq "{studentNames}"
   }
 
   @Test fun `integer array is possible`() {
@@ -59,7 +59,7 @@ class BasicPrimitiveArray {
       val ages by model.studentAges
     }
     query::ages.returnType.classifier eq IntArray::class
-    query.toGraphql(false) eq "{studentAges}"
+    query.toGraphql() eq "{studentAges}"
   }
 
   @Test fun `float array is possible`() {
@@ -68,7 +68,7 @@ class BasicPrimitiveArray {
       val gpas by model.studentGpa
     }
     query::gpas.returnType.classifier eq FloatArray::class
-    query.toGraphql(false) eq "{studentGpa}"
+    query.toGraphql() eq "{studentGpa}"
   }
 
   @Test fun `boolean array is possible`() {
@@ -76,7 +76,7 @@ class BasicPrimitiveArray {
       val passing by model.studentPassing
     }
     query::passing.returnType.classifier eq BooleanArray::class
-    query.toGraphql(false) eq "{studentPassing}"
+    query.toGraphql() eq "{studentPassing}"
   }
 
   @Test fun `arrays of all types with empty invocation blocks is possible`() {
@@ -93,7 +93,7 @@ class BasicPrimitiveArray {
 
     }
 
-    query.toGraphql(false) eq "{studentNames,studentAges,studentGpa,studentPassing}"
+    query.toGraphql() eq "{studentNames,studentAges,studentGpa,studentPassing}"
   }
 
   @Test fun `arrays of all types with dynamic arguments is possible`() {
@@ -120,7 +120,7 @@ class BasicPrimitiveArray {
 
     }
 
-    query.toGraphql(false) eq
+    query.toGraphql() eq
         """{studentNames(Hello: \"World\"),studentAges(NumberArgument: 9000),""" +
           """studentGpa(BooleanArgument: true),studentPassing(FloatArgument: 5.005f)}"""
   }

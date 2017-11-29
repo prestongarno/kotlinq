@@ -27,6 +27,8 @@ import com.prestongarno.ktq.stubs.UnionListStub
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import kotlin.reflect.KProperty
 
 internal fun <T : QUnionType, A : ArgBuilder> newUnionListStub(
@@ -96,15 +98,14 @@ private class UnionListStubImpl(
     } else false
   }
 
-  override fun toRawPayload(): String = qproperty.graphqlName +
-      (if (args.isEmpty()) "" else args.entries.joinToString(
-          prefix = "(", postfix = ")", separator = ","
-      ) { (key, value) -> "$key: ${formatAs(value)}" }) +
-      fragments.joinToString(prefix = "{__typename,", postfix = "}") {
-        it.model.run {
-          "... on " + graphqlType + toGraphql(false)
-        }
-      }
+  override fun toRawPayload(): String =
+      qproperty.graphqlName +
+          args.stringify() +
+          fragments.joinToString(prefix = "{__typename,", postfix = "}") {
+            it.model.run {
+              "... on " + graphqlType + toGraphql()
+            }
+          }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>) = value
 

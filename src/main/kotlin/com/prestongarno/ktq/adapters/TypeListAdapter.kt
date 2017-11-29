@@ -25,6 +25,8 @@ import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.stubs.TypeListStub
 import kotlin.reflect.KProperty
 
@@ -56,11 +58,8 @@ private data class TypeListStubImpl<P : QModel<*>>(
 
   override val value: QModel<*> by lazy { init() }
 
-  override fun toRawPayload(): String = qproperty.graphqlName +
-      (if (args.isNotEmpty()) args.entries
-          .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
-            "$key: ${formatAs(value)}"
-          } else "") + value.toGraphql(false)
+  override fun toRawPayload(): String =
+      qproperty.graphqlName + args.stringify() + value.toGraphql()
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results
 

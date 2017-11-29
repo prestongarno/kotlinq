@@ -78,7 +78,7 @@ class ReceiverApiTestStructure {
       }
     }
 
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo(
             "{getRandomConcept{__typename, ... on Persistence{name,type}, ... on Timber{name,type}}}")
 

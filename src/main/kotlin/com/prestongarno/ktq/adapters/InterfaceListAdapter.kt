@@ -25,6 +25,8 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
@@ -94,12 +96,9 @@ private data class InterfaceListField<out I>(
   }
 
   override fun toRawPayload(): String {
-    return qproperty.graphqlName + (if (args.isEmpty()) "" else args.entries.joinToString(
-        prefix = "(", postfix = ")") { (key, value) ->
-      "$key: " + formatAs(value)
-    }) +
+    return qproperty.graphqlName + args.stringify() +
         fragments.joinToString(prefix = "{__typename,", postfix = "}") {
-          "... on " + it.model.graphqlType + it.model.toGraphql(false)
+          "... on " + it.model.graphqlType + it.model.toGraphql()
         }
   }
 

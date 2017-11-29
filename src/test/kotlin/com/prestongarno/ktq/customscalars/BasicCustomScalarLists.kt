@@ -21,11 +21,12 @@ import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.adapters.custom.StringScalarListMapper
+import com.prestongarno.ktq.hooks.StubProvider
 import com.prestongarno.ktq.primitives.eq
 import org.junit.Test
 
 object ResourceBundle : QType {
-  val urls by QSchemaType.QCustomScalarList.stub<URL>()
+  val urls by QSchemaType.QCustomScalar.List.stub<URL>()
 }
 
 class BasicCustomScalarLists {
@@ -37,6 +38,6 @@ class BasicCustomScalarLists {
     }
     query::urls.returnType.arguments
         .firstOrNull()?.type?.classifier eq String::class
-    query.toGraphql(false) eq "{urls}"
+    query.toGraphql() eq "{urls}"
   }
 }

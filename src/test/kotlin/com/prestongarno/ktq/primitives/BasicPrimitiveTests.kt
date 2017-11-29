@@ -52,7 +52,7 @@ class BasicPrimitiveTests {
     }
     assertThat(query::name.returnType.classifier)
         .isEqualTo(String::class)
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{name}")
   }
 
@@ -62,7 +62,7 @@ class BasicPrimitiveTests {
     }
     assertThat(query::age.returnType.classifier)
         .isEqualTo(Int::class)
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{age}")
   }
 
@@ -72,7 +72,7 @@ class BasicPrimitiveTests {
     }
     assertThat(query::gpa.returnType.classifier)
         .isEqualTo(Float::class)
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{gpa}")
   }
 
@@ -82,7 +82,7 @@ class BasicPrimitiveTests {
     }
     assertThat(query::gradated.returnType.classifier)
         .isEqualTo(Boolean::class)
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{hasHighSchoolDiploma}")
   }
 
@@ -116,7 +116,7 @@ class BasicPrimitiveTests {
       }
     }
 
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{name,age,gpa,hasHighSchoolDiploma}")
   }
 
@@ -141,7 +141,7 @@ class BasicPrimitiveTests {
       }
     }
 
-    query.toGraphql(false) eq "{name,age,gpa,hasHighSchoolDiploma}"
+    query.toGraphql() eq "{name,age,gpa,hasHighSchoolDiploma}"
 
     query.name   eq   "Preston Garno"
     query.age    eq   22
@@ -170,7 +170,7 @@ class BasicPrimitiveTests {
       }
     }
 
-    query.toGraphql(false) eq
+    query.toGraphql() eq
         """{name(Hello: \"World\"),age(Number: 69),gpa(Boolean: false)""" +
             """,hasHighSchoolDiploma(floatArgument: 4.0000067f)}"""
   }
@@ -193,8 +193,8 @@ class BasicPrimitiveTests {
       val name by delegateStub
     }
 
-    query.toGraphql(false) eq "{name(Hello: \\\"World\\\")}"
-    query2.toGraphql(false) eq query.toGraphql(false)
+    query.toGraphql() eq "{name(Hello: \\\"World\\\")}"
+    query2.toGraphql() eq query.toGraphql()
 
     delegateStub.default = null
     query.name eq "First Query Expected Default"

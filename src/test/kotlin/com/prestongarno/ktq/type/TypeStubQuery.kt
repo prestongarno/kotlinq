@@ -92,7 +92,7 @@ class TypeStubQueryable {
     val query = object : QModel<Order>(Order) {
       val personWhoPlacedTheOrder by model.owner.query(::Me)
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{owner{name}}")
   }
 
@@ -102,7 +102,7 @@ class TypeStubQueryable {
         config { }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{owner{name}}")
   }
 
@@ -112,7 +112,7 @@ class TypeStubQueryable {
         config { "Hello" with "World" }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("""{owner(Hello: \"World\"){name}}""")
   }
 
@@ -134,7 +134,7 @@ class TypeStubQueryable {
         }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("""{owner(Hello: \"World\",Foo: 1337,Bar: false){name}}""")
   }
 
@@ -142,7 +142,7 @@ class TypeStubQueryable {
     val query = object : QModel<Order>(Order) {
       val address by model.ownerAddress.query(::DefaultAddress)
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{ownerAddress{line1}}")
   }
 
@@ -154,7 +154,7 @@ class TypeStubQueryable {
         }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("{ownerAddress(addressType: WORK){line1}}")
   }
 
@@ -167,7 +167,7 @@ class TypeStubQueryable {
         }
       }
     }
-    assertThat(query.toGraphql(false))
+    assertThat(query.toGraphql())
         .isEqualTo("""{ownerAddress(addressType: WORK,Hello: \"GraphQL\"){line1}}""")
   }
 
@@ -190,7 +190,7 @@ class TypeStubQueryable {
           Order.DestinationArgs(ContactAddressType.HOME, false)
       )
     }
-    assertThat(query.toGraphql(false)).isEqualTo(
+    assertThat(query.toGraphql()).isEqualTo(
         "{destination(addressType: HOME,canLeaveAtDoor: false){line1}}"
     )
   }
@@ -202,7 +202,7 @@ class TypeStubQueryable {
         config { unrelatedMagicString = "DSLs are fucking unbelievable" }
       }
     }
-    assertThat(query.toGraphql(false)).isEqualTo(
+    assertThat(query.toGraphql()).isEqualTo(
         """{destination(addressType: HOME,canLeaveAtDoor: false,unrelatedMagicString: \"DSLs are fucking unbelievable\"){line1}}"""
     )
   }
@@ -214,7 +214,7 @@ class TypeStubQueryable {
         config { "expletive" with "censored" }
       }
     }
-    assertThat(query.toGraphql(false)).isEqualTo(
+    assertThat(query.toGraphql()).isEqualTo(
         """{destination(addressType: HOME,canLeaveAtDoor: false,expletive: \"censored\"){line1}}"""
     )
   }

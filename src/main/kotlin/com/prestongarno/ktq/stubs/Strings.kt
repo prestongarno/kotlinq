@@ -28,22 +28,22 @@ import kotlin.reflect.KProperty
 
 interface StringDelegate<out A : ArgBuilder> : ScalarDelegate<StringStub> {
 
-  var default : String?
+  var default: String?
 
   fun config(scope: A.() -> Unit)
 
   companion object {
 
-    @PublishedApi internal fun noArgStub(
+    internal fun noArgStub(
         qproperty: GraphQlProperty
     ): StringDelegate.Query = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+    internal fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): StringDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> argStub(
+    internal fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): StringDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -84,6 +84,9 @@ interface StringDelegate<out A : ArgBuilder> : ScalarDelegate<StringStub> {
     ): StringDelegate<A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl(val qproperty: GraphQlProperty) : StringDelegate.Query {
     override fun invoke(arguments: ArgBuilder?, scope: (StringDelegate<ArgBuilder>.() -> Unit)?
     ) = StringDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)

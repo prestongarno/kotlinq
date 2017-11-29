@@ -25,6 +25,8 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.stubs.TypeStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.ValueDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import kotlin.reflect.KProperty
 
 internal class TypeStubAdapter<out T : QModel<U>, out U : QType, out A : ArgBuilder>(
@@ -62,11 +64,7 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     }.isEmpty() && value.resolved
   }
 
-  override fun toRawPayload(): String = qproperty.graphqlName +
-      (if (args.isNotEmpty())
-        (args.entries.joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
-          "$key: ${formatAs(value)}"
-        }) else "") +
-      value.toGraphql(false)
+  override fun toRawPayload(): String =
+      qproperty.graphqlName + args.stringify() + value.toGraphql()
 
 }

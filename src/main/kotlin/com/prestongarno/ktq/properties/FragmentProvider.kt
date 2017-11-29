@@ -24,24 +24,39 @@ import com.prestongarno.ktq.hooks.Fragment
 /**
  * This is simply a hook into the generated API interface to
  * be able to call a 'SomeUnionObjectType.() -> Unit' on the correct object
- *
- * I still have no idea how this works */
+ * and get the fragments from the context for the DSL
+ */
 class FragmentProvider {
 
-  private val collector = mutableListOf<Fragment>()
+  private var collector: MutableList<Fragment>? = null
 
-  @Synchronized operator fun <I: QUnionType> invoke(
+  /**
+   * This is used for unions to invoke the dsl block passed from a union model.
+   * Synchronized to handle state of [FragmentProvider.collector] during execution
+   * of the code block (generated union fragment methods should normally add to collector)
+   * @param target the target Union schema definition
+   * @param dispatch the DSL code block to execute
+   * @param callback a way for the fragments to be fetched (normally just call [FragmentProvider.reset] in closure)
+   */
+  @Synchronized operator fun <I : QUnionType> invoke(
       target: I,
       dispatch: I.() -> Unit,
       callback: FragmentProvider.() -> Unit
   ) {
-      dispatch(target)
-      callback(this)
+    collector = mutableListOf()
+    dispatch(target)
+    callback(this)
+    collector = null
   }
 
-  internal fun reset(): Set<Fragment> = collector.toSet().also { collector.clear() }
-
   /**
-   * MUST only be called from a context of this.invoke! (indirectly, ofc...) */
-  internal fun addFragment(init: Fragment) { collector.add(init) }
+   * Reset the state of this instance. Call this from the
+   * 3rd parameter in this context from [FragmentProvider.invoke]
+   */
+  internal fun reset(): Set<Fragment>
+      = collector?.toSet()?.also { collector = null } ?: emptySet()
+
+  internal fun addFragment(init: Fragment) {
+    collector?.add(init)
+  }
 }

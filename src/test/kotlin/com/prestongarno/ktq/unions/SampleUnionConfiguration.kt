@@ -31,7 +31,7 @@ object Thing : QUnionType by QUnionType.create() {
 }
 
 object Hamburger : QType {
-  val ingredients by QScalarArray.String.stub()
+  val ingredients by QScalar.List.String.stub()
 }
 
 object Car : QType {
@@ -42,7 +42,7 @@ object Car : QType {
 object Query : QType {
   val thing by QUnion.stub(Thing)
 
-  val things by QUnionList.stub(Thing)
+  val things by QUnion.List.stub(Thing)
 }
 
 class SampleUnionConfiguration {
@@ -67,7 +67,7 @@ class SampleUnionConfiguration {
       }
 
     }
-    query.toGraphql(false) eq "{thing{__typename,... on Car{make,carModel}, ... on Hamburger{ingredients}}}"
+    query.toGraphql() eq "{thing{__typename,... on Car{make,carModel}, ... on Hamburger{ingredients}}}"
   }
 
   @Test fun `union list field and fragments is possible`() {
@@ -82,6 +82,6 @@ class SampleUnionConfiguration {
       }
 
     }
-    query.toGraphql(false) eq "{things{__typename,... on Car{make,carModel}, ... on Hamburger{ingredients}}}"
+    query.toGraphql() eq "{things{__typename,... on Car{make,carModel}, ... on Hamburger{ingredients}}}"
   }
 }

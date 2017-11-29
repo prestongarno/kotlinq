@@ -23,6 +23,8 @@ import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.internal.ValueDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -112,11 +114,6 @@ private data class EnumFieldImpl<T>(
   }
 
   override fun toRawPayload(): String {
-    return qproperty.graphqlName +
-        if (args.isNotEmpty())
-          args.entries.joinToString(",", "(", ")") { (key, value) ->
-            "$key: ${formatAs(value)}"
-          }
-        else ""
+    return qproperty.graphqlName + args.stringify()
   }
 }

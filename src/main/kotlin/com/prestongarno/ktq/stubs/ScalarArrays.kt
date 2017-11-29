@@ -17,17 +17,15 @@
 
 package com.prestongarno.ktq.stubs
 
-import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.Adapter
-import com.prestongarno.ktq.adapters.bind
-import com.prestongarno.ktq.adapters.formatAs
+import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.CollectionDelegate
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface ScalarArrayDelegate<out D: PrimitiveArrayStub> : SchemaStub {
+interface ScalarArrayDelegate<out D : PrimitiveArrayStub> : SchemaStub {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
 }
 
@@ -85,7 +83,7 @@ class IntArrayStub(
   var value: IntArray? = null
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): IntArray {
-    return value?: default ?: throw NullPointerException(
+    return value ?: default ?: throw NullPointerException(
         "Graphql qproperty ${this.qproperty.graphqlName} was null (kotlin qproperty $property)")
   }
 
@@ -100,7 +98,7 @@ class IntArrayStub(
         secondary[0] = it
         resolved = true
         value = secondary
-      }?: if (default != null) {
+      } ?: if (default != null) {
         resolved = true
         value = default
       }
@@ -119,7 +117,7 @@ class FloatArrayStub(
   var value: FloatArray? = null
 
   operator fun getValue(inst: QModel<*>, property: KProperty<*>): FloatArray {
-    return value?: default ?: throw NullPointerException(
+    return value ?: default ?: throw NullPointerException(
         "Graphql property ${this.qproperty.graphqlName} was null (kotlin property $property)")
   }
 
@@ -134,7 +132,7 @@ class FloatArrayStub(
         secondary[0] = it
         resolved = true
         value = secondary
-      }?: if (default != null) {
+      } ?: if (default != null) {
         resolved = true
         value = default
       }

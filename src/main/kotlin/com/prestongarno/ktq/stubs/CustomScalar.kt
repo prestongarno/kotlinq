@@ -36,15 +36,15 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgBuilder> : DelegatePr
 
   companion object {
 
-    @PublishedApi internal fun <T : CustomScalar> noArgStub(
+    internal fun <T : CustomScalar> noArgStub(
         qproperty: GraphQlProperty
     ): Query<T> = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <T : CustomScalar, A : ArgBuilder> optionalArgStub(
+    internal fun <T : CustomScalar, A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<T, A> = OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <T : CustomScalar, A : ArgBuilder> argStub(
+    internal fun <T : CustomScalar, A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<T, A> = ConfigurableQueryImpl(qproperty)
 
@@ -56,7 +56,7 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgBuilder> : DelegatePr
   }
 
   interface OptionalConfigQuery<T : CustomScalar, in A : ArgBuilder> : SchemaStub {
-    fun <U: QScalarMapper<V>, V> map(
+    fun <U : QScalarMapper<V>, V> map(
         adapter: U
     ): OptionalConfiguration<CustomScalarStub<T, V, ArgBuilder>, V, A>
   }
@@ -67,6 +67,9 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgBuilder> : DelegatePr
     ): ConfiguredQuery<CustomScalarStub<T, V, ArgBuilder>, A>
   }
 
+  /*********************************************************************************
+   * Private default implementations
+   */
   private class QueryImpl<T : CustomScalar>(val qproperty: GraphQlProperty) : Query<T> {
 
     override fun <U : QScalarMapper<V>, V> map(adapter: U): NoArgConfig<CustomScalarStub<T, V, ArgBuilder>, V> =

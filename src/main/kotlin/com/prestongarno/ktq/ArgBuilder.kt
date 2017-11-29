@@ -25,7 +25,9 @@ import kotlin.reflect.KProperty
  * while properties are GraphQL optional arguments
  */
 open class ArgBuilder {
-  protected val arguments = PropertyMapper()
+
+  protected
+  val arguments = PropertyMapper()
 
   infix fun String.with(value: Any) {
     arguments.put(this, value)
@@ -38,23 +40,25 @@ open class ArgBuilder {
 
 class PropertyMapper {
 
-  private val values = mutableMapOf<String, Any?>()
+  private
+  val values = mutableMapOf<String, Any?>()
 
+  @Suppress("UNCHECKED_CAST")
   operator fun <T> getValue(inst: Any, property: KProperty<*>): T? =
-      values[property.name]?.let {
-        @Suppress("UNCHECKED_CAST")
-        it as? T ?: throw NullPointerException("Property '${property.name} was 'null'")
-      }
+      values[property.name] as? T
+          ?: throw NullPointerException("Property '${property.name} was 'null'")
 
   operator fun <T> setValue(inst: Any, property: KProperty<*>, value: T) {
     values[property.name] = value
   }
 
-  internal operator fun invoke(): Map<String, Any> = values.mapNotNull { (key, value) ->
+  internal
+  operator fun invoke(): Map<String, Any> = values.mapNotNull { (key, value) ->
     value?.let { key to it }
   }.toMap()
 
-  internal fun put(key: String, value: Any) {
+  internal
+  fun put(key: String, value: Any) {
     values[key] = value
   }
 }

@@ -27,6 +27,8 @@ import com.prestongarno.ktq.stubs.UnionStub
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import kotlin.reflect.KProperty
 
 fun <T : QUnionType, A : ArgBuilder> newUnionField(
@@ -79,12 +81,10 @@ private class UnionAdapterImpl<T : QUnionType, out A : ArgBuilder>(
   }
 
   override fun toRawPayload(): String = qproperty.graphqlName +
-      (if (args.isEmpty()) "" else args.entries.joinToString(
-          prefix = "(", postfix = ")", separator = ","
-      ) { (key, value) -> "$key: ${formatAs(value)}" }) +
+      args.stringify() +
       fragments.joinToString(prefix = "{__typename,", postfix = "}") {
         it.model.run {
-          "... on " + graphqlType + toGraphql(false)
+          "... on " + graphqlType + toGraphql()
         }
       }
 

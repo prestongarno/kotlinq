@@ -17,6 +17,10 @@
 
 package com.prestongarno.ktq.properties
 
+/**
+ * Isn't really used for anything
+ * TODO maybe in the future when making a cache
+ */
 enum class PropertyType {
   INT,
   BOOLEAN,
