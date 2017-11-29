@@ -23,18 +23,22 @@ import com.prestongarno.ktq.SchemaStub
 import kotlin.reflect.KProperty
 
 interface StubProvider<out T : SchemaStub> {
-  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): StubLoader<T>
+
+  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<T>
 
   companion object {
-    val delegationContext: DelegationContext = TODO()
+
+    internal
+    @PublishedApi val delegationContext: DelegationContext = DefaultDelegationContext()
   }
 }
 
-interface StubLoader<out T : SchemaStub> {
+
+interface Stub<out T : SchemaStub> {
   operator fun getValue(inst: QSchemaType, property: KProperty<*>): T
 }
 
-private class StubLoaderImpl<out T : SchemaStub>(val value: T) : StubLoader<T> {
+private class StubLoaderImpl<out T : SchemaStub>(val value: T) : Stub<T> {
   override operator fun getValue(inst: QSchemaType, property: KProperty<*>): T = value
 }
 
@@ -52,12 +56,12 @@ private class StubLoaderImpl<out T : SchemaStub>(val value: T) : StubLoader<T> {
  * fragment `getValue` for the schemastub it simply invokes the function with the prop of the graphqlName that it's
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
-@PublishedApi internal class Grub<out T : SchemaStub>(
+internal class Grub<out T : SchemaStub>(
     private val typeName: String,
     private val isList: Boolean = false,
     private val toInit: (property: GraphQlProperty) -> T
 ) : StubProvider<T> {
 
-  override operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): StubLoader<T> =
+  override operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<T> =
       StubLoaderImpl(toInit(GraphQlProperty.from(property, typeName, isList, property.name)))
 }

@@ -28,7 +28,7 @@ import com.prestongarno.ktq.hooks.NoArgConfig
 import com.prestongarno.ktq.hooks.OptionalConfiguration
 import com.prestongarno.ktq.properties.GraphQlProperty
 
-interface TypeListStub<out T : QModel<U>, U : QType, out A : ArgBuilder> : DelegateProvider<List<T>> {
+interface TypeListStub<out T : QModel<U>, out U : QType, out A : ArgBuilder> : DelegateProvider<List<T>> {
 
   fun config(scope: A.() -> Unit)
 

@@ -27,9 +27,9 @@ import org.junit.Test
 
 object Team : QType {
 
-  val members by QTypeList.stub<Person>()
+  val members by QTypes.List.stub<Person>()
 
-  val configMembers by QTypeList.configStub<Person, ConfigMembersArgs>()
+  val configMembers by QTypes.List.configStub<Person, ConfigMembersArgs>()
 
   class ConfigMembersArgs(limit: Int) : ArgBuilder() {
 

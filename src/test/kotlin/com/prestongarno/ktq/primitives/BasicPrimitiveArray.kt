@@ -29,16 +29,16 @@ import org.junit.Test
 object AnonymousClassroom : QType {
 
   val studentNames: StringArrayDelegate.Query
-      by QScalarArray.String.stub()
+      by QScalar.List.String.stub()
 
   val studentAges: IntArrayDelegate.Query
-      by QScalarArray.Int.stub()
+      by QScalar.List.Int.stub()
 
   val studentGpa: FloatArrayDelegate.Query
-      by QScalarArray.Float.stub()
+      by QScalar.List.Float.stub()
 
   val studentPassing: BooleanArrayDelegate.Query
-      by QScalarArray.Boolean.stub()
+      by QScalar.List.Boolean.stub()
 }
 
 class BasicPrimitiveArray {

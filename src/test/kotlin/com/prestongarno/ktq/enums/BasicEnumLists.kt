@@ -26,7 +26,7 @@ import org.intellij.lang.annotations.Language
 import org.junit.Test
 
 object Data : QType {
-  val numberEnums by QEnumLists.stub<Kind>()
+  val numberEnums by QEnum.List.stub<Kind>()
 }
 
 enum class Kind(val num: Int) : QEnumType {

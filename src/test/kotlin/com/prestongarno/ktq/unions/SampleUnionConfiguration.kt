@@ -31,7 +31,7 @@ object Thing : QUnionType by QUnionType.create() {
 }
 
 object Hamburger : QType {
-  val ingredients by QScalarArray.String.stub()
+  val ingredients by QScalar.List.String.stub()
 }
 
 object Car : QType {
@@ -42,7 +42,7 @@ object Car : QType {
 object Query : QType {
   val thing by QUnion.stub(Thing)
 
-  val things by QUnionList.stub(Thing)
+  val things by QUnion.List.stub(Thing)
 }
 
 class SampleUnionConfiguration {

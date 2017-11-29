@@ -17,6 +17,7 @@
 
 package com.prestongarno.ktq.interfaces
 
+import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType.*
@@ -34,7 +35,7 @@ object Concrete : Thing {
 }
 
 object Get : QType {
-  val getThings by QInterfaceLists.stub<Thing>()
+  val getThings by QInterfaces.stub<Thing>()
 }
 
 class BasicInterfaceLists {
@@ -52,7 +53,7 @@ class BasicInterfaceLists {
     }
 
     query::things.returnType.arguments
-        .firstOrNull()?.type?.classifier eq QModel::class
-    query.toGraphql(false) eq "{getThings{__typename,... on Concrete{name}}}"
+        .firstOrNull()?.type?.classifier eq Thing::class
+    query.toGraphql(false) eq "{getThings{__typename, ... on Concrete{name}}}"
   }
 }
