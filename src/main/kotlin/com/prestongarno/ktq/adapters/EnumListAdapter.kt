@@ -18,10 +18,11 @@
 package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QModel
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.stubs.EnumListStub
 import kotlin.reflect.KClass
@@ -73,10 +74,7 @@ private data class EnumListAdapterImpl<T>(
 
   private val value = mutableListOf<T>()
 
-  override fun toRawPayload(): String = qproperty.graphqlName +
-      if (args.isEmpty()) "" else args.entries.joinToString(
-          prefix = "(", postfix = ")", separator = ","
-      ) { "${it.key}: ${formatAs(it)}" }
+  override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 
   override fun accept(result: Any?): Boolean {
     if (result is JsonArray<*>)

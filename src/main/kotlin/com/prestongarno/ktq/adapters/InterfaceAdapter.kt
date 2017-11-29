@@ -26,6 +26,8 @@ import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
@@ -79,10 +81,7 @@ private class InterfaceDelegateImpl<I : QType>(
   }
 
   override fun toRawPayload(): String =
-      qproperty.graphqlName + (if (args.isEmpty()) "" else args.entries.joinToString(
-          prefix = "(", postfix = ")") { (key, value) ->
-        "$key: " + formatAs(value)
-      }) + fragments.joinToString(
+      qproperty.graphqlName + args.stringify() + fragments.joinToString(
           prefix = "{__typename, ",
           postfix = "}",
           transform = Fragment::toString)

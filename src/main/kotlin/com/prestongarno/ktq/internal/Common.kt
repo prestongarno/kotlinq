@@ -17,11 +17,12 @@
 
 package com.prestongarno.ktq.internal
 
+import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.Adapter
-import com.prestongarno.ktq.adapters.formatAs
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.hooks.ModelProvider
+import com.prestongarno.ktq.input.QInput
 
 
 @Suppress("UNCHECKED_CAST")
@@ -32,6 +33,32 @@ private object Block {
 }
 
 internal fun <T : Any?> empty(): T.() -> Unit = Block.emptyBlock()
+
+internal fun Map<String, Any>.stringify(): String = if (entries.isEmpty()) "" else
+  entries.joinToString(prefix = "(", postfix = ")", separator = ",") { (k, v) -> "$k: ${formatAs(v)}" }
+
+internal
+fun ArgBuilder?.stringify(): String = this?.let {
+  "(" + it.getArguments()().entries.joinToString(separator = ",") { (k, v) ->
+    "$k: ${formatAs(v)}"
+  } + ")"
+} ?: ""
+
+internal
+fun formatAs(value: Any): String {
+  return when (value) {
+    is Int, is Boolean -> "$value"
+    is Float -> "${value}f"
+    is String -> "\\\"$value\\\""
+    is QInput -> value.toPayloadString()
+    is Enum<*> -> value.name
+    is List<*> -> value
+        .map { formatAs(it ?: "") }
+        .filter { it.isNotBlank() }
+        .joinToString(",", "[ ", " ]")
+    else -> throw UnsupportedOperationException("Unsupported format for type: ${value::class}")
+  }
+}
 
 fun String.indent(times: Int = 1): String =
     replace("^".toRegex(), Jsonify.INDENT.repeat(times))
@@ -67,4 +94,5 @@ internal fun Adapter.prettyPrinted(): String = qproperty.graphqlName +
 
 internal object Jsonify {
   val INDENT = "  "
+
 }

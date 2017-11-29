@@ -25,6 +25,8 @@ import com.prestongarno.ktq.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.ktq.adapters.custom.QScalarMapper
 import com.prestongarno.ktq.adapters.custom.StringScalarMapper
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.internal.formatAs
+import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.stubs.CustomScalarStub
 import kotlin.reflect.KProperty
 
@@ -72,9 +74,5 @@ private data class CustomScalarFieldImpl<out Q>(
     return true
   }
 
-  override fun toRawPayload(): String = qproperty.graphqlName +
-      if (args.isNotEmpty()) this.args.entries
-          .joinToString(separator = ",", prefix = "(", postfix = ")") { (key, value) ->
-            "$key: ${formatAs(value)}"
-          } else ""
+  override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 }

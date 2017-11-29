@@ -17,7 +17,6 @@
 
 package com.prestongarno.ktq.adapters
 
-import com.prestongarno.ktq.input.QInput
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
@@ -49,17 +48,3 @@ interface QField<out T> {
 }
 
 
-internal fun formatAs(value: Any): String {
-  return when (value) {
-    is Int, is Boolean -> "$value"
-    is Float -> "${value}f"
-    is String -> "\\\"$value\\\""
-    is QInput -> value.toPayloadString()
-    is Enum<*> -> value.name
-    is List<*> -> value
-        .map { formatAs(it ?: "") }
-        .filter { it.isNotBlank() }
-        .joinToString(",", "[ ", " ]")
-    else -> throw UnsupportedOperationException("Unsupported format for type: ${value::class}")
-  }
-}
