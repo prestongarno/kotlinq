@@ -19,6 +19,7 @@ package com.prestongarno.ktq
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.ktq.adapters.Adapter
+import com.prestongarno.ktq.internal.prettyPrinted
 import java.io.InputStream
 
 open class QModel<out T : QType>(val model: T) {

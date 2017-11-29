@@ -17,18 +17,21 @@
 
 package com.prestongarno.ktq.hooks
 
-import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.SchemaStub
 import kotlin.reflect.KProperty
 
-interface StubLoader<out T : SchemaStub> {
-  operator fun getValue(inst: QSchemaType, property: KProperty<*>): T
-}
-
 interface StubProvider<out T : SchemaStub> {
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): StubLoader<T>
+
+  companion object {
+    val delegationContext: DelegationContext = TODO()
+  }
+}
+
+interface StubLoader<out T : SchemaStub> {
+  operator fun getValue(inst: QSchemaType, property: KProperty<*>): T
 }
 
 private class StubLoaderImpl<out T : SchemaStub>(val value: T) : StubLoader<T> {
