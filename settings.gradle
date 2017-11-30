@@ -17,3 +17,5 @@
 
 rootProject.name = 'ktq-client'
 include ":"
+include 'ktq-gradle'
+

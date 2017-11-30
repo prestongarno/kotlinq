@@ -19,11 +19,11 @@ package com.prestongarno.ktq.internal
 
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.PropertyMapper
+import com.prestongarno.ktq.QInputType
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.adapters.Adapter
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.hooks.ModelProvider
-import com.prestongarno.ktq.input.QInput
 
 
 @Suppress("UNCHECKED_CAST")
@@ -61,7 +61,7 @@ fun formatAs(value: Any): String {
     is Int, is Boolean -> "$value"
     is Float -> "${value}f"
     is String -> "\\\"$value\\\""
-    is QInput -> value.toPayloadString()
+    is QInputType -> value.toString()
     is Enum<*> -> value.name
     is List<*> -> value
         .map { formatAs(it ?: "") }
