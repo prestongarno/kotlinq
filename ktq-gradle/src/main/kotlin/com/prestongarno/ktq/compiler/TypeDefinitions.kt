@@ -2,6 +2,7 @@ package com.prestongarno.ktq.compiler
 
 import com.prestongarno.ktq.CustomScalar
 import com.prestongarno.ktq.QEnumType
+import com.prestongarno.ktq.QInputType
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QSchemaType
@@ -47,13 +48,18 @@ sealed class SchemaType<out T : ParserRuleContext>(val context: T) : KotlinTypeE
   }.let { (format, typeNames) ->
     CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray())
   }
+
+  companion object {
+    val CLASS_DELEGATE_MARKER = "__BY_CLASS_DELEGATE__"
+  }
+
 }
 
 sealed class ScopedDeclarationType<out T : ParserRuleContext>(context: T) : SchemaType<T>(context) {
   abstract val fields: Set<FieldDefinition>
 
   val symtab by lazy {
-    fields.map { it.name to it }.toMap()
+    fields.associate { it.name to it }.toMap()
   }
 }
 
@@ -135,10 +141,6 @@ class UnionDef(context: GraphQLSchemaParser.UnionDefContext)
   override val schemaTypeClass = QUnionType::class
   override val delegateStubClass: KClass<*> = QSchemaType.QInterfaces::class
   override val delegateListStubClass: KClass<*> = QSchemaType.QInterfaces.List::class
-
-  companion object {
-    val CLASS_DELEGATE_MARKER = "_BY_UNION_CLASS_DELEGATE_"
-  }
 }
 
 class ScalarDef(context: GraphQLSchemaParser.ScalarDefContext)
@@ -181,28 +183,31 @@ class InputDef(context: GraphQLSchemaParser.InputTypeDefContext)
   override val fields = context.fieldDef().map(::FieldDefinition).toSet()
 
   override fun toKotlin(): TypeSpec = TypeSpec.classBuilder(name).apply {
-    addSuperinterface(QSchemaType::class)
+    addSuperinterface((schemaTypeClass.qualifiedName + CLASS_DELEGATE_MARKER).asTypeName())
     // add required (non-nullable) fields to primary constructor
     this@InputDef.fields.filterNot { it.nullable }.map { required ->
       ParameterSpec.builder(required.name, required.type.name.asTypeName()).build()
     }.also { params ->
       FunSpec.constructorBuilder()
           .addParameters(params)
-          .build()
+          .addCode(CodeBlock.of(params.joinToString(separator = "\n") {
+            "\"${it.name}\" with ${it.name}"
+          })).build()
           .let(this::primaryConstructor)
     }
     // add others as nullable props
     this@InputDef.fields.filter { it.nullable }.map {
-      PropertySpec.builder(it.name, it.type.name.asTypeName().asNullable())
-          .initializer("null") // TODO boxed primitives
+      PropertySpec.builder(it.name, it.type.name.asTypeName()
+          .asNullable())
+          .delegate("input")
           .build()
     }.let(this::addProperties)
 
   }.build()
 
-  override val schemaTypeClass = throw UnsupportedOperationException()
-  override val delegateStubClass: KClass<*> = throw UnsupportedOperationException()
-  override val delegateListStubClass: KClass<*> = delegateStubClass
+  override val schemaTypeClass = QInputType::class
+  override val delegateStubClass: KClass<*> = Nothing::class
+  override val delegateListStubClass: KClass<*> = Nothing::class
 
 }
 

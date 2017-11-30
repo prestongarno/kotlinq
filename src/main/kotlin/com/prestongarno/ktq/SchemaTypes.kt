@@ -60,11 +60,11 @@ interface QUnionType : QType {
   fun on(init: () -> QModel<QType>)
 
   companion object {
-    fun create(): QUnionType = QUnionTypeImpl()
+    fun new(): QUnionType = QUnionTypeImpl()
   }
 
   private
-  class QUnionTypeImpl() : QUnionType {
+  class QUnionTypeImpl : QUnionType {
 
     override val queue: FragmentProvider = FragmentProvider()
 

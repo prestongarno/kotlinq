@@ -13,20 +13,20 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](https:/
 
 To use in a project, add the dependency to a gradle buildscript:
 
-      compile 'com.prestongarno.ktq:ktq-client:0.2'
-      
-Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
+      compile 'com.prestongarno.ktq:ktq-client:0.3'
+
+Make sure to include the [ gradle plugin ](ktq-gradle) and read
  the gradle syntax for configuring compilation of graphql SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
-      classpath 'com.prestongarno.ktq:ktq-gradle:0.2'
+      classpath 'com.prestongarno.ktq:ktq-gradle:0.3'
 
 And apply the plugin:
 
       plugins {
-        id 'com.prestongarno.ktq' version 0.2
+        id 'com.prestongarno.ktq' version 0.3
       }
-      
+
 ### About
 
 Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
@@ -59,7 +59,7 @@ in the `model` instance which a concrete query/mutation class delegates its prop
       val phoneNumber: Int by model.display_phone
       val directUrl: String by model.url
     }
-    
+
 
 When initializing a `BusinessQuery` calling the `.toGraphql()` results in a valid graphql query as a String:
 
@@ -76,7 +76,7 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
         }
       }
     }
-    
+
 For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
 check out the wiki.
 

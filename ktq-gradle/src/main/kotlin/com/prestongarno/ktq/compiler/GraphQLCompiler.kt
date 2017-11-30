@@ -89,15 +89,15 @@ class GraphQLCompiler(
     if (definitions.isEmpty())
       throw IllegalArgumentException("No schema types defined")
 
-    val specs = definitions.map(SchemaType<*>::toKotlin)
+    val specs = definitions.associate { it to it.toKotlin() }
 
-    val sourceClasses = specs.map {
-      var exact = it.toString()
+    val sourceClasses = specs.map { (ir, kotlinSpec) ->
+      var exact = kotlinSpec.toString()
 
-      if (it.superinterfaces.find {
-        it.toString().contains(UnionDef.CLASS_DELEGATE_MARKER)
-      } != null) exact = exact.replace(UnionDef.CLASS_DELEGATE_MARKER,
-          " by ${QUnionType::class.qualifiedName!!}.create()")
+      if (kotlinSpec.superinterfaces.find {
+        it.toString().contains(SchemaType.CLASS_DELEGATE_MARKER)
+      } != null) exact = exact.replace(SchemaType.CLASS_DELEGATE_MARKER,
+          " by ${ir.schemaTypeClass.qualifiedName}.new()")
           .replace("^import.*\n".toRegex(), "")
 
       return@map exact
