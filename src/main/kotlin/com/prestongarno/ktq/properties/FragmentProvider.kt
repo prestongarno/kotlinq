@@ -18,7 +18,6 @@
 package com.prestongarno.ktq.properties
 
 import com.prestongarno.ktq.QUnionType
-import com.prestongarno.ktq.adapters.QField
 import com.prestongarno.ktq.hooks.Fragment
 
 /**
@@ -53,10 +52,12 @@ class FragmentProvider {
    * Reset the state of this instance. Call this from the
    * 3rd parameter in this context from [FragmentProvider.invoke]
    */
-  internal fun reset(): Set<Fragment>
+  internal
+  fun reset(): Set<Fragment>
       = collector?.toSet()?.also { collector = null } ?: emptySet()
 
-  internal fun addFragment(init: Fragment) {
+  internal
+  fun addFragment(init: Fragment) {
     collector?.add(init)
   }
 }

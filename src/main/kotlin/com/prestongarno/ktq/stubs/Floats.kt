@@ -34,16 +34,19 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
 
   companion object {
 
-    internal fun noArgStub(
+    internal
+    fun noArgStub(
         qproperty: GraphQlProperty
     ): FloatDelegate.Query = QueryImpl(qproperty)
 
-    internal fun <A : ArgBuilder> optionalArgStub(
+    internal
+    fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): FloatDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    internal fun <A : ArgBuilder> argStub(
+    internal
+    fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): FloatDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -87,13 +90,15 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
   /*********************************************************************************
    * Private default implementations
    */
-  private class QueryImpl(val qproperty: GraphQlProperty) : FloatDelegate.Query {
+  private
+  class QueryImpl(val qproperty: GraphQlProperty) : FloatDelegate.Query {
     override fun invoke(
         arguments: ArgBuilder?, scope: (FloatDelegate<ArgBuilder>.() -> Unit)?
     ) = FloatDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalConfigQueryImpl<A : ArgBuilder>(
+  private
+  class OptionalConfigQueryImpl<A : ArgBuilder>(
       val qproperty: GraphQlProperty
   ) : FloatDelegate.OptionalConfigQuery<A> {
 
@@ -109,7 +114,8 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
     ): FloatStub = FloatStub(qproperty).bind(inst)
   }
 
-  private class ConfigurableQueryImpl<A : ArgBuilder>(
+  private
+  class ConfigurableQueryImpl<A : ArgBuilder>(
       val qproperty: GraphQlProperty
   ) : FloatDelegate.ConfigurableQuery<A> {
 
@@ -121,7 +127,8 @@ interface FloatDelegate<out A : ArgBuilder> : ScalarDelegate<FloatStub> {
   }
 }
 
-private class FloatDelegateImpl<out A : ArgBuilder>(
+private
+class FloatDelegateImpl<out A : ArgBuilder>(
     val qproperty: GraphQlProperty,
     val argBuilder: A? = null
 ) : FloatDelegate<A> {

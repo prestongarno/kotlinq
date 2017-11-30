@@ -35,7 +35,8 @@ open class ArgBuilder {
 
   fun addArgument(key: String, value: Any) = apply { arguments.put(key, value) }
 
-  internal fun getArguments() = arguments
+  internal
+  fun getArguments() = arguments
 }
 
 class PropertyMapper {
@@ -44,16 +45,19 @@ class PropertyMapper {
   val values = mutableMapOf<String, Any?>()
 
   @Suppress("UNCHECKED_CAST")
-  operator fun <T> getValue(inst: Any, property: KProperty<*>): T? =
+  operator
+  fun <T> getValue(inst: Any, property: KProperty<*>): T? =
       values[property.name] as? T
           ?: throw NullPointerException("Property '${property.name} was 'null'")
 
-  operator fun <T> setValue(inst: Any, property: KProperty<*>, value: T) {
+  operator
+  fun <T> setValue(inst: Any, property: KProperty<*>, value: T) {
     values[property.name] = value
   }
 
   internal
-  operator fun invoke(): Map<String, Any> = values.mapNotNull { (key, value) ->
+  operator
+  fun invoke(): Map<String, Any> = values.mapNotNull { (key, value) ->
     value?.let { key to it }
   }.toMap()
 

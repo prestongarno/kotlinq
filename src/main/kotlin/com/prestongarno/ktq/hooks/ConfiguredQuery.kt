@@ -38,7 +38,7 @@ import kotlin.reflect.KProperty
  * @param D : The type of SchemaStub which will provide a delegate type <T>
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface ConfiguredQuery<out D : DelegateProvider<*>, in A: ArgBuilder> : SchemaStub {
+interface ConfiguredQuery<out D : DelegateProvider<*>, in A : ArgBuilder> : SchemaStub {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
@@ -57,7 +57,7 @@ interface ConfiguredQuery<out D : DelegateProvider<*>, in A: ArgBuilder> : Schem
  * @param D : The type of [DelegateProvider] which this field supplies
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A: ArgBuilder> : SchemaStub {
+interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder> : SchemaStub {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
@@ -97,7 +97,8 @@ interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
  * @param A : The type of [ArgBuilder] that this DelegateProvider takes
  * @param constructor a function that constructs a new [DelegateProvider]
  */
-private class DefaultConfigurableQuery<out T : DelegateProvider<*>, in A : ArgBuilder>(
+private
+class DefaultConfigurableQuery<out T : DelegateProvider<*>, in A : ArgBuilder>(
     private val constructor: (A) -> T
 ) : ConfiguredQuery<T, A> {
 
@@ -111,7 +112,8 @@ private class DefaultConfigurableQuery<out T : DelegateProvider<*>, in A : ArgBu
  * @param A : The type of [ArgBuilder] that this DelegateProvider takes
  * @param constructor a function that constructs a new [DelegateProvider]
  */
-private class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder>(
+private
+class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder>(
     private val constructor: (A?) -> D
 ) : OptionalConfiguration<D, T, A> {
 
@@ -122,7 +124,8 @@ private class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : 
       constructor(arguments).applyNotNull(scope)
 }
 
-private class DefaultNoArgConfig<out D : DelegateProvider<T>, out T : Any?>(
+private
+class DefaultNoArgConfig<out D : DelegateProvider<T>, out T : Any?>(
     private val constructor: (ArgBuilder?) -> D
 ) : NoArgConfig<D, T> {
 

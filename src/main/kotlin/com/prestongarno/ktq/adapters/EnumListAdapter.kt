@@ -21,21 +21,22 @@ import com.beust.klaxon.JsonArray
 import com.prestongarno.ktq.ArgBuilder
 import com.prestongarno.ktq.QEnumType
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.stubs.EnumListStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-@PublishedApi internal fun <T, A> newEnumListDelegate(
+@PublishedApi internal
+fun <T, A> newEnumListDelegate(
     qproperty: GraphQlProperty,
     arguments: A?,
     enumClass: KClass<T>
 ): EnumListStub<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder =
     EnumListStubImpl(qproperty, arguments, enumClass)
 
-@PublishedApi internal fun <T> newEnumListField(
+@PublishedApi internal
+fun <T> newEnumListField(
     qproperty: GraphQlProperty,
     enumClass: KClass<T>
 ): QField<List<T>> where T : Enum<*>, T : QEnumType =

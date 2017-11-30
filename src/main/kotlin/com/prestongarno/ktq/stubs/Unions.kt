@@ -79,7 +79,8 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
   /*********************************************************************************
    * Private default implementations
    */
-  private class QueryImpl<out T : QUnionType>(
+  private
+  class QueryImpl<out T : QUnionType>(
       val qproperty: GraphQlProperty,
       val unionObject: T
   ) : Query<T> {
@@ -92,7 +93,8 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
 
   }
 
-  private class OptionalConfigQueryImpl<out T : QUnionType, A : ArgBuilder>(
+  private
+  class OptionalConfigQueryImpl<out T : QUnionType, A : ArgBuilder>(
       val qproperty: GraphQlProperty,
       val unionObject: T
   ) : OptionalConfigQuery<T, A> {
@@ -105,7 +107,8 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
 
   }
 
-  private class ConfigurableQueryImpl<out T : QUnionType, A : ArgBuilder>(
+  private
+  class ConfigurableQueryImpl<out T : QUnionType, A : ArgBuilder>(
       val qproperty: GraphQlProperty,
       val unionObject: T
   ) : ConfigurableQuery<T, A> {

@@ -19,16 +19,15 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
-import com.prestongarno.ktq.QUnionType
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.stubs.UnionStub
+import com.prestongarno.ktq.QUnionType
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
-import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.stringify
+import com.prestongarno.ktq.properties.GraphQlProperty
+import com.prestongarno.ktq.stubs.UnionStub
 import kotlin.reflect.KProperty
 
 fun <T : QUnionType, A : ArgBuilder> newUnionField(
@@ -37,7 +36,9 @@ fun <T : QUnionType, A : ArgBuilder> newUnionField(
     arguments: A?
 ): UnionStub<T, A> = UnionAdapterImpl(qproperty, unionObject, arguments)
 
-private class UnionAdapterImpl<T : QUnionType, out A : ArgBuilder>(
+@kotlin.Suppress("AddVarianceModifier")
+private
+class UnionAdapterImpl<T : QUnionType, out A : ArgBuilder>(
     val qproperty: GraphQlProperty,
     val unionObject: T,
     val arguments: A? = null
@@ -58,7 +59,8 @@ private class UnionAdapterImpl<T : QUnionType, out A : ArgBuilder>(
 
 }
 
-@ValueDelegate(QModel::class) private class UnionStubImpl(
+@ValueDelegate(QModel::class) private
+class UnionStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()

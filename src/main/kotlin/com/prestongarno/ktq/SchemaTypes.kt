@@ -18,6 +18,8 @@
 package com.prestongarno.ktq
 
 import com.prestongarno.ktq.hooks.Fragment
+import com.prestongarno.ktq.internal.bracket
+import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.properties.FragmentProvider
 
 /**
@@ -61,12 +63,52 @@ interface QUnionType : QType {
     fun create(): QUnionType = QUnionTypeImpl()
   }
 
-  private class QUnionTypeImpl() : QUnionType {
+  private
+  class QUnionTypeImpl() : QUnionType {
 
     override val queue: FragmentProvider = FragmentProvider()
 
     override fun on(init: () -> QModel<QType>) {
       queue.addFragment(Fragment(init))
+    }
+  }
+}
+
+/**
+ * Interface for all Input Objects.
+ *
+ * NOTE: Generated schema type is not a static object
+ * like the other types. This is a class, so perfectly
+ * fine to pass to an instance
+ *
+ * @author prestongarno
+ * @since 0.3.0
+ */
+interface QInputType : QSchemaType {
+  val input: PropertyMapper
+
+  companion object {
+
+    /**
+     * Utility function to create a new type for class-level
+     * delegation from the compiled/generated schema
+     */
+    fun new(): QInputType = object : QInputType {
+
+      private
+      val field = PropertyMapper()
+
+      override
+      val input: PropertyMapper get() = this.field
+
+      /**
+       * TODO -> [com.prestongarno.ktq.internal.formatAs] is used in
+       * [com.prestongarno.ktq.internal.stringify] and allows [QModel]
+       * values in the backing map. This is illegal in the GraphQL specificaton
+       * for input object types
+       */
+      override
+      fun toString(): String = field.stringify().bracket()
     }
   }
 }

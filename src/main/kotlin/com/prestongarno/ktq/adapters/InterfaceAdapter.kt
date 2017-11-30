@@ -19,22 +19,22 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.stubs.InterfaceStub
 import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.Fragment
 import com.prestongarno.ktq.hooks.FragmentContext
 import com.prestongarno.ktq.internal.ValueDelegate
-import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.stringify
 import com.prestongarno.ktq.properties.GraphQlProperty
+import com.prestongarno.ktq.stubs.InterfaceStub
 import kotlin.reflect.KProperty
 
 /**
  * Base type of a R.H.S. delegate provider
  */
-internal class InterfaceAdapterImpl<I, out A : ArgBuilder>(
+internal
+class InterfaceAdapterImpl<I, out A : ArgBuilder>(
     qproperty: GraphQlProperty,
     val arguments: A? = null
 ) : PreDelegate(qproperty),
@@ -59,7 +59,8 @@ internal class InterfaceAdapterImpl<I, out A : ArgBuilder>(
 }
 
 @ValueDelegate(QModel::class)
-private class InterfaceDelegateImpl<I : QType>(
+private
+class InterfaceDelegateImpl<I : QType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>

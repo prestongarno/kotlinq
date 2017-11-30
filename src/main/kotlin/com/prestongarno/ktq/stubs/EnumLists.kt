@@ -41,20 +41,23 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
 
   companion object {
 
-    internal fun <T> noArgStub(
+    internal
+    fun <T> noArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): EnumListStub.Query<T> where T : Enum<*>, T : QEnumType =
         QueryImpl<T>(qproperty, enumClass)
 
-    internal fun <T, A> optionalArgStub(
+    internal
+    fun <T, A> optionalArgStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): EnumListStub.OptionalConfigQuery<T, A>
         where T : Enum<*>, T : QEnumType, A : ArgBuilder =
         OptionalConfigQueryImpl(qproperty, enumClass)
 
-    internal fun <T, A> argStub(
+    internal
+    fun <T, A> argStub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): EnumListStub.ConfigurableQuery<T, A>
@@ -73,7 +76,8 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
 
   }
 
-  private class QueryImpl<T>(
+  private
+  class QueryImpl<T>(
       val qproperty: GraphQlProperty,
       val enumClass: KClass<T>
   ) : Query<T> where T : Enum<*>, T : QEnumType {
@@ -107,7 +111,8 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
   /*********************************************************************************
    * Private default implementations
    */
-  private class OptionalConfigQueryImpl<T, A>(
+  private
+  class OptionalConfigQueryImpl<T, A>(
       val qproperty: GraphQlProperty,
       val enumClass: KClass<T>
   ) : OptionalConfigQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
@@ -138,7 +143,8 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
 
   }
 
-  private class ConfigurableQueryImpl<T, A>(
+  private
+  class ConfigurableQueryImpl<T, A>(
       val qproperty: GraphQlProperty,
       val enumClass: KClass<T>
   ) : ConfigurableQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {

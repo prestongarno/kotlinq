@@ -23,7 +23,7 @@ object GraphQL {
   fun initialize(endpoint: String): GraphHttpAdapter = GraphHttpImpl(endpoint)
 }
 
-internal class GraphHttpImpl(override val endpoint: String) : GraphHttpAdapter {
+internalclass GraphHttpImpl(override val endpoint: String) : GraphHttpAdapter {
   override var authorization: Authorization? = null
 }
 

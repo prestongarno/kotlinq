@@ -19,18 +19,18 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.prestongarno.ktq.properties.GraphQlProperty
-import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.ArgBuilder
+import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.CollectionDelegate
-import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.stringify
+import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.stubs.TypeListStub
 import kotlin.reflect.KProperty
 
-internal class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgBuilder>(
+internal
+class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgBuilder>(
     qproperty: GraphQlProperty,
     val init: () -> P,
     val argBuilder: A? = null
