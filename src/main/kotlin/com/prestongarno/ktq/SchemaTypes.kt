@@ -79,7 +79,7 @@ interface QUnionType : QType {
  *
  * NOTE: Generated schema type is not a static object
  * like the other types. This is a class, so perfectly
- * fine to pass to an instance
+ * fine to bind to an instance
  *
  * @author prestongarno
  * @since 0.3.0
