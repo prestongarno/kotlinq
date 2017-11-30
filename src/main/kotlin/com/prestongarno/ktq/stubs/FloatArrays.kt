@@ -34,16 +34,19 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
 
   companion object {
 
-    @PublishedApi internal fun noArgStub(
+    @PublishedApi internal
+    fun noArgStub(
         qproperty: GraphQlProperty
     ): FloatArrayDelegate.Query = QueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> optionalArgStub(
+    @PublishedApi internal
+    fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): FloatArrayDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    @PublishedApi internal fun <A : ArgBuilder> argStub(
+    @PublishedApi internal
+    fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): FloatArrayDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -88,12 +91,14 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
   /*********************************************************************************
    * Private default implementations
    */
-  private class QueryImpl(val qproperty: GraphQlProperty) : Query {
+  private
+  class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgBuilder?, scope: (FloatArrayDelegate<ArgBuilder>.() -> Unit)?
     ) = FloatArrayDelegateImpl<ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
+  private
+  class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (FloatArrayDelegate<A>.() -> Unit)?): FloatArrayDelegate<A> =
         FloatArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -102,14 +107,16 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
   }
 
 
-  private class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+  private
+  class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 
     override fun invoke(arguments: A, scope: (FloatArrayDelegate<A>.() -> Unit)?): FloatArrayDelegate<A> =
         FloatArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
   }
 }
 
-private class FloatArrayDelegateImpl<out A : ArgBuilder>(
+private
+class FloatArrayDelegateImpl<out A : ArgBuilder>(
     private val qproperty: GraphQlProperty,
     private val argBuilder: A?
 ) : FloatArrayDelegate<A> {

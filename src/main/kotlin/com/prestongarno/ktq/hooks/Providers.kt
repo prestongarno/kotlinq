@@ -19,7 +19,6 @@
  */
 package com.prestongarno.ktq.hooks
 
-import com.prestongarno.ktq.QInterface
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
 
@@ -31,7 +30,7 @@ internal interface ModelProvider {
  * TODO -> Add type arguments for this and [Fragment] so no type casting on resolving interface fragment types
  */
 internal interface FragmentContext/*<I> where I : QType, I : QInterface*/ {
-  val fragments : Set<Fragment>
+  val fragments: Set<Fragment>
 }
 
 data class Fragment(val initializer: () -> QModel<QType>) {

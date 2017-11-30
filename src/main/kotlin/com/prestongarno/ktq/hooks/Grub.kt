@@ -17,9 +17,9 @@
 
 package com.prestongarno.ktq.hooks
 
-import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QSchemaType
 import com.prestongarno.ktq.SchemaStub
+import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
 interface StubProvider<out T : SchemaStub> {
@@ -38,7 +38,8 @@ interface Stub<out T : SchemaStub> {
   operator fun getValue(inst: QSchemaType, property: KProperty<*>): T
 }
 
-private class StubLoaderImpl<out T : SchemaStub>(val value: T) : Stub<T> {
+private
+class StubLoaderImpl<out T : SchemaStub>(val value: T) : Stub<T> {
   override operator fun getValue(inst: QSchemaType, property: KProperty<*>): T = value
 }
 
@@ -56,7 +57,8 @@ private class StubLoaderImpl<out T : SchemaStub>(val value: T) : Stub<T> {
  * fragment `getValue` for the schemastub it simply invokes the function with the prop of the graphqlName that it's
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
-internal class Grub<out T : SchemaStub>(
+internal
+class Grub<out T : SchemaStub>(
     private val typeName: String,
     private val isList: Boolean = false,
     private val toInit: (property: GraphQlProperty) -> T

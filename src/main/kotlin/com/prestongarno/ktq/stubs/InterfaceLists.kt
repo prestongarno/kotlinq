@@ -36,18 +36,21 @@ interface InterfaceListStub<I, out A> :
   fun config(argumentScope: A.() -> Unit)
 
   companion object {
-    internal fun <I> noArgStub(
+    internal
+    fun <I> noArgStub(
         qproperty: GraphQlProperty
     ): Query<I> where I : QInterface, I : QType =
         QueryImpl(qproperty)
 
-    internal fun <I, A> optionalArgStub(
+    internal
+    fun <I, A> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<I, A>
         where I : QInterface, I : QType, A : ArgBuilder =
         OptionalConfigQueryImpl(qproperty)
 
-    internal fun <I, A> argStub(
+    internal
+    fun <I, A> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<I, A>
         where I : QInterface, I : QType, A : ArgBuilder =
@@ -90,13 +93,15 @@ interface InterfaceListStub<I, out A> :
   /*********************************************************************************
    * Private default implementations
    */
-  private class QueryImpl<I>(val qproperty: GraphQlProperty) : Query<I> where I : QInterface, I : QType {
+  private
+  class QueryImpl<I>(val qproperty: GraphQlProperty) : Query<I> where I : QInterface, I : QType {
     override fun invoke(arguments: ArgBuilder?, scope: InterfaceListStub<I, ArgBuilder>.() -> Unit)
         : InterfaceListStub<I, ArgBuilder> =
         newInterfaceListStub<I, ArgBuilder>(qproperty, arguments ?: ArgBuilder()).apply(scope)
   }
 
-  private class OptionalConfigQueryImpl<I, A>(
+  private
+  class OptionalConfigQueryImpl<I, A>(
       val qproperty: GraphQlProperty
   ) : OptionalConfigQuery<I, A>
       where I : QInterface,
@@ -110,7 +115,8 @@ interface InterfaceListStub<I, out A> :
         newInterfaceListStub<I, A>(qproperty, null).apply(scope)
   }
 
-  private class ConfigurableQueryImpl<I, A>(
+  private
+  class ConfigurableQueryImpl<I, A>(
       val qproperty: GraphQlProperty
   ) : ConfigurableQuery<I, A>
       where I : QInterface,

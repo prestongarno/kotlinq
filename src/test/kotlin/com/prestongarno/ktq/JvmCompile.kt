@@ -79,20 +79,20 @@ class KtqCompileWrapper(private val root: File) {
       (loader.loadClass(name).kotlin as KClass<QSchemaType>)
 }
 
-internal fun QModel<*>.allGraphQl(): String {
+internalfun QModel<*>.allGraphQl(): String {
   model::class.declaredMemberProperties.map { it.call(model) as FieldConfig }
       .map { it.toAdapter() }
       .forEach { if (!fields.contains(it)) fields.add(it) }
   return toGraphql()
 }
 
-internal fun QModel<*>.mockGraphql(selectedFields: List<String>) =
+internalfun QModel<*>.mockGraphql(selectedFields: List<String>) =
     model::class.declaredMemberProperties
         .filter { selectedFields.contains(it.name) }
         .map { fields.add(it.call(model) as Adapter<*>) }
         .let { toGraphql() }
 
-internal fun QModel<*>.mockInputGraphql(name: String, map: Map<String, Any>): QModel<*> = this.apply {
+internalfun QModel<*>.mockInputGraphql(name: String, map: Map<String, Any>): QModel<*> = this.apply {
   model::class.declaredMemberProperties.find { it.name == name }!!
       .call(model)
       .also {
@@ -101,15 +101,15 @@ internal fun QModel<*>.mockInputGraphql(name: String, map: Map<String, Any>): QM
       }
 }
 
-internal fun String.compactGraphql(): String = trimMargin("|")
+internalfun String.compactGraphql(): String = trimMargin("|")
     .replace("[\\s\\n]*".toRegex(), "")
     .replace("...on", "... on ")
 
-internal fun QModel<*>.setDelegateProvidingValue(name: String, value: () -> QModel<*>) =
+internalfun QModel<*>.setDelegateProvidingValue(name: String, value: () -> QModel<*>) =
     model::class.declaredMemberProperties.find { it.name == name }!!.call(model)
         .also { (it as ModelProvider).setValue(value.invoke()); this.fields.add((it as FieldConfig).toAdapter()) }
 
-internal fun ModelProvider.setValue(value: QModel<*>) {
+internalfun ModelProvider.setValue(value: QModel<*>) {
   when (this) {
     is TypeStubAdapter<*, *, *> -> this.build { value }
     is TypeListAdapter<*, *, *> -> this.build { value }

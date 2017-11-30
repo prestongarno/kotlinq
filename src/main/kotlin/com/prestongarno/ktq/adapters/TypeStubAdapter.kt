@@ -19,17 +19,17 @@ package com.prestongarno.ktq.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.properties.GraphQlProperty
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QType
-import com.prestongarno.ktq.stubs.TypeStub
 import com.prestongarno.ktq.hooks.ModelProvider
 import com.prestongarno.ktq.internal.ValueDelegate
-import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.stringify
+import com.prestongarno.ktq.properties.GraphQlProperty
+import com.prestongarno.ktq.stubs.TypeStub
 import kotlin.reflect.KProperty
 
-internal class TypeStubAdapter<out T : QModel<U>, out U : QType, out A : ArgBuilder>(
+internal
+class TypeStubAdapter<out T : QModel<U>, out U : QType, out A : ArgBuilder>(
     private val qproperty: GraphQlProperty,
     private val init: () -> T,
     private val argBuilder: A?

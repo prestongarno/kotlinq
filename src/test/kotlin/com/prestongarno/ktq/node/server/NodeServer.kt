@@ -42,7 +42,7 @@ abstract class NodeServer {
 
   lateinit var graphql: GraphHttpAdapter
 
-  @Before internal fun setUp() {
+  @Before internalfun setUp() {
 
     graphqlServerPs = ProcessBuilder()
         .inheritIO()

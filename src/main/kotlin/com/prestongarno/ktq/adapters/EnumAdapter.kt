@@ -18,17 +18,17 @@
 package com.prestongarno.ktq.adapters
 
 import com.prestongarno.ktq.ArgBuilder
-import com.prestongarno.ktq.stubs.EnumStub
-import com.prestongarno.ktq.properties.GraphQlProperty
-import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.QEnumType
+import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.internal.ValueDelegate
-import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.stringify
+import com.prestongarno.ktq.properties.GraphQlProperty
+import com.prestongarno.ktq.stubs.EnumStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal class EnumConfigStubImpl<T, A>(
+internal
+class EnumConfigStubImpl<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
 ) : EnumStub.ConfigurableQuery<T, A>
@@ -39,7 +39,8 @@ internal class EnumConfigStubImpl<T, A>(
 
 }
 
-internal class EnumOptionalArgStubQuery<T, A>(
+internal
+class EnumOptionalArgStubQuery<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
 ) : EnumStub.OptionalConfigQuery<T, A>
@@ -56,7 +57,8 @@ internal class EnumOptionalArgStubQuery<T, A>(
 
 }
 
-@PublishedApi internal class EnumNoArgStub<T>(
+@PublishedApi internal
+class EnumNoArgStub<T>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
 ) : EnumStub.Query<T>
@@ -74,7 +76,8 @@ internal class EnumOptionalArgStubQuery<T, A>(
       EnumAdapterImpl(qproperty, enumClass, arguments).apply(scope)
 }
 
-private class EnumAdapterImpl<T, out A>(
+private
+class EnumAdapterImpl<T, out A>(
     qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
     private val argBuilder: A?

@@ -20,8 +20,8 @@ package com.prestongarno.ktq.stubs
 import com.prestongarno.ktq.QModel
 import com.prestongarno.ktq.SchemaStub
 import com.prestongarno.ktq.adapters.Adapter
-import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.internal.CollectionDelegate
+import com.prestongarno.ktq.internal.formatAs
 import com.prestongarno.ktq.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 

@@ -44,7 +44,7 @@ interface GraphQlRequest<T : QModel<*>> {
   fun runAsync()
 }
 
-internal class RequestBuilder<T : QModel<*>>(
+internalclass RequestBuilder<T : QModel<*>>(
     internal val type: RequestType,
     internal val adapter: GraphHttpAdapter,
     internal val `for`: (() -> T)) : GraphQlRequest<T> {

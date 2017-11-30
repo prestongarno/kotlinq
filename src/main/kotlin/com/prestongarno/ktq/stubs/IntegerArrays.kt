@@ -34,16 +34,19 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 
   companion object {
 
-    internal fun noArgStub(
+    internal
+    fun noArgStub(
         qproperty: GraphQlProperty
     ): IntArrayDelegate.Query = QueryImpl(qproperty)
 
-    internal fun <A : ArgBuilder> optionalArgStub(
+    internal
+    fun <A : ArgBuilder> optionalArgStub(
         qproperty: GraphQlProperty
     ): IntArrayDelegate.OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
-    internal fun <A : ArgBuilder> argStub(
+    internal
+    fun <A : ArgBuilder> argStub(
         qproperty: GraphQlProperty
     ): IntArrayDelegate.ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -86,12 +89,14 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
   /*********************************************************************************
    * Private default implementations
    */
-  private class QueryImpl(val qproperty: GraphQlProperty) : Query {
+  private
+  class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgBuilder?, scope: (IntArrayDelegate<ArgBuilder>.() -> Unit)?
     ) = IntArrayDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
-  private class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
+  private
+  class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (IntArrayDelegate<A>.() -> Unit)?): IntArrayDelegate<A> =
         IntArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -100,14 +105,16 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
   }
 
 
-  private class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+  private
+  class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 
     override fun invoke(arguments: A, scope: (IntArrayDelegate<A>.() -> Unit)?): IntArrayDelegate<A> =
         IntArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
   }
 }
 
-private class IntArrayDelegateImpl<out A : ArgBuilder>(
+private
+class IntArrayDelegateImpl<out A : ArgBuilder>(
     private val qproperty: GraphQlProperty,
     private val argBuilder: A?
 ) : IntArrayDelegate<A> {

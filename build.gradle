@@ -49,7 +49,7 @@ apply plugin: "com.jfrog.artifactory"
 def getVersion = { Project project ->
   if (project.hasProperty("release") &&
           project.property("release") == "true") {
-    return "0.2.1"
+    return "0.3"
   } else {
     return "0.3-SNAPSHOT"
   }
