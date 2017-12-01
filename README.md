@@ -8,7 +8,7 @@
 
 ## About
 
-* 
+* **type-safe models for querying and mutating your data**
 * **dynamic queries/mutations** evaluated at runtime
 * **custom scalar deserialization** to any native type
 * **100% native** code - zero config files, zero old-school DSLs
