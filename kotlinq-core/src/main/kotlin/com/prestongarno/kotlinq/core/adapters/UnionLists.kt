@@ -28,6 +28,7 @@ import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.stubs.UnionListStub
+import java.util.Collections.emptySet
 import kotlin.reflect.KProperty
 
 internal

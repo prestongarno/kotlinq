@@ -32,6 +32,7 @@ interface GraphHttpAdapter {
   fun <T : QModel<*>> mutate(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(RequestType.MUTATION, this, `for`)
 }
 
+@Suppress("EXPERIMENTAL_FEATURE_WARNING")
 /**
  * A wrapper class for a GraphQL request */
 interface GraphQlRequest<T : QModel<*>> {
@@ -58,6 +59,7 @@ class RequestBuilder<T : QModel<*>>(
 
   override fun onError(handler: (errorCode: Int, message: String) -> Unit) = apply { errorHandler = handler }
 
+  @Suppress("EXPERIMENTAL_FEATURE_WARNING")
   override suspend fun run() = Http4k.send(this)
 
   override fun runAsync() {

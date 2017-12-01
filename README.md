@@ -1,45 +1,37 @@
-*__a kotlin client with type-safe DSL generation & runtime support__*
+*__a Kotlin GraohQL client: type-safe DSL generation & runtime library*
 -----------------------------
 
-[![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
+[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC1) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC1/link)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
- [ ![jcenter](https://api.bintray.com/packages/prestongarno/ktq/ktq-client/images/download.svg?version=0.2) ](https://bintray.com/prestongarno/ktq/ktq-client/0.2/link)
+[![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
 
 ## Documentation
 
 The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/ktq/)
 
-### Adding dependency from Central or JCenter
+## Modules
 
-To use in a project, add the dependency to a gradle buildscript:
+* `kotlinq-core`: Runtime API
+* `kotlinq-gradle`: Gradle code-generating compiler
+* `kotlinq-http`: HTTP Utilities using [http4k](http://http4k.org) as a dependency
 
-      compile 'com.prestongarno.ktq:ktq-client:0.3'
+## About
 
-Make sure to include the [ gradle plugin ](ktq-gradle) and read
- the gradle syntax for configuring compilation of graphql SDL as kotlin classes. 
- Add this to project buildscript dependencies block:
+Why *kotlinq* is unique:
 
-      classpath 'com.prestongarno.ktq:ktq-gradle:0.3'
+* **type-safe models** for querying and mutating your data
+* **dynamic queries/mutations** evaluated at runtime
+* **custom scalar deserialization** to any native type
+* **100% native** code - zero config files, zero old-school DSLs
+* **No boilerplate** "adapters" classes or intermediate objects
 
-And apply the plugin:
-
-      plugins {
-        id 'com.prestongarno.ktq' version 0.3
-      }
-
-### About
-
-Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
-queries and mutations against a GraphQl schema. 
-
-The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
+The [ gradle plugin ](ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
 and mutations without ever leaving native code.
 
-For an example of how to build models, see the example below created for the Yelp Graphql API. 
-Note that while field types are specified, they are not necessary and can be inferred by the properties
-in the `model` instance which a concrete query/mutation class delegates its properties to.
+An example below queries the Yelp Graphql API. 
+Note that while field types are specified, they are not necessary and can be inferred:
 
-    class BusinessQuery(searchTerm: String) : QModel(Query) {
+    class BusinessNodeQuery(searchTerm: String) : QModel(Query) {
     
       val result: List<BusinessNodes> by model.search(::BusinessesNodes) {
           config {
@@ -82,8 +74,8 @@ check out the wiki.
 
 ### How to execute a query or mutation:
 
-This isn't supported in the current release, but the package `com.prestongarno.ktq.http` package 
-adds a dependency on [http4k](http://http4k.org) and supports end-to-end mutations and queries out of the box. Just 
+This isn't supported in the current release, but the `kotlinq-http` module has
+a dependency on [http4k](http://http4k.org) and supports end-to-end mutations and queries out of the box. Just 
 describe your model, and execute. This is an example for getting your github name (not shown: compiled github schema):
 
     class ViewerQuery : QModel<Query>(Query) {
@@ -102,6 +94,29 @@ describe your model, and execute. This is an example for getting your github nam
 
 
 The last code block will print "Hello, \<your name here\>"
+
+### Adding dependency from Central or JCenter
+
+***Note: version 0.3 is backwards-incompatible. It isn't a final release yet and 
+is hosted in the repository: ***
+
+To use in a project, add the core & http libraries to a gradle buildscript:
+
+      api 'com.prestongarno.kotlinq:kotlinq-core:0.3'
+      api 'com.prestongarno.kotlinq:kotlinq-http:0.3'
+
+Make sure to include the [ gradle plugin ](ktq-gradle) and read
+ the gradle syntax for configuring compilation of graphql SDL as kotlin classes. 
+ Add this to project buildscript dependencies block:
+
+      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3'
+
+And apply the plugin:
+
+      plugins {
+        id 'com.prestongarno.ktq' version 0.3
+      }
+
 
 ### FAQ
 
