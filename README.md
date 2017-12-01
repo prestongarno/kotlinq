@@ -97,8 +97,7 @@ The last code block will print "Hello, \<your name here\>"
 
 ### Adding dependency from Central or JCenter
 
-***Note: version 0.3 is backwards-incompatible. It isn't a final release yet and 
-is hosted in the repository: ***
+*** Note: version 0.3 is backwards-incompatible. It isn't a final release yet and is hosted in the repository: ***
 
 To use in a project, add the core & http libraries to a gradle buildscript:
 
@@ -114,10 +113,7 @@ Make sure to include the [ gradle plugin ](ktq-gradle) and read
 And apply the plugin:
 
       plugins {
-        id 'com.prestongarno.ktq' version 0.3
+        id 'com.prestongarno.kotlin1' version '0.3.0-RC1'
       }
 
 
-### FAQ
-
-* __Can I use this in production?__ Please don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while
