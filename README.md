@@ -99,11 +99,10 @@ This is an example for getting your github name:
 
 The last code block will print "Hello, \<your name here\>"
 
-### Adding dependency from Central or JCenter
+### Adding dependency from JCenter
 
-__Note: version 0.3 is backwards-incompatible. It isn't a final release yet and is hosted in the repository:__
+__\<\< Note: version 0.3 is backwards-incompatible. It isn't a final release \\\>\>__
 
-    https://dl.bintray.com/prestongarno/kotlinq
 
 To use in a project, add the core & http libraries to a gradle buildscript:
 
