@@ -20,6 +20,7 @@ package com.prestongarno.kotlinq.http.internal
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.internal.resolve.resolve
 import com.prestongarno.kotlinq.http.RequestBuilder
 import org.http4k.client.OkHttp
 import org.http4k.core.HttpHandler
@@ -34,6 +35,7 @@ internal enum class RequestType {
   MUTATION
 }
 
+@Suppress("EXPERIMENTAL_FEATURE_WARNING")
 internal object Http4k {
 
   suspend fun <T : QModel<*>> send(requestBuilder: RequestBuilder<T>): T {
@@ -50,26 +52,15 @@ internal object Http4k {
             }.query(requestBuilder.type.name.toLowerCase(), obj.toGraphql())
     )
 
-
     if (networkResponse.status == Status.OK) {
-      obj.apply {
 
-        resolved = Parser().parse(networkResponse.body.stream)
-            ?.let { it as? JsonObject }
-            ?.run { accept(this["data"] as JsonObject) }
-            ?: false
-
-        if (resolved) {
+        if (obj.resolve(networkResponse.body.stream)) {
           requestBuilder.successHandler?.invoke(obj)
-
         } else {
-          requestBuilder.errorHandler
-              ?.invoke(400, "Malformed Response: ${networkResponse.body}")
+          requestBuilder.errorHandler?.invoke(400, "Malformed Response: ${networkResponse.body}")
         }
-      }
 
     } else if (networkResponse.status != Status.OK) {
-      obj.resolved = false
       requestBuilder.errorHandler?.invoke(networkResponse.status.code, networkResponse.toMessage())
     }
     return obj
