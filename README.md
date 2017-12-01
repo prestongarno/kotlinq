@@ -13,32 +13,18 @@
 * **100% native** code - zero config files, zero old-school DSLs
 * **No boilerplate** adapter classes or intermediate objects
 
-## About 
+The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
+lets you auto-complete your way to safe, reliable queries and mutations
 
-<dl>
-  <dd>**type-safe DSLs** for querying and mutating your data</dd>
+## Documentation
 
-  <dd>**dynamic queries/mutations** evaluated at runtime</dd>
-
-  <dd>**custom scalar deserialization** to any native type</dd>
-
-  <dd>**100% native** code - zero config files, zero old-school DSLs</dd>
-
-  <dd>**No boilerplate** adapter classes or intermediate objects</dd>
-</dl>
+The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/kotlinq/)
 
 ## Modules
 
 * `kotlinq-core`: Runtime API
 * `kotlinq-gradle`: Gradle code-generating compiler
 * `kotlinq-http`: HTTP Utilities using [http4k](http://http4k.org) as a dependency
-
-## Documentation
-
-The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/kotlinq/)
-
-The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
-lets you auto-complete your way to safe, reliable queries and mutations
 
 ## Example
 
