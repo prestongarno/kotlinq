@@ -32,7 +32,7 @@ An example below queries the Yelp Graphql API.
 Note that while field types are specified, they are not necessary and can be inferred:
 
     class BusinessNodeQuery(searchTerm: String) : QModel(Query) {
-    
+
       val result: List<BusinessNodes> by model.search(::BusinessesNodes) {
           config {
             term = searchTerm
@@ -103,14 +103,14 @@ The last code block will print "Hello, \<your name here\>"
 
 To use in a project, add the core & http libraries to a gradle buildscript:
 
-      api 'com.prestongarno.kotlinq:kotlinq-core:0.3'
-      api 'com.prestongarno.kotlinq:kotlinq-http:0.3'
+      api 'com.prestongarno.kotlinq:kotlinq-core:0.3.0-RC1'
+      api 'com.prestongarno.kotlinq:kotlinq-http:0.3.0-RC1'
 
 Make sure to include the [ gradle plugin ](ktq-gradle) and read
  the gradle syntax for configuring compilation of graphql SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
-      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3'
+      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0-RC1'
 
 And apply the plugin:
 
