@@ -7,7 +7,7 @@
 
 ## Documentation
 
-The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/ktq/)
+The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/kotlinq/)
 
 ## Modules
 
@@ -26,7 +26,7 @@ Why *kotlinq* is unique:
 * **No boilerplate** adapter classes or intermediate objects
 
 The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
-lets you execute queries and mutations without ever leaving native code.
+lets you auto-complete your way to safe, reliable queries and mutations
 
 ## Example
 
@@ -49,8 +49,13 @@ Note that while field types are specified, they are not necessary and can be inf
     }
 
     class BusinessQuery : QModel(Business) {
-      val name: String by model.name
+    
+      val name: String by model.name {
+        default = "Unknown"
+      }
+      
       val phoneNumber: Int by model.display_phone
+      
       val directUrl: String by model.url
     }
 
