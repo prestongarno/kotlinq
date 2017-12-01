@@ -1,4 +1,4 @@
-*__a Kotlin GraohQL client: type-safe DSL generation & runtime library*
+***a Kotlin GraphQL client: type-safe DSL generation & runtime library***
 -----------------------------
 
 [ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC1) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC1/link)
@@ -23,7 +23,7 @@ Why *kotlinq* is unique:
 * **dynamic queries/mutations** evaluated at runtime
 * **custom scalar deserialization** to any native type
 * **100% native** code - zero config files, zero old-school DSLs
-* **No boilerplate** "adapters" classes or intermediate objects
+* **No boilerplate** adapter classes or intermediate objects
 
 The [ gradle plugin ](ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
 and mutations without ever leaving native code.
