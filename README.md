@@ -5,9 +5,19 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
 [![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
 
-## Documentation
+## About 
 
-The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/kotlinq/)
+<dl>
+  <dd>**type-safe DSLs** for querying and mutating your data</dd>
+
+  <dd>**dynamic queries/mutations** evaluated at runtime</dd>
+
+  <dd>**custom scalar deserialization** to any native type</dd>
+
+  <dd>**100% native** code - zero config files, zero old-school DSLs</dd>
+  
+  <dd>**No boilerplate** adapter classes or intermediate objects</dd>
+</dl>
 
 ## Modules
 
@@ -15,15 +25,9 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](https:/
 * `kotlinq-gradle`: Gradle code-generating compiler
 * `kotlinq-http`: HTTP Utilities using [http4k](http://http4k.org) as a dependency
 
-## About
+## Documentation
 
-Why *kotlinq* is unique:
-
-* **type-safe models** for querying and mutating your data
-* **dynamic queries/mutations** evaluated at runtime
-* **custom scalar deserialization** to any native type
-* **100% native** code - zero config files, zero old-school DSLs
-* **No boilerplate** adapter classes or intermediate objects
+The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/kotlinq/)
 
 The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
 lets you auto-complete your way to safe, reliable queries and mutations
