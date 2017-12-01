@@ -25,7 +25,7 @@ Why *kotlinq* is unique:
 * **100% native** code - zero config files, zero old-school DSLs
 * **No boilerplate** adapter classes or intermediate objects
 
-The [ gradle plugin ](ktq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
+The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
 lets you execute queries and mutations without ever leaving native code.
 
 ## Example
