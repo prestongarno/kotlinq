@@ -1,0 +1,69 @@
+buildscript {
+  ext.kotlin_version = '1.2.0'
+}
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  compile project(":kotlinq-core")
+  compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
+  compile group: "org.http4k", name: "http4k-core", version: "2.29.1"
+  compile group: "org.http4k", name: "http4k-client-okhttp", version: "2.29.1"
+}
+
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId "$rootProject.group"
+      artifactId clientId
+      from components.java
+      artifact jarDoc
+      artifact jarSource
+
+      pom.withXml {
+        asNode().children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name clientId
+          description projectDescription
+          url gitBaseUrl
+          organization {
+            name DEV_COMPANY
+            url DEV_COMPANY_URL
+          }
+          issueManagement {
+            system 'git'
+            url "$gitBaseUrl/issues"
+          }
+          scm {
+            url "${gitBaseUrl}.git"
+          }
+          licenses {
+            license {
+              name "Apache 2.0"
+              url "$projLicenseUrl"
+              comments "See $projLicenseUrl for more details."
+              distribution "$projLicenseUrl"
+            }
+          }
+          developers {
+            developer {
+              id DEV_URL
+              name DEV_NAME
+              organization DEV_COMPANY
+              organizationUrl DEV_COMPANY_URL
+            }
+          }
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      url 'https://bintray.com/com/prestongarno/'
+    }
+  }
+}

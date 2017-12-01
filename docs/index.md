@@ -55,6 +55,6 @@ Simple, right? It gets even better!
   [1]: http://graphql.org
   [2]: http://facebook.github.io/graphql
   [3]: http://graphql.org/learn/
-  [4]: http://github.com/prestongarno/ktq
-  [5]: http://github.com/prestongarno/ktq-gradle
+  [4]: http://github.com/prestongarno/kotlinq
+  [5]: http://github.com/prestongarno/kotlinq-gradle
   [6]: 

@@ -1,0 +1,70 @@
+buildscript {
+  ext.kotlin_version = '1.2.0'
+}
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  compile 'com.beust:klaxon:0.30'
+  testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+  testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
+          version: "$kotlin_version"
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId "$rootProject.group"
+      artifactId clientId
+      version projects.project.version.toString()
+      from components.java
+      artifact jarDoc
+      artifact jarSource
+
+      pom.withXml {
+        asNode().children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name clientId
+          description projectDescription
+          url gitBaseUrl
+          organization {
+            name DEV_COMPANY
+            url DEV_COMPANY_URL
+          }
+          issueManagement {
+            system 'git'
+            url "$gitBaseUrl/issues"
+          }
+          scm {
+            url "${gitBaseUrl}.git"
+          }
+          licenses {
+            license {
+              name "Apache 2.0"
+              url "$projLicenseUrl"
+              comments "See $projLicenseUrl for more details."
+              distribution "$projLicenseUrl"
+            }
+          }
+          developers {
+            developer {
+              id DEV_URL
+              name DEV_NAME
+              organization DEV_COMPANY
+              organizationUrl DEV_COMPANY_URL
+            }
+          }
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      url 'https://bintray.com/com/prestongarno/'
+    }
+  }
+}

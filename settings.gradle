@@ -15,5 +15,7 @@
  *
  */
 
-rootProject.name = 'ktq-client'
-include ":"
+rootProject.name = 'kotlinq'
+include 'kotlinq-core'
+include 'kotlinq-http'
+include 'kotlinq-gradle'

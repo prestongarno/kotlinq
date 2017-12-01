@@ -1,0 +1,27 @@
+interface ActorFoo {
+    avatar(size: Int): URLY!
+    login: String!
+    url: URLY!
+}
+interface SomeConflict {
+    avatar(size: Int): URLY!
+    foobar: String
+}
+
+scalar URLY
+
+type UserFoo implements ActorFoo {
+    avatar(size: Int): URLY!
+    login: String!
+    url: URLY!
+}
+
+type OrganizationFoo implements ActorFoo SomeConflict {
+    owner: UserFoo
+    name: String
+    members: [UserFoo]
+    avatar(size: Int): URLY!
+    login: String!
+    url: URLY!
+    foobar: String
+}

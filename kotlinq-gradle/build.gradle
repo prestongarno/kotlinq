@@ -1,0 +1,116 @@
+/*buildscript {
+    ext.kotlin_version = '1.2.0'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group 'com.prestongarno.ktq'
+version '0.3-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}*/
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  compile gradleApi()
+  compile project(":kotlinq-core")
+  implementation "com.squareup:kotlinpoet:0.6.0"
+  compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7'
+  testCompile gradleTestKit()
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable', version: "$kotlin_version"
+}
+
+compileKotlin {
+  kotlinOptions {
+    includeRuntime = false
+  }
+}
+
+jar {
+  manifest {
+    attributes('Manifest-Version': '1.0', "implementation-class": "${rootProject.group}.compiler.CompilerPlugin"
+    )
+  }
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId "$rootProject.group"
+      artifactId clientId
+      from components.java
+      artifact jarDoc
+      artifact jarSource
+
+      pom.withXml {
+        asNode().children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name clientId
+          description projectDescription
+          url gitBaseUrl
+          organization {
+            name DEV_COMPANY
+            url DEV_COMPANY_URL
+          }
+          issueManagement {
+            system 'git'
+            url "$gitBaseUrl/issues"
+          }
+          scm {
+            url "${gitBaseUrl}.git"
+          }
+          licenses {
+            license {
+              name "Apache 2.0"
+              url "$projLicenseUrl"
+              comments "See $projLicenseUrl for more details."
+              distribution "$projLicenseUrl"
+            }
+          }
+          developers {
+            developer {
+              id DEV_URL
+              name DEV_NAME
+              organization DEV_COMPANY
+              organizationUrl DEV_COMPANY_URL
+            }
+          }
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      url {
+        'https://bintray.com/com/prestongarno'
+      }
+    }
+  }
+}
