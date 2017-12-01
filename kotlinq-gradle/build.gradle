@@ -34,17 +34,6 @@ compileTestKotlin {
 }*/
 buildscript {
 
-  repositories {
-    jcenter()
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-    classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-  }
-
 }
 
 apply plugin: 'java'
@@ -55,12 +44,11 @@ apply plugin: "com.jfrog.artifactory"
 
 def evalIsRelease = { Project project ->
   if (project.hasProperty("release") &&
-          project.property("release") == "true") return "0.3"
-  else return "0.3-SNAPSHOT"
+          project.property("release") == "true") return rootProject.version
+  else return "$rootProject.version-SNAPSHOT"
 }
 
 version = "${evalIsRelease(projects.project)}"
-group = 'com.prestongarno.ktq'
 
 
 repositories {

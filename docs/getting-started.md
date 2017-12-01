@@ -1,19 +1,19 @@
-## <span style="color:#f442c2"> How to objectValue **ktq** </span>
+## <span style="color:#f442c2"> How to objectValue **kotlinq** </span>
 
 To use in a project, add the dependency to a gradle buildscript:
 
-      compile 'com.prestongarno.ktq:ktq-client:0.2'
+      compile 'com.prestongarno.kotlinq:kotlinq-client:0.2'
       
-Make sure to include the [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) and read
+Make sure to include the [ gradle plugin ](https://github.com/prestongarno/kotlinq-gradle) and read
 the gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
-      classpath 'com.prestongarno.ktq:ktq-gradle:0.2'
+      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.2'
 
 And apply the plugin:
 
       plugins {
-        id 'com.prestongarno.ktq' version 0.2
+        id 'com.prestongarno.kotlinq' version 0.2
       }
       
 ## <span style="color:#f442c2">About</span>
@@ -21,7 +21,7 @@ And apply the plugin:
 Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
 queries and mutations against a GraphQl schema. 
 
-The [ gradle plugin ](https://github.com/prestongarno/ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
+The [ gradle plugin ](https://github.com/prestongarno/kotlinq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
 and mutations without ever leaving native code.
 
 For an example of how to build models, see the example below created for the Yelp Graphql API. 

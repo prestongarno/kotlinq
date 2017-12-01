@@ -84,7 +84,7 @@ open class QModel<out T : QType>(val model: T) {
 
   internal
   fun getFields(): Sequence<Adapter> =
-      fields.entries.asSequence().map { it.value }
+      fields.entries.map { it.value }.asSequence()
 
   /**
    * Add the field to the instance of this model
