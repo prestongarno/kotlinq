@@ -25,8 +25,10 @@ Why *kotlinq* is unique:
 * **100% native** code - zero config files, zero old-school DSLs
 * **No boilerplate** adapter classes or intermediate objects
 
-The [ gradle plugin ](ktq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
-and mutations without ever leaving native code.
+The [ gradle plugin ](ktq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
+lets you execute queries and mutations without ever leaving native code.
+
+## Example
 
 An example below queries the Yelp Graphql API. 
 Note that while field types are specified, they are not necessary and can be inferred:
@@ -55,7 +57,7 @@ Note that while field types are specified, they are not necessary and can be inf
 
 When initializing a `BusinessQuery` calling the `.toGraphql()` results in a valid graphql query as a String:
 
-E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
+E.g. `BusinessQuery("foobar").toGraphql()` returns:
 
     {
      search(limit: 10,
@@ -69,14 +71,11 @@ E.g. `BusinessQuery("foobar").toGraphql()` returns (formatted by default):
       }
     }
 
-For a complete guide on how to use all other graphql types such as Unions and Nullable fields,
-check out the wiki.
+For a complete guide on how to use all other graphql types such as Unions and Nullable fields, see the docs.
 
 ### How to execute a query or mutation:
 
-This isn't supported in the current release, but the `kotlinq-http` module has
-a dependency on [http4k](http://http4k.org) and supports end-to-end mutations and queries out of the box. Just 
-describe your model, and execute. This is an example for getting your github name (not shown: compiled github schema):
+This is an example for getting your github name:
 
     class ViewerQuery : QModel<Query>(Query) {
       val me by model.viewer.querying { UserModel() }
@@ -97,7 +96,7 @@ The last code block will print "Hello, \<your name here\>"
 
 ### Adding dependency from Central or JCenter
 
-*** Note: version 0.3 is backwards-incompatible. It isn't a final release yet and is hosted in the repository: ***
+__Note: version 0.3 is backwards-incompatible. It isn't a final release yet and is hosted in the repository:__
 
     https://dl.bintray.com/prestongarno/kotlinq
 
