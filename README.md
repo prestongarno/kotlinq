@@ -99,6 +99,8 @@ The last code block will print "Hello, \<your name here\>"
 
 *** Note: version 0.3 is backwards-incompatible. It isn't a final release yet and is hosted in the repository: ***
 
+    https://dl.bintray.com/prestongarno/kotlinq
+
 To use in a project, add the core & http libraries to a gradle buildscript:
 
       api 'com.prestongarno.kotlinq:kotlinq-core:0.3'
