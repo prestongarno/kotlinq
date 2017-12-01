@@ -15,7 +15,7 @@
  *
  */
 
-rootProject.name = 'kotlinq'
-include 'kotlinq-core'
-include 'kotlinq-http'
-include 'kotlinq-gradle'
+@file:Suppress("unused")
+
+package ktq.yelp
+

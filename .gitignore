@@ -22,3 +22,5 @@ graphql.schema.json
 site
 site/
 site/*
+*.log
+.log

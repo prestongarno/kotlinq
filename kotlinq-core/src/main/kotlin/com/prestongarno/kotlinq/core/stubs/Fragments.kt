@@ -15,7 +15,18 @@
  *
  */
 
-rootProject.name = 'kotlinq'
-include 'kotlinq-core'
-include 'kotlinq-http'
-include 'kotlinq-gradle'
+package com.prestongarno.kotlinq.core.stubs
+
+import com.prestongarno.kotlinq.core.QInterface
+import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QType
+
+/**
+ * To support no arguments on optional query and restricting use of config { } block
+ */
+interface FragmentStub<in I> where I : QType, I : QInterface {
+  /**
+   * Create a fragment on an field
+   * @param T The concrete type. Bounded by [I] and [QType] */
+  fun <T : I> on(initializer: () -> QModel<T>)
+}

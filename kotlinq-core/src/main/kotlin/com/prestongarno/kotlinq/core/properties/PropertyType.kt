@@ -15,7 +15,24 @@
  *
  */
 
-rootProject.name = 'kotlinq'
-include 'kotlinq-core'
-include 'kotlinq-http'
-include 'kotlinq-gradle'
+package com.prestongarno.kotlinq.core.properties
+
+/**
+ * Isn't really used for anything
+ * TODO maybe in the future when making a cache
+ */
+enum class PropertyType {
+  INT,
+  BOOLEAN,
+  STRING,
+  FLOAT,
+  ENUM,
+  OBJECT,
+  CUSTOM_SCALAR;
+
+  companion object {
+    fun from(name: String): PropertyType = all[name.toUpperCase()] ?: OBJECT
+
+    private val all = PropertyType.values().map { Pair(it.name, it) }.toMap()
+  }
+}

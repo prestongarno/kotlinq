@@ -15,7 +15,16 @@
  *
  */
 
-rootProject.name = 'kotlinq'
-include 'kotlinq-core'
-include 'kotlinq-http'
-include 'kotlinq-gradle'
+package com.prestongarno.kotlinq.http
+
+object GraphQL {
+  /**
+   * The entry point for a ktq/GraphQL application*/
+  fun initialize(endpoint: String): GraphHttpAdapter = GraphHttpImpl(endpoint)
+}
+
+internal
+class GraphHttpImpl(override val endpoint: String) : GraphHttpAdapter {
+  override var authorization: Authorization? = null
+}
+

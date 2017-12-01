@@ -1,0 +1,25 @@
+{
+  "name": "ktq-test-server",
+  "description": "Lol what u use javascript",
+  "keywords": [
+    "util",
+    "server",
+    "client",
+    "graphql",
+    "test-harness"
+  ],
+  "author": "Preston Garno <prestongarno@gmail.com>",
+  "dependencies": [
+    "express",
+    "express-graphql",
+    "graphql",
+    "graphql-tools"
+  ],
+  "version": "0.1.0",
+  "main": "src/server.json",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prestongarno/ktq-harness"
+  }
+}

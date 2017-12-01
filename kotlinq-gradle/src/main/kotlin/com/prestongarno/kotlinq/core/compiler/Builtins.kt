@@ -15,7 +15,18 @@
  *
  */
 
-rootProject.name = 'kotlinq'
-include 'kotlinq-core'
-include 'kotlinq-http'
-include 'kotlinq-gradle'
+package com.prestongarno.kotlinq.core.compiler
+
+enum class ScalarPrimitives(val typeDef: ScalarType) {
+  INT(IntType),
+  BOOLEAN(BooleanType),
+  FLOAT(FloatType),
+  STRING(StringType);
+
+  companion object {
+    val named: Map<String, ScalarPrimitives> = values().map { Pair(it.typeDef.name, it) }.toMap()
+  }
+}
+
+
+internal fun String.prepend(prefix: String) = prefix + this

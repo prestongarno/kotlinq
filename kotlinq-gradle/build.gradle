@@ -1,0 +1,101 @@
+/*buildscript {
+    ext.kotlin_version = '1.2.0'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group 'com.prestongarno.ktq'
+version '0.3-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}*/
+buildscript {
+
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+  }
+
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.artifactory"
+
+def evalIsRelease = { Project project ->
+  if (project.hasProperty("release") &&
+          project.property("release") == "true") return "0.3"
+  else return "0.3-SNAPSHOT"
+}
+
+version = "${evalIsRelease(projects.project)}"
+group = 'com.prestongarno.ktq'
+
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+def nonExported = ["org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version",
+                   "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"]
+
+dependencies {
+  compile gradleApi()
+  compile project(":kotlinq-core")
+  implementation "com.squareup:kotlinpoet:0.6.0"
+  compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7'
+  compileClasspath nonExported
+  testRuntimeClasspath nonExported
+  testCompile gradleTestKit()
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile 'junit:junit:4.12'
+  testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+  testCompile group: 'com.google.truth', name: 'truth', version: '0.36'
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable', version: "$kotlin_version"
+}
+
+compileKotlin {
+  kotlinOptions {
+    includeRuntime = false
+  }
+}
+
+jar {
+  manifest {
+    attributes('Manifest-Version': '1.0',
+            "implementation-class": "${rootProject.group}.compiler.CompilerPlugin"
+    )
+  }
+}
