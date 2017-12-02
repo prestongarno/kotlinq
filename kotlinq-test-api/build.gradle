@@ -1,49 +1,68 @@
 buildscript {
 
-  ext.generationTarget = 'src/generated/kotlin'
+  ext.generationTarget = "$name/src/generated/kotlin"
 
   repositories {
     mavenCentral()
+    jcenter()
+    maven {
+      url 'repo'
+    }
   }
   dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.0"
+    classpath "com.prestongarno.kotlinq:kotlinq-gradle:1.0"
   }
 }
-
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'com.prestongarno.kotlinq'
+
+tasks.findByName("compileGraphQL").mustRunAfter("compileJava")
 
 repositories {
   mavenCentral()
   jcenter()
+  flatDir {
+    dirs['repo']
+  }
 }
 
 dependencies {
-  compile project(":kotlinq-gradle")
-  compile project(":kotlinq-core")
+  compile ":kotlinq-core:1.0" // workaround since gradle plugin only added by jar
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0"
+  compile "org.jetbrains.kotlin:kotlin-reflect:1.2.0"
+}
+
+artifacts {
+  archives jar
 }
 
 sourceSets {
   main {
     java {
-      srcDirs += generationTarget
+      srcDirs = ['src/main/kotlin',
+                 generationTarget]
+    }
+    resources {
+      srcDirs = ['src/main/resources']
     }
   }
 }
 
-publishing {
-  publications {
-    mavenJava(MavenPublication) {}
+kotlinq {
+  schema {
+    target = "$project.name/src/main/resources/programmingLanguages.graphqls"
+    kotlinFileName = "LanguagesGraphQL.kt"
+    packageName = "com.prestongarno.kotlinq.generated.languages"
+    outputDir = generationTarget + "/lang"
   }
 }
 
-task generateApis(type: JavaExec) {
-  classpath sourceSets.main.runtimeClasspath
-  main = 'GenerateApi'
-  args generationTarget
 
-  doLast {
-    compileKotlin
+projects.each {
+  def foo = System.properties.getProperty("java.class.path").split(":")
+  foo.collect().forEach { s ->
+    println(s)
   }
 }
-

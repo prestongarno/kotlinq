@@ -33,78 +33,74 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }*/
 
+buildscript {
+
+}
 repositories {
   mavenCentral()
   jcenter()
 }
 
+apply plugin: 'maven'
+
 dependencies {
   compile gradleApi()
-  implementation project(":kotlinq-core")
-  implementation "com.squareup:kotlinpoet:0.6.0"
+  compile project(":kotlinq-core")
+  compile "com.squareup:kotlinpoet:0.6.0"
   compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7'
   testCompile gradleTestKit()
-  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable', version: "$kotlin_version"
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
+          version: "$kotlin_version"
 }
 
-compileKotlin {
-  kotlinOptions {
-    includeRuntime = false
-  }
-}
+def lazyPom = { PublicationContainer context ->
+  mavenJava(MavenPublication) {
+    groupId "$rootProject.group"
+    artifactId clientId
+    from components.java
+    artifact jarDoc
+    artifact jarSource
 
-jar {
-  manifest {
-    attributes('Manifest-Version': '1.0')
-  }
-}
-
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      groupId "$rootProject.group"
-      artifactId clientId
-      from components.java
-      artifact jarDoc
-      artifact jarSource
-
-      pom.withXml {
-        asNode().children().last() + {
-          resolveStrategy = Closure.DELEGATE_FIRST
-          name clientId
-          description projectDescription
-          url gitBaseUrl
-          organization {
-            name DEV_COMPANY
-            url DEV_COMPANY_URL
+    pom.withXml {
+      asNode().children().last() + {
+        resolveStrategy = Closure.DELEGATE_FIRST
+        name clientId
+        description projectDescription
+        url gitBaseUrl
+        organization {
+          name DEV_COMPANY
+          url DEV_COMPANY_URL
+        }
+        issueManagement {
+          system 'git'
+          url "$gitBaseUrl/issues"
+        }
+        scm {
+          url "${gitBaseUrl}.git"
+        }
+        licenses {
+          license {
+            name "Apache 2.0"
+            url "$projLicenseUrl"
+            comments "See $projLicenseUrl for more details."
+            distribution "$projLicenseUrl"
           }
-          issueManagement {
-            system 'git'
-            url "$gitBaseUrl/issues"
-          }
-          scm {
-            url "${gitBaseUrl}.git"
-          }
-          licenses {
-            license {
-              name "Apache 2.0"
-              url "$projLicenseUrl"
-              comments "See $projLicenseUrl for more details."
-              distribution "$projLicenseUrl"
-            }
-          }
-          developers {
-            developer {
-              id DEV_URL
-              name DEV_NAME
-              organization DEV_COMPANY
-              organizationUrl DEV_COMPANY_URL
-            }
+        }
+        developers {
+          developer {
+            id DEV_URL
+            name DEV_NAME
+            organization DEV_COMPANY
+            organizationUrl DEV_COMPANY_URL
           }
         }
       }
     }
   }
+}
+
+publishing {
+  publications(lazyPom)
   repositories {
     maven {
       url {
@@ -112,4 +108,14 @@ publishing {
       }
     }
   }
+}
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: uri('repo'))
+    }
+  }
+}
+clean.doFirst {
+  delete uri('repo')
 }

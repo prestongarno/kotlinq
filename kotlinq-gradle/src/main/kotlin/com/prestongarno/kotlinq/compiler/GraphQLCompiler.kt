@@ -32,21 +32,25 @@ typealias SymbolScopeRule = Set<ScopedSymbol>.(ScopedDeclarationType<*>) -> Unit
 
 /** TODO use antlr4's listener hooks to stop unnecessary iteration for validation rules */
 class GraphQLCompiler(
-    private val schema: Schema,
-    private val scope: Configuration.() -> Unit = { /* nothing */ }
+    schema: Schema,
+    scope: Configuration.() -> Unit = { /* nothing */ }
 ) {
 
   val config = Configuration.fromContext(schema, scope)
 
   /** This is kept in sync by the [GraphQLCompiler.definitions] variable. Do NOT add definitions here */
-  internal val symtab: MutableMap<String, SchemaType<*>> = ScalarPrimitives.values().map {
-    it.typeDef.name to it.typeDef
-  }.toMap(mutableMapOf())
+  val symtab: MutableMap<String, SchemaType<*>> = mutableMapOf()
 
   private val definitions: MutableSet<SchemaType<*>> by Delegates.observable(mutableSetOf()) { _, _, newValue ->
     newValue.filter { symtab[it.name] == null }.forEach { defn ->
       symtab[defn.name] = defn
     }
+  }
+
+  init {
+    ScalarSymbols.values().map {
+      it.typeDef.name to it.typeDef
+    }.also { symtab.putAll(it) }
   }
 
   val schemaTypes get() = definitions.toSet()
@@ -178,7 +182,7 @@ private fun `duplicate type names check`(): SchemaRule = {
 
 private fun `type name does not match scalar primitive`(): SchemaRule = {
   forEach { defn ->
-    require(ScalarPrimitives.named[defn.name] == null) {
+    require(ScalarSymbols.named[defn.name] == null) {
       "Illegal schema declaration name '${defn.name}' at" + defn.context.sourceInterval.a
     }
   }

@@ -18,4 +18,4 @@
 package com.prestongarno.kotlinq.core.fragments
 
 // Using generated kotlinq-test-api
-import com.prestongarno.kotlinq.generated.yelp.User
+//import com.prestongarno.kotlinq.generated.yelp.User

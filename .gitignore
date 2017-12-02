@@ -25,3 +25,5 @@ site/*
 *.log
 .log
 kotlinq-test-api/src/generated/kotlin/*
+repo/
+repo/*

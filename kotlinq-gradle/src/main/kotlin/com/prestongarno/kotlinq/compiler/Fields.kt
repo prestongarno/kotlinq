@@ -115,7 +115,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
       is InputDef -> QInputType::class
       is TypeDef -> TypeStub::class
       is UnionDef -> UnionStub::class
-      is ScalarType -> ScalarPrimitives.named[type.name]!!.typeDef.stubClass
+      is ScalarType -> ScalarSymbols.named[type.name]!!.typeDef.stubClass
     }
 
     fun `type name for list field`() = when (type) {
@@ -125,7 +125,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
       is InputDef -> QInputType::class
       is TypeDef -> TypeListStub::class
       is UnionDef -> UnionListStub::class
-      is ScalarType -> ScalarPrimitives.named[type.name]!!.typeDef.arrayStubClass
+      is ScalarType -> ScalarSymbols.named[type.name]!!.typeDef.arrayStubClass
     }
     // hell kotlinpoet why do you try to be so helpful with imports
     val baseTypeName = (if (isList) `type name for list field`() else `type name for non-collection field`())

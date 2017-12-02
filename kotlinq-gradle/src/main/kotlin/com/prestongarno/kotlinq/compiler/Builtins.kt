@@ -17,16 +17,22 @@
 
 package com.prestongarno.kotlinq.compiler
 
-enum class ScalarPrimitives(val typeDef: ScalarType) {
+enum class ScalarSymbols(@JvmField val typeDef: ScalarType) {
+  @JvmStatic
   INT(IntType),
+  @JvmStatic
   BOOLEAN(BooleanType),
+  @JvmStatic
   FLOAT(FloatType),
+  @JvmStatic
   STRING(StringType);
 
   companion object {
-    val named: Map<String, ScalarPrimitives> = values().map { Pair(it.typeDef.name, it) }.toMap()
+    @JvmStatic
+    val named: Map<String, ScalarSymbols> by lazy {
+      values().map { Pair(it.typeDef.name, it) }.toMap()
+    }
   }
 }
-
 
 internal fun String.prepend(prefix: String) = prefix + this

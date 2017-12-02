@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+/*
 
 package com.prestongarno.kotlinq.core.formatting
 
@@ -295,4 +296,5 @@ class QmodelToGraphQl {
       """.trimMargin("|"))
   }
 }
+*/
 

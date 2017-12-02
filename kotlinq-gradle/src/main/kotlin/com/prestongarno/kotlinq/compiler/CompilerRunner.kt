@@ -18,10 +18,12 @@
 package com.prestongarno.kotlinq.compiler
 
 import groovy.lang.Closure
+import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.AbstractCompile
@@ -29,34 +31,41 @@ import java.io.File
 
 open class CompilerRunner : DefaultTask() {
 
-  val schemaDefs: Set<SchemaDefinition> = extensions
+  val schemaDefs: Set<SchemaDefinition> by lazy { project.rootProject.extensions
       .getByType(KotlinqCompilerConfiguration::class.java)
       ?.schemaDefinitions
-      ?: throw GradleException("Kotlinq gradle plugin is not configured")
+      ?: throw GradleException("Kotlinq gradle plugin is not configured") }
 
   @Input
   val schemaFiles: Set<File> = schemaDefs
-      .map(SchemaDefinition::file)
+      .map(SchemaDefinition::target)
       .map(::File)
       .toSet()
+
+  init {
+    schemaDefs.forEach {
+      outputs.file(it.target.asFile())
+    }
+  }
 
   @TaskAction
   fun compileGraphQl() {
     schemaDefs.filter {
-      it.file.asFile().let { file -> file.exists() && file.canRead() }
+      it.target.asFile().let { file -> file.exists() && file.canRead() }
     }.onEach { schemaDef ->
 
-      val file = schemaDef.file.asFile()
+      val file = schemaDef.target.asFile()
 
-      val result = GraphQLCompiler(FileSchema(file.absolutePath)) {
+      val compiler = GraphQLCompiler(FileSchema(file.absolutePath)) {
         kotlinFileName = schemaDef.kotlinFileName
             .let { if (it.isEmpty()) "GraphQLKotlin.kt" else it }
         packageName = schemaDef.packageName
-      }.apply(GraphQLCompiler::compile)
-          .let(GraphQLCompiler::toKotlinApi)
+      }
+      compiler.compile()
+      val result = compiler.toKotlinApi()
 
       schemaDef.outputDir.asFile().apply {
-        if (!exists() || !mkdirs())
+        if (!mkdirs())
           throw GradleException("Could not make compile output directory $path")
 
         val ktFile = this.child(schemaDef.packageName.replace(".", "/")).apply {
@@ -73,14 +82,14 @@ open class CompilerRunner : DefaultTask() {
     }
 
     if (schemaDefs.isEmpty()) {
-      println("No schema definitions specified. Skipping...")
+      logger.log(LogLevel.INFO, "No schema definitions specified. Skipping...")
     }
   }
 
 }
 
 class SchemaDefinition(project: Project) {
-  @JvmField var file: String = ""
+  @JvmField var target: String = ""
   @JvmField var kotlinFileName = ""
   @JvmField var packageName = ""
   @JvmField var outputDir = project.buildDir.absolutePath + "generated/kotlinq"
@@ -90,23 +99,29 @@ open class KotlinqCompilerConfiguration(var project: Project) {
 
   internal val schemaDefinitions: MutableSet<SchemaDefinition> = mutableSetOf()
 
-  fun schema(closure: Closure<SchemaDefinition>) {
+  fun schema(action: Action<SchemaDefinition>) {
     val schemaDef = SchemaDefinition(project)
-    closure.call(schemaDef)
+    action.execute(schemaDef)
     schemaDefinitions += schemaDef
+
+    /*project.logger.log(LogLevel.INFO, */
+    println("Working directory: ${File("./").absolutePath}")
+    println("Registered GraphQL schema:" + schemaDef.run {
+      "\n\ttarget: " + target +
+      "\n\tkotlinFileName: " + kotlinFileName +
+      "\n\tpackageName: " + packageName +
+      "\n\toutputDir: " + outputDir
+    })
   }
 
 }
 
-class KotlinqPlugin : Plugin<Project> {
+open class KotlinqPlugin : Plugin<Project> {
 
   override fun apply(target: Project?): Unit = target?.run {
-    extensions.create("kotlinq", KotlinqCompilerConfiguration::class.java, project)
-    val compilerTask = project.tasks.create("compileGraphQL", CompilerRunner::class.java)
-    tasks.withType(AbstractCompile::class.java).forEach {
-      it.dependsOn(compilerTask)
-    }
-
+    target.logger.log(LogLevel.INFO, "Applying compiler plugin to project: '${target.name}'")
+    target.extensions.create("kotlinq", KotlinqCompilerConfiguration::class.java, target)
+    val compilerTask = target.tasks.create("compileGraphQL", CompilerRunner::class.java)
   }.ignore()
 }
 

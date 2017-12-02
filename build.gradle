@@ -19,7 +19,7 @@ buildscript {
   ext.kotlin_version = '1.2.0'
   ext.clientId = projects.project.name
   ext.sourceCompatibility = 1.8
-  ext.projectDescription = 'a kotlin client for graphql'
+  ext.projectDescription = "kotlinq: a kotlin client for graphql"
   ext.gitBaseUrl = GIT_BASE_URL + '/kotlinq'
   ext.projLicenseUrl = "$gitBaseUrl/LICENSE.txt"
 
@@ -28,6 +28,7 @@ buildscript {
     mavenCentral()
   }
 
+  //noinspection GroovyAssignabilityCheck <-- why does this even happen...
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
@@ -38,7 +39,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'kotlin'
 
-def getVersion = { Project project ->
+def getVersion = {
   if (rootProject.hasProperty("release") && rootProject.property("release") == "true") {
     return "0.3.0-RC2"
   } else {
@@ -50,104 +51,102 @@ group = 'com.prestongarno.kotlinq'
 version = getVersion()
 
 
-configurations.all {
-  resolutionStrategy {
-    eachDependency { DependencyResolveDetails details ->
-      if (details.requested.group == 'org.jetbrains.kotlin') {
-        details.useVersion(kotlin_version)
+subprojects {
+  configurations.all {
+    resolutionStrategy {
+      eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.jetbrains.kotlin') {
+          details.useVersion(kotlin_version)
+        }
       }
     }
   }
 }
 
-subprojects { Project project ->
-  project.apply {
+subprojects {
 
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'kotlin'
-    apply plugin: 'maven-publish'
-    apply plugin: 'maven-publish'
-    apply plugin: "com.jfrog.artifactory"
+  apply plugin: 'java'
+  apply plugin: 'idea'
+  apply plugin: 'kotlin'
+  apply plugin: 'maven-publish'
+  apply plugin: "com.jfrog.bintray"
+  apply plugin: "com.jfrog.artifactory"
 
-    apply plugin: "com.jfrog.bintray"
+  ext.clientId = project.name
 
-    ext.clientId = project.name
-
-    version = getVersion(rootProject)
+  version = getVersion(rootProject)
 
 
-    dependencies {
-      compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-      compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-      testCompile group: 'junit', name: 'junit', version: '4.12'
-      testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-      testCompile group: 'com.google.truth', name: 'truth', version: '0.36'
-    }
+  dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile group: 'com.google.truth', name: 'truth', version: '0.36'
+  }
 
-    sourceSets {
-      main {
-        java {
-          srcDirs = ['src/main/kotlin',
-                     'src/main/java']
-        }
-        resources {
-          srcDirs = ['src/main/resources']
-        }
+  sourceSets {
+    main {
+      java {
+        srcDirs = ['src/main/kotlin',
+                   'src/main/java']
       }
-      test {
-        java {
-          srcDirs = ['src/test/kotlin',
-                     'src/main/java']
-        }
-        resources {
-          srcDirs = ['src/test/resources']
-        }
+      resources {
+        srcDirs = ['src/main/resources']
       }
     }
-
-    kotlin {
-      experimental {
-        coroutines "enable"
+    test {
+      java {
+        srcDirs = ['src/test/kotlin',
+                   'src/main/java']
+      }
+      resources {
+        srcDirs = ['src/test/resources']
       }
     }
+  }
 
-    task jarDoc(type: Jar) {
-      from(javadoc.destinationDir)
-      classifier 'javadoc'
-      archiveName "$clientId-$version-${classifier}.jar"
+  kotlin {
+    experimental {
+      coroutines "enable"
     }
+  }
 
-    task jarSource(type: Jar) {
-      from(sourceSets.main.allSource)
-      from(sourceSets.test.allSource)
-      classifier 'sources'
-      archiveName = "$clientId-$version-sources.jar"
-    }
+  task jarDoc(type: Jar) {
+    from(javadoc.destinationDir)
+    classifier 'javadoc'
+    archiveName "$clientId-$version-${classifier}.jar"
+  }
 
-
-
-    artifacts {
-      archives jar, jarSource, jarDoc
-    }
-
-    bintrayUpload {
-      doFirst { println("Uploading module $clientId $version") }
-    }
+  task jarSource(type: Jar) {
+    from(sourceSets.main.allSource)
+    from(sourceSets.test.allSource)
+    classifier 'sources'
+    archiveName = "$clientId-$version-sources.jar"
+  }
 
 
-    artifactory {
-      contextUrl = 'http://oss.jfrog.org/artifactory'
-      publish {
-        repository {
-          repoKey = 'oss-snapshot-local'
-          username = BINTRAY_USER
-          password = JFROG_KEY
-        }
-        defaults {
-          publications('mavenJava')
-          publishPom = true
-        }
+
+  artifacts {
+    archives jar, jarSource, jarDoc
+  }
+
+  bintrayUpload {
+    doFirst { println("Uploading module $clientId $version") }
+  }
+
+
+  artifactory {
+    contextUrl = 'http://oss.jfrog.org/artifactory'
+    publish {
+      repository {
+        repoKey = 'oss-snapshot-local'
+        username = BINTRAY_USER
+        password = JFROG_KEY
+      }
+      defaults {
+        publications('mavenJava')
+        publishPom = true
       }
     }
   }
@@ -185,3 +184,52 @@ subprojects { Project project ->
     }
   }
 }
+
+
+subprojects.findAll { it.name != 'kotlinq-test-api' }.each { Project proj ->
+  println(proj.name)
+}
+
+
+
+task copyPluginPublish(type: Copy) {
+  from ('kotlinq-gradle/repo') {
+    include '**/*.jar'
+  }
+  def vers = '1.0'
+  def name = 'kotlinq-gradle'
+  into 'kotlinq-test-api/repo'
+  rename "$version", "1.0"
+  rename "kotlinq-gradle-(.*).jar", ("$name-$vers" + '.jar')
+  eachFile { details ->
+    details.path = ('com/prestongarno/kotlinq/kotlinq-gradle/1.0/' + details.name)
+  }
+  setIncludeEmptyDirs(false)
+}
+
+task evaluateTestApi(type: GradleBuild, dependsOn: jar) { GradleBuild g ->
+  g.dependsOn(copyPluginPublish)
+  g.dependsOn(":kotlinq-gradle:uploadArchives")
+  g.doFirst {
+    copyPluginPublish.execute()
+  }
+  buildFile = 'kotlinq-test-api/build.gradle'
+  tasks = ['clean', 'compileGraphQL', 'build', 'jar']
+
+  doLast {
+    projects.findAll { p -> p.name == "kotlinq-core" }.each { Project core ->
+      core.repositories {
+        maven {
+          url buildDir.absolutePath
+        }
+      }
+      core.dependencies {
+        testCompile ":kotlinq-test-api:$rootProject.version"
+      }
+    }
+  }
+}
+
+evaluateTestApi.dependsOn(":kotlinq-gradle:uploadArchives")
+evaluateTestApi.dependsOn(copyPluginPublish)
+copyPluginPublish.dependsOn(":kotlinq-gradle:uploadArchives")
