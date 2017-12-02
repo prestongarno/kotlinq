@@ -32,7 +32,7 @@ class UnionToKotlinTest : JavacTest() {
       |type Jedi {name: String}
       |
       """
-    val result = compileOut(schema.trimMargin("|")).apply { println(this) }
+    val result = compileOut(schema.trimMargin("|"))
 
     val expect = """
 

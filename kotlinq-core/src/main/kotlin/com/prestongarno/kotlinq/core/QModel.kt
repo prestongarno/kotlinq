@@ -19,6 +19,7 @@ package com.prestongarno.kotlinq.core
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.internal.pretty
 import java.io.InputStream
 
 /**
@@ -41,9 +42,11 @@ open class QModel<out T : QType>(val model: T) {
 
   fun isResolved(): Boolean = resolved
 
-  fun toGraphql(): String = fields.entries.joinToString(",", "{", "}") {
-    it.value.toRawPayload()
-  }
+  @JvmOverloads
+  fun toGraphql(pretty: Boolean = false): String =
+      if (pretty) pretty() else fields.entries.joinToString(",", "{", "}") {
+        it.value.toRawPayload()
+      }
 
   private
   fun onResponse(input: InputStream): Boolean =
