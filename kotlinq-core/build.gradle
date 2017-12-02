@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.beust:klaxon:0.30'
+  implementation 'com.beust:klaxon:0.30'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
   testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',

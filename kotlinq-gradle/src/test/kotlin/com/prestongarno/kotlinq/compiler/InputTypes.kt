@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
+import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
 import org.junit.Test
 
 class InputTypes : JavacTest() {

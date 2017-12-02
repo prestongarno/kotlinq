@@ -55,8 +55,7 @@ compileKotlin {
 
 jar {
   manifest {
-    attributes('Manifest-Version': '1.0', "implementation-class": "${rootProject.group}.compiler.CompilerPlugin"
-    )
+    attributes('Manifest-Version': '1.0')
   }
 }
 

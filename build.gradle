@@ -59,6 +59,7 @@ configurations.all {
     }
   }
 }
+
 subprojects { Project project ->
   project.apply {
 

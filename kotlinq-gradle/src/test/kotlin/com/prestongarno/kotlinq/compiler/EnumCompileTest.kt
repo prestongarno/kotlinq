@@ -19,8 +19,8 @@ package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.compiler.KTypeSubject.Companion.argumentsMatching
-import com.prestongarno.kotlinq.core.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
+import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.argumentsMatching
+import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
 import com.prestongarno.kotlinq.core.stubs.EnumStub
 import org.junit.After
 import org.junit.Before
