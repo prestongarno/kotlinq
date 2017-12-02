@@ -15,14 +15,14 @@
  *
  */
 
-package ktq.interfaces
+package com.prestongarno.kotlinq.core.interfaces
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.QInterface
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.QType
-import ktq.primitives.eq
+import com.prestongarno.kotlinq.core.primitives.eq
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import org.junit.Test
 
@@ -41,13 +41,13 @@ object Get : QType {
 class BasicInterfaceLists {
 
   class ThingImpl : QModel<Concrete>(Concrete) {
-    val name by model.name
+    val name by Concrete.name
   }
 
   @Test fun `interface list is possible`() {
 
     val query = object : QModel<Get>(Get) {
-      val things by model.getThings {
+      val things by Get.getThings {
         on(BasicInterfaceLists::ThingImpl)
       }
     }

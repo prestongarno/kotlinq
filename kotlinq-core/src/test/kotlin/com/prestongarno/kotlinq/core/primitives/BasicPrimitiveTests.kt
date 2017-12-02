@@ -15,7 +15,7 @@
  *
  */
 
-package ktq.primitives
+package com.prestongarno.kotlinq.core.primitives
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.QModel
@@ -48,7 +48,7 @@ class BasicPrimitiveTests {
 
   @Test fun `string field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val name by model.name
+      val name by Person.name
     }
     assertThat(query::name.returnType.classifier)
         .isEqualTo(String::class)
@@ -58,7 +58,7 @@ class BasicPrimitiveTests {
 
   @Test fun `integer field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val age by model.age
+      val age by Person.age
     }
     assertThat(query::age.returnType.classifier)
         .isEqualTo(Int::class)
@@ -68,7 +68,7 @@ class BasicPrimitiveTests {
 
   @Test fun `float field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val gpa by model.gpa
+      val gpa by Person.gpa
     }
     assertThat(query::gpa.returnType.classifier)
         .isEqualTo(Float::class)
@@ -78,7 +78,7 @@ class BasicPrimitiveTests {
 
   @Test fun `boolean field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val gradated by model.hasHighSchoolDiploma
+      val gradated by Person.hasHighSchoolDiploma
     }
     assertThat(query::gradated.returnType.classifier)
         .isEqualTo(Boolean::class)
@@ -88,10 +88,10 @@ class BasicPrimitiveTests {
 
   @Test fun `delegate with empty invocation blocks is possible`() {
     val query = object : QModel<Person>(Person) {
-      val name by model.name { /* Nothing */ }
-      val age by model.age { /* Nothing */ }
-      val gpa by model.gpa { /* Nothing */ }
-      val isGrad by model.hasHighSchoolDiploma { /* Nothing */ }
+      val name by Person.name { /* Nothing */ }
+      val age by Person.age { /* Nothing */ }
+      val gpa by Person.gpa { /* Nothing */ }
+      val isGrad by Person.hasHighSchoolDiploma { /* Nothing */ }
     }
 
     query.fields.entries.map {
@@ -124,19 +124,19 @@ class BasicPrimitiveTests {
 
     val query = object : QModel<Person>(Person) {
 
-      val name by model.name {
+      val name by Person.name {
         default = "Preston Garno"
       }
 
-      val age by model.age {
+      val age by Person.age {
         default = 22
       }
 
-      val gpa by model.gpa {
+      val gpa by Person.gpa {
         default = 3.9F
       }
 
-      val isGrad by model.hasHighSchoolDiploma {
+      val isGrad by Person.hasHighSchoolDiploma {
         default = true
       }
     }
@@ -153,19 +153,19 @@ class BasicPrimitiveTests {
 
     val query = object : QModel<Person>(Person) {
 
-      val name by model.name {
+      val name by Person.name {
         config { "Hello" with "World" }
       }
 
-      val age by model.age {
+      val age by Person.age {
         config { "Number" with 69 }
       }
 
-      val gpa by model.gpa {
+      val gpa by Person.gpa {
         config { "Boolean" with false }
       }
 
-      val grad by model.hasHighSchoolDiploma {
+      val grad by Person.hasHighSchoolDiploma {
         config { "floatArgument" with 4.0000067f }
       }
     }

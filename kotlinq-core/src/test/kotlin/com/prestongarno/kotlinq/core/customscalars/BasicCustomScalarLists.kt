@@ -15,14 +15,14 @@
  *
  */
 
-package ktq.customscalars
+package com.prestongarno.kotlinq.core.customscalars
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.adapters.custom.StringScalarListMapper
 import com.prestongarno.kotlinq.core.hooks.StubProvider
-import ktq.primitives.eq
+import com.prestongarno.kotlinq.core.primitives.eq
 import org.junit.Test
 
 object ResourceBundle : QType {
@@ -34,7 +34,7 @@ class BasicCustomScalarLists {
   @Test fun `custom scalar list is possible`() {
 
     val query = object : QModel<ResourceBundle>(ResourceBundle) {
-      val urls by model.urls.map(StringScalarListMapper { it })
+      val urls by ResourceBundle.urls.map(StringScalarListMapper { it })
     }
     query::urls.returnType.arguments
         .firstOrNull()?.type?.classifier eq String::class

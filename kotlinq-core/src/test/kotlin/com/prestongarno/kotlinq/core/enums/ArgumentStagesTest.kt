@@ -15,7 +15,7 @@
  *
  */
 
-package ktq.enums
+package com.prestongarno.kotlinq.core.enums
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
@@ -36,7 +36,7 @@ class ArgumentStagesTest {
 
   @Test fun `config block on NoArg stub shows up`() {
     val query = object : QModel<Class>(Class) {
-      val level by model.classLevel {
+      val level by Class.classLevel {
         config { "Hello" with "World" }
       }
     }
@@ -51,7 +51,7 @@ class ArgumentStagesTest {
     val arguments = Class.ClassLevelArgs(100, "100", 100.0f, true)
 
     val query = object : QModel<Class>(Class) {
-      val levelWithArgs by model.classLevelWithArgs(arguments) {
+      val levelWithArgs by Class.classLevelWithArgs(arguments) {
         config {
           integer = 1200
           string = "1200"
@@ -76,7 +76,7 @@ class ArgumentStagesTest {
 
   @Test fun `optional arguments with no args passed`() {
     val query = object : QModel<Class>(Class) {
-      val levelNoArgs by model.classLevelOptionalArgs
+      val levelNoArgs by Class.classLevelOptionalArgs
     }
     assertThat(query.toGraphql())
         .isEqualTo("{${Class::classLevelOptionalArgs.name}}")
@@ -84,7 +84,7 @@ class ArgumentStagesTest {
 
   @Test fun `optional arguments with arguments passed in DSL closure`() {
     val query = object : QModel<Class>(Class) {
-      val levelWithArgs by model.classLevelOptionalArgs(Class.OptionalClassLevelArgs()) {
+      val levelWithArgs by Class.classLevelOptionalArgs(Class.OptionalClassLevelArgs()) {
         default = ClassLevel.HIGH_SCHOOL
         config {
           intArgument = 3535
@@ -101,7 +101,7 @@ class ArgumentStagesTest {
 
   @Test fun `optional arguments with not all arguments set in config block`() {
     val query = object : QModel<Class>(Class) {
-      val levelWithArgs by model.classLevelOptionalArgs(Class.OptionalClassLevelArgs()) {
+      val levelWithArgs by Class.classLevelOptionalArgs(Class.OptionalClassLevelArgs()) {
         default = ClassLevel.HIGH_SCHOOL
         config {
           intArgument = 353535
@@ -156,7 +156,7 @@ enum class ClassLevel : QEnumType {
 }
 
 class ClassQuery1 : QModel<Class>(Class) {
-  val level by model.classLevel {
+  val level by Class.classLevel {
     default = ClassLevel.UNDERGRADUATE
   }
 }

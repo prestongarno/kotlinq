@@ -15,13 +15,13 @@
  *
  */
 
-package ktq.enums
+package com.prestongarno.kotlinq.core.enums
 
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.QType
-import ktq.primitives.eq
+import com.prestongarno.kotlinq.core.primitives.eq
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 
@@ -51,7 +51,7 @@ class BasicEnumLists {
   @Test fun `enum list basic delegate type is possible`() {
 
     val query = object : QModel<Data>(Data) {
-      val numbers by model.numberEnums
+      val numbers by Data.numberEnums
     }
     query::numbers.returnType
         .arguments.firstOrNull()?.type?.classifier eq Kind::class
@@ -61,7 +61,7 @@ class BasicEnumLists {
   @Test fun `enum list from response is valid`() {
 
     val query = object : QModel<Data>(Data) {
-      val numbers by model.numberEnums
+      val numbers by Data.numberEnums
     }
     query.toGraphql() eq "{numberEnums}"
 

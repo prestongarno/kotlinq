@@ -17,5 +17,5 @@
 
 @file:Suppress("unused")
 
-package ktq.yelp
+package com.prestongarno.kotlinq.core.yelp
 

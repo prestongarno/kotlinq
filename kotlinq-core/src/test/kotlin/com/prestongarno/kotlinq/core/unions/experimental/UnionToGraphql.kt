@@ -15,7 +15,7 @@
  *
  */
 
-package ktq.unions.experimental
+package com.prestongarno.kotlinq.core.unions.experimental
 
 
 /*

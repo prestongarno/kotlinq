@@ -15,7 +15,7 @@
  *
  */
 
-package ktq
+package com.prestongarno.kotlinq.core
 
 
 /*

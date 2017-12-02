@@ -15,7 +15,7 @@
  *
  */
 
-package ktq
+package com.prestongarno.kotlinq.core
 /*
 import com.prestongarno.ktq.QSchemaType.QTypeList
 import com.prestongarno.ktq.QSchemaType.QScalar

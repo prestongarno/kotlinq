@@ -15,14 +15,14 @@
  *
  */
 
-package ktq.type
+package com.prestongarno.kotlinq.core.type
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.QType
-import ktq.primitives.eq
+import com.prestongarno.kotlinq.core.primitives.eq
 import org.junit.Test
 
 object Team : QType {
@@ -50,14 +50,14 @@ enum class ListOrder : QEnumType {
 class BasicTypeList {
 
   class PersonModel : QModel<Person>(Person) {
-    val name by model.name
-    val age by model.age
+    val name by Person.name
+    val age by Person.age
   }
 
   @Test fun `type list field is possible`() {
     
     val query = object : QModel<Team>(Team) {
-      val teamMembers by model.members.query(BasicTypeList::PersonModel)
+      val teamMembers by Team.members.query(BasicTypeList::PersonModel)
     }
 
     query::teamMembers.returnType.arguments
@@ -68,7 +68,7 @@ class BasicTypeList {
   @Test fun `configured type list field is possible`() {
 
     val query = object : QModel<Team>(Team) {
-      val members by model.configMembers
+      val members by Team.configMembers
           .query(BasicTypeList::PersonModel)(Team.ConfigMembersArgs(100))
     }
     query::members.returnType.arguments

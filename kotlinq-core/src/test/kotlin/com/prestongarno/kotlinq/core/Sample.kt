@@ -17,7 +17,7 @@
 
 @file:Suppress("unused")
 
-package ktq
+package com.prestongarno.kotlinq.core
 /*
 import org.junit.Test
 import com.prestongarno.ktq.QSchemaType.QScalar

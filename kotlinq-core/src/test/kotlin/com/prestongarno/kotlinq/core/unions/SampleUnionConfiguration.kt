@@ -15,13 +15,13 @@
  *
  */
 
-package ktq.unions
+package com.prestongarno.kotlinq.core.unions
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.QUnionType
-import ktq.primitives.eq
+import com.prestongarno.kotlinq.core.primitives.eq
 import org.junit.Test
 
 
@@ -48,18 +48,18 @@ object Query : QType {
 class SampleUnionConfiguration {
 
   class CarModel : QModel<Car>(Car) {
-    val make by model.make
-    val carModel by model.carModel
+    val make by Car.make
+    val carModel by Car.carModel
   }
   class HamburgerModel : QModel<Hamburger>(Hamburger) {
-    val ingredientsList by model.ingredients
+    val ingredientsList by Hamburger.ingredients
   }
 
   @Test fun `union field and fragments is possible`() {
 
     val query = object : QModel<Query>(Query) {
 
-      val thing by model.thing {
+      val thing by Query.thing {
         fragment {
           onCar(SampleUnionConfiguration::CarModel)
           onHamburger(SampleUnionConfiguration::HamburgerModel)
@@ -74,7 +74,7 @@ class SampleUnionConfiguration {
 
     val query = object : QModel<Query>(Query) {
 
-      val thingList by model.things {
+      val thingList by Query.things {
         fragment {
           onCar(SampleUnionConfiguration::CarModel)
           onHamburger(SampleUnionConfiguration::HamburgerModel)
