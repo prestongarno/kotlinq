@@ -40,7 +40,7 @@ repositories {
 
 dependencies {
   compile gradleApi()
-  compile project(":kotlinq-core")
+  implementation project(":kotlinq-core")
   implementation "com.squareup:kotlinpoet:0.6.0"
   compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7'
   testCompile gradleTestKit()

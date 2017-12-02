@@ -27,8 +27,11 @@ import com.prestongarno.kotlinq.core.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.stubs.TypeStub
+import com.prestongarno.kotlinq.generated.yelp.Business
+import com.prestongarno.kotlinq.generated.yelp.Location
+import com.prestongarno.kotlinq.generated.yelp.Review
+import com.prestongarno.kotlinq.generated.yelp.User
 import org.junit.Test
-import com.prestongarno.kotlinq.core.yelp.*
 
 class QmodelToGraphQl {
 
