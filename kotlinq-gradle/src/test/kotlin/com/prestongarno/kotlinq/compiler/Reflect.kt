@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction

@@ -15,18 +15,11 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
-enum class ScalarPrimitives(val typeDef: ScalarType) {
-  INT(IntType),
-  BOOLEAN(BooleanType),
-  FLOAT(FloatType),
-  STRING(StringType);
+sealed class Schema
 
-  companion object {
-    val named: Map<String, ScalarPrimitives> = values().map { Pair(it.typeDef.name, it) }.toMap()
-  }
-}
+class StringSchema(val source: String) : Schema()
 
+class FileSchema(val path: String) : Schema()
 
-internal fun String.prepend(prefix: String) = prefix + this

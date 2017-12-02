@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import com.google.common.io.Files
 import java.io.File

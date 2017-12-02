@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.QSchemaType
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments

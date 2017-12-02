@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
 import org.junit.Test

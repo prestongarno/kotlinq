@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.QInputType
 import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
@@ -67,7 +67,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
   lateinit var inheritsFrom: Set<InterfaceDef>
 
   /** has to be done from an outside context. Created in [GraphQLCompiler.attrInheritance]*/
-  internal var argBuilder: ArgBuilderDef? = null
+  internal var argBuilder: com.prestongarno.kotlinq.compiler.ArgBuilderDef? = null
 
   val arguments: List<ArgumentDefinition> = context.fieldArgs()
       ?.argument()

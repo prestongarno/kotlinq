@@ -15,27 +15,18 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
-import com.squareup.kotlinpoet.ParameterSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
+enum class ScalarPrimitives(val typeDef: ScalarType) {
+  INT(IntType),
+  BOOLEAN(BooleanType),
+  FLOAT(FloatType),
+  STRING(StringType);
 
-interface KotlinLangElement<T : Any> {
-  fun toKotlin(): T
+  companion object {
+    val named: Map<String, ScalarPrimitives> = values().map { Pair(it.typeDef.name, it) }.toMap()
+  }
 }
 
-interface KotlinTypeElement : KotlinLangElement<TypeSpec>
 
-interface KotlinPropertyElement : KotlinLangElement<PropertySpec>
-
-interface KotlinParameterElement : KotlinLangElement<ParameterSpec>
-
-
-interface NamedElement {
-  val name: String
-}
-
-interface SymbolElement : NamedElement {
-  val typeName: String
-}
+internal fun String.prepend(prefix: String) = prefix + this

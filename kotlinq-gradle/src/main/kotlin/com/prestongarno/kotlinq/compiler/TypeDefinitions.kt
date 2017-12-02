@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.CustomScalar
 import com.prestongarno.kotlinq.core.QEnumType

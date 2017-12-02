@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import com.google.common.truth.ThrowableSubject
 import com.google.common.truth.Truth.assertThat

@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaLexer
 import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser

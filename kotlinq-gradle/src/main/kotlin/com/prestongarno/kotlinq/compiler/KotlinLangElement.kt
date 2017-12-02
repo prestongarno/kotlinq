@@ -15,11 +15,27 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.compiler
+package com.prestongarno.kotlinq.compiler
 
-sealed class Schema
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 
-class StringSchema(val source: String) : Schema()
+interface KotlinLangElement<T : Any> {
+  fun toKotlin(): T
+}
 
-class FileSchema(val path: String) : Schema()
+interface KotlinTypeElement : KotlinLangElement<TypeSpec>
 
+interface KotlinPropertyElement : KotlinLangElement<PropertySpec>
+
+interface KotlinParameterElement : KotlinLangElement<ParameterSpec>
+
+
+interface NamedElement {
+  val name: String
+}
+
+interface SymbolElement : NamedElement {
+  val typeName: String
+}
