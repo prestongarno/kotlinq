@@ -15,7 +15,7 @@
  *
  */
 
-package ktq.interfaces
+package com.prestongarno.kotlinq.core.interfaces
 /*
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.ktq.ArgBuilder

@@ -15,7 +15,7 @@
  *
  */
 
-package ktq.interfaces
+package com.prestongarno.kotlinq.core.interfaces
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.QEnumType
@@ -61,18 +61,18 @@ object Random : QType {
 class ReceiverApiTestStructure {
 
   class MyPersistence : QModel<Persistence>(Persistence) {
-    val name by model.name
-    val type by model.type
+    val name by Persistence.name
+    val type by Persistence.type
   }
   class MyTimber : QModel<Timber>(Timber) {
-    val name by model.name
-    val type by model.type
+    val name by Timber.name
+    val type by Timber.type
   }
 
   @Test fun `single interface field query with parsing response`() {
     val query = object : QModel<Random>(Random) {
       // TODO -> not allow a providedelegate without fragmenting!
-      val result by model.getRandomConcept {
+      val result by Random.getRandomConcept {
         on(ReceiverApiTestStructure::MyPersistence)
         on(ReceiverApiTestStructure::MyTimber)
       }
