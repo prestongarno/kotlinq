@@ -76,7 +76,7 @@ class ArgumentStagesTest {
 
   @Test fun `optional arguments with no args passed`() {
     val query = object : QModel<Class>(Class) {
-      val levelNoArgs by Class.classLevelOptionalArgs
+      val levelNoArgs by model.classLevelOptionalArgs
     }
     assertThat(query.toGraphql())
         .isEqualTo("{${Class::classLevelOptionalArgs.name}}")
@@ -156,7 +156,7 @@ enum class ClassLevel : QEnumType {
 }
 
 class ClassQuery1 : QModel<Class>(Class) {
-  val level by Class.classLevel {
+  val level by model.classLevel {
     default = ClassLevel.UNDERGRADUATE
   }
 }

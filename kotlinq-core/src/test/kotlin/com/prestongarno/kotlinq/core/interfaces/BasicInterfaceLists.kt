@@ -41,7 +41,7 @@ object Get : QType {
 class BasicInterfaceLists {
 
   class ThingImpl : QModel<Concrete>(Concrete) {
-    val name by Concrete.name
+    val name by model.name
   }
 
   @Test fun `interface list is possible`() {

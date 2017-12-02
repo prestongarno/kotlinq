@@ -46,7 +46,7 @@ class BasicPrimitiveArray {
   @Test fun `string array is possible`() {
 
     val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
-      val names by AnonymousClassroom.studentNames
+      val names by model.studentNames
     }
 
     query::names.returnType.classifier eq Array<String>::class
@@ -56,7 +56,7 @@ class BasicPrimitiveArray {
   @Test fun `integer array is possible`() {
 
     val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
-      val ages by AnonymousClassroom.studentAges
+      val ages by model.studentAges
     }
     query::ages.returnType.classifier eq IntArray::class
     query.toGraphql() eq "{studentAges}"
@@ -65,7 +65,7 @@ class BasicPrimitiveArray {
   @Test fun `float array is possible`() {
 
     val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
-      val gpas by AnonymousClassroom.studentGpa
+      val gpas by model.studentGpa
     }
     query::gpas.returnType.classifier eq FloatArray::class
     query.toGraphql() eq "{studentGpa}"
@@ -73,7 +73,7 @@ class BasicPrimitiveArray {
 
   @Test fun `boolean array is possible`() {
     val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
-      val passing by AnonymousClassroom.studentPassing
+      val passing by model.studentPassing
     }
     query::passing.returnType.classifier eq BooleanArray::class
     query.toGraphql() eq "{studentPassing}"
@@ -83,13 +83,13 @@ class BasicPrimitiveArray {
 
     val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
 
-      val names by AnonymousClassroom.studentNames { /* nothing */ }
+      val names by model.studentNames { /* nothing */ }
 
-      val ages by AnonymousClassroom.studentAges { /* nothing */ }
+      val ages by model.studentAges { /* nothing */ }
 
-      val gpas by AnonymousClassroom.studentGpa { /* nothing */ }
+      val gpas by model.studentGpa { /* nothing */ }
 
-      val passing by AnonymousClassroom.studentPassing { /* nothing */ }
+      val passing by model.studentPassing { /* nothing */ }
 
     }
 
@@ -100,21 +100,21 @@ class BasicPrimitiveArray {
 
     val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
 
-      val names by AnonymousClassroom.studentNames {
+      val names by model.studentNames {
         config {
           "Hello" with "World"
         }
       }
 
-      val ages by AnonymousClassroom.studentAges {
+      val ages by model.studentAges {
         config { "NumberArgument" with 9000 }
       }
 
-      val gpas by AnonymousClassroom.studentGpa {
+      val gpas by model.studentGpa {
         config { "BooleanArgument" with true }
       }
 
-      val passing by AnonymousClassroom.studentPassing {
+      val passing by model.studentPassing {
         config { "FloatArgument" with 5.005f }
       }
 

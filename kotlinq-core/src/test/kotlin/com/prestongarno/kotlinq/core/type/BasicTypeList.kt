@@ -50,8 +50,8 @@ enum class ListOrder : QEnumType {
 class BasicTypeList {
 
   class PersonModel : QModel<Person>(Person) {
-    val name by Person.name
-    val age by Person.age
+    val name by model.name
+    val age by model.age
   }
 
   @Test fun `type list field is possible`() {

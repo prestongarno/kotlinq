@@ -36,7 +36,7 @@ class BasicCustomScalarField {
   @Test fun `custom scalar field is possible`() {
 
     val query = object : QModel<Item>(Item) {
-      val url by Item.url.map(StringScalarMapper { it })
+      val url by model.url.map(StringScalarMapper { it })
     }
 
     query::url.returnType.classifier eq String::class
@@ -47,7 +47,8 @@ class BasicCustomScalarField {
   @Test fun `custom scalar field is possible 2`() {
 
     val query = object : QModel<Item>(Item) {
-      val url by Item.url.map(StringScalarMapper { it.toIntOrNull() })
+      val url by model.url.map(StringScalarMapper { it.toIntOrNull() })
+
     }
 
     query::url.returnType.classifier eq Int::class

@@ -34,7 +34,7 @@ class BasicCustomScalarLists {
   @Test fun `custom scalar list is possible`() {
 
     val query = object : QModel<ResourceBundle>(ResourceBundle) {
-      val urls by ResourceBundle.urls.map(StringScalarListMapper { it })
+      val urls by model.urls.map(StringScalarListMapper { it })
     }
     query::urls.returnType.arguments
         .firstOrNull()?.type?.classifier eq String::class
