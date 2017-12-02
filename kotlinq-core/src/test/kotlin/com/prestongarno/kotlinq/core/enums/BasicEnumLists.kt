@@ -51,7 +51,7 @@ class BasicEnumLists {
   @Test fun `enum list basic delegate type is possible`() {
 
     val query = object : QModel<Data>(Data) {
-      val numbers by Data.numberEnums
+      val numbers by model.numberEnums
     }
     query::numbers.returnType
         .arguments.firstOrNull()?.type?.classifier eq Kind::class
@@ -61,7 +61,7 @@ class BasicEnumLists {
   @Test fun `enum list from response is valid`() {
 
     val query = object : QModel<Data>(Data) {
-      val numbers by Data.numberEnums
+      val numbers by model.numberEnums
     }
     query.toGraphql() eq "{numberEnums}"
 

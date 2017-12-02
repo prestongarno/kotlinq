@@ -48,7 +48,7 @@ object Persistence : Concept {
   override val type by QEnum.stub<ConceptType>()
 }
 
-object Timber : Concept {
+object Unknown : Concept {
   override val name by QScalar.String.stub()
 
   override val type by QEnum.stub<ConceptType>()
@@ -61,12 +61,12 @@ object Random : QType {
 class ReceiverApiTestStructure {
 
   class MyPersistence : QModel<Persistence>(Persistence) {
-    val name by Persistence.name
-    val type by Persistence.type
+    val name by model.name
+    val type by model.type
   }
-  class MyTimber : QModel<Timber>(Timber) {
-    val name by Timber.name
-    val type by Timber.type
+  class UnknownModel : QModel<Unknown>(Unknown) {
+    val name by model.name
+    val type by model.type
   }
 
   @Test fun `single interface field query with parsing response`() {
@@ -74,7 +74,7 @@ class ReceiverApiTestStructure {
       // TODO -> not allow a providedelegate without fragmenting!
       val result by Random.getRandomConcept {
         on(ReceiverApiTestStructure::MyPersistence)
-        on(ReceiverApiTestStructure::MyTimber)
+        on(ReceiverApiTestStructure::UnknownModel)
       }
     }
 

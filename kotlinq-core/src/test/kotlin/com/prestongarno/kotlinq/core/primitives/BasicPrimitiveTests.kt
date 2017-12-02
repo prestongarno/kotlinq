@@ -48,7 +48,7 @@ class BasicPrimitiveTests {
 
   @Test fun `string field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val name by Person.name
+      val name by model.name
     }
     assertThat(query::name.returnType.classifier)
         .isEqualTo(String::class)
@@ -58,7 +58,7 @@ class BasicPrimitiveTests {
 
   @Test fun `integer field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val age by Person.age
+      val age by model.age
     }
     assertThat(query::age.returnType.classifier)
         .isEqualTo(Int::class)
@@ -68,7 +68,7 @@ class BasicPrimitiveTests {
 
   @Test fun `float field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val gpa by Person.gpa
+      val gpa by model.gpa
     }
     assertThat(query::gpa.returnType.classifier)
         .isEqualTo(Float::class)
@@ -78,7 +78,7 @@ class BasicPrimitiveTests {
 
   @Test fun `boolean field is possible`() {
     val query = object : QModel<Person>(Person) {
-      val gradated by Person.hasHighSchoolDiploma
+      val gradated by model.hasHighSchoolDiploma
     }
     assertThat(query::gradated.returnType.classifier)
         .isEqualTo(Boolean::class)
@@ -88,10 +88,10 @@ class BasicPrimitiveTests {
 
   @Test fun `delegate with empty invocation blocks is possible`() {
     val query = object : QModel<Person>(Person) {
-      val name by Person.name { /* Nothing */ }
-      val age by Person.age { /* Nothing */ }
-      val gpa by Person.gpa { /* Nothing */ }
-      val isGrad by Person.hasHighSchoolDiploma { /* Nothing */ }
+      val name by model.name { /* Nothing */ }
+      val age by model.age { /* Nothing */ }
+      val gpa by model.gpa { /* Nothing */ }
+      val isGrad by model.hasHighSchoolDiploma { /* Nothing */ }
     }
 
     query.fields.entries.map {
@@ -124,19 +124,19 @@ class BasicPrimitiveTests {
 
     val query = object : QModel<Person>(Person) {
 
-      val name by Person.name {
+      val name by model.name {
         default = "Preston Garno"
       }
 
-      val age by Person.age {
+      val age by model.age {
         default = 22
       }
 
-      val gpa by Person.gpa {
+      val gpa by model.gpa {
         default = 3.9F
       }
 
-      val isGrad by Person.hasHighSchoolDiploma {
+      val isGrad by model.hasHighSchoolDiploma {
         default = true
       }
     }
@@ -153,19 +153,19 @@ class BasicPrimitiveTests {
 
     val query = object : QModel<Person>(Person) {
 
-      val name by Person.name {
+      val name by model.name {
         config { "Hello" with "World" }
       }
 
-      val age by Person.age {
+      val age by model.age {
         config { "Number" with 69 }
       }
 
-      val gpa by Person.gpa {
+      val gpa by model.gpa {
         config { "Boolean" with false }
       }
 
-      val grad by Person.hasHighSchoolDiploma {
+      val grad by model.hasHighSchoolDiploma {
         config { "floatArgument" with 4.0000067f }
       }
     }

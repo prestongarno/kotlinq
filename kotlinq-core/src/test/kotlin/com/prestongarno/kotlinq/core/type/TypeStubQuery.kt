@@ -77,7 +77,7 @@ enum class State : QEnumType {
 class TypeStubQueryable {
 
   class Me : QModel<Person>(Person) {
-    val name by Person.name {
+    val name by model.name {
       default = "Preston Garno"
     }
   }
