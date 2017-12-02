@@ -6,6 +6,7 @@ repositories {
   mavenCentral()
   jcenter()
 }
+apply plugin: 'maven'
 
 dependencies {
   implementation 'com.beust:klaxon:0.30'
@@ -66,5 +67,14 @@ publishing {
     maven {
       url 'https://bintray.com/com/prestongarno/'
     }
+  }
+}
+// why does gradle do this to me
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: uri('repo'))
+    }
+    group 'com.prestongarno.kotlinq'
   }
 }

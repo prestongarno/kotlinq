@@ -65,15 +65,14 @@ open class CompilerRunner : DefaultTask() {
       val result = compiler.toKotlinApi()
 
       schemaDef.outputDir.asFile().apply {
-        if (!mkdirs())
-          throw GradleException("Could not make compile output directory $path")
+        mkdirs()
 
-        val ktFile = this.child(schemaDef.packageName.replace(".", "/")).apply {
-          if (!exists() || !mkdirs())
+        val ktFile = this.child(schemaDef.packageName.replace(".", "/").prepend("/")).apply {
+          if (!exists() && !mkdirs())
             throw GradleException("Could not make compile output directory $path")
         }.child(schemaDef.kotlinFileName)
 
-        if (!ktFile.canWrite())
+        if (!exists() || ktFile.canWrite())
           throw GradleException("Can't write to ${ktFile.path}")
 
         ktFile.writeText(text = result)

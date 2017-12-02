@@ -185,35 +185,14 @@ subprojects {
   }
 }
 
+task evaluateTestApi(type: GradleBuild) {
 
-subprojects.findAll { it.name != 'kotlinq-test-api' }.each { Project proj ->
-  println(proj.name)
-}
+  dependsOn(":kotlinq-gradle:uploadArchives")
+  dependsOn(":kotlinq-core:uploadArchives")
 
-
-
-task copyPluginPublish(type: Copy) {
-  from ('kotlinq-gradle/repo') {
-    include '**/*.jar'
-  }
-  def vers = '1.0'
-  def name = 'kotlinq-gradle'
-  into 'kotlinq-test-api/repo'
-  rename "$version", "1.0"
-  rename "kotlinq-gradle-(.*).jar", ("$name-$vers" + '.jar')
-  eachFile { details ->
-    details.path = ('com/prestongarno/kotlinq/kotlinq-gradle/1.0/' + details.name)
-  }
-  setIncludeEmptyDirs(false)
-}
-
-task evaluateTestApi(type: GradleBuild, dependsOn: jar) { GradleBuild g ->
-  g.dependsOn(copyPluginPublish)
-  g.dependsOn(":kotlinq-gradle:uploadArchives")
-  g.doFirst {
-    copyPluginPublish.execute()
-  }
   buildFile = 'kotlinq-test-api/build.gradle'
+
+  //noinspection GroovyAssignabilityCheck
   tasks = ['clean', 'compileGraphQL', 'build', 'jar']
 
   doLast {
@@ -230,6 +209,3 @@ task evaluateTestApi(type: GradleBuild, dependsOn: jar) { GradleBuild g ->
   }
 }
 
-evaluateTestApi.dependsOn(":kotlinq-gradle:uploadArchives")
-evaluateTestApi.dependsOn(copyPluginPublish)
-copyPluginPublish.dependsOn(":kotlinq-gradle:uploadArchives")
