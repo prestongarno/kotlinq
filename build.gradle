@@ -40,9 +40,9 @@ apply plugin: 'kotlin'
 
 def getVersion = { Project project ->
   if (rootProject.hasProperty("release") && rootProject.property("release") == "true") {
-    return "0.3.0-RC1"
+    return "0.3.0-RC2"
   } else {
-    return "0.3.0-RC1-SNAPSHOT"
+    return "0.3.0-RC2-SNAPSHOT"
   }
 }
 
