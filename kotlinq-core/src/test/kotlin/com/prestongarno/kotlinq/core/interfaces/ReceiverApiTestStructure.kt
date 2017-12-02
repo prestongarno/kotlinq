@@ -80,7 +80,7 @@ class ReceiverApiTestStructure {
 
     assertThat(query.toGraphql())
         .isEqualTo(
-            "{getRandomConcept{__typename, ... on Persistence{name,type}, ... on Timber{name,type}}}")
+            "{getRandomConcept{__typename, ... on Persistence{name,type}, ... on Unknown{name,type}}}")
 
     @Language("JSON") val response = """
       {
