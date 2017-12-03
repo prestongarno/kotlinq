@@ -1,0 +1,3 @@
+[submodule "kotlinq-core/src/test/resources/test-server"]
+	path = kotlinq-core/src/test/resources/test-server
+	url = https://github.com/prestongarno/kotlinq-test-harness
