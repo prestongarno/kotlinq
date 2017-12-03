@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-/*
+
 
 package com.prestongarno.kotlinq.core.formatting
 
@@ -28,10 +28,10 @@ import com.prestongarno.kotlinq.core.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.stubs.TypeStub
-import com.prestongarno.kotlinq.generated.yelp.Business
-import com.prestongarno.kotlinq.generated.yelp.Location
-import com.prestongarno.kotlinq.generated.yelp.Review
-import com.prestongarno.kotlinq.generated.yelp.User
+import com.yelp.graphql.generated.Business
+import com.yelp.graphql.generated.Location
+import com.yelp.graphql.generated.Review
+import com.yelp.graphql.generated.User
 import org.junit.Test
 
 class QmodelToGraphQl {
@@ -296,5 +296,4 @@ class QmodelToGraphQl {
       """.trimMargin("|"))
   }
 }
-*/
 

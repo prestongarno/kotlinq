@@ -20,4 +20,3 @@ include 'kotlinq-core'
 include 'kotlinq-http'
 include 'kotlinq-gradle'
 
-

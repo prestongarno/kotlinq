@@ -1,3 +1,5 @@
+version = rootProject.properties.get("version")
+
 buildscript {
 
   ext.generationTarget = "$rootProject.name/src/generated"
@@ -5,17 +7,17 @@ buildscript {
     jcenter()
     mavenCentral()
     maven {
-      url '../kotlinq-gradle/repo'
+      url '../kotlinq-gradle/build/repo'
     }
     maven {
-      url '../kotlinq-core/repo'
+      url '../kotlinq-core/build/repo'
     }
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.0"
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-    classpath "com.prestongarno.kotlinq:kotlinq-gradle:0.3.0-RC2-SNAPSHOT"
+    classpath "com.prestongarno.kotlinq:kotlinq-gradle:$version"
   }
 }
 
@@ -26,10 +28,22 @@ apply plugin: "com.jfrog.bintray"
 apply plugin: "com.jfrog.artifactory"
 apply plugin: "com.prestongarno.kotlinq"
 
+repositories {
+  mavenCentral()
+  jcenter()
+  maven {
+    url '../kotlinq-core/build/repo'
+  }
+}
+
+dependencies {
+  compile "com.prestongarno.kotlinq:kotlinq-core:$version"
+}
+
 sourceSets {
   main {
     java {
-      srcDirs = ['src/main/kotlin', generationTarget]
+      srcDirs = ['src/generated']
     }
     resources {
       srcDirs = ['src/main/resources']
@@ -44,7 +58,14 @@ kotlinq {
     packageName = "com.prestongarno.kotlinq.generated.languages"
     outputDir = generationTarget
   }
+  schema {
+    target = "$project.name/src/main/resources/yelp.graphqls"
+    kotlinFileName = "YelpGraphQl.kt"
+    packageName = "com.yelp.graphql.generated"
+    outputDir = generationTarget
+  }
 }
+
 artifacts {
   archives jar
 }

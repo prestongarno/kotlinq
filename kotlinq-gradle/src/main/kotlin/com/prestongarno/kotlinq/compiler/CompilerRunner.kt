@@ -27,6 +27,7 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.AbstractCompile
+import org.gradle.api.tasks.compile.JavaCompile
 import java.io.File
 
 open class CompilerRunner : DefaultTask() {
@@ -44,7 +45,8 @@ open class CompilerRunner : DefaultTask() {
 
   init {
     schemaDefs.forEach {
-      outputs.file(it.target.asFile())
+      outputs.file(it.outputDir.asFile())
+      inputs.file(it.target.asFile())
     }
   }
 
@@ -72,7 +74,7 @@ open class CompilerRunner : DefaultTask() {
             throw GradleException("Could not make compile output directory $path")
         }.child(schemaDef.kotlinFileName)
 
-        if (!exists() || ktFile.canWrite())
+        if (ktFile.exists() && !ktFile.canWrite())
           throw GradleException("Can't write to ${ktFile.path}")
 
         ktFile.writeText(text = result)
@@ -82,6 +84,14 @@ open class CompilerRunner : DefaultTask() {
 
     if (schemaDefs.isEmpty()) {
       logger.log(LogLevel.INFO, "No schema definitions specified. Skipping...")
+    } else {
+      project.tasks.filter {
+        it.group?.contains("kotlin") == true
+      }.forEach {
+        (it as AbstractCompile).source(schemaDefs.map {
+          it.outputDir
+        }.toList())
+      }
     }
   }
 
@@ -89,8 +99,8 @@ open class CompilerRunner : DefaultTask() {
 
 class SchemaDefinition(project: Project) {
   @JvmField var target: String = ""
-  @JvmField var kotlinFileName = ""
-  @JvmField var packageName = ""
+  @JvmField var kotlinFileName = "GraphqlKotlinq.kt"
+  @JvmField var packageName = "org.graphql"
   @JvmField var outputDir = project.buildDir.absolutePath + "generated/kotlinq"
 }
 
@@ -104,8 +114,8 @@ open class KotlinqCompilerConfiguration(var project: Project) {
     schemaDefinitions += schemaDef
 
     /*project.logger.log(LogLevel.INFO, */
-    println("Working directory: ${File("./").absolutePath}")
-    println("Registered GraphQL schema:" + schemaDef.run {
+    project.logger.log(LogLevel.INFO, "Working directory: ${File("./").absolutePath}")
+    project.logger.log(LogLevel.INFO, "Registered GraphQL schema:" + schemaDef.run {
       "\n\ttarget: " + target +
       "\n\tkotlinFileName: " + kotlinFileName +
       "\n\tpackageName: " + packageName +
@@ -127,4 +137,4 @@ open class KotlinqPlugin : Plugin<Project> {
 
 private fun Any?.ignore(): Unit = Unit
 private fun String.asFile() = File(this)
-private fun File.child(relativePath: String): File = ((this.path ?: "./") + relativePath).asFile()
+private fun File.child(relativePath: String): File = ((this.path ?: "./") + relativePath.prepend("/")).asFile()

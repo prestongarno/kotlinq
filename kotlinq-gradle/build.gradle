@@ -28,9 +28,6 @@ dependencies {
           version: "$kotlin_version"
 }
 
-def lazyPom = {
-}
-
 publishing {
   publications { PublicationContainer context ->
     mavenJava(MavenPublication) {
@@ -88,8 +85,7 @@ publishing {
 uploadArchives {
   repositories {
     mavenDeployer {
-      repository(url: uri('repo'))
+      repository(url: uri("$project.buildDir.absolutePath/repo"))
     }
-    group 'com.prestongarno.kotlinq'
   }
 }

@@ -18,6 +18,8 @@
 buildscript {
   ext.kotlin_version = '1.2.0'
   ext.clientId = projects.project.name
+  ext.mockTestDependencies =
+          rootProject.project("kotlinq-core").buildDir.absolutePath + "/test-jars"
   ext.sourceCompatibility = 1.8
   ext.projectDescription = "kotlinq: a kotlin client for graphql"
   ext.gitBaseUrl = GIT_BASE_URL + '/kotlinq'
@@ -51,7 +53,7 @@ group = 'com.prestongarno.kotlinq'
 version = getVersion()
 
 
-subprojects {
+subprojects.each {
   configurations.all {
     resolutionStrategy {
       eachDependency { DependencyResolveDetails details ->
@@ -73,6 +75,7 @@ subprojects {
   apply plugin: "com.jfrog.artifactory"
 
   ext.clientId = project.name
+  group 'com.prestongarno.kotlinq'
 
   version = getVersion(rootProject)
 
@@ -185,27 +188,47 @@ subprojects {
   }
 }
 
-task evaluateTestApi(type: GradleBuild) {
-
+/* This is so ugly */
+task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
+  // using old maven plugin for local plugin resolution
   dependsOn(":kotlinq-gradle:uploadArchives")
   dependsOn(":kotlinq-core:uploadArchives")
 
+  inputs.files("kotlinq-test-api/build/libs")
+  outputs.dirs(mockTestDependencies)
   buildFile = 'kotlinq-test-api/build.gradle'
+  //noinspection GroovyAssignabilityCheck
+  g.startParameter.projectProperties.put("version", getVersion())
 
   //noinspection GroovyAssignabilityCheck
   tasks = ['clean', 'compileGraphQL', 'build', 'jar']
 
   doLast {
-    projects.findAll { p -> p.name == "kotlinq-core" }.each { Project core ->
-      core.repositories {
-        maven {
-          url buildDir.absolutePath
-        }
-      }
-      core.dependencies {
-        testCompile ":kotlinq-test-api:$rootProject.version"
-      }
+    copy {
+      from inputs.files.asFileTree.files.collect()
+      into mockTestDependencies
+      include '*.jar'
+      eachFile { details -> details.path = "$details.name" }
     }
+    //delete 'kotlinq-gradle/build/repo'
+    //delete 'kotlinq-core/build/repo'
   }
 }
 
+task copyTestJars(type: Copy) {
+  from outputs
+  into mockTestDependencies
+  include "**/*.jar"
+  includeEmptyDirs = false
+}
+
+test.dependsOn(evaluateTestApi)
+
+tasks.withType(Copy) {
+  includeEmptyDirs false
+}
+
+compileTestJava.dependsOn(evaluateTestApi)
+subprojects {
+  compileTestJava.dependsOn(evaluateTestApi)
+}
