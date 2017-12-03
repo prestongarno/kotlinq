@@ -17,8 +17,6 @@
 
 package com.prestongarno.kotlinq.http.internal
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.internal.resolve.resolve
 import com.prestongarno.kotlinq.http.RequestBuilder

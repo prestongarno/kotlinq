@@ -5,6 +5,18 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
 [![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
 
+
+## About
+
+* **type-safe DSLs** for querying and mutating your data
+* **dynamic queries/mutations** evaluated at runtime
+* **custom scalar deserialization** to any native type
+* **100% native** code - zero config files, zero old-school DSLs
+* **No boilerplate** adapter classes or intermediate objects
+
+The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
+lets you auto-complete your way to safe, reliable queries and mutations
+
 ## Documentation
 
 The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/kotlinq/)
@@ -15,18 +27,11 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](https:/
 * `kotlinq-gradle`: Gradle code-generating compiler
 * `kotlinq-http`: HTTP Utilities using [http4k](http://http4k.org) as a dependency
 
-## About
+## Version
 
-Why *kotlinq* is unique:
-
-* **type-safe models** for querying and mutating your data
-* **dynamic queries/mutations** evaluated at runtime
-* **custom scalar deserialization** to any native type
-* **100% native** code - zero config files, zero old-school DSLs
-* **No boilerplate** adapter classes or intermediate objects
-
-The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
-lets you auto-complete your way to safe, reliable queries and mutations
+Previous releases are backwards incompatible,
+ please use either the snapshots of version `0.3.0-RC2` at [oss.jfrog.org](https://oss.jfrog.org/artifactory/libs-snapshot/com/prestongarno/kotlinq),
+ or clone & build locally by running `./gradlew test`
 
 ## Example
 

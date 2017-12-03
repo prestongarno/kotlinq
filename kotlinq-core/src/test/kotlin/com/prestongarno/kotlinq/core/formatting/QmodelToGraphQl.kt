@@ -29,6 +29,11 @@ import com.prestongarno.kotlinq.core.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.stubs.TypeStub
 import org.junit.Test
 import com.prestongarno.kotlinq.core.yelp.*
+import com.yelp.graphql.Business
+import com.yelp.graphql.Location
+import com.yelp.graphql.Review
+import com.yelp.graphql.User
+import org.junit.Test
 
 class QmodelToGraphQl {
 
