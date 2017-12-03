@@ -26,6 +26,12 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](https:/
 * `kotlinq-gradle`: Gradle code-generating compiler
 * `kotlinq-http`: HTTP Utilities using [http4k](http://http4k.org) as a dependency
 
+## Version
+
+Previous releases are backwards incompatible,
+ please use either the snapshots of version `0.3.0-RC2` at [oss.jfrog.org](https://oss.jfrog.org/artifactory/libs-snapshot/com/prestongarno/kotlinq),
+ or clone & build locally by running `./gradlew test`
+
 ## Example
 
 An example below queries the Yelp Graphql API. 
