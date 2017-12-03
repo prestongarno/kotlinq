@@ -3,6 +3,7 @@ buildscript {
 
   repositories {
     mavenCentral()
+    mavenLocal()
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -12,6 +13,7 @@ buildscript {
 repositories {
   mavenCentral()
   jcenter()
+  mavenLocal()
 }
 
 group rootProject.group
@@ -26,6 +28,11 @@ dependencies {
   testCompile gradleTestKit()
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
           version: "$kotlin_version"
+}
+
+jar {
+  from(compileJava.outputs)
+  from(sourceSets.main.resources)
 }
 
 publishing {
@@ -84,9 +91,7 @@ publishing {
 }
 uploadArchives {
   repositories {
-    mavenDeployer {
-      repository(url: uri("$rootProject.rootDir.path/kotlinq-core/libs"))
-    }
+    mavenLocal()
   }
 }
 sourceSets {

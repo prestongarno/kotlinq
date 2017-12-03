@@ -28,6 +28,7 @@ buildscript {
   repositories {
     jcenter()
     mavenCentral()
+    mavenLocal()
   }
 
   //noinspection GroovyAssignabilityCheck <-- why does this even happen...
@@ -38,7 +39,7 @@ buildscript {
   }
 }
 apply plugin: 'java'
-//apply plugin: 'idea'
+apply plugin: 'idea'
 apply plugin: 'kotlin'
 
 def getVersion = {
@@ -68,7 +69,7 @@ subprojects.each {
 subprojects {
 
   apply plugin: 'java'
-  //apply plugin: 'idea'
+  apply plugin: 'idea'
   apply plugin: 'kotlin'
   apply plugin: 'maven-publish'
   apply plugin: "com.jfrog.bintray"
@@ -114,7 +115,7 @@ subprojects {
   }
 
   bintrayUpload {
-    doFirst { println("Uploading module $clientId $version") }
+    doFirst { println("Uploading module $projects.project.name $version") }
   }
 
 
@@ -170,8 +171,8 @@ subprojects {
 /* This is so ugly */
 task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
   // using old maven plugin for local plugin resolution
-  dependsOn(":kotlinq-gradle:uploadArchives")
-  dependsOn(":kotlinq-core:uploadArchives")
+  dependsOn(":kotlinq-gradle:install")
+  dependsOn(":kotlinq-core:install")
 
   inputs.files("kotlinq-test-api/build/libs")
   outputs.dirs(mockTestDependencies)
@@ -181,20 +182,13 @@ task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
   g.inputs.files("kotlinq-test-api/src")
 
   //noinspection GroovyAssignabilityCheck
-  g.tasks = ['compileGraphQL', 'compileKotlin','compileJava', 'jar']
-
-  doLast {
-    copy {
-      from files("kotlinq-test-api/build/libs")
-      into file("kotlinq-core/libs/com/prestongarno/kotlinq/")
-    }
-  }
+  g.tasks = ['compileGraphQL', 'publishToMavenLocal']
 }
 
 
-compileTestJava.dependsOn(evaluateTestApi)
 subprojects {
   compileTestJava.dependsOn(evaluateTestApi)
+  test.dependsOn(evaluateTestApi)
 }
 
 clean.doFirst {

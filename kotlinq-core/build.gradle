@@ -1,10 +1,7 @@
-
 repositories {
   mavenCentral()
   jcenter()
-  flatDir {
-    dirs "libs/com/prestongarno/kotlinq"
-  }
+  mavenLocal()
 }
 apply plugin: 'maven'
 
@@ -15,6 +12,12 @@ dependencies {
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
           version: "$kotlin_version"
   testCompile "com.prestongarno.kotlinq:kotlinq-test-api:$version"
+}
+
+uploadArchives {
+  repositories {
+    mavenLocal()
+  }
 }
 
 publishing {
@@ -70,14 +73,6 @@ publishing {
     }
   }
 }
-// why does gradle do this to me
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      repository(url: uri("$rootProject.rootDir.path/kotlinq-core/libs"))
-    }
-  }
-}
 
 sourceSets {
   main {
@@ -99,6 +94,7 @@ sourceSets {
     }
   }
 }
+
 rootProject.tasks.findAll {
   t -> t.name == "evaluateTestApi"
 }.each { Task t ->
