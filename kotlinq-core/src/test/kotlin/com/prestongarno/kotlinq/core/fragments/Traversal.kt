@@ -15,8 +15,7 @@
  *
  */
 
-rootProject.name = 'kotlinq'
-include 'kotlinq-core'
-include 'kotlinq-http'
-include 'kotlinq-gradle'
+package com.prestongarno.kotlinq.core.fragments
 
+// Using generated kotlinq-test-api
+//import com.prestongarno.kotlinq.generated.yelp.User

@@ -1,0 +1,25 @@
+
+interface ProgrammingLanguage {
+  name: String
+  isTyped: Boolean
+  primaryFeatures: [Feature]
+}
+
+type Feature {
+  name: String
+  description: String
+}
+
+type Kotlin implements ProgrammingLanguage {
+  name: String
+  isTyped: Boolean
+  primaryFeatures: [Feature]
+}
+
+type Groovy implements ProgrammingLanguage {
+  name: String
+  isTyped: Boolean
+  primaryFeatures: [Feature]
+}
+
+
