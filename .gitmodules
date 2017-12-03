@@ -1,3 +1,0 @@
-[submodule "src/test/resources/test-server"]
-	path = src/test/resources/test-server
-	url = https://github.com/prestongarno/ktq-harness
