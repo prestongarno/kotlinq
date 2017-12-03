@@ -7,10 +7,10 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
-        <meta name="description" content="A Kotlin client for GraphQL">
+        <meta name="description" content="GraphQL DSLs for Kotlin">
       
       
-        <link rel="canonical" href="http://prestongarno.github.io/ktq/">
+        <link rel="canonical" href="http://prestongarno.github.io/kotlinq/">
       
       
         <meta name="author" content="Preston Garno">
@@ -22,7 +22,7 @@
     
     
       
-        <title>KTQ</title>
+        <title>Kotlinq</title>
       
     
     
@@ -69,7 +69,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="http://prestongarno.github.io/ktq" title="KTQ" class="md-header-nav__button md-logo">
+        <a href="http://prestongarno.github.io/kotlinq" title="Kotlinq" class="md-header-nav__button md-logo">
           
             <i class="md-icon md-icon--home"></i>
           
@@ -123,7 +123,7 @@
   
 
 
-  <a href="https://github.com/prestongarno/ktq" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/prestongarno/kotlinq" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -132,7 +132,7 @@
       </div>
     
     <div class="md-source__repository">
-      prestongarno/ktq
+      prestongarno/kotlinq
     </div>
   </a>
 
@@ -160,7 +160,7 @@
         <i class="md-icon md-icon--home"></i>
       
     </div>
-    KTQ
+    Kotlinq
   </label>
   
     <div class="md-nav__source">
@@ -170,7 +170,7 @@
   
 
 
-  <a href="https://github.com/prestongarno/ktq" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/prestongarno/kotlinq" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -179,7 +179,7 @@
       </div>
     
     <div class="md-source__repository">
-      prestongarno/ktq
+      prestongarno/kotlinq
     </div>
   </a>
 
@@ -201,44 +201,22 @@
       
     
     
-      <label class="md-nav__link md-nav__link--active" for="toc">
-        Intro
-      </label>
-    
     <a href="." title="Intro" class="md-nav__link md-nav__link--active">
       Intro
     </a>
     
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
+  </li>
+
     
-  
-  
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#about" title="About" class="md-nav__link">
-    About
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hello-world" title="Hello, World" class="md-nav__link">
-    Hello, World
-  </a>
-  
-</li>
       
       
       
-    </ul>
-  
-</nav>
-    
+
+
+  <li class="md-nav__item">
+    <a href="hello_world/" title="Hello, world!" class="md-nav__link">
+      Hello, world!
+    </a>
   </li>
 
     
@@ -261,13 +239,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
-    <label class="md-nav__link" for="nav-3">
+    <label class="md-nav__link" for="nav-4">
       Types
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-3">
+      <label class="md-nav__title" for="nav-4">
         Types
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -279,8 +257,8 @@
 
 
   <li class="md-nav__item">
-    <a href="types/paradigms/" title="Paradigms" class="md-nav__link">
-      Paradigms
+    <a href="types/paradigms/" title="Introduction" class="md-nav__link">
+      Introduction
     </a>
   </li>
 
@@ -345,13 +323,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-4">
+    <label class="md-nav__link" for="nav-5">
       API
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-5">
         API
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -475,27 +453,6 @@
     
   
   
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#about" title="About" class="md-nav__link">
-    About
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hello-world" title="Hello, World" class="md-nav__link">
-    Hello, World
-  </a>
-  
-</li>
-      
-      
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -507,43 +464,26 @@
               
                 
                 
-                <h1 id="ktq-a-kotlin-library-for-type-safe-graphql-dsl"><b><span style="color:#f442c2">KTQ :  <small>a kotlin library for type-safe GraphQL DSL</small></span></b><a class="headerlink" href="#ktq-a-kotlin-library-for-type-safe-graphql-dsl" title="Permanent link">&para;</a></h1>
+                <h1 id="ktq-a-kotlin-library-for-easy-type-safe-graphql-dsls"><b><span style="color:#f442c2">KTQ :  <small>a kotlin library for easy, type-safe GraphQL DSLs</small></span></b><a class="headerlink" href="#ktq-a-kotlin-library-for-easy-type-safe-graphql-dsls" title="Permanent link">&para;</a></h1>
+<h1 id="check-out-the-source-code-httpsgithubcomprestongarnokotlinq">Check out the source code: <a href="https://github.com/prestongarno/kotlinq">https://github.com/prestongarno/kotlinq</a><a class="headerlink" href="#check-out-the-source-code-httpsgithubcomprestongarnokotlinq" title="Permanent link">&para;</a></h1>
 <h2 id="about"><span style="color:#f442c2">About</span><a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p>This project is a <a href="http://github.com/prestongarno/ktq-gradle">compiler</a> and <a href="http://github.com/prestongarno/ktq">runtime</a> for type-safe DSLs modeling a <a href="http://graphql.org">GraphQL</a> API.</p>
-<p>GraphQL is a rigorously tested and thoroughly defined <a href="http://facebook.github.io/graphql">specification</a> which defines
-its architecture as structured data which conforms to a simple type system.<br />
-GraphQL is a natural way to describe <strong><em>data types</em></strong> and their <strong><em>relationships to other types</em></strong>
-(also known as a graph, where nodes and edges describe a confined set of data). You can read more
+<p>This project is a kotlin type-generating <a href="http://github.com/prestongarno/kotlinq/kotlinq-gradle">compiler</a> and <a href="http://github.com/prestongarno/kotlinq">runtime</a> 
+for type-safe Kotlin DSLs mirroring your <a href="http://graphql.org">GraphQL</a> API/schema.</p>
+<h2 id="project-goals"><span style="color:#f442c2">Project goals</span><a class="headerlink" href="#project-goals" title="Permanent link">&para;</a></h2>
+<p>Kotlinq has the goal of making GraphQL easy to setup and use in a scalable manner 
+while taking advantage of the both pragmatic and type-safe nature of Kotlin. </p>
+<p>Check out obligatory <a href="hello_world/">Hello, world!</a> page to see how kotlinq accomplishes this!</p>
+<h2 id="what-is-graphql"><span style="color:#f442c2">What is GraphQL?</span><a class="headerlink" href="#what-is-graphql" title="Permanent link">&para;</a></h2>
+<p>GraphQL is a thoroughly defined <a href="http://facebook.github.io/graphql">specification</a> which defines
+its architecture as structured data conforming to a simple, declarative type system.</p>
+<p>GraphQL is a natural way to describe <strong><em>data types</em></strong> and their <strong><em>relationships to other types</em></strong>
+(also known as a graph, where nodes and edges describe a confined set of data). You can learn more
 about it <a href="http://graphql.org/learn/">here</a></p>
-<p>Ktq has the goal of making GraphQL easy to setup and use while taking advantage of
-the both pragmatic and type-safe nature of Kotlin. </p>
-<h2 id="hello-world"><span style="color:#f442c2">Hello, World</span><a class="headerlink" href="#hello-world" title="Permanent link">&para;</a></h2>
-<p>The following example uses the following graphql schema</p>
-<div class="codehilite"><pre><span></span>type Query {
-  hello: String
-}
-</pre></div>
-
-<p>After using the <a href="http://github.com/prestongarno/ktq-gradle">gradle plugin</a> to create the kotlin types, you can now describe a model</p>
-<div class="codehilite"><pre><span></span>val helloQuery = object : QModel(Query) {
-  val hello by model.hello
-}
-</pre></div>
-
-<p>You now have a GraphQL Query ready to go!</p>
-<div class="codehilite"><pre><span></span>helloQuery.toGraphQL()
-</pre></div>
-
-<p>Prints:
-<div class="codehilite"><pre><span></span>  {
-    hello
-  }
-</pre></div></p>
-<p><a href="">Resolve the model</a>, by fetching from your endpoint, and then get the results:</p>
-<div class="codehilite"><pre><span></span>println(helloQuery.hello)
-</pre></div>
-
-<p>Simple, right? It gets even better!</p>
+<h2 id="what-does-the-name-kotlinq-even-mean"><span style="color:#f442c2">What does the name <em>kotlinq</em> even mean?</span><a class="headerlink" href="#what-does-the-name-kotlinq-even-mean" title="Permanent link">&para;</a></h2>
+<p><span style="color:#f442c2"></span></p>
+<p>[Kot]lin [L]anguage [I]ntegrated [Q]ueries</p>
+<h2 id="getting-started"><span style="color:#f442c2">Getting started</span><a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<p>Check out the next section for a simple 'Hello, world!' query</p>
                 
                   
                 
@@ -563,13 +503,13 @@ the both pragmatic and type-safe nature of Kotlin. </p>
       <nav class="md-footer-nav__inner md-grid">
         
         
-          <a href="getting-started/" title="Getting started" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="hello_world/" title="Hello, world!" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Getting started
+                Hello, world!
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

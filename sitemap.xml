@@ -3,16 +3,24 @@
 
     
     <url>
-     <loc>http://prestongarno.github.io/ktq/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>http://prestongarno.github.io/ktq/getting-started/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/hello_world/</loc>
+     <lastmod>2017-12-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>http://prestongarno.github.io/kotlinq/getting-started/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,95 +28,95 @@
     
         
     <url>
-     <loc>http://prestongarno.github.io/ktq/types/paradigms/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/types/paradigms/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>http://prestongarno.github.io/ktq/types/primitives/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/types/primitives/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>http://prestongarno.github.io/ktq/types/custom_scalars/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/types/custom_scalars/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>http://prestongarno.github.io/ktq/types/objects/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/types/objects/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>http://prestongarno.github.io/ktq/types/nullables/</loc>
-     <lastmod>2017-11-18</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    
-
-    
-        
-    <url>
-     <loc>http://prestongarno.github.io/ktq/api/query/</loc>
-     <lastmod>2017-11-18</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>http://prestongarno.github.io/ktq/api/mutation/</loc>
-     <lastmod>2017-11-18</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>http://prestongarno.github.io/ktq/subscription/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/types/nullables/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     
 
     
+        
     <url>
-     <loc>http://prestongarno.github.io/ktq/http/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/api/query/</loc>
+     <lastmod>2017-12-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>http://prestongarno.github.io/kotlinq/api/mutation/</loc>
+     <lastmod>2017-12-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>http://prestongarno.github.io/kotlinq/subscription/</loc>
+     <lastmod>2017-12-03</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+    <url>
+     <loc>http://prestongarno.github.io/kotlinq/http/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>http://prestongarno.github.io/ktq/faq/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/faq/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>http://prestongarno.github.io/ktq/release_notes/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/release_notes/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>http://prestongarno.github.io/ktq/contributing/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/contributing/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>http://prestongarno.github.io/ktq/license/</loc>
-     <lastmod>2017-11-18</lastmod>
+     <loc>http://prestongarno.github.io/kotlinq/license/</loc>
+     <lastmod>2017-12-03</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
