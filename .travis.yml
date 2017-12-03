@@ -4,7 +4,7 @@ jdk:
 - oraclejdk8
 
 script: 
-  - ./gradlew :kotlinq-test-api:generateApis build test
+  - ./gradlew build test
 
 branches:
   except:
