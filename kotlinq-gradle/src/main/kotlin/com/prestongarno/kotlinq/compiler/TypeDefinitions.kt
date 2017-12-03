@@ -49,6 +49,10 @@ import com.squareup.kotlinpoet.asTypeName
 import org.antlr.v4.runtime.ParserRuleContext
 import kotlin.reflect.KClass
 
+private const val DEFAULT_NO_ARG = "stub<%T>()"
+private const val DEFAULT_OPTIONAL_ARG = "optionalConfigStub<%T, %T>()"
+private const val DEFAULT_REQ_ARG = "configStub<%T, %T>()"
+
 sealed class SchemaType<out T : ParserRuleContext>(val context: T) : KotlinTypeElement, NamedElement {
 
   abstract val schemaTypeClass: KClass<out QSchemaType>
@@ -58,10 +62,10 @@ sealed class SchemaType<out T : ParserRuleContext>(val context: T) : KotlinTypeE
 
   // this is literally hundreds of lines simpler than the last one
   open fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
-    field.arguments.isEmpty() -> "stub<%T>()" to listOf(name)
+    field.arguments.isEmpty() -> DEFAULT_NO_ARG to listOf(name)
     field.arguments.isNotEmpty() && field.arguments.find { !it.nullable } == null ->
-      "optionalConfigStub<%T, %T>()" to listOf(name, field.argBuilder!!.name)
-    else -> "configStub<%T, %T>()" to listOf(name, field.argBuilder!!.name)
+       DEFAULT_OPTIONAL_ARG to listOf(name, field.argBuilder!!.name)
+    else ->  DEFAULT_REQ_ARG to listOf(name, field.argBuilder!!.name)
   }.let { (format, typeNames) ->
     CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray())
   }
@@ -71,6 +75,7 @@ sealed class SchemaType<out T : ParserRuleContext>(val context: T) : KotlinTypeE
   }
 
 }
+
 
 sealed class ScopedDeclarationType<out T : ParserRuleContext>(context: T) : SchemaType<T>(context) {
   abstract val fields: Set<FieldDefinition>
@@ -134,6 +139,18 @@ class UnionDef(context: GraphQLSchemaParser.UnionDefContext)
 
   lateinit var possibilities: Set<TypeDef>
 
+  fun parametersRequiredFrom(field: FieldDefinition): List<TypeName> {
+    return listOf(name.asTypeName())
+  }
+
+  override fun getStubDelegationCall(field: FieldDefinition): CodeBlock {
+    return super.getStubDelegationCall(field).toString().split("()").let { before ->
+      require(before.size == 2)
+      // TODO@preston this will mess up imports
+      return@let CodeBlock.of(before[0] + "($name)" + before[1])
+    }
+  }
+
   override fun toKotlin(): TypeSpec = TypeSpec.objectBuilder(name).apply {
     addSuperinterface(schemaTypeClass.qualifiedName
         .let { it + CLASS_DELEGATE_MARKER }
@@ -156,8 +173,8 @@ class UnionDef(context: GraphQLSchemaParser.UnionDefContext)
   }.build()
 
   override val schemaTypeClass = QUnionType::class
-  override val delegateStubClass: KClass<*> = QSchemaType.QInterfaces::class
-  override val delegateListStubClass: KClass<*> = QSchemaType.QInterfaces.List::class
+  override val delegateStubClass: KClass<*> = QSchemaType.QUnion::class
+  override val delegateListStubClass: KClass<*> = QSchemaType.QUnion.List::class
 }
 
 class ScalarDef(context: GraphQLSchemaParser.ScalarDefContext)
@@ -170,8 +187,8 @@ class ScalarDef(context: GraphQLSchemaParser.ScalarDefContext)
       .build()
 
   override val schemaTypeClass = CustomScalar::class
-  override val delegateStubClass: KClass<*> = QSchemaType.QInterfaces::class
-  override val delegateListStubClass: KClass<*> = QSchemaType.QInterfaces.List::class
+  override val delegateStubClass: KClass<*> = QSchemaType.QCustomScalar::class
+  override val delegateListStubClass: KClass<*> = QSchemaType.QCustomScalar.List::class
 }
 
 class EnumDef(context: GraphQLSchemaParser.EnumDefContext)

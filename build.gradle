@@ -75,6 +75,8 @@ subprojects {
   apply plugin: "com.jfrog.bintray"
   apply plugin: "com.jfrog.artifactory"
 
+  idea.module.downloadJavadoc = true
+
   ext.clientId = project.name
   group 'com.prestongarno.kotlinq'
 
