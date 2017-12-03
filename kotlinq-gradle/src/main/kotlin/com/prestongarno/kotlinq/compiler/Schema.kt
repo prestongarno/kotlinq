@@ -15,8 +15,11 @@
  *
  */
 
-rootProject.name = 'kotlinq'
-include 'kotlinq-core'
-include 'kotlinq-http'
-include 'kotlinq-gradle'
+package com.prestongarno.kotlinq.compiler
+
+sealed class Schema
+
+class StringSchema(val source: String) : Schema()
+
+class FileSchema(val path: String) : Schema()
 

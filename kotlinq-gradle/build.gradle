@@ -1,67 +1,35 @@
-/*buildscript {
-    ext.kotlin_version = '1.2.0'
+buildscript {
+  ext.kotlin_version = '1.2.0'
 
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-group 'com.prestongarno.ktq'
-version '0.3-SNAPSHOT'
-
-apply plugin: 'java'
-apply plugin: 'kotlin'
-
-sourceCompatibility = 1.8
-
-repositories {
+  repositories {
     mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
 }
-
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}*/
 
 repositories {
   mavenCentral()
   jcenter()
 }
 
+group rootProject.group
+
+apply plugin: 'maven'
+
 dependencies {
   compile gradleApi()
   compile project(":kotlinq-core")
-  implementation "com.squareup:kotlinpoet:0.6.0"
+  compile "com.squareup:kotlinpoet:0.6.0"
   compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7'
   testCompile gradleTestKit()
-  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable', version: "$kotlin_version"
-}
-
-compileKotlin {
-  kotlinOptions {
-    includeRuntime = false
-  }
-}
-
-jar {
-  manifest {
-    attributes('Manifest-Version': '1.0', "implementation-class": "${rootProject.group}.compiler.CompilerPlugin"
-    )
-  }
+  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
+          version: "$kotlin_version"
 }
 
 publishing {
-  publications {
+  publications { PublicationContainer context ->
     mavenJava(MavenPublication) {
       groupId "$rootProject.group"
       artifactId clientId
@@ -104,13 +72,41 @@ publishing {
           }
         }
       }
-    }
-  }
-  repositories {
-    maven {
-      url {
-        'https://bintray.com/com/prestongarno'
+      repositories {
+        maven {
+          url {
+            'https://bintray.com/com/prestongarno'
+          }
+        }
       }
     }
   }
 }
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: uri("$rootProject.rootDir.path/kotlinq-core/libs"))
+    }
+  }
+}
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/main/resources']
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/test/resources']
+    }
+  }
+}
+

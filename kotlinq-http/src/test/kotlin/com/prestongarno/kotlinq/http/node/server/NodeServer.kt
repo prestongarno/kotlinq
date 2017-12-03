@@ -17,8 +17,6 @@
 
 package com.prestongarno.kotlinq.http.node.server
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.http.GraphQL
 import com.prestongarno.kotlinq.http.GraphHttpAdapter
 import okhttp3.OkHttpClient
@@ -31,6 +29,7 @@ import java.time.Instant
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.timerTask
+import kotlin.streams.toList
 
 abstract class NodeServer {
 
@@ -64,9 +63,7 @@ fun setUp() {
             .execute()
 
         if (result.code() == 200 && result.body()?.byteStream()?.let {
-          Parser().parse(it)?.let {
-            it is JsonObject && it["status"] == "okay"
-          } == true
+          it.bufferedReader().lines().toList().joinToString().contains("okay")
         } == true) {
           isStarted.set(true)
           cancel()

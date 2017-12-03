@@ -1,18 +1,20 @@
-buildscript {
-  ext.kotlin_version = '1.2.0'
-}
 
 repositories {
   mavenCentral()
   jcenter()
+  flatDir {
+    dirs "libs/com/prestongarno/kotlinq"
+  }
 }
+apply plugin: 'maven'
 
 dependencies {
-  compile 'com.beust:klaxon:0.30'
+  implementation 'com.beust:klaxon:0.30'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
   testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
           version: "$kotlin_version"
+  testCompile "com.prestongarno.kotlinq:kotlinq-test-api:$version"
 }
 
 publishing {
@@ -68,3 +70,42 @@ publishing {
     }
   }
 }
+// why does gradle do this to me
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: uri("$rootProject.rootDir.path/kotlinq-core/libs"))
+    }
+  }
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/main/resources']
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/test/resources']
+    }
+  }
+}
+rootProject.tasks.findAll {
+  t -> t.name == "evaluateTestApi"
+}.each { Task t ->
+  if (t.didWork) {
+    compileJava.shouldRunAfter(t)
+  }
+}
+
+compileTestJava.mustRunAfter(":evaluateTestApi")
+
