@@ -85,7 +85,28 @@ publishing {
 uploadArchives {
   repositories {
     mavenDeployer {
-      repository(url: uri("$project.buildDir.absolutePath/repo"))
+      repository(url: uri("$rootProject.rootDir.path/kotlinq-core/libs"))
     }
   }
 }
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/main/resources']
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/test/resources']
+    }
+  }
+}
+

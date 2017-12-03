@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2017 Preston Garno
  *
@@ -28,10 +29,10 @@ import com.prestongarno.kotlinq.core.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.stubs.TypeStub
-import com.yelp.graphql.generated.Business
-import com.yelp.graphql.generated.Location
-import com.yelp.graphql.generated.Review
-import com.yelp.graphql.generated.User
+import com.yelp.graphql.Business
+import com.yelp.graphql.Location
+import com.yelp.graphql.Review
+import com.yelp.graphql.User
 import org.junit.Test
 
 class QmodelToGraphQl {

@@ -1,8 +1,9 @@
+
 repositories {
   mavenCentral()
   jcenter()
   flatDir {
-    dirs "$project.buildDir/test-jars"
+    dirs "libs/com/prestongarno/kotlinq"
   }
 }
 apply plugin: 'maven'
@@ -13,7 +14,7 @@ dependencies {
   testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
           version: "$kotlin_version"
-  testCompile fileTree(rootProject.ext.mockTestDependencies)
+  testCompile "com.prestongarno.kotlinq:kotlinq-test-api:$version"
 }
 
 publishing {
@@ -73,15 +74,38 @@ publishing {
 uploadArchives {
   repositories {
     mavenDeployer {
-      repository(url: uri("$project.buildDir.absolutePath/repo"))
+      repository(url: uri("$rootProject.rootDir.path/kotlinq-core/libs"))
     }
   }
 }
 
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/main/resources']
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/kotlin',
+                 'src/main/java']
+    }
+    resources {
+      srcDirs = ['src/test/resources']
+    }
+  }
+}
 rootProject.tasks.findAll {
   t -> t.name == "evaluateTestApi"
 }.each { Task t ->
-  compileJava.shouldRunAfter(t)
+  if (t.didWork) {
+    compileJava.shouldRunAfter(t)
+  }
 }
 
 compileTestJava.mustRunAfter(":evaluateTestApi")
+

@@ -24,6 +24,7 @@ site/
 site/*
 *.log
 .log
-kotlinq-test-api/src/generated
-**/repo
-repo/
+kotlinq-test-api/src/
+libs
+**/libs
+kotlinq-core/libs
