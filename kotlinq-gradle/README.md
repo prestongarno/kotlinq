@@ -10,7 +10,8 @@ Generates a static representation of your schema
 
 1. Add the plugin to the buildscript classpath (where your kotlin plugin is)
 
-    `classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.2`
+    `classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0-RC2`
+    
 2. If you haven't already, specify either JCenter or maven Central Repository in the buildscript
 
        repositories {
@@ -23,10 +24,6 @@ Generates a static representation of your schema
 
 4. Configure the plugin to target & compile your schema as kotlin by inserting a config block titled `kotlinq` in your `build.gradle`.
 See the next section for how to do this
-
-5. If applicable: Upgrade the gradle wrapper to gradle `4.1`:
-
-      `gradle wrapper --gradle-version 4.1`
 
 
 ## Configuration

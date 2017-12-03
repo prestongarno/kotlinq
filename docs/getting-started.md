@@ -1,28 +1,22 @@
-## <span style="color:#f442c2"> How to objectValue **kotlinq** </span>
+## <span style="color:#f442c2">How to get started</span>
 
 To use in a project, add the dependency to a gradle buildscript:
 
-      compile 'com.prestongarno.kotlinq:kotlinq-client:0.2'
-      
-Make sure to include the [ gradle plugin ](https://github.com/prestongarno/kotlinq-gradle) and read
+      compile 'com.prestongarno.kotlinq:kotlinq-client:0.3.0'
+
+Make sure to include the [ gradle plugin ](https://github.com/prestongarno/kotlinq/kotlinq-gradle) and read
 the gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
-      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.2'
+      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0'
 
 And apply the plugin:
 
       plugins {
-        id 'com.prestongarno.kotlinq' version 0.2
+        id 'com.prestongarno.kotlinq' version 0.3.0
       }
-      
-## <span style="color:#f442c2">About</span>
 
-Stands for KoTlin Query (language). This is a library which supports concise, type-safe models for 
-queries and mutations against a GraphQl schema. 
-
-The [ gradle plugin ](https://github.com/prestongarno/kotlinq-gradle) generates an equivalent kotlin type hierarchy which is used to create and execute queries
-and mutations without ever leaving native code.
+## <span style="color:#f442c2">Example nested query</span>
 
 For an example of how to build models, see the example below created for the Yelp Graphql API. 
 
@@ -46,7 +40,7 @@ For an example of how to build models, see the example below created for the Yel
       val phoneNumber: Int by model.display_phone
       val directUrl: String by model.url
     }
-    
+
 
 Note that while field types are specified, they are not necessary and can be inferred by the properties
 in the `model` instance which a concrete query/mutation class delegates its properties to.
