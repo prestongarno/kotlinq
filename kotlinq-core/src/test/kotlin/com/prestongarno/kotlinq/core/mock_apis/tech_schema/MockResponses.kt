@@ -48,7 +48,7 @@ class MockResponses {
       }
       """.trimMargin()
 
-    query.resolve(response.byteInputStream())
+    query.resolve(response.byteInputStream()) eq true
 
     val result = query.query as Language
 
@@ -68,6 +68,7 @@ class MockResponses {
         time = this@apply.since
         get(Calendar.DAY_OF_MONTH) eq 19
         get(Calendar.MONTH) eq 1
+        // literally have no clue how this date works
         get(Calendar.HOUR_OF_DAY) eq 16
       }
     }
