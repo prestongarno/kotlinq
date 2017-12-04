@@ -1,15 +1,16 @@
 version = rootProject.properties.get("version")
+group = "com.prestongarno.kotlinq"
 
 buildscript {
 
+  println("Using kotlinq version: $version")
+
   ext.generationTarget = "$rootProject.name/src/main/kotlin"
+
   repositories {
+    mavenLocal()
     jcenter()
     mavenCentral()
-    maven {
-      // build plugins are hell on earch to manage without a maven repo
-      url '../kotlinq-core/libs'
-    }
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.0"
@@ -20,17 +21,17 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: "com.prestongarno.kotlinq"
+apply plugin: 'maven-publish'
+
 
 repositories {
+  mavenLocal()
   mavenCentral()
   jcenter()
-  maven {
-    url '../kotlinq-core/libs'
-  }
 }
 
 dependencies {
-  compile "com.prestongarno.kotlinq:kotlinq-core:$version"
+  compileOnly "com.prestongarno.kotlinq:kotlinq-core:$version"
 }
 
 sourceSets {
@@ -68,3 +69,26 @@ kotlinq {
 }
 
 compileJava.mustRunAfter(compileGraphQL)
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId group
+      artifactId rootProject.name
+      from components.java
+      pom.withXml {
+        asNode().children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          licenses {
+            license {
+              name "Apache 2.0"
+            }
+          }
+        }
+      }
+    }
+  }
+  repositories {
+    mavenLocal()
+  }
+}
