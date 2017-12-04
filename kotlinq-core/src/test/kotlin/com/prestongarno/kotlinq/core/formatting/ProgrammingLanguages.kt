@@ -34,8 +34,7 @@ import java.time.Instant
 
 
 /**
- * Simple test cases covering the front end of a GraphQL client:
- * Making requests.
+ * Simple test cases covering the front end of a GraphQL client: making requests.
  *
  * Using the generated test module API package [com.languages]
  * Implemented classes using the kotlinq API are at the end of the file
