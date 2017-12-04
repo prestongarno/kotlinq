@@ -284,4 +284,3 @@ class FeatureModel : QModel<Feature>(Feature) {
 fun Date.parseFromQuery(value: String): java.util.Date =
     java.util.Date.from(Instant.parse(value))
 
-
