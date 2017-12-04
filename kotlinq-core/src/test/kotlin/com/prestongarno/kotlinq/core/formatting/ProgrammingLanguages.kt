@@ -201,11 +201,8 @@ class ProgrammingLanguagesSchemaQueryTests {
       |  }
       |}
       """.trimMargin("|")
-
-    println(result)
-
-    query.getFragments().forEach { println(it.model.graphqlType + it.hashCode()) }
   }
+
   // non-recursive nested fragment for ^^^ test to prevent cycle
   // also non-local class because kotlin class fqnames can't be escaped
   class NestedFrameworkModel : QModel<Framework>(Framework) {
