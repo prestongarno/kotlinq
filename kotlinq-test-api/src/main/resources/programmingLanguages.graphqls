@@ -1,5 +1,9 @@
 
 
+type Query {
+  search(term: String!, limit: Int!, after: ID): SoftwareComponent
+}
+
 union SoftwareComponent = ProgrammingLanguage | Library | Framework | OperatingSystem
 
 type ProgrammingLanguage implements Platform {
@@ -54,8 +58,4 @@ scalar ID
 type Feature {
   name: String
   description: String
-}
-
-type Query {
-  search(term: String!, limit: Int!, after: ID): SoftwareComponent
 }

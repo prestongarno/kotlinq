@@ -34,15 +34,18 @@ import java.time.Instant
 
 
 /**
- * Simple test cases covering the front end of a GraphQL client: making requests.
+ * Four simple test cases using the kolinq-core library which covers
+ * the front end of a GraphQL client: making requests.
  *
- * Using the generated test module API package [com.languages]
- * Implemented classes using the kotlinq API are at the end of the file
+ * Using classes from the (build-time generated) test module package [com.languages]
+ *
+ * Implemented subclasses for making queries are at the end of the file
+ *
  * GraphQL SDL file is in the kotlinq-test-api module resources folder
  *
  * @author prestongarno
  */
-class ProgrammingLanguagesSchemaQueryTests {
+class TechSchemaQueryTests {
 
   @Test fun `query fragment on programming lang type`() {
 
@@ -216,7 +219,11 @@ class ProgrammingLanguagesSchemaQueryTests {
 
 }
 
-/** Mock Implementation classes covering basic use cases in graphql */
+/************************************************************
+ *
+ * Mock Implementation classes covering basic use cases of graphql spec
+ *
+ ***********************************************************/
 
 class TechnologyQuery(
     searchTerm: String = "kotlin",
@@ -224,7 +231,7 @@ class TechnologyQuery(
     block: SoftwareComponent.() -> Unit
 ) : QModel<Query>(Query) {
 
-  val query by model.search(Query.SearchArgs(searchTerm, limit)) {
+  val query: QModel<*>? by model.search(Query.SearchArgs(searchTerm, limit)) {
     fragment(block)
   }
 
@@ -233,23 +240,23 @@ class TechnologyQuery(
 
 class Language : QModel<ProgrammingLanguage>(ProgrammingLanguage) {
 
-  val name by model.name
+  val name: String by model.name
 
-  val features by model.primaryFeatures.query(::FeatureModel)
+  val features: List<FeatureModel> by model.primaryFeatures.query(::FeatureModel)
 
-  val isTyped by model.isTyped
+  val isTyped: Boolean by model.isTyped
 
-  // TODO make this invokable so can deserialize without explicit method call
-  val since by model.since.map(StringScalarMapper(
+  // Custopm deserializing from graphql fields
+  val since: java.util.Date by model.since.map(StringScalarMapper(
       Date::parseFromQuery))
 
 }
 
 class OperatingSys : QModel<OperatingSystem>(OperatingSystem) {
 
-  val name by model.name
+  val name: String by model.name
 
-  val since by model.since.map(StringScalarMapper(
+  val since: java.util.Date by model.since.map(StringScalarMapper(
       Date::parseFromQuery))
 
   val architecture by model.archSupport { default = Architecture.X86_64 }
@@ -260,11 +267,11 @@ class FrameworkModel(
     dependencyScope: SoftwareComponent.() -> Unit
 ) : QModel<Framework>(Framework) {
 
-  val name by model.name
+  val name: String by model.name
 
-  val languagesUsed by model.languagesUsed.query(::Language)
+  val languagesUsed: List<Language> by model.languagesUsed.query(::Language)
 
-  val dependencies by model.dependencies {
+  val dependencies: List<QModel<*>> by model.dependencies {
     fragment(dependencyScope)
   }
 }
@@ -272,9 +279,9 @@ class FrameworkModel(
 
 class FeatureModel : QModel<Feature>(Feature) {
 
-  val name by model.name
+  val name: String by model.name
 
-  val description by model.description
+  val description: String by model.description
 
 }
 
