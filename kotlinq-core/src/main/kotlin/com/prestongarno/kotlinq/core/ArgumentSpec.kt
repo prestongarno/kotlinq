@@ -74,17 +74,17 @@ class PropertyMapper {
   }
 
   @Suppress("UNCHECKED_CAST")
-  fun <T: Any> notNull(key: String, value: T): ReadOnlyProperty<ArgumentSpec, T> {
+  fun <T: Any> notNull(key: String, value: T): ReadOnlyProperty<Any, T> {
     put(key, value)
-    return notNullDelegate as ReadOnlyProperty<ArgumentSpec, T>
+    return notNullDelegate as ReadOnlyProperty<Any, T>
   }
 
 
   // hack
-  private inner class NotNull<out T: Any> : ReadOnlyProperty<ArgumentSpec, T> {
+  private inner class NotNull<out T: Any> : ReadOnlyProperty<Any, T> {
 
     @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: ArgumentSpec, property: KProperty<*>): T = values[property.name] as T
+    override fun getValue(thisRef: Any, property: KProperty<*>): T = values[property.name] as T
   }
 }
 

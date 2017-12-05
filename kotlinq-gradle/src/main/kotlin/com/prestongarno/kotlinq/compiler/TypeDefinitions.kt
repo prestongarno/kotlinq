@@ -227,9 +227,7 @@ class InputDef(context: GraphQLSchemaParser.InputTypeDefContext)
     }.also { params ->
       FunSpec.constructorBuilder()
           .addParameters(params)
-          .addCode(CodeBlock.of(params.joinToString(separator = "\n") {
-            "\"${it.name}\" with ${it.name}"
-          })).build()
+          .build()
           .let(this::primaryConstructor)
     }
     // add others as nullable props
@@ -239,7 +237,13 @@ class InputDef(context: GraphQLSchemaParser.InputTypeDefContext)
           .delegate("input")
           .build()
     }.let(this::addProperties)
-
+        .addProperties(
+            this@InputDef.fields.filterNot { it.nullable }
+                .map {
+                  PropertySpec.builder(it.name, it.type.name.asTypeName())
+                      .delegate(notNullDelegateCode(arg = it, targetName = "input"))
+                      .build()
+                })
   }.build()
 
   override val schemaTypeClass = QInputType::class

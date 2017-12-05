@@ -59,12 +59,11 @@ private fun ArgumentSpecDef.toClass(): TypeSpec = TypeSpec.classBuilder(name).ap
   })
   // add constructor for non-nullable input arg arguments
   if (field.arguments.find { !it.nullable } != null) primaryConstructor(FunSpec.constructorBuilder()
-      .addParameters(field.arguments.filterNot {
-        it.nullable
-      }.map(ArgumentDefinition::toKotlin))
+      .addParameters(field.arguments.filterNot(ArgumentDefinition::nullable)
+          .map(ArgumentDefinition::toKotlin))
       .build())
       .addProperties(field.arguments.filter {
-        !it.nullable && field.inheritsFrom.isNotEmpty()
+        !it.nullable
       }.map {
         PropertySpec.builder(
             it.name,
@@ -90,6 +89,6 @@ private fun ArgumentSpecDef.toClass(): TypeSpec = TypeSpec.classBuilder(name).ap
 
 }.build()
 
-private fun notNullDelegateCode(arg: ArgumentDefinition): CodeBlock {
-  return CodeBlock.of("arguments.notNull<%T>(\"${arg.name}\", ${arg.name})", arg.type.name.asTypeName())
+fun notNullDelegateCode(arg: ScopedSymbol, targetName: String = "arguments"): CodeBlock {
+  return CodeBlock.of("$targetName.notNull<%T>(\"${arg.name}\", ${arg.name})", arg.type.name.asTypeName())
 }
