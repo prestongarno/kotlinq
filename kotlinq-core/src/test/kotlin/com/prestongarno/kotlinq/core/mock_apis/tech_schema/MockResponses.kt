@@ -65,9 +65,6 @@ class MockResponses {
         time = this@apply.since
 
         get(Calendar.YEAR) eq 2012
-        time = this@apply.since
-        get(Calendar.DAY_OF_MONTH) eq 19
-        get(Calendar.MONTH) eq 1
       }
     }
 

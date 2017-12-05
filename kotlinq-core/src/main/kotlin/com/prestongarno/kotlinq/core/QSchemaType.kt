@@ -253,7 +253,7 @@ interface QSchemaType {
 
     inline fun <reified T, A> optionalConfigStub()
         :
-        StubProvider<InterfaceStub.OptionalConfigQuery<T, out A>>
+        StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
         where T : QType,
               T : QInterface,
               A : ArgumentSpec =
@@ -262,7 +262,7 @@ interface QSchemaType {
 
     inline fun <reified T, A> configStub()
         :
-        StubProvider<InterfaceStub.ConfigurableQuery<T, out A>>
+        StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
         where T : QType,
               T : QInterface,
               A : ArgumentSpec =
@@ -280,7 +280,7 @@ interface QSchemaType {
 
       inline fun <reified T, A> optionalConfigStub()
           :
-          StubProvider<InterfaceListStub.OptionalConfigQuery<T, out A>>
+          StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
           where T : QType,
                 T : QInterface,
                 A : ArgumentSpec =
@@ -288,7 +288,7 @@ interface QSchemaType {
 
       inline fun <reified T, A> configStub()
           :
-          StubProvider<InterfaceListStub.ConfigurableQuery<T, out A>>
+          StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
           where T : QType,
                 T : QInterface,
                 A : ArgumentSpec =

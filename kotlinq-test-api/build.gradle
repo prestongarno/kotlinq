@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-  compileOnly "com.prestongarno.kotlinq:kotlinq-core:$version"
+  compile "com.prestongarno.kotlinq:kotlinq-core:$version"
 }
 
 sourceSets {

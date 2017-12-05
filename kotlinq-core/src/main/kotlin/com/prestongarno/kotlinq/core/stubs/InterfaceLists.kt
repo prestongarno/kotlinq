@@ -46,14 +46,14 @@ interface InterfaceListStub<I, out A> :
     internal
     fun <I, A> optionalArgStub(
         qproperty: GraphQlProperty
-    ): OptionalConfigQuery<I, out A>
+    ): OptionalConfigQuery<I, A>
         where I : QInterface, I : QType, A : ArgumentSpec =
         OptionalConfigQueryImpl(qproperty)
 
     internal
     fun <I, A> argStub(
         qproperty: GraphQlProperty
-    ): ConfigurableQuery<I, out A>
+    ): ConfigurableQuery<I, A>
         where I : QInterface, I : QType, A : ArgumentSpec =
         ConfigurableQueryImpl(qproperty)
   }
@@ -67,27 +67,27 @@ interface InterfaceListStub<I, out A> :
 
   }
 
-  interface OptionalConfigQuery<I, A> : ConfigurableQuery<I, A>
+  interface OptionalConfigQuery<I, in A> : ConfigurableQuery<I, A>
       where I : QInterface,
             I : QType,
             A : ArgumentSpec {
 
     /** Create stub for field without any arguments */
-    operator fun invoke(
+    operator fun <B : A> invoke(
         scope: FragmentStub<I>.() -> Unit
-    ): InterfaceListStub<I, A>
+    ): InterfaceListStub<I, B>
 
   }
 
-  interface ConfigurableQuery<I, A> : SchemaStub
+  interface ConfigurableQuery<I, in A> : SchemaStub
       where I : QInterface,
             I : QType,
             A : ArgumentSpec {
 
-    operator fun invoke(
-        arguments: A,
-        scope: InterfaceListStub<I, out A>.() -> Unit
-    ): InterfaceListStub<I, out A>
+    operator fun <B: A> invoke(
+        arguments: B,
+        scope: InterfaceListStub<I, B>.() -> Unit
+    ): InterfaceListStub<I, B>
 
   }
 
@@ -109,11 +109,12 @@ interface InterfaceListStub<I, out A> :
             I : QType,
             A : ArgumentSpec {
 
-    override fun invoke(arguments: A, scope: InterfaceListStub<I, A>.() -> Unit): InterfaceListStub<I, A> =
-        newInterfaceListStub<I, A>(qproperty, arguments).apply(scope)
+    override fun <B : A> invoke(arguments: B, scope: InterfaceListStub<I, B>.() -> Unit): InterfaceListStub<I, B> {
+      return newInterfaceListStub<I, B>(qproperty, arguments).apply(scope)
+    }
 
-    override fun invoke(scope: FragmentStub<I>.() -> Unit): InterfaceListStub<I, A> =
-        newInterfaceListStub<I, A>(qproperty, null).apply(scope)
+    override fun <B : A> invoke(scope: FragmentStub<I>.() -> Unit): InterfaceListStub<I, B> =
+        newInterfaceListStub<I, B>(qproperty, null).apply(scope)
   }
 
   private

@@ -92,6 +92,7 @@ private fun String.minusPackageNames() = this.replace("com.prestongarno.kotlinq.
 
 
 interface Entity : QType, QInterface {
+
   val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
 
   interface BaseFriendsArgs : ArgumentSpec {
@@ -101,23 +102,23 @@ interface Entity : QType, QInterface {
 
 
 interface Actor : QType, QInterface {
-  val friends: InterfaceListStub.OptionalConfigQuery<Entity, BaseFriendsArgs>
+  val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
 
   interface BaseFriendsArgs : ArgumentSpec
+}
+class FriendsArgs(query: String) : ArgBuilder(), Entity.BaseFriendsArgs, Actor.BaseFriendsArgs {
+
+  override val query: String by arguments.notNull<String>("query", query)
+
+  var first: Int? by arguments
+
+  var after: ID? by arguments
 }
 
 
 object Wookie : QType, Entity, Actor {
+  override val friends: InterfaceListStub.ConfigurableQuery<Entity, FriendsArgs> get() = TODO()
 
-  override val friends: InterfaceListStub.ConfigurableQuery<Entity, FriendsArgs> by QSchemaType.QInterfaces.List.configStub<Entity, FriendsArgs>()
-
-  class FriendsArgs(query: String) : ArgBuilder(), Entity.BaseFriendsArgs, Actor.BaseFriendsArgs {
-    override val query: String by arguments.notNull<String>("query", query)
-
-    var first: Int? by arguments
-
-    var after: ID? by arguments
-  }
 }
 
 
