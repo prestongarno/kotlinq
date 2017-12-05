@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
@@ -31,7 +32,7 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumType, T : Enum<*> {
+interface EnumStub<T, out A : ArgumentSpec> : DelegateProvider<T> where T : QEnumType, T : Enum<*> {
   var default: T?
 
   fun config(argumentScope: A.() -> Unit)
@@ -52,7 +53,7 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
         enumClass: KClass<T>
     ): ConfigurableQuery<T, A>
         where T : QEnumType,
-              T : Enum<*>, A : ArgBuilder =
+              T : Enum<*>, A : ArgumentSpec =
         EnumConfigStubImpl(qproperty, enumClass)
 
     internal
@@ -62,7 +63,7 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
     ): OptionalConfigQuery<T, A>
         where T : QEnumType,
               T : Enum<*>,
-              A : ArgBuilder =
+              A : ArgumentSpec =
         EnumOptionalArgStubQuery(qproperty, enumClass)
   }
 
@@ -72,12 +73,12 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
         invoke(scope = empty()).provideDelegate(inst, property)
 
     operator fun invoke(
-        arguments: ArgBuilder = ArgBuilder(),
-        scope: EnumStub<T, ArgBuilder>.() -> Unit = empty()
-    ): EnumStub<T, ArgBuilder>
+        arguments: ArgumentSpec = ArgBuilder(),
+        scope: EnumStub<T, ArgumentSpec>.() -> Unit = empty()
+    ): EnumStub<T, ArgumentSpec>
   }
 
-  interface OptionalConfigQuery<T, A> : SchemaStub where T : QEnumType, T : Enum<*>, A : ArgBuilder {
+  interface OptionalConfigQuery<T, A> : SchemaStub where T : QEnumType, T : Enum<*>, A : ArgumentSpec {
 
     operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
         invoke(empty()).provideDelegate(inst, property)
@@ -88,12 +89,12 @@ interface EnumStub<T, out A : ArgBuilder> : DelegateProvider<T> where T : QEnumT
     ): EnumStub<T, A>
 
     operator fun invoke(
-        scope: EnumStub<T, ArgBuilder>.() -> Unit
-    ): EnumStub<T, ArgBuilder>
+        scope: EnumStub<T, ArgumentSpec>.() -> Unit
+    ): EnumStub<T, ArgumentSpec>
   }
 
 
-  interface ConfigurableQuery<T, A> : SchemaStub where T : QEnumType, T : Enum<*>, A : ArgBuilder {
+  interface ConfigurableQuery<T, A> : SchemaStub where T : QEnumType, T : Enum<*>, A : ArgumentSpec {
 
     operator fun invoke(
         arguments: A,

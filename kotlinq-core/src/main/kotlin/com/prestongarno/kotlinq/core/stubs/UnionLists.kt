@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QUnionType
@@ -25,7 +26,7 @@ import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.newUnionListStub
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface UnionListStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<List<QModel<*>>> {
+interface UnionListStub<out T : QUnionType, out A : ArgumentSpec> : DelegateProvider<List<QModel<*>>> {
 
   fun config(scope: A.() -> Unit)
 
@@ -40,13 +41,13 @@ interface UnionListStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvid
         QueryImpl(qproperty, unionObject)
 
     internal
-    fun <T : QUnionType, A : ArgBuilder> optionalArgStub(qproperty: GraphQlProperty, unionObject: T)
+    fun <T : QUnionType, A : ArgumentSpec> optionalArgStub(qproperty: GraphQlProperty, unionObject: T)
         :
         OptionalConfigQuery<T, A> =
         OptionalConfigQueryImpl(qproperty, unionObject)
 
     internal
-    fun <T : QUnionType, A : ArgBuilder> argStub(qproperty: GraphQlProperty, unionObject: T)
+    fun <T : QUnionType, A : ArgumentSpec> argStub(qproperty: GraphQlProperty, unionObject: T)
         :
         ConfigurableQuery<T, A> =
         ConfigurableQueryImpl(qproperty, unionObject)
@@ -55,21 +56,21 @@ interface UnionListStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvid
 
   interface Query<out T : QUnionType> : SchemaStub {
 
-    operator fun invoke(arguments: ArgBuilder? = null, scope: UnionListStub<T, ArgBuilder>.() -> Unit)
+    operator fun invoke(arguments: ArgumentSpec? = null, scope: UnionListStub<T, ArgumentSpec>.() -> Unit)
         :
-        UnionListStub<T, ArgBuilder>
+        UnionListStub<T, ArgumentSpec>
 
   }
 
-  interface OptionalConfigQuery<out T : QUnionType, A : ArgBuilder> : ConfigurableQuery<T, A> {
+  interface OptionalConfigQuery<out T : QUnionType, A : ArgumentSpec> : ConfigurableQuery<T, A> {
 
-    operator fun invoke(scope: UnionListStub<T, ArgBuilder>.() -> Unit)
+    operator fun invoke(scope: UnionListStub<T, ArgumentSpec>.() -> Unit)
         :
-        UnionListStub<T, ArgBuilder>
+        UnionListStub<T, ArgumentSpec>
 
   }
 
-  interface ConfigurableQuery<out T : QUnionType, A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<out T : QUnionType, A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -87,18 +88,18 @@ interface UnionListStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvid
       val union: T
   ) : Query<T> {
 
-    override fun invoke(arguments: ArgBuilder?, scope: UnionListStub<T, ArgBuilder>.() -> Unit) =
+    override fun invoke(arguments: ArgumentSpec?, scope: UnionListStub<T, ArgumentSpec>.() -> Unit) =
         newUnionListStub(qproperty, union, arguments ?: ArgBuilder()).apply(scope)
 
   }
 
   private
-  class OptionalConfigQueryImpl<out T : QUnionType, A : ArgBuilder>(
+  class OptionalConfigQueryImpl<out T : QUnionType, A : ArgumentSpec>(
       val qproperty: GraphQlProperty,
       val union: T
   ) : OptionalConfigQuery<T, A> {
 
-    override fun invoke(scope: UnionListStub<T, ArgBuilder>.() -> Unit) =
+    override fun invoke(scope: UnionListStub<T, ArgumentSpec>.() -> Unit) =
         newUnionListStub(qproperty, union, ArgBuilder()).apply(scope)
 
     override fun invoke(arguments: A, scope: UnionListStub<T, A>.() -> Unit) =
@@ -107,7 +108,7 @@ interface UnionListStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvid
   }
 
   private
-  class ConfigurableQueryImpl<out T : QUnionType, A : ArgBuilder>(
+  class ConfigurableQueryImpl<out T : QUnionType, A : ArgumentSpec>(
       val qproperty: GraphQlProperty,
       val union: T
   ) : ConfigurableQuery<T, A> {

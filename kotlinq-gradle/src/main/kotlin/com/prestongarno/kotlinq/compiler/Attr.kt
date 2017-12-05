@@ -54,7 +54,7 @@ internal fun GraphQLCompiler.attrInheritance() {
         ?.let(this@on::setSupertypes) ?: setSupertypes(emptySet())
 
     fields.onEach(fieldSuperTable::setFieldInheritanceContext)
-        .forEach(this::assignArgBuilder)
+        .forEach(this::assignArgumentSpec)
   }
 }
 
@@ -87,7 +87,7 @@ private fun TypeDef.requireOverrides(abstract: FieldDefinition) {
         && type == abstract.type
         && arguments.containsAll(abstract.arguments)
   }) { "Field ${abstract.name} does not override supertype property" }
-  assignArgBuilder(abstract)
+  assignArgumentSpec(abstract)
 }
 
 private fun second(pair: Pair<FieldDefinition, FieldDefinition>): FieldDefinition = pair.second
@@ -111,7 +111,7 @@ private fun GraphQLSchemaParser.TypeNameContext.toNameString(): String = Name().
 
 private fun FieldDefinition.newCache(): Pair<FieldDefinition, MutableSet<InterfaceDef>> = this to mutableSetOf()
 
-private fun TypeDef.assignArgBuilder(field: FieldDefinition) {
-  field.argBuilder = ArgBuilderDef(field, this)
+private fun TypeDef.assignArgumentSpec(field: FieldDefinition) {
+  field.argBuilder = ArgumentSpecDef(field, this)
 }
 

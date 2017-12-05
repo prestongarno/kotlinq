@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.primitives
 
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType.*
+import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.stubs.BooleanArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatArrayDelegate
@@ -102,26 +102,26 @@ class BasicPrimitiveArray {
 
       val names by model.studentNames {
         config {
-          "Hello" with "World"
+          arguments.put("Hello", "World")
         }
       }
 
       val ages by model.studentAges {
-        config { "NumberArgument" with 9000 }
+        config { arguments.put("NumberArgument", 9000) }
       }
 
       val gpas by model.studentGpa {
-        config { "BooleanArgument" with true }
+        config { arguments.put("BooleanArgument", true) }
       }
 
       val passing by model.studentPassing {
-        config { "FloatArgument" with 5.005f }
+        config { arguments.put("FloatArgument", 5.005f) }
       }
 
     }
 
     query.toGraphql() eq
         """{studentNames(Hello: \"World\"),studentAges(NumberArgument: 9000),""" +
-          """studentGpa(BooleanArgument: true),studentPassing(FloatArgument: 5.005f)}"""
+            """studentGpa(BooleanArgument: true),studentPassing(FloatArgument: 5.005f)}"""
   }
 }

@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
@@ -26,7 +27,7 @@ import com.prestongarno.kotlinq.core.adapters.toMap
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
+interface BooleanDelegate<out A : ArgumentSpec> : ScalarDelegate<BooleanStub> {
 
   var default: Boolean
 
@@ -40,13 +41,13 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): Query = QueryImpl(qproperty)
 
     internal
-    fun <A : ArgBuilder> optionalArgStub(
+    fun <A : ArgumentSpec> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
     internal
-    fun <A : ArgBuilder> argStub(
+    fun <A : ArgumentSpec> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -56,9 +57,9 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
   interface Query : SchemaStub {
 
     operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: (BooleanDelegate<ArgBuilder>.() -> Unit)? = null
-    ): BooleanDelegate<ArgBuilder>
+        arguments: ArgumentSpec? = null,
+        scope: (BooleanDelegate<ArgumentSpec>.() -> Unit)? = null
+    ): BooleanDelegate<ArgumentSpec>
 
     operator fun provideDelegate(
         inst: QModel<*>,
@@ -66,7 +67,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): BooleanStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgBuilder> : SchemaStub {
+  interface OptionalConfigQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -79,7 +80,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
     ): BooleanStub
   }
 
-  interface ConfigurableQuery<A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -93,12 +94,12 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(
-        arguments: ArgBuilder?, scope: (BooleanDelegate<ArgBuilder>.() -> Unit)?
+        arguments: ArgumentSpec?, scope: (BooleanDelegate<ArgumentSpec>.() -> Unit)?
     ) = BooleanDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private
-  class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
+  class OptionalConfigQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (BooleanDelegate<A>.() -> Unit)?): BooleanDelegate<A> =
         BooleanDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -107,7 +108,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
   }
 
   private
-  class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+  class ConfigurableQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 
     override fun invoke(arguments: A, scope: (BooleanDelegate<A>.() -> Unit)?): BooleanDelegate<A> =
         BooleanDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -115,7 +116,7 @@ interface BooleanDelegate<out A : ArgBuilder> : ScalarDelegate<BooleanStub> {
 }
 
 private
-class BooleanDelegateImpl<out A : ArgBuilder>(
+class BooleanDelegateImpl<out A : ArgumentSpec>(
     val qproperty: GraphQlProperty,
     val argBuilder: A? = null
 ) : BooleanDelegate<A> {

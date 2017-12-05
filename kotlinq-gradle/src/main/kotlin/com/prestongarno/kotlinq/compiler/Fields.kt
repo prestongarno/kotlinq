@@ -67,7 +67,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
   lateinit var inheritsFrom: Set<InterfaceDef>
 
   /** has to be done from an outside context. Created in [GraphQLCompiler.attrInheritance]*/
-  internal var argBuilder: com.prestongarno.kotlinq.compiler.ArgBuilderDef? = null
+  internal var argBuilder: com.prestongarno.kotlinq.compiler.ArgumentSpecDef? = null
 
   val arguments: List<ArgumentDefinition> = context.fieldArgs()
       ?.argument()
@@ -98,7 +98,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
    * StubType: [ [String|Float|Int|Boolean]{Array}Delegate | [Type|Interface|Union|Enum|CustomScalar]{List}Stub ]
    *
    * Primitive delegates/stubs don't have a type argument.
-   * Only for the the associated ArgBuilder class on the graphql primitive field
+   * Only for the the associated ArgumentSpec class on the graphql primitive field
    */
   private fun ktqGraphQLDelegateKotlinpoetTypeName(): TypeName {
 

@@ -18,17 +18,18 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.CustomScalar
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.custom.QScalarMapper
 import com.prestongarno.kotlinq.core.adapters.newScalarDelegate
-import com.prestongarno.kotlinq.core.hooks.ConfiguredQuery
-import com.prestongarno.kotlinq.core.hooks.NoArgConfig
-import com.prestongarno.kotlinq.core.hooks.OptionalConfiguration
+import com.prestongarno.kotlinq.core.api.ConfiguredQuery
+import com.prestongarno.kotlinq.core.api.NoArgConfig
+import com.prestongarno.kotlinq.core.api.OptionalConfiguration
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface CustomScalarStub<T : CustomScalar, V, out A : ArgBuilder> : DelegateProvider<V> {
+interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : DelegateProvider<V> {
 
   var default: V?
 
@@ -42,12 +43,12 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgBuilder> : DelegatePr
     ): Query<T> = QueryImpl(qproperty)
 
     internal
-    fun <T : CustomScalar, A : ArgBuilder> optionalArgStub(
+    fun <T : CustomScalar, A : ArgumentSpec> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<T, A> = OptionalConfigQueryImpl(qproperty)
 
     internal
-    fun <T : CustomScalar, A : ArgBuilder> argStub(
+    fun <T : CustomScalar, A : ArgumentSpec> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<T, A> = ConfigurableQueryImpl(qproperty)
 
@@ -55,19 +56,19 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgBuilder> : DelegatePr
 
   interface Query<T : CustomScalar> : SchemaStub {
     fun <U : QScalarMapper<V>, V> map(adapter: U)
-        : NoArgConfig<CustomScalarStub<T, V, ArgBuilder>, V>
+        : NoArgConfig<CustomScalarStub<T, V, ArgumentSpec>, V>
   }
 
-  interface OptionalConfigQuery<T : CustomScalar, in A : ArgBuilder> : SchemaStub {
+  interface OptionalConfigQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
     fun <U : QScalarMapper<V>, V> map(
         adapter: U
-    ): OptionalConfiguration<CustomScalarStub<T, V, ArgBuilder>, V, A>
+    ): OptionalConfiguration<CustomScalarStub<T, V, ArgumentSpec>, V, A>
   }
 
-  interface ConfigurableQuery<T : CustomScalar, in A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
     fun <V> map(
         adapter: QScalarMapper<V>
-    ): ConfiguredQuery<CustomScalarStub<T, V, ArgBuilder>, A>
+    ): ConfiguredQuery<CustomScalarStub<T, V, ArgumentSpec>, A>
   }
 
   /*********************************************************************************
@@ -76,27 +77,27 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgBuilder> : DelegatePr
   private
   class QueryImpl<T : CustomScalar>(val qproperty: GraphQlProperty) : Query<T> {
 
-    override fun <U : QScalarMapper<V>, V> map(adapter: U): NoArgConfig<CustomScalarStub<T, V, ArgBuilder>, V> =
-        NoArgConfig.new { args -> newScalarDelegate<T, U, V, ArgBuilder>(qproperty, adapter, args ?: ArgBuilder()) }
+    override fun <U : QScalarMapper<V>, V> map(adapter: U): NoArgConfig<CustomScalarStub<T, V, ArgumentSpec>, V> =
+        NoArgConfig.new { args -> newScalarDelegate<T, U, V, ArgumentSpec>(qproperty, adapter, args ?: ArgBuilder()) }
 
   }
 
   private
-  class OptionalConfigQueryImpl<T : CustomScalar, A : ArgBuilder>(
+  class OptionalConfigQueryImpl<T : CustomScalar, A : ArgumentSpec>(
       val qproperty: GraphQlProperty
   ) : OptionalConfigQuery<T, A> {
 
-    override fun <U : QScalarMapper<V>, V> map(adapter: U): OptionalConfiguration<CustomScalarStub<T, V, ArgBuilder>, V, A> =
+    override fun <U : QScalarMapper<V>, V> map(adapter: U): OptionalConfiguration<CustomScalarStub<T, V, ArgumentSpec>, V, A> =
         OptionalConfiguration.new { args -> newScalarDelegate(qproperty, adapter, args) }
 
   }
 
   private
-  class ConfigurableQueryImpl<T : CustomScalar, A : ArgBuilder>(
+  class ConfigurableQueryImpl<T : CustomScalar, A : ArgumentSpec>(
       val qproperty: GraphQlProperty
   ) : ConfigurableQuery<T, A> {
 
-    override fun <V> map(adapter: QScalarMapper<V>): ConfiguredQuery<CustomScalarStub<T, V, ArgBuilder>, A> =
+    override fun <V> map(adapter: QScalarMapper<V>): ConfiguredQuery<CustomScalarStub<T, V, ArgumentSpec>, A> =
         ConfiguredQuery.new { args -> newScalarDelegate(qproperty, adapter, args) }
 
   }

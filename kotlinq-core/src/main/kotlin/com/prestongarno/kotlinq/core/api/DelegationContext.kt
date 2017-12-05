@@ -15,9 +15,9 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.hooks
+package com.prestongarno.kotlinq.core.api
 
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.CustomScalar
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QInterface
@@ -123,12 +123,12 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<TypeStub.Query<T>> =
         Grub(typeClazz.graphQlName()) { TypeStub.noArgStub<T>(it) }
 
-    fun <T : QType, A : ArgBuilder> optionalConfigStub(typeClazz: KClass<T>)
+    fun <T : QType, A : ArgumentSpec> optionalConfigStub(typeClazz: KClass<T>)
         :
         StubProvider<TypeStub.OptionalConfigQuery<T, A>> =
         Grub(typeClazz.graphQlName()) { TypeStub.optionalArgStub<T, A>(it) }
 
-    fun <T : QType, A : ArgBuilder> configStub(typeClazz: KClass<T>)
+    fun <T : QType, A : ArgumentSpec> configStub(typeClazz: KClass<T>)
         :
         StubProvider<TypeStub.ConfigurableQuery<T, A>> =
         Grub(typeClazz.graphQlName()) { TypeStub.argStub<T, A>(it) }
@@ -150,7 +150,7 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
         where T : QType,
               T : QInterface,
-              A : ArgBuilder =
+              A : ArgumentSpec =
         Grub(clazz.graphQlName()) { InterfaceStub.optionalArgStub<T, A>(it) }
 
     fun <T, A> configStub(clazz: KClass<T>)
@@ -158,7 +158,7 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
         where T : QType,
               T : QInterface,
-              A : ArgBuilder =
+              A : ArgumentSpec =
         Grub(clazz.graphQlName()) { InterfaceStub.argStub<T, A>(it) }
 
     override val list: Lists.Interface = Lists.Interface()
@@ -171,12 +171,12 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<UnionStub.Query<T>> =
         Grub(union::class.graphQlName()) { UnionStub.noArgStub(it, union) }
 
-    fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T)
+    fun <T : QUnionType, A : ArgumentSpec> optionalConfigStub(union: T)
         :
         StubProvider<UnionStub.OptionalConfigQuery<T, A>> =
         Grub(union::class.graphQlName()) { UnionStub.optionalArgStub<T, A>(it, union) }
 
-    fun <T : QUnionType, A : ArgBuilder> configStub(union: T)
+    fun <T : QUnionType, A : ArgumentSpec> configStub(union: T)
         :
         StubProvider<UnionStub.ConfigurableQuery<T, A>> =
         Grub(union::class.graphQlName()) { UnionStub.argStub<T, A>(it, union) }
@@ -194,14 +194,14 @@ class DefaultDelegationContext : DelegationContext {
               T : QEnumType
         = Grub(clazz.graphQlName()) { EnumStub.noArgStub(it, clazz) }
 
-    fun <T, A : ArgBuilder> optionalConfigStub(clazz: KClass<T>)
+    fun <T, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
         :
         StubProvider<EnumStub.OptionalConfigQuery<T, A>>
         where T : kotlin.Enum<*>,
               T : QEnumType =
         Grub(clazz.graphQlName()) { EnumStub.optionalArgStub<T, A>(it, clazz) }
 
-    fun <T, A : ArgBuilder> configStub(clazz: KClass<T>)
+    fun <T, A : ArgumentSpec> configStub(clazz: KClass<T>)
         :
         StubProvider<EnumStub.ConfigurableQuery<T, A>>
         where T : kotlin.Enum<*>,
@@ -219,12 +219,12 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<StringDelegate.Query> =
         Grub("String") { StringDelegate.noArgStub(it) }
 
-    fun <A : ArgBuilder> optionalConfigStub()
+    fun <A : ArgumentSpec> optionalConfigStub()
         :
         StubProvider<StringDelegate.OptionalConfigQuery<A>> =
         Grub("String") { StringDelegate.optionalArgStub<A>(it) }
 
-    fun <A : ArgBuilder> configStub()
+    fun <A : ArgumentSpec> configStub()
         :
         StubProvider<StringDelegate.ConfigurableQuery<A>> =
         Grub("String") { StringDelegate.argStub<A>(it) }
@@ -240,12 +240,12 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<IntDelegate.Query> =
         Grub("Int") { IntDelegate.noArgStub(it) }
 
-    fun <A : ArgBuilder> optionalConfigStub()
+    fun <A : ArgumentSpec> optionalConfigStub()
         :
         StubProvider<IntDelegate.OptionalConfigQuery<A>> =
         Grub("Int") { IntDelegate.optionalArgStub<A>(it) }
 
-    fun <A : ArgBuilder> configStub()
+    fun <A : ArgumentSpec> configStub()
         :
         StubProvider<IntDelegate.ConfigurableQuery<A>> =
         Grub("Int") { IntDelegate.argStub<A>(it) }
@@ -261,12 +261,12 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<FloatDelegate.Query> =
         Grub("Float") { FloatDelegate.noArgStub(it) }
 
-    fun <A : ArgBuilder> optionalConfigStub()
+    fun <A : ArgumentSpec> optionalConfigStub()
         :
         StubProvider<FloatDelegate.OptionalConfigQuery<A>> =
         Grub("Float") { FloatDelegate.optionalArgStub<A>(it) }
 
-    fun <A : ArgBuilder> configStub()
+    fun <A : ArgumentSpec> configStub()
         :
         StubProvider<FloatDelegate.ConfigurableQuery<A>> =
         Grub("Float") { FloatDelegate.argStub<A>(it) }
@@ -280,12 +280,12 @@ class DefaultDelegationContext : DelegationContext {
         : StubProvider<BooleanDelegate.Query> =
         Grub("Boolean") { BooleanDelegate.noArgStub(it) }
 
-    fun <A : ArgBuilder> optionalConfigStub()
+    fun <A : ArgumentSpec> optionalConfigStub()
         :
         StubProvider<BooleanDelegate.OptionalConfigQuery<A>> =
         Grub("Boolean") { BooleanDelegate.optionalArgStub<A>(it) }
 
-    fun <A : ArgBuilder> configStub()
+    fun <A : ArgumentSpec> configStub()
         :
         StubProvider<BooleanDelegate.ConfigurableQuery<A>> =
         Grub("Boolean") { BooleanDelegate.argStub<A>(it) }
@@ -300,12 +300,12 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<CustomScalarStub.Query<T>> =
         Grub(clazz.graphQlName()) { CustomScalarStub.noArgStub<T>(it) }
 
-    fun <T : CustomScalar, A : ArgBuilder> optionalConfigStub(clazz: KClass<T>)
+    fun <T : CustomScalar, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
         :
         StubProvider<CustomScalarStub.OptionalConfigQuery<T, A>> =
         Grub(clazz.graphQlName()) { CustomScalarStub.optionalArgStub<T, A>(it) }
 
-    fun <T : CustomScalar, A : ArgBuilder> configStub(clazz: KClass<T>)
+    fun <T : CustomScalar, A : ArgumentSpec> configStub(clazz: KClass<T>)
         :
         StubProvider<CustomScalarStub.ConfigurableQuery<T, A>> =
         Grub(clazz.graphQlName()) { CustomScalarStub.argStub<T, A>(it) }
@@ -339,12 +339,12 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<TypeListStub.Query<T>> =
           Grub(typeClazz.graphQlName(), true) { TypeListStub.noArgStub<T>(it) }
 
-      fun <T : QType, A : ArgBuilder> optionalConfigStub(typeClazz: KClass<T>)
+      fun <T : QType, A : ArgumentSpec> optionalConfigStub(typeClazz: KClass<T>)
           :
           StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
           Grub(typeClazz.graphQlName(), true) { TypeListStub.optionalArgStub<T, A>(it) }
 
-      fun <T : QType, A : ArgBuilder> configStub(typeClazz: KClass<T>)
+      fun <T : QType, A : ArgumentSpec> configStub(typeClazz: KClass<T>)
           :
           StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
           Grub(typeClazz.graphQlName(), true) { TypeListStub.argStub<T, A>(it) }
@@ -364,7 +364,7 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
           where T : QType,
                 T : QInterface,
-                A : ArgBuilder =
+                A : ArgumentSpec =
           Grub(clazz.graphQlName(), true) { InterfaceListStub.optionalArgStub<T, A>(it) }
 
       fun <T, A> configStub(clazz: KClass<T>)
@@ -372,7 +372,7 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
           where T : QType,
                 T : QInterface,
-                A : ArgBuilder =
+                A : ArgumentSpec =
           Grub(clazz.graphQlName(), true) { InterfaceListStub.argStub<T, A>(it) }
     }
 
@@ -383,12 +383,12 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<UnionListStub.Query<T>> =
           Grub(union::class.graphQlName(), true) { UnionListStub.noArgStub(it, union) }
 
-      fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T)
+      fun <T : QUnionType, A : ArgumentSpec> optionalConfigStub(union: T)
           :
           StubProvider<UnionListStub.OptionalConfigQuery<T, A>> =
           Grub(union::class.graphQlName(), true) { UnionListStub.optionalArgStub<T, A>(it, union) }
 
-      fun <T : QUnionType, A : ArgBuilder> configStub(union: T)
+      fun <T : QUnionType, A : ArgumentSpec> configStub(union: T)
           :
           StubProvider<UnionListStub.ConfigurableQuery<T, A>> =
           Grub(union::class.graphQlName(), true) { UnionListStub.argStub<T, A>(it, union) }
@@ -403,14 +403,14 @@ class DefaultDelegationContext : DelegationContext {
                 T : QEnumType
           = Grub(clazz.graphQlName(), true) { EnumListStub.noArgStub(it, clazz) }
 
-      fun <T, A : ArgBuilder> optionalConfigStub(clazz: KClass<T>)
+      fun <T, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
           :
           StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
           where T : kotlin.Enum<*>,
                 T : QEnumType =
           Grub(clazz.graphQlName(), true) { EnumListStub.optionalArgStub<T, A>(it, clazz) }
 
-      fun <T, A : ArgBuilder> configStub(clazz: KClass<T>)
+      fun <T, A : ArgumentSpec> configStub(clazz: KClass<T>)
           :
           StubProvider<EnumListStub.ConfigurableQuery<T, A>>
           where T : kotlin.Enum<*>,
@@ -426,12 +426,12 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<CustomScalarListStub.Query<T>> =
           Grub(clazz.graphQlName()) { CustomScalarListStub.noArgStub<T>(it) }
 
-      fun <T : CustomScalar, A : ArgBuilder> optionalConfigStub(clazz: KClass<T>)
+      fun <T : CustomScalar, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
           :
           StubProvider<CustomScalarListStub.OptionalConfigQuery<T, A>> =
           Grub(clazz.graphQlName()) { CustomScalarListStub.optionalArgStub<T, A>(it) }
 
-      fun <T : CustomScalar, A : ArgBuilder> configStub(clazz: KClass<T>)
+      fun <T : CustomScalar, A : ArgumentSpec> configStub(clazz: KClass<T>)
           :
           StubProvider<CustomScalarListStub.ConfigurableQuery<T, A>> =
           Grub(clazz.graphQlName()) { CustomScalarListStub.argStub<T, A>(it) }
@@ -444,12 +444,12 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<StringArrayDelegate.Query> =
           Grub("String", true) { StringArrayDelegate.noArgStub(it) }
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<StringArrayDelegate.OptionalConfigQuery<A>> =
           Grub("String", true) { StringArrayDelegate.optionalArgStub<A>(it) }
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<StringArrayDelegate.ConfigurableQuery<A>> =
           Grub("String", true) { StringArrayDelegate.argStub<A>(it) }
@@ -462,12 +462,12 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<IntArrayDelegate.Query> =
           Grub("Int", true) { IntArrayDelegate.noArgStub(it) }
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<IntArrayDelegate.OptionalConfigQuery<A>> =
           Grub("Int", true) { IntArrayDelegate.optionalArgStub<A>(it) }
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<IntArrayDelegate.ConfigurableQuery<A>> =
           Grub("Int", true) { IntArrayDelegate.argStub<A>(it) }
@@ -480,12 +480,12 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<FloatArrayDelegate.Query> =
           Grub("Float", true) { FloatArrayDelegate.noArgStub(it) }
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<FloatArrayDelegate.OptionalConfigQuery<A>> =
           Grub("Float", true) { FloatArrayDelegate.optionalArgStub<A>(it) }
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<FloatArrayDelegate.ConfigurableQuery<A>> =
           Grub("Float", true) { FloatArrayDelegate.argStub<A>(it) }
@@ -498,12 +498,12 @@ class DefaultDelegationContext : DelegationContext {
           StubProvider<BooleanArrayDelegate.Query> =
           Grub("Boolean", true) { BooleanArrayDelegate.noArgStub(it) }
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<BooleanArrayDelegate.OptionalConfigQuery<A>> =
           Grub("Boolean", true) { BooleanArrayDelegate.optionalArgStub<A>(it) }
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<BooleanArrayDelegate.ConfigurableQuery<A>> =
           Grub("Boolean", true) { BooleanArrayDelegate.argStub<A>(it) }

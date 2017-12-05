@@ -19,10 +19,10 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.hooks.ModelProvider
+import com.prestongarno.kotlinq.core.api.ModelProvider
 import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
@@ -30,7 +30,7 @@ import com.prestongarno.kotlinq.core.stubs.TypeListStub
 import kotlin.reflect.KProperty
 
 internal
-class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgBuilder>(
+class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgumentSpec>(
     qproperty: GraphQlProperty,
     val init: () -> P,
     val argBuilder: A? = null

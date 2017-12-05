@@ -37,7 +37,7 @@ class ArgumentStagesTest {
   @Test fun `config block on NoArg stub shows up`() {
     val query = object : QModel<Class>(Class) {
       val level by Class.classLevel {
-        config { "Hello" with "World" }
+        config { arguments.put("Hello", "World") }
       }
     }
 
@@ -116,6 +116,7 @@ class ArgumentStagesTest {
 
   private fun String.flatLine() = this.replace("\\s*\\n\\s*".toRegex(RegexOption.MULTILINE), "")
 }
+
 object Class : QType {
   val classLevel by QSchemaType.QEnum.stub<ClassLevel>()
 
@@ -127,6 +128,7 @@ object Class : QType {
     var intArgument: Int? by arguments
     var stringArgument: String? by arguments
   }
+
   class ClassLevelArgs(
       requiredInteger: Int,
       requiredString: String,
@@ -140,6 +142,7 @@ object Class : QType {
       "requiredFloat" with requiredFloat
       "requiredBoolean" with requiredBoolean
     }
+
     var integer: Int? by arguments
     var string: String? by arguments
     var float: Float? by arguments

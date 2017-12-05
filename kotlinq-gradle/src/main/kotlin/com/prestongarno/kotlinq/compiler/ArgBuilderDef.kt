@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -26,7 +27,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
 
-internal class ArgBuilderDef(val field: FieldDefinition, val context: ScopedDeclarationType<*>) : KotlinTypeElement {
+internal class ArgumentSpecDef(val field: FieldDefinition, val context: ScopedDeclarationType<*>) : KotlinTypeElement {
 
   val isInterface = field.isAbstract
 
@@ -37,8 +38,9 @@ internal class ArgBuilderDef(val field: FieldDefinition, val context: ScopedDecl
   override fun toKotlin(): TypeSpec = if (isInterface) toInterface() else toClass()
 }
 
-private fun ArgBuilderDef.toInterface(): TypeSpec =
+private fun ArgumentSpecDef.toInterface(): TypeSpec =
     TypeSpec.interfaceBuilder(name)
+        .addSuperinterface(ArgumentSpec::class)
         .addProperties(
             field.arguments.filterNot { it.nullable }.map { arg ->
               PropertySpec.builder(
@@ -49,7 +51,7 @@ private fun ArgBuilderDef.toInterface(): TypeSpec =
         ).build()
 
 // mom's spaghetti
-private fun ArgBuilderDef.toClass(): TypeSpec = TypeSpec.classBuilder(name).apply {
+private fun ArgumentSpecDef.toClass(): TypeSpec = TypeSpec.classBuilder(name).apply {
   superclass(ArgBuilder::class)
   addSuperinterfaces(field.inheritsFrom.map {
     it.symtab[field.name]!!.name
@@ -61,8 +63,8 @@ private fun ArgBuilderDef.toClass(): TypeSpec = TypeSpec.classBuilder(name).appl
         it.nullable
       }.map(ArgumentDefinition::toKotlin))
       .build())
-      .addProperties(field.arguments.filterNot {
-        it.nullable && field.inheritsFrom.isNotEmpty()
+      .addProperties(field.arguments.filter {
+        !it.nullable && field.inheritsFrom.isNotEmpty()
       }.map {
         PropertySpec.builder(
             it.name,

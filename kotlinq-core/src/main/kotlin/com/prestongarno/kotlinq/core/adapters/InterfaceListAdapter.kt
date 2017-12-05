@@ -18,12 +18,12 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QInterface
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.hooks.Fragment
-import com.prestongarno.kotlinq.core.hooks.FragmentContext
+import com.prestongarno.kotlinq.core.api.Fragment
+import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
@@ -32,11 +32,11 @@ import kotlin.reflect.KProperty
 /**
  * Factory method for an Interface List GraphQL field delegate provider
  * @param I the type of interface
- * @param A the type of [ArgBuilder] */
+ * @param A the type of [ArgumentSpec] */
 fun <I, A> newInterfaceListStub(
     qproperty: GraphQlProperty, argBuilder: A?
 ): InterfaceListStub<I, A>
-    where I : QType, I : QInterface, A : ArgBuilder =
+    where I : QType, I : QInterface, A : ArgumentSpec =
     InterfaceListStubImpl(qproperty, argBuilder)
 
 private data class InterfaceListStubImpl<I, out A>(
@@ -45,7 +45,7 @@ private data class InterfaceListStubImpl<I, out A>(
 ) : InterfaceListStub<I, A>
     where I : QType,
           I : QInterface,
-          A : ArgBuilder {
+          A : ArgumentSpec {
 
   private val fragments = mutableSetOf<Fragment>()
 

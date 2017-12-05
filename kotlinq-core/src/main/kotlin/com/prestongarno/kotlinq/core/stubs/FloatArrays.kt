@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
@@ -26,7 +27,7 @@ import com.prestongarno.kotlinq.core.adapters.toMap
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArrayStub> {
+interface FloatArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<FloatArrayStub> {
 
   var default: FloatArray?
 
@@ -40,13 +41,13 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
     ): Query = QueryImpl(qproperty)
 
     @PublishedApi internal
-    fun <A : ArgBuilder> optionalArgStub(
+    fun <A : ArgumentSpec> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
     @PublishedApi internal
-    fun <A : ArgBuilder> argStub(
+    fun <A : ArgumentSpec> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -55,9 +56,9 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
 
   interface Query : SchemaStub {
     operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: (FloatArrayDelegate<ArgBuilder>.() -> Unit)? = null
-    ): FloatArrayDelegate<ArgBuilder>
+        arguments: ArgumentSpec? = null,
+        scope: (FloatArrayDelegate<ArgumentSpec>.() -> Unit)? = null
+    ): FloatArrayDelegate<ArgumentSpec>
 
     operator fun provideDelegate(
         inst: QModel<*>,
@@ -65,7 +66,7 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
     ): FloatArrayStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgBuilder> : SchemaStub {
+  interface OptionalConfigQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -79,7 +80,7 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
 
   }
 
-  interface ConfigurableQuery<A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -93,12 +94,12 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
    */
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
-    override fun invoke(arguments: ArgBuilder?, scope: (FloatArrayDelegate<ArgBuilder>.() -> Unit)?
-    ) = FloatArrayDelegateImpl<ArgBuilder>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+    override fun invoke(arguments: ArgumentSpec?, scope: (FloatArrayDelegate<ArgumentSpec>.() -> Unit)?
+    ) = FloatArrayDelegateImpl<ArgumentSpec>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private
-  class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
+  class OptionalConfigQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (FloatArrayDelegate<A>.() -> Unit)?): FloatArrayDelegate<A> =
         FloatArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -108,7 +109,7 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
 
 
   private
-  class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+  class ConfigurableQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 
     override fun invoke(arguments: A, scope: (FloatArrayDelegate<A>.() -> Unit)?): FloatArrayDelegate<A> =
         FloatArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -116,7 +117,7 @@ interface FloatArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<FloatArra
 }
 
 private
-class FloatArrayDelegateImpl<out A : ArgBuilder>(
+class FloatArrayDelegateImpl<out A : ArgumentSpec>(
     private val qproperty: GraphQlProperty,
     private val argBuilder: A?
 ) : FloatArrayDelegate<A> {

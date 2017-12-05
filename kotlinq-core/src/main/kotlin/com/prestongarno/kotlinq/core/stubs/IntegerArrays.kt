@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
@@ -26,7 +27,7 @@ import com.prestongarno.kotlinq.core.adapters.toMap
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStub> {
+interface IntArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<IntArrayStub> {
 
   var default: IntArray?
 
@@ -40,13 +41,13 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
     ): Query = QueryImpl(qproperty)
 
     internal
-    fun <A : ArgBuilder> optionalArgStub(
+    fun <A : ArgumentSpec> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
     internal
-    fun <A : ArgBuilder> argStub(
+    fun <A : ArgumentSpec> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -54,9 +55,9 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 
   interface Query : SchemaStub {
     operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: (IntArrayDelegate<ArgBuilder>.() -> Unit)? = null
-    ): IntArrayDelegate<ArgBuilder>
+        arguments: ArgumentSpec? = null,
+        scope: (IntArrayDelegate<ArgumentSpec>.() -> Unit)? = null
+    ): IntArrayDelegate<ArgumentSpec>
 
     operator fun provideDelegate(
         inst: QModel<*>,
@@ -64,7 +65,7 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
     ): IntArrayStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgBuilder> : SchemaStub {
+  interface OptionalConfigQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -78,7 +79,7 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 
   }
 
-  interface ConfigurableQuery<A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -91,12 +92,12 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
    */
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
-    override fun invoke(arguments: ArgBuilder?, scope: (IntArrayDelegate<ArgBuilder>.() -> Unit)?
+    override fun invoke(arguments: ArgumentSpec?, scope: (IntArrayDelegate<ArgumentSpec>.() -> Unit)?
     ) = IntArrayDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private
-  class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
+  class OptionalConfigQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (IntArrayDelegate<A>.() -> Unit)?): IntArrayDelegate<A> =
         IntArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -106,7 +107,7 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 
 
   private
-  class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+  class ConfigurableQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 
     override fun invoke(arguments: A, scope: (IntArrayDelegate<A>.() -> Unit)?): IntArrayDelegate<A> =
         IntArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -114,7 +115,7 @@ interface IntArrayDelegate<out A : ArgBuilder> : ScalarArrayDelegate<IntArrayStu
 }
 
 private
-class IntArrayDelegateImpl<out A : ArgBuilder>(
+class IntArrayDelegateImpl<out A : ArgumentSpec>(
     private val qproperty: GraphQlProperty,
     private val argBuilder: A?
 ) : IntArrayDelegate<A> {

@@ -29,10 +29,9 @@ interface ArgumentSpec {
  * Constructor parameters are arguments which are required by the GraphQL schema,
  * while properties are GraphQL optional arguments
  */
-open class ArgBuilder {
+open class ArgBuilder : ArgumentSpec {
 
-  protected
-  val arguments = PropertyMapper()
+  override val arguments = PropertyMapper()
 
   infix fun String.with(value: Any) {
     arguments.put(this, value)
@@ -75,17 +74,17 @@ class PropertyMapper {
   }
 
   @Suppress("UNCHECKED_CAST")
-  fun <T: Any> notNull(key: String, value: T): ReadOnlyProperty<ArgBuilder, T> {
+  fun <T: Any> notNull(key: String, value: T): ReadOnlyProperty<ArgumentSpec, T> {
     put(key, value)
-    return notNullDelegate as ReadOnlyProperty<ArgBuilder, T>
+    return notNullDelegate as ReadOnlyProperty<ArgumentSpec, T>
   }
 
 
   // hack
-  private inner class NotNull<out T: Any> : ReadOnlyProperty<ArgBuilder, T> {
+  private inner class NotNull<out T: Any> : ReadOnlyProperty<ArgumentSpec, T> {
 
     @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: ArgBuilder, property: KProperty<*>): T = values[property.name] as T
+    override fun getValue(thisRef: ArgumentSpec, property: KProperty<*>): T = values[property.name] as T
   }
 }
 

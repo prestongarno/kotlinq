@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.CustomScalar
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.InputStreamScalarListMapper
@@ -30,14 +30,14 @@ import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
 import kotlin.reflect.KProperty
 
 internal
-fun <E : CustomScalar, P : QScalarListMapper<Q>, Q, A : ArgBuilder> newCustomScalarListField(
+fun <E : CustomScalar, P : QScalarListMapper<Q>, Q, A : ArgumentSpec> newCustomScalarListField(
     qproperty: GraphQlProperty,
     mapper: P,
     arguments: A?
 ): CustomScalarListStub<E, Q, A> = CustomScalarListAdapter(qproperty, mapper, arguments)
 
 private
-class CustomScalarListAdapter<E : CustomScalar, out P : QScalarListMapper<Q>, Q, out A : ArgBuilder>(
+class CustomScalarListAdapter<E : CustomScalar, out P : QScalarListMapper<Q>, Q, out A : ArgumentSpec>(
     qproperty: GraphQlProperty,
     val mapper: P,
     val arguments: A?

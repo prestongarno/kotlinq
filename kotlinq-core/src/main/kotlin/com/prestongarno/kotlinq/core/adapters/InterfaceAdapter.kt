@@ -18,12 +18,12 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QInterface
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.hooks.Fragment
-import com.prestongarno.kotlinq.core.hooks.FragmentContext
+import com.prestongarno.kotlinq.core.api.Fragment
+import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty
  * Base type of a R.H.S. delegate provider
  */
 internal
-class InterfaceAdapterImpl<I, out A : ArgBuilder>(
+class InterfaceAdapterImpl<I, out A : ArgumentSpec>(
     qproperty: GraphQlProperty,
     val arguments: A? = null
 ) : PreDelegate(qproperty),

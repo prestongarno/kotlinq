@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.type
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*

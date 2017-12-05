@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.hooks
+package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.SchemaStub

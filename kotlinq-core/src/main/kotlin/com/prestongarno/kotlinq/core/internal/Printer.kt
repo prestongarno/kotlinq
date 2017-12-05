@@ -19,8 +19,8 @@ package com.prestongarno.kotlinq.core.internal
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
-import com.prestongarno.kotlinq.core.hooks.FragmentContext
-import com.prestongarno.kotlinq.core.hooks.ModelProvider
+import com.prestongarno.kotlinq.core.api.FragmentContext
+import com.prestongarno.kotlinq.core.api.ModelProvider
 
 private const val INDENT = "  "
 

@@ -126,7 +126,7 @@ class InterfaceDef(context: GraphQLSchemaParser.InterfaceDefContext)
     addProperties(fields.map(FieldDefinition::toKotlin))
     addTypes(fields
         .mapNotNull(FieldDefinition::argBuilder)
-        .map(ArgBuilderDef::toKotlin))
+        .map(ArgumentSpecDef::toKotlin))
   }.build()
 
   override val schemaTypeClass = QInterface::class

@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.properties
 
 import com.prestongarno.kotlinq.core.QUnionType
-import com.prestongarno.kotlinq.core.hooks.Fragment
+import com.prestongarno.kotlinq.core.api.Fragment
 
 /**
  * This is simply a hook into the generated API interface to

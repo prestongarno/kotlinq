@@ -15,9 +15,10 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.hooks
+package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.SchemaStub
@@ -26,7 +27,7 @@ import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import kotlin.reflect.KProperty
 
 /**
- * Represents an intermediate object that enforces passing of an [ArgBuilder]
+ * Represents an intermediate object that enforces passing of an [ArgumentSpec]
  * instance to the object. This is for GraphQL fields with one or more non-null
  * arguments specified in the schema
  *
@@ -38,12 +39,12 @@ import kotlin.reflect.KProperty
  * @param D : The type of SchemaStub which will provide a delegate type <T>
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface ConfiguredQuery<out D : DelegateProvider<*>, in A : ArgBuilder> : SchemaStub {
+interface ConfiguredQuery<out D : DelegateProvider<*>, A : ArgumentSpec> : SchemaStub {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
   companion object {
-    fun <T : DelegateProvider<*>, A : ArgBuilder> new(
+    fun <T : DelegateProvider<*>, A : ArgumentSpec> new(
         constructor: (A) -> T
     ): ConfiguredQuery<T, A> = DefaultConfigurableQuery(constructor)
   }
@@ -51,20 +52,20 @@ interface ConfiguredQuery<out D : DelegateProvider<*>, in A : ArgBuilder> : Sche
 
 /**
  * Represents an intermediate object that optionally allows invoking by passing
- * an [ArgBuilder] instance to the object. This is for GraphQL fields with
+ * an [ArgumentSpec] instance to the object. This is for GraphQL fields with
  * exactly zero non-null arguments specified for this field, but with one or
  * more arguments/parameters specified
  * @param D : The type of [DelegateProvider] which this field supplies
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder> : SchemaStub {
+interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, A : ArgumentSpec> : SchemaStub {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 
   companion object {
-    fun <D : DelegateProvider<T>, T : Any?, A : ArgBuilder> new(
+    fun <D : DelegateProvider<T>, T : Any?, A : ArgumentSpec> new(
         constructor: (A?) -> D
     ): OptionalConfiguration<D, T, A> = DefaultOptionalConfiguration(constructor)
   }
@@ -72,21 +73,21 @@ interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A 
 
 /**
  * Represents an intermediate object that optionally allows invoking by passing
- * an [ArgBuilder] instance to the object. This is for GraphQL fields with
+ * an [ArgumentSpec] instance to the object. This is for GraphQL fields with
  * exactly zero non-null arguments specified for this field, and zero arguments/parameters specified.
  * This interface exists to support adding arguments arbitrarily to GraphQL queries/mutations
  * @param D : The type of [DelegateProvider] which this field supplies
  */
 interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
 
-  operator fun invoke(arguments: ArgBuilder? = ArgBuilder(), scope: (D.() -> Unit)? = null): D
+  operator fun invoke(arguments: ArgumentSpec? = ArgBuilder(), scope: (D.() -> Unit)? = null): D
 
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
       invoke().provideDelegate(inst, property)
 
   companion object {
     fun <D : DelegateProvider<T>, T : Any?> new(
-        constructor: (ArgBuilder?) -> D
+        constructor: (ArgumentSpec?) -> D
     ): NoArgConfig<D, T> = DefaultNoArgConfig(constructor)
   }
 }
@@ -94,11 +95,11 @@ interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
 /**
  * Default [ConfiguredQuery] class for dynamic class-level delegation by schema stub types
  * @param T : The type of [DelegateProvider] that this function returns
- * @param A : The type of [ArgBuilder] that this DelegateProvider takes
+ * @param A : The type of [ArgumentSpec] that this DelegateProvider takes
  * @param constructor a function that constructs a new [DelegateProvider]
  */
 private
-class DefaultConfigurableQuery<out T : DelegateProvider<*>, in A : ArgBuilder>(
+class DefaultConfigurableQuery<out T : DelegateProvider<*>, A : ArgumentSpec>(
     private val constructor: (A) -> T
 ) : ConfiguredQuery<T, A> {
 
@@ -109,11 +110,11 @@ class DefaultConfigurableQuery<out T : DelegateProvider<*>, in A : ArgBuilder>(
 /**
  * Default [OptionalConfiguration] class for dynamic class-level delegation by schema stub types
  * @param T : The type of [DelegateProvider] that this function returns
- * @param A : The type of [ArgBuilder] that this DelegateProvider takes
+ * @param A : The type of [ArgumentSpec] that this DelegateProvider takes
  * @param constructor a function that constructs a new [DelegateProvider]
  */
 private
-class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgBuilder>(
+class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, A : ArgumentSpec>(
     private val constructor: (A?) -> D
 ) : OptionalConfiguration<D, T, A> {
 
@@ -126,9 +127,9 @@ class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in
 
 private
 class DefaultNoArgConfig<out D : DelegateProvider<T>, out T : Any?>(
-    private val constructor: (ArgBuilder?) -> D
+    private val constructor: (ArgumentSpec?) -> D
 ) : NoArgConfig<D, T> {
 
-  override fun invoke(arguments: ArgBuilder?, scope: (D.() -> Unit)?): D =
+  override fun invoke(arguments: ArgumentSpec?, scope: (D.() -> Unit)?): D =
       constructor(arguments).applyNotNull(scope)
 }

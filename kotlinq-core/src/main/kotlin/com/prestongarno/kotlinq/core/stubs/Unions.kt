@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QUnionType
@@ -25,7 +26,7 @@ import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.newUnionField
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<QModel<*>?> {
+interface UnionStub<out T : QUnionType, out A : ArgumentSpec> : DelegateProvider<QModel<*>?> {
 
   fun config(scope: A.() -> Unit)
 
@@ -40,13 +41,13 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
         QueryImpl(qproperty, unionObject)
 
     internal
-    fun <T : QUnionType, A : ArgBuilder> optionalArgStub(qproperty: GraphQlProperty, unionObject: T)
+    fun <T : QUnionType, A : ArgumentSpec> optionalArgStub(qproperty: GraphQlProperty, unionObject: T)
         :
         OptionalConfigQuery<T, A> =
         OptionalConfigQueryImpl(qproperty, unionObject)
 
     internal
-    fun <T : QUnionType, A : ArgBuilder> argStub(qproperty: GraphQlProperty, unionObject: T)
+    fun <T : QUnionType, A : ArgumentSpec> argStub(qproperty: GraphQlProperty, unionObject: T)
         :
         ConfigurableQuery<T, A> =
         ConfigurableQueryImpl(qproperty, unionObject)
@@ -54,21 +55,21 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
 
   interface Query<out T : QUnionType> : SchemaStub {
 
-    operator fun invoke(arguments: ArgBuilder? = null, scope: UnionStub<T, ArgBuilder>.() -> Unit)
+    operator fun invoke(arguments: ArgumentSpec? = null, scope: UnionStub<T, ArgumentSpec>.() -> Unit)
         :
-        UnionStub<T, ArgBuilder>
+        UnionStub<T, ArgumentSpec>
 
   }
 
-  interface OptionalConfigQuery<out T : QUnionType, A : ArgBuilder> : ConfigurableQuery<T, A> {
+  interface OptionalConfigQuery<out T : QUnionType, A : ArgumentSpec> : ConfigurableQuery<T, A> {
 
-    operator fun invoke(scope: UnionStub<T, ArgBuilder>.() -> Unit)
+    operator fun invoke(scope: UnionStub<T, ArgumentSpec>.() -> Unit)
         :
-        UnionStub<T, ArgBuilder>
+        UnionStub<T, ArgumentSpec>
 
   }
 
-  interface ConfigurableQuery<out T : QUnionType, A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<out T : QUnionType, A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit)
         :
@@ -86,15 +87,15 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
   ) : Query<T> {
 
     override fun invoke(
-        arguments: ArgBuilder?,
-        scope: UnionStub<T, ArgBuilder>.() -> Unit
-    ): UnionStub<T, ArgBuilder> =
+        arguments: ArgumentSpec?,
+        scope: UnionStub<T, ArgumentSpec>.() -> Unit
+    ): UnionStub<T, ArgumentSpec> =
         newUnionField(qproperty, unionObject, arguments ?: ArgBuilder()).apply(scope)
 
   }
 
   private
-  class OptionalConfigQueryImpl<out T : QUnionType, A : ArgBuilder>(
+  class OptionalConfigQueryImpl<out T : QUnionType, A : ArgumentSpec>(
       val qproperty: GraphQlProperty,
       val unionObject: T
   ) : OptionalConfigQuery<T, A> {
@@ -102,13 +103,13 @@ interface UnionStub<out T : QUnionType, out A : ArgBuilder> : DelegateProvider<Q
     override fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit) =
         newUnionField(qproperty, unionObject, arguments).apply(scope)
 
-    override fun invoke(scope: UnionStub<T, ArgBuilder>.() -> Unit) =
+    override fun invoke(scope: UnionStub<T, ArgumentSpec>.() -> Unit) =
         newUnionField(qproperty, unionObject, ArgBuilder()).apply(scope)
 
   }
 
   private
-  class ConfigurableQueryImpl<out T : QUnionType, A : ArgBuilder>(
+  class ConfigurableQueryImpl<out T : QUnionType, A : ArgumentSpec>(
       val qproperty: GraphQlProperty,
       val unionObject: T
   ) : ConfigurableQuery<T, A> {

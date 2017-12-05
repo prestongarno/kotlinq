@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core
 
-import com.prestongarno.kotlinq.core.hooks.Fragment
+import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.internal.bracket
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.FragmentProvider
