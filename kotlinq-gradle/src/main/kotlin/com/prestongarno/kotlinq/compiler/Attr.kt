@@ -111,5 +111,5 @@ private fun GraphQLSchemaParser.TypeNameContext.toNameString(): String = Name().
 private fun FieldDefinition.newCache(): Pair<FieldDefinition, MutableSet<InterfaceDef>> = this to mutableSetOf()
 
 private fun TypeDef.assignArgBuilder(field: FieldDefinition) {
-  if (field.arguments.isNotEmpty()) field.argBuilder = com.prestongarno.kotlinq.compiler.ArgBuilderDef(field, this)
+  if (field.arguments.isNotEmpty()) field.argBuilder = ArgBuilderDef(field, this)
 }

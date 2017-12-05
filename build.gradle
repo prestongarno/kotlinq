@@ -79,6 +79,7 @@ subprojects {
 
   ext.clientId = project.name
   group 'com.prestongarno.kotlinq'
+  ext.groupId = clientId
 
   version = getVersion(rootProject)
 
