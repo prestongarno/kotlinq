@@ -19,6 +19,8 @@ package com.prestongarno.kotlinq.compiler
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import com.prestongarno.kotlinq.core.*
+import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 
 class InterfaceMultiInheritance : JavacTest() {
 
@@ -42,12 +44,12 @@ class InterfaceMultiInheritance : JavacTest() {
       |
       |""".trimMargin("|")
 
-      assertThat(compileOut(schema).minusPackageNames()).isEqualTo("""
+    assertThat(compileOut(schema).minusPackageNames()).isEqualTo("""
         |
         |interface Entity : QType, QInterface {
         |  val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
         |
-        |  interface BaseFriendsArgs {
+        |  interface BaseFriendsArgs : ArgumentSpec {
         |    abstract val query: String
         |  }
         |}
@@ -56,7 +58,7 @@ class InterfaceMultiInheritance : JavacTest() {
         |interface Actor : QType, QInterface {
         |  val friends: InterfaceListStub.OptionalConfigQuery<Entity, BaseFriendsArgs>
         |
-        |  interface BaseFriendsArgs
+        |  interface BaseFriendsArgs : ArgumentSpec
         |}
         |
         |
@@ -82,7 +84,41 @@ class InterfaceMultiInheritance : JavacTest() {
   }
 }
 
+
 private fun String.minusPackageNames() = this.replace("com.prestongarno.kotlinq.", "")
     .replace("stubs.", "")
     .replace("core.", "")
     .replace("QSchemaType.", "")
+
+
+interface Entity : QType, QInterface {
+  val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
+
+  interface BaseFriendsArgs : ArgumentSpec {
+    abstract val query: String
+  }
+}
+
+
+interface Actor : QType, QInterface {
+  val friends: InterfaceListStub.OptionalConfigQuery<Entity, BaseFriendsArgs>
+
+  interface BaseFriendsArgs : ArgumentSpec
+}
+
+
+object Wookie : QType, Entity, Actor {
+
+  override val friends: InterfaceListStub.ConfigurableQuery<Entity, FriendsArgs> by QSchemaType.QInterfaces.List.configStub<Entity, FriendsArgs>()
+
+  class FriendsArgs(query: String) : ArgBuilder(), Entity.BaseFriendsArgs, Actor.BaseFriendsArgs {
+    override val query: String by arguments.notNull<String>("query", query)
+
+    var first: Int? by arguments
+
+    var after: ID? by arguments
+  }
+}
+
+
+object ID : CustomScalar

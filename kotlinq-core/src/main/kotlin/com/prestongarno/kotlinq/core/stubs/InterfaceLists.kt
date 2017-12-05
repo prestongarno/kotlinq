@@ -46,14 +46,14 @@ interface InterfaceListStub<I, out A> :
     internal
     fun <I, A> optionalArgStub(
         qproperty: GraphQlProperty
-    ): OptionalConfigQuery<I, A>
+    ): OptionalConfigQuery<I, out A>
         where I : QInterface, I : QType, A : ArgumentSpec =
         OptionalConfigQueryImpl(qproperty)
 
     internal
     fun <I, A> argStub(
         qproperty: GraphQlProperty
-    ): ConfigurableQuery<I, A>
+    ): ConfigurableQuery<I, out A>
         where I : QInterface, I : QType, A : ArgumentSpec =
         ConfigurableQueryImpl(qproperty)
   }
@@ -86,8 +86,8 @@ interface InterfaceListStub<I, out A> :
 
     operator fun invoke(
         arguments: A,
-        scope: InterfaceListStub<I, A>.() -> Unit
-    ): InterfaceListStub<I, A>
+        scope: InterfaceListStub<I, out A>.() -> Unit
+    ): InterfaceListStub<I, out A>
 
   }
 

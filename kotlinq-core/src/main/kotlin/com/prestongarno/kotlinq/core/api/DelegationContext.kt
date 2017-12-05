@@ -361,7 +361,7 @@ class DefaultDelegationContext : DelegationContext {
 
       fun <T, A> optionalConfigStub(clazz: KClass<T>)
           :
-          StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
+          StubProvider<InterfaceListStub.OptionalConfigQuery<T, out A>>
           where T : QType,
                 T : QInterface,
                 A : ArgumentSpec =
@@ -369,7 +369,7 @@ class DefaultDelegationContext : DelegationContext {
 
       fun <T, A> configStub(clazz: KClass<T>)
           :
-          StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
+          StubProvider<InterfaceListStub.ConfigurableQuery<T, out A>>
           where T : QType,
                 T : QInterface,
                 A : ArgumentSpec =

@@ -54,6 +54,7 @@ internal fun GraphQLCompiler.attrInheritance() {
         ?.let(this@on::setSupertypes) ?: setSupertypes(emptySet())
 
     fields.onEach(fieldSuperTable::setFieldInheritanceContext)
+        .filter { it.arguments.isNotEmpty() }
         .forEach(this::assignArgumentSpec)
   }
 }

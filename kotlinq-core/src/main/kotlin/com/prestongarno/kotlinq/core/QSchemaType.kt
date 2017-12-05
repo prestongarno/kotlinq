@@ -232,12 +232,12 @@ interface QSchemaType {
 
       inline fun <reified T : QType, A : ArgumentSpec> optionalConfigStub()
           :
-          StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
+          StubProvider<TypeListStub.OptionalConfigQuery<T, out A>> =
           delegationContext.type.list.optionalConfigStub(T::class)
 
       inline fun <reified T : QType, A : ArgumentSpec> configStub()
           :
-          StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
+          StubProvider<TypeListStub.ConfigurableQuery<T, out A>> =
           delegationContext.type.list.configStub(T::class)
     }
   }
@@ -253,7 +253,7 @@ interface QSchemaType {
 
     inline fun <reified T, A> optionalConfigStub()
         :
-        StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
+        StubProvider<InterfaceStub.OptionalConfigQuery<T, out A>>
         where T : QType,
               T : QInterface,
               A : ArgumentSpec =
@@ -262,7 +262,7 @@ interface QSchemaType {
 
     inline fun <reified T, A> configStub()
         :
-        StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
+        StubProvider<InterfaceStub.ConfigurableQuery<T, out A>>
         where T : QType,
               T : QInterface,
               A : ArgumentSpec =
@@ -280,7 +280,7 @@ interface QSchemaType {
 
       inline fun <reified T, A> optionalConfigStub()
           :
-          StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
+          StubProvider<InterfaceListStub.OptionalConfigQuery<T, out A>>
           where T : QType,
                 T : QInterface,
                 A : ArgumentSpec =
@@ -288,7 +288,7 @@ interface QSchemaType {
 
       inline fun <reified T, A> configStub()
           :
-          StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
+          StubProvider<InterfaceListStub.ConfigurableQuery<T, out A>>
           where T : QType,
                 T : QInterface,
                 A : ArgumentSpec =
