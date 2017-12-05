@@ -21,6 +21,7 @@ import com.prestongarno.kotlinq.core.ArgBuilder
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
@@ -33,37 +34,60 @@ internal class ArgBuilderDef(val field: FieldDefinition, val context: ScopedDecl
     if (isInterface) it.prepend("Base") else it
   }
 
-  // spaghetti
-  override fun toKotlin(): TypeSpec {
-    return TypeSpec.classBuilder(name).apply {
-      superclass(ArgBuilder::class)
-      addSuperinterfaces(field.inheritsFrom.map {
-        it.symtab[field.name]!!.name
-        ClassName("", it.name).nestedClass("Base" + name)
-      })
-      // add constructor for non-nullable input arg arguments
-      if (field.arguments.find { !it.nullable } != null) primaryConstructor(FunSpec.constructorBuilder()
-          .addParameters(field.arguments.filterNot {
-            it.nullable
-          }.map {
-            it.toKotlin()
-          }).addCode(
-          CodeBlock.of(field.arguments.filterNot {
-            it.nullable
-          }.joinToString("\n") { """"${it.name}" with ${it.name}""" }))
-          .build())
+  override fun toKotlin(): TypeSpec = if (isInterface) toInterface() else toClass()
+}
 
-      field.arguments.filter { it.nullable }.map {
-        // add nullable properties for config { } dsl block
-        PropertySpec.builder(it.name,
-            it.typeName
-                .asTypeName()
-                .asNullable())
-            .mutable(true)
-            .delegate("arguments")
+private fun ArgBuilderDef.toInterface(): TypeSpec =
+    TypeSpec.interfaceBuilder(name)
+        .addProperties(
+            field.arguments.filterNot { it.nullable }.map { arg ->
+              PropertySpec.builder(
+                  arg.name,
+                  arg.type.name.asTypeName(),
+                  KModifier.ABSTRACT).build()
+            }
+        ).build()
+
+// mom's spaghetti
+private fun ArgBuilderDef.toClass(): TypeSpec = TypeSpec.classBuilder(name).apply {
+  superclass(ArgBuilder::class)
+  addSuperinterfaces(field.inheritsFrom.map {
+    it.symtab[field.name]!!.name
+    ClassName("", it.name).nestedClass("Base" + name)
+  })
+  // add constructor for non-nullable input arg arguments
+  if (field.arguments.find { !it.nullable } != null) primaryConstructor(FunSpec.constructorBuilder()
+      .addParameters(field.arguments.filterNot {
+        it.nullable
+      }.map(ArgumentDefinition::toKotlin))
+      .build())
+      .addProperties(field.arguments.filterNot {
+        it.nullable && field.inheritsFrom.isNotEmpty()
+      }.map {
+        PropertySpec.builder(
+            it.name,
+            it.type.name.asTypeName(),
+            *(if (field.inheritsFrom.find { superiface ->
+              superiface.symtab[field.name]
+                  ?.arguments?.find { arg -> arg.name == it.name } != null
+            } != null) arrayOf(KModifier.OVERRIDE) else emptyArray())
+        ).delegate(notNullDelegateCode(it))
             .build()
-      }.let(this::addProperties)
+      })
 
-    }.build()
-  }
+  field.arguments.filter { it.nullable }.map {
+    // add nullable properties for config { } dsl block
+    PropertySpec.builder(it.name,
+        it.typeName
+            .asTypeName()
+            .asNullable())
+        .mutable(true)
+        .delegate("arguments")
+        .build()
+  }.let(this::addProperties)
+
+}.build()
+
+private fun notNullDelegateCode(arg: ArgumentDefinition): CodeBlock {
+  return CodeBlock.of("arguments.notNull<%T>(\"${arg.name}\", ${arg.name})", arg.type.name.asTypeName())
 }

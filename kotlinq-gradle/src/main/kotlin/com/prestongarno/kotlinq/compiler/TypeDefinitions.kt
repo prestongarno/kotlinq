@@ -64,8 +64,8 @@ sealed class SchemaType<out T : ParserRuleContext>(val context: T) : KotlinTypeE
   open fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
     field.arguments.isEmpty() -> DEFAULT_NO_ARG to listOf(name)
     field.arguments.isNotEmpty() && field.arguments.find { !it.nullable } == null ->
-       DEFAULT_OPTIONAL_ARG to listOf(name, field.argBuilder!!.name)
-    else ->  DEFAULT_REQ_ARG to listOf(name, field.argBuilder!!.name)
+      DEFAULT_OPTIONAL_ARG to listOf(name, field.argBuilder!!.name)
+    else -> DEFAULT_REQ_ARG to listOf(name, field.argBuilder!!.name)
   }.let { (format, typeNames) ->
     CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray())
   }
@@ -123,7 +123,10 @@ class InterfaceDef(context: GraphQLSchemaParser.InterfaceDefContext)
     // interface needs to subtype QType *&* QInterface for interface fragment stubs
     addSuperinterface(QType::class)
     addSuperinterface(schemaTypeClass)
-    addProperties(fields.map { it.toKotlin() })
+    addProperties(fields.map(FieldDefinition::toKotlin))
+    addTypes(fields
+        .mapNotNull(FieldDefinition::argBuilder)
+        .map(ArgBuilderDef::toKotlin))
   }.build()
 
   override val schemaTypeClass = QInterface::class

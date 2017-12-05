@@ -87,6 +87,7 @@ private fun TypeDef.requireOverrides(abstract: FieldDefinition) {
         && type == abstract.type
         && arguments.containsAll(abstract.arguments)
   }) { "Field ${abstract.name} does not override supertype property" }
+  assignArgBuilder(abstract)
 }
 
 private fun second(pair: Pair<FieldDefinition, FieldDefinition>): FieldDefinition = pair.second
@@ -111,5 +112,13 @@ private fun GraphQLSchemaParser.TypeNameContext.toNameString(): String = Name().
 private fun FieldDefinition.newCache(): Pair<FieldDefinition, MutableSet<InterfaceDef>> = this to mutableSetOf()
 
 private fun TypeDef.assignArgBuilder(field: FieldDefinition) {
-  if (field.arguments.isNotEmpty()) field.argBuilder = ArgBuilderDef(field, this)
+  field.argBuilder = ArgBuilderDef(field, this)
+  return
+  if (field.arguments.isNotEmpty()) {
+    if (field.isAbstract)
+      TODO()
+    else
+      field.argBuilder = ArgBuilderDef(field, this)
+  }
 }
+

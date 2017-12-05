@@ -134,7 +134,9 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
 
     fun FieldDefinition.argBuilderTypeName(): TypeName {
       require(arguments.isNotEmpty())
-      return ClassName.bestGuess(argBuilder!!.context.name)
+      return if (isAbstract)
+        ClassName.bestGuess(argBuilder!!.name)
+      else ClassName.bestGuess(argBuilder!!.context.name)
           .nestedClass(argBuilder!!.name)
     }
 

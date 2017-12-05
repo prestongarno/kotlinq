@@ -17,6 +17,7 @@
 
 package com.prestongarno.kotlinq.core
 
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
@@ -44,6 +45,9 @@ class PropertyMapper {
   private
   val values = mutableMapOf<String, Any?>()
 
+  private
+  val notNullDelegate = NotNull<Any>()
+
   @Suppress("UNCHECKED_CAST")
   operator
   fun <T> getValue(inst: Any, property: KProperty<*>): T? =
@@ -64,6 +68,20 @@ class PropertyMapper {
   internal
   fun put(key: String, value: Any) {
     values[key] = value
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  fun <T: Any> notNull(key: String, value: T): ReadOnlyProperty<ArgBuilder, T> {
+    put(key, value)
+    return notNullDelegate as ReadOnlyProperty<ArgBuilder, T>
+  }
+
+
+  // hack
+  private inner class NotNull<out T: Any> : ReadOnlyProperty<ArgBuilder, T> {
+
+    @Suppress("UNCHECKED_CAST")
+    override fun getValue(thisRef: ArgBuilder, property: KProperty<*>): T = values[property.name] as T
   }
 }
 
