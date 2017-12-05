@@ -77,7 +77,7 @@ import kotlin.reflect.KClass
  * stub delegate provider type. This is restricted by the sealed class [GraphQLDelegate]
  */
 
-@PublishedApi internal
+internal
 class DefaultDelegationContext : DelegationContext {
 
   override val type = GraphQLDelegate.Type()

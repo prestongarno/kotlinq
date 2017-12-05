@@ -113,12 +113,5 @@ private fun FieldDefinition.newCache(): Pair<FieldDefinition, MutableSet<Interfa
 
 private fun TypeDef.assignArgBuilder(field: FieldDefinition) {
   field.argBuilder = ArgBuilderDef(field, this)
-  return
-  if (field.arguments.isNotEmpty()) {
-    if (field.isAbstract)
-      TODO()
-    else
-      field.argBuilder = ArgBuilderDef(field, this)
-  }
 }
 

@@ -20,6 +20,10 @@ package com.prestongarno.kotlinq.core
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+interface ArgumentSpec {
+  val arguments: PropertyMapper
+}
+
 /**
  * The supertype of all classes which are used for arguments on GraphQL types.
  * Constructor parameters are arguments which are required by the GraphQL schema,
