@@ -18,6 +18,13 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.google.common.truth.Truth.assertThat
+import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.CustomScalar
+import com.prestongarno.kotlinq.core.QInterface
+import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 import org.junit.Test
 
 class InterfaceMultiInheritance : JavacTest() {
@@ -42,7 +49,7 @@ class InterfaceMultiInheritance : JavacTest() {
       |
       |""".trimMargin("|")
 
-      assertThat(compileOut(schema).minusPackageNames()).isEqualTo("""
+    assertThat(compileOut(schema).minusPackageNames()).isEqualTo("""
         |
         |interface Entity : QType, QInterface {
         |  val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
@@ -86,3 +93,35 @@ private fun String.minusPackageNames() = this.replace("com.prestongarno.kotlinq.
     .replace("stubs.", "")
     .replace("core.", "")
     .replace("QSchemaType.", "")
+
+
+interface Entity : QType, QInterface {
+  val friends: InterfaceListStub.ConfigurableQuery<Entity, out Entity.BaseFriendsArgs>
+
+  interface BaseFriendsArgs : ArgumentSpec {
+    abstract val query: String
+  }
+}
+
+
+interface Actor : QType, QInterface {
+  val friends: InterfaceListStub.ConfigurableQuery<Entity, out Actor.BaseFriendsArgs>
+
+  interface BaseFriendsArgs : ArgumentSpec
+}
+
+
+object Wookie : QType, Entity, Actor {
+  override val friends: InterfaceListStub.ConfigurableQuery<Entity, FriendsArgs> by QSchemaType.QInterfaces.List.configStub()
+
+  class FriendsArgs(query: String) : ArgBuilder(), Entity.BaseFriendsArgs, Actor.BaseFriendsArgs {
+
+    override val query: String by arguments.notNull("query", query)
+
+    var first: Int? by arguments
+
+    var after: ID? by arguments
+  }
+}
+
+object ID: CustomScalar
