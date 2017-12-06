@@ -17,8 +17,8 @@
 
 package com.prestongarno.kotlinq.core
 
-import com.prestongarno.kotlinq.core.hooks.StubProvider
-import com.prestongarno.kotlinq.core.hooks.StubProvider.Companion.delegationContext
+import com.prestongarno.kotlinq.core.api.StubProvider
+import com.prestongarno.kotlinq.core.api.StubProvider.Companion.delegationContext
 import com.prestongarno.kotlinq.core.stubs.BooleanArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
@@ -54,12 +54,12 @@ interface QSchemaType {
           StubProvider<StringDelegate.Query> =
           delegationContext.stringScalar.stub()
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<StringDelegate.OptionalConfigQuery<A>> =
           delegationContext.stringScalar.optionalConfigStub()
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<StringDelegate.ConfigurableQuery<A>> =
           delegationContext.stringScalar.configStub()
@@ -74,12 +74,12 @@ interface QSchemaType {
           delegationContext.intScalar.stub()
 
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<IntDelegate.OptionalConfigQuery<A>> =
           delegationContext.intScalar.optionalConfigStub()
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<IntDelegate.ConfigurableQuery<A>> =
           delegationContext.intScalar.configStub()
@@ -94,12 +94,12 @@ interface QSchemaType {
           delegationContext.floatScalar.stub()
 
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<FloatDelegate.OptionalConfigQuery<A>> =
           delegationContext.floatScalar.optionalConfigStub()
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<FloatDelegate.ConfigurableQuery<A>> =
           delegationContext.floatScalar.configStub()
@@ -113,12 +113,12 @@ interface QSchemaType {
           StubProvider<BooleanDelegate.Query> =
           delegationContext.booleanScalar.stub()
 
-      fun <A : ArgBuilder> optionalConfigStub()
+      fun <A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<BooleanDelegate.OptionalConfigQuery<A>> =
           delegationContext.booleanScalar.optionalConfigStub()
 
-      fun <A : ArgBuilder> configStub()
+      fun <A : ArgumentSpec> configStub()
           :
           StubProvider<BooleanDelegate.ConfigurableQuery<A>> =
           delegationContext.booleanScalar.configStub()
@@ -134,12 +134,12 @@ interface QSchemaType {
             StubProvider<StringArrayDelegate.Query> =
             delegationContext.stringScalar.list.stub()
 
-        fun <A : ArgBuilder> optionalConfigStub()
+        fun <A : ArgumentSpec> optionalConfigStub()
             :
             StubProvider<StringArrayDelegate.OptionalConfigQuery<A>> =
             delegationContext.stringScalar.list.optionalConfigStub()
 
-        fun <A : ArgBuilder> configStub()
+        fun <A : ArgumentSpec> configStub()
             :
             StubProvider<StringArrayDelegate.ConfigurableQuery<A>> =
             delegationContext.stringScalar.list.configStub()
@@ -153,12 +153,12 @@ interface QSchemaType {
             StubProvider<IntArrayDelegate.Query> =
             delegationContext.intScalar.list.stub()
 
-        fun <A : ArgBuilder> optionalConfigStub()
+        fun <A : ArgumentSpec> optionalConfigStub()
             :
             StubProvider<IntArrayDelegate.OptionalConfigQuery<A>> =
             delegationContext.intScalar.list.optionalConfigStub()
 
-        fun <A : ArgBuilder> configStub()
+        fun <A : ArgumentSpec> configStub()
             :
             StubProvider<IntArrayDelegate.ConfigurableQuery<A>> =
             delegationContext.intScalar.list.configStub()
@@ -172,12 +172,12 @@ interface QSchemaType {
             StubProvider<FloatArrayDelegate.Query> =
             delegationContext.floatScalar.list.stub()
 
-        fun <A : ArgBuilder> optionalConfigStub()
+        fun <A : ArgumentSpec> optionalConfigStub()
             :
             StubProvider<FloatArrayDelegate.OptionalConfigQuery<A>> =
             delegationContext.floatScalar.list.optionalConfigStub()
 
-        fun <A : ArgBuilder> configStub()
+        fun <A : ArgumentSpec> configStub()
             :
             StubProvider<FloatArrayDelegate.ConfigurableQuery<A>> =
             delegationContext.floatScalar.list.configStub()
@@ -191,12 +191,12 @@ interface QSchemaType {
             StubProvider<BooleanArrayDelegate.Query> =
             delegationContext.booleanScalar.list.stub()
 
-        fun <A : ArgBuilder> optionalConfigStub()
+        fun <A : ArgumentSpec> optionalConfigStub()
             :
             StubProvider<BooleanArrayDelegate.OptionalConfigQuery<A>> =
             delegationContext.booleanScalar.list.optionalConfigStub()
 
-        fun <A : ArgBuilder> configStub()
+        fun <A : ArgumentSpec> configStub()
             :
             StubProvider<BooleanArrayDelegate.ConfigurableQuery<A>> =
             delegationContext.booleanScalar.list.configStub()
@@ -212,12 +212,12 @@ interface QSchemaType {
         StubProvider<TypeStub.Query<T>> =
         delegationContext.type.query(T::class)
 
-    inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub()
+    inline fun <reified T : QType, A : ArgumentSpec> optionalConfigStub()
         :
         StubProvider<TypeStub.OptionalConfigQuery<T, A>> =
         delegationContext.type.optionalConfigStub(T::class)
 
-    inline fun <reified T : QType, A : ArgBuilder> configStub()
+    inline fun <reified T : QType, A : ArgumentSpec> configStub()
         :
         StubProvider<TypeStub.ConfigurableQuery<T, A>> =
         delegationContext.type.configStub(T::class)
@@ -230,12 +230,12 @@ interface QSchemaType {
           StubProvider<TypeListStub.Query<T>> =
           delegationContext.type.list.query(T::class)
 
-      inline fun <reified T : QType, A : ArgBuilder> optionalConfigStub()
+      inline fun <reified T : QType, A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
           delegationContext.type.list.optionalConfigStub(T::class)
 
-      inline fun <reified T : QType, A : ArgBuilder> configStub()
+      inline fun <reified T : QType, A : ArgumentSpec> configStub()
           :
           StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
           delegationContext.type.list.configStub(T::class)
@@ -256,7 +256,7 @@ interface QSchemaType {
         StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
         where T : QType,
               T : QInterface,
-              A : ArgBuilder =
+              A : ArgumentSpec =
         delegationContext.iface.optionalConfigStub(T::class)
 
 
@@ -265,7 +265,7 @@ interface QSchemaType {
         StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
         where T : QType,
               T : QInterface,
-              A : ArgBuilder =
+              A : ArgumentSpec =
         delegationContext.iface.configStub(T::class)
 
 
@@ -283,7 +283,7 @@ interface QSchemaType {
           StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
           where T : QType,
                 T : QInterface,
-                A : ArgBuilder =
+                A : ArgumentSpec =
           delegationContext.iface.list.optionalConfigStub(T::class)
 
       inline fun <reified T, A> configStub()
@@ -291,7 +291,7 @@ interface QSchemaType {
           StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
           where T : QType,
                 T : QInterface,
-                A : ArgBuilder =
+                A : ArgumentSpec =
           delegationContext.iface.list.configStub(T::class)
     }
   }
@@ -305,7 +305,7 @@ interface QSchemaType {
               T : QEnumType =
         delegationContext.enum.stub(T::class)
 
-    inline fun <reified T, A : ArgBuilder> optionalConfigStub()
+    inline fun <reified T, A : ArgumentSpec> optionalConfigStub()
         :
         StubProvider<EnumStub.OptionalConfigQuery<T, A>>
         where T : Enum<*>,
@@ -313,7 +313,7 @@ interface QSchemaType {
         delegationContext.enum.optionalConfigStub(T::class)
 
 
-    inline fun <reified T, A : ArgBuilder> configStub()
+    inline fun <reified T, A : ArgumentSpec> configStub()
         :
         StubProvider<EnumStub.ConfigurableQuery<T, A>>
         where T : Enum<*>,
@@ -335,7 +335,7 @@ interface QSchemaType {
           StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
           where T : Enum<*>,
                 T : QEnumType,
-                A : ArgBuilder =
+                A : ArgumentSpec =
           delegationContext.enum.list.optionalConfigStub(T::class)
 
       inline fun <reified T, A> configStub()
@@ -343,7 +343,7 @@ interface QSchemaType {
           StubProvider<EnumListStub.ConfigurableQuery<T, A>>
           where T : Enum<*>,
                 T : QEnumType,
-                A : ArgBuilder =
+                A : ArgumentSpec =
           delegationContext.enum.list.configStub(T::class)
 
     }
@@ -357,12 +357,12 @@ interface QSchemaType {
         StubProvider<CustomScalarStub.Query<T>> =
         delegationContext.scalar.stub(T::class)
 
-    inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
+    inline fun <reified T : CustomScalar, A : ArgumentSpec> optionalConfigStub()
         :
         StubProvider<CustomScalarStub.OptionalConfigQuery<T, A>> =
         delegationContext.scalar.optionalConfigStub(T::class)
 
-    inline fun <reified T : CustomScalar, A : ArgBuilder> configStub()
+    inline fun <reified T : CustomScalar, A : ArgumentSpec> configStub()
         :
         StubProvider<CustomScalarStub.ConfigurableQuery<T, A>> =
         delegationContext.scalar.configStub(T::class)
@@ -375,12 +375,12 @@ interface QSchemaType {
           StubProvider<CustomScalarListStub.Query<T>> =
           delegationContext.scalar.list.stub(T::class)
 
-      inline fun <reified T : CustomScalar, A : ArgBuilder> optionalConfigStub()
+      inline fun <reified T : CustomScalar, A : ArgumentSpec> optionalConfigStub()
           :
           StubProvider<CustomScalarListStub.OptionalConfigQuery<T, A>> =
           delegationContext.scalar.list.optionalConfigStub(T::class)
 
-      inline fun <reified T : CustomScalar, A : ArgBuilder> configStub()
+      inline fun <reified T : CustomScalar, A : ArgumentSpec> configStub()
           :
           StubProvider<CustomScalarListStub.ConfigurableQuery<T, A>> =
           delegationContext.scalar.list.configStub(T::class)
@@ -394,13 +394,13 @@ interface QSchemaType {
         StubProvider<UnionStub.Query<T>> =
         delegationContext.union.stub(union)
 
-    fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T)
+    fun <T : QUnionType, A : ArgumentSpec> optionalConfigStub(union: T)
         :
         StubProvider<UnionStub.OptionalConfigQuery<T, A>> =
         delegationContext.union.optionalConfigStub(union)
 
 
-    fun <T : QUnionType, A : ArgBuilder> configStub(union: T)
+    fun <T : QUnionType, A : ArgumentSpec> configStub(union: T)
         :
         StubProvider<UnionStub.ConfigurableQuery<T, A>> =
         delegationContext.union.configStub(union)
@@ -412,12 +412,12 @@ interface QSchemaType {
           StubProvider<UnionListStub.Query<T>> =
           delegationContext.union.list.stub(union)
 
-      fun <T : QUnionType, A : ArgBuilder> optionalConfigStub(union: T)
+      fun <T : QUnionType, A : ArgumentSpec> optionalConfigStub(union: T)
           :
           StubProvider<UnionListStub.OptionalConfigQuery<T, A>> =
           delegationContext.union.list.optionalConfigStub(union)
 
-      fun <T : QUnionType, A : ArgBuilder> configStub(union: T)
+      fun <T : QUnionType, A : ArgumentSpec> configStub(union: T)
           :
           StubProvider<UnionListStub.ConfigurableQuery<T, A>> =
           delegationContext.union.list.configStub(union)

@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
@@ -26,7 +27,7 @@ import com.prestongarno.kotlinq.core.adapters.toMap
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
+interface IntDelegate<out A : ArgumentSpec> : ScalarDelegate<IntStub> {
 
   var default: Int
 
@@ -40,13 +41,13 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
     ): Query = QueryImpl(qproperty)
 
     internal
-    fun <A : ArgBuilder> optionalArgStub(
+    fun <A : ArgumentSpec> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<A> =
         OptionalConfigQueryImpl(qproperty)
 
     internal
-    fun <A : ArgBuilder> argStub(
+    fun <A : ArgumentSpec> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
@@ -56,9 +57,9 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
   interface Query : SchemaStub {
 
     operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: (IntDelegate<ArgBuilder>.() -> Unit)? = null
-    ): IntDelegate<ArgBuilder>
+        arguments: ArgumentSpec? = null,
+        scope: (IntDelegate<ArgumentSpec>.() -> Unit)? = null
+    ): IntDelegate<ArgumentSpec>
 
     operator fun provideDelegate(
         inst: QModel<*>,
@@ -66,7 +67,7 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
     ): IntStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgBuilder> : SchemaStub {
+  interface OptionalConfigQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -79,7 +80,7 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
     ): IntStub
   }
 
-  interface ConfigurableQuery<A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<A : ArgumentSpec> : SchemaStub {
 
     operator fun invoke(
         arguments: A,
@@ -93,12 +94,12 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(
-        arguments: ArgBuilder?, scope: (IntDelegate<ArgBuilder>.() -> Unit)?
+        arguments: ArgumentSpec?, scope: (IntDelegate<ArgumentSpec>.() -> Unit)?
     ) = IntDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private
-  class OptionalConfigQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
+  class OptionalConfigQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
     override fun invoke(arguments: A, scope: (IntDelegate<A>.() -> Unit)?): IntDelegate<A> =
         IntDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -107,7 +108,7 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
   }
 
   private
-  class ConfigurableQueryImpl<A : ArgBuilder>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+  class ConfigurableQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 
     override fun invoke(arguments: A, scope: (IntDelegate<A>.() -> Unit)?): IntDelegate<A> =
         IntDelegateImpl(qproperty, arguments).applyNotNull(scope)
@@ -115,7 +116,7 @@ interface IntDelegate<out A : ArgBuilder> : ScalarDelegate<IntStub> {
 }
 
 private
-class IntDelegateImpl<out A : ArgBuilder>(
+class IntDelegateImpl<out A : ArgumentSpec>(
     val qproperty: GraphQlProperty,
     val argBuilder: A? = null
 ) : IntDelegate<A> {

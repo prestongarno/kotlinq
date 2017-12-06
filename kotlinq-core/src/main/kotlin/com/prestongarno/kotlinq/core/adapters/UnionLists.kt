@@ -18,12 +18,12 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.QUnionType
-import com.prestongarno.kotlinq.core.hooks.Fragment
-import com.prestongarno.kotlinq.core.hooks.FragmentContext
+import com.prestongarno.kotlinq.core.api.Fragment
+import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
@@ -32,7 +32,7 @@ import java.util.Collections.emptySet
 import kotlin.reflect.KProperty
 
 internal
-fun <T : QUnionType, A : ArgBuilder> newUnionListStub(
+fun <T : QUnionType, A : ArgumentSpec> newUnionListStub(
     qproperty: GraphQlProperty,
     objectModel: T,
     arguments: A?
@@ -40,7 +40,7 @@ fun <T : QUnionType, A : ArgBuilder> newUnionListStub(
     UnionListAdapter(qproperty, objectModel, arguments)
 
 private
-class UnionListAdapter<I : QUnionType, out A : ArgBuilder>(
+class UnionListAdapter<I : QUnionType, out A : ArgumentSpec>(
     val qproperty: GraphQlProperty,
     val objectModel: I,
     val arguments: A?

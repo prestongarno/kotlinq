@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QInterface
 import com.prestongarno.kotlinq.core.QModel
@@ -31,7 +32,7 @@ interface InterfaceListStub<I, out A> :
     DelegateProvider<List<QModel<I>>>
     where I : QType,
           I : QInterface,
-          A : ArgBuilder {
+          A : ArgumentSpec {
 
   fun config(argumentScope: A.() -> Unit)
 
@@ -46,30 +47,30 @@ interface InterfaceListStub<I, out A> :
     fun <I, A> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<I, A>
-        where I : QInterface, I : QType, A : ArgBuilder =
+        where I : QInterface, I : QType, A : ArgumentSpec =
         OptionalConfigQueryImpl(qproperty)
 
     internal
     fun <I, A> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<I, A>
-        where I : QInterface, I : QType, A : ArgBuilder =
+        where I : QInterface, I : QType, A : ArgumentSpec =
         ConfigurableQueryImpl(qproperty)
   }
 
   interface Query<I> : SchemaStub where I : QInterface, I : QType {
 
     operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: InterfaceListStub<I, ArgBuilder>.() -> Unit
-    ): InterfaceListStub<I, ArgBuilder>
+        arguments: ArgumentSpec? = null,
+        scope: InterfaceListStub<I, ArgumentSpec>.() -> Unit
+    ): InterfaceListStub<I, ArgumentSpec>
 
   }
 
   interface OptionalConfigQuery<I, A> : ConfigurableQuery<I, A>
       where I : QInterface,
             I : QType,
-            A : ArgBuilder {
+            A : ArgumentSpec {
 
     /** Create stub for field without any arguments */
     operator fun invoke(
@@ -81,7 +82,7 @@ interface InterfaceListStub<I, out A> :
   interface ConfigurableQuery<I, A> : SchemaStub
       where I : QInterface,
             I : QType,
-            A : ArgBuilder {
+            A : ArgumentSpec {
 
     operator fun invoke(
         arguments: A,
@@ -95,9 +96,9 @@ interface InterfaceListStub<I, out A> :
    */
   private
   class QueryImpl<I>(val qproperty: GraphQlProperty) : Query<I> where I : QInterface, I : QType {
-    override fun invoke(arguments: ArgBuilder?, scope: InterfaceListStub<I, ArgBuilder>.() -> Unit)
-        : InterfaceListStub<I, ArgBuilder> =
-        newInterfaceListStub<I, ArgBuilder>(qproperty, arguments ?: ArgBuilder()).apply(scope)
+    override fun invoke(arguments: ArgumentSpec?, scope: InterfaceListStub<I, ArgumentSpec>.() -> Unit)
+        : InterfaceListStub<I, ArgumentSpec> =
+        newInterfaceListStub<I, ArgumentSpec>(qproperty, arguments ?: ArgBuilder()).apply(scope)
   }
 
   private
@@ -106,7 +107,7 @@ interface InterfaceListStub<I, out A> :
   ) : OptionalConfigQuery<I, A>
       where I : QInterface,
             I : QType,
-            A : ArgBuilder {
+            A : ArgumentSpec {
 
     override fun invoke(arguments: A, scope: InterfaceListStub<I, A>.() -> Unit): InterfaceListStub<I, A> =
         newInterfaceListStub<I, A>(qproperty, arguments).apply(scope)
@@ -121,7 +122,7 @@ interface InterfaceListStub<I, out A> :
   ) : ConfigurableQuery<I, A>
       where I : QInterface,
             I : QType,
-            A : ArgBuilder {
+            A : ArgumentSpec {
 
     override fun invoke(
         arguments: A, scope: InterfaceListStub<I, A>.() -> Unit

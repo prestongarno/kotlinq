@@ -17,17 +17,21 @@
 
 package com.prestongarno.kotlinq.core
 
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
+
+interface ArgumentSpec {
+  val arguments: PropertyMapper
+}
 
 /**
  * The supertype of all classes which are used for arguments on GraphQL types.
  * Constructor parameters are arguments which are required by the GraphQL schema,
  * while properties are GraphQL optional arguments
  */
-open class ArgBuilder {
+open class ArgBuilder : ArgumentSpec {
 
-  protected
-  val arguments = PropertyMapper()
+  override val arguments = PropertyMapper()
 
   infix fun String.with(value: Any) {
     arguments.put(this, value)
@@ -43,6 +47,9 @@ class PropertyMapper {
 
   private
   val values = mutableMapOf<String, Any?>()
+
+  private
+  val notNullDelegate = NotNull<Any>()
 
   @Suppress("UNCHECKED_CAST")
   operator
@@ -64,6 +71,20 @@ class PropertyMapper {
   internal
   fun put(key: String, value: Any) {
     values[key] = value
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  fun <T: Any> notNull(key: String, value: T): ReadOnlyProperty<Any, T> {
+    put(key, value)
+    return notNullDelegate as ReadOnlyProperty<Any, T>
+  }
+
+
+  // hack
+  private inner class NotNull<out T: Any> : ReadOnlyProperty<Any, T> {
+
+    @Suppress("UNCHECKED_CAST")
+    override fun getValue(thisRef: Any, property: KProperty<*>): T = values[property.name] as T
   }
 }
 

@@ -17,9 +17,9 @@
 
 package com.prestongarno.kotlinq.core
 
-import com.prestongarno.kotlinq.core.hooks.Fragment
-import com.prestongarno.kotlinq.core.hooks.FragmentContext
-import com.prestongarno.kotlinq.core.hooks.ModelProvider
+import com.prestongarno.kotlinq.core.api.Fragment
+import com.prestongarno.kotlinq.core.api.FragmentContext
+import com.prestongarno.kotlinq.core.api.ModelProvider
 
 internal
 fun QModel<*>.getFragments(): Set<Fragment> {

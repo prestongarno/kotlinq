@@ -17,6 +17,7 @@
 
 package com.prestongarno.kotlinq.compiler
 
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class UnionToKotlinTest : JavacTest() {
@@ -56,6 +57,7 @@ class UnionToKotlinTest : JavacTest() {
 
         """.trimIndent()
 
+    assertThat(result).isEqualTo(expect)
     result eq expect
 
     val loader = jvmCompileAndLoad(schema.trimMargin("|"), "com.test").apply {

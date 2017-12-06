@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.CustomScalar
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.InputStreamScalarMapper
@@ -29,14 +29,14 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.stubs.CustomScalarStub
 import kotlin.reflect.KProperty
 
-fun <E : CustomScalar, P : QScalarMapper<Q>, Q, A : ArgBuilder> newScalarDelegate(
+fun <E : CustomScalar, P : QScalarMapper<Q>, Q, A : ArgumentSpec> newScalarDelegate(
     qproperty: GraphQlProperty,
     mapper: P,
     arguments: A?
 ): CustomScalarStub<E, Q, A> = CustomScalarAdapter<E, P, Q, A>(qproperty, mapper, arguments)
 
 private
-class CustomScalarAdapter<E : CustomScalar, out P : QScalarMapper<Q>, Q, out B : ArgBuilder>(
+class CustomScalarAdapter<E : CustomScalar, out P : QScalarMapper<Q>, Q, out B : ArgumentSpec>(
     qproperty: GraphQlProperty,
     val mapper: P,
     val arguments: B? = null

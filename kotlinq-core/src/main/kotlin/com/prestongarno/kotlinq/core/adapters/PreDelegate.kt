@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
@@ -35,5 +35,5 @@ fun <T : Any> T.applyNotNull(scope: (T.() -> Unit)?): T {
 }
 
 internal
-fun <A : ArgBuilder?> A?.toMap(): Map<String, Any> = this?.getArguments()?.invoke() ?: emptyMap()
+fun <A : ArgumentSpec?> A?.toMap(): Map<String, Any> = this?.arguments?.invoke() ?: emptyMap()
 

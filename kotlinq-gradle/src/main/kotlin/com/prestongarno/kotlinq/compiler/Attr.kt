@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser.*
+import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser.TypeNameContext
 
 /**
  *
@@ -32,30 +32,35 @@ import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser.*
  *
  */
 // TODO pass type && supertype to [registerAsSuper] method for diagnostics
-internal fun GraphQLCompiler.attrInheritance() {
-  schemaTypes.on<TypeDef> {
+internal fun GraphQLCompiler.attrInheritance() = schemaTypes.on<TypeDef> {
 
-    val fieldSuperTable = fields
-        .map(FieldDefinition::newCache)
-        .toMap(mutableMapOf())
+  val fieldSuperTable = fields
+      .map(FieldDefinition::newCache)
+      .toMap(mutableMapOf())
 
-    context.implementationDefs()
-        ?.typeName()
-        ?.map(TypeNameContext::toNameString)
-        ?.map(this@attrInheritance::fromSymtab)
-        ?.onEach { supertype ->
-          supertype.fields
-              .onEach(this::requireOverrides)
-              .map(this::joiningWithImplementation)
-              .map(::second)
-              .map(supertype::registerAsSuper)
-              .forEach(fieldSuperTable::cacheSymbol)
-        }?.toSet()
-        ?.let(this@on::setSupertypes) ?: setSupertypes(emptySet())
+  context.implementationDefs()
+      ?.typeName()
+      ?.map(TypeNameContext::toNameString)
+      ?.map(this@attrInheritance::fromSymtab)
+      ?.onEach { supertype ->
 
-    fields.onEach(fieldSuperTable::setFieldInheritanceContext)
-        .forEach(this::assignArgBuilder)
-  }
+        supertype.fields
+            .onEach(this::requireOverrides)
+            .onEach { supertype.assignArgumentSpec(subType = this, symbol = it.name) }
+            .map(this::joiningWithImplementation)
+            .map(::second)
+            .map(supertype::registerAsSuper)
+            .forEach(fieldSuperTable::cacheSymbol)
+
+      }?.toSet()
+      ?.let(this@on::setSupertypes) ?: setSupertypes(emptySet())
+
+  fields.onEach(fieldSuperTable::setFieldInheritanceContext)
+      .onEach(this::assignArgumentSpec)
+      .forEach { field ->
+        if (field.inheritsFrom.isNotEmpty() && field.arguments.find { !it.nullable } != null)
+          field.inheritsFrom.map { it.symtab[field.name]!! }.forEach(FieldDefinition::flagAsRequiringConfiguration)
+      }
 }
 
 
@@ -102,14 +107,72 @@ private fun MutableMap<FieldDefinition, MutableSet<InterfaceDef>>.setFieldInheri
   field.inheritsFrom = this[field]?.toSet() ?: emptySet()
 }
 
-private fun FieldDefinition.setSupertypes(supers: Set<InterfaceDef>?) {
-  this.inheritsFrom = supers ?: emptySet()
-}
-
 private fun GraphQLSchemaParser.TypeNameContext.toNameString(): String = Name().text
 
 private fun FieldDefinition.newCache(): Pair<FieldDefinition, MutableSet<InterfaceDef>> = this to mutableSetOf()
 
-private fun TypeDef.assignArgBuilder(field: FieldDefinition) {
-  if (field.arguments.isNotEmpty()) field.argBuilder = com.prestongarno.kotlinq.compiler.ArgBuilderDef(field, this)
+private fun TypeDef.assignArgumentSpec(field: FieldDefinition) {
+  if (field.arguments.isNotEmpty())
+    field.argBuilder = ArgumentSpecDef(field, this)
 }
+
+/**
+ * Checks the subtype and assigns the supertype field's argbuilder definition (if applicable)
+ *
+ * The rule is that:
+ *
+ *    If a single concrete type is enforced configured, all superinterfaces and their fields must also match.
+ *         |-> i.e. 'Optionally' configured fields are given lowest priority because they exist only for convenience
+ *
+ * By now, the field -> superfield inheritance checks have been done
+ */
+private fun InterfaceDef.assignArgumentSpec(subType: TypeDef, symbol: String) {
+
+  val subField = subType.symtab[symbol]
+      ?: throw IllegalArgumentException("Expected overriden subtype field of interface $name on ${subType.name}")
+  val superField = symtab[symbol]
+      ?: throw IllegalArgumentException("Expected superinterface field '$symbol' on def '$name'")
+
+  val Req_Args = 2
+  val Optional_Args = 1
+  val No_Args = 0
+
+  fun argumentRequirements(abstractField: FieldDefinition, concreteField: FieldDefinition): Int = when {
+    abstractField.arguments.isEmpty()
+        && concreteField.arguments.isEmpty() -> No_Args
+    concreteField.arguments.isNotEmpty()
+        && concreteField.arguments.find { !it.nullable } == null -> Optional_Args
+    else -> Req_Args
+  }
+
+  fun asConfigStub(field: FieldDefinition) {
+    require(field.isAbstract)
+    field.argBuilder = ArgumentSpecDef(field, this)
+  }
+
+
+  // Check the **CONCRETE** field for it's argument requirements
+  // and set the interface argument builder type based off of that
+  // supertype field should match the same 1/3 arg type
+  superField.argBuilder = when (argumentRequirements(superField, subField)) {
+    Req_Args -> ArgumentSpecDef(superField, this)
+    Optional_Args -> ArgumentSpecDef(superField, this)
+    No_Args -> null
+    else -> throw IllegalStateException("lol")
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

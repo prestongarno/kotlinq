@@ -21,7 +21,9 @@ import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType.*
+import com.prestongarno.kotlinq.core.QSchemaType.QEnum
+import com.prestongarno.kotlinq.core.QSchemaType.QScalar
+import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.QType
 import org.junit.Test
 
@@ -109,7 +111,7 @@ class TypeStubQueryable {
   @Test fun `noArg type stub with custom configuration is possible`() {
     val query = object : QModel<Order>(Order) {
       val personWhoPlacedTheOrder by Order.owner.query(TypeStubQueryable::Me)() {
-        config { "Hello" with "World" }
+        config { this.arguments.put("Hello", "World") }
       }
     }
     assertThat(query.toGraphql())
@@ -128,9 +130,9 @@ class TypeStubQueryable {
     val query = object : QModel<Order>(Order) {
       val personWhoPlacedTheOrder by Order.owner.query(TypeStubQueryable::Me).invoke {
         config {
-          "Hello" with "World"
-          "Foo" with 1337
-          "Bar" with false
+          this.arguments.put("Hello", "World")
+          this.arguments.put("Foo", 1337)
+          this.arguments.put("Bar", false)
         }
       }
     }

@@ -29,7 +29,9 @@ import com.prestongarno.kotlinq.core.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.stubs.TypeStub
 import com.prestongarno.kotlinq.core.stubs.UnionListStub
 import com.prestongarno.kotlinq.core.stubs.UnionStub
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
@@ -49,7 +51,7 @@ sealed class ScopedSymbol : SymbolElement {
 data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefContext) : ScopedSymbol(), KotlinPropertyElement {
 
 
-  override val name = context.fieldName().Name().text
+  override val name = context.fieldName().Name().text!!
 
   override val typeName = context.typeSpec()?.typeName()?.Name()?.text
       ?: context.typeSpec().listType()?.children?.get(1)?.text
@@ -67,11 +69,24 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
   lateinit var inheritsFrom: Set<InterfaceDef>
 
   /** has to be done from an outside context. Created in [GraphQLCompiler.attrInheritance]*/
-  internal var argBuilder: com.prestongarno.kotlinq.compiler.ArgBuilderDef? = null
+  internal var argBuilder: com.prestongarno.kotlinq.compiler.ArgumentSpecDef? = null
 
-  val arguments: List<ArgumentDefinition> = context.fieldArgs()
-      ?.argument()
-      ?.map(::ArgumentDefinition) ?: emptyList()
+  val arguments: List<ArgumentDefinition> by lazy {
+    context.fieldArgs()
+        ?.argument()
+        ?.map { ArgumentDefinition(this, it) }
+        ?: emptyList()
+  }
+
+  val requiresConfiguration: Boolean get() = arguments.isNotEmpty() && __requiresConfiguration
+      || arguments.find { !it.nullable } != null
+
+  private var __requiresConfiguration = false
+
+  fun flagAsRequiringConfiguration() {
+    __requiresConfiguration = true
+  }
+
 
   override fun toKotlin(): PropertySpec =
       PropertySpec.builder(
@@ -98,13 +113,13 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
    * StubType: [ [String|Float|Int|Boolean]{Array}Delegate | [Type|Interface|Union|Enum|CustomScalar]{List}Stub ]
    *
    * Primitive delegates/stubs don't have a type argument.
-   * Only for the the associated ArgBuilder class on the graphql primitive field
+   * Only for the the associated ArgumentSpec class on the graphql primitive field
    */
   private fun ktqGraphQLDelegateKotlinpoetTypeName(): TypeName {
 
     fun FieldDefinition.configurationTypeClassName(): String = when {
       arguments.isEmpty() -> "Query"
-      arguments.isNotEmpty() && arguments.find { it.nullable == false } == null -> "OptionalConfigQuery"
+      !requiresConfiguration -> "OptionalConfigQuery"
       else -> "ConfigurableQuery"
     }
 
@@ -131,6 +146,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
     val baseTypeName = (if (isList) `type name for list field`() else `type name for non-collection field`())
         .asTypeName()
         .nestedClass(configurationTypeClassName())
+        //
 
     fun FieldDefinition.argBuilderTypeName(): TypeName {
       require(arguments.isNotEmpty())
@@ -150,13 +166,26 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
             baseTypeName.enclosingClassName()!!.simpleName(),
             baseTypeName.simpleName()
         ),
-        *parameterizedTypeNames.toTypedArray()
+        *parameterizedTypeNames.toTypedArray().let {
+          if (isAbstract)
+            it[it.size - 1] = it.last().annotated(AnnotationSpec.builder(Nothing::class).build())
+          it
+        }
     )
+  }
+
+  companion object {
+    // not exactly sure how to do 'out' variance on parameterized types
+    const val OUT_VARIANCE_MARKER = "@java.lang.Void"
   }
 
 }
 
-data class ArgumentDefinition(override val context: GraphQLSchemaParser.ArgumentContext) : ScopedSymbol(), KotlinParameterElement {
+data class ArgumentDefinition(
+    private val field: FieldDefinition,
+    override val context: GraphQLSchemaParser.ArgumentContext
+) : ScopedSymbol(),
+    KotlinPropertyElement {
 
   override val name: String get() = context.Name().text
 
@@ -168,14 +197,43 @@ data class ArgumentDefinition(override val context: GraphQLSchemaParser.Argument
 
   override lateinit var type: SchemaType<*>
 
-  override fun toKotlin(): ParameterSpec {
-    val type = if (isList)
-      ParameterizedTypeName.get(List::class.asClassName(), typeName.asTypeName())
-    else typeName.asTypeName()
+  val isAbstract = field.isAbstract
 
-    return ParameterSpec.builder(name, type.apply {
-      if (nullable) asNullable()
-    }).build()
+  val asParameter = AsParameter()
+
+  override fun toKotlin(): PropertySpec =
+      PropertySpec.builder(
+          // name
+          name,
+          // Type name
+          type.name.asTypeName().let {
+            if (this@ArgumentDefinition.nullable) it.asNullable() else it
+          }, // modifiers
+          *(if (!isAbstract && field.inheritsFrom.find { superiface ->
+            superiface.symtab[field.name]?.arguments
+                ?.find { arg -> arg.name == name } != null
+          } != null)
+            arrayOf(KModifier.OVERRIDE)
+          else if (isAbstract) arrayOf(KModifier.ABSTRACT)
+          else emptyArray())
+      ).apply {
+        // assignment
+        if (!isAbstract)
+          delegate(if (!nullable) notNullDelegateCode(this@ArgumentDefinition) else CodeBlock.of("arguments"))
+        mutable(nullable)
+      }.build()
+
+  inner class AsParameter : KotlinParameterElement {
+
+    override fun toKotlin(): ParameterSpec {
+      val type = if (isList)
+        ParameterizedTypeName.get(List::class.asClassName(), typeName.asTypeName())
+      else typeName.asTypeName()
+
+      return ParameterSpec.builder(name, type.apply {
+        if (nullable) asNullable()
+      }).build()
+    }
   }
 
   override fun equals(other: Any?): Boolean {

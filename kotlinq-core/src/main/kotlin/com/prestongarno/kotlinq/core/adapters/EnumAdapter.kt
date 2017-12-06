@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
@@ -32,7 +33,7 @@ class EnumConfigStubImpl<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
 ) : EnumStub.ConfigurableQuery<T, A>
-    where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+    where T : Enum<*>, T : QEnumType, A : ArgumentSpec {
 
   override fun invoke(arguments: A, scope: EnumStub<T, A>.() -> Unit): EnumStub<T, A> =
       EnumAdapterImpl(qproperty, enumClass, arguments).apply(scope)
@@ -44,7 +45,7 @@ class EnumOptionalArgStubQuery<T, A>(
     private val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>
 ) : EnumStub.OptionalConfigQuery<T, A>
-    where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+    where T : Enum<*>, T : QEnumType, A : ArgumentSpec {
 
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
       EnumFieldImpl(qproperty, enumClass, emptyMap()).bind(inst)
@@ -52,7 +53,7 @@ class EnumOptionalArgStubQuery<T, A>(
   override fun invoke(arguments: A, scope: EnumStub<T, A>.() -> Unit): EnumStub<T, A> =
       EnumAdapterImpl(qproperty, enumClass, arguments).apply(scope)
 
-  override fun invoke(scope: EnumStub<T, ArgBuilder>.() -> Unit): EnumStub<T, ArgBuilder> =
+  override fun invoke(scope: EnumStub<T, ArgumentSpec>.() -> Unit): EnumStub<T, ArgumentSpec> =
       EnumAdapterImpl(qproperty, enumClass, ArgBuilder()).apply(scope)
 
 }
@@ -70,9 +71,9 @@ class EnumNoArgStub<T>(
   ): QField<T> = EnumFieldImpl(qproperty, enumClass, emptyMap()).bind(inst)
 
   override fun invoke(
-      arguments: ArgBuilder,
-      scope: EnumStub<T, ArgBuilder>.() -> Unit
-  ): EnumStub<T, ArgBuilder> =
+      arguments: ArgumentSpec,
+      scope: EnumStub<T, ArgumentSpec>.() -> Unit
+  ): EnumStub<T, ArgumentSpec> =
       EnumAdapterImpl(qproperty, enumClass, arguments).apply(scope)
 }
 
@@ -86,7 +87,7 @@ class EnumAdapterImpl<T, out A>(
 
     where T : Enum<*>,
           T : QEnumType,
-          A : ArgBuilder {
+          A : ArgumentSpec {
 
   override var default: T? = null
 

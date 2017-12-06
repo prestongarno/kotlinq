@@ -4,7 +4,7 @@ jdk:
 - oraclejdk8
 
 script: 
-  - ./gradlew build test
+  - ./gradlew clean evaluateTestApi build test --info
 
 branches:
   except:
@@ -20,6 +20,8 @@ cache:
   directories:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
+  - $HOME/.m2
+
 
 notifications:
   - email: false

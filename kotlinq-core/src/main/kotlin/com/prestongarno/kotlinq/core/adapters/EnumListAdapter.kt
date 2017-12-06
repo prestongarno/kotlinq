@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonArray
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.internal.stringify
@@ -32,7 +32,7 @@ fun <T, A> newEnumListDelegate(
     qproperty: GraphQlProperty,
     arguments: A?,
     enumClass: KClass<T>
-): EnumListStub<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder =
+): EnumListStub<T, A> where T : Enum<*>, T : QEnumType, A : ArgumentSpec =
     EnumListStubImpl(qproperty, arguments, enumClass)
 
 @PublishedApi internal
@@ -49,7 +49,7 @@ private data class EnumListStubImpl<T, out A>(
 ) : EnumListStub<T, A>
     where T : Enum<*>,
           T : QEnumType,
-          A : ArgBuilder {
+          A : ArgumentSpec {
 
   override var default: T? = null
 

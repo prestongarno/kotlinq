@@ -5,9 +5,12 @@ buildscript {
 }
 
 repositories {
-  mavenLocal()
   mavenCentral()
   jcenter()
+  flatDir {
+    dirs "$project.buildDir/libs"
+  }
+  mavenLocal()
 }
 apply plugin: 'maven'
 
@@ -18,6 +21,7 @@ dependencies {
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
           version: "$kotlin_version"
   testCompile "com.prestongarno.kotlinq:kotlinq-test-api:$version"
+  testCompile "com.prestongarno.kotlinq:kotlinq-core:$version" // idea dependency for live inference
 }
 
 uploadArchives {

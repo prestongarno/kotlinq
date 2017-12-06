@@ -19,14 +19,13 @@ package com.prestongarno.kotlinq.core.primitives
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType.*
+import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import org.junit.Test
-import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.declaredMembers
 
 infix fun Any?.eq(other: Any?): Boolean =
@@ -143,10 +142,10 @@ class BasicPrimitiveTests {
 
     query.toGraphql() eq "{name,age,gpa,hasHighSchoolDiploma}"
 
-    query.name   eq   "Preston Garno"
-    query.age    eq   22
-    query.gpa    eq   3.9F
-    query.isGrad eq   true
+    query.name eq "Preston Garno"
+    query.age eq 22
+    query.gpa eq 3.9F
+    query.isGrad eq true
   }
 
   @Test fun `graphql with custom arguments added is possible`() {
@@ -154,19 +153,19 @@ class BasicPrimitiveTests {
     val query = object : QModel<Person>(Person) {
 
       val name by model.name {
-        config { "Hello" with "World" }
+        config { arguments.put("Hello", "World") }
       }
 
       val age by model.age {
-        config { "Number" with 69 }
+        config { arguments.put("Number", 69) }
       }
 
       val gpa by model.gpa {
-        config { "Boolean" with false }
+        config { arguments.put("Boolean", false) }
       }
 
       val grad by model.hasHighSchoolDiploma {
-        config { "floatArgument" with 4.0000067f }
+        config { arguments.put("floatArgument", 4.0000067f) }
       }
     }
 
@@ -180,7 +179,7 @@ class BasicPrimitiveTests {
 
     val delegateStub = Person.name().apply {
       default = "First Query Expected Default"
-      config { "Hello" with "World" }
+      config { arguments.put("Hello", "World") }
     }
 
     val query = object : QModel<Person>(Person) {

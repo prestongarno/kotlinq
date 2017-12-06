@@ -81,12 +81,12 @@ class GraphQLCompiler(
     val result = parser.graphqlSchema()
 
     // Add type definitions to context
-    definitions += result.enumDef().map { EnumDef(it) }
-    definitions += result.inputTypeDef().map { InputDef(it) }
-    definitions += result.interfaceDef().map { InterfaceDef(it) }
-    definitions += result.typeDef().map { TypeDef(it) }
-    definitions += result.scalarDef().map { ScalarDef(it) }
-    definitions += result.unionDef().map { UnionDef(it) }
+    definitions += result.interfaceDef().map(::InterfaceDef)
+    definitions += result.enumDef().map(::EnumDef)
+    definitions += result.inputTypeDef().map(::InputDef)
+    definitions += result.typeDef().map(::TypeDef)
+    definitions += result.scalarDef().map(::ScalarDef)
+    definitions += result.unionDef().map(::UnionDef)
     symtab.putAll(definitions.map { it.name to it })
 
     // intermediate
@@ -118,6 +118,8 @@ class GraphQLCompiler(
       } != null) exact = exact.replace(SchemaType.CLASS_DELEGATE_MARKER,
           " by ${ir.schemaTypeClass.qualifiedName}.new()")
           .replace("^import.*\n".toRegex(), "")
+
+      exact = exact.replace(FieldDefinition.OUT_VARIANCE_MARKER, "out")
 
       return@map exact
     }.joinToString("\n\n") { it }

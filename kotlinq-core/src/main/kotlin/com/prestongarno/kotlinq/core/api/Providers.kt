@@ -17,7 +17,7 @@
 
 /**For organizing the utility objects/classes which provide stubs for schema types
  */
-package com.prestongarno.kotlinq.core.hooks
+package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QType

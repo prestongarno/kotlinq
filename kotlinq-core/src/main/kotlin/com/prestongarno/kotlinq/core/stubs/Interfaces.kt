@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QInterface
 import com.prestongarno.kotlinq.core.QModel
@@ -29,7 +30,7 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 /**
  * Remember -> compile generate all interface types to be *both* [QType] ***and*** [QInterface]
  */
-interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvider<QModel<I>?>
+interface InterfaceStub<I, out A : ArgumentSpec> : FragmentStub<I>, DelegateProvider<QModel<I>?>
     where I : QInterface,
           I : QType {
 
@@ -49,7 +50,7 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
         OptionalConfigQuery<I, A>
         where I : QInterface,
               I : QType,
-              A : ArgBuilder =
+              A : ArgumentSpec =
         OptionalConfigQueryImpl(qproperty)
 
     internal
@@ -58,19 +59,19 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
         ConfigurableQuery<I, A>
         where I : QInterface,
               I : QType,
-              A : ArgBuilder =
+              A : ArgumentSpec =
         ConfigurableQueryImpl(qproperty)
   }
 
   interface Query<I> : SchemaStub where I : QInterface, I : QType {
 
-    operator fun invoke(arguments: ArgBuilder? = ArgBuilder(),
-          scope: InterfaceStub<I, ArgBuilder>.() -> Unit)
+    operator fun invoke(arguments: ArgumentSpec? = ArgBuilder(),
+          scope: InterfaceStub<I, ArgumentSpec>.() -> Unit)
         :
-        InterfaceStub<I, ArgBuilder>
+        InterfaceStub<I, ArgumentSpec>
   }
 
-  interface OptionalConfigQuery<I, A> : SchemaStub where I : QInterface, I : QType, A : ArgBuilder {
+  interface OptionalConfigQuery<I, A> : SchemaStub where I : QInterface, I : QType, A : ArgumentSpec {
 
     operator fun invoke(scope: FragmentStub<I>.() -> Unit)
         :
@@ -82,7 +83,7 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
 
   }
 
-  interface ConfigurableQuery<I, A> : SchemaStub where I : QInterface, I : QType, A : ArgBuilder {
+  interface ConfigurableQuery<I, A> : SchemaStub where I : QInterface, I : QType, A : ArgumentSpec {
 
     operator fun invoke(arguments: A, scope: InterfaceStub<I, A>.() -> Unit)
         :
@@ -97,16 +98,16 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
   private
   class QueryImpl<I>(val qproperty: GraphQlProperty) : Query<I> where I : QInterface, I : QType {
 
-    override fun invoke(arguments: ArgBuilder?, scope: InterfaceStub<I, ArgBuilder>.() -> Unit)
+    override fun invoke(arguments: ArgumentSpec?, scope: InterfaceStub<I, ArgumentSpec>.() -> Unit)
         :
-        InterfaceStub<I, ArgBuilder>
-        = InterfaceAdapterImpl<I, ArgBuilder>(qproperty, arguments ?: ArgBuilder()).apply(scope)
+        InterfaceStub<I, ArgumentSpec>
+        = InterfaceAdapterImpl<I, ArgumentSpec>(qproperty, arguments ?: ArgBuilder()).apply(scope)
 
   }
 
   private
   class OptionalConfigQueryImpl<I, A>(val qproperty: GraphQlProperty) : OptionalConfigQuery<I, A>
-      where I : QInterface, I : QType, A : ArgBuilder {
+      where I : QInterface, I : QType, A : ArgumentSpec {
 
     override fun invoke(scope: FragmentStub<I>.() -> Unit): FragmentStub<I> =
         InterfaceAdapterImpl<I, A>(qproperty, null).apply(scope)
@@ -118,7 +119,7 @@ interface InterfaceStub<I, out A : ArgBuilder> : FragmentStub<I>, DelegateProvid
 
   private
   class ConfigurableQueryImpl<I, A>(val qproperty: GraphQlProperty) : ConfigurableQuery<I, A>
-      where I : QInterface, I : QType, A : ArgBuilder {
+      where I : QInterface, I : QType, A : ArgumentSpec {
 
     override fun invoke(arguments: A, scope: InterfaceStub<I, A>.() -> Unit): InterfaceStub<I, A> =
         InterfaceAdapterImpl<I, A>(qproperty, arguments).apply(scope)

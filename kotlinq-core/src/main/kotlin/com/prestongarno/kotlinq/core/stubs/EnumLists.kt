@@ -18,6 +18,7 @@
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
@@ -33,7 +34,7 @@ import kotlin.reflect.KProperty
 interface EnumListStub<T, out A> : DelegateProvider<List<T>>
     where T : Enum<*>,
           T : QEnumType,
-          A : ArgBuilder {
+          A : ArgumentSpec {
 
   var default: T?
 
@@ -53,7 +54,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): OptionalConfigQuery<T, A>
-        where T : Enum<*>, T : QEnumType, A : ArgBuilder =
+        where T : Enum<*>, T : QEnumType, A : ArgumentSpec =
         OptionalConfigQueryImpl(qproperty, enumClass)
 
     internal
@@ -61,7 +62,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): ConfigurableQuery<T, A>
-        where T : Enum<*>, T : QEnumType, A : ArgBuilder =
+        where T : Enum<*>, T : QEnumType, A : ArgumentSpec =
         ConfigurableQueryImpl(qproperty, enumClass)
   }
 
@@ -70,9 +71,9 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
             T : QEnumType {
 
     operator fun invoke(
-        arguments: ArgBuilder? = null,
-        scope: (EnumListStub<T, ArgBuilder>.() -> Unit)? = null
-    ): EnumListStub<T, ArgBuilder>
+        arguments: ArgumentSpec? = null,
+        scope: (EnumListStub<T, ArgumentSpec>.() -> Unit)? = null
+    ): EnumListStub<T, ArgumentSpec>
 
   }
 
@@ -86,10 +87,10 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         invoke(ArgBuilder()).provideDelegate(inst, property)
 
     override fun invoke(
-        arguments: ArgBuilder?,
-        scope: (EnumListStub<T, ArgBuilder>.() -> Unit)?
-    ): EnumListStub<T, ArgBuilder> =
-        newEnumListDelegate<T, ArgBuilder>(
+        arguments: ArgumentSpec?,
+        scope: (EnumListStub<T, ArgumentSpec>.() -> Unit)?
+    ): EnumListStub<T, ArgumentSpec> =
+        newEnumListDelegate<T, ArgumentSpec>(
             qproperty,
             arguments ?: ArgBuilder(),
             enumClass
@@ -99,12 +100,12 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
   interface OptionalConfigQuery<T, A> : DelegateProvider<List<T>>
       where T : Enum<*>,
             T : QEnumType,
-            A : ArgBuilder {
+            A : ArgumentSpec {
 
     operator fun invoke(
         arguments: A,
         scope: (EnumListStub<T, A>.() -> Unit)? = null
-    ): EnumListStub<T, ArgBuilder>
+    ): EnumListStub<T, ArgumentSpec>
 
   }
 
@@ -115,7 +116,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
   class OptionalConfigQueryImpl<T, A>(
       val qproperty: GraphQlProperty,
       val enumClass: KClass<T>
-  ) : OptionalConfigQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+  ) : OptionalConfigQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgumentSpec {
 
     override fun provideDelegate(
         inst: QModel<*>,
@@ -126,7 +127,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
     override fun invoke(
         arguments: A,
         scope: (EnumListStub<T, A>.() -> Unit)?
-    ): EnumListStub<T, ArgBuilder> =
+    ): EnumListStub<T, ArgumentSpec> =
         newEnumListDelegate<T, A>(qproperty, arguments, enumClass).applyNotNull(scope)
 
   }
@@ -134,12 +135,12 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
   interface ConfigurableQuery<T, A> : SchemaStub
       where T : Enum<*>,
             T : QEnumType,
-            A : ArgBuilder {
+            A : ArgumentSpec {
 
     operator fun invoke(
         arguments: A,
         scope: (EnumListStub<T, A>.() -> Unit)? = null
-    ): EnumListStub<T, ArgBuilder>
+    ): EnumListStub<T, ArgumentSpec>
 
   }
 
@@ -147,12 +148,12 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
   class ConfigurableQueryImpl<T, A>(
       val qproperty: GraphQlProperty,
       val enumClass: KClass<T>
-  ) : ConfigurableQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgBuilder {
+  ) : ConfigurableQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgumentSpec {
 
     override fun invoke(
         arguments: A,
         scope: (EnumListStub<T, A>.() -> Unit)?
-    ): EnumListStub<T, ArgBuilder> =
+    ): EnumListStub<T, ArgumentSpec> =
         newEnumListDelegate<T, A>(qproperty, arguments, enumClass).applyNotNull(scope)
 
   }

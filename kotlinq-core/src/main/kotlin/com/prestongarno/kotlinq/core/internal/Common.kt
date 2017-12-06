@@ -17,13 +17,13 @@
 
 package com.prestongarno.kotlinq.core.internal
 
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.PropertyMapper
 import com.prestongarno.kotlinq.core.QInputType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
-import com.prestongarno.kotlinq.core.hooks.FragmentContext
-import com.prestongarno.kotlinq.core.hooks.ModelProvider
+import com.prestongarno.kotlinq.core.api.FragmentContext
+import com.prestongarno.kotlinq.core.api.ModelProvider
 
 
 @Suppress("UNCHECKED_CAST")
@@ -41,8 +41,8 @@ fun Map<String, Any>.stringify(): String = if (entries.isEmpty()) "" else
   entries.joinToString(prefix = "(", postfix = ")", separator = ",") { (k, v) -> "$k: ${formatAs(v)}" }
 
 internal
-fun ArgBuilder?.stringify(): String = this?.let {
-  this.getArguments().stringify().parenthesize()
+fun ArgumentSpec?.stringify(): String = this?.let {
+  arguments.stringify().parenthesize()
 } ?: ""
 
 internal

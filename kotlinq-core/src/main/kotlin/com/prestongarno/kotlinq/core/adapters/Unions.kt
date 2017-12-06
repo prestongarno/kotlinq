@@ -18,19 +18,19 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.QUnionType
-import com.prestongarno.kotlinq.core.hooks.Fragment
-import com.prestongarno.kotlinq.core.hooks.FragmentContext
+import com.prestongarno.kotlinq.core.api.Fragment
+import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.stubs.UnionStub
 import kotlin.reflect.KProperty
 
-fun <T : QUnionType, A : ArgBuilder> newUnionField(
+fun <T : QUnionType, A : ArgumentSpec> newUnionField(
     qproperty: GraphQlProperty,
     unionObject: T,
     arguments: A?
@@ -38,7 +38,7 @@ fun <T : QUnionType, A : ArgBuilder> newUnionField(
 
 @kotlin.Suppress("AddVarianceModifier")
 private
-class UnionAdapterImpl<T : QUnionType, out A : ArgBuilder>(
+class UnionAdapterImpl<T : QUnionType, out A : ArgumentSpec>(
     val qproperty: GraphQlProperty,
     val unionObject: T,
     val arguments: A? = null

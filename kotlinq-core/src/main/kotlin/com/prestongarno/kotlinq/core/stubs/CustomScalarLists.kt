@@ -17,18 +17,18 @@
 
 package com.prestongarno.kotlinq.core.stubs
 
-import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.CustomScalar
 import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.custom.QScalarListMapper
 import com.prestongarno.kotlinq.core.adapters.newCustomScalarListField
-import com.prestongarno.kotlinq.core.hooks.ConfiguredQuery
-import com.prestongarno.kotlinq.core.hooks.NoArgConfig
-import com.prestongarno.kotlinq.core.hooks.OptionalConfiguration
+import com.prestongarno.kotlinq.core.api.ConfiguredQuery
+import com.prestongarno.kotlinq.core.api.NoArgConfig
+import com.prestongarno.kotlinq.core.api.OptionalConfiguration
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : DelegateProvider<List<V>> {
+interface CustomScalarListStub<T : CustomScalar, V, out A : ArgumentSpec> : DelegateProvider<List<V>> {
 
   fun config(scope: A.() -> Unit)
 
@@ -40,12 +40,12 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
     ): Query<T> = QueryImpl(qproperty)
 
     internal
-    fun <T : CustomScalar, A : ArgBuilder> optionalArgStub(
+    fun <T : CustomScalar, A : ArgumentSpec> optionalArgStub(
         qproperty: GraphQlProperty
     ): OptionalConfigQuery<T, A> = OptionalConfigQueryImpl(qproperty)
 
     internal
-    fun <T : CustomScalar, A : ArgBuilder> argStub(
+    fun <T : CustomScalar, A : ArgumentSpec> argStub(
         qproperty: GraphQlProperty
     ): ConfigurableQuery<T, A> = ConfigurableQueryImpl(qproperty)
 
@@ -53,19 +53,19 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
 
   interface Query<T : CustomScalar> : SchemaStub {
     fun <U : QScalarListMapper<V>, V> map(adapter: U)
-        : NoArgConfig<CustomScalarListStub<T, V, ArgBuilder>, List<V>>
+        : NoArgConfig<CustomScalarListStub<T, V, ArgumentSpec>, List<V>>
   }
 
-  interface OptionalConfigQuery<T : CustomScalar, in A : ArgBuilder> : SchemaStub {
+  interface OptionalConfigQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
     fun <U : QScalarListMapper<V>, V> map(
         adapter: U
-    ): OptionalConfiguration<CustomScalarListStub<T, V, ArgBuilder>, List<V>, A>
+    ): OptionalConfiguration<CustomScalarListStub<T, V, ArgumentSpec>, List<V>, A>
   }
 
-  interface ConfigurableQuery<T : CustomScalar, in A : ArgBuilder> : SchemaStub {
+  interface ConfigurableQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
     fun <V> map(
         adapter: QScalarListMapper<V>
-    ): ConfiguredQuery<CustomScalarListStub<T, V, ArgBuilder>, A>
+    ): ConfiguredQuery<CustomScalarListStub<T, V, ArgumentSpec>, A>
   }
 
   /*********************************************************************************
@@ -76,20 +76,20 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
 
     override fun <U : QScalarListMapper<V>, V> map(
         adapter: U
-    ): NoArgConfig<CustomScalarListStub<T, V, ArgBuilder>, List<V>> =
+    ): NoArgConfig<CustomScalarListStub<T, V, ArgumentSpec>, List<V>> =
         NoArgConfig.new { args ->
-          newCustomScalarListField<T, U, V, ArgBuilder>(qproperty, adapter, args)
+          newCustomScalarListField<T, U, V, ArgumentSpec>(qproperty, adapter, args)
         }
   }
 
   private
-  class OptionalConfigQueryImpl<T : CustomScalar, in A : ArgBuilder>(
+  class OptionalConfigQueryImpl<T : CustomScalar, A : ArgumentSpec>(
       val qproperty: GraphQlProperty
   ) : OptionalConfigQuery<T, A> {
 
     override fun <U : QScalarListMapper<V>, V> map(
         adapter: U
-    ): OptionalConfiguration<CustomScalarListStub<T, V, ArgBuilder>, List<V>, A> =
+    ): OptionalConfiguration<CustomScalarListStub<T, V, ArgumentSpec>, List<V>, A> =
         OptionalConfiguration.new { args ->
           newCustomScalarListField(qproperty, adapter, args)
         }
@@ -97,13 +97,13 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgBuilder> : Delega
   }
 
   private
-  class ConfigurableQueryImpl<T : CustomScalar, in A : ArgBuilder>(
+  class ConfigurableQueryImpl<T : CustomScalar, A : ArgumentSpec>(
       val qproperty: GraphQlProperty
   ) : ConfigurableQuery<T, A> {
 
     override fun <V> map(
         adapter: QScalarListMapper<V>
-    ): ConfiguredQuery<CustomScalarListStub<T, V, ArgBuilder>, A> =
+    ): ConfiguredQuery<CustomScalarListStub<T, V, ArgumentSpec>, A> =
         ConfiguredQuery.new { args ->
           newCustomScalarListField(qproperty, adapter, args)
         }

@@ -79,6 +79,7 @@ subprojects {
 
   ext.clientId = project.name
   group 'com.prestongarno.kotlinq'
+  ext.groupId = clientId
 
   version = getVersion(rootProject)
 
@@ -184,7 +185,7 @@ task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
   g.inputs.files("kotlinq-test-api/src")
 
   //noinspection GroovyAssignabilityCheck
-  g.tasks = ['compileGraphQL', 'publishToMavenLocal']
+  g.tasks = ['clean', 'compileGraphQL', 'publishToMavenLocal', 'install']
 }
 
 
