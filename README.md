@@ -19,7 +19,7 @@ lets you auto-complete your way to safe, reliable queries and mutations
 
 ## Documentation
 
-The documentation is moving (slowly) to a dedicated site. [Check it out](https://prestongarno.github.io/kotlinq/)
+The documentation is moving (slowly) to a dedicated site. [Check it out](http://kotlinq.org)
 
 ## Modules
 
