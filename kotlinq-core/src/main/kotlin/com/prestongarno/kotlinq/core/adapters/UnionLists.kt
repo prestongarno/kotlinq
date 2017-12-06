@@ -71,7 +71,7 @@ class UnionListAdapter<I : QUnionType, out A : ArgumentSpec>(
 
 @CollectionDelegate(QModel::class)
 private
-class UnionListStubImpl(
+data class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any>
@@ -79,7 +79,7 @@ class UnionListStubImpl(
     QField<List<QModel<*>>>,
     FragmentContext {
 
-  private var value: List<QModel<QType>> = mutableListOf()
+  private var value: List<QModel<QType>> = emptyList()
 
   override fun accept(result: Any?): Boolean {
     return if (result is Collection<*>) {

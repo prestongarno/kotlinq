@@ -19,6 +19,7 @@ package com.prestongarno.kotlinq.core.properties
 
 import kotlin.reflect.KProperty
 
+
 /**
  * The immutable object which ultimately ends up inside of
  * a field adapter class to denote reflective information about the GraphQL field
@@ -85,12 +86,10 @@ private data class PropertyImpl @JvmOverloads constructor(
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
-    if (javaClass != other?.javaClass) return false
 
-    other as PropertyImpl
+    other as? GraphQlProperty ?: return false
 
     if (graphqlType != other.graphqlType) return false
-    if (kproperty != other.kproperty) return false
     if (isList != other.isList) return false
     if (graphqlName != other.graphqlName) return false
     if (typeKind != other.typeKind) return false

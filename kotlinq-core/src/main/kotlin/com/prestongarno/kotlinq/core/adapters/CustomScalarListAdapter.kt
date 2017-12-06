@@ -79,4 +79,10 @@ private data class CustomScalarListStubImpl<out Q>(
     }
     return true
   }
+
+  override fun equals(other: Any?): Boolean {
+    return (qproperty == (other as? Adapter)?.qproperty)
+        && other.args == args
+        && adapter == (other as? CustomScalarListStubImpl<*>)?.adapter
+  }
 }

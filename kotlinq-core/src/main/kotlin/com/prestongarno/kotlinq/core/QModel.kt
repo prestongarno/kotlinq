@@ -65,15 +65,13 @@ open class QModel<out T : QType>(val model: T) {
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
-    if (javaClass != other?.javaClass) return false
+    if (other !is QModel<*>) return false
+    if (graphqlType != other.graphqlType) return false
+    if (fields.size != other.fields.size) return false
 
-    other as QModel<*>
-
-    if (model != other.model) return false
-    if (resolved != other.resolved) return false
-    if (!fields.entries.containsAll(other.fields.entries)) return false
-
-    return true
+    return fields.entries.find {
+      other.fields[it.key] != it.value
+    } == null
   }
 
   override fun hashCode(): Int {

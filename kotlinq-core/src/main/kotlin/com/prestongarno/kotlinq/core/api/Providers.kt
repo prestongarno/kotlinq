@@ -39,5 +39,9 @@ data class Fragment(val initializer: () -> QModel<QType>) {
   override fun toString(): String {
     return "... on ${model.graphqlType}${model.toGraphql()}"
   }
+
+  override fun equals(other: Any?): Boolean {
+    return model == (other as? Fragment)?.model
+  }
 }
 

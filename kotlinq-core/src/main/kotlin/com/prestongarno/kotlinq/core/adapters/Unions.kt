@@ -60,7 +60,7 @@ class UnionAdapterImpl<T : QUnionType, out A : ArgumentSpec>(
 }
 
 @ValueDelegate(QModel::class) private
-class UnionStubImpl(
+data class UnionStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()

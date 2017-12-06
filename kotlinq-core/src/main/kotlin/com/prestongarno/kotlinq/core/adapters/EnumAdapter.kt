@@ -102,7 +102,7 @@ class EnumAdapterImpl<T, out A>(
 @ValueDelegate(Enum::class)
 private data class EnumFieldImpl<T>(
     override val qproperty: GraphQlProperty,
-    private val enumClass: KClass<T>,
+    val enumClass: KClass<T>,
     override val args: Map<String, Any>,
     private val default: T? = null
 ) : QField<T>, Adapter where T : Enum<*>, T : QEnumType {
@@ -120,4 +120,5 @@ private data class EnumFieldImpl<T>(
   override fun toRawPayload(): String {
     return qproperty.graphqlName + args.stringify()
   }
+
 }

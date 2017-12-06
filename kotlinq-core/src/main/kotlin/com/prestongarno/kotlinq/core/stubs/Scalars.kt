@@ -43,6 +43,26 @@ sealed class PrimitiveStub(
       if (args.isNotEmpty())
         args.entries.joinToString(",", "(", ")") { "${it.key}: ${formatAs(it.value)}" }
       else ""
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as PrimitiveStub
+
+    if (qproperty != other.qproperty) return false
+    if (args != other.args) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = qproperty.hashCode()
+    result = 31 * result + args.hashCode()
+    return result
+  }
+
+
 }
 
 @ValueDelegate(String::class)
