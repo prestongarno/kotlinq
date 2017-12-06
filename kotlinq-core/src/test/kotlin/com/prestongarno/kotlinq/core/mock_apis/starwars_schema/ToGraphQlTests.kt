@@ -31,16 +31,16 @@ class ToGraphQlTests {
 
     val expect = """
       |{
-      |  search {
+      |  search(text: \"Han Solo\") {
       |    ... on Human {
       |      name
       |      mass
       |      friendsConnection {
       |        totalCount
       |        friends {
-      |          ... on Human {
+      |          ... on Droid {
       |            name
-      |            id
+      |            primaryFunction
       |          }
       |        }
       |      }

@@ -18,8 +18,6 @@
 buildscript {
   ext.kotlin_version = '1.2.0'
   ext.clientId = projects.project.name
-  ext.mockTestDependencies =
-          rootProject.project("kotlinq-core").buildDir.absolutePath + "/test-files"
   ext.sourceCompatibility = 1.8
   ext.projectDescription = "kotlinq: a kotlin client for graphql"
   ext.gitBaseUrl = GIT_BASE_URL + '/kotlinq'
@@ -178,7 +176,7 @@ task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
   dependsOn(":kotlinq-core:install")
 
   inputs.files("kotlinq-test-api/build/libs")
-  outputs.dirs(mockTestDependencies)
+  outputs.dirs("kotlinq-test-api/src/main/kotlin")
   buildFile = 'kotlinq-test-api/build.gradle'
   //noinspection GroovyAssignabilityCheck
   g.startParameter.projectProperties.put("version", getVersion())

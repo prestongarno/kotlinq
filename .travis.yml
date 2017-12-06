@@ -4,7 +4,7 @@ jdk:
 - oraclejdk8
 
 script: 
-  - ./gradlew clean evaluateTestApi build test --info
+  - ./gradlew evaluateTestApi build test
 
 branches:
   except:
@@ -34,7 +34,7 @@ before_install:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   - echo $GMAIL_GPG | gpg --decrypt --passphrase-fd 0 .buildscript/gradle.properties.gpg >> ~/.gradle/gradle.properties
-  - ./kotlinq-core/src/test/resources/test-server/install.sh
+  #- ./kotlinq-core/src/test/resources/test-server/install.sh
 
 after_success:
   - ./.buildscript/snapshot.sh

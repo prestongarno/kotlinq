@@ -17,17 +17,27 @@
 
 package com.prestongarno.kotlinq.core.mock_apis.starwars_schema
 
+import com.facebook.Character
+import com.facebook.Droid
 import com.facebook.FriendsConnection
 import com.facebook.Human
 import com.facebook.Query
 import com.facebook.SearchResult
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
+import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 
 
-class StarWarsQuery(query: String, fragments: SearchResult.() -> Unit) : QModel<Query>(Query) {
+class StarWarsQuery(
+    val query: String? = "",
+    fragments: SearchResult.() -> Unit
+) : QModel<Query>(Query) {
 
-  val search by model.search {
+  val search by model.search(Query.SearchArgs()) {
+    config {
+      text = this@StarWarsQuery.query
+    }
     fragment(fragments)
   }
 
@@ -39,19 +49,42 @@ class HumanModel : QModel<Human>(Human) {
 
   val mass by model.mass
 
-  val friendsConnection by model.friendsConnection.query(::FriendsConn)
+  val friendsConnection by model.friendsConnection.query {
+    FriendsConn{
+      on(::DroidBaseModel)
+    }
+  }
 }
 
-class FriendsConn : QModel<FriendsConnection>(FriendsConnection) {
+class FriendsConn(
+    spread: InterfaceListStub<Character, ArgumentSpec>.() -> Unit
+) : QModel<FriendsConnection>(FriendsConnection) {
 
   val totalCount by model.totalCount
 
-  val friends by model.friends {
-    on(::NestedHumanModel)
-  }
+  val friends by model.friends.invoke(scope = spread)
 }
 
 class NestedHumanModel : QModel<Human>(Human) {
   val name by model.name
   val id by model.id.map(StringScalarMapper { it })
 }
+
+open class DroidBaseModel : QModel<Droid>(Droid) {
+  val name by model.name
+  val primaryFunction by model.primaryFunction
+}
+
+class DroidModel : DroidBaseModel() {
+
+  val friendsConn by model.friendsConnection.query {
+    FriendsConn {
+      on(::HumanModel)
+      on(::DroidBaseModel)
+    }
+  }
+
+  val appearsIn by model.appearsIn
+
+}
+
