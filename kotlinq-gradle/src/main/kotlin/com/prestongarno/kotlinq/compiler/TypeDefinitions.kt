@@ -90,13 +90,13 @@ class TypeDef(context: GraphQLSchemaParser.TypeDefContext)
 
   override val name: String = context.typeName().Name().text
 
-  override val fields = context.fieldDef().map { FieldDefinition(it) }.toSet()
+  override val fields = context.fieldDef().map(::FieldDefinition).toSet()
 
   lateinit var supertypes: Set<InterfaceDef>
 
   override fun toKotlin(): TypeSpec = TypeSpec.objectBuilder(name).apply {
     addSuperinterface(schemaTypeClass)
-    addProperties(fields.map { it.toKotlin() })
+    addProperties(fields.map(FieldDefinition::toKotlin))
     addSuperinterfaces(supertypes.map {
       it.name.asTypeName()
     })

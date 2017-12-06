@@ -18,6 +18,14 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.google.common.truth.Truth.assertThat
+import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.CustomScalar
+import com.prestongarno.kotlinq.core.QInterface
+import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 import org.junit.Test
 import com.prestongarno.kotlinq.core.*
 import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
@@ -47,18 +55,26 @@ class InterfaceMultiInheritance : JavacTest() {
     assertThat(compileOut(schema).minusPackageNames()).isEqualTo("""
         |
         |interface Entity : QType, QInterface {
-        |  val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
+        |  val friends: InterfaceListStub.ConfigurableQuery<Entity, out Entity.BaseFriendsArgs>
         |
         |  interface BaseFriendsArgs : ArgumentSpec {
         |    abstract val query: String
+        |
+        |    abstract var first: Int?
+        |
+        |    abstract var after: ID?
         |  }
         |}
         |
         |
         |interface Actor : QType, QInterface {
-        |  val friends: InterfaceListStub.OptionalConfigQuery<Entity, BaseFriendsArgs>
+        |  val friends: InterfaceListStub.ConfigurableQuery<Entity, out Actor.BaseFriendsArgs>
         |
-        |  interface BaseFriendsArgs : ArgumentSpec
+        |  interface BaseFriendsArgs : ArgumentSpec {
+        |    abstract var first: Int?
+        |
+        |    abstract var after: ID?
+        |  }
         |}
         |
         |
@@ -68,9 +84,9 @@ class InterfaceMultiInheritance : JavacTest() {
         |  class FriendsArgs(query: String) : ArgBuilder(), Entity.BaseFriendsArgs, Actor.BaseFriendsArgs {
         |    override val query: String by arguments.notNull<String>("query", query)
         |
-        |    var first: Int? by arguments
+        |    override var first: Int? by arguments
         |
-        |    var after: ID? by arguments
+        |    override var after: ID? by arguments
         |  }
         |}
         |
@@ -90,36 +106,3 @@ private fun String.minusPackageNames() = this.replace("com.prestongarno.kotlinq.
     .replace("core.", "")
     .replace("QSchemaType.", "")
 
-
-interface Entity : QType, QInterface {
-
-  val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
-
-  interface BaseFriendsArgs : ArgumentSpec {
-    abstract val query: String
-  }
-}
-
-
-interface Actor : QType, QInterface {
-  val friends: InterfaceListStub.ConfigurableQuery<Entity, BaseFriendsArgs>
-
-  interface BaseFriendsArgs : ArgumentSpec
-}
-class FriendsArgs(query: String) : ArgBuilder(), Entity.BaseFriendsArgs, Actor.BaseFriendsArgs {
-
-  override val query: String by arguments.notNull<String>("query", query)
-
-  var first: Int? by arguments
-
-  var after: ID? by arguments
-}
-
-
-object Wookie : QType, Entity, Actor {
-  override val friends: InterfaceListStub.ConfigurableQuery<Entity, FriendsArgs> get() = TODO()
-
-}
-
-
-object ID : CustomScalar

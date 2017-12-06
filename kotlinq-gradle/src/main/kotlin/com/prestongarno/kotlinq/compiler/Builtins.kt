@@ -17,19 +17,14 @@
 
 package com.prestongarno.kotlinq.compiler
 
-enum class ScalarSymbols(@JvmField val typeDef: ScalarType) {
-  @JvmStatic
+enum class ScalarSymbols(val typeDef: ScalarType) {
   INT(IntType),
-  @JvmStatic
   BOOLEAN(BooleanType),
-  @JvmStatic
   FLOAT(FloatType),
-  @JvmStatic
   STRING(StringType);
 
   companion object {
-    @JvmStatic
-    val named: Map<String, ScalarSymbols> by lazy {
+    @JvmStatic val named: Map<String, ScalarSymbols> by lazy {
       values().map { Pair(it.typeDef.name, it) }.toMap()
     }
   }

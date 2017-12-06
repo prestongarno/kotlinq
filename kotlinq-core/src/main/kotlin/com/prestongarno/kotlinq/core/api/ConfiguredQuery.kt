@@ -39,7 +39,7 @@ import kotlin.reflect.KProperty
  * @param D : The type of SchemaStub which will provide a delegate type <T>
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface ConfiguredQuery<out D : DelegateProvider<*>, A : ArgumentSpec> : SchemaStub {
+interface ConfiguredQuery<out D : DelegateProvider<*>, in A : ArgumentSpec> : SchemaStub {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
@@ -58,7 +58,7 @@ interface ConfiguredQuery<out D : DelegateProvider<*>, A : ArgumentSpec> : Schem
  * @param D : The type of [DelegateProvider] which this field supplies
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, A : ArgumentSpec> : SchemaStub {
+interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgumentSpec> : SchemaStub {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
@@ -99,7 +99,7 @@ interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
  * @param constructor a function that constructs a new [DelegateProvider]
  */
 private
-class DefaultConfigurableQuery<out T : DelegateProvider<*>, A : ArgumentSpec>(
+class DefaultConfigurableQuery<out T : DelegateProvider<*>, in A : ArgumentSpec>(
     private val constructor: (A) -> T
 ) : ConfiguredQuery<T, A> {
 
@@ -114,7 +114,7 @@ class DefaultConfigurableQuery<out T : DelegateProvider<*>, A : ArgumentSpec>(
  * @param constructor a function that constructs a new [DelegateProvider]
  */
 private
-class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, A : ArgumentSpec>(
+class DefaultOptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgumentSpec>(
     private val constructor: (A?) -> D
 ) : OptionalConfiguration<D, T, A> {
 

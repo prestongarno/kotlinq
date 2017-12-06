@@ -22,10 +22,12 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
+
+fun notNullDelegateCode(arg: ScopedSymbol, targetName: String = "arguments"): CodeBlock {
+  return CodeBlock.of("$targetName.notNull<%T>(\"${arg.name}\", ${arg.name})", arg.type.name.asTypeName())
+}
 
 internal class ArgumentSpecDef(val field: FieldDefinition, val context: ScopedDeclarationType<*>) : KotlinTypeElement {
 
@@ -42,53 +44,19 @@ private fun ArgumentSpecDef.toInterface(): TypeSpec =
     TypeSpec.interfaceBuilder(name)
         .addSuperinterface(ArgumentSpec::class)
         .addProperties(
-            field.arguments.filterNot { it.nullable }.map { arg ->
-              PropertySpec.builder(
-                  arg.name,
-                  arg.type.name.asTypeName(),
-                  KModifier.ABSTRACT).build()
-            }
+            field.arguments.map(ArgumentDefinition::toKotlin)
         ).build()
 
-// mom's spaghetti
 private fun ArgumentSpecDef.toClass(): TypeSpec = TypeSpec.classBuilder(name).apply {
   superclass(ArgBuilder::class)
   addSuperinterfaces(field.inheritsFrom.map {
     it.symtab[field.name]!!.name
     ClassName("", it.name).nestedClass("Base" + name)
-  })
+  }).addProperties(field.arguments.map(ArgumentDefinition::toKotlin))
+      .build()
   // add constructor for non-nullable input arg arguments
   if (field.arguments.find { !it.nullable } != null) primaryConstructor(FunSpec.constructorBuilder()
       .addParameters(field.arguments.filterNot(ArgumentDefinition::nullable)
-          .map(ArgumentDefinition::toKotlin))
-      .build())
-      .addProperties(field.arguments.filter {
-        !it.nullable
-      }.map {
-        PropertySpec.builder(
-            it.name,
-            it.type.name.asTypeName(),
-            *(if (field.inheritsFrom.find { superiface ->
-              superiface.symtab[field.name]
-                  ?.arguments?.find { arg -> arg.name == it.name } != null
-            } != null) arrayOf(KModifier.OVERRIDE) else emptyArray())
-        ).delegate(notNullDelegateCode(it))
-            .build()
-      })
-
-  field.arguments.filter { it.nullable }.map {
-    // add nullable properties for config { } dsl block
-    PropertySpec.builder(it.name,
-        it.typeName
-            .asTypeName()
-            .asNullable())
-        .mutable(true)
-        .delegate("arguments")
-        .build()
-  }.let(this::addProperties)
+          .map { it.asParameter.toKotlin() }).build())
 
 }.build()
-
-fun notNullDelegateCode(arg: ScopedSymbol, targetName: String = "arguments"): CodeBlock {
-  return CodeBlock.of("$targetName.notNull<%T>(\"${arg.name}\", ${arg.name})", arg.type.name.asTypeName())
-}
