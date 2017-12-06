@@ -68,8 +68,8 @@ interface TypeStub<out T, out U, out A : ArgumentSpec> : DelegateProvider<T> whe
     }
   }
 
-  interface OptionalConfigQuery<U : QType, out A : ArgumentSpec> : SchemaStub {
-    fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<TypeStub<T, U, A>, T, out A>
+  interface OptionalConfigQuery<U : QType, A : ArgumentSpec> : SchemaStub {
+    fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<TypeStub<T, U, A>, T, A>
 
     companion object {
       internal
@@ -85,8 +85,8 @@ interface TypeStub<out T, out U, out A : ArgumentSpec> : DelegateProvider<T> whe
     }
   }
 
-  interface ConfigurableQuery<U : QType, out A : ArgumentSpec> : SchemaStub {
-    fun <T : QModel<U>> query(init: () -> T): ConfiguredQuery<TypeStub<T, U, A>, out A>
+  interface ConfigurableQuery<U : QType, A : ArgumentSpec> : SchemaStub {
+    fun <T : QModel<U>> query(init: () -> T): ConfiguredQuery<TypeStub<T, U, A>, A>
 
     companion object {
       internal
