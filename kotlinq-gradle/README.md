@@ -1,7 +1,7 @@
 # kotlinq-gradle
 
 [ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC2) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC2/link)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-gradle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-gradle)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.kotlinq/kotlinq-gradle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.kotlinq/kotlinq-gradle)
  [ ![jcenter](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC2) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC2/link)
 
 Generates a static representation of your schema
