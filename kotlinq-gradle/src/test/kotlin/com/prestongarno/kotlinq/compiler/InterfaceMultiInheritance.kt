@@ -28,7 +28,6 @@ import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 import org.junit.Test
 import com.prestongarno.kotlinq.core.*
-import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 
 class InterfaceMultiInheritance : JavacTest() {
 

@@ -232,12 +232,12 @@ interface QSchemaType {
 
       inline fun <reified T : QType, A : ArgumentSpec> optionalConfigStub()
           :
-          StubProvider<TypeListStub.OptionalConfigQuery<T, out A>> =
+          StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
           delegationContext.type.list.optionalConfigStub(T::class)
 
       inline fun <reified T : QType, A : ArgumentSpec> configStub()
           :
-          StubProvider<TypeListStub.ConfigurableQuery<T, out A>> =
+          StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
           delegationContext.type.list.configStub(T::class)
     }
   }
