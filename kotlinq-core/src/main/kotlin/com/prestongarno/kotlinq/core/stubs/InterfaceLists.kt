@@ -125,9 +125,11 @@ interface InterfaceListStub<I, out A> :
             I : QType,
             A : ArgumentSpec {
 
-    override fun invoke(
-        arguments: A, scope: InterfaceListStub<I, A>.() -> Unit
-    ): InterfaceListStub<I, A> =
-        newInterfaceListStub<I, A>(qproperty, arguments).apply(scope)
+    override fun <B : A> invoke(
+        arguments: B,
+        scope: InterfaceListStub<I, B>.() -> Unit
+    ): InterfaceListStub<I, B> =
+      newInterfaceListStub<I, B>(qproperty, arguments).apply(scope)
+
   }
 }

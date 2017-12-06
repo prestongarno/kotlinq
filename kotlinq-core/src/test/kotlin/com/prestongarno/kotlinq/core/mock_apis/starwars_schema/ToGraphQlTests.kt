@@ -18,7 +18,6 @@
 package com.prestongarno.kotlinq.core.mock_apis.starwars_schema
 
 import com.google.common.truth.Truth.assertThat
-import com.prestongarno.kotlinq.core.primitives.eq
 import org.junit.Test
 
 
