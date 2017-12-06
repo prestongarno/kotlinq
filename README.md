@@ -1,7 +1,7 @@
 ***a Kotlin GraphQL client: type-safe DSL generation & runtime library***
 -----------------------------
 
-[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC1) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC1/link)
+[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC2) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC2/link)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
 [![Build Status](https://travis-ci.org/prestongarno/ktq.svg?branch=master)](https://travis-ci.org/prestongarno/ktq)
 
@@ -111,19 +111,19 @@ __\<\< Note: version 0.3 is backwards-incompatible. It isn't a final release \\\
 
 To use in a project, add the core & http libraries to a gradle buildscript:
 
-      api 'com.prestongarno.kotlinq:kotlinq-core:0.3.0-RC1'
-      api 'com.prestongarno.kotlinq:kotlinq-http:0.3.0-RC1'
+      api 'com.prestongarno.kotlinq:kotlinq-core:0.3.0-RC2'
+      api 'com.prestongarno.kotlinq:kotlinq-http:0.3.0-RC2'
 
 Make sure to include the [ gradle plugin ](ktq-gradle) and read
  the gradle syntax for configuring compilation of graphql SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
-      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0-RC1'
+      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0-RC2'
 
 And apply the plugin:
 
       plugins {
-        id 'com.prestongarno.kotlin1' version '0.3.0-RC1'
+        id 'com.prestongarno.kotlin1' version '0.3.0-RC2'
       }
 
 
