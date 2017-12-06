@@ -98,3 +98,7 @@ publishing {
     mavenLocal()
   }
 }
+
+clean.doFirst {
+  delete 'kotlinq-test-api/src/main/kotlin'
+}
