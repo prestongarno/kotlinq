@@ -22,6 +22,7 @@ import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.compiler.ParameterQualification.Companion.nullability
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.argumentsMatching
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
+import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.stubs.IntDelegate
@@ -124,7 +125,7 @@ class YelpPublicAPICompile {
 
   @Test fun `argument builder class with non-null parameter is non-nullable constructor parameter`() {
     val argClass = loader.loadClass("com.yelp.Query\$BusinessArgs")
-    argClass directlyImplements ArgumentSpec::class
+    argClass directlyImplements ArgBuilder::class
     argClass without nullability constructorParametersContain "id"
   }
 
@@ -157,7 +158,7 @@ class YelpPublicAPICompile {
   @Test fun `graphql field with arguments correct return type`() = loader.loadClass("com.yelp.Query") {
 
     val businessArgsClass = loader.loadClass("com.yelp.Query\$BusinessArgs")
-    businessArgsClass directlyImplements ArgumentSpec::class
+    businessArgsClass directlyImplements ArgBuilder::class
 
     val businessClass = loader.loadClass("com.yelp.Business")
     businessClass directlyImplements QType::class
@@ -189,7 +190,7 @@ class YelpPublicAPICompile {
   @Test fun `graphql arguments on field is enforced in argbuilder`() = loader.loadClass("com.yelp.Query") {
 
     val businessBestMatchArgs = loader.loadClass("com.yelp.Query\$Business_match_bestArgs")
-    businessBestMatchArgs directlyImplements ArgumentSpec::class
+    businessBestMatchArgs directlyImplements ArgBuilder::class
     businessBestMatchArgs without nullability constructorParametersMatchExactly mapOf(
         "name" to String::class,
         "city" to String::class,
