@@ -185,7 +185,7 @@ task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
   g.inputs.files("kotlinq-test-api/src")
 
   //noinspection GroovyAssignabilityCheck
-  g.tasks = ['clean', 'compileGraphQL', 'publishToMavenLocal']
+  g.tasks = ['clean', 'compileGraphQL', 'publishToMavenLocal', 'install']
 }
 
 
