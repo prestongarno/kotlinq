@@ -22,10 +22,8 @@ import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.stubs.StringStub
 import com.prestongarno.kotlinq.core.stubs.UnionStub
-import com.prestongarno.kotlinq.core.type.Address
 import com.prestongarno.kotlinq.core.type.BasicTypeList.PersonModel
 import com.prestongarno.kotlinq.core.type.Person
-import com.prestongarno.kotlinq.core.type.TypeStubQueryable
 import com.prestongarno.kotlinq.core.type.TypeStubQueryable.*
 import org.junit.Test
 
@@ -189,22 +187,30 @@ class ModelEquality {
 
   @Test fun toGraphQL() {
 
-    extractedPayload(MPersonModel()).println()
+    extractedPayload(MPersonModel()).assertBracketsMatch()
 
     val query = EqualityImpl("ZR1") {
       on {
         AirplaneFrag2 {
-          //onPerson(::MPersonModel)
+          onPerson(::MPersonModel)
           onOrganization(::OrganizationModel)
         }
       }
     }
 
-    //extractedPayload(query).println()
+    extractedPayload(query).apply {
+      assertThat(this)
+          .isEqualTo("{search(keyword: \\\"ZR1\\\"){... on Airplane{owner{... on Organization{type," +
+              "members{age,name},name}... on Person{address{line1},age,name},},model},}}")
+      this.assertBracketsMatch()
+    }
   }
 }
 
-private fun <Z : Adapter> QModel<*>.getDelegate(named: String): Z = fields[named] as? Z
-    ?: throw IllegalArgumentException("Field $named is not of that type!")
+@Suppress("UNCHECKED_CAST") private fun <Z : Adapter> QModel<*>.getDelegate(named: String): Z =
+    fields[named] as? Z ?: throw IllegalArgumentException("Field $named is not of that type!")
 
 private fun Any?.println() = println(this)
+
+private fun String.assertBracketsMatch() =
+    count { it == '{' } eq count { it == '}' }

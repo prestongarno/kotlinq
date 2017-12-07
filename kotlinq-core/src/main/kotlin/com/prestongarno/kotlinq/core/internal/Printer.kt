@@ -19,9 +19,12 @@ package com.prestongarno.kotlinq.core.internal
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
+import com.prestongarno.kotlinq.core.stubs.EnumStub
+import com.prestongarno.kotlinq.core.stubs.PrimitiveStub
 import java.util.*
 
 private const val INDENT = "  "
@@ -93,8 +96,10 @@ fun extractedPayload(root: QModel<*>): String {
         pushField(curr.value)
         continue
       } else if (curr is FragmentContext) {
-        builder.append(enterModel)
+        pushField(curr)
         curr.fragments.forEach { pushField(it) }
+        builder.append(enterModel)
+        continue
       }
 
     } else if (curr is Fragment) {
@@ -106,17 +111,25 @@ fun extractedPayload(root: QModel<*>): String {
       stack.addFirst(curr)
       curr.getFields().forEach { stack.addFirst(it) }
       builder.append(enterModel)
+      continue
     }
 
-    if (stack.isNotEmpty() && stack.first is QModel<*>) {
-      while (stack.isNotEmpty() && stack.removeFirst() is QModel<*>) {
+    if (stack.isNotEmpty()
+        && (stack.first is QModel<*>
+        || stack.first is FragmentContext)) {
+      while (stack.isNotEmpty()
+          && (stack.first is QModel<*>
+          || stack.first is FragmentContext)) {
+        stack.removeFirst()
         builder.append(exitModel)
+        if (stack.isNotEmpty() && stack.first is Adapter)
+          builder.append(",")
       }
-      if (stack.isNotEmpty() && stack.first is Adapter) {
-        builder.append(",")
-      }
+    } else if (stack.isNotEmpty() && (stack.first is Adapter)) {
+      builder.append(",")
     }
 
   }
+
   return builder.toString()
 }
