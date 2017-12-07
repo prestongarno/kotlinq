@@ -74,11 +74,10 @@ open class QModel<out T : QType>(val model: T) {
     } == null
   }
 
-  override fun hashCode(): Int {
-    var result = model.hashCode()
-    result = 31 * result + resolved.hashCode()
-    return result
-  }
+  override fun hashCode(): Int =
+      fields.entries.fold(initial = graphqlType.hashCode()) { acc, entry ->
+        acc * 31 * entry.value.hashCode()
+      }
 
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
       fields.entries.joinToString(",", "[", "]") { it.value.qproperty.toString() }

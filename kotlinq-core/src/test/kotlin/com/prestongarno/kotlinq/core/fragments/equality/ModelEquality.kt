@@ -13,16 +13,21 @@ import com.prestongarno.kotlinq.core.QSchemaType.QUnion
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.QUnionType
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.primitives.eq
+import com.prestongarno.kotlinq.core.primitives.neq
 import com.prestongarno.kotlinq.core.stubs.FloatDelegate
+import com.prestongarno.kotlinq.core.stubs.FloatStub
 import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.stubs.StringStub
 import com.prestongarno.kotlinq.core.stubs.UnionStub
+import com.prestongarno.kotlinq.core.type.Address
 import com.prestongarno.kotlinq.core.type.BasicTypeList.PersonModel
 import com.prestongarno.kotlinq.core.type.Person
+import com.prestongarno.kotlinq.core.type.TypeStubQueryable
+import com.prestongarno.kotlinq.core.type.TypeStubQueryable.*
 import org.junit.Test
-import kotlin.reflect.jvm.isAccessible
 
 /*********************************************************
  *  Manually-created schema definition
@@ -124,6 +129,16 @@ open class AirplaneFrag2(spread: Entity.() -> Unit) : AirplaneFrag1() {
   val owner by model.owner { fragment(spread) }
 }
 
+open class MPersonModel : PersonModel() {
+  val address by model.address.query(::DefaultAddress)
+}
+
+open class OrganizationModel : QModel<Organization>(Organization) {
+  val name by model.name
+  val members by model.members.query(::PersonModel)
+  val type by model.type
+}
+
 /*********************************************************
  *  Class with test cases
  *********************************************************/
@@ -136,17 +151,29 @@ class ModelEquality {
         .isNotEqualTo(AirplaneFrag1())
   }
 
-  @Test fun instanceDelegateCheck() {
-
-
-    val frag0 = AirplaneFrag0()
+  @Test fun delegatesPropertyEquality() {
 
     val f = AirplaneFrag0().getDelegate<StringStub>("model")
 
-    val g = AirplaneFrag0().getDelegate<StringStub>("model")
+    val g = AirplaneFrag1().getDelegate<StringStub>("model")
 
     f eq g
 
+    val h = AirplaneFrag0().getDelegate<FloatStub>("maxSpeed")
+
+    val i = AirplaneFrag0().getDelegate<FloatStub>("maxSpeed")
+
+    h eq i
+
+    val j = AirplaneFrag2({ onPerson(::PersonModel) }).getDelegate<Adapter>("owner")
+
+    class AirplaneFragLocal() : AirplaneFrag2({ onPerson(::PersonModel) }) {
+      val smthingElse by model.maxPassengers
+    }
+
+    j eq AirplaneFragLocal().getDelegate("owner")
+
+    AirplaneFrag2({ onPerson(::PersonModel) }) neq AirplaneFragLocal()
   }
 
   @Test fun simpleModelEqualityCheck() {
@@ -159,8 +186,25 @@ class ModelEquality {
 
     ctor() eq ctor()
   }
+
+  @Test fun toGraphQL() {
+
+    extractedPayload(MPersonModel()).println()
+
+    val query = EqualityImpl("ZR1") {
+      on {
+        AirplaneFrag2 {
+          //onPerson(::MPersonModel)
+          onOrganization(::OrganizationModel)
+        }
+      }
+    }
+
+    //extractedPayload(query).println()
+  }
 }
 
 private fun <Z : Adapter> QModel<*>.getDelegate(named: String): Z = fields[named] as? Z
     ?: throw IllegalArgumentException("Field $named is not of that type!")
+
 private fun Any?.println() = println(this)

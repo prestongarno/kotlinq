@@ -175,8 +175,8 @@ task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
   dependsOn(":kotlinq-gradle:install")
   dependsOn(":kotlinq-core:install")
 
-  inputs.files("kotlinq-test-api/build/libs")
-  outputs.dirs("kotlinq-test-api/src/main/kotlin")
+  inputs.files("kotlinq-test-api/src")
+  outputs.dirs("kotlinq-test-api/build")
   buildFile = 'kotlinq-test-api/build.gradle'
   //noinspection GroovyAssignabilityCheck
   g.startParameter.projectProperties.put("version", getVersion())

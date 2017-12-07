@@ -1,3 +1,4 @@
+@file:SuppressWarnings("UNUSED_VARIABLE")
 /*
  * Copyright (C) 2017 Preston Garno
  *

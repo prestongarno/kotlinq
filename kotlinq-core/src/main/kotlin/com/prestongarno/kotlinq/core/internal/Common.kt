@@ -79,36 +79,6 @@ fun String.indent(times: Int = 1): String =
 internal
 fun String.prepend(of: String): String = of + this
 
-internal
-fun QModel<*>.prettyPrinted(indentation: Int): String =
-    ((getFields().joinToString(separator = ",\n") { it.prettyPrinted() }
-        .indent(1)) + "\n}").prepend("{\n").indent(indentation)
-        .replace("\\s*([(,])".toRegex(), "$1").trim()
-
-internal
-fun QModel<*>.prettyPrintUnion(indentation: Int) =
-    (getFields().joinToString(separator = ",\n", prefix = "{\n".indent(indentation)) {
-      it.prettyPrinted().prepend("... on ")
-    }.indent(1)
-        .plus("\n}")
-        .indent(indentation))
-        .replace("\\s*([(,])".toRegex(), "$1").trim()
-
-internal
-fun Adapter.prettyPrinted(): String = qproperty.graphqlName +
-    (when {
-      args.isNotEmpty() -> args.entries
-          .joinToString(separator = ",", prefix = "(", postfix = ")") {
-            "${it.key}: ${formatAs(it.value)}"
-          }
-      this is ModelProvider -> value.toGraphql()
-      this is FragmentContext -> fragments.joinToString("\n") {
-        "... on ${qproperty.graphqlType} ${it.model.toGraphql()}"
-      }
-      else -> ""
-    }).replace("\\s*([(,])".toRegex(), "$1").trim()
-
 internal object Jsonify {
   val INDENT = "  "
-
 }

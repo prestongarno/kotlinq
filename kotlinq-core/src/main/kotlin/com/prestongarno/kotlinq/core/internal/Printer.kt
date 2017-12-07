@@ -19,8 +19,10 @@ package com.prestongarno.kotlinq.core.internal
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
+import java.util.*
 
 private const val INDENT = "  "
 
@@ -58,4 +60,63 @@ fun Adapter.printEdge(indentLevel: Int = 1): String {
 
     else -> ""
   }
+}
+
+
+internal
+fun extractedPayload(root: QModel<*>): String {
+
+  val enterModel = "{"
+  val exitModel = "}"
+  val enterField = ","
+
+  val builder = StringBuilder()
+  val stack = LinkedList<Any>()
+
+  val pushField: (Any) -> Unit = stack::addFirst
+
+  pushField(root)
+
+  var curr: Any
+
+  while (stack.isNotEmpty()) {
+
+
+    curr = stack.remove()
+
+    if (curr is Adapter) {
+
+      builder.append(curr.qproperty.graphqlName)
+      if (curr.args.isNotEmpty()) builder.append(curr.args.stringify())
+
+      if (curr is ModelProvider) {
+        pushField(curr.value)
+        continue
+      } else if (curr is FragmentContext) {
+        builder.append(enterModel)
+        curr.fragments.forEach { pushField(it) }
+      }
+
+    } else if (curr is Fragment) {
+      builder.append("... on ")
+      builder.append(curr.model.graphqlType)
+      stack.addFirst(curr.model)
+      continue
+    } else if (curr is QModel<*>) {
+      stack.addFirst(curr)
+      curr.getFields().forEach { stack.addFirst(it) }
+      builder.append(enterModel)
+    }
+
+    if (stack.isNotEmpty() && stack.first is QModel<*>) {
+      while (stack.isNotEmpty() && stack.removeFirst() is QModel<*>) {
+        builder.append(exitModel)
+      }
+      if (stack.isNotEmpty() && stack.first is Adapter) {
+        builder.append(",")
+      }
+    }
+
+  }
+  return builder.toString()
 }

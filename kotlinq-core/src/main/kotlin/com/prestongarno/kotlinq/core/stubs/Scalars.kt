@@ -62,7 +62,9 @@ sealed class PrimitiveStub(
     return result
   }
 
-
+  override fun toString(): String {
+    return qproperty.graphqlName + " (${qproperty.graphqlType})"
+  }
 }
 
 @ValueDelegate(String::class)
