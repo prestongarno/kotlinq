@@ -17,5 +17,9 @@
 
 package com.prestongarno.kotlinq.core.fragments
 
-// Using generated kotlinq-test-api
-//import com.prestongarno.kotlinq.generated.yelp.User
+import com.facebook.*
+import com.prestongarno.kotlinq.core.QModel
+
+class BaseDroidModel : QModel<Droid>(Droid) {
+
+}

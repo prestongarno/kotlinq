@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
   compile project(":kotlinq-core")
-  compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
+  compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
   compile group: "org.http4k", name: "http4k-core", version: "2.29.1"
   compile group: "org.http4k", name: "http4k-client-okhttp", version: "2.29.1"
 }

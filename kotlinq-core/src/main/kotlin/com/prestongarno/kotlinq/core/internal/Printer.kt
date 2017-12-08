@@ -112,7 +112,7 @@ fun extractedPayload(root: QModel<*>): String {
         continue
       } else if (curr is FragmentContext) {
         pushField(curr)
-        curr.fragments.forEach { pushField(it) }
+        curr.fragments.forEach(pushField)
         builder.append(enterModel)
         continue
       }
@@ -124,7 +124,7 @@ fun extractedPayload(root: QModel<*>): String {
       continue
     } else if (curr is QModel<*>) {
       stack.addFirst(curr)
-      curr.getFields().forEach { stack.addFirst(it) }
+      curr.getFields().forEach(pushField)
       builder.append(enterModel)
       continue
     }
