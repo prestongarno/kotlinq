@@ -20,15 +20,10 @@ package com.prestongarno.kotlinq.core
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
-import kotlinx.coroutines.experimental.runBlocking
 import kotlin.coroutines.experimental.buildSequence
 
 internal
-fun QModel<*>.getFragments(parallel: Boolean = false): Set<Fragment> {
-  return if (parallel) runBlocking {
-    getFragmentSequence(this@getFragments, hashSetOf(this@getFragments))
-  }.toSet() else getFragments(this, hashSetOf(this))
-}
+fun QModel<*>.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
 
 private
 fun getFragments(root: QModel<*>, collector: Set<QModel<*>>): Set<Fragment> {
@@ -76,9 +71,9 @@ fun getFragmentSequence(root: QModel<*>, collector: Set<QModel<*>>): Sequence<Fr
       yield(it)
     }
     while (iterator.hasNext()) {
-      getFragmentSequence(iterator.next(), next).forEach {
-        yield(it)
-      }
+      getFragmentSequence(iterator.next(), next)
+          .asSequence()
+          .forEach { yield(it) }
     }
   }
 }
