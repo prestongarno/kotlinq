@@ -73,8 +73,7 @@ private data class PropertyImpl @JvmOverloads constructor(
 ) : GraphQlProperty {
 
   override fun hashCode(): Int {
-    var result = kproperty.hashCode()
-    result = 31 * result + graphqlType.hashCode()
+    var result = graphqlType.hashCode()
     result = 31 * result + typeKind.hashCode()
     result = 31 * result + graphqlName.hashCode()
     result = 31 * result + isList.hashCode()

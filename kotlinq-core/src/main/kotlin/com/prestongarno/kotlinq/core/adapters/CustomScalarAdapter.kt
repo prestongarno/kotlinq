@@ -79,13 +79,7 @@ private data class CustomScalarFieldImpl<out Q>(
   override fun equals(other: Any?): Boolean {
     return (qproperty == (other as? Adapter)?.qproperty)
         && other.args == args
-        && adapter == (other as? CustomScalarFieldImpl<*>)?.adapter
   }
 
-  override fun hashCode(): Int {
-    var result = qproperty.hashCode()
-    result = 31 * result + args.hashCode()
-    result = 31 * result + adapter.hashCode()
-    return result
-  }
+  override fun hashCode(): Int = (qproperty.hashCode() * 31) + (args.hashCode() * 31)
 }

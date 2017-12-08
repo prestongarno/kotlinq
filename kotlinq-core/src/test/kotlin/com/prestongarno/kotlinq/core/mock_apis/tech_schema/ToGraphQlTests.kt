@@ -20,6 +20,7 @@ package com.prestongarno.kotlinq.core.mock_apis.tech_schema
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.getFragments
+import com.prestongarno.kotlinq.core.primitives.eq
 import org.junit.Test
 
 
@@ -130,6 +131,17 @@ class TechSchemaQueryTests {
         }
       }
     }
+    val query2 = TechnologyQuery(searchTerm = "python") {
+      onFramework {
+        FrameworkModel {
+          onProgrammingLanguage(::Language)
+          onOperatingSystem(::OperatingSys)
+          onFramework(::NestedFrameworkModel)
+        }
+      }
+    }
+    query.hashCode() eq query2.hashCode()
+    query eq query2
 
     val result = query.toGraphql(pretty = true)
 

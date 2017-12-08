@@ -76,7 +76,7 @@ open class QModel<out T : QType>(val model: T) {
 
   override fun hashCode(): Int =
       fields.entries.fold(initial = graphqlType.hashCode()) { acc, entry ->
-        acc * 31 * entry.value.hashCode()
+        acc * 31 + entry.value.hashCode()
       }
 
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +

@@ -92,4 +92,21 @@ class InterfaceDelegateImpl<I : QType>(
       property: KProperty<*>
   ): QModel<I>? = value
 
+  override fun hashCode(): Int =
+      (qproperty.hashCode() * 31) +
+          (args.hashCode() * 31) +
+          (fragments.hashCode() * 31)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as InterfaceDelegateImpl<*>
+
+    if (qproperty != other.qproperty) return false
+    if (args != other.args) return false
+    if (fragments != other.fragments) return false
+
+    return true
+  }
 }

@@ -56,11 +56,7 @@ sealed class PrimitiveStub(
     return true
   }
 
-  override fun hashCode(): Int {
-    var result = qproperty.hashCode()
-    result = 31 * result + args.hashCode()
-    return result
-  }
+  override fun hashCode(): Int = 31 * qproperty.hashCode() + args.hashCode()
 
   override fun toString(): String {
     return qproperty.graphqlName + " (${qproperty.graphqlType})"

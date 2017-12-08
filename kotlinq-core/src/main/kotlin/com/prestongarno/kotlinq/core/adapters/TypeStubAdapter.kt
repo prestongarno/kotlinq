@@ -67,4 +67,8 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
   override fun toRawPayload(): String =
       qproperty.graphqlName + args.stringify() + value.toGraphql()
 
+  override fun hashCode(): Int =
+      (value.hashCode() * 31) +
+          (args.hashCode() * 31) +
+          (qproperty.hashCode() * 31)
 }

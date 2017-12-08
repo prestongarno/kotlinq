@@ -33,7 +33,7 @@ internal interface FragmentContext/*<I> where I : QType, I : QInterface*/ {
   val fragments: Set<Fragment>
 }
 
-data class Fragment(val initializer: () -> QModel<QType>) {
+class Fragment(val initializer: () -> QModel<QType>) {
   internal val model by lazy(initializer)
 
   override fun toString(): String {
@@ -42,6 +42,10 @@ data class Fragment(val initializer: () -> QModel<QType>) {
 
   override fun equals(other: Any?): Boolean {
     return model == (other as? Fragment)?.model
+  }
+
+  override fun hashCode(): Int {
+    return model.hashCode()
   }
 }
 

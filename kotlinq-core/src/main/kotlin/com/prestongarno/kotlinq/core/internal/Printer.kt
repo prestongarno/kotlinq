@@ -66,12 +66,17 @@ fun Adapter.printEdge(indentLevel: Int = 1): String {
 }
 
 
+/**
+ * Stack-based algorithm to print GraphQL requests
+ *
+ * Rules:
+ *   * Stack is type
+ */
 internal
 fun extractedPayload(root: QModel<*>): String {
 
   val enterModel = "{"
   val exitModel = "}"
-  val enterField = ","
 
   val builder = StringBuilder()
   val stack = LinkedList<Any>()
@@ -114,16 +119,19 @@ fun extractedPayload(root: QModel<*>): String {
       continue
     }
 
-    if (stack.isNotEmpty()
-        && (stack.first is QModel<*>
-        || stack.first is FragmentContext)) {
+    if (stack.isNotEmpty() && (stack.first is QModel<*> || stack.first is FragmentContext)) {
+
       while (stack.isNotEmpty()
           && (stack.first is QModel<*>
           || stack.first is FragmentContext)) {
+
         stack.removeFirst()
         builder.append(exitModel)
-        if (stack.isNotEmpty() && stack.first is Adapter)
-          builder.append(",")
+
+        if (stack.isNotEmpty() && stack.first.let {
+          it is Adapter && it !is FragmentContext
+        }) builder.append(",")
+
       }
     } else if (stack.isNotEmpty() && (stack.first is Adapter)) {
       builder.append(",")

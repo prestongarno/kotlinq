@@ -157,15 +157,20 @@ class ModelEquality {
 
     f eq g
 
+    f.hashCode() eq g.hashCode()
+
     val h = AirplaneFrag0().getDelegate<FloatStub>("maxSpeed")
 
     val i = AirplaneFrag0().getDelegate<FloatStub>("maxSpeed")
 
+    h.qproperty.hashCode() eq i.qproperty.hashCode()
     h eq i
+
+    h.hashCode() eq i.hashCode()
 
     val j = AirplaneFrag2({ onPerson(::PersonModel) }).getDelegate<Adapter>("owner")
 
-    class AirplaneFragLocal() : AirplaneFrag2({ onPerson(::PersonModel) }) {
+    class AirplaneFragLocal : AirplaneFrag2({ onPerson(::PersonModel) }) {
       val smthingElse by model.maxPassengers
     }
 
@@ -183,6 +188,8 @@ class ModelEquality {
     val ctor = { AirplaneFrag2({ onPerson(::PersonModel) }) }
 
     ctor() eq ctor()
+
+    ctor().hashCode() eq ctor().hashCode()
   }
 
   @Test fun toGraphQL() {
@@ -201,7 +208,7 @@ class ModelEquality {
     extractedPayload(query).apply {
       assertThat(this)
           .isEqualTo("{search(keyword: \\\"ZR1\\\"){... on Airplane{owner{... on Organization{type," +
-              "members{age,name},name}... on Person{address{line1},age,name},},model},}}")
+              "members{age,name},name}... on Person{address{line1},age,name}},model}}}")
       this.assertBracketsMatch()
     }
   }
