@@ -91,6 +91,7 @@ fun extractedPayload(root: QModel<*>): String {
   val builder = StringBuilder()
   val stack = LinkedList<Any>()
 
+
   val pushField: (Any) -> Unit = stack::addFirst
 
   pushField(root)
@@ -112,7 +113,7 @@ fun extractedPayload(root: QModel<*>): String {
         continue
       } else if (curr is FragmentContext) {
         pushField(curr)
-        curr.fragments.reversed().forEach(pushField)
+        curr.fragments.forEach(pushField)
         builder.append(enterModel)
         continue
       }
@@ -124,7 +125,7 @@ fun extractedPayload(root: QModel<*>): String {
       continue
     } else if (curr is QModel<*>) {
       stack.addFirst(curr)
-      curr.getFields().toList().reversed().forEach(pushField)
+      curr.getFields().forEach(pushField)
       builder.append(enterModel)
       continue
     }
