@@ -19,12 +19,9 @@ package com.prestongarno.kotlinq.core.internal
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
-import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
-import com.prestongarno.kotlinq.core.stubs.EnumStub
-import com.prestongarno.kotlinq.core.stubs.PrimitiveStub
 import java.util.*
 
 private const val INDENT = "  "
@@ -70,7 +67,20 @@ fun Adapter.printEdge(indentLevel: Int = 1): String {
  * Stack-based algorithm to print GraphQL requests
  *
  * Rules:
- *   * Stack is type
+ *   * Stack is type Any, but only [Adapter] & [QModel] ever added/removed
+ *   * [QModel] & [FragmentContext] are critical points
+ *
+ *   * Algorithm:
+ *      - If [curr] is an [GraphQlProperty], print field name and arguments
+ *      - On encountering via an adapter class such as [ModelProvider] or [Fragment],
+ *           push model(s) to stack & print open bracket (and spread operator if applicable)
+ *      - Else if encountering [curr] is [QModel], push all [QModel.fields] (set of [Adapters]) to the stack, continue
+ *      - at end of loop, check if [List.isNotEmpty] && [List.first] is [FragmentContext] or [QModel]
+ *          - if above case, while true append a closing bracket, and pop the stack & repeat this step
+ *          - else print a comma to separate with next field
+ *
+ *
+ * **WARNING** this reverses the order of printing, need to fix tests before using this by default
  */
 internal
 fun extractedPayload(root: QModel<*>): String {

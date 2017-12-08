@@ -44,9 +44,7 @@ open class QModel<out T : QType>(val model: T) {
 
   @JvmOverloads
   fun toGraphql(pretty: Boolean = false): String =
-      if (pretty) pretty() else fields.entries.joinToString(",", "{", "}") {
-        it.value.toRawPayload()
-      }
+      if (pretty) pretty() else fields.entries.joinToString(",", "{", "}") { it.value.toRawPayload() }
 
   private
   fun onResponse(input: InputStream): Boolean =
@@ -84,7 +82,7 @@ open class QModel<out T : QType>(val model: T) {
 
   internal
   fun getFields(): Sequence<Adapter> =
-      fields.entries.map { it.value }.asSequence()
+      fields.entries.asSequence().map { it.value }
 
   /**
    * Add the field to the instance of this model
