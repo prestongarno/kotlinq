@@ -175,15 +175,14 @@ task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
   dependsOn(":kotlinq-gradle:install")
   dependsOn(":kotlinq-core:install")
 
-  inputs.files("kotlinq-test-api/build/libs")
-  outputs.dirs("kotlinq-test-api/src/main/kotlin")
-  buildFile = 'kotlinq-test-api/build.gradle'
+  g.inputs.files("kotlinq-test-api/src/main/resources")
+  g.outputs.dirs("kotlinq-test-api/build")
+  g.buildFile = 'kotlinq-test-api/build.gradle'
   //noinspection GroovyAssignabilityCheck
   g.startParameter.projectProperties.put("version", getVersion())
-  g.inputs.files("kotlinq-test-api/src")
 
   //noinspection GroovyAssignabilityCheck
-  g.tasks = ['clean', 'compileGraphQL', 'publishToMavenLocal', 'install']
+  g.tasks = ['compileGraphQL', 'install']
 }
 
 

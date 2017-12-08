@@ -20,27 +20,60 @@ package com.prestongarno.kotlinq.core
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
+import kotlin.coroutines.experimental.buildSequence
 
 internal
-fun QModel<*>.getFragments(): Set<Fragment> {
-  return getFragments(this, hashSetOf(this))
-}
+fun QModel<*>.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
 
 private
 fun getFragments(root: QModel<*>, collector: Set<QModel<*>>): Set<Fragment> {
-  val fragmentEdges = root.getFields().filterIsInstance<FragmentContext>()
+  val fragmentEdges = root.getFields()
+      .asSequence()
+      .filterIsInstance<FragmentContext>()
       .flatMap { it.fragments.asSequence() }
       .filterNot { collector.contains(it.model) }
       .toSet()
-  val models = root.getFields().filterIsInstance<ModelProvider>()
+  val models = root.getFields()
+      .asSequence()
+      .filterIsInstance<ModelProvider>()
+      .filterNot { collector.contains(it.value) }
+      .map(ModelProvider::value)
+      .plus(fragmentEdges.map(Fragment::model))
+
+  return fragmentEdges + models.map {
+    getFragments(it, collector + models)
+  }.flatten().toSet()
+
+}
+
+private
+fun getFragmentSequence(root: QModel<*>, collector: Set<QModel<*>>): Sequence<Fragment> {
+  val fragmentEdges = root.getFields()
+      .asSequence()
+      .filterIsInstance<FragmentContext>()
+      .flatMap { it.fragments.asSequence() }
+      .filterNot { collector.contains(it.model) }
+
+  val models = root.getFields()
+      .asSequence()
+      .filterIsInstance<ModelProvider>()
       .filterNot { collector.contains(it.value) }
       .map(ModelProvider::value)
       .plus(fragmentEdges
-          .filterNot { collector.contains(it.model) }
           .map(Fragment::model))
 
-  return fragmentEdges + models.map {
-    getFragments(it, collector + models + fragmentEdges.map(Fragment::model))
-  }.flatten().toSet()
+  val next = (collector + models).toSet()
+  val iterator = models.iterator()
 
+
+  return buildSequence {
+    fragmentEdges.forEach {
+      yield(it)
+    }
+    while (iterator.hasNext()) {
+      getFragmentSequence(iterator.next(), next)
+          .asSequence()
+          .forEach { yield(it) }
+    }
+  }
 }

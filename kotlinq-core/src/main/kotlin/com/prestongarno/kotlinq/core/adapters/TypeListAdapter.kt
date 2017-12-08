@@ -74,4 +74,9 @@ private data class TypeListStubImpl<P : QModel<*>>(
     } else false
   }
 
+  override fun hashCode(): Int =
+      (value.hashCode() * 31) +
+          (args.hashCode() * 31) +
+          (qproperty.hashCode() * 31)
+
 }

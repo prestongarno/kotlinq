@@ -27,7 +27,7 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 internal abstract class PreDelegate(val qproperty: GraphQlProperty)
 
 internal
-fun <T> T.bind(inst: QModel<*>): T where T : Adapter = apply { inst.register(this) }
+fun <T> T.bind(inst: QModel<*>): T where T : Adapter = this.let(inst::register)
 
 internal
 fun <T : Any> T.applyNotNull(scope: (T.() -> Unit)?): T {

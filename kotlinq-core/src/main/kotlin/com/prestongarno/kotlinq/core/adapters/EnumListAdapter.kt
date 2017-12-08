@@ -73,7 +73,7 @@ private data class EnumListAdapterImpl<T>(
     where T : Enum<*>,
           T : QEnumType {
 
-  private val value = mutableListOf<T>()
+  private var value = listOf<T>()
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 
@@ -84,7 +84,7 @@ private data class EnumListAdapterImpl<T>(
           it.name == str
         }
       }.let { transformed ->
-        value.addAll(transformed)
+        value = transformed
       }
     return result is JsonArray<*>
   }

@@ -75,4 +75,11 @@ private data class CustomScalarFieldImpl<out Q>(
   }
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
+
+  override fun equals(other: Any?): Boolean {
+    return (qproperty == (other as? Adapter)?.qproperty)
+        && other.args == args
+  }
+
+  override fun hashCode(): Int = (qproperty.hashCode() * 31) + (args.hashCode() * 31)
 }

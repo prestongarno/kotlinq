@@ -50,7 +50,7 @@ enum class ListOrder : QEnumType {
 
 class BasicTypeList {
 
-  class PersonModel : QModel<Person>(Person) {
+  open class PersonModel : QModel<Person>(Person) {
     val name by model.name
     val age by model.age
   }

@@ -115,7 +115,7 @@ class TypeStubQueryable {
       }
     }
     assertThat(query.toGraphql())
-        .isEqualTo("""{owner(Hello: \"World\"){name}}""")
+        .isEqualTo("""{owner(Hello: "World"){name}}""")
   }
 
   @Test fun `noArg type stub with default field value returns value`() {
@@ -137,7 +137,7 @@ class TypeStubQueryable {
       }
     }
     assertThat(query.toGraphql())
-        .isEqualTo("""{owner(Hello: \"World\",Foo: 1337,Bar: false){name}}""")
+        .isEqualTo("""{owner(Hello: "World",Foo: 1337,Bar: false){name}}""")
   }
 
   @Test fun `optionalArg type stub with no arguments is possible`() {
@@ -170,7 +170,7 @@ class TypeStubQueryable {
       }
     }
     assertThat(query.toGraphql())
-        .isEqualTo("""{ownerAddress(addressType: WORK,Hello: \"GraphQL\"){line1}}""")
+        .isEqualTo("""{ownerAddress(addressType: WORK,Hello: "GraphQL"){line1}}""")
   }
 
   @Test fun `optionalArg type stub with arguments default values return correctly`() {
@@ -205,7 +205,7 @@ class TypeStubQueryable {
       }
     }
     assertThat(query.toGraphql()).isEqualTo(
-        """{destination(addressType: HOME,canLeaveAtDoor: false,unrelatedMagicString: \"DSLs are fucking unbelievable\"){line1}}"""
+        """{destination(addressType: HOME,canLeaveAtDoor: false,unrelatedMagicString: "DSLs are fucking unbelievable"){line1}}"""
     )
   }
 
@@ -217,7 +217,7 @@ class TypeStubQueryable {
       }
     }
     assertThat(query.toGraphql()).isEqualTo(
-        """{destination(addressType: HOME,canLeaveAtDoor: false,expletive: \"censored\"){line1}}"""
+        """{destination(addressType: HOME,canLeaveAtDoor: false,expletive: "censored"){line1}}"""
     )
   }
 

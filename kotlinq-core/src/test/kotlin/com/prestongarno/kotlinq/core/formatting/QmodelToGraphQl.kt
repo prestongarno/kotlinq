@@ -20,7 +20,9 @@ package com.prestongarno.kotlinq.core.formatting
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.QInterface
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType.*
+import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
+import com.prestongarno.kotlinq.core.QSchemaType.QScalar
+import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.primitives.eq
 import com.prestongarno.kotlinq.core.stubs.IntDelegate
@@ -189,18 +191,20 @@ class QmodelToGraphQl {
     assertThat(mockQueryImpl.toGraphql(pretty = true)).isEqualTo("""
       |{
       |  queryImock {
-      |    ... on Mock {
-      |      refId
-      |      ttl
-      |      businessList {
-      |        name
-      |        location {
-      |          address1
-      |          city
-      |          state
-      |          country
-      |        }
-      |      }
+      |    __typename
+      |    ...fragMock0
+      |  }
+      |}
+      |fragment fragMock0 on Mock {
+      |  refId
+      |  ttl
+      |  businessList {
+      |    name
+      |    location {
+      |      address1
+      |      city
+      |      state
+      |      country
       |    }
       |  }
       |}
@@ -250,45 +254,48 @@ class QmodelToGraphQl {
     assertThat(mockQueryImpl.toGraphql(pretty = true)).isEqualTo("""
       |{
       |  queryImock {
-      |    ... on Mock {
-      |      refId
-      |      ttl
-      |      businessList {
-      |        name
-      |        location {
-      |          address1
-      |          city
-      |          state
-      |          country
-      |        }
+      |    __typename
+      |    ...fragMock0
+      |    ...fragDock1
+      |  }
+      |}
+      |fragment fragDock1 on Dock {
+      |  length
+      |  refId
+      |  ttl
+      |  businessList {
+      |    name
+      |    location {
+      |      address1
+      |      city
+      |      state
+      |      country
+      |    }
+      |  }
+      |  mockReference {
+      |    refId
+      |    ttl
+      |    businessList {
+      |      name
+      |      location {
+      |        address1
+      |        city
+      |        state
+      |        country
       |      }
       |    }
-      |    ... on Dock {
-      |      length
-      |      refId
-      |      ttl
-      |      businessList {
-      |        name
-      |        location {
-      |          address1
-      |          city
-      |          state
-      |          country
-      |        }
-      |      }
-      |      mockReference {
-      |        refId
-      |        ttl
-      |        businessList {
-      |          name
-      |          location {
-      |            address1
-      |            city
-      |            state
-      |            country
-      |          }
-      |        }
-      |      }
+      |  }
+      |}
+      |fragment fragMock0 on Mock {
+      |  refId
+      |  ttl
+      |  businessList {
+      |    name
+      |    location {
+      |      address1
+      |      city
+      |      state
+      |      country
       |    }
       |  }
       |}

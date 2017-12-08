@@ -60,7 +60,7 @@ class UnionAdapterImpl<T : QUnionType, out A : ArgumentSpec>(
 }
 
 @ValueDelegate(QModel::class) private
-class UnionStubImpl(
+data class UnionStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
@@ -91,5 +91,22 @@ class UnionStubImpl(
       }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<QType>? = value
+
+  override fun equals(other: Any?): Boolean {
+    if (other !is Adapter) return false
+    if (other !is QField<*>) return false
+    if (other !is FragmentContext) return false
+
+    if (other.qproperty != qproperty) return false
+    if (other.fragments != fragments) return false
+    if (other.args.size != args.size) return false
+    return other.args.entries.find {
+      args[it.key] == null
+    } == null
+  }
+  override fun hashCode(): Int =
+      (qproperty.hashCode() * 31) +
+          (args.hashCode() * 31) +
+          (fragments.hashCode() * 31)
 }
 

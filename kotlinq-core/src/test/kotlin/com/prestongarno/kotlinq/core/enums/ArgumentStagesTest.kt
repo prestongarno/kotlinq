@@ -42,7 +42,7 @@ class ArgumentStagesTest {
     }
 
     assertThat(query.toGraphql())
-        .isEqualTo("""{classLevel(Hello: \"World\")}""")
+        .isEqualTo("""{classLevel(Hello: "World")}""")
   }
 
   @Test fun `required argument type is enforced on field`() {
@@ -61,17 +61,15 @@ class ArgumentStagesTest {
       }
     }
     assertThat(query.toGraphql())
-        .isEqualTo("""
-          {classLevelWithArgs(
-            requiredInteger: 100,
-            requiredString: \"100\",
-            requiredFloat: 100.0f,
-            requiredBoolean: true,
-            integer: 1200,
-            string: \"1200\",
-            boolean: true,
-            float: 1200.0f)}
-        """.flatLine())
+        .isEqualTo("{classLevelWithArgs(" +
+            "requiredInteger: 100," +
+            "requiredString: \"100\"," +
+            "requiredFloat: 100.0f," +
+            "requiredBoolean: true," +
+            "integer: 1200," +
+            "string: \"1200\"," +
+            "boolean: true," +
+            "float: 1200.0f)}")
   }
 
   @Test fun `optional arguments with no args passed`() {
@@ -95,7 +93,7 @@ class ArgumentStagesTest {
     assertThat(query.toGraphql())
         .isEqualTo("""{${Class::classLevelOptionalArgs.name}
           |(${Class.OptionalClassLevelArgs::intArgument.name}: 3535,
-          |${Class.OptionalClassLevelArgs::stringArgument.name}: \"Hello, World!\"
+          |${Class.OptionalClassLevelArgs::stringArgument.name}: "Hello, World!"
           |)}""".trimMargin().flatLine())
   }
 

@@ -67,7 +67,9 @@ class SampleUnionConfiguration {
       }
 
     }
-    query.toGraphql() eq "{thing{__typename,... on Car{make,carModel}, ... on Hamburger{ingredients}}}"
+    query.toGraphql() eq "{thing{__typename,...fragCar0...fragHamburger1}}" +
+        "fragment fragCar0 on Car{make,carModel}," +
+        "fragment fragHamburger1 on Hamburger{ingredients}"
   }
 
   @Test fun `union list field and fragments is possible`() {
@@ -82,6 +84,8 @@ class SampleUnionConfiguration {
       }
 
     }
-    query.toGraphql() eq "{things{__typename,... on Car{make,carModel}, ... on Hamburger{ingredients}}}"
+    query.toGraphql() eq "{things{__typename,...fragCar0...fragHamburger1}}" +
+        "fragment fragCar0 on Car{make,carModel}," +
+        "fragment fragHamburger1 on Hamburger{ingredients}"
   }
 }

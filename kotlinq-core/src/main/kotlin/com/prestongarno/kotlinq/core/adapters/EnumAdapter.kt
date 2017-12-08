@@ -100,9 +100,10 @@ class EnumAdapterImpl<T, out A>(
 }
 
 @ValueDelegate(Enum::class)
-private data class EnumFieldImpl<T>(
+private
+class EnumFieldImpl<T>(
     override val qproperty: GraphQlProperty,
-    private val enumClass: KClass<T>,
+    val enumClass: KClass<T>,
     override val args: Map<String, Any>,
     private val default: T? = null
 ) : QField<T>, Adapter where T : Enum<*>, T : QEnumType {
@@ -120,4 +121,25 @@ private data class EnumFieldImpl<T>(
   override fun toRawPayload(): String {
     return qproperty.graphqlName + args.stringify()
   }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as EnumFieldImpl<*>
+
+    if (qproperty != other.qproperty) return false
+    if (enumClass != other.enumClass) return false
+    if (args != other.args) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = qproperty.hashCode()
+    result = 31 * result + enumClass.hashCode()
+    result = 31 * result + args.hashCode()
+    return result
+  }
+
 }

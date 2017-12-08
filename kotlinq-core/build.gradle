@@ -16,8 +16,8 @@ apply plugin: 'maven'
 
 dependencies {
   implementation 'com.beust:klaxon:0.30'
+  compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-  testCompile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19'
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
           version: "$kotlin_version"
   testCompile "com.prestongarno.kotlinq:kotlinq-test-api:$version"
