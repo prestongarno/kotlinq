@@ -22,21 +22,30 @@ import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
+import com.prestongarno.kotlinq.core.getFragments
 import java.util.*
 
-private const val INDENT = "  "
+private const val INDENT: String = "  "
+private const val SPREAD: String = "..."
+private const val ENTER_SCOPE: String = "{"
+private const val EXIT_SCOPE: String = "}"
 
 internal
-fun QModel<*>.pretty() = printNode()
+fun QModel<*>.pretty(): String {
+  val fragments = getFragments().mapIndexed { index, fragment ->  fragment to "frag${fragment.model.graphqlType}$index" }.toMap()
+  return printNode(fragments) + fragments.entries.joinToString(prefix = "\n", separator = "\n") { (frag, index) ->
+    "fragment ${fragments[frag]} on ${frag.model.graphqlType} " + frag.model.printNode(fragments)
+  }
+}
 
 /**
  * what even is a stack? mutual recursion is all I know
  */
 private
-fun QModel<*>.printNode(indentLevel: Int = 1): String {
+fun QModel<*>.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
   val indent = "\n${INDENT.repeat(indentLevel)}"
   return this.fields.entries.map(MutableMap.MutableEntry<String, Adapter>::value).map {
-    it.qproperty.graphqlName + it.args.stringify() + it.printEdge(indentLevel + 1)
+    it.qproperty.graphqlName + it.args.stringify() + it.printEdge(fragments, indentLevel + 1)
   }.joinToString(
       prefix = "{" + indent,
       separator = indent,
@@ -45,17 +54,17 @@ fun QModel<*>.printNode(indentLevel: Int = 1): String {
 }
 
 private
-fun Adapter.printEdge(indentLevel: Int = 1): String {
+fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
   val whitespace = "\n${INDENT.repeat(indentLevel)}"
   return when (this) {
 
-    is ModelProvider -> " " + value.printNode(indentLevel) // only fragments get indented + 1
+    is ModelProvider -> " " + value.printNode(fragments, indentLevel) // only fragments get indented + 1
 
-    is FragmentContext -> fragments.joinToString(
+    is FragmentContext -> this@printEdge.fragments.joinToString(
         prefix = " {" + whitespace,
         postfix = "\n${INDENT.repeat(indentLevel - 1)}}",
         separator = whitespace) {
-      "... on ${it.model.graphqlType} " + it.model.printNode(indentLevel + 1)
+      "...${fragments[it]}"// + it.model.printNode(fragments, indentLevel + 1)
     }
 
     else -> ""
@@ -79,17 +88,26 @@ fun Adapter.printEdge(indentLevel: Int = 1): String {
  *          - if above case, while true append a closing bracket, and pop the stack & repeat this step
  *          - else print a comma to separate with next field
  *
+ *      - if [fragments] is null ([Map] joining [Fragment] to a unique [String] identifier
+ *          - Means that we are in the root context, so we can print the fragments at end
+ *          - For all in [fragments]
+ *              - print fragment definition
+ *              - for all model fields
+ *                  - print fields like usual
+ *                  - if contains another model or another context, recurse on model, but pass the fragments and the [StringBuilder] instance
+ *                      - this way, we do not do any redundant work and always have [fragments] reference from the base scope
+ *
  *
  * **WARNING** this reverses the order of printing, need to fix tests before using this by default
  */
-internal
-fun extractedPayload(root: QModel<*>): String {
+internal fun extractedPayload(root: QModel<*>): String = extractedPayload(root, null)
 
-  val enterModel = "{"
-  val exitModel = "}"
+private
+fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
 
-  val builder = StringBuilder()
   val stack = LinkedList<Any>()
+  val fragments = if (frags != null) frags else
+    root.getFragments().mapIndexed { index, fragment -> fragment to "frag${fragment.model.graphqlType}$index" }.toMap()
 
 
   val pushField: (Any) -> Unit = stack::addFirst
@@ -114,19 +132,18 @@ fun extractedPayload(root: QModel<*>): String {
       } else if (curr is FragmentContext) {
         pushField(curr)
         curr.fragments.forEach(pushField)
-        builder.append(enterModel)
+        builder.append(ENTER_SCOPE)
+        builder.append("__typename,")
         continue
       }
 
     } else if (curr is Fragment) {
-      builder.append("... on ")
-      builder.append(curr.model.graphqlType)
-      stack.addFirst(curr.model)
-      continue
+      builder.append("...")
+      builder.append(fragments[curr]!!) // fail fast
     } else if (curr is QModel<*>) {
       stack.addFirst(curr)
       curr.getFields().forEach(pushField)
-      builder.append(enterModel)
+      builder.append(ENTER_SCOPE)
       continue
     }
 
@@ -137,7 +154,7 @@ fun extractedPayload(root: QModel<*>): String {
           || stack.first is FragmentContext)) {
 
         stack.removeFirst()
-        builder.append(exitModel)
+        builder.append(EXIT_SCOPE)
 
         if (stack.isNotEmpty() && stack.first.let {
           it is Adapter && it !is FragmentContext
@@ -150,5 +167,44 @@ fun extractedPayload(root: QModel<*>): String {
 
   }
 
+  if (fragments.isNotEmpty()) builder.append(",")
+
+  if (frags == null) {
+
+    val numFragments = fragments.size - 1
+
+    fragments.entries.forEachIndexed { x, (fragment, name) ->
+      builder.apply {
+        append("fragment ")
+        append(name)
+        append(" on ")
+        append(fragment.model.graphqlType)
+        append(ENTER_SCOPE)
+        val numOfFields = fragment.model.fields.size - 1
+
+        fragment.model.getFields().forEachIndexed { i, field ->
+          append(field.qproperty.graphqlName)
+          append(field.args.stringify())
+          when (field) {
+          // recursive call, but only on one level deep since we pass the fragment set
+            is ModelProvider -> extractedPayload(field.value, frags, builder)
+            is FragmentContext -> {
+              field.fragments.joinTo(builder, separator = ",$SPREAD", prefix = "{__typename,$SPREAD", postfix = "}") {
+                fragments[it]!!
+              }
+            }
+          }
+          if (i < numOfFields) {
+            append(",")
+          }
+        }
+      }
+      builder.append(EXIT_SCOPE)
+      if (x < numFragments)
+        builder.append(",")
+    }
+  }
+
   return builder.toString()
 }
+

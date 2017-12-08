@@ -26,55 +26,40 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
 import com.prestongarno.kotlinq.core.getFragments
+import com.prestongarno.kotlinq.core.internal.resolve.resolve
+import com.prestongarno.kotlinq.core.mock_apis.starwars_schema.StarWarsQuery
 import com.prestongarno.kotlinq.core.primitives.eq
 import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 import org.junit.Test
 
 open class BaseDroidModel : QModel<Droid>(Droid) {
-
   val name by model.name
-
   val function by model.primaryFunction
-
   val id by model.id.map(StringScalarMapper { it })
-
 }
 
 class DroidModel(
     friendsFragments: InterfaceListStub<Character, ArgumentSpec>.() -> Unit
 ) : BaseDroidModel() {
-
   val friends by model.friends {}.apply(friendsFragments)
 }
 
 open class BaseHumanModel : QModel<Human>(Human) {
-
   val name by model.name
-
   val spaceShip by model.starships.query(::BaseStarshipModel)
-
   val id by model.id.map(StringScalarMapper { it })
-
 }
 
 class HumanModel(
     friendsFragments: InterfaceListStub<Character, ArgumentSpec>.() -> Unit
 ) : BaseHumanModel() {
-
-  val friends by model.friends {  }.apply(friendsFragments)
-
+  val friends by model.friends { }.apply(friendsFragments)
 }
 
 class BaseStarshipModel : QModel<Starship>(Starship) {
-
   val name by model.name
-
-  val length by model.length(Starship.LengthArgs()) {
-    config { unit = LengthUnit.FOOT }
-  }
-
+  val length by model.length(Starship.LengthArgs()) { config { unit = LengthUnit.FOOT } }
   val id by model.id.map(StringScalarMapper { it })
-
 }
 
 class Traversal {
@@ -133,122 +118,24 @@ class Traversal {
 
     val max = 6
 
-    for (i in 1..10_000) {
+    for (i in 1..1_000) {
       require(createHuman().getFragments().count() == max)
     }
 
-    createHuman().toGraphql(pretty = true) eq """
-        |{
-        |  name
-        |  starships {
-        |    name
-        |    length(unit: FOOT)
-        |    id
-        |  }
-        |  id
-        |  friends {
-        |    ... on Droid {
-        |      name
-        |      primaryFunction
-        |      id
-        |      friends {
-        |        ... on Human {
-        |          name
-        |          starships {
-        |            name
-        |            length(unit: FOOT)
-        |            id
-        |          }
-        |          id
-        |          friends {
-        |            ... on Human {
-        |              name
-        |              starships {
-        |                name
-        |                length(unit: FOOT)
-        |                id
-        |              }
-        |              id
-        |              friends {
-        |                ... on Human {
-        |                  name
-        |                  starships {
-        |                    name
-        |                    length(unit: FOOT)
-        |                    id
-        |                  }
-        |                  id
-        |                }
-        |                ... on Droid {
-        |                  name
-        |                  primaryFunction
-        |                  id
-        |                }
-        |              }
-        |            }
-        |          }
-        |        }
-        |        ... on Droid {
-        |          name
-        |          primaryFunction
-        |          id
-        |          friends {
-        |            ... on Human {
-        |              name
-        |              starships {
-        |                name
-        |                length(unit: FOOT)
-        |                id
-        |              }
-        |              id
-        |            }
-        |            ... on Droid {
-        |              name
-        |              primaryFunction
-        |              id
-        |            }
-        |          }
-        |        }
-        |      }
-        |    }
-        |    ... on Human {
-        |      name
-        |      starships {
-        |        name
-        |        length(unit: FOOT)
-        |        id
-        |      }
-        |      id
-        |      friends {
-        |        ... on Human {
-        |          name
-        |          starships {
-        |            name
-        |            length(unit: FOOT)
-        |            id
-        |          }
-        |          id
-        |          friends {
-        |            ... on Human {
-        |              name
-        |              starships {
-        |                name
-        |                length(unit: FOOT)
-        |                id
-        |              }
-        |              id
-        |            }
-        |            ... on Droid {
-        |              name
-        |              primaryFunction
-        |              id
-        |            }
-        |          }
-        |        }
-        |      }
-        |    }
-        |  }
-        |}
-        """.trimMargin("|")
+    val rootQuery = StarWarsQuery {
+      onHuman {
+        HumanModel {
+          on(::BaseHumanModel)
+        }
+      }
+    }
+
+    rootQuery.resolve("""{"data":{"search":[{"__typename":"Human","name":"HanSolo","starships":[{"id":"3000","length":112.76247079999999,"name":"MilleniumFalcon"},{"id":"3003","length":65.6168,"name":"Imperialshuttle"}],"id":"1002","friends":[{"__typename":"Human","name":"LukeSkywalker","starships":[{"id":"3001","length":41.0105,"name":"X-Wing"},{"id":"3003","length":65.6168,"name":"Imperialshuttle"}],"id":"1000"},{"__typename":"Human","name":"LeiaOrgana","starships":[],"id":"1003"},{"__typename":"Droid"}]}]}}""".byteInputStream())
+
+    rootQuery.search.first().let { it as HumanModel }.apply {
+      name eq "HanSolo"
+      friends.find { it is HumanModel && it.name eq "LeiaOrgana" }
+      spaceShip.first().name eq "MilleniumFalcon"
+    }
   }
 }
