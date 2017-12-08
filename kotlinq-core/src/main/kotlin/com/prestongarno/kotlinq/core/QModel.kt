@@ -19,6 +19,7 @@ package com.prestongarno.kotlinq.core
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.internal.pretty
 import java.io.InputStream
 
@@ -40,15 +41,31 @@ open class QModel<out T : QType>(val model: T) {
   internal
   val graphqlType by lazy { "${model::class.simpleName}" }
 
-  fun isResolved(): Boolean = resolved
+  val isResolved: Boolean get() = resolved
 
-  @JvmOverloads
-  fun toGraphql(pretty: Boolean = false): String =
-      if (pretty) pretty() else fields.entries.joinToString(",", "{", "}") { it.value.toRawPayload() }
+  /**
+   * Constructs a GraphQL query from this [QModel]. Fragments are named according to this rule:
+   *
+   *
+   * ***`frag${[QModel.model].class.simpleName}${index}`***
+   *
+   * and are printed in alphabetical order.
+   * The ${index} mentioned in the last sentence is primarily assigned by the depth of the fragment in the
+   * graph & secondarily the order in which the properties/fragments are declared in a [QModel]
+   *
+   * ***Remember:*** Kotlinq does not distinguish between a root query/mutation
+   * and therefore treats this instance as a root query.
+   *
+   * @param pretty If true, returns a formatted string query indented by two spaces, otherwise a compact query
+   * @return The GraphQL query that this class represents as a [String]
+   * @throws OutOfMemoryError if the definition is recursive
+   */
+  @JvmOverloads fun toGraphql(pretty: Boolean = false): String =
+      if (pretty) pretty() else extractedPayload(this)
 
   private
   fun onResponse(input: InputStream): Boolean =
-      (Parser().parse(input) as? JsonObject)?.let { accept(it) } == true
+      (Parser().parse(input) as? JsonObject)?.let(this::accept) == true
 
   internal
   fun onResponse(input: String) = onResponse(input.byteInputStream())
@@ -72,17 +89,16 @@ open class QModel<out T : QType>(val model: T) {
     } == null
   }
 
-  override fun hashCode(): Int =
-      fields.entries.fold(initial = graphqlType.hashCode()) { acc, entry ->
-        acc * 31 + entry.value.hashCode()
-      }
+  override fun hashCode(): Int = fields.entries.fold(initial = graphqlType.hashCode()) { acc, entry ->
+    acc * 31 + entry.value.hashCode()
+  }
 
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
       fields.entries.joinToString(",", "[", "]") { it.value.qproperty.toString() }
 
   internal
   fun getFields(): Sequence<Adapter> =
-      fields.entries.asSequence().map { it.value }
+      fields.entries.asSequence().map(MutableMap.MutableEntry<String, Adapter>::value)
 
   /**
    * Add the field to the instance of this model

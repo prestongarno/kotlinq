@@ -79,8 +79,16 @@ class ReceiverApiTestStructure {
     }
 
     assertThat(query.toGraphql())
-        .isEqualTo(
-            "{getRandomConcept{__typename, ... on Persistence{name,type}, ... on Unknown{name,type}}}")
+        .isEqualTo("{getRandomConcept{" +
+            "__typename," +
+            "...fragPersistence0" +
+            "...fragUnknown1}}" +
+            "fragment fragPersistence0 on Persistence{" +
+            "name," +
+            "type}," +
+            "fragment fragUnknown1 on Unknown{" +
+            "name," +
+            "type}")
 
     @Language("JSON") val response = """
       {

@@ -31,50 +31,41 @@ class ToGraphQLTests2 {
 
     assertThat(query.toGraphql(pretty = true))
         .isEqualTo("""
-          |{
-          |  search(text: \"R2D2\") {
-          |    ... on Droid {
-          |      name
-          |      primaryFunction
-          |      friendsConnection {
-          |        totalCount
-          |        friends {
-          |          ... on Human {
-          |            name
-          |            mass
-          |            friendsConnection {
-          |              totalCount
-          |              friends {
-          |                ... on Droid {
-          |                  name
-          |                  primaryFunction
-          |                }
-          |              }
-          |            }
-          |          }
-          |          ... on Droid {
-          |            name
-          |            primaryFunction
-          |          }
-          |        }
-          |      }
-          |      appearsIn
-          |    }
-          |    ... on Human {
-          |      name
-          |      mass
-          |      friendsConnection {
-          |        totalCount
-          |        friends {
-          |          ... on Droid {
-          |            name
-          |            primaryFunction
-          |          }
-          |        }
-          |      }
-          |    }
-          |  }
-          |}
-          """.trimMargin("|"))
+          {
+            search(text: "R2D2") {
+              __typename
+              ...fragDroid0
+              ...fragHuman1
+            }
+          }
+          fragment fragDroid0 on Droid {
+            name
+            primaryFunction
+            friendsConnection {
+              totalCount
+              friends {
+                __typename
+                ...fragHuman1
+                ...fragDroid2
+              }
+            }
+            appearsIn
+          }
+          fragment fragDroid2 on Droid {
+            name
+            primaryFunction
+          }
+          fragment fragHuman1 on Human {
+            name
+            mass
+            friendsConnection {
+              totalCount
+              friends {
+                __typename
+                ...fragDroid2
+              }
+            }
+          }
+          """.trimIndent())
   }
 }

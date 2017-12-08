@@ -60,8 +60,8 @@ fun formatAs(value: Any): String {
   return when (value) {
     is Int, is Boolean -> "$value"
     is Float -> "${value}f"
-    is String -> "\\\"$value\\\""
-    is QInputType -> value.toString()
+    is String -> "\"$value\""
+    is QInputType -> value.input.stringify().bracket()
     is Enum<*> -> value.name
     is List<*> -> value
         .map { formatAs(it ?: "") }

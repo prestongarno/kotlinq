@@ -78,7 +78,7 @@ class InterfaceDelegateImpl<I : QType>(
       @Suppress("UNCHECKED_CAST")
       it as? QModel<I>
     }
-    return value?.isResolved() == true
+    return value?.isResolved == true
   }
 
   override fun toRawPayload(): String =

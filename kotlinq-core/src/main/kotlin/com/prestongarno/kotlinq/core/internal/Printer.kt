@@ -32,9 +32,12 @@ private const val EXIT_SCOPE: String = "}"
 
 internal
 fun QModel<*>.pretty(): String {
-  val fragments = getFragments().mapIndexed { index, fragment ->  fragment to "frag${fragment.model.graphqlType}$index" }.toMap()
-  return printNode(fragments) + fragments.entries.joinToString(prefix = "\n", separator = "\n") { (frag, index) ->
-    "fragment ${fragments[frag]} on ${frag.model.graphqlType} " + frag.model.printNode(fragments)
+  val fragments = getFragments().mapIndexed { index, fragment -> fragment to "frag${fragment.model.graphqlType}$index" }.toMap()
+  return printNode(fragments).let {
+    if (fragments.isEmpty()) it else it + fragments.entries.sortedBy(Map.Entry<Fragment, String>::value)
+        .joinToString(prefix = "\n", separator = "\n", postfix = "") { (frag, name) ->
+          "fragment $name on ${frag.model.graphqlType} " + frag.model.printNode(fragments)
+        }
   }
 }
 
@@ -44,13 +47,10 @@ fun QModel<*>.pretty(): String {
 private
 fun QModel<*>.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
   val indent = "\n${INDENT.repeat(indentLevel)}"
-  return this.fields.entries.map(MutableMap.MutableEntry<String, Adapter>::value).map {
-    it.qproperty.graphqlName + it.args.stringify() + it.printEdge(fragments, indentLevel + 1)
-  }.joinToString(
-      prefix = "{" + indent,
-      separator = indent,
-      postfix = "\n${INDENT.repeat(indentLevel - 1)}}"
-  )
+  return this.fields.entries.map(MutableMap.MutableEntry<String, Adapter>::value)
+      .joinToString(prefix = "{" + indent, separator = indent, postfix = "\n${INDENT.repeat(indentLevel - 1)}}") {
+        it.qproperty.graphqlName + it.args.stringify() + it.printEdge(fragments, indentLevel + 1)
+      }
 }
 
 private
@@ -61,7 +61,7 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
     is ModelProvider -> " " + value.printNode(fragments, indentLevel) // only fragments get indented + 1
 
     is FragmentContext -> this@printEdge.fragments.joinToString(
-        prefix = " {" + whitespace,
+        prefix = " {" + whitespace + "__typename" + whitespace,
         postfix = "\n${INDENT.repeat(indentLevel - 1)}}",
         separator = whitespace) {
       "...${fragments[it]}"// + it.model.printNode(fragments, indentLevel + 1)
@@ -131,7 +131,7 @@ fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, buil
         continue
       } else if (curr is FragmentContext) {
         pushField(curr)
-        curr.fragments.forEach(pushField)
+        curr.fragments.reversed().forEach(pushField)
         builder.append(ENTER_SCOPE)
         builder.append("__typename,")
         continue
@@ -142,7 +142,7 @@ fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, buil
       builder.append(fragments[curr]!!) // fail fast
     } else if (curr is QModel<*>) {
       stack.addFirst(curr)
-      curr.getFields().forEach(pushField)
+      curr.getFields().asIterable().reversed().forEach(pushField)
       builder.append(ENTER_SCOPE)
       continue
     }
@@ -167,13 +167,11 @@ fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, buil
 
   }
 
-  if (fragments.isNotEmpty()) builder.append(",")
-
   if (frags == null) {
 
     val numFragments = fragments.size - 1
 
-    fragments.entries.forEachIndexed { x, (fragment, name) ->
+    fragments.entries.sortedBy(Map.Entry<Fragment, String>::value).forEachIndexed { x, (fragment, name) ->
       builder.apply {
         append("fragment ")
         append(name)
@@ -205,6 +203,6 @@ fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, buil
     }
   }
 
-  return builder.toString()
+  return builder.toString().trim()
 }
 

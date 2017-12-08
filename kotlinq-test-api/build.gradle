@@ -35,25 +35,6 @@ dependencies {
   compile "com.prestongarno.kotlinq:kotlinq-core:$version"
 }
 
-sourceSets {
-  main {
-    java {
-      srcDirs = ["$rootProject.name/src/kotlin"]
-    }
-    resources {
-      srcDirs = ['src/main/resources']
-    }
-  }
-  test {
-    java {
-      srcDirs = []
-    }
-    resources {
-      srcDirs = []
-    }
-  }
-}
-
 kotlinq {
   schema {
     target = "$project.name/src/main/resources/starwars.graphqls"
@@ -109,3 +90,21 @@ uploadArchives {
   }
 }
 
+sourceSets {
+  main {
+    java {
+      srcDirs = ["$rootProject.name/src/kotlin"]
+    }
+    resources {
+      srcDirs = ['src/main/resources']
+    }
+  }
+  test {
+    java {
+      srcDirs = []
+    }
+    resources {
+      srcDirs = []
+    }
+  }
+}

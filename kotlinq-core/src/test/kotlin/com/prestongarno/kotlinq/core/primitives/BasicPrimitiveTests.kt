@@ -30,6 +30,7 @@ import kotlin.reflect.full.declaredMembers
 
 infix fun Any?.eq(other: Any?): Boolean =
     if (other === Nothing::class) true else assertThat(this).isEqualTo(other) == Unit
+
 infix fun Any?.neq(other: Any?): Boolean =
     if (other === Nothing::class) true else assertThat(this).isNotEqualTo(other) == Unit
 
@@ -142,6 +143,7 @@ class BasicPrimitiveTests {
       }
     }
 
+    //language=GraphQL
     query.toGraphql() eq "{name,age,gpa,hasHighSchoolDiploma}"
 
     query.name eq "Preston Garno"
@@ -172,8 +174,7 @@ class BasicPrimitiveTests {
     }
 
     query.toGraphql() eq
-        """{name(Hello: \"World\"),age(Number: 69),gpa(Boolean: false)""" +
-            """,hasHighSchoolDiploma(floatArgument: 4.0000067f)}"""
+        "{name(Hello: \"World\"),age(Number: 69),gpa(Boolean: false),hasHighSchoolDiploma(floatArgument: 4.0000067f)}"
   }
 
   /** This is so fucking key right here. */
@@ -194,7 +195,7 @@ class BasicPrimitiveTests {
       val name by delegateStub
     }
 
-    query.toGraphql() eq "{name(Hello: \\\"World\\\")}"
+    query.toGraphql() eq "{name(Hello: \"World\")}"
     query2.toGraphql() eq query.toGraphql()
 
     delegateStub.default = null

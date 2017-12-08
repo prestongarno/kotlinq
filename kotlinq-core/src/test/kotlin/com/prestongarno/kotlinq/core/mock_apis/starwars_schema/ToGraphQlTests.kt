@@ -31,19 +31,23 @@ class ToGraphQlTests {
 
     val expect = """
       |{
-      |  search(text: \"Han Solo\") {
-      |    ... on Human {
-      |      name
-      |      mass
-      |      friendsConnection {
-      |        totalCount
-      |        friends {
-      |          ... on Droid {
-      |            name
-      |            primaryFunction
-      |          }
-      |        }
-      |      }
+      |  search(text: "Han Solo") {
+      |    __typename
+      |    ...fragHuman0
+      |  }
+      |}
+      |fragment fragDroid1 on Droid {
+      |  name
+      |  primaryFunction
+      |}
+      |fragment fragHuman0 on Human {
+      |  name
+      |  mass
+      |  friendsConnection {
+      |    totalCount
+      |    friends {
+      |      __typename
+      |      ...fragDroid1
       |    }
       |  }
       |}

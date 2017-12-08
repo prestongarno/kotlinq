@@ -21,6 +21,7 @@ package com.prestongarno.kotlinq.core.mock_apis.tech_schema
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.getFragments
 import com.prestongarno.kotlinq.core.primitives.eq
+import org.intellij.lang.annotations.Language
 import org.junit.Test
 
 
@@ -47,20 +48,22 @@ class TechSchemaQueryTests {
     val result = query.toGraphql(pretty = true)
 
     val expected = """
-      |{
-      |  search(term: \"kotlin\",limit: 9000) {
-      |    ... on ProgrammingLanguage {
-      |      name
-      |      primaryFeatures {
-      |        name
-      |        description
-      |      }
-      |      isTyped
-      |      since
-      |    }
-      |  }
-      |}
-      """.trimMargin("|")
+      {
+        search(term: "kotlin",limit: 9000) {
+          __typename
+          ...fragProgrammingLanguage0
+        }
+      }
+      fragment fragProgrammingLanguage0 on ProgrammingLanguage {
+        name
+        primaryFeatures {
+          name
+          description
+        }
+        isTyped
+        since
+      }
+      """.trimIndent()
 
     assertThat(result).isEqualTo(expected)
   }
@@ -73,17 +76,20 @@ class TechSchemaQueryTests {
 
     val result = query.toGraphql(pretty = true)
 
+    @Language("GraphQL")
     val expect = """
-      |{
-      |  search(term: \"Windows\",limit: 69) {
-      |    ... on OperatingSystem {
-      |      name
-      |      since
-      |      archSupport
-      |    }
-      |  }
-      |}
-      """.trimMargin("|")
+      {
+        search(term: "Windows",limit: 69) {
+          __typename
+          ...fragOperatingSystem0
+        }
+      }
+      fragment fragOperatingSystem0 on OperatingSystem {
+        name
+        since
+        archSupport
+      }
+      """.trimIndent()
   }
 
   @Test fun `query fragment programming lang and operating system`() {
@@ -95,118 +101,31 @@ class TechSchemaQueryTests {
 
     val result = query.toGraphql(pretty = true)
 
-    val expect = """
-      |{
-      |  search(term: \"unix\",limit: 35) {
-      |    ... on ProgrammingLanguage {
-      |      name
-      |      primaryFeatures {
-      |        name
-      |        description
-      |      }
-      |      isTyped
-      |      since
-      |    }
-      |    ... on OperatingSystem {
-      |      name
-      |      since
-      |      archSupport
-      |    }
-      |  }
-      |}
-      """.trimMargin("|")
+    @Language("GraphQL") val expect = """
+      {
+        search(term: "unix",limit: 35) {
+          __typename
+          ...fragProgrammingLanguage0
+          ...fragOperatingSystem1
+        }
+      }
+      fragment fragOperatingSystem1 on OperatingSystem {
+        name
+        since
+        archSupport
+      }
+      fragment fragProgrammingLanguage0 on ProgrammingLanguage {
+        name
+        primaryFeatures {
+          name
+          description
+        }
+        isTyped
+        since
+      }
+      """.trimIndent()
 
     assertThat(result).isEqualTo(expect)
   }
-
-  @Test fun `nested fragment multiple levels on framework`() {
-
-
-    val query = TechnologyQuery(searchTerm = "python") {
-      onFramework {
-        FrameworkModel {
-          onProgrammingLanguage(::Language)
-          onOperatingSystem(::OperatingSys)
-          onFramework(::NestedFrameworkModel)
-        }
-      }
-    }
-    val query2 = TechnologyQuery(searchTerm = "python") {
-      onFramework {
-        FrameworkModel {
-          onProgrammingLanguage(::Language)
-          onOperatingSystem(::OperatingSys)
-          onFramework(::NestedFrameworkModel)
-        }
-      }
-    }
-    query.hashCode() eq query2.hashCode()
-    query eq query2
-
-    val result = query.toGraphql(pretty = true)
-
-    // 5 fragments in query, but 2 are exactly equal
-    assertThat(query.getFragments().size)
-        .isEqualTo(4)
-
-    val expect = """
-      |{
-      |  search(term: \"python\",limit: 10) {
-      |    ... on Framework {
-      |      name
-      |      languagesUsed {
-      |        name
-      |        primaryFeatures {
-      |          name
-      |          description
-      |        }
-      |        isTyped
-      |        since
-      |      }
-      |      dependencies {
-      |        ... on ProgrammingLanguage {
-      |          name
-      |          primaryFeatures {
-      |            name
-      |            description
-      |          }
-      |          isTyped
-      |          since
-      |        }
-      |        ... on OperatingSystem {
-      |          name
-      |          since
-      |          archSupport
-      |        }
-      |        ... on Framework {
-      |          name
-      |          platform {
-      |            ... on ProgrammingLanguage {
-      |              name
-      |              primaryFeatures {
-      |                name
-      |                description
-      |              }
-      |              isTyped
-      |              since
-      |            }
-      |            ... on OperatingSystem {
-      |              name
-      |              since
-      |              archSupport
-      |            }
-      |          }
-      |          primaryFeatures {
-      |            name
-      |            description
-      |          }
-      |        }
-      |      }
-      |    }
-      |  }
-      |}
-      """.trimMargin("|")
-  }
-
 
 }

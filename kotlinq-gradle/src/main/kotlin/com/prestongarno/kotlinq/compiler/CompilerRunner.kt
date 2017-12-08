@@ -131,6 +131,9 @@ open class KotlinqPlugin : Plugin<Project> {
     target.logger.log(LogLevel.INFO, "Applying compiler plugin to project: '${target.name}'")
     target.extensions.create("kotlinq", KotlinqCompilerConfiguration::class.java, target)
     val compilerTask = target.tasks.create("compileGraphQL", CompilerRunner::class.java)
+    target.tasks
+        .filter { it.name.contains("test") }
+        .forEach { it.dependsOn.add(compilerTask) }
   }.ignore()
 }
 

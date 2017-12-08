@@ -207,8 +207,11 @@ class ModelEquality {
 
     extractedPayload(query).apply {
       assertThat(this)
-          .isEqualTo("{search(keyword: \\\"ZR1\\\"){... on Airplane{owner{... on Organization{type," +
-              "members{age,name},name}... on Person{address{line1},age,name}},model}}}")
+          .isEqualTo("{search(keyword: \"ZR1\")" +
+              "{__typename,...fragAirplane0}}" +
+              "fragment fragAirplane0 on Airplane{model,owner{__typename,...fragPerson1,...fragOrganization2}}," +
+              "fragment fragOrganization2 on Organization{name,members{name,age},type}," +
+              "fragment fragPerson1 on Person{name,age,address{line1}}")
       this.assertBracketsMatch()
     }
   }
