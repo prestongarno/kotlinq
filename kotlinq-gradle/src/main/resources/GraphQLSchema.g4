@@ -1,47 +1,12 @@
 grammar GraphQLSchema;
 
-typeName
-  : Name
-  ;
-
-Name
-  : [a-zA-Z][_0-9A-Za-z]*
-  ;
-
-graphqlSchema
-  : (typeDef|inputTypeDef|unionDef|enumDef|interfaceDef|scalarDef)*
-  ;
-
-typeDef
-  : 'type' typeName implementationDefs? '{' fieldDef+ '}'
-  ;
-
-implementationDefs
-  : 'implements' typeName+
-  ;
-
-inputTypeDef
-  : 'input' typeName '{' fieldDef+ '}'
-  ;
-
-interfaceDef
-  : 'interface' typeName '{' fieldDef+ '}'
-  ;
-
-scalarDef
-  : 'scalar' typeName
-  ;
-
-unionDef
-  : 'union' typeName '=' unionTypes
-  ;
-
-unionTypes
-  : (typeName '|')* typeName
+// TYPE, INPUT, INTERFACE
+blockDef
+  :  fieldDef+
   ;
 
 enumDef
-  : 'enum' typeName '{' scalarName+ '}'
+  : scalarName+
   ;
 
 scalarName
@@ -79,6 +44,14 @@ nullable
 
 defaultValue
   : '=' value
+  ;
+
+typeName
+  : Name
+  ;
+
+Name
+  : [a-zA-Z][_0-9A-Za-z]*
   ;
 
 value

@@ -1,5 +1,5 @@
 // Generated from /home/preston/IdeaProjects/kotlinq/kotlinq-gradle/src/main/resources/GraphQLSchema.g4 by ANTLR 4.7
-package com.prestongarno.kotlinq.core.org.antlr4.gen;
+package com.prestongarno.kotlinq.org.antlr4.definitions;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -8,95 +8,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface GraphQLSchemaListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#typeName}.
+	 * Enter a parse tree produced by {@link GraphQLSchemaParser#blockDef}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeName(GraphQLSchemaParser.TypeNameContext ctx);
+	void enterBlockDef(GraphQLSchemaParser.BlockDefContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#typeName}.
+	 * Exit a parse tree produced by {@link GraphQLSchemaParser#blockDef}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeName(GraphQLSchemaParser.TypeNameContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#graphqlSchema}.
-	 * @param ctx the parse tree
-	 */
-	void enterGraphqlSchema(GraphQLSchemaParser.GraphqlSchemaContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#graphqlSchema}.
-	 * @param ctx the parse tree
-	 */
-	void exitGraphqlSchema(GraphQLSchemaParser.GraphqlSchemaContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#typeDef}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeDef(GraphQLSchemaParser.TypeDefContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#typeDef}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeDef(GraphQLSchemaParser.TypeDefContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#implementationDefs}.
-	 * @param ctx the parse tree
-	 */
-	void enterImplementationDefs(GraphQLSchemaParser.ImplementationDefsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#implementationDefs}.
-	 * @param ctx the parse tree
-	 */
-	void exitImplementationDefs(GraphQLSchemaParser.ImplementationDefsContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#inputTypeDef}.
-	 * @param ctx the parse tree
-	 */
-	void enterInputTypeDef(GraphQLSchemaParser.InputTypeDefContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#inputTypeDef}.
-	 * @param ctx the parse tree
-	 */
-	void exitInputTypeDef(GraphQLSchemaParser.InputTypeDefContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#interfaceDef}.
-	 * @param ctx the parse tree
-	 */
-	void enterInterfaceDef(GraphQLSchemaParser.InterfaceDefContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#interfaceDef}.
-	 * @param ctx the parse tree
-	 */
-	void exitInterfaceDef(GraphQLSchemaParser.InterfaceDefContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#scalarDef}.
-	 * @param ctx the parse tree
-	 */
-	void enterScalarDef(GraphQLSchemaParser.ScalarDefContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#scalarDef}.
-	 * @param ctx the parse tree
-	 */
-	void exitScalarDef(GraphQLSchemaParser.ScalarDefContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#unionDef}.
-	 * @param ctx the parse tree
-	 */
-	void enterUnionDef(GraphQLSchemaParser.UnionDefContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#unionDef}.
-	 * @param ctx the parse tree
-	 */
-	void exitUnionDef(GraphQLSchemaParser.UnionDefContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GraphQLSchemaParser#unionTypes}.
-	 * @param ctx the parse tree
-	 */
-	void enterUnionTypes(GraphQLSchemaParser.UnionTypesContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GraphQLSchemaParser#unionTypes}.
-	 * @param ctx the parse tree
-	 */
-	void exitUnionTypes(GraphQLSchemaParser.UnionTypesContext ctx);
+	void exitBlockDef(GraphQLSchemaParser.BlockDefContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GraphQLSchemaParser#enumDef}.
 	 * @param ctx the parse tree
@@ -197,6 +117,16 @@ public interface GraphQLSchemaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDefaultValue(GraphQLSchemaParser.DefaultValueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GraphQLSchemaParser#typeName}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeName(GraphQLSchemaParser.TypeNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GraphQLSchemaParser#typeName}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeName(GraphQLSchemaParser.TypeNameContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GraphQLSchemaParser#value}.
 	 * @param ctx the parse tree

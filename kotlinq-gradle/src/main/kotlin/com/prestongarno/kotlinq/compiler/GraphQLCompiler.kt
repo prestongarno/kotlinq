@@ -17,18 +17,12 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaLexer
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
 import com.squareup.kotlinpoet.FileSpec
-import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Token
-import java.io.File
 import kotlin.properties.Delegates
 
-typealias SchemaRule = Set<SchemaType<*>>.() -> Unit
-typealias SymbolScopeRule = Set<ScopedSymbol>.(ScopedDeclarationType<*>) -> Unit
+typealias SchemaRule = Set<SchemaType>.() -> Unit
+typealias SymbolScopeRule = Set<ScopedSymbol>.(ScopedDeclarationType) -> Unit
 
 /** TODO use antlr4's listener hooks to stop unnecessary iteration for validation rules */
 class GraphQLCompiler(
@@ -36,12 +30,12 @@ class GraphQLCompiler(
     scope: Configuration.() -> Unit = { /* nothing */ }
 ) {
 
-  val config = Configuration.fromContext(schema, scope)
+  private val config = Configuration.fromContext(schema, scope)
 
   /** This is kept in sync by the [GraphQLCompiler.definitions] variable. Do NOT add definitions here */
-  val symtab: MutableMap<String, SchemaType<*>> = mutableMapOf()
+  val symtab: MutableMap<String, SchemaType> = mutableMapOf()
 
-  private val definitions: MutableSet<SchemaType<*>> by Delegates.observable(mutableSetOf()) { _, _, newValue ->
+  private val definitions: MutableSet<SchemaType> by Delegates.observable(mutableSetOf()) { _, _, newValue ->
     newValue.filter { symtab[it.name] == null }.forEach { defn ->
       symtab[defn.name] = defn
     }
@@ -67,27 +61,8 @@ class GraphQLCompiler(
 
   fun compile() {
 
-    // Get schema
-    val input: CharStream = when (config.schema) {
-      is StringSchema -> CharStreams.fromString(config.schema.source)
-      is FileSchema -> CharStreams.fromPath(File(config.schema.path).toPath())
-    }
-
-    // Parse/lexify it
-    val lexer = GraphQLSchemaLexer(input)
-    val stream = CommonTokenStream(lexer)
-    val parser = GraphQLSchemaParser(stream)
-
-    val result = parser.graphqlSchema()
-
-    // Add type definitions to context
-    definitions += result.interfaceDef().map(::InterfaceDef)
-    definitions += result.enumDef().map(::EnumDef)
-    definitions += result.inputTypeDef().map(::InputDef)
-    definitions += result.typeDef().map(::TypeDef)
-    definitions += result.scalarDef().map(::ScalarDef)
-    definitions += result.unionDef().map(::UnionDef)
-    symtab.putAll(definitions.map { it.name to it })
+    definitions += GraphQLsLexer(config.schema).parse()
+    definitions.forEach { symtab[it.name] = it }
 
     // intermediate
     attrFieldTypes()
@@ -131,8 +106,8 @@ class GraphQLCompiler(
     return metadata + sourceClasses
   }
 
-  private fun attrFieldTypes() = definitions.filterIsInstance<ScopedDeclarationType<*>>()
-      .flatMap(ScopedDeclarationType<*>::expandSymbols)
+  private fun attrFieldTypes() = definitions.filterIsInstance<ScopedDeclarationType>()
+      .flatMap(ScopedDeclarationType::expandSymbols)
       .forEach { (symbol, typeContext) ->
         symbol.type = this@GraphQLCompiler.symtab[symbol.typeName] ?: throw symbol.unknownTypeExc(typeContext)
       }
@@ -142,14 +117,12 @@ class GraphQLCompiler(
       possibilities = defs
     }
 
-    definitions.on<UnionDef> {
+    definitions.filterIsInstance<UnionDef>().forEach {
 
-      context.unionTypes().typeName().map {
-        it.Name().text
-      }.map {
-        symtab[it] as TypeDef // safe cast - rule will prevent this
+      it.types.map {
+        symtab[it] as TypeDef
       }.also { options ->
-        this.setLateinitPossibilities(options.toSet())
+        it.setLateinitPossibilities(options.toSet())
       }
     }
   }
@@ -158,7 +131,7 @@ class GraphQLCompiler(
   /**
    * Apply validation to a set of symbols within the same scope */
   private fun inspectFields(vararg rules: SymbolScopeRule) {
-    definitions.on<ScopedDeclarationType<*>> {
+    definitions.on<ScopedDeclarationType> {
       rules.forEach { rule -> rule(fields, this@on) }
     }
   }
@@ -185,7 +158,7 @@ private fun `duplicate type names check`(): SchemaRule = {
 private fun `type name does not match scalar primitive`(): SchemaRule = {
   forEach { defn ->
     require(ScalarSymbols.named[defn.name] == null) {
-      "Illegal schema declaration name '${defn.name}' at" + defn.context.sourceInterval.a
+      "Illegal schema declaration name '${defn.name}' at${defn.name}"
     }
   }
 }
@@ -209,11 +182,11 @@ private fun Token.toCoordinates() = "[${this.line},${this.startIndex}]"
 
 inline fun <reified T> Collection<*>.on(action: T.() -> Unit) = this.filterIsInstance<T>().forEach(action)
 
-private fun ScopedSymbol.unknownTypeExc(idlContext: ScopedDeclarationType<*>) = IllegalArgumentException(
+private fun ScopedSymbol.unknownTypeExc(idlContext: ScopedDeclarationType) = IllegalArgumentException(
     "Unknown type '$typeName' for field ${idlContext.name}::$name at " + context.start.toCoordinates()
 )
 
-private fun ScopedDeclarationType<*>.expandSymbols() = run {
+private fun ScopedDeclarationType.expandSymbols() = run {
   listOf<Iterable<ScopedSymbol>>(this@expandSymbols.fields,
       this@expandSymbols.fields.flatMap { it.arguments })
       .flatten()

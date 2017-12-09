@@ -29,7 +29,7 @@ fun notNullDelegateCode(arg: ScopedSymbol, targetName: String = "arguments"): Co
   return CodeBlock.of("$targetName.notNull<%T>(\"${arg.name}\", ${arg.name})", arg.type.name.asTypeName())
 }
 
-internal class ArgumentSpecDef(val field: FieldDefinition, val context: ScopedDeclarationType<*>) : KotlinTypeElement {
+internal class ArgumentSpecDef(val field: FieldDefinition, val context: ScopedDeclarationType) : KotlinTypeElement {
 
   val isInterface = field.isAbstract
 

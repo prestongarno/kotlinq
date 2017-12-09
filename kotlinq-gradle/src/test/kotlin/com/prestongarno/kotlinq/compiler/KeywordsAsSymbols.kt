@@ -3,8 +3,8 @@ package com.prestongarno.kotlinq.compiler
 import com.prestongarno.kotlinq.core.org.antlr4.base.GraphQLBaseSchema
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
 import org.junit.Test
+import java.io.File
 
 
 class KeywordsAsSymbols {
@@ -14,24 +14,32 @@ class KeywordsAsSymbols {
 
     // Get schema
     val input: CharStream = CharStreams.fromString("""
-      type Foo {
+
+      scalar MyCustomScalar
+      type Foo implements BazBar, Baz {
         foo: String!
 
         bar: String!
+        #equpur8jf;lasmn;vlkjtype interface baz bar
 
       }
 
-      union Baz = Foo|Baz
-
-      interface BazBar {
-        d: Int
+      scalar FOOMOO union Baz = input|type|interface interface BazBar {
+        d: Int @FOO("B\"AR")
       }
-    """.trimIndent())
+      #equpur8jf;lasmn;vlkjtype interface baz bar
+      type StarWarsQuery implements Boo Baz      , Buzz ,     Aldrin {
+        foo: String! bar: String!
+      }input Barz
+    """.trimIndent())!!
 
     val lexer = GraphQLBaseSchema(input)
-    lexer.ruleNames.forEachIndexed{index, s -> println("$index: $s") }
+    lexer.modeNames.toList().println()
+
+    lexer.tokenTypeMap.entries.sortedBy { it.value }.forEach { println("${it.key}(${it.value}),") }
+
     lexer.allTokens.forEachIndexed { index, token ->
-      println("Rule(${token.type})[$index]='${token.text}'")
+      println("T=${token.type} | '${token.text}'")
     }
   }
 }

@@ -17,8 +17,7 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser.TypeNameContext
+import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 
 /**
  *
@@ -38,10 +37,7 @@ internal fun GraphQLCompiler.attrInheritance() = schemaTypes.on<TypeDef> {
       .map(FieldDefinition::newCache)
       .toMap(mutableMapOf())
 
-  context.implementationDefs()
-      ?.typeName()
-      ?.map(TypeNameContext::toNameString)
-      ?.map(this@attrInheritance::fromSymtab)
+  this.supertypeNames.map(this@attrInheritance::fromSymtab)
       ?.onEach { supertype ->
 
         supertype.fields

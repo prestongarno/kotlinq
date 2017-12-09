@@ -18,7 +18,6 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.QInputType
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
 import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
 import com.prestongarno.kotlinq.core.stubs.CustomScalarStub
 import com.prestongarno.kotlinq.core.stubs.EnumListStub
@@ -29,6 +28,7 @@ import com.prestongarno.kotlinq.core.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.stubs.TypeStub
 import com.prestongarno.kotlinq.core.stubs.UnionListStub
 import com.prestongarno.kotlinq.core.stubs.UnionStub
+import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -44,7 +44,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 sealed class ScopedSymbol : SymbolElement {
   abstract val nullable: Boolean
   abstract val isList: Boolean
-  abstract var type: SchemaType<*>
+  abstract var type: SchemaType
   abstract val context: ParserRuleContext
 }
 
@@ -62,7 +62,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
 
   override val isList = context.typeSpec().listType() != null
 
-  override lateinit var type: SchemaType<*>
+  override lateinit var type: SchemaType
 
   var isAbstract: Boolean = false
 
@@ -195,7 +195,7 @@ data class ArgumentDefinition(
 
   override val isList = context.typeSpec().listType() != null
 
-  override lateinit var type: SchemaType<*>
+  override lateinit var type: SchemaType
 
   val isAbstract = field.isAbstract
 

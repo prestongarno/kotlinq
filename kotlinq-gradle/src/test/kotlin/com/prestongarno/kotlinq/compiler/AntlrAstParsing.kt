@@ -17,11 +17,12 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaLexer
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
+import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaLexer
+import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import org.antlr.v4.runtime.CharStreams
 import org.junit.Test
 import org.antlr.v4.runtime.CommonTokenStream
+/*
 
 class AntlrAstParsing {
 
@@ -123,4 +124,5 @@ class AntlrAstParsing {
 }
 
 fun GraphQLSchemaParser.TypeNameContext.value() = this.Name().text
+*/
 

@@ -25,7 +25,6 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.QUnionType
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
 import com.prestongarno.kotlinq.core.stubs.BooleanArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatArrayDelegate
@@ -36,6 +35,7 @@ import com.prestongarno.kotlinq.core.stubs.ScalarArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.ScalarDelegate
 import com.prestongarno.kotlinq.core.stubs.StringArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
+import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -53,7 +53,7 @@ private const val DEFAULT_NO_ARG = "stub<%T>()"
 private const val DEFAULT_OPTIONAL_ARG = "optionalConfigStub<%T, %T>()"
 private const val DEFAULT_REQ_ARG = "configStub<%T, %T>()"
 
-sealed class SchemaType<out T : ParserRuleContext>(val context: T) : KotlinTypeElement, NamedElement {
+sealed class SchemaType : KotlinTypeElement, NamedElement {
 
   abstract val schemaTypeClass: KClass<out QSchemaType>
   // the delegate stub creator objects which you invoke method for the right delegate field on
@@ -77,7 +77,7 @@ sealed class SchemaType<out T : ParserRuleContext>(val context: T) : KotlinTypeE
 }
 
 
-sealed class ScopedDeclarationType<out T : ParserRuleContext>(context: T) : SchemaType<T>(context) {
+sealed class ScopedDeclarationType() : SchemaType() {
   abstract val fields: Set<FieldDefinition>
 
   val symtab by lazy {
@@ -85,12 +85,11 @@ sealed class ScopedDeclarationType<out T : ParserRuleContext>(context: T) : Sche
   }
 }
 
-class TypeDef(context: GraphQLSchemaParser.TypeDefContext)
-  : ScopedDeclarationType<GraphQLSchemaParser.TypeDefContext>(context) {
-
-  override val name: String = context.typeName().Name().text
-
-  override val fields = context.fieldDef().map(::FieldDefinition).toSet()
+class TypeDef(
+    override val name: String,
+    val supertypeNames: List<String>,
+    override val fields: Set<FieldDefinition>
+) : ScopedDeclarationType() {
 
   lateinit var supertypes: Set<InterfaceDef>
 
@@ -110,11 +109,12 @@ class TypeDef(context: GraphQLSchemaParser.TypeDefContext)
   override val delegateListStubClass = QSchemaType.QTypes.List::class
 }
 
-class InterfaceDef(context: GraphQLSchemaParser.InterfaceDefContext)
-  : ScopedDeclarationType<GraphQLSchemaParser.InterfaceDefContext>(context) {
-  override val name: String = context.typeName().Name().text
+class InterfaceDef(
+    override val name: String,
+    fields: Set<FieldDefinition>
+) : ScopedDeclarationType() {
 
-  override val fields = context.fieldDef().map(::FieldDefinition).onEach {
+  override val fields = fields.onEach {
     it.isAbstract = true // flag as abstract
     it.inheritsFrom = emptySet() // initialize lateinit var
   }.toSet()
@@ -135,10 +135,7 @@ class InterfaceDef(context: GraphQLSchemaParser.InterfaceDefContext)
 
 }
 
-class UnionDef(context: GraphQLSchemaParser.UnionDefContext)
-  : SchemaType<GraphQLSchemaParser.UnionDefContext>(context) {
-
-  override val name: String = context.typeName().Name().text
+class UnionDef(override val name: String, val types: List<String>) : SchemaType() {
 
   lateinit var possibilities: Set<TypeDef>
 
@@ -180,10 +177,7 @@ class UnionDef(context: GraphQLSchemaParser.UnionDefContext)
   override val delegateListStubClass: KClass<*> = QSchemaType.QUnion.List::class
 }
 
-class ScalarDef(context: GraphQLSchemaParser.ScalarDefContext)
-  : SchemaType<GraphQLSchemaParser.ScalarDefContext>(context) {
-
-  override val name = context.typeName().Name().text
+class ScalarDef(override val name: String) : SchemaType() {
 
   override fun toKotlin(): TypeSpec = TypeSpec.objectBuilder(name)
       .addSuperinterface(schemaTypeClass)
@@ -194,12 +188,8 @@ class ScalarDef(context: GraphQLSchemaParser.ScalarDefContext)
   override val delegateListStubClass: KClass<*> = QSchemaType.QCustomScalar.List::class
 }
 
-class EnumDef(context: GraphQLSchemaParser.EnumDefContext)
-  : SchemaType<GraphQLSchemaParser.EnumDefContext>(context) {
-
-  override val name: String = context.typeName().Name().text
-
-  val options = context.scalarName().map { it.Name().text }
+class EnumDef(override val name: String, val options: List<String>)
+  : SchemaType() {
 
   override fun toKotlin(): TypeSpec = TypeSpec.enumBuilder(name).apply {
     options.forEach { addEnumConstant(it) }
@@ -212,12 +202,8 @@ class EnumDef(context: GraphQLSchemaParser.EnumDefContext)
 
 }
 
-class InputDef(context: GraphQLSchemaParser.InputTypeDefContext)
-  : ScopedDeclarationType<GraphQLSchemaParser.InputTypeDefContext>(context) {
-
-  override val name = context.typeName().Name().text
-
-  override val fields = context.fieldDef().map(::FieldDefinition).toSet()
+class InputDef(override val name: String, override val fields: Set<FieldDefinition>)
+  : ScopedDeclarationType() {
 
   override fun toKotlin(): TypeSpec = TypeSpec.classBuilder(name).apply {
     addSuperinterface((schemaTypeClass.qualifiedName + CLASS_DELEGATE_MARKER).asTypeName())
@@ -252,7 +238,7 @@ class InputDef(context: GraphQLSchemaParser.InputTypeDefContext)
 
 }
 
-sealed class ScalarType : SchemaType<PlatformTypeContext>(PlatformTypeContext) {
+sealed class ScalarType : SchemaType() {
 
   abstract val stubClass: KClass<out ScalarDelegate<*>>
   abstract val arrayStubClass: KClass<out ScalarArrayDelegate<*>>
@@ -314,7 +300,7 @@ object PlatformTypeContext : ParserRuleContext()
 
 fun String.asTypeName(): TypeName = ClassName.bestGuess(this)
 
-private fun SchemaType<*>.stubFor(field: FieldDefinition, typeArgs: List<String>): List<ClassName> =
+private fun SchemaType.stubFor(field: FieldDefinition, typeArgs: List<String>): List<ClassName> =
     mutableListOf((if (field.isList) delegateListStubClass else delegateStubClass).asTypeName()).apply {
       // all are generated in same package for now
       addAll(typeArgs.map { ClassName("", it) })
