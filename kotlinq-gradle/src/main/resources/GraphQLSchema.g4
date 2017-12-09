@@ -1,5 +1,13 @@
 grammar GraphQLSchema;
 
+typeName
+  : Name
+  ;
+
+Name
+  : [a-zA-Z][_0-9A-Za-z]*
+  ;
+
 graphqlSchema
   : (typeDef|inputTypeDef|unionDef|enumDef|interfaceDef|scalarDef)*
   ;
@@ -69,16 +77,8 @@ nullable
   : '!'
   ;
 
-typeName
-  : Name
-  ;
-
 defaultValue
   : '=' value
-  ;
-
-Name
-  : [a-zA-Z][_0-9A-Za-z]*
   ;
 
 value
@@ -170,6 +170,7 @@ fragment DoubleQuote
 fragment Hex
    : [0-9a-fA-F]
    ;
+
 Ignored
    : (Whitespace|Comma|LineTerminator|Comment) -> skip
    ;

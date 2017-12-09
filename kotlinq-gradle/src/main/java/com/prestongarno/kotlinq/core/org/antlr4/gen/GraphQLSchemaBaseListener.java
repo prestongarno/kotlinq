@@ -1,21 +1,4 @@
-/*
- * Copyright (C) 2017 Preston Garno
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-// Generated from /home/preston/IdeaProjects/ktq-gradle/src/main/resources/GraphQLSchema.g4 by ANTLR 4.7
+// Generated from /home/preston/IdeaProjects/kotlinq/kotlinq-gradle/src/main/resources/GraphQLSchema.g4 by ANTLR 4.7
 package com.prestongarno.kotlinq.core.org.antlr4.gen;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -28,6 +11,18 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * of the available methods.
  */
 public class GraphQLSchemaBaseListener implements GraphQLSchemaListener {
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -232,18 +227,6 @@ public class GraphQLSchemaBaseListener implements GraphQLSchemaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNullable(GraphQLSchemaParser.NullableContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

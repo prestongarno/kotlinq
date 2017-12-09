@@ -1,27 +1,13 @@
-/*
- * Copyright (C) 2017 Preston Garno
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-// Generated from /home/preston/IdeaProjects/ktq-gradle/src/main/resources/GraphQLSchema.g4 by ANTLR 4.7
+// Generated from /home/preston/IdeaProjects/kotlinq/kotlinq-gradle/src/main/resources/GraphQLSchema.g4 by ANTLR 4.7
 package com.prestongarno.kotlinq.core.org.antlr4.gen;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class GraphQLSchemaParser extends Parser {
@@ -37,18 +23,17 @@ public class GraphQLSchemaParser extends Parser {
 		Sign=24, IntegerPart=25, NonZeroDigit=26, ExponentPart=27, Digit=28, StringValue=29, 
 		Ignored=30;
 	public static final int
-		RULE_graphqlSchema = 0, RULE_typeDef = 1, RULE_implementationDefs = 2, 
-		RULE_inputTypeDef = 3, RULE_interfaceDef = 4, RULE_scalarDef = 5, RULE_unionDef = 6, 
-		RULE_unionTypes = 7, RULE_enumDef = 8, RULE_scalarName = 9, RULE_fieldDef = 10, 
-		RULE_fieldArgs = 11, RULE_fieldName = 12, RULE_argument = 13, RULE_typeSpec = 14, 
-		RULE_listType = 15, RULE_nullable = 16, RULE_typeName = 17, RULE_defaultValue = 18, 
-		RULE_value = 19, RULE_enumValue = 20, RULE_arrayValue = 21, RULE_objectValue = 22, 
-		RULE_objectField = 23;
+		RULE_typeName = 0, RULE_graphqlSchema = 1, RULE_typeDef = 2, RULE_implementationDefs = 3, 
+		RULE_inputTypeDef = 4, RULE_interfaceDef = 5, RULE_scalarDef = 6, RULE_unionDef = 7, 
+		RULE_unionTypes = 8, RULE_enumDef = 9, RULE_scalarName = 10, RULE_fieldDef = 11, 
+		RULE_fieldArgs = 12, RULE_fieldName = 13, RULE_argument = 14, RULE_typeSpec = 15, 
+		RULE_listType = 16, RULE_nullable = 17, RULE_defaultValue = 18, RULE_value = 19, 
+		RULE_enumValue = 20, RULE_arrayValue = 21, RULE_objectValue = 22, RULE_objectField = 23;
 	public static final String[] ruleNames = {
-		"graphqlSchema", "typeDef", "implementationDefs", "inputTypeDef", "interfaceDef", 
-		"scalarDef", "unionDef", "unionTypes", "enumDef", "scalarName", "fieldDef", 
-		"fieldArgs", "fieldName", "argument", "typeSpec", "listType", "nullable", 
-		"typeName", "defaultValue", "value", "enumValue", "arrayValue", "objectValue", 
+		"typeName", "graphqlSchema", "typeDef", "implementationDefs", "inputTypeDef", 
+		"interfaceDef", "scalarDef", "unionDef", "unionTypes", "enumDef", "scalarName", 
+		"fieldDef", "fieldArgs", "fieldName", "argument", "typeSpec", "listType", 
+		"nullable", "defaultValue", "value", "enumValue", "arrayValue", "objectValue", 
 		"objectField"
 	};
 
@@ -112,6 +97,48 @@ public class GraphQLSchemaParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+	public static class TypeNameContext extends ParserRuleContext {
+		public TerminalNode Name() { return getToken(GraphQLSchemaParser.Name, 0); }
+		public TypeNameContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_typeName; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof GraphQLSchemaListener ) ((GraphQLSchemaListener)listener).enterTypeName(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof GraphQLSchemaListener ) ((GraphQLSchemaListener)listener).exitTypeName(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GraphQLSchemaVisitor ) return ((GraphQLSchemaVisitor<? extends T>)visitor).visitTypeName(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final TypeNameContext typeName() throws RecognitionException {
+		TypeNameContext _localctx = new TypeNameContext(_ctx, getState());
+		enterRule(_localctx, 0, RULE_typeName);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(48);
+			match(Name);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class GraphqlSchemaContext extends ParserRuleContext {
 		public List<TypeDefContext> typeDef() {
 			return getRuleContexts(TypeDefContext.class);
@@ -170,52 +197,52 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final GraphqlSchemaContext graphqlSchema() throws RecognitionException {
 		GraphqlSchemaContext _localctx = new GraphqlSchemaContext(_ctx, getState());
-		enterRule(_localctx, 0, RULE_graphqlSchema);
+		enterRule(_localctx, 2, RULE_graphqlSchema);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(56);
+			setState(58);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << T__7) | (1L << T__10))) != 0)) {
 				{
-				setState(54);
+				setState(56);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case T__0:
 					{
-					setState(48);
+					setState(50);
 					typeDef();
 					}
 					break;
 				case T__4:
 					{
-					setState(49);
+					setState(51);
 					inputTypeDef();
 					}
 					break;
 				case T__7:
 					{
-					setState(50);
+					setState(52);
 					unionDef();
 					}
 					break;
 				case T__10:
 					{
-					setState(51);
+					setState(53);
 					enumDef();
 					}
 					break;
 				case T__5:
 					{
-					setState(52);
+					setState(54);
 					interfaceDef();
 					}
 					break;
 				case T__6:
 					{
-					setState(53);
+					setState(55);
 					scalarDef();
 					}
 					break;
@@ -223,7 +250,7 @@ public class GraphQLSchemaParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(58);
+				setState(60);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -274,42 +301,42 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final TypeDefContext typeDef() throws RecognitionException {
 		TypeDefContext _localctx = new TypeDefContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_typeDef);
+		enterRule(_localctx, 4, RULE_typeDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(59);
+			setState(61);
 			match(T__0);
-			setState(60);
-			typeName();
 			setState(62);
+			typeName();
+			setState(64);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__3) {
 				{
-				setState(61);
+				setState(63);
 				implementationDefs();
 				}
 			}
 
-			setState(64);
+			setState(66);
 			match(T__1);
-			setState(66); 
+			setState(68); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(65);
+				setState(67);
 				fieldDef();
 				}
 				}
-				setState(68); 
+				setState(70); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==Name );
-			setState(70);
+			setState(72);
 			match(T__2);
 			}
 		}
@@ -352,24 +379,24 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final ImplementationDefsContext implementationDefs() throws RecognitionException {
 		ImplementationDefsContext _localctx = new ImplementationDefsContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_implementationDefs);
+		enterRule(_localctx, 6, RULE_implementationDefs);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(72);
+			setState(74);
 			match(T__3);
-			setState(74); 
+			setState(76); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(73);
+				setState(75);
 				typeName();
 				}
 				}
-				setState(76); 
+				setState(78); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==Name );
@@ -417,32 +444,32 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final InputTypeDefContext inputTypeDef() throws RecognitionException {
 		InputTypeDefContext _localctx = new InputTypeDefContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_inputTypeDef);
+		enterRule(_localctx, 8, RULE_inputTypeDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(78);
-			match(T__4);
-			setState(79);
-			typeName();
 			setState(80);
+			match(T__4);
+			setState(81);
+			typeName();
+			setState(82);
 			match(T__1);
-			setState(82); 
+			setState(84); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(81);
+				setState(83);
 				fieldDef();
 				}
 				}
-				setState(84); 
+				setState(86); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==Name );
-			setState(86);
+			setState(88);
 			match(T__2);
 			}
 		}
@@ -488,32 +515,32 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final InterfaceDefContext interfaceDef() throws RecognitionException {
 		InterfaceDefContext _localctx = new InterfaceDefContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_interfaceDef);
+		enterRule(_localctx, 10, RULE_interfaceDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(88);
-			match(T__5);
-			setState(89);
-			typeName();
 			setState(90);
+			match(T__5);
+			setState(91);
+			typeName();
+			setState(92);
 			match(T__1);
-			setState(92); 
+			setState(94); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(91);
+				setState(93);
 				fieldDef();
 				}
 				}
-				setState(94); 
+				setState(96); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==Name );
-			setState(96);
+			setState(98);
 			match(T__2);
 			}
 		}
@@ -553,13 +580,13 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final ScalarDefContext scalarDef() throws RecognitionException {
 		ScalarDefContext _localctx = new ScalarDefContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_scalarDef);
+		enterRule(_localctx, 12, RULE_scalarDef);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(98);
+			setState(100);
 			match(T__6);
-			setState(99);
+			setState(101);
 			typeName();
 			}
 		}
@@ -602,17 +629,17 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final UnionDefContext unionDef() throws RecognitionException {
 		UnionDefContext _localctx = new UnionDefContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_unionDef);
+		enterRule(_localctx, 14, RULE_unionDef);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(101);
-			match(T__7);
-			setState(102);
-			typeName();
 			setState(103);
-			match(T__8);
+			match(T__7);
 			setState(104);
+			typeName();
+			setState(105);
+			match(T__8);
+			setState(106);
 			unionTypes();
 			}
 		}
@@ -655,30 +682,30 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final UnionTypesContext unionTypes() throws RecognitionException {
 		UnionTypesContext _localctx = new UnionTypesContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_unionTypes);
+		enterRule(_localctx, 16, RULE_unionTypes);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(111);
+			setState(113);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(106);
+					setState(108);
 					typeName();
-					setState(107);
+					setState(109);
 					match(T__9);
 					}
 					} 
 				}
-				setState(113);
+				setState(115);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			}
-			setState(114);
+			setState(116);
 			typeName();
 			}
 		}
@@ -724,32 +751,32 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final EnumDefContext enumDef() throws RecognitionException {
 		EnumDefContext _localctx = new EnumDefContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_enumDef);
+		enterRule(_localctx, 18, RULE_enumDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(116);
-			match(T__10);
-			setState(117);
-			typeName();
 			setState(118);
+			match(T__10);
+			setState(119);
+			typeName();
+			setState(120);
 			match(T__1);
-			setState(120); 
+			setState(122); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(119);
+				setState(121);
 				scalarName();
 				}
 				}
-				setState(122); 
+				setState(124); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==Name );
-			setState(124);
+			setState(126);
 			match(T__2);
 			}
 		}
@@ -787,11 +814,11 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final ScalarNameContext scalarName() throws RecognitionException {
 		ScalarNameContext _localctx = new ScalarNameContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_scalarName);
+		enterRule(_localctx, 20, RULE_scalarName);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(126);
+			setState(128);
 			match(Name);
 			}
 		}
@@ -837,26 +864,26 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final FieldDefContext fieldDef() throws RecognitionException {
 		FieldDefContext _localctx = new FieldDefContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_fieldDef);
+		enterRule(_localctx, 22, RULE_fieldDef);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(128);
-			fieldName();
 			setState(130);
+			fieldName();
+			setState(132);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__12) {
 				{
-				setState(129);
+				setState(131);
 				fieldArgs();
 				}
 			}
 
-			setState(132);
+			setState(134);
 			match(T__11);
-			setState(133);
+			setState(135);
 			typeSpec();
 			}
 		}
@@ -899,28 +926,28 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final FieldArgsContext fieldArgs() throws RecognitionException {
 		FieldArgsContext _localctx = new FieldArgsContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_fieldArgs);
+		enterRule(_localctx, 24, RULE_fieldArgs);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(135);
+			setState(137);
 			match(T__12);
-			setState(137); 
+			setState(139); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(136);
+				setState(138);
 				argument();
 				}
 				}
-				setState(139); 
+				setState(141); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==Name );
-			setState(141);
+			setState(143);
 			match(T__13);
 			}
 		}
@@ -958,11 +985,11 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final FieldNameContext fieldName() throws RecognitionException {
 		FieldNameContext _localctx = new FieldNameContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_fieldName);
+		enterRule(_localctx, 26, RULE_fieldName);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(143);
+			setState(145);
 			match(Name);
 			}
 		}
@@ -1009,33 +1036,33 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final ArgumentContext argument() throws RecognitionException {
 		ArgumentContext _localctx = new ArgumentContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_argument);
+		enterRule(_localctx, 28, RULE_argument);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(145);
-			match(Name);
-			setState(146);
-			match(T__11);
 			setState(147);
-			typeSpec();
+			match(Name);
+			setState(148);
+			match(T__11);
 			setState(149);
+			typeSpec();
+			setState(151);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__16) {
 				{
-				setState(148);
+				setState(150);
 				nullable();
 				}
 			}
 
-			setState(152);
+			setState(154);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__8) {
 				{
-				setState(151);
+				setState(153);
 				defaultValue();
 				}
 			}
@@ -1084,34 +1111,34 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final TypeSpecContext typeSpec() throws RecognitionException {
 		TypeSpecContext _localctx = new TypeSpecContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_typeSpec);
+		enterRule(_localctx, 30, RULE_typeSpec);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(156);
+			setState(158);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case Name:
 				{
-				setState(154);
+				setState(156);
 				typeName();
 				}
 				break;
 			case T__14:
 				{
-				setState(155);
+				setState(157);
 				listType();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(159);
+			setState(161);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
 			case 1:
 				{
-				setState(158);
+				setState(160);
 				nullable();
 				}
 				break;
@@ -1154,15 +1181,15 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final ListTypeContext listType() throws RecognitionException {
 		ListTypeContext _localctx = new ListTypeContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_listType);
+		enterRule(_localctx, 32, RULE_listType);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(161);
-			match(T__14);
-			setState(162);
-			typeSpec();
 			setState(163);
+			match(T__14);
+			setState(164);
+			typeSpec();
+			setState(165);
 			match(T__15);
 			}
 		}
@@ -1199,54 +1226,12 @@ public class GraphQLSchemaParser extends Parser {
 
 	public final NullableContext nullable() throws RecognitionException {
 		NullableContext _localctx = new NullableContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_nullable);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(165);
-			match(T__16);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class TypeNameContext extends ParserRuleContext {
-		public TerminalNode Name() { return getToken(GraphQLSchemaParser.Name, 0); }
-		public TypeNameContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_typeName; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof GraphQLSchemaListener ) ((GraphQLSchemaListener)listener).enterTypeName(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof GraphQLSchemaListener ) ((GraphQLSchemaListener)listener).exitTypeName(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GraphQLSchemaVisitor ) return ((GraphQLSchemaVisitor<? extends T>)visitor).visitTypeName(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final TypeNameContext typeName() throws RecognitionException {
-		TypeNameContext _localctx = new TypeNameContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_typeName);
+		enterRule(_localctx, 34, RULE_nullable);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(167);
-			match(Name);
+			match(T__16);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1642,52 +1627,52 @@ public class GraphQLSchemaParser extends Parser {
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
-		"\3\2\3\2\3\2\3\2\3\2\3\2\7\29\n\2\f\2\16\2<\13\2\3\3\3\3\3\3\5\3A\n\3"+
-		"\3\3\3\3\6\3E\n\3\r\3\16\3F\3\3\3\3\3\4\3\4\6\4M\n\4\r\4\16\4N\3\5\3\5"+
-		"\3\5\3\5\6\5U\n\5\r\5\16\5V\3\5\3\5\3\6\3\6\3\6\3\6\6\6_\n\6\r\6\16\6"+
-		"`\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t\7\tp\n\t\f\t\16"+
-		"\ts\13\t\3\t\3\t\3\n\3\n\3\n\3\n\6\n{\n\n\r\n\16\n|\3\n\3\n\3\13\3\13"+
-		"\3\f\3\f\5\f\u0085\n\f\3\f\3\f\3\f\3\r\3\r\6\r\u008c\n\r\r\r\16\r\u008d"+
-		"\3\r\3\r\3\16\3\16\3\17\3\17\3\17\3\17\5\17\u0098\n\17\3\17\5\17\u009b"+
-		"\n\17\3\20\3\20\5\20\u009f\n\20\3\20\5\20\u00a2\n\20\3\21\3\21\3\21\3"+
-		"\21\3\22\3\22\3\23\3\23\3\24\3\24\3\24\3\25\3\25\3\25\3\25\3\25\3\25\3"+
-		"\25\3\25\5\25\u00b7\n\25\3\26\3\26\3\27\3\27\7\27\u00bd\n\27\f\27\16\27"+
-		"\u00c0\13\27\3\27\3\27\3\30\3\30\7\30\u00c6\n\30\f\30\16\30\u00c9\13\30"+
-		"\3\30\3\30\3\31\3\31\3\31\3\31\3\31\2\2\32\2\4\6\b\n\f\16\20\22\24\26"+
-		"\30\32\34\36 \"$&(*,.\60\2\2\2\u00d4\2:\3\2\2\2\4=\3\2\2\2\6J\3\2\2\2"+
-		"\bP\3\2\2\2\nZ\3\2\2\2\fd\3\2\2\2\16g\3\2\2\2\20q\3\2\2\2\22v\3\2\2\2"+
-		"\24\u0080\3\2\2\2\26\u0082\3\2\2\2\30\u0089\3\2\2\2\32\u0091\3\2\2\2\34"+
-		"\u0093\3\2\2\2\36\u009e\3\2\2\2 \u00a3\3\2\2\2\"\u00a7\3\2\2\2$\u00a9"+
-		"\3\2\2\2&\u00ab\3\2\2\2(\u00b6\3\2\2\2*\u00b8\3\2\2\2,\u00ba\3\2\2\2."+
-		"\u00c3\3\2\2\2\60\u00cc\3\2\2\2\629\5\4\3\2\639\5\b\5\2\649\5\16\b\2\65"+
-		"9\5\22\n\2\669\5\n\6\2\679\5\f\7\28\62\3\2\2\28\63\3\2\2\28\64\3\2\2\2"+
-		"8\65\3\2\2\28\66\3\2\2\28\67\3\2\2\29<\3\2\2\2:8\3\2\2\2:;\3\2\2\2;\3"+
-		"\3\2\2\2<:\3\2\2\2=>\7\3\2\2>@\5$\23\2?A\5\6\4\2@?\3\2\2\2@A\3\2\2\2A"+
-		"B\3\2\2\2BD\7\4\2\2CE\5\26\f\2DC\3\2\2\2EF\3\2\2\2FD\3\2\2\2FG\3\2\2\2"+
-		"GH\3\2\2\2HI\7\5\2\2I\5\3\2\2\2JL\7\6\2\2KM\5$\23\2LK\3\2\2\2MN\3\2\2"+
-		"\2NL\3\2\2\2NO\3\2\2\2O\7\3\2\2\2PQ\7\7\2\2QR\5$\23\2RT\7\4\2\2SU\5\26"+
-		"\f\2TS\3\2\2\2UV\3\2\2\2VT\3\2\2\2VW\3\2\2\2WX\3\2\2\2XY\7\5\2\2Y\t\3"+
-		"\2\2\2Z[\7\b\2\2[\\\5$\23\2\\^\7\4\2\2]_\5\26\f\2^]\3\2\2\2_`\3\2\2\2"+
-		"`^\3\2\2\2`a\3\2\2\2ab\3\2\2\2bc\7\5\2\2c\13\3\2\2\2de\7\t\2\2ef\5$\23"+
-		"\2f\r\3\2\2\2gh\7\n\2\2hi\5$\23\2ij\7\13\2\2jk\5\20\t\2k\17\3\2\2\2lm"+
-		"\5$\23\2mn\7\f\2\2np\3\2\2\2ol\3\2\2\2ps\3\2\2\2qo\3\2\2\2qr\3\2\2\2r"+
-		"t\3\2\2\2sq\3\2\2\2tu\5$\23\2u\21\3\2\2\2vw\7\r\2\2wx\5$\23\2xz\7\4\2"+
-		"\2y{\5\24\13\2zy\3\2\2\2{|\3\2\2\2|z\3\2\2\2|}\3\2\2\2}~\3\2\2\2~\177"+
-		"\7\5\2\2\177\23\3\2\2\2\u0080\u0081\7\24\2\2\u0081\25\3\2\2\2\u0082\u0084"+
-		"\5\32\16\2\u0083\u0085\5\30\r\2\u0084\u0083\3\2\2\2\u0084\u0085\3\2\2"+
-		"\2\u0085\u0086\3\2\2\2\u0086\u0087\7\16\2\2\u0087\u0088\5\36\20\2\u0088"+
-		"\27\3\2\2\2\u0089\u008b\7\17\2\2\u008a\u008c\5\34\17\2\u008b\u008a\3\2"+
-		"\2\2\u008c\u008d\3\2\2\2\u008d\u008b\3\2\2\2\u008d\u008e\3\2\2\2\u008e"+
-		"\u008f\3\2\2\2\u008f\u0090\7\20\2\2\u0090\31\3\2\2\2\u0091\u0092\7\24"+
-		"\2\2\u0092\33\3\2\2\2\u0093\u0094\7\24\2\2\u0094\u0095\7\16\2\2\u0095"+
-		"\u0097\5\36\20\2\u0096\u0098\5\"\22\2\u0097\u0096\3\2\2\2\u0097\u0098"+
-		"\3\2\2\2\u0098\u009a\3\2\2\2\u0099\u009b\5&\24\2\u009a\u0099\3\2\2\2\u009a"+
-		"\u009b\3\2\2\2\u009b\35\3\2\2\2\u009c\u009f\5$\23\2\u009d\u009f\5 \21"+
-		"\2\u009e\u009c\3\2\2\2\u009e\u009d\3\2\2\2\u009f\u00a1\3\2\2\2\u00a0\u00a2"+
-		"\5\"\22\2\u00a1\u00a0\3\2\2\2\u00a1\u00a2\3\2\2\2\u00a2\37\3\2\2\2\u00a3"+
-		"\u00a4\7\21\2\2\u00a4\u00a5\5\36\20\2\u00a5\u00a6\7\22\2\2\u00a6!\3\2"+
-		"\2\2\u00a7\u00a8\7\23\2\2\u00a8#\3\2\2\2\u00a9\u00aa\7\24\2\2\u00aa%\3"+
-		"\2\2\2\u00ab\u00ac\7\13\2\2\u00ac\u00ad\5(\25\2\u00ad\'\3\2\2\2\u00ae"+
+		"\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\7\3;\n\3\f\3\16\3>\13\3\3\4\3\4\3\4\5"+
+		"\4C\n\4\3\4\3\4\6\4G\n\4\r\4\16\4H\3\4\3\4\3\5\3\5\6\5O\n\5\r\5\16\5P"+
+		"\3\6\3\6\3\6\3\6\6\6W\n\6\r\6\16\6X\3\6\3\6\3\7\3\7\3\7\3\7\6\7a\n\7\r"+
+		"\7\16\7b\3\7\3\7\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\n\3\n\3\n\7\nr\n\n"+
+		"\f\n\16\nu\13\n\3\n\3\n\3\13\3\13\3\13\3\13\6\13}\n\13\r\13\16\13~\3\13"+
+		"\3\13\3\f\3\f\3\r\3\r\5\r\u0087\n\r\3\r\3\r\3\r\3\16\3\16\6\16\u008e\n"+
+		"\16\r\16\16\16\u008f\3\16\3\16\3\17\3\17\3\20\3\20\3\20\3\20\5\20\u009a"+
+		"\n\20\3\20\5\20\u009d\n\20\3\21\3\21\5\21\u00a1\n\21\3\21\5\21\u00a4\n"+
+		"\21\3\22\3\22\3\22\3\22\3\23\3\23\3\24\3\24\3\24\3\25\3\25\3\25\3\25\3"+
+		"\25\3\25\3\25\3\25\5\25\u00b7\n\25\3\26\3\26\3\27\3\27\7\27\u00bd\n\27"+
+		"\f\27\16\27\u00c0\13\27\3\27\3\27\3\30\3\30\7\30\u00c6\n\30\f\30\16\30"+
+		"\u00c9\13\30\3\30\3\30\3\31\3\31\3\31\3\31\3\31\2\2\32\2\4\6\b\n\f\16"+
+		"\20\22\24\26\30\32\34\36 \"$&(*,.\60\2\2\2\u00d4\2\62\3\2\2\2\4<\3\2\2"+
+		"\2\6?\3\2\2\2\bL\3\2\2\2\nR\3\2\2\2\f\\\3\2\2\2\16f\3\2\2\2\20i\3\2\2"+
+		"\2\22s\3\2\2\2\24x\3\2\2\2\26\u0082\3\2\2\2\30\u0084\3\2\2\2\32\u008b"+
+		"\3\2\2\2\34\u0093\3\2\2\2\36\u0095\3\2\2\2 \u00a0\3\2\2\2\"\u00a5\3\2"+
+		"\2\2$\u00a9\3\2\2\2&\u00ab\3\2\2\2(\u00b6\3\2\2\2*\u00b8\3\2\2\2,\u00ba"+
+		"\3\2\2\2.\u00c3\3\2\2\2\60\u00cc\3\2\2\2\62\63\7\24\2\2\63\3\3\2\2\2\64"+
+		";\5\6\4\2\65;\5\n\6\2\66;\5\20\t\2\67;\5\24\13\28;\5\f\7\29;\5\16\b\2"+
+		":\64\3\2\2\2:\65\3\2\2\2:\66\3\2\2\2:\67\3\2\2\2:8\3\2\2\2:9\3\2\2\2;"+
+		">\3\2\2\2<:\3\2\2\2<=\3\2\2\2=\5\3\2\2\2><\3\2\2\2?@\7\3\2\2@B\5\2\2\2"+
+		"AC\5\b\5\2BA\3\2\2\2BC\3\2\2\2CD\3\2\2\2DF\7\4\2\2EG\5\30\r\2FE\3\2\2"+
+		"\2GH\3\2\2\2HF\3\2\2\2HI\3\2\2\2IJ\3\2\2\2JK\7\5\2\2K\7\3\2\2\2LN\7\6"+
+		"\2\2MO\5\2\2\2NM\3\2\2\2OP\3\2\2\2PN\3\2\2\2PQ\3\2\2\2Q\t\3\2\2\2RS\7"+
+		"\7\2\2ST\5\2\2\2TV\7\4\2\2UW\5\30\r\2VU\3\2\2\2WX\3\2\2\2XV\3\2\2\2XY"+
+		"\3\2\2\2YZ\3\2\2\2Z[\7\5\2\2[\13\3\2\2\2\\]\7\b\2\2]^\5\2\2\2^`\7\4\2"+
+		"\2_a\5\30\r\2`_\3\2\2\2ab\3\2\2\2b`\3\2\2\2bc\3\2\2\2cd\3\2\2\2de\7\5"+
+		"\2\2e\r\3\2\2\2fg\7\t\2\2gh\5\2\2\2h\17\3\2\2\2ij\7\n\2\2jk\5\2\2\2kl"+
+		"\7\13\2\2lm\5\22\n\2m\21\3\2\2\2no\5\2\2\2op\7\f\2\2pr\3\2\2\2qn\3\2\2"+
+		"\2ru\3\2\2\2sq\3\2\2\2st\3\2\2\2tv\3\2\2\2us\3\2\2\2vw\5\2\2\2w\23\3\2"+
+		"\2\2xy\7\r\2\2yz\5\2\2\2z|\7\4\2\2{}\5\26\f\2|{\3\2\2\2}~\3\2\2\2~|\3"+
+		"\2\2\2~\177\3\2\2\2\177\u0080\3\2\2\2\u0080\u0081\7\5\2\2\u0081\25\3\2"+
+		"\2\2\u0082\u0083\7\24\2\2\u0083\27\3\2\2\2\u0084\u0086\5\34\17\2\u0085"+
+		"\u0087\5\32\16\2\u0086\u0085\3\2\2\2\u0086\u0087\3\2\2\2\u0087\u0088\3"+
+		"\2\2\2\u0088\u0089\7\16\2\2\u0089\u008a\5 \21\2\u008a\31\3\2\2\2\u008b"+
+		"\u008d\7\17\2\2\u008c\u008e\5\36\20\2\u008d\u008c\3\2\2\2\u008e\u008f"+
+		"\3\2\2\2\u008f\u008d\3\2\2\2\u008f\u0090\3\2\2\2\u0090\u0091\3\2\2\2\u0091"+
+		"\u0092\7\20\2\2\u0092\33\3\2\2\2\u0093\u0094\7\24\2\2\u0094\35\3\2\2\2"+
+		"\u0095\u0096\7\24\2\2\u0096\u0097\7\16\2\2\u0097\u0099\5 \21\2\u0098\u009a"+
+		"\5$\23\2\u0099\u0098\3\2\2\2\u0099\u009a\3\2\2\2\u009a\u009c\3\2\2\2\u009b"+
+		"\u009d\5&\24\2\u009c\u009b\3\2\2\2\u009c\u009d\3\2\2\2\u009d\37\3\2\2"+
+		"\2\u009e\u00a1\5\2\2\2\u009f\u00a1\5\"\22\2\u00a0\u009e\3\2\2\2\u00a0"+
+		"\u009f\3\2\2\2\u00a1\u00a3\3\2\2\2\u00a2\u00a4\5$\23\2\u00a3\u00a2\3\2"+
+		"\2\2\u00a3\u00a4\3\2\2\2\u00a4!\3\2\2\2\u00a5\u00a6\7\21\2\2\u00a6\u00a7"+
+		"\5 \21\2\u00a7\u00a8\7\22\2\2\u00a8#\3\2\2\2\u00a9\u00aa\7\23\2\2\u00aa"+
+		"%\3\2\2\2\u00ab\u00ac\7\13\2\2\u00ac\u00ad\5(\25\2\u00ad\'\3\2\2\2\u00ae"+
 		"\u00b7\7\30\2\2\u00af\u00b7\7\31\2\2\u00b0\u00b7\7\37\2\2\u00b1\u00b7"+
 		"\7\25\2\2\u00b2\u00b7\7\26\2\2\u00b3\u00b7\5*\26\2\u00b4\u00b7\5,\27\2"+
 		"\u00b5\u00b7\5.\30\2\u00b6\u00ae\3\2\2\2\u00b6\u00af\3\2\2\2\u00b6\u00b0"+
@@ -1699,8 +1684,8 @@ public class GraphQLSchemaParser extends Parser {
 		"\u00c3\u00c7\7\4\2\2\u00c4\u00c6\5\60\31\2\u00c5\u00c4\3\2\2\2\u00c6\u00c9"+
 		"\3\2\2\2\u00c7\u00c5\3\2\2\2\u00c7\u00c8\3\2\2\2\u00c8\u00ca\3\2\2\2\u00c9"+
 		"\u00c7\3\2\2\2\u00ca\u00cb\7\5\2\2\u00cb/\3\2\2\2\u00cc\u00cd\7\24\2\2"+
-		"\u00cd\u00ce\7\16\2\2\u00ce\u00cf\5(\25\2\u00cf\61\3\2\2\2\248:@FNV`q"+
-		"|\u0084\u008d\u0097\u009a\u009e\u00a1\u00b6\u00be\u00c7";
+		"\u00cd\u00ce\7\16\2\2\u00ce\u00cf\5(\25\2\u00cf\61\3\2\2\2\24:<BHPXbs"+
+		"~\u0086\u008f\u0099\u009c\u00a0\u00a3\u00b6\u00be\u00c7";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

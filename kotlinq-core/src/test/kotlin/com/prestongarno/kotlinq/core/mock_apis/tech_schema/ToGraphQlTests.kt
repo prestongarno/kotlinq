@@ -116,6 +116,7 @@ class TechSchemaQueryTests {
       }
       fragment fragProgrammingLanguage0 on ProgrammingLanguage {
         name
+        input
         primaryFeatures {
           name
           description
