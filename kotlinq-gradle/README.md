@@ -47,4 +47,4 @@ kotlinq {
 5. Add as many schemas as you want within the `kotlinq` block
 
 
-### ***See the [build.gradle](build.gradle) file for this module to see an example of how to use multiple GraphQL APIs in a project***
+### ***See the [build.gradle](../kotlinq-test-api/build.gradle) file for the project test API module to see an example of how to use multiple GraphQL APIs in a project***
