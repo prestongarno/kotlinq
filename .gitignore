@@ -15,8 +15,6 @@ compiler/.gradle
 compiler/*.iml
 compiler/*.xml
 compiler/*.iws
-graphql.config.json
-graphql.schema.json
 .DS_Store
 *.scratch
 site
@@ -24,7 +22,7 @@ site/
 site/*
 *.log
 .log
-kotlinq-test-api/src/
+kotlinq-test-api/src/main/kotlin
 libs
 **/libs
 kotlinq-core/libs

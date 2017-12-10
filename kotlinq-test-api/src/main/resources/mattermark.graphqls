@@ -1,0 +1,744 @@
+# source: https://eapi.mattermark.com/graphql
+# timestamp: Wed Oct 04 2017 07:51:19 GMT-0400 (EDT)
+
+schema {
+  query: RootQuery
+}
+
+# Record of acquisition
+type Acquisition {
+  # Date of acquisition
+  date: Date
+
+  # The target organization
+  organization: Organization
+}
+
+# Built-in java.math.BigInteger
+scalar BigInteger
+
+# Business model
+type BusinessModel {
+  prop: String
+}
+
+# City
+type City {
+  # Descriptive prop for city
+  prop: String
+}
+
+# Company specific fields and aggregates
+type CompanyPersona {
+  # Stage of the company (Series A, B, C, etc)
+  companyStage: String
+  monthsSinceLastFunding: Int
+  employeesAddedSinceLastFunding: Int
+  newPersonMonthsSinceLastFunding: Int
+  newFundingEmployeeGrowth: Int
+  totalFunding: CurrencyValue
+  lastFundingAmount: CurrencyValue
+  lastFundingDate: Date
+}
+
+# Contact information for an employee
+type ContactDetails {
+  # Employee prop
+  prop: String
+
+  # Organization identifier
+  orgId: String
+
+  # Employee email address
+  email: String
+}
+
+# Continent
+type Continent {
+  # Name of continent
+  prop: String
+
+  # Three character abbreviation for Continent
+  iso3: String
+}
+
+# Country
+type Country {
+  # Three character abbreviation for country
+  iso3: String
+}
+
+type CurrencyValue {
+  value: Long
+
+  # Currency
+  currency: String
+  transactionDate: Date
+}
+
+# Date (yyyy-mm-dd)
+scalar Date
+
+# ISO8601 DateTime
+scalar DateTime
+
+type Employee {
+  # Employee Title
+  title: String
+
+  # Full prop
+  prop: String
+}
+
+type EmployeeCount implements FeedEvent {
+  # The kind of event represented 
+  eventType: String!
+
+  # Microseconds from epoch of when the event occurred
+  canonicalTimestamp: Long!
+
+  # Microseconds from epoch of when oldEmployeeCount occurred
+  oldCanonicalTimestamp: Long
+
+  # Current employee count
+  employeeCount: Int
+
+  # Previous employee count
+  oldEmployeeCount: Int
+}
+
+type FacebookAccount implements SocialAccount {
+  urn: String
+  profileUrl: String
+  slugHandle: String
+
+  # Facebook Likes metrics
+  likes: TimeSeriesMetric
+
+  # Facebook Talking metrics
+  talking: TimeSeriesMetric
+}
+
+type FeedBase {
+  # Feed events
+  events: [FeedEvent]
+}
+
+interface FeedEvent {
+  # The kind of event represented 
+  eventType: String!
+
+  # Microseconds from epoch of when the event occurred
+  canonicalTimestamp: Long!
+}
+
+# A collection of investments forming a round of funding
+type FundingRound {
+  # Series designation (seed, A, B, etc)
+  series: String
+
+  # Sum total of investments
+  amountRaised: CurrencyValue
+
+  # Date of funding
+  fundingDate: Date
+
+  # Lists of investments/investors in this round
+  investments: [Investment]
+}
+
+# A collection of investments forming a round of funding
+type FundingRoundSummary implements Node {
+  # Unique funding identifier
+  id: ID!
+
+  # Series seed, angel, a through i, debt_financing, private_equity, undisclosed
+  series: String
+
+  # Sum total of investments
+  amountRaised: CurrencyValue
+
+  # City
+  city: String
+
+  # Country
+  country: String
+
+  # Company prop
+  companyName: String
+
+  # Mattermark company Id
+  companyId: String
+
+  # industry
+  industry: String
+
+  # Url of the news item
+  newsUrl: String
+
+  # Date of funding
+  fundingDate: Date
+
+  # Lists of investors in this round
+  investorNames: [String]
+
+  # Lists of investors in this round
+  investorSlugs: [String]
+
+  # Region
+  region: String
+}
+
+# A connection to a list of items.
+type FundingRoundSummaryConnection {
+  edges: [FundingRoundSummaryEdge]
+  pageInfo: PageInfo!
+  totalResults: Int
+  currentPage: Int
+  pageSize: Int
+}
+
+# An edge in a connection.
+type FundingRoundSummaryEdge {
+  # The item at the end of the edge
+  node: FundingRoundSummary
+  cursor: String!
+}
+
+type FundingRoundSummaryQuery {
+  fundingRounds(before: String, after: String, first: Int, last: Int): FundingRoundSummaryConnection
+}
+
+type GrowthScore implements FeedEvent {
+  # The kind of event represented 
+  eventType: String!
+
+  # Microseconds from epoch of when the event occurred
+  canonicalTimestamp: Long!
+
+  # Microseconds from epoch of when the oldGrowthScore score occurred
+  oldCanonicalTimestamp: Long
+
+  # Current growth score for the company
+  growthScore: Int
+
+  # The previous growth score for the company
+  oldGrowthScore: Int
+}
+
+# Industry
+type Industry {
+  prop: String
+}
+
+# An IPO record for a single stock exchange
+type InitialPublicOffering {
+  # Amount of public funds raised in the IPO
+  amountRaised: CurrencyValue
+
+  # Date of IPO
+  date: Date
+
+  # The exchange the IPO was offered fragment
+  stockExchange: String
+
+  # Stock Ticker Symbol
+  stockSymbol: String
+}
+
+# Web domain
+type InternetDomain {
+  # Example: mattermark.com
+  domain: String!
+
+  # Should this domain be treated as the canonical domain representation
+  canonical: Boolean
+
+  # Alexa Rank metrics
+  alexaRanks: TimeSeriesMetric
+
+  # Estimated Monthly Unique Traffic metrics
+  estimatedMonthlyUniques: TimeSeriesMetric
+}
+
+# Web domain
+type InternetDomainSummary {
+  # Example: mattermark.com
+  domain: String!
+
+  # Should this domain be treated as the canonical domain representation
+  canonical: Boolean
+}
+
+# Investment made by an organization
+type Investment {
+  # Investment amount
+  amount: CurrencyValue
+
+  # Investor organization
+  investor: Organization
+}
+
+# Investor specific fields and aggregates
+type InvestorPersona {
+  # Type of investor (seed, venture, pe)
+  investorType: String
+  threeYearFundsOffered: CurrencyValue
+  threeYearFundsSold: CurrencyValue
+  estimatedMostRecentFundDate: Date
+  mostRecentDeal: Date
+  numberOfDeals: Int
+  portfolioSize: Int
+  averageInvestmentGrowthScore: Float
+  dealsPerCompany: Float
+}
+
+# JobTItle
+type JobTitle {
+  # Employee prop
+  prop: String
+
+  # Employee title
+  title: String
+
+  # Employee department
+  department: String
+
+  # Employee seniority
+  seniority: String
+}
+
+type LinkedinAccount implements SocialAccount {
+  urn: String
+  profileUrl: String
+  slugHandle: String
+
+  # Linkedin Followers metrics
+  followers: TimeSeriesMetric
+}
+
+# A geographic location
+type Location {
+  # Descriptive prop for location
+  prop: String
+
+  # City
+  city: City
+
+  # State
+  state: State
+
+  # Zip Code
+  zip: Zip
+
+  # Country
+  country: Country
+
+  # Continent
+  continent: Continent
+
+  # Region (e.g. Bay Area)
+  region: Region
+}
+
+# Long type
+scalar Long
+
+# An object with an ID
+interface Node {
+  # The ID of an object
+  id: ID!
+}
+
+# An organization's office location
+type Office {
+  # A geographic location
+  location: Location
+}
+
+# A public or private organization
+type Organization implements Node {
+  # Unique organization identifier
+  id: ID!
+
+  # Organization prop
+  prop: String
+
+  # Organization description
+  description: String
+
+  # Number of mobile downloads
+  mobileDownloads: Int
+
+  # Estimated founding date
+  estFounded: Date
+
+  # Mattermark Slug identifier
+  mattermarkSlug: String
+
+  # Revenue range
+  revenueRange: String
+
+  # Zipcode
+  zipcode: String
+
+  # Domains controlled by organization
+  domains: [InternetDomain]
+
+  # Organization personnel
+  personnel: [Employee]
+
+  # Organization job titles
+  jobTitles: [JobTitle]
+
+  # Rounds of funding
+  fundingRounds: [FundingRound]
+
+  # Business models used by the org
+  businessModels: [BusinessModel]
+
+  # Industries operated in by the org
+  industries: [Industry]
+  socialAccounts: [SocialAccount]
+
+  # Products sold or managed by this organization
+  products: [Product]
+
+  # Company specific fields and aggregates
+  companyPersona: CompanyPersona
+
+  # Investor specific fields and aggregates
+  investorPersona: InvestorPersona
+
+  # List of Initial Public Offerings
+  ipos: [InitialPublicOffering]
+
+  # List of acquisitions
+  acquisitions: [Acquisition]
+
+  # List of acquisitions
+  acquiredBy: [Acquisition]
+
+  # Organization offices
+  offices: [Office]
+
+  # Organizational metrics
+  organizationMetrics: OrganizationMetrics
+
+  # Feed
+  feed(
+    # Limit number of events to return. Default is 50
+    limit: Int = 50
+
+    # Default is 0
+    offset: Int = 0
+
+    # Show events that occur at after (and including) this time period specified in microseconds after epoch
+    start: Long
+
+    # Show events that occur before this time period specified in microseconds
+    end: Long
+  ): FeedBase
+
+  # Date added to Mattermark
+  __dateAdded: Date
+}
+
+# Collection of organizational metrics
+type OrganizationMetrics {
+  # Mattermark Growth Score
+  growthScore: TimeSeriesMetric
+
+  # Mattermark Mindshare Score
+  mindshareScore: TimeSeriesMetric
+
+  # Mattermark Weekly Momentum Score
+  weeklyMomentumScore: TimeSeriesMetric
+
+  # Employee Count Metrics
+  employeeCounts: TimeSeriesMetric
+}
+
+# A public or private organization
+type OrganizationSummary implements Node {
+  # Unique organization identifier
+  id: ID!
+
+  # Organization prop
+  prop: String
+
+  # Organization description
+  description: String
+
+  # Mattermark Slug Identifier
+  mattermarkSlug: String
+
+  # Domains controlled by organization
+  domains: [InternetDomainSummary]
+
+  # Business models used by the org
+  businessModels: [BusinessModel]
+
+  # Industries operated in by the org
+  industries: [Industry]
+
+  # Company specific fields and aggregates
+  companyPersona: CompanyPersona
+
+  # Investor specific fields and aggregates
+  investorPersona: InvestorPersona
+
+  # Date added to Mattermark
+  __dateAdded: Date
+}
+
+# A connection to a list of items.
+type OrganizationSummaryConnection {
+  edges: [OrganizationSummaryEdge]
+  pageInfo: PageInfo!
+
+  # URL Safe Query ID
+  queryId: ID!
+
+  # Query
+  rawQuery: String
+  totalResults: Int
+  currentPage: Int
+  pageSize: Int
+}
+
+# An edge in a connection.
+type OrganizationSummaryEdge {
+  # The item at the end of the edge
+  node: OrganizationSummary
+  cursor: String!
+}
+
+type OrganizationSummaryQuery {
+  organizations(before: String, after: String, first: Int, last: Int): OrganizationSummaryConnection
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+# Platform instance of a Product
+type Platform {
+  # Platform Identifier
+  urn: String
+
+  # URL to find product fragment this platform
+  url: String
+
+  # External Platform Identifier (Itunes ID, Google Playstore package id, etc)
+  idRef: String
+}
+
+# Product offered by the organization
+type Product {
+  # Product Name
+  prop: String
+
+  # Platforms the product is available fragment
+  platforms: [Platform]
+}
+
+# Current user's quota
+type Quota {
+  # limit
+  limit: Int!
+
+  # Number of calls remaining
+  remaining: Int!
+
+  # The time at which the current rate limit window resets in UTC epoch seconds
+  reset: Long!
+}
+
+# Region
+type Region {
+  # Descriptive prop for region (e.g. Bay Area)
+  prop: String
+}
+
+# Root Query Fields. This is the start of the GraphQL query tree.
+type RootQuery {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+
+  # Return a single organization by identifier or domain.
+  organization(
+    # Organization identifier
+    id: String
+
+    # Organization domain
+    domain: String
+  ): Organization
+
+  # Return a list of organizations by list of ids or list of domains.
+  organizations(
+    # Organization identifiers
+    ids: [String]
+
+    # Organization domains
+    domains: [String]
+  ): [Organization]
+
+  # Query for a list of organizations using an MSFL query or saved query
+  # identifier. This field supports relay paging conventions
+  organizationSummaryQuery(
+    # MSFL Query String
+    msfl: String
+
+    # URL Safe Query Id
+    queryId: String
+  ): OrganizationSummaryQuery
+
+  # Request contact information (email) for a prop, organization pair.
+  contactDetails(
+    # Full prop
+    prop: String!
+
+    # Organization identifier
+    orgId: String!
+  ): ContactDetails
+
+  # Return account details, including quota usage.
+  viewer: Viewer
+  fundingRoundSummaryQuery(
+    # Upper bound (inclusive) of funding amount raised
+    amountRaisedMax: BigInteger
+
+    # Lower bound (inclusive) of funding amount raised
+    amountRaisedMin: BigInteger
+
+    # List of city names
+    cities: [String]
+
+    # List of three character ISO 3166-1 alpha-3 country abbreviations
+    countries: [String]
+
+    # Lower bound (inclusive) of funding date in YYYY-MM-DD form
+    fundingDateMin: String
+
+    # Upper bound (inclusive) of funding date in YYYY-MM-DD form
+    fundingDateMax: String
+
+    # List of investor ids
+    investorIds: [String]
+
+    # List of investor slugs
+    investorSlugs: [String]
+
+    # List of series seed, angel, a through i, debt_financing, private_equity, undisclosed
+    series: [String]
+
+    # List of two character state abbreviations
+    states: [String]
+  ): FundingRoundSummaryQuery
+}
+
+interface SocialAccount {
+  # Service Resource prop (e.g. urn:social:facebook)
+  urn: String
+  profileUrl: String
+  slugHandle: String
+}
+
+# State
+type State {
+  # Two character abbreviation (e.g. CA, AZ, etc)
+  iso2: String
+}
+
+# Summary metrics as well as raw data points
+type TimeSeriesMetric {
+  # Current metric value
+  current: Int
+
+  # Value of metric 7 days ago
+  weekAgo: Int
+
+  # Value of metric one month ago
+  monthAgo: Int
+
+  # Value of metric six months ago
+  sixMonthsAgo: Int
+
+  # Value of metric twelve months ago
+  yearAgo: Int
+
+  # Week over week growth (percent)
+  wowGrowth: Int
+
+  # Month over month growth (percent)
+  momGrowth: Int
+
+  # Year over year growth (percent)
+  yoyGrowth: Int
+
+  # Raw data points
+  points(
+    # Limit number of points to return (default null -- return all)
+    limit: Long
+  ): [TimeSeriesMetricPoint]
+}
+
+# Raw metric data point
+type TimeSeriesMetricPoint {
+  # Value record
+  value: Int
+
+  # Time recorded at
+  at: DateTime
+}
+
+type TwitterAccount implements SocialAccount {
+  urn: String
+  profileUrl: String
+  slugHandle: String
+
+  # Twitter Followers metrics
+  followers: TimeSeriesMetric
+}
+
+# Current user's identity
+type Viewer {
+  # Account ID
+  id: ID!
+
+  # First Name
+  firstName: String
+
+  # Full Name
+  fullName: String
+
+  # Email
+  email: String
+
+  # Company
+  company: String
+
+  # User's quota
+  quota: Quota
+}
+
+# US Zip Code
+type Zip {
+  # Zip Code
+  code: String
+}

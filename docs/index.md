@@ -1,4 +1,4 @@
-# <b><span style="color:#f442c2">KTQ :  <small>a kotlin library for easy, type-safe GraphQL DSLs</small></span></b>
+# <b><span style="color:#f442c2">Kotlinq :  <small>a kotlin library for easy, type-safe GraphQL DSLs</small></span></b>
 
 # Check out the source code: https://github.com/prestongarno/kotlinq
 
