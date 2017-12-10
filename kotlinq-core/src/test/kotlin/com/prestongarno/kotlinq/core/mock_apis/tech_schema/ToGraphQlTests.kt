@@ -19,13 +19,11 @@
 package com.prestongarno.kotlinq.core.mock_apis.tech_schema
 
 import com.google.common.truth.Truth.assertThat
-import com.prestongarno.kotlinq.core.getFragments
-import com.prestongarno.kotlinq.core.primitives.eq
 import org.intellij.lang.annotations.Language
 import org.junit.Test
+import com.prestongarno.kotlinq.core.eq
 
-
-/**
+/*
  * Four simple test cases using the kolinq-core library which covers
  * the front end of a GraphQL client: making requests.
  *

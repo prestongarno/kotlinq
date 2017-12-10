@@ -39,8 +39,8 @@ fun <T : QUnionType, A : ArgumentSpec> newUnionListStub(
 ): UnionListStub<T, A> =
     UnionListAdapter(qproperty, objectModel, arguments)
 
-private
-class UnionListAdapter<I : QUnionType, out A : ArgumentSpec>(
+@Suppress("AddVarianceModifier")
+private class UnionListAdapter<I : QUnionType, out A : ArgumentSpec>(
     val qproperty: GraphQlProperty,
     val objectModel: I,
     val arguments: A?

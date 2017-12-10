@@ -1,22 +1,5 @@
-/*
- * Copyright (C) 2017 Preston Garno
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-// Generated from /home/preston/IdeaProjects/ktq-gradle/src/main/resources/GraphQLSchema.g4 by ANTLR 4.7
-package com.prestongarno.kotlinq.core.org.antlr4.gen;
+// Generated from /home/preston/IdeaProjects/kotlinq/kotlinq-gradle/src/main/resources/GraphQLSchema.g4 by ANTLR 4.7
+package com.prestongarno.kotlinq.org.antlr4.definitions;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -33,97 +16,13 @@ public class GraphQLSchemaBaseListener implements GraphQLSchemaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGraphqlSchema(GraphQLSchemaParser.GraphqlSchemaContext ctx) { }
+	@Override public void enterBlockDef(GraphQLSchemaParser.BlockDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGraphqlSchema(GraphQLSchemaParser.GraphqlSchemaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeDef(GraphQLSchemaParser.TypeDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeDef(GraphQLSchemaParser.TypeDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterImplementationDefs(GraphQLSchemaParser.ImplementationDefsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitImplementationDefs(GraphQLSchemaParser.ImplementationDefsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterInputTypeDef(GraphQLSchemaParser.InputTypeDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInputTypeDef(GraphQLSchemaParser.InputTypeDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterInterfaceDef(GraphQLSchemaParser.InterfaceDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInterfaceDef(GraphQLSchemaParser.InterfaceDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterScalarDef(GraphQLSchemaParser.ScalarDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitScalarDef(GraphQLSchemaParser.ScalarDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterUnionDef(GraphQLSchemaParser.UnionDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUnionDef(GraphQLSchemaParser.UnionDefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterUnionTypes(GraphQLSchemaParser.UnionTypesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUnionTypes(GraphQLSchemaParser.UnionTypesContext ctx) { }
+	@Override public void exitBlockDef(GraphQLSchemaParser.BlockDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -237,18 +136,6 @@ public class GraphQLSchemaBaseListener implements GraphQLSchemaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDefaultValue(GraphQLSchemaParser.DefaultValueContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -256,6 +143,18 @@ public class GraphQLSchemaBaseListener implements GraphQLSchemaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDefaultValue(GraphQLSchemaParser.DefaultValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypeName(GraphQLSchemaParser.TypeNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

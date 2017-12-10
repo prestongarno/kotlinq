@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("UNUSED_VARIABLE")
+
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.QEnumType
@@ -40,7 +42,7 @@ class EnumCompileTest : JavacTest() {
       |}
       |
       |type Bar { enumProp(inputObject: Foo): GraphQLEnum }
-      """.trimMargin("|"), "", System.out)
+      """.trimMargin("|"), "")
   }
 
   @After fun kill() {

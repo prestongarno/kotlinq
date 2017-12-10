@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.fragments.equality
 
 import com.google.common.truth.Truth.assertThat
@@ -13,9 +15,9 @@ import com.prestongarno.kotlinq.core.QSchemaType.QUnion
 import com.prestongarno.kotlinq.core.QType
 import com.prestongarno.kotlinq.core.QUnionType
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.internal.extractedPayload
-import com.prestongarno.kotlinq.core.primitives.eq
-import com.prestongarno.kotlinq.core.primitives.neq
+import com.prestongarno.kotlinq.core.neq
 import com.prestongarno.kotlinq.core.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatStub
 import com.prestongarno.kotlinq.core.stubs.InterfaceListStub

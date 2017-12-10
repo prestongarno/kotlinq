@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.formatting
 
 import com.google.common.truth.Truth.assertThat
@@ -24,7 +26,7 @@ import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.primitives.eq
+import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.stubs.TypeListStub

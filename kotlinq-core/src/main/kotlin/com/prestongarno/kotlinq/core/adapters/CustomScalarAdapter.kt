@@ -33,7 +33,7 @@ fun <E : CustomScalar, P : QScalarMapper<Q>, Q, A : ArgumentSpec> newScalarDeleg
     qproperty: GraphQlProperty,
     mapper: P,
     arguments: A?
-): CustomScalarStub<E, Q, A> = CustomScalarAdapter<E, P, Q, A>(qproperty, mapper, arguments)
+): CustomScalarStub<E, Q, A> = CustomScalarAdapter(qproperty, mapper, arguments)
 
 private
 class CustomScalarAdapter<E : CustomScalar, out P : QScalarMapper<Q>, Q, out B : ArgumentSpec>(

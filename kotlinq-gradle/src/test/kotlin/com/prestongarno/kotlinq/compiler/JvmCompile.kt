@@ -63,13 +63,7 @@ object JvmCompile {
 
 }
 
-fun File.getFileTree(): List<File> {
-  return this.walkTopDown().asSequence().distinct()
-      .filter { it.isFile }
-      .toList()
-}
-
-class KtqCompileWrapper(private val root: File) {
+class KtqCompileWrapper(root: File) {
 
   val classLoader = URLClassLoader(
       listOf(root.toURI().toURL()).toTypedArray(),
@@ -83,12 +77,6 @@ class KtqCompileWrapper(private val root: File) {
 
   @Suppress("UNCHECKED_CAST") fun loadInterface(name: String): KClass<QSchemaType> =
       (classLoader.loadClass(name).kotlin as KClass<QSchemaType>)
-
-  fun dumpFiles(): Iterable<File> =
-      classLoader.urLs.flatMap {
-        it.toURI().rawPath!!.asFile().getFileTree()
-      }.sortedBy { it.path.length }
-          .asIterable()
 
 
 }

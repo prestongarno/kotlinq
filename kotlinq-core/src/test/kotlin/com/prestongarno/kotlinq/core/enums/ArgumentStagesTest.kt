@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.enums
 
 import com.google.common.truth.Truth.assertThat

@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.fragments
 
 import com.facebook.Character
@@ -28,8 +30,8 @@ import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
 import com.prestongarno.kotlinq.core.getFragments
 import com.prestongarno.kotlinq.core.internal.resolve.resolve
 import com.prestongarno.kotlinq.core.mock_apis.starwars_schema.StarWarsQuery
-import com.prestongarno.kotlinq.core.primitives.eq
 import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
+import com.prestongarno.kotlinq.core.eq
 import org.junit.Test
 
 open class BaseDroidModel : QModel<Droid>(Droid) {
@@ -133,9 +135,10 @@ class Traversal {
     rootQuery.resolve("""{"data":{"search":[{"__typename":"Human","name":"HanSolo","starships":[{"id":"3000","length":112.76247079999999,"name":"MilleniumFalcon"},{"id":"3003","length":65.6168,"name":"Imperialshuttle"}],"id":"1002","friends":[{"__typename":"Human","name":"LukeSkywalker","starships":[{"id":"3001","length":41.0105,"name":"X-Wing"},{"id":"3003","length":65.6168,"name":"Imperialshuttle"}],"id":"1000"},{"__typename":"Human","name":"LeiaOrgana","starships":[],"id":"1003"},{"__typename":"Droid"}]}]}}""".byteInputStream())
 
     rootQuery.search.first().let { it as HumanModel }.apply {
-      name eq "HanSolo"
+      this.name eq "HanSolo"
       friends.find { it is HumanModel && it.name eq "LeiaOrgana" }
       spaceShip.first().name eq "MilleniumFalcon"
     }
   }
 }
+

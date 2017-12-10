@@ -47,7 +47,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
     ): Query<T> where T : Enum<*>, T : QEnumType =
-        QueryImpl<T>(qproperty, enumClass)
+        QueryImpl(qproperty, enumClass)
 
     internal
     fun <T, A> optionalArgStub(
@@ -90,7 +90,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         arguments: ArgumentSpec?,
         scope: (EnumListStub<T, ArgumentSpec>.() -> Unit)?
     ): EnumListStub<T, ArgumentSpec> =
-        newEnumListDelegate<T, ArgumentSpec>(
+        newEnumListDelegate(
             qproperty,
             arguments ?: ArgBuilder(),
             enumClass
@@ -128,7 +128,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         arguments: A,
         scope: (EnumListStub<T, A>.() -> Unit)?
     ): EnumListStub<T, ArgumentSpec> =
-        newEnumListDelegate<T, A>(qproperty, arguments, enumClass).applyNotNull(scope)
+        newEnumListDelegate(qproperty, arguments, enumClass).applyNotNull(scope)
 
   }
 
@@ -154,7 +154,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         arguments: A,
         scope: (EnumListStub<T, A>.() -> Unit)?
     ): EnumListStub<T, ArgumentSpec> =
-        newEnumListDelegate<T, A>(qproperty, arguments, enumClass).applyNotNull(scope)
+        newEnumListDelegate(qproperty, arguments, enumClass).applyNotNull(scope)
 
   }
 

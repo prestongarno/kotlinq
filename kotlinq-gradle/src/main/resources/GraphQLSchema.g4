@@ -1,39 +1,12 @@
 grammar GraphQLSchema;
 
-graphqlSchema
-  : (typeDef|inputTypeDef|unionDef|enumDef|interfaceDef|scalarDef)*
-  ;
-
-typeDef
-  : 'type' typeName implementationDefs? '{' fieldDef+ '}'
-  ;
-
-implementationDefs
-  : 'implements' typeName+
-  ;
-
-inputTypeDef
-  : 'input' typeName '{' fieldDef+ '}'
-  ;
-
-interfaceDef
-  : 'interface' typeName '{' fieldDef+ '}'
-  ;
-
-scalarDef
-  : 'scalar' typeName
-  ;
-
-unionDef
-  : 'union' typeName '=' unionTypes
-  ;
-
-unionTypes
-  : (typeName '|')* typeName
+// TYPE, INPUT, INTERFACE
+blockDef
+  :  fieldDef+
   ;
 
 enumDef
-  : 'enum' typeName '{' scalarName+ '}'
+  : scalarName+
   ;
 
 scalarName
@@ -62,19 +35,19 @@ typeSpec
   ;
 
 listType
-  : '[' typeSpec ']'
+  : '[' typeSpec nullable? ']'
   ;
 
 nullable
   : '!'
   ;
 
-typeName
-  : Name
-  ;
-
 defaultValue
   : '=' value
+  ;
+
+typeName
+  : Name
   ;
 
 Name
@@ -170,12 +143,17 @@ fragment DoubleQuote
 fragment Hex
    : [0-9a-fA-F]
    ;
+
 Ignored
-   : (Whitespace|Comma|LineTerminator|Comment) -> skip
+   : (Whitespace|Comma|LineTerminator|Comment|Directive) -> skip
    ;
 
 fragment Comment
    : '#' ~[\n\r\u2028\u2029]*
+   ;
+
+fragment Directive
+   : '@' ~[\n\r\u2028\u2029]*
    ;
 
 fragment LineTerminator

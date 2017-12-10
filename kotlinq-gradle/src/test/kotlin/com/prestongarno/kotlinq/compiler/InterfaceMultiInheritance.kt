@@ -18,16 +18,7 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.google.common.truth.Truth.assertThat
-import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.CustomScalar
-import com.prestongarno.kotlinq.core.QInterface
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
 import org.junit.Test
-import com.prestongarno.kotlinq.core.*
 
 class InterfaceMultiInheritance : JavacTest() {
 
@@ -66,6 +57,9 @@ class InterfaceMultiInheritance : JavacTest() {
         |}
         |
         |
+        |object ID : CustomScalar
+        |
+        |
         |interface Actor : QType, QInterface {
         |  val friends: InterfaceListStub.ConfigurableQuery<Entity, out Actor.BaseFriendsArgs>
         |
@@ -88,12 +82,9 @@ class InterfaceMultiInheritance : JavacTest() {
         |    override var after: ID? by arguments
         |  }
         |}
-        |
-        |
-        |object ID : CustomScalar
         |""".trimMargin("|"))
 
-    jvmCompileAndLoad(schema, "com.star.wars", System.out).apply {
+    jvmCompileAndLoad(schema, "com.star.wars").apply {
       loadClass("com.star.wars.Actor\$BaseFriendsArgs").isAbstract eq true
     }
   }

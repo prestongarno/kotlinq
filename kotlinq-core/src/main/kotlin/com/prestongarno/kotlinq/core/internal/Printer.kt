@@ -106,8 +106,9 @@ private
 fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
 
   val stack = LinkedList<Any>()
-  val fragments = if (frags != null) frags else
-    root.getFragments().mapIndexed { index, fragment -> fragment to "frag${fragment.model.graphqlType}$index" }.toMap()
+  val fragments = frags ?: root.getFragments().mapIndexed { index, fragment ->
+    fragment to "frag${fragment.model.graphqlType}$index"
+  }.toMap()
 
 
   val pushField: (Any) -> Unit = stack::addFirst

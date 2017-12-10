@@ -17,9 +17,6 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser
-import com.prestongarno.kotlinq.core.org.antlr4.gen.GraphQLSchemaParser.TypeNameContext
-
 /**
  *
  * Strategy for entering field inheritance info for kotlinpoet generic args on fields:
@@ -38,22 +35,17 @@ internal fun GraphQLCompiler.attrInheritance() = schemaTypes.on<TypeDef> {
       .map(FieldDefinition::newCache)
       .toMap(mutableMapOf())
 
-  context.implementationDefs()
-      ?.typeName()
-      ?.map(TypeNameContext::toNameString)
-      ?.map(this@attrInheritance::fromSymtab)
-      ?.onEach { supertype ->
+  this.supertypeNames.map(this@attrInheritance::fromSymtab).onEach { supertype ->
 
-        supertype.fields
-            .onEach(this::requireOverrides)
-            .onEach { supertype.assignArgumentSpec(subType = this, symbol = it.name) }
-            .map(this::joiningWithImplementation)
-            .map(::second)
-            .map(supertype::registerAsSuper)
-            .forEach(fieldSuperTable::cacheSymbol)
+    supertype.fields
+        .onEach(this::requireOverrides)
+        .onEach { supertype.assignArgumentSpec(subType = this, symbol = it.name) }
+        .map(this::joiningWithImplementation)
+        .map(::second)
+        .map(supertype::registerAsSuper)
+        .forEach(fieldSuperTable::cacheSymbol)
 
-      }?.toSet()
-      ?.let(this@on::setSupertypes) ?: setSupertypes(emptySet())
+  }.toSet().let(this@on::setSupertypes)
 
   fields.onEach(fieldSuperTable::setFieldInheritanceContext)
       .onEach(this::assignArgumentSpec)
@@ -76,7 +68,7 @@ private fun TypeDef.setSupertypes(def: Set<InterfaceDef>) {
 }
 
 private fun TypeDef.joiningWithImplementation(abstractField: FieldDefinition): Pair<FieldDefinition, FieldDefinition> {
-  val concrete = symtab[abstractField.name] ?: throw IllegalArgumentException("Type ${name} does not override abstract " +
+  val concrete = symtab[abstractField.name] ?: throw IllegalArgumentException("Type $name does not override abstract " +
       "graphql field ${abstractField.name} declared in ${supertypes.flatMap(InterfaceDef::fields).find {
         it.name == abstractField.name
       }?.name}")
@@ -107,8 +99,6 @@ private fun MutableMap<FieldDefinition, MutableSet<InterfaceDef>>.setFieldInheri
   field.inheritsFrom = this[field]?.toSet() ?: emptySet()
 }
 
-private fun GraphQLSchemaParser.TypeNameContext.toNameString(): String = Name().text
-
 private fun FieldDefinition.newCache(): Pair<FieldDefinition, MutableSet<InterfaceDef>> = this to mutableSetOf()
 
 private fun TypeDef.assignArgumentSpec(field: FieldDefinition) {
@@ -126,6 +116,7 @@ private fun TypeDef.assignArgumentSpec(field: FieldDefinition) {
  *
  * By now, the field -> superfield inheritance checks have been done
  */
+@Suppress("LocalVariableName")
 private fun InterfaceDef.assignArgumentSpec(subType: TypeDef, symbol: String) {
 
   val subField = subType.symtab[symbol]
@@ -143,11 +134,6 @@ private fun InterfaceDef.assignArgumentSpec(subType: TypeDef, symbol: String) {
     concreteField.arguments.isNotEmpty()
         && concreteField.arguments.find { !it.nullable } == null -> Optional_Args
     else -> Req_Args
-  }
-
-  fun asConfigStub(field: FieldDefinition) {
-    require(field.isAbstract)
-    field.argBuilder = ArgumentSpecDef(field, this)
   }
 
 

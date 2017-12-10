@@ -193,4 +193,5 @@ subprojects {
 
 clean.doFirst {
   delete 'kotlinq-test-api/src/main/kotlin'
+  delete 'kotlinq-test-api/build'
 }

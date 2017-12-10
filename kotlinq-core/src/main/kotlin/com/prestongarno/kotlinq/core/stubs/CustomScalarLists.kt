@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
@@ -28,6 +30,7 @@ import com.prestongarno.kotlinq.core.api.NoArgConfig
 import com.prestongarno.kotlinq.core.api.OptionalConfiguration
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
+@Suppress("AddVarianceModifier") // THIS IS INTENTIONAL -> Needed for multi-inherited argument types
 interface CustomScalarListStub<T : CustomScalar, V, out A : ArgumentSpec> : DelegateProvider<List<V>> {
 
   fun config(scope: A.() -> Unit)

@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.mock_apis.starwars_schema
 
 import com.facebook.Character

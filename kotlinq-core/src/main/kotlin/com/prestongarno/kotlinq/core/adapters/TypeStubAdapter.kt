@@ -71,4 +71,16 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
       (value.hashCode() * 31) +
           (args.hashCode() * 31) +
           (qproperty.hashCode() * 31)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as TypeStubImpl<*, *>
+
+    if (qproperty != other.qproperty) return false
+    if (args != other.args) return false
+
+    return true
+  }
 }
