@@ -66,6 +66,9 @@ class InterfaceMultiInheritance : JavacTest() {
         |}
         |
         |
+        |object ID : CustomScalar
+        |
+        |
         |interface Actor : QType, QInterface {
         |  val friends: InterfaceListStub.ConfigurableQuery<Entity, out Actor.BaseFriendsArgs>
         |
@@ -88,9 +91,6 @@ class InterfaceMultiInheritance : JavacTest() {
         |    override var after: ID? by arguments
         |  }
         |}
-        |
-        |
-        |object ID : CustomScalar
         |""".trimMargin("|"))
 
     jvmCompileAndLoad(schema, "com.star.wars", System.out).apply {

@@ -120,7 +120,7 @@ class GraphQLCompiler(
     definitions.filterIsInstance<UnionDef>().forEach {
 
       it.types.map {
-        symtab[it] as TypeDef
+        symtab[it] as? TypeDef ?: throw IllegalArgumentException("Unknown type '$it'")
       }.also { options ->
         it.setLateinitPossibilities(options.toSet())
       }
@@ -158,7 +158,7 @@ private fun `duplicate type names check`(): SchemaRule = {
 private fun `type name does not match scalar primitive`(): SchemaRule = {
   forEach { defn ->
     require(ScalarSymbols.named[defn.name] == null) {
-      "Illegal schema declaration name '${defn.name}' at${defn.name}"
+      "Illegal schema declaration name '${defn.name}' (Cannot be named the same as GraphQL built-in scalars)"
     }
   }
 }

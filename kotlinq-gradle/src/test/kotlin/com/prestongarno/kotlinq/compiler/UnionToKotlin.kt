@@ -42,17 +42,17 @@ class UnionToKotlinTest : JavacTest() {
         }
 
 
-        object Jedi : com.prestongarno.kotlinq.core.QType {
-          val name: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
-        }
-
-
         object Actor : com.prestongarno.kotlinq.core.QUnionType by com.prestongarno.kotlinq.core.QUnionType.new() {
           fun onJedi(init: () -> com.prestongarno.kotlinq.core.QModel<Jedi>) {
             on(init)}
 
           fun onDroid(init: () -> com.prestongarno.kotlinq.core.QModel<Droid>) {
             on(init)}
+        }
+
+
+        object Jedi : com.prestongarno.kotlinq.core.QType {
+          val name: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
         }
 
         """.trimIndent()

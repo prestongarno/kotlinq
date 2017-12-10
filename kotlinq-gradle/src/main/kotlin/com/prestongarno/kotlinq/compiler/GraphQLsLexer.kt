@@ -1,7 +1,10 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.org.antlr4.base.GraphQLBaseSchema
+import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaLexer
+import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Token
 import java.io.File
 
@@ -13,7 +16,7 @@ class GraphQLsLexer(val schema: Schema) {
     val str = when (schema) {
       is StringSchema -> schema.source
       is FileSchema -> File(schema.path).let {
-        require(it.exists() && it.isFile() && it.canRead()) {
+        require(it.exists() && it.isFile && it.canRead()) {
           "Cannot read schema: '${it.path}'"
         }
         it.readText()
@@ -25,16 +28,77 @@ class GraphQLsLexer(val schema: Schema) {
 
     if (!ordered.hasNext()) throw IllegalArgumentException("Empty schema")
 
-    var current = ordered.next()
+    val definitions = mutableSetOf<TypeTokenSet>()
 
-    while (ordered.hasNext()) {
+    var typeToken = ordered.next()
+
+    while (Rule.match(typeToken) != Rule.EOF && ordered.hasNext()) {
+      val currentType = GraphQLType.match(typeToken)
       // make sure it's one of the 6 types allowed by gql
-      if (Rule.match(current) != Rule.TYPE_LIT || GraphQLType.match(current) == null) {
-        throw err(current, " Expected one of { type, input, enum, interface, scalar, union }")
+      if (Rule.match(typeToken) != Rule.TYPE_LIT || currentType == null) {
+        throw err(typeToken, " Expected one of { type, input, enum, interface, scalar, union }")
       }
 
+      val name = matchName(ordered.next())
+
+      val superinterfaces = mutableListOf<Token>()
+
+      val body = mutableListOf<Token>()
+
+      var next: Token = ordered.next()
+
+      if (GraphQLType.match(typeToken) == GraphQLType.TYPE) {
+
+        if (Rule.match(next).let { it != Rule.LCURLY && it != Rule.NAME })
+          throw err(next, "Expected a valid superinterface name or '{'")
+
+        while (Rule.match(next) == Rule.NAME) {
+          superinterfaces.add(next)
+          next = ordered.next()
+        }
+      }
+      if (currentType == GraphQLType.SCALAR) {
+        definitions += TypeTokenSet(currentType, name, "")
+      } else if (currentType == GraphQLType.UNION) {
+        if (Rule.match(next) != Rule.BLOCK)
+          throw err(next, "Expected a set of type names separated by '|'")
+        definitions += TypeTokenSet(currentType, name, next.text)
+        next = ordered.next()
+      } else { // default block body
+        if (Rule.match(next) != Rule.LCURLY)
+          throw err(next, "Expected '{'")
+        while (Rule.match(next) != Rule.RCURLY) {
+          next = ordered.next()
+          body.add(next)
+        }
+        definitions += TypeTokenSet(
+            currentType,
+            name,
+            body.joinToString(separator = "") { it.text },
+            superinterfaces.map { it.text }
+        )
+        if (ordered.hasNext()) next = ordered.next()
+      }
+      typeToken = next
     }
-    TODO()
+
+    return definitions.map {
+      it.type.createType(it)
+    }.toSet()
+  }
+
+  class TypeTokenSet(
+      val type: GraphQLType,
+      val name: String,
+      val body: String,
+      val superInterfaces: List<String> = emptyList()
+  )
+
+  private fun matchName(token: Token): String {
+    if (Rule.match(token) != Rule.TYPE_DEC) {
+      throw err(token, "Expected a name, but got ${token.text}")
+    }
+    return token.text
   }
 
   private fun err(token: Token, message: String = ""): IllegalArgumentException {
@@ -44,12 +108,31 @@ class GraphQLsLexer(val schema: Schema) {
 }
 
 enum class GraphQLType {
-  TYPE,
-  ENUM,
-  INPUT,
-  SCALAR,
-  INTERFACE,
-  UNION;
+  TYPE {
+    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType =
+        TypeDef(tokens.name, tokens.superInterfaces, fieldDefinitionsFromBody(tokens.body))
+  },
+  ENUM {
+    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType =
+        EnumDef(tokens.name, enumFromBody(tokens.body))
+  },
+  INPUT {
+    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType =
+        InputDef(tokens.name, fieldDefinitionsFromBody(tokens.body))
+  },
+  SCALAR {
+    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType = ScalarDef(tokens.name)
+  },
+  INTERFACE {
+    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType =
+        InterfaceDef(tokens.name, fieldDefinitionsFromBody(tokens.body))
+  },
+  UNION {
+    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType =
+        UnionDef(tokens.name, tokens.body.split("\\s*\\|\\s*".toRegex()).filter(String::isNotEmpty))
+  };
+
+  abstract fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType
 
   companion object {
     fun match(token: Token): GraphQLType? {
@@ -100,3 +183,15 @@ fun Token.humanReadableSourceCoordinates(): String {
   return "[$line, $charPositionInLine]"
 }
 
+fun fieldDefinitionsFromBody(body: String): Set<FieldDefinition> =
+    GraphQLSchemaParser(CommonTokenStream(GraphQLSchemaLexer(CharStreams.fromString(body))))
+        .blockDef()
+        .fieldDef()
+        .map(::FieldDefinition)
+        .toSet()
+
+fun enumFromBody(body: String): List<String> =
+    GraphQLSchemaParser(CommonTokenStream(GraphQLSchemaLexer(CharStreams.fromString(body))))
+        .enumDef()
+        .scalarName()
+        .map { it.Name().text }

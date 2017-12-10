@@ -4,34 +4,21 @@ import com.prestongarno.kotlinq.core.org.antlr4.base.GraphQLBaseSchema
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
 import org.junit.Test
-import java.io.File
 
 
 class KeywordsAsSymbols {
 
-  @Test fun iLoveAntlr() {
+  @Test fun `single line schema with keywords as symbols compiles successfully`() {
 
 
     // Get schema
-    val input: CharStream = CharStreams.fromString("""
-
-      scalar MyCustomScalar
-      type Foo implements BazBar, Baz {
-        foo: String!
-
-        bar: String!
-        #equpur8jf;lasmn;vlkjtype interface baz bar
-
-      }
-
-      scalar FOOMOO union Baz = input|type|interface interface BazBar {
-        d: Int @FOO("B\"AR")
-      }
-      #equpur8jf;lasmn;vlkjtype interface baz bar
-      type StarWarsQuery implements Boo Baz      , Buzz ,     Aldrin {
-        foo: String! bar: String!
-      }input Barz
-    """.trimIndent())!!
+    val schema = "\n      scalar MyCustomScalar " +
+        "type Foo implements BazBar, Baz { foo: String! bar: String! input: Int string: Foo type: Int d: Int } " +
+        "type Input { enum: Int } " +
+        "scalar FOO interface BazBar { d: Int } " +
+        "union SampletypeUnion = Foo | Input " +
+        "interface Baz { foo: String! }\n    "
+    val input: CharStream = CharStreams.fromString(schema.trimIndent())!!
 
     val lexer = GraphQLBaseSchema(input)
     lexer.modeNames.toList().println()
@@ -41,5 +28,6 @@ class KeywordsAsSymbols {
     lexer.allTokens.forEachIndexed { index, token ->
       println("T=${token.type} | '${token.text}'")
     }
+    GraphQLCompiler(StringSchema(schema)).toKotlinApi()
   }
 }

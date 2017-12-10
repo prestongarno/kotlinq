@@ -298,7 +298,13 @@ object BooleanType : ScalarType() {
 
 object PlatformTypeContext : ParserRuleContext()
 
-fun String.asTypeName(): TypeName = ClassName.bestGuess(this)
+fun String.asTypeName(): TypeName {
+  try {
+    return ClassName.bestGuess(this)
+  } catch (ex: IllegalArgumentException) {
+    throw IllegalArgumentException("Class name '$this' is unsupported at the moment", ex)
+  }
+}
 
 private fun SchemaType.stubFor(field: FieldDefinition, typeArgs: List<String>): List<ClassName> =
     mutableListOf((if (field.isList) delegateListStubClass else delegateStubClass).asTypeName()).apply {

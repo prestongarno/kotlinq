@@ -5,7 +5,7 @@ UNION_DEF: 'union' -> type(TYPE_LIT), pushMode(UNION);
 SCALAR_DEF: 'scalar' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
 TYPE_DEF: 'type' -> type(TYPE_LIT), pushMode(TYPE);
 INTERFACE_DEF: 'interface' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
-ENUM_DEF: 'enum' NAME -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
+ENUM_DEF: 'enum' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
 INPUT_DEF: 'input' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
 
 LCURLY: '{' -> pushMode(CODE_0);
@@ -30,7 +30,7 @@ CODE_0_OTHER: ~[{}]+ -> type(OTHER);
 mode TYPE_SCOPE;
 
 CODE_N_LCURLY: '{' -> type(OTHER), pushMode(CODE_0);
-CODE_N_RCURLY: '}' -> type(OTHER), popMode, pushMode(DEFAULT_MODE);
+CODE_N_RCURLY: '}' -> type(RCURLY), popMode, pushMode(DEFAULT_MODE);
 OTHER: ~[{}]+;
 
 mode UNION;
@@ -42,7 +42,8 @@ EQ: '=' -> skip, popMode, pushMode(UNION_CONTEXT);
 mode UNION_CONTEXT;
 
 WS_UNION:  [ \t\r\n] -> skip;
-BODY: NAME ('|' NAME)* -> type(BLOCK), popMode;
+OR: WS*?'|'WS*? -> skip;
+BODY: NAME (OR NAME)+ -> type(BLOCK), popMode;
 
 mode DEF_NAME_CTX;
 
@@ -54,7 +55,7 @@ mode TYPE;
 WS_TYPE: WS -> skip;
 IMPL_: 'implements' -> skip, pushMode(TYPE_IMPL_CONTEXT);
 TYPE_NAME: NAME -> type(TYPE_DEC);
-EXIT_TYPE: LCURLY -> popMode, pushMode(TYPE_SCOPE);
+EXIT_TYPE: LCURLY -> type(LCURLY), popMode, pushMode(TYPE_SCOPE);
 
 mode TYPE_IMPL_CONTEXT;
 
