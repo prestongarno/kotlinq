@@ -2,13 +2,13 @@
     "docs": [
         {
             "location": "/",
-            "text": "KTQ :  \na kotlin library for easy, type-safe GraphQL DSLs\n\u00b6\n\n\nCheck out the source code: \nhttps://github.com/prestongarno/kotlinq\n\u00b6\n\n\nAbout\n\u00b6\n\n\nThis project is a kotlin type-generating \ncompiler\n and \nruntime\n \nfor type-safe Kotlin DSLs mirroring your \nGraphQL\n API/schema.\n\n\nProject goals\n\u00b6\n\n\nKotlinq has the goal of making GraphQL easy to setup and use in a scalable manner \nwhile taking advantage of the both pragmatic and type-safe nature of Kotlin. \n\n\nCheck out obligatory \nHello, world!\n page to see how kotlinq accomplishes this!\n\n\nWhat is GraphQL?\n\u00b6\n\n\nGraphQL is a thoroughly defined \nspecification\n which defines\nits architecture as structured data conforming to a simple, declarative type system.\n\n\nGraphQL is a natural way to describe \ndata types\n and their \nrelationships to other types\n\n(also known as a graph, where nodes and edges describe a confined set of data). You can learn more\nabout it \nhere\n\n\nWhat does the name \nkotlinq\n even mean?\n\u00b6\n\n\n\n\n[Kot]lin [L]anguage [I]ntegrated [Q]ueries\n\n\nGetting started\n\u00b6\n\n\nCheck out the next section for a simple 'Hello, world!' query",
+            "text": "Kotlinq :  \na kotlin library for easy, type-safe GraphQL DSLs\n\u00b6\n\n\nCheck out the source code: \nhttps://github.com/prestongarno/kotlinq\n\u00b6\n\n\nAbout\n\u00b6\n\n\nThis project is a kotlin type-generating \ncompiler\n and \nruntime\n \nfor type-safe Kotlin DSLs mirroring your \nGraphQL\n API/schema.\n\n\nProject goals\n\u00b6\n\n\nKotlinq has the goal of making GraphQL easy to setup and use in a scalable manner \nwhile taking advantage of the both pragmatic and type-safe nature of Kotlin. \n\n\nCheck out obligatory \nHello, world!\n page to see how kotlinq accomplishes this!\n\n\nWhat is GraphQL?\n\u00b6\n\n\nGraphQL is a thoroughly defined \nspecification\n which defines\nits architecture as structured data conforming to a simple, declarative type system.\n\n\nGraphQL is a natural way to describe \ndata types\n and their \nrelationships to other types\n\n(also known as a graph, where nodes and edges describe a confined set of data). You can learn more\nabout it \nhere\n\n\nWhat does the name \nkotlinq\n even mean?\n\u00b6\n\n\n\n\n[Kot]lin [L]anguage [I]ntegrated [Q]ueries\n\n\nGetting started\n\u00b6\n\n\nCheck out the next section for a simple 'Hello, world!' query",
             "title": "Intro"
         },
         {
-            "location": "/#ktq-a-kotlin-library-for-easy-type-safe-graphql-dsls",
+            "location": "/#kotlinq-a-kotlin-library-for-easy-type-safe-graphql-dsls",
             "text": "",
-            "title": "KTQ :  a kotlin library for easy, type-safe GraphQL DSLs"
+            "title": "Kotlinq :  a kotlin library for easy, type-safe GraphQL DSLs"
         },
         {
             "location": "/#check-out-the-source-code-httpsgithubcomprestongarnokotlinq",
