@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.http
 
 import com.prestongarno.kotlinq.core.QModel

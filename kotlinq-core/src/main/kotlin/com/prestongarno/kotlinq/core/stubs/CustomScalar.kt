@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
@@ -59,12 +61,14 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : Delegate
         : NoArgConfig<CustomScalarStub<T, V, ArgumentSpec>, V>
   }
 
+  @Suppress("AddVarianceModifier") // THIS IS INTENTIONAL -> Needed for multi-inherited argument types
   interface OptionalConfigQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
     fun <U : QScalarMapper<V>, V> map(
         adapter: U
     ): OptionalConfiguration<CustomScalarStub<T, V, ArgumentSpec>, V, A>
   }
 
+  @Suppress("AddVarianceModifier") // THIS IS INTENTIONAL -> Needed for multi-inherited argument types
   interface ConfigurableQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
     fun <V> map(
         adapter: QScalarMapper<V>

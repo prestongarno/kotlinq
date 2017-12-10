@@ -35,7 +35,6 @@ import com.prestongarno.kotlinq.core.stubs.ScalarArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.ScalarDelegate
 import com.prestongarno.kotlinq.core.stubs.StringArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
-import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -46,7 +45,6 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
-import org.antlr.v4.runtime.ParserRuleContext
 import kotlin.reflect.KClass
 
 private const val DEFAULT_NO_ARG = "stub<%T>()"
@@ -77,7 +75,7 @@ sealed class SchemaType : KotlinTypeElement, NamedElement {
 }
 
 
-sealed class ScopedDeclarationType() : SchemaType() {
+sealed class ScopedDeclarationType : SchemaType() {
   abstract val fields: Set<FieldDefinition>
 
   val symtab by lazy {
@@ -139,10 +137,6 @@ class UnionDef(override val name: String, val types: List<String>) : SchemaType(
 
   lateinit var possibilities: Set<TypeDef>
 
-  fun parametersRequiredFrom(field: FieldDefinition): List<TypeName> {
-    return listOf(name.asTypeName())
-  }
-
   override fun getStubDelegationCall(field: FieldDefinition): CodeBlock {
     return super.getStubDelegationCall(field).toString().split("()").let { before ->
       require(before.size == 2)
@@ -152,8 +146,7 @@ class UnionDef(override val name: String, val types: List<String>) : SchemaType(
   }
 
   override fun toKotlin(): TypeSpec = TypeSpec.objectBuilder(name).apply {
-    addSuperinterface(schemaTypeClass.qualifiedName
-        .let { it + CLASS_DELEGATE_MARKER }
+    addSuperinterface((schemaTypeClass.qualifiedName + CLASS_DELEGATE_MARKER)
         .asTypeName()) // TODO use delegate supporting vers
     possibilities.map { type ->
 
@@ -188,7 +181,7 @@ class ScalarDef(override val name: String) : SchemaType() {
   override val delegateListStubClass: KClass<*> = QSchemaType.QCustomScalar.List::class
 }
 
-class EnumDef(override val name: String, val options: List<String>)
+class EnumDef(override val name: String, private val options: List<String>)
   : SchemaType() {
 
   override fun toKotlin(): TypeSpec = TypeSpec.enumBuilder(name).apply {
@@ -209,7 +202,9 @@ class InputDef(override val name: String, override val fields: Set<FieldDefiniti
     addSuperinterface((schemaTypeClass.qualifiedName + CLASS_DELEGATE_MARKER).asTypeName())
     // add required (non-nullable) fields to primary constructor
     this@InputDef.fields.filterNot { it.nullable }.map { required ->
-      ParameterSpec.builder(required.name, required.type.name.asTypeName()).build()
+      ParameterSpec.builder(required.name, required.type.name.asTypeName().let {
+        if (required.isList) ParameterizedTypeName.get(ClassName("kotlin.collections", "List"), it) else it
+      }).build()
     }.also { params ->
       FunSpec.constructorBuilder()
           .addParameters(params)
@@ -226,8 +221,9 @@ class InputDef(override val name: String, override val fields: Set<FieldDefiniti
         .addProperties(
             this@InputDef.fields.filterNot { it.nullable }
                 .map {
-                  PropertySpec.builder(it.name, it.type.name.asTypeName())
-                      .delegate(notNullDelegateCode(arg = it, targetName = "input"))
+                  PropertySpec.builder(it.name, it.type.name.asTypeName().let { name ->
+                    if (it.isList) ParameterizedTypeName.get(ClassName("kotlin.collections", "List"), name) else name
+                  }).delegate(notNullDelegateCode(arg = it, targetName = "input"))
                       .build()
                 })
   }.build()
@@ -247,7 +243,7 @@ sealed class ScalarType : SchemaType() {
     get() = throw IllegalArgumentException("No schema stub class for primitives!")
 
   override fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
-    field.arguments.isEmpty() -> "stub()" to emptyList<String>()
+    field.arguments.isEmpty() -> "stub()" to emptyList()
     field.arguments.isNotEmpty() && field.arguments.find { !it.nullable } == null ->
       "optionalConfigStub<%T>()" to listOf(field.argBuilder!!.name)
     else -> "configStub<%T>()" to listOf(field.argBuilder!!.name)
@@ -296,11 +292,9 @@ object BooleanType : ScalarType() {
   override val delegateListStubClass: KClass<*> = QSchemaType.QScalar.List.Boolean::class
 }
 
-object PlatformTypeContext : ParserRuleContext()
-
 fun String.asTypeName(): TypeName {
-  try {
-    return ClassName.bestGuess(this)
+  return try {
+    ClassName("", this)
   } catch (ex: IllegalArgumentException) {
     throw IllegalArgumentException("Class name '$this' is unsupported at the moment", ex)
   }

@@ -61,7 +61,7 @@ private data class EnumListStubImpl<T, out A>(
       inst: QModel<*>,
       property: KProperty<*>
   ): QField<List<T>> =
-      EnumListAdapterImpl<T>(qproperty, arguments.toMap(), enumClass).bind(inst)
+      EnumListAdapterImpl(qproperty, arguments.toMap(), enumClass).bind(inst)
 
 }
 

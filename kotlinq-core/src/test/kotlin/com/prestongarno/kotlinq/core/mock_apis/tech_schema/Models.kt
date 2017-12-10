@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.mock_apis.tech_schema
 
 import com.languages.Architecture
@@ -28,6 +30,7 @@ import com.languages.SoftwareComponent
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
 import java.time.Instant
+import com.prestongarno.kotlinq.core.eq
 
 
 // non-recursive nested fragment for ^^^ test to prevent cycle
@@ -107,6 +110,6 @@ class FeatureModel : QModel<Feature>(Feature) {
 
 }
 
-fun Date.parseFromQuery(value: String): java.util.Date =
+@Suppress("unused") fun Date.parseFromQuery(value: String): java.util.Date =
     java.util.Date.from(Instant.parse(value))
 

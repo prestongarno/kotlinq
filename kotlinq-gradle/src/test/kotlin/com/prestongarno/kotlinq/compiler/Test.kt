@@ -19,24 +19,22 @@ package com.prestongarno.kotlinq.compiler
 
 import com.google.common.truth.ThrowableSubject
 import com.google.common.truth.Truth.assertThat
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.TypeSpec
-import java.time.Instant
-import java.util.*
-import kotlin.reflect.KCallable
 
-/** F# expression redirect for single exp. return types */
+@Suppress("unused")
+    /** F# expression redirect for single exp. return types */
 fun Any?.ignore() = Unit
 
-@Suppress("NOTHING_TO_INLINE") inline infix fun Any?.eq(other: Any?) = assertThat(this).isEqualTo(other)
-@Suppress("NOTHING_TO_INLINE") inline infix fun Any?.notEq(other: Any?) = assertThat(this).isNotEqualTo(other)
+@Suppress("NOTHING_TO_INLINE")
+inline infix fun Any?.eq(other: Any?) = assertThat(this).isEqualTo(other)
+@Suppress("NOTHING_TO_INLINE")
+inline infix fun Any?.notEq(other: Any?) = assertThat(this).isNotEqualTo(other)
 
 inline fun <reified T> assertThrows(block: () -> Unit): ThrowableSubject {
   try {
     block()
   } catch (e: Throwable) {
-    if (e is T) {
-      return assertThat(e)
+    return if (e is T) {
+      assertThat(e)
     } else {
       throw e
     }
@@ -49,10 +47,7 @@ fun compileOut(schema: String, block: (GraphQLCompiler.() -> Unit) = emptyBlock(
         .apply(block)
         .toKotlinApi()
 
-// Not a test case without a functional println
-fun Any?.println() = println(this)
-
-fun <T> emptyBlock(): T.() -> Unit = Block.empty<T>()
+fun <T> emptyBlock(): T.() -> Unit = Block.empty()
 
 private object Block {
 

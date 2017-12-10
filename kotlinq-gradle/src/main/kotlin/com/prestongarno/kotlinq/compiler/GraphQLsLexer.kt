@@ -39,13 +39,31 @@ class GraphQLsLexer(val schema: Schema) {
         throw err(typeToken, " Expected one of { type, input, enum, interface, scalar, union }")
       }
 
-      val name = matchName(ordered.next())
+      val name = try {
+        matchName(ordered.next())
+      } catch (ex: NoSuchElementException) {
+        throw err(typeToken, "No name for ${currentType.name.toLowerCase()} type at " +
+            typeToken.humanReadableSourceCoordinates())
+      }
 
       val superinterfaces = mutableListOf<Token>()
 
       val body = mutableListOf<Token>()
 
-      var next: Token = ordered.next()
+      // short curcuit on scalar declaration
+      if (currentType == GraphQLType.SCALAR) {
+        definitions += TypeTokenSet(currentType, name, "")
+        if (ordered.hasNext()) {
+          typeToken = ordered.next()
+          continue
+        } else break
+      }
+
+      var next: Token = try {
+        ordered.next()
+      } catch (ex: NoSuchElementException) {
+        throw err(typeToken, "No definition for ${currentType.name.toLowerCase()} type $name")
+      }
 
       if (GraphQLType.match(typeToken) == GraphQLType.TYPE) {
 
@@ -57,9 +75,7 @@ class GraphQLsLexer(val schema: Schema) {
           next = ordered.next()
         }
       }
-      if (currentType == GraphQLType.SCALAR) {
-        definitions += TypeTokenSet(currentType, name, "")
-      } else if (currentType == GraphQLType.UNION) {
+      if (currentType == GraphQLType.UNION) {
         if (Rule.match(next) != Rule.BLOCK)
           throw err(next, "Expected a set of type names separated by '|'")
         definitions += TypeTokenSet(currentType, name, next.text)

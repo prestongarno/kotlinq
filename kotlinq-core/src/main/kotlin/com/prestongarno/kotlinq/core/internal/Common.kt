@@ -20,10 +20,6 @@ package com.prestongarno.kotlinq.core.internal
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.PropertyMapper
 import com.prestongarno.kotlinq.core.QInputType
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.adapters.Adapter
-import com.prestongarno.kotlinq.core.api.FragmentContext
-import com.prestongarno.kotlinq.core.api.ModelProvider
 
 
 @Suppress("UNCHECKED_CAST")
@@ -71,14 +67,3 @@ fun formatAs(value: Any): String {
   }
 }
 
-internal
-fun String.indent(times: Int = 1): String =
-    replace("^".toRegex(), Jsonify.INDENT.repeat(times))
-        .replace("\\n".toRegex(), ("\n${Jsonify.INDENT.repeat(times)}"))
-
-internal
-fun String.prepend(of: String): String = of + this
-
-internal object Jsonify {
-  val INDENT = "  "
-}

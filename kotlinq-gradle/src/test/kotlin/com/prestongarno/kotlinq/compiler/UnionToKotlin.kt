@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("UNUSED_VARIABLE")
+
 package com.prestongarno.kotlinq.compiler
 
 import com.google.common.truth.Truth.assertThat

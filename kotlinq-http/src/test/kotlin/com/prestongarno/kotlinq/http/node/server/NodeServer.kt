@@ -62,9 +62,13 @@ fun setUp() {
             .build())
             .execute()
 
-        if (result.code() == 200 && result.body()?.byteStream()?.let {
-          it.bufferedReader().lines().toList().joinToString().contains("okay")
-        } == true) {
+        if (result.code() == 200 && result.body()
+            ?.byteStream()
+            ?.bufferedReader()
+            ?.lines()
+            ?.toList()
+            ?.joinToString()
+            ?.contains("okay") == true) {
           isStarted.set(true)
           cancel()
         }

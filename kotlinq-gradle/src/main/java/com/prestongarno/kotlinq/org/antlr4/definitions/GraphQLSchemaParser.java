@@ -540,6 +540,9 @@ public class GraphQLSchemaParser extends Parser {
 		public TypeSpecContext typeSpec() {
 			return getRuleContext(TypeSpecContext.class,0);
 		}
+		public NullableContext nullable() {
+			return getRuleContext(NullableContext.class,0);
+		}
 		public ListTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -557,6 +560,7 @@ public class GraphQLSchemaParser extends Parser {
 	public final ListTypeContext listType() throws RecognitionException {
 		ListTypeContext _localctx = new ListTypeContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_listType);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -564,7 +568,17 @@ public class GraphQLSchemaParser extends Parser {
 			match(T__3);
 			setState(80);
 			typeSpec();
-			setState(81);
+			setState(82);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__5) {
+				{
+				setState(81);
+				nullable();
+				}
+			}
+
+			setState(84);
 			match(T__4);
 			}
 		}
@@ -600,7 +614,7 @@ public class GraphQLSchemaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(83);
+			setState(86);
 			match(T__5);
 			}
 		}
@@ -639,9 +653,9 @@ public class GraphQLSchemaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(85);
+			setState(88);
 			match(T__6);
-			setState(86);
+			setState(89);
 			value();
 			}
 		}
@@ -678,7 +692,7 @@ public class GraphQLSchemaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(88);
+			setState(91);
 			match(Name);
 			}
 		}
@@ -726,62 +740,62 @@ public class GraphQLSchemaParser extends Parser {
 		ValueContext _localctx = new ValueContext(_ctx, getState());
 		enterRule(_localctx, 24, RULE_value);
 		try {
-			setState(98);
+			setState(101);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case IntValue:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(90);
+				setState(93);
 				match(IntValue);
 				}
 				break;
 			case FloatValue:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(91);
+				setState(94);
 				match(FloatValue);
 				}
 				break;
 			case StringValue:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(92);
+				setState(95);
 				match(StringValue);
 				}
 				break;
 			case BooleanValue:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(93);
+				setState(96);
 				match(BooleanValue);
 				}
 				break;
 			case NullValue:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(94);
+				setState(97);
 				match(NullValue);
 				}
 				break;
 			case Name:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(95);
+				setState(98);
 				enumValue();
 				}
 				break;
 			case T__3:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(96);
+				setState(99);
 				arrayValue();
 				}
 				break;
 			case T__7:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(97);
+				setState(100);
 				objectValue();
 				}
 				break;
@@ -822,7 +836,7 @@ public class GraphQLSchemaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(100);
+			setState(103);
 			match(Name);
 			}
 		}
@@ -865,23 +879,23 @@ public class GraphQLSchemaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(102);
+			setState(105);
 			match(T__3);
-			setState(106);
+			setState(109);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__7) | (1L << Name) | (1L << BooleanValue) | (1L << NullValue) | (1L << IntValue) | (1L << FloatValue) | (1L << StringValue))) != 0)) {
 				{
 				{
-				setState(103);
+				setState(106);
 				value();
 				}
 				}
-				setState(108);
+				setState(111);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(109);
+			setState(112);
 			match(T__4);
 			}
 		}
@@ -924,23 +938,23 @@ public class GraphQLSchemaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(111);
+			setState(114);
 			match(T__7);
-			setState(115);
+			setState(118);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Name) {
 				{
 				{
-				setState(112);
+				setState(115);
 				objectField();
 				}
 				}
-				setState(117);
+				setState(120);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(118);
+			setState(121);
 			match(T__8);
 			}
 		}
@@ -980,11 +994,11 @@ public class GraphQLSchemaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(120);
+			setState(123);
 			match(Name);
-			setState(121);
+			setState(124);
 			match(T__0);
-			setState(122);
+			setState(125);
 			value();
 			}
 		}
@@ -1000,36 +1014,37 @@ public class GraphQLSchemaParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\30\177\4\2\t\2\4"+
-		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
-		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\30\u0082\4\2\t\2"+
+		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
+		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\3\2\6\2&\n\2\r\2\16\2\'\3\3\6\3+\n\3\r\3\16\3,\3\4\3\4\3\5\3\5\5\5\63"+
 		"\n\5\3\5\3\5\3\5\3\6\3\6\6\6:\n\6\r\6\16\6;\3\6\3\6\3\7\3\7\3\b\3\b\3"+
 		"\b\3\b\5\bF\n\b\3\b\5\bI\n\b\3\t\3\t\5\tM\n\t\3\t\5\tP\n\t\3\n\3\n\3\n"+
-		"\3\n\3\13\3\13\3\f\3\f\3\f\3\r\3\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16"+
-		"\3\16\5\16e\n\16\3\17\3\17\3\20\3\20\7\20k\n\20\f\20\16\20n\13\20\3\20"+
-		"\3\20\3\21\3\21\7\21t\n\21\f\21\16\21w\13\21\3\21\3\21\3\22\3\22\3\22"+
-		"\3\22\3\22\2\2\23\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"\2\2\2~\2%"+
-		"\3\2\2\2\4*\3\2\2\2\6.\3\2\2\2\b\60\3\2\2\2\n\67\3\2\2\2\f?\3\2\2\2\16"+
-		"A\3\2\2\2\20L\3\2\2\2\22Q\3\2\2\2\24U\3\2\2\2\26W\3\2\2\2\30Z\3\2\2\2"+
-		"\32d\3\2\2\2\34f\3\2\2\2\36h\3\2\2\2 q\3\2\2\2\"z\3\2\2\2$&\5\b\5\2%$"+
-		"\3\2\2\2&\'\3\2\2\2\'%\3\2\2\2\'(\3\2\2\2(\3\3\2\2\2)+\5\6\4\2*)\3\2\2"+
-		"\2+,\3\2\2\2,*\3\2\2\2,-\3\2\2\2-\5\3\2\2\2./\7\f\2\2/\7\3\2\2\2\60\62"+
-		"\5\f\7\2\61\63\5\n\6\2\62\61\3\2\2\2\62\63\3\2\2\2\63\64\3\2\2\2\64\65"+
-		"\7\3\2\2\65\66\5\20\t\2\66\t\3\2\2\2\679\7\4\2\28:\5\16\b\298\3\2\2\2"+
-		":;\3\2\2\2;9\3\2\2\2;<\3\2\2\2<=\3\2\2\2=>\7\5\2\2>\13\3\2\2\2?@\7\f\2"+
-		"\2@\r\3\2\2\2AB\7\f\2\2BC\7\3\2\2CE\5\20\t\2DF\5\24\13\2ED\3\2\2\2EF\3"+
-		"\2\2\2FH\3\2\2\2GI\5\26\f\2HG\3\2\2\2HI\3\2\2\2I\17\3\2\2\2JM\5\30\r\2"+
-		"KM\5\22\n\2LJ\3\2\2\2LK\3\2\2\2MO\3\2\2\2NP\5\24\13\2ON\3\2\2\2OP\3\2"+
-		"\2\2P\21\3\2\2\2QR\7\6\2\2RS\5\20\t\2ST\7\7\2\2T\23\3\2\2\2UV\7\b\2\2"+
-		"V\25\3\2\2\2WX\7\t\2\2XY\5\32\16\2Y\27\3\2\2\2Z[\7\f\2\2[\31\3\2\2\2\\"+
-		"e\7\20\2\2]e\7\21\2\2^e\7\27\2\2_e\7\r\2\2`e\7\16\2\2ae\5\34\17\2be\5"+
-		"\36\20\2ce\5 \21\2d\\\3\2\2\2d]\3\2\2\2d^\3\2\2\2d_\3\2\2\2d`\3\2\2\2"+
-		"da\3\2\2\2db\3\2\2\2dc\3\2\2\2e\33\3\2\2\2fg\7\f\2\2g\35\3\2\2\2hl\7\6"+
-		"\2\2ik\5\32\16\2ji\3\2\2\2kn\3\2\2\2lj\3\2\2\2lm\3\2\2\2mo\3\2\2\2nl\3"+
-		"\2\2\2op\7\7\2\2p\37\3\2\2\2qu\7\n\2\2rt\5\"\22\2sr\3\2\2\2tw\3\2\2\2"+
-		"us\3\2\2\2uv\3\2\2\2vx\3\2\2\2wu\3\2\2\2xy\7\13\2\2y!\3\2\2\2z{\7\f\2"+
-		"\2{|\7\3\2\2|}\5\32\16\2}#\3\2\2\2\r\',\62;EHLOdlu";
+		"\5\nU\n\n\3\n\3\n\3\13\3\13\3\f\3\f\3\f\3\r\3\r\3\16\3\16\3\16\3\16\3"+
+		"\16\3\16\3\16\3\16\5\16h\n\16\3\17\3\17\3\20\3\20\7\20n\n\20\f\20\16\20"+
+		"q\13\20\3\20\3\20\3\21\3\21\7\21w\n\21\f\21\16\21z\13\21\3\21\3\21\3\22"+
+		"\3\22\3\22\3\22\3\22\2\2\23\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \""+
+		"\2\2\2\u0082\2%\3\2\2\2\4*\3\2\2\2\6.\3\2\2\2\b\60\3\2\2\2\n\67\3\2\2"+
+		"\2\f?\3\2\2\2\16A\3\2\2\2\20L\3\2\2\2\22Q\3\2\2\2\24X\3\2\2\2\26Z\3\2"+
+		"\2\2\30]\3\2\2\2\32g\3\2\2\2\34i\3\2\2\2\36k\3\2\2\2 t\3\2\2\2\"}\3\2"+
+		"\2\2$&\5\b\5\2%$\3\2\2\2&\'\3\2\2\2\'%\3\2\2\2\'(\3\2\2\2(\3\3\2\2\2)"+
+		"+\5\6\4\2*)\3\2\2\2+,\3\2\2\2,*\3\2\2\2,-\3\2\2\2-\5\3\2\2\2./\7\f\2\2"+
+		"/\7\3\2\2\2\60\62\5\f\7\2\61\63\5\n\6\2\62\61\3\2\2\2\62\63\3\2\2\2\63"+
+		"\64\3\2\2\2\64\65\7\3\2\2\65\66\5\20\t\2\66\t\3\2\2\2\679\7\4\2\28:\5"+
+		"\16\b\298\3\2\2\2:;\3\2\2\2;9\3\2\2\2;<\3\2\2\2<=\3\2\2\2=>\7\5\2\2>\13"+
+		"\3\2\2\2?@\7\f\2\2@\r\3\2\2\2AB\7\f\2\2BC\7\3\2\2CE\5\20\t\2DF\5\24\13"+
+		"\2ED\3\2\2\2EF\3\2\2\2FH\3\2\2\2GI\5\26\f\2HG\3\2\2\2HI\3\2\2\2I\17\3"+
+		"\2\2\2JM\5\30\r\2KM\5\22\n\2LJ\3\2\2\2LK\3\2\2\2MO\3\2\2\2NP\5\24\13\2"+
+		"ON\3\2\2\2OP\3\2\2\2P\21\3\2\2\2QR\7\6\2\2RT\5\20\t\2SU\5\24\13\2TS\3"+
+		"\2\2\2TU\3\2\2\2UV\3\2\2\2VW\7\7\2\2W\23\3\2\2\2XY\7\b\2\2Y\25\3\2\2\2"+
+		"Z[\7\t\2\2[\\\5\32\16\2\\\27\3\2\2\2]^\7\f\2\2^\31\3\2\2\2_h\7\20\2\2"+
+		"`h\7\21\2\2ah\7\27\2\2bh\7\r\2\2ch\7\16\2\2dh\5\34\17\2eh\5\36\20\2fh"+
+		"\5 \21\2g_\3\2\2\2g`\3\2\2\2ga\3\2\2\2gb\3\2\2\2gc\3\2\2\2gd\3\2\2\2g"+
+		"e\3\2\2\2gf\3\2\2\2h\33\3\2\2\2ij\7\f\2\2j\35\3\2\2\2ko\7\6\2\2ln\5\32"+
+		"\16\2ml\3\2\2\2nq\3\2\2\2om\3\2\2\2op\3\2\2\2pr\3\2\2\2qo\3\2\2\2rs\7"+
+		"\7\2\2s\37\3\2\2\2tx\7\n\2\2uw\5\"\22\2vu\3\2\2\2wz\3\2\2\2xv\3\2\2\2"+
+		"xy\3\2\2\2y{\3\2\2\2zx\3\2\2\2{|\7\13\2\2|!\3\2\2\2}~\7\f\2\2~\177\7\3"+
+		"\2\2\177\u0080\5\32\16\2\u0080#\3\2\2\2\16\',\62;EHLOTgox";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

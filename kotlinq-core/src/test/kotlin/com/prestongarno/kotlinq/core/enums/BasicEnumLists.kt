@@ -21,7 +21,7 @@ import com.prestongarno.kotlinq.core.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.primitives.eq
+import com.prestongarno.kotlinq.core.eq
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 

@@ -1,12 +1,18 @@
 
 lexer grammar GraphQLBaseSchema;
 
-UNION_DEF: 'union' -> type(TYPE_LIT), pushMode(UNION);
-SCALAR_DEF: 'scalar' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
-TYPE_DEF: 'type' -> type(TYPE_LIT), pushMode(TYPE);
-INTERFACE_DEF: 'interface' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
-ENUM_DEF: 'enum' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
-INPUT_DEF: 'input' -> type(TYPE_LIT), pushMode(DEF_NAME_CTX);
+UNION_DEF: 'union' ->
+  type(TYPE_LIT), pushMode(UNION);
+TYPE_DEF: 'type' ->
+  type(TYPE_LIT), pushMode(TYPE);
+SCALAR_DEF: 'scalar' ->
+  type(TYPE_LIT), pushMode(DEF_NAME_CTX);
+INTERFACE_DEF: 'interface' ->
+  type(TYPE_LIT), pushMode(DEF_NAME_CTX);
+ENUM_DEF: 'enum' ->
+  type(TYPE_LIT), pushMode(DEF_NAME_CTX);
+INPUT_DEF: 'input' ->
+  type(TYPE_LIT), pushMode(DEF_NAME_CTX);
 
 LCURLY: '{' -> pushMode(CODE_0);
 

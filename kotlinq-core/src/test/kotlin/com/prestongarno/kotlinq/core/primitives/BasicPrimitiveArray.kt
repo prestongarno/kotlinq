@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.primitives
 
 import com.prestongarno.kotlinq.core.QModel
@@ -25,6 +27,7 @@ import com.prestongarno.kotlinq.core.stubs.FloatArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.IntArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.StringArrayDelegate
 import org.junit.Test
+import com.prestongarno.kotlinq.core.eq
 
 object AnonymousClassroom : QType {
 

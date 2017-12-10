@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.mock_apis.tech_schema
 
 import com.prestongarno.kotlinq.core.internal.resolve.resolve
-import com.prestongarno.kotlinq.core.primitives.eq
+import com.prestongarno.kotlinq.core.eq
 import org.junit.Test
 import java.util.*
 

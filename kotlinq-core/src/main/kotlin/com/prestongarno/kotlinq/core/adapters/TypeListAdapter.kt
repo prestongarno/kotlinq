@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("AddVarianceModifier")
+
 package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonArray
@@ -78,5 +80,17 @@ private data class TypeListStubImpl<P : QModel<*>>(
       (value.hashCode() * 31) +
           (args.hashCode() * 31) +
           (qproperty.hashCode() * 31)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as TypeListStubImpl<*>
+
+    if (qproperty != other.qproperty) return false
+    if (args != other.args) return false
+
+    return true
+  }
 
 }

@@ -35,7 +35,7 @@ typeSpec
   ;
 
 listType
-  : '[' typeSpec ']'
+  : '[' typeSpec nullable? ']'
   ;
 
 nullable
@@ -145,11 +145,15 @@ fragment Hex
    ;
 
 Ignored
-   : (Whitespace|Comma|LineTerminator|Comment) -> skip
+   : (Whitespace|Comma|LineTerminator|Comment|Directive) -> skip
    ;
 
 fragment Comment
    : '#' ~[\n\r\u2028\u2029]*
+   ;
+
+fragment Directive
+   : '@' ~[\n\r\u2028\u2029]*
    ;
 
 fragment LineTerminator

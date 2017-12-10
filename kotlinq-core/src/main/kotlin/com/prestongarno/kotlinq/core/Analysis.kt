@@ -46,34 +46,3 @@ fun getFragments(root: QModel<*>, collector: Set<QModel<*>>): Set<Fragment> {
 
 }
 
-private
-fun getFragmentSequence(root: QModel<*>, collector: Set<QModel<*>>): Sequence<Fragment> {
-  val fragmentEdges = root.getFields()
-      .asSequence()
-      .filterIsInstance<FragmentContext>()
-      .flatMap { it.fragments.asSequence() }
-      .filterNot { collector.contains(it.model) }
-
-  val models = root.getFields()
-      .asSequence()
-      .filterIsInstance<ModelProvider>()
-      .filterNot { collector.contains(it.value) }
-      .map(ModelProvider::value)
-      .plus(fragmentEdges
-          .map(Fragment::model))
-
-  val next = (collector + models).toSet()
-  val iterator = models.iterator()
-
-
-  return buildSequence {
-    fragmentEdges.forEach {
-      yield(it)
-    }
-    while (iterator.hasNext()) {
-      getFragmentSequence(iterator.next(), next)
-          .asSequence()
-          .forEach { yield(it) }
-    }
-  }
-}

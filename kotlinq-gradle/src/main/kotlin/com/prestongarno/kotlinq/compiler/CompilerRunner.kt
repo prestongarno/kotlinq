@@ -15,9 +15,10 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.compiler
 
-import groovy.lang.Closure
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -27,15 +28,17 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.compile.AbstractCompile
-import org.gradle.api.tasks.compile.JavaCompile
 import java.io.File
 
 open class CompilerRunner : DefaultTask() {
 
-  val schemaDefs: Set<SchemaDefinition> by lazy { project.rootProject.extensions
-      .getByType(KotlinqCompilerConfiguration::class.java)
-      ?.schemaDefinitions
-      ?: throw GradleException("Kotlinq gradle plugin is not configured") }
+  private val schemaDefs: Set<SchemaDefinition> by lazy {
+    @Suppress("UNNECESSARY_SAFE_CALL") // you never fucking know with gradle
+    project.rootProject.extensions
+        .getByType(KotlinqCompilerConfiguration::class.java)
+        ?.schemaDefinitions
+        ?: throw GradleException("Kotlinq gradle plugin is not configured")
+  }
 
   @Input
   val schemaFiles: Set<File> = schemaDefs
@@ -52,9 +55,13 @@ open class CompilerRunner : DefaultTask() {
 
   @TaskAction
   fun compileGraphQl() {
-    schemaDefs.filter {
-      it.target.asFile().let { file -> file.exists() && file.canRead() }
-    }.onEach { schemaDef ->
+    val results = schemaDefs.filter {
+      it.target.asFile().let { file -> file.exists() && file.canRead() }.apply {
+        if (!this) logger.warn("Unable to read a valid GraphQL schema at ${it.target}")
+      }
+    }.map { schemaDef ->
+
+      var exception: Throwable? = null
 
       val file = schemaDef.target.asFile()
 
@@ -63,23 +70,59 @@ open class CompilerRunner : DefaultTask() {
             .let { if (it.isEmpty()) "GraphQLKotlin.kt" else it }
         packageName = schemaDef.packageName
       }
-      compiler.compile()
-      val result = compiler.toKotlinApi()
+
+      var result: String? = null
+
+      try {
+        compiler.compile()
+        result = compiler.toKotlinApi()
+      } catch (ex: Exception) {
+        exception = exception?.let { IllegalArgumentException(it) } ?: ex
+      }
 
       schemaDef.outputDir.asFile().apply {
+
         mkdirs()
 
         val ktFile = this.child(schemaDef.packageName.replace(".", "/").prepend("/")).apply {
-          if (!exists() && !mkdirs())
-            throw GradleException("Could not make compile output directory $path")
+          if (!exists() && !mkdirs()) {
+            val msg = "Could not make compile output directory $path"
+            exception = exception?.let { IllegalArgumentException(msg, it) } ?: GradleException(msg)
+          }
         }.child(schemaDef.kotlinFileName)
 
-        if (ktFile.exists() && !ktFile.canWrite())
-          throw GradleException("Can't write to ${ktFile.path}")
+        if (ktFile.exists() && !ktFile.canWrite()) {
+          exception = GradleException("Can't write to ${ktFile.path}")
+        }
 
-        ktFile.writeText(text = result)
+        try {
+          if (result != null) {
+            ktFile.writeText(result)
+          } else throw IllegalArgumentException("Result was empty")
+        } catch (ex: Exception) {
+          exception = exception?.let { IllegalArgumentException(it) } ?: ex
+        }
       }
+      return@map Pair(schemaDef, exception)
+    }
 
+    results.partition { it.second == null }.let { (successes, failures) ->
+      successes.map { it.first }.forEach {
+        logger.info("Successfully generated schema from " +
+            "${it.target} to ${it.outputDir} as ${it.kotlinFileName}")
+      }
+      failures.takeIf { it.isNotEmpty() }?.apply {
+        forEach { (schema, exception) ->
+          logger.info("Failed to compile schema at ${schema.target}. Reason: <${exception?.message}>")
+          val details = "Failure stacktrace for compilation of ${schema.target}:\n" +
+              exception?.recursiveStacktrace()
+          logger.debug(details)
+          if (logger.isTraceEnabled) System.err.println(details)
+        }
+        // TODO should probably clean up the build dirs
+        throw GradleException("Failed to compile the following schema(s):" +
+            failures.joinToString(separator = "; ") { it.first.target })
+      }
     }
 
     if (schemaDefs.isEmpty()) {
@@ -104,7 +147,7 @@ class SchemaDefinition(project: Project) {
   @JvmField var outputDir = project.buildDir.absolutePath + "generated/kotlinq"
 }
 
-open class KotlinqCompilerConfiguration(var project: Project) {
+open class KotlinqCompilerConfiguration(private var project: Project) {
 
   internal val schemaDefinitions: MutableSet<SchemaDefinition> = mutableSetOf()
 
@@ -117,9 +160,9 @@ open class KotlinqCompilerConfiguration(var project: Project) {
     project.logger.log(LogLevel.INFO, "Working directory: ${File("./").absolutePath}")
     project.logger.log(LogLevel.INFO, "Registered GraphQL schema:" + schemaDef.run {
       "\n\ttarget: " + target +
-      "\n\tkotlinFileName: " + kotlinFileName +
-      "\n\tpackageName: " + packageName +
-      "\n\toutputDir: " + outputDir
+          "\n\tkotlinFileName: " + kotlinFileName +
+          "\n\tpackageName: " + packageName +
+          "\n\toutputDir: " + outputDir
     })
   }
 
@@ -127,7 +170,7 @@ open class KotlinqCompilerConfiguration(var project: Project) {
 
 open class KotlinqPlugin : Plugin<Project> {
 
-  override fun apply(target: Project?): Unit = target?.run {
+  override fun apply(target: Project?) = target?.run {
     target.logger.log(LogLevel.INFO, "Applying compiler plugin to project: '${target.name}'")
     target.extensions.create("kotlinq", KotlinqCompilerConfiguration::class.java, target)
     val compilerTask = target.tasks.create("compileGraphQL", CompilerRunner::class.java)
@@ -138,6 +181,17 @@ open class KotlinqPlugin : Plugin<Project> {
 }
 
 
-private fun Any?.ignore(): Unit = Unit
+@Suppress("unused") private fun Any?.ignore() = Unit
 private fun String.asFile() = File(this)
 private fun File.child(relativePath: String): File = ((this.path ?: "./") + relativePath.prepend("/")).asFile()
+private fun StackTraceElement.toLoggingFormat(): String =
+    "[$className].$methodName\t$fileName($lineNumber)"
+
+private fun Throwable.recursiveStacktrace(indent: Int = 1): String {
+  val indentSpace = "  ".repeat(indent)
+  return stackTrace.joinToString(
+      separator = "\n$indentSpace",
+      prefix = "\nCaused by: $message\n$indentSpace",
+      transform = StackTraceElement::toLoggingFormat
+  ) + cause?.recursiveStacktrace(indent + 1)
+}

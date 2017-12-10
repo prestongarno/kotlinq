@@ -19,7 +19,6 @@ package com.prestongarno.kotlinq.core.interfaces
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.adapters.toMap
 import org.junit.Ignore
 import org.junit.Test

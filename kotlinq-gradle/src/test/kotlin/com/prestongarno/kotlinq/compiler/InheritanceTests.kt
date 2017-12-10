@@ -173,6 +173,7 @@ class InheritanceTests {
 }
 
 
+@Suppress("unused")
 fun GraphQLCompiler.prettyPrintScopes(): String {
   return schemaTypes.filterIsInstance<ScopedDeclarationType>().joinToString("\n") {
     it.name + it.symtab.entries.joinToString(prefix = "\n", separator = ",\n") {

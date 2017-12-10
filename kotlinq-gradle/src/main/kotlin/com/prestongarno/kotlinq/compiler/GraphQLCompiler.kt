@@ -15,6 +15,8 @@
  *
  */
 
+@file:Suppress("FunctionName")
+
 package com.prestongarno.kotlinq.compiler
 
 import com.squareup.kotlinpoet.FileSpec
@@ -49,13 +51,13 @@ class GraphQLCompiler(
 
   val schemaTypes get() = definitions.toSet()
 
-  private val schemaRules = listOf<SchemaRule>(
+  private val schemaRules = listOf(
       `duplicate type names check`(),
       `unique supertype declarations`(),
       `type name does not match scalar primitive`()
   )
 
-  private val scopedSymbolRules = listOf<SymbolScopeRule>(
+  private val scopedSymbolRules = listOf(
       `no duplicate symbol names`()
   )
 

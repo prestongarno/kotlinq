@@ -22,11 +22,15 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeSpec
 
 
 fun notNullDelegateCode(arg: ScopedSymbol, targetName: String = "arguments"): CodeBlock {
-  return CodeBlock.of("$targetName.notNull<%T>(\"${arg.name}\", ${arg.name})", arg.type.name.asTypeName())
+  val paramType = arg.type.name.asTypeName().let {
+    if (arg.isList) ParameterizedTypeName.get(ClassName("kotlin.collections", "List"), it) else it
+  }
+  return CodeBlock.of("$targetName.notNull<%T>(\"${arg.name}\", ${arg.name})", paramType)
 }
 
 internal class ArgumentSpecDef(val field: FieldDefinition, val context: ScopedDeclarationType) : KotlinTypeElement {

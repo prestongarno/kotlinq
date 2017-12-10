@@ -53,9 +53,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
 
   override val name = context.fieldName().Name().text!!
 
-  override val typeName = context.typeSpec()?.typeName()?.Name()?.text
-      ?: context.typeSpec().listType()?.children?.get(1)?.text
-      ?: throw IllegalArgumentException("Unknown type name for $name at ${context.typeSpec().text}")
+  override val typeName = getTypeNameOrError(context)
   // TODO actually use the parse trees so don't have to exception on ctor^
 
   override val nullable = context.typeSpec().nullable() == null
@@ -78,10 +76,11 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
         ?: emptyList()
   }
 
-  val requiresConfiguration: Boolean get() = arguments.isNotEmpty() && __requiresConfiguration
-      || arguments.find { !it.nullable } != null
+  val requiresConfiguration: Boolean
+    get() = arguments.isNotEmpty() && __requiresConfiguration
+        || arguments.find { !it.nullable } != null
 
-  private var __requiresConfiguration = false
+  @Suppress("PrivatePropertyName") private var __requiresConfiguration = false
 
   fun flagAsRequiringConfiguration() {
     __requiresConfiguration = true
@@ -146,7 +145,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
     val baseTypeName = (if (isList) `type name for list field`() else `type name for non-collection field`())
         .asTypeName()
         .nestedClass(configurationTypeClassName())
-        //
+    //
 
     fun FieldDefinition.argBuilderTypeName(): TypeName {
       require(arguments.isNotEmpty())
@@ -177,6 +176,16 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
   companion object {
     // not exactly sure how to do 'out' variance on parameterized types
     const val OUT_VARIANCE_MARKER = "@java.lang.Void"
+
+    // TODO support multi-dimensional arrays
+    private fun getTypeNameOrError(context: GraphQLSchemaParser.FieldDefContext): String =
+        context.typeSpec().text.let { value ->
+          val brackets = value.takeWhile { it -> it == '[' }.count()
+          require(brackets == value.takeLastWhile { it == '!' || it == ']' }.replace("!", "").count()) {
+            "Unmatched bracket on field ${context.fieldName()}"
+          }
+          return@let value.substring(brackets, value.indexOfFirst { it == ']' || it == '!' }.let { if (it < 1) value.length else it })
+        }
   }
 
 }
@@ -187,9 +196,9 @@ data class ArgumentDefinition(
 ) : ScopedSymbol(),
     KotlinPropertyElement {
 
-  override val name: String get() = context.Name().text
+  override val name: String = context.Name().text
 
-  override val typeName: String get() = context.typeSpec().typeName().text
+  override val typeName: String = getTypeNameOrError(context)
 
   override val nullable = context.typeSpec().nullable() == null
 
@@ -207,6 +216,8 @@ data class ArgumentDefinition(
           name,
           // Type name
           type.name.asTypeName().let {
+            if (isList) ParameterizedTypeName.get(ClassName("kotlin.collections", "List"), it) else it
+          }.let {
             if (this@ArgumentDefinition.nullable) it.asNullable() else it
           }, // modifiers
           *(if (!isAbstract && field.inheritsFrom.find { superiface ->
@@ -250,6 +261,19 @@ data class ArgumentDefinition(
     result = 31 * result + nullable.hashCode()
     result = 31 * result + isList.hashCode()
     return result
+  }
+
+  companion object {
+
+    // TODO support multi-dimensional arrays
+    private fun getTypeNameOrError(context: GraphQLSchemaParser.ArgumentContext): String =
+        context.typeSpec().text.let { value ->
+          val brackets = value.takeWhile { it -> it == '[' }.count()
+          require(brackets == value.takeLastWhile { it == '!' || it == ']' }.replace("!", "").count()) {
+            "Unmatched bracket on field ${context.Name().text}"
+          }
+          return@let value.substring(brackets, value.indexOfFirst { it == ']' || it == '!' }.let { if (it < 1) value.length else it })
+        }
   }
 }
 

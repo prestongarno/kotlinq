@@ -1,9 +1,9 @@
 input AcceptTopicSuggestionInput {
     clientMutationId: String
 
-    repositoryId: ID!
+    repositoryId: Id!
 
-    name: String!
+    prop: String!
 }
 
 type AcceptTopicSuggestionPayload {
@@ -26,7 +26,7 @@ interface Actor {
 input AddCommentInput {
     clientMutationId: String
 
-    subjectId: ID!
+    subjectId: Id!
 
     body: String!
 }
@@ -44,9 +44,9 @@ type AddCommentPayload {
 input AddProjectCardInput {
     clientMutationId: String
 
-    projectColumnId: ID!
+    projectColumnId: Id!
 
-    contentId: ID
+    contentId: Id
 
     note: String
 }
@@ -62,9 +62,9 @@ type AddProjectCardPayload {
 input AddProjectColumnInput {
     clientMutationId: String
 
-    projectId: ID!
+    projectId: Id!
 
-    name: String!
+    prop: String!
 }
 
 type AddProjectColumnPayload {
@@ -78,9 +78,9 @@ type AddProjectColumnPayload {
 input AddPullRequestReviewCommentInput {
     clientMutationId: String
 
-    pullRequestReviewId: ID!
+    pullRequestReviewId: Id!
 
-    commitOID: GitObjectID
+    commitOId: GitObjectId
 
     body: String!
 
@@ -88,7 +88,7 @@ input AddPullRequestReviewCommentInput {
 
     position: Int
 
-    inReplyTo: ID
+    inReplyTo: Id
 }
 
 type AddPullRequestReviewCommentPayload {
@@ -102,9 +102,9 @@ type AddPullRequestReviewCommentPayload {
 input AddPullRequestReviewInput {
     clientMutationId: String
 
-    pullRequestId: ID!
+    pullRequestId: Id!
 
-    commitOID: GitObjectID
+    commitOId: GitObjectId
 
     body: String
 
@@ -124,7 +124,7 @@ type AddPullRequestReviewPayload {
 input AddReactionInput {
     clientMutationId: String
 
-    subjectId: ID!
+    subjectId: Id!
 
     content: ReactionContent!
 }
@@ -140,7 +140,7 @@ type AddReactionPayload {
 input AddStarInput {
     clientMutationId: String
 
-    starrableId: ID!
+    starrableId: Id!
 }
 
 type AddStarPayload {
@@ -154,8 +154,8 @@ type AddedToProjectEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 }
 
 interface Assignable {
@@ -175,7 +175,7 @@ type AssignedEvent implements Node {
     assignable: Assignable!
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     user: User
 }
@@ -185,8 +185,8 @@ type BaseRefChangedEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 }
 
 type BaseRefForcePushedEvent implements Node {
@@ -197,7 +197,7 @@ type BaseRefForcePushedEvent implements Node {
     beforeCommit: Commit!
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 
@@ -226,13 +226,13 @@ type Blob implements Node, GitObject {
     commitResourcePath: URI!
 
     commitUrl: URI!
-    id: ID!
+    id: Id!
 
     isBinary: Boolean!
 
     isTruncated: Boolean!
 
-    oid: GitObjectID!
+    oid: GitObjectId!
 
     repository: Repository!
 
@@ -243,8 +243,8 @@ type Bot implements Node, Actor, UniformResourceLocatable {
     avatarUrl(
     size: Int): URI!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
     login: String!
 
@@ -265,7 +265,7 @@ type ClosedEvent implements Node {
     commit: Commit
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 }
 
 type CodeOfConduct {
@@ -273,7 +273,7 @@ type CodeOfConduct {
 
     key: String!
 
-    name: String!
+    prop: String!
 
     url: URI
 }
@@ -292,7 +292,7 @@ interface Comment {
     createdViaEmail: Boolean!
 
     editor: Actor
-    id: ID!
+    id: Id!
 
     lastEditedAt: DateTime
 
@@ -334,8 +334,8 @@ type CommentDeletedEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 }
 
 type Commit implements Node, GitObject, Subscribable {
@@ -383,9 +383,9 @@ type Commit implements Node, GitObject, Subscribable {
     since: GitTimestamp
 
     until: GitTimestamp): CommitHistoryConnection!
-    id: ID!
+    id: Id!
 
-    message: String!
+    hello: String!
 
     messageBody: String!
 
@@ -395,7 +395,7 @@ type Commit implements Node, GitObject, Subscribable {
 
     messageHeadlineHTML: HTML!
 
-    oid: GitObjectID!
+    oid: GitObjectId!
 
     repository: Repository!
 
@@ -419,7 +419,7 @@ type Commit implements Node, GitObject, Subscribable {
 }
 
 input CommitAuthor {
-    id: ID
+    id: Id
 
     emails: [String!]
 }
@@ -439,10 +439,10 @@ type CommitComment implements Node, Comment, Deletable, Updatable, UpdatableComm
 
     createdViaEmail: Boolean!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     editor: Actor
-    id: ID!
+    id: Id!
 
     lastEditedAt: DateTime
 
@@ -509,7 +509,7 @@ type CommitCommentThread implements Node, RepositoryNode {
     before: String): CommitCommentConnection!
 
     commit: Commit!
-    id: ID!
+    id: Id!
 
     path: String
 
@@ -537,16 +537,16 @@ type ConvertedNoteToIssueEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 }
 
 input CreateProjectInput {
     clientMutationId: String
 
-    ownerId: ID!
+    ownerId: Id!
 
-    name: String!
+    prop: String!
 
     body: String
 }
@@ -562,9 +562,9 @@ scalar DateTime
 input DeclineTopicSuggestionInput {
     clientMutationId: String
 
-    repositoryId: ID!
+    repositoryId: Id!
 
-    name: String!
+    prop: String!
 
     reason: TopicSuggestionDeclineReason!
 }
@@ -590,7 +590,7 @@ interface Deletable {
 input DeleteProjectCardInput {
     clientMutationId: String
 
-    cardId: ID!
+    cardId: Id!
 }
 
 type DeleteProjectCardPayload {
@@ -598,19 +598,19 @@ type DeleteProjectCardPayload {
 
     column: ProjectColumn!
 
-    deletedCardId: ID!
+    deletedCardId: Id!
 }
 
 input DeleteProjectColumnInput {
     clientMutationId: String
 
-    columnId: ID!
+    columnId: Id!
 }
 
 type DeleteProjectColumnPayload {
     clientMutationId: String
 
-    deletedColumnId: ID!
+    deletedColumnId: Id!
 
     project: Project!
 }
@@ -618,7 +618,7 @@ type DeleteProjectColumnPayload {
 input DeleteProjectInput {
     clientMutationId: String
 
-    projectId: ID!
+    projectId: Id!
 }
 
 type DeleteProjectPayload {
@@ -630,7 +630,7 @@ type DeleteProjectPayload {
 input DeletePullRequestReviewInput {
     clientMutationId: String
 
-    pullRequestReviewId: ID!
+    pullRequestReviewId: Id!
 }
 
 type DeletePullRequestReviewPayload {
@@ -643,7 +643,7 @@ type DemilestonedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     milestoneTitle: String!
 
@@ -655,10 +655,10 @@ type DeployedEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     deployment: Deployment!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 
@@ -673,7 +673,7 @@ type Deployment implements Node {
     creator: Actor
 
     environment: String
-    id: ID!
+    id: Id!
 
     latestStatus: DeploymentStatus
 
@@ -731,7 +731,7 @@ type DeploymentStatus implements Node {
     description: String
 
     environmentUrl: URI
-    id: ID!
+    id: Id!
 
     logUrl: URI
 
@@ -769,9 +769,9 @@ enum DeploymentStatusState {
 input DismissPullRequestReviewInput {
     clientMutationId: String
 
-    pullRequestReviewId: ID!
+    pullRequestReviewId: Id!
 
-    message: String!
+    hello: String!
 }
 
 type DismissPullRequestReviewPayload {
@@ -790,7 +790,7 @@ input DraftPullRequestReviewComment {
 
 type ExternalIdentity implements Node {
     guid: String!
-    id: ID!
+    id: Id!
 
     organizationInvitation: OrganizationInvitation
 
@@ -858,11 +858,11 @@ type Gist implements Node, Starrable {
     createdAt: DateTime!
 
     description: String
-    id: ID!
+    id: Id!
 
     isPublic: Boolean!
 
-    name: String!
+    prop: String!
 
     owner: RepositoryOwner
 
@@ -896,7 +896,7 @@ type GistComment implements Node, Comment, Deletable, Updatable, UpdatableCommen
     createdViaEmail: Boolean!
 
     editor: Actor
-    id: ID!
+    id: Id!
 
     lastEditedAt: DateTime
 
@@ -961,7 +961,7 @@ type GitActor {
 
     email: String
 
-    name: String
+    prop: String
 
     user: User
 }
@@ -972,14 +972,14 @@ interface GitObject {
     commitResourcePath: URI!
 
     commitUrl: URI!
-    id: ID!
+    id: Id!
 
-    oid: GitObjectID!
+    oid: GitObjectId!
 
     repository: Repository!
 }
 
-scalar GitObjectID
+scalar GitObjectId
 
 interface GitSignature {
     email: String!
@@ -996,9 +996,9 @@ interface GitSignature {
 }
 
 enum GitSignatureState {
-    VALID
+    VALId
 
-    INVALID
+    INVALId
 
     MALFORMED_SIG
 
@@ -1051,7 +1051,7 @@ type HeadRefDeletedEvent implements Node {
     headRef: Ref
 
     headRefName: String!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 }
@@ -1064,7 +1064,7 @@ type HeadRefForcePushedEvent implements Node {
     beforeCommit: Commit!
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 
@@ -1075,7 +1075,7 @@ type HeadRefRestoredEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 }
@@ -1115,10 +1115,10 @@ type Issue implements Node, Assignable, Closable, Comment, Updatable, UpdatableC
 
     createdViaEmail: Boolean!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     editor: Actor
-    id: ID!
+    id: Id!
 
     labels(
     first: Int
@@ -1214,10 +1214,10 @@ type IssueComment implements Node, Comment, Deletable, Updatable, UpdatableComme
 
     createdViaEmail: Boolean!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     editor: Actor
-    id: ID!
+    id: Id!
 
     issue: Issue!
 
@@ -1335,7 +1335,7 @@ type IssueTimelineItemEdge {
 
 type Label implements Node {
     color: String!
-    id: ID!
+    id: Id!
 
     issues(
     first: Int
@@ -1352,7 +1352,7 @@ type Label implements Node {
 
     states: [IssueState!]): IssueConnection!
 
-    name: String!
+    prop: String!
 
     pullRequests(
     first: Int
@@ -1397,7 +1397,7 @@ type LabeledEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     label: Label!
 
@@ -1406,9 +1406,9 @@ type LabeledEvent implements Node {
 
 type Language implements Node {
     color: String
-    id: ID!
+    id: Id!
 
-    name: String!
+    prop: String!
 }
 
 type LanguageConnection {
@@ -1448,7 +1448,7 @@ type LockedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     lockable: Lockable!
 }
@@ -1458,8 +1458,8 @@ type MentionedEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 }
 
 enum MergeableState {
@@ -1476,7 +1476,7 @@ type MergedEvent implements Node, UniformResourceLocatable {
     commit: Commit
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     mergeRef: Ref
 
@@ -1495,7 +1495,7 @@ type Milestone implements Node, UniformResourceLocatable {
     description: String
 
     dueOn: DateTime
-    id: ID!
+    id: Id!
 
     number: Int!
 
@@ -1538,7 +1538,7 @@ type MilestonedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     milestoneTitle: String!
 
@@ -1548,11 +1548,11 @@ type MilestonedEvent implements Node {
 input MoveProjectCardInput {
     clientMutationId: String
 
-    cardId: ID!
+    cardId: Id!
 
-    columnId: ID!
+    columnId: Id!
 
-    afterCardId: ID
+    afterCardId: Id
 }
 
 type MoveProjectCardPayload {
@@ -1564,9 +1564,9 @@ type MoveProjectCardPayload {
 input MoveProjectColumnInput {
     clientMutationId: String
 
-    columnId: ID!
+    columnId: Id!
 
-    afterColumnId: ID
+    afterColumnId: Id
 }
 
 type MoveProjectColumnPayload {
@@ -1580,8 +1580,8 @@ type MovedColumnsInProjectEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 }
 
 type Mutation {
@@ -1617,7 +1617,7 @@ type Mutation {
 }
 
 interface Node {
-    id: ID!
+    id: Id!
 }
 
 enum OrderDirection {
@@ -1630,8 +1630,8 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
     avatarUrl(
     size: Int): URI!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
     isInvoiced: Boolean!
 
@@ -1646,7 +1646,7 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
 
     before: String): UserConnection!
 
-    name: String!
+    prop: String!
 
     newTeamResourcePath: URI!
 
@@ -1713,7 +1713,7 @@ type Organization implements Node, Actor, ProjectOwner, RepositoryOwner, Uniform
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -1787,7 +1787,7 @@ type OrganizationIdentityProvider implements Node {
     last: Int
 
     before: String): ExternalIdentityConnection!
-    id: ID!
+    id: Id!
 
     idpCertificate: X509Certificate
 
@@ -1802,7 +1802,7 @@ type OrganizationIdentityProvider implements Node {
 
 type OrganizationInvitation {
     email: String
-    id: ID!
+    id: Id!
 
     invitee: User
 
@@ -1867,10 +1867,10 @@ type Project implements Node, Updatable {
 
     creator: Actor
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
-    name: String!
+    prop: String!
 
     number: Int!
 
@@ -1896,8 +1896,8 @@ type ProjectCard implements Node {
 
     creator: Actor
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
     note: String
 
@@ -1952,10 +1952,10 @@ type ProjectColumn implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
-    name: String!
+    prop: String!
 
     project: Project!
 
@@ -2009,7 +2009,7 @@ enum ProjectOrderField {
 }
 
 interface ProjectOwner {
-    id: ID!
+    id: Id!
 
     project(
     number: Int!): Project
@@ -2056,11 +2056,11 @@ type ProtectedBranch implements Node {
     hasRestrictedReviewDismissals: Boolean!
 
     hasStrictRequiredStatusChecks: Boolean!
-    id: ID!
+    id: Id!
 
     isAdminEnforced: Boolean!
 
-    name: String!
+    prop: String!
 
     pushAllowances(
     first: Int
@@ -2149,7 +2149,7 @@ type PullRequest implements Node, Assignable, Closable, Comment, Updatable, Upda
 
     createdViaEmail: Boolean!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     editor: Actor
 
@@ -2160,7 +2160,7 @@ type PullRequest implements Node, Assignable, Closable, Comment, Updatable, Upda
     headRepository: Repository
 
     headRepositoryOwner: RepositoryOwner
-    id: ID!
+    id: Id!
 
     isCrossRepository: Boolean!
 
@@ -2279,7 +2279,7 @@ type PullRequest implements Node, Assignable, Closable, Comment, Updatable, Upda
 
 type PullRequestCommit implements Node, UniformResourceLocatable {
     commit: Commit!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 
@@ -2354,10 +2354,10 @@ type PullRequestReview implements Node, Comment, Deletable, Updatable, Updatable
 
     createdViaEmail: Boolean!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     editor: Actor
-    id: ID!
+    id: Id!
 
     lastEditedAt: DateTime
 
@@ -2403,14 +2403,14 @@ type PullRequestReviewComment implements Node, Comment, Deletable, Updatable, Up
 
     createdViaEmail: Boolean!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     diffHunk: String!
 
     draftedAt: DateTime!
 
     editor: Actor
-    id: ID!
+    id: Id!
 
     lastEditedAt: DateTime
 
@@ -2525,7 +2525,7 @@ type PullRequestReviewThread implements Node {
     last: Int
 
     before: String): PullRequestReviewCommentConnection!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 }
@@ -2557,7 +2557,7 @@ type PullRequestTimelineItemEdge {
 
 type PushAllowance implements Node {
     actor: PushAllowanceActor
-    id: ID!
+    id: Id!
 
     protectedBranch: ProtectedBranch!
 }
@@ -2585,9 +2585,9 @@ type Query {
 
     codesOfConduct: [CodeOfConduct]
 
-    node(id: ID!): Node
+    node(id: Id!): Node
 
-    nodes(ids: [ID!]!): [Node]!
+    nodes(ids: [Id!]!): [Node]!
 
     organization(login: String!): Organization
 
@@ -2595,7 +2595,7 @@ type Query {
 
     relay: Query!
 
-    repository(owner: String!, name: String!): Repository
+    repository(owner: String!, prop: String!): Repository
 
     repositoryOwner(login: String!): RepositoryOwner
 
@@ -2603,7 +2603,7 @@ type Query {
 
     search(first: Int, after: String, last: Int, before: String, query: String!, type: SearchType!): SearchResultItemConnection!
 
-    topic(name: String!): Topic
+    topic(prop: String!): Topic
 
     user(login: String!): User
 
@@ -2621,8 +2621,8 @@ type RateLimit {
 }
 
 interface Reactable {
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
     reactionGroups: [ReactionGroup!]
 
@@ -2664,8 +2664,8 @@ type Reaction implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
     user: User
 }
@@ -2742,9 +2742,9 @@ type Ref implements Node {
     before: String
 
     states: [PullRequestState!]): PullRequestConnection!
-    id: ID!
+    id: Id!
 
-    name: String!
+    prop: String!
 
     prefix: String!
 
@@ -2777,7 +2777,7 @@ type ReferencedEvent implements Node {
     commitRepository: Repository!
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     isCrossReference: Boolean! @deprecated(reason: "Use ReferencedEvent.isCrossRepository instead.")
 
@@ -2792,9 +2792,9 @@ union ReferencedSubject = Issue | PullRequest
 
 type Release implements Node, UniformResourceLocatable {
     description: String
-    id: ID!
+    id: Id!
 
-    name: String
+    prop: String
 
     publishedAt: DateTime
 
@@ -2807,7 +2807,7 @@ type Release implements Node, UniformResourceLocatable {
 
     before: String
 
-    name: String!): ReleaseAssetConnection!
+    prop: String!): ReleaseAssetConnection!
 
     releaseAssets(
     first: Int
@@ -2826,9 +2826,9 @@ type Release implements Node, UniformResourceLocatable {
 }
 
 type ReleaseAsset implements Node {
-    id: ID!
+    id: Id!
 
-    name: String!
+    prop: String!
 
     release: Release
 
@@ -2870,9 +2870,9 @@ type ReleaseEdge {
 input RemoveOutsideCollaboratorInput {
     clientMutationId: String
 
-    userId: ID!
+    userId: Id!
 
-    organizationId: ID!
+    organizationId: Id!
 }
 
 type RemoveOutsideCollaboratorPayload {
@@ -2884,7 +2884,7 @@ type RemoveOutsideCollaboratorPayload {
 input RemoveReactionInput {
     clientMutationId: String
 
-    subjectId: ID!
+    subjectId: Id!
 
     content: ReactionContent!
 }
@@ -2900,7 +2900,7 @@ type RemoveReactionPayload {
 input RemoveStarInput {
     clientMutationId: String
 
-    starrableId: ID!
+    starrableId: Id!
 }
 
 type RemoveStarPayload {
@@ -2914,8 +2914,8 @@ type RemovedFromProjectEvent implements Node {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 }
 
 type RenamedTitleEvent implements Node {
@@ -2924,7 +2924,7 @@ type RenamedTitleEvent implements Node {
     createdAt: DateTime!
 
     currentTitle: String!
-    id: ID!
+    id: Id!
 
     previousTitle: String!
 
@@ -2939,7 +2939,7 @@ type ReopenedEvent implements Node {
     closable: Closable!
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 }
 
 type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformResourceLocatable, RepositoryInfo {
@@ -2956,7 +2956,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     defaultBranchRef: Ref
 
@@ -2997,7 +2997,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
     hasWikiEnabled: Boolean!
 
     homepageUrl: URI
-    id: ID!
+    id: Id!
 
     isFork: Boolean!
 
@@ -3029,7 +3029,7 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
     states: [IssueState!]): IssueConnection!
 
     label(
-    name: String!): Label
+    prop: String!): Label
 
     labels(
     first: Int
@@ -3078,12 +3078,12 @@ type Repository implements Node, ProjectOwner, Subscribable, Starrable, UniformR
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
-    object(
-    oid: GitObjectID
+    gitObject(
+    oid: GitObjectId
 
     expression: String): GitObject
 
@@ -3232,7 +3232,7 @@ enum RepositoryAffiliation {
 enum RepositoryCollaboratorAffiliation {
     ALL
 
-    OUTSIDE
+    OUTSIdE
 }
 
 type RepositoryConnection {
@@ -3280,7 +3280,7 @@ interface RepositoryInfo {
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3296,7 +3296,7 @@ interface RepositoryInfo {
 }
 
 type RepositoryInvitation implements Node {
-    id: ID!
+    id: Id!
 
     invitee: User!
 
@@ -3332,7 +3332,7 @@ type RepositoryInvitationRepository implements RepositoryInfo {
 
     mirrorUrl: URI
 
-    name: String!
+    prop: String!
 
     nameWithOwner: String!
 
@@ -3382,7 +3382,7 @@ enum RepositoryOrderField {
 interface RepositoryOwner {
     avatarUrl(
     size: Int): URI!
-    id: ID!
+    id: Id!
 
     login: String!
 
@@ -3423,7 +3423,7 @@ interface RepositoryOwner {
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -3437,7 +3437,7 @@ enum RepositoryPrivacy {
 }
 
 type RepositoryTopic implements Node, UniformResourceLocatable {
-    id: ID!
+    id: Id!
 
     resourcePath: URI!
 
@@ -3465,11 +3465,11 @@ type RepositoryTopicEdge {
 input RequestReviewsInput {
     clientMutationId: String
 
-    pullRequestId: ID!
+    pullRequestId: Id!
 
-    userIds: [ID!]
+    userIds: [Id!]
 
-    teamIds: [ID!]
+    teamIds: [Id!]
 
     union: Boolean
 }
@@ -3484,7 +3484,7 @@ type RequestReviewsPayload {
 
 type ReviewDismissalAllowance implements Node {
     actor: ReviewDismissalAllowanceActor
-    id: ID!
+    id: Id!
 
     protectedBranch: ProtectedBranch!
 }
@@ -3512,10 +3512,10 @@ type ReviewDismissedEvent implements Node, UniformResourceLocatable {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
-    message: String!
+    hello: String!
 
     messageHtml: HTML!
 
@@ -3533,8 +3533,8 @@ type ReviewDismissedEvent implements Node, UniformResourceLocatable {
 }
 
 type ReviewRequest implements Node {
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
-    id: ID!
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
+    id: Id!
 
     pullRequest: PullRequest!
 
@@ -3561,7 +3561,7 @@ type ReviewRequestRemovedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 
@@ -3572,7 +3572,7 @@ type ReviewRequestedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     pullRequest: PullRequest!
 
@@ -3655,7 +3655,7 @@ type StargazerEdge {
 }
 
 interface Starrable {
-    id: ID!
+    id: Id!
 
     stargazers(
     first: Int
@@ -3692,10 +3692,10 @@ type Status implements Node {
     commit: Commit
 
     context(
-    name: String!): StatusContext
+    prop: String!): StatusContext
 
     contexts: [StatusContext!]!
-    id: ID!
+    id: Id!
 
     state: StatusState!
 }
@@ -3710,7 +3710,7 @@ type StatusContext implements Node {
     creator: Actor
 
     description: String
-    id: ID!
+    id: Id!
 
     state: StatusState!
 
@@ -3732,7 +3732,7 @@ enum StatusState {
 input SubmitPullRequestReviewInput {
     clientMutationId: String
 
-    pullRequestReviewId: ID!
+    pullRequestReviewId: Id!
 
     event: PullRequestReviewEvent!
 
@@ -3755,7 +3755,7 @@ type SubscribedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     subscribable: Subscribable!
 }
@@ -3782,13 +3782,13 @@ type Tag implements Node, GitObject {
     commitResourcePath: URI!
 
     commitUrl: URI!
-    id: ID!
+    id: Id!
 
-    message: String
+    hello: String
 
-    name: String!
+    prop: String!
 
-    oid: GitObjectID!
+    oid: GitObjectId!
 
     repository: Repository!
 
@@ -3803,7 +3803,7 @@ type Team implements Node {
     editTeamResourcePath: URI!
 
     editTeamUrl: URI!
-    id: ID!
+    id: Id!
 
     invitations(
     first: Int
@@ -3814,7 +3814,7 @@ type Team implements Node {
 
     before: String): OrganizationInvitationConnection
 
-    name: String!
+    prop: String!
 
     organization: Organization!
 
@@ -3866,9 +3866,9 @@ enum TeamRole {
 }
 
 type Topic implements Node {
-    id: ID!
+    id: Id!
 
-    name: String!
+    prop: String!
 
     relatedTopics: [Topic!]!
 }
@@ -3891,9 +3891,9 @@ type Tree implements Node, GitObject {
     commitUrl: URI!
 
     entries: [TreeEntry!]
-    id: ID!
+    id: Id!
 
-    oid: GitObjectID!
+    oid: GitObjectId!
 
     repository: Repository!
 }
@@ -3901,11 +3901,11 @@ type Tree implements Node, GitObject {
 type TreeEntry {
     mode: Int!
 
-    name: String!
+    prop: String!
 
-    object: GitObject
+    gitObject: GitObject
 
-    oid: GitObjectID!
+    oid: GitObjectId!
 
     repository: Repository!
 
@@ -3920,7 +3920,7 @@ type UnassignedEvent implements Node {
     assignable: Assignable!
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     user: User
 }
@@ -3949,7 +3949,7 @@ type UnlabeledEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     label: Label!
 
@@ -3960,7 +3960,7 @@ type UnlockedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     lockable: Lockable!
 }
@@ -3969,7 +3969,7 @@ type UnsubscribedEvent implements Node {
     actor: Actor
 
     createdAt: DateTime!
-    id: ID!
+    id: Id!
 
     subscribable: Subscribable!
 }
@@ -3985,7 +3985,7 @@ interface UpdatableComment {
 input UpdateProjectCardInput {
     clientMutationId: String
 
-    projectCardId: ID!
+    projectCardId: Id!
 
     note: String!
 }
@@ -3999,9 +3999,9 @@ type UpdateProjectCardPayload {
 input UpdateProjectColumnInput {
     clientMutationId: String
 
-    projectColumnId: ID!
+    projectColumnId: Id!
 
-    name: String!
+    prop: String!
 }
 
 type UpdateProjectColumnPayload {
@@ -4013,9 +4013,9 @@ type UpdateProjectColumnPayload {
 input UpdateProjectInput {
     clientMutationId: String
 
-    projectId: ID!
+    projectId: Id!
 
-    name: String!
+    prop: String!
 
     body: String
 
@@ -4031,7 +4031,7 @@ type UpdateProjectPayload {
 input UpdatePullRequestReviewCommentInput {
     clientMutationId: String
 
-    pullRequestReviewCommentId: ID!
+    pullRequestReviewCommentId: Id!
 
     body: String!
 }
@@ -4045,7 +4045,7 @@ type UpdatePullRequestReviewCommentPayload {
 input UpdatePullRequestReviewInput {
     clientMutationId: String
 
-    pullRequestReviewId: ID!
+    pullRequestReviewId: Id!
 
     body: String!
 }
@@ -4059,7 +4059,7 @@ type UpdatePullRequestReviewPayload {
 input UpdateSubscriptionInput {
     clientMutationId: String
 
-    subscribableId: ID!
+    subscribableId: Id!
 
     state: SubscriptionState!
 }
@@ -4073,7 +4073,7 @@ type UpdateSubscriptionPayload {
 input UpdateTopicsInput {
     clientMutationId: String
 
-    repositoryId: ID!
+    repositoryId: Id!
 
     topicNames: [String!]!
 }
@@ -4117,7 +4117,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
 
     createdAt: DateTime!
 
-    databaseId: Int @deprecated(reason: "Exposed database IDs will eventually be removed in favor of global Relay IDs.")
+    databaseId: Int @deprecated(reason: "Exposed database Ids will eventually be removed in favor of global Relay Ids.")
 
     email: String!
 
@@ -4140,7 +4140,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     before: String): FollowingConnection!
 
     gist(
-    name: String!): Gist
+    prop: String!): Gist
 
     gists(
     first: Int
@@ -4152,7 +4152,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     before: String
 
     privacy: GistPrivacy): GistConnection!
-    id: ID!
+    id: Id!
 
     isBountyHunter: Boolean!
 
@@ -4189,7 +4189,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
 
     login: String!
 
-    name: String
+    prop: String
 
     organization(
     login: String!): Organization
@@ -4259,7 +4259,7 @@ type User implements Node, Actor, RepositoryOwner, UniformResourceLocatable {
     isFork: Boolean): RepositoryConnection!
 
     repository(
-    name: String!): Repository
+    prop: String!): Repository
 
     resourcePath: URI!
 
@@ -4321,4 +4321,6 @@ type UserEdge {
 }
 
 scalar X509Certificate
-scalar ID
+
+scalar Id
+

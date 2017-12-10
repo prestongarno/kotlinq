@@ -1,9 +1,7 @@
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.org.antlr4.base.GraphQLBaseSchema
-import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CharStreams
 import org.junit.Test
+import kotlin.reflect.KClass
 
 
 class KeywordsAsSymbols {
@@ -12,22 +10,73 @@ class KeywordsAsSymbols {
 
 
     // Get schema
-    val schema = "\n      scalar MyCustomScalar " +
-        "type Foo implements BazBar, Baz { foo: String! bar: String! input: Int string: Foo type: Int d: Int } " +
-        "type Input { enum: Int } " +
-        "scalar FOO interface BazBar { d: Int } " +
+    val schema = "scalar MyCustomScalar " +
+        "type Foo implements FooBarEnterprise, Bar { enum(input: String!): Int bar: String! scalar: Int string: Foo type: Int d: Int } " +
+        "type Input { enum: [[Int]] } " +
+        "scalar FOO " +
+        "interface FooBarEnterprise { d: Int } " +
         "union SampletypeUnion = Foo | Input " +
-        "interface Baz { foo: String! }\n    "
-    val input: CharStream = CharStreams.fromString(schema.trimIndent())!!
+        "interface Bar { enum(input: String!): Int }"
 
-    val lexer = GraphQLBaseSchema(input)
-    lexer.modeNames.toList().println()
-
-    lexer.tokenTypeMap.entries.sortedBy { it.value }.forEach { println("${it.key}(${it.value}),") }
-
-    lexer.allTokens.forEachIndexed { index, token ->
-      println("T=${token.type} | '${token.text}'")
-    }
     GraphQLCompiler(StringSchema(schema)).toKotlinApi()
+
+    val allTypes = GraphQLCompiler(StringSchema(schema)).apply(GraphQLCompiler::compile).schemaTypes
+        .map { it.name to it }
+        .toMap()
+
+    allTypes containsEntry "Foo" withType matching<TypeDef>()
+    allTypes containsEntry "FooBarEnterprise" withType matching<InterfaceDef>()
+    allTypes containsEntry "Bar" withType matching<InterfaceDef>()
+    allTypes containsEntry "FOO" withType matching<ScalarDef>()
+    allTypes containsEntry "MyCustomScalar" withType matching<ScalarDef>()
+    allTypes containsEntry "SampletypeUnion" withType matching<UnionDef>()
+    allTypes containsEntry "Input" withType matching<TypeDef>()
+
+    allTypes.entries.size eq 7
+
+    (allTypes["Foo"]!! as TypeDef).apply {
+      supertypes.forEachIndexed { index, iface ->
+        when (index) {
+          0 -> require(iface == allTypes["FooBarEnterprise"])
+          1 -> require(iface == allTypes["Bar"])
+        }
+      }
+      fields.forEachIndexed { index, field ->
+        when (index) {
+          0 -> field.apply {
+            requiresConfiguration eq true
+            inheritsFrom.size eq 1
+            inheritsFrom.first().name eq "Bar"
+            arguments.size eq 1
+            arguments.first().apply {
+              isAbstract eq false
+              type.name eq "String"
+              name eq "input"
+              nullable eq false
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @Test fun `github public api compilation test`() {
+
+    val schema = this::class.java.classLoader
+        .getResourceAsStream("graphql.schema.graphqls")
+        .reader()
+        .readText()
+
+    GraphQLCompiler(StringSchema(schema)).apply {
+      compile()
+      schemaTypes.count() eq 312
+    }
   }
 }
+
+private infix fun Map<String, SchemaType>.containsEntry(name: String) =
+    this[name] ?: throw IllegalArgumentException("No such type '$name'")
+
+private infix fun <T: SchemaType> SchemaType.withType(clazz: KClass<T>) = require(this::class == clazz)
+
+private inline fun <reified T: SchemaType> matching() = T::class

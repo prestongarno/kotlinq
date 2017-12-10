@@ -94,7 +94,7 @@ interface StringArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<String
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgumentSpec?, scope: (StringArrayDelegate<ArgumentSpec>.() -> Unit)?
-    ) = StringArrayDelegateImpl<ArgumentSpec>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+    ) = StringArrayDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private

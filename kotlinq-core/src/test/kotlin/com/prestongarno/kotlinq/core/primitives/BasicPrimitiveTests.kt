@@ -15,24 +15,22 @@
  *
  */
 
+@file:Suppress("unused")
+
 package com.prestongarno.kotlinq.core.primitives
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate
 import org.junit.Test
 import kotlin.reflect.full.declaredMembers
-
-infix fun Any?.eq(other: Any?): Boolean =
-    if (other === Nothing::class) true else assertThat(this).isEqualTo(other) == Unit
-
-infix fun Any?.neq(other: Any?): Boolean =
-    if (other === Nothing::class) true else assertThat(this).isNotEqualTo(other) == Unit
+import com.prestongarno.kotlinq.core.eq
 
 object Person : QType {
 

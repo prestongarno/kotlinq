@@ -37,6 +37,12 @@ dependencies {
 
 kotlinq {
   schema {
+    target = "$project.name/src/main/resources/graphql.schema.graphqls"
+    kotlinFileName = "GitHubGraphQl.kt"
+    packageName = "com.github.graphql"
+    outputDir = generationTarget
+  }
+  schema {
     target = "$project.name/src/main/resources/starwars.graphqls"
     kotlinFileName = "StarWars.kt"
     packageName = "com.facebook"

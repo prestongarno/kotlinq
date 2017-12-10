@@ -94,7 +94,7 @@ interface BooleanArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<Boole
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
     override fun invoke(arguments: ArgumentSpec?, scope: (BooleanArrayDelegate<ArgumentSpec>.() -> Unit)?
-    ) = BooleanArrayDelegateImpl<ArgumentSpec>(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+    ) = BooleanArrayDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private
