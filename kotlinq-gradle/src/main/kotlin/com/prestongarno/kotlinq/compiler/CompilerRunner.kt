@@ -34,7 +34,7 @@ open class CompilerRunner : DefaultTask() {
 
   private val schemaDefs: Set<SchemaDefinition> by lazy {
     @Suppress("UNNECESSARY_SAFE_CALL") // you never fucking know with gradle
-    project.rootProject.extensions
+    project.project.extensions
         .getByType(KotlinqCompilerConfiguration::class.java)
         ?.schemaDefinitions
         ?: throw GradleException("Kotlinq gradle plugin is not configured")
