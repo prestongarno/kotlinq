@@ -22,7 +22,7 @@ Generates a static representation of your schema
 
     `apply plugin: 'com.prestongarno.kotlinq'`
 
-4. Configure the plugin (replace the paths & names with your use case):
+4. Configure the plugin (replace the paths & names with your use case) :
 
 ```
 kotlinq {
@@ -46,3 +46,5 @@ kotlinq {
 
 5. Add as many schemas as you want within the `kotlinq` block
 
+
+### ***See the [build.gradle](build.gradle) file for this module to see an example of how to use multiple GraphQL APIs in a project***
