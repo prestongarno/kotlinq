@@ -1,7 +1,7 @@
 ***a Kotlin GraphQL client: type-safe DSL generation & runtime library***
 -----------------------------
 
-[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC2) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC2/link)
+[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0/link)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
 [![Build Status](https://travis-ci.org/prestongarno/kotlinq.svg?branch=master)](https://travis-ci.org/prestongarno/kotlinq)
 
@@ -30,7 +30,7 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](http://
 ## Version
 
 Previous releases are backwards incompatible,
- please use either the snapshots of version `0.3.0-RC2` at [oss.jfrog.org](https://oss.jfrog.org/artifactory/libs-snapshot/com/prestongarno/kotlinq),
+ please use either the snapshots of version `0.3.0` at [oss.jfrog.org](https://oss.jfrog.org/artifactory/libs-snapshot/com/prestongarno/kotlinq),
  or clone & build locally by running `./gradlew test`
 
 ## Example
@@ -106,24 +106,21 @@ The last code block will print "Hello, \<your name here\>"
 
 ### Adding dependency from JCenter
 
-__\<\< Note: version 0.3 is backwards-incompatible. It isn't a final release \\\>\>__
-
-
 To use in a project, add the core & http libraries to a gradle buildscript:
 
-      api 'com.prestongarno.kotlinq:kotlinq-core:0.3.0-RC2'
-      api 'com.prestongarno.kotlinq:kotlinq-http:0.3.0-RC2'
+      api 'com.prestongarno.kotlinq:kotlinq-core:0.3.0'
+      api 'com.prestongarno.kotlinq:kotlinq-http:0.3.0'
 
 Make sure to include the [ gradle plugin ](ktq-gradle) and read
  the gradle syntax for configuring compilation of graphql SDL as kotlin classes. 
  Add this to project buildscript dependencies block:
 
-      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0-RC2'
+      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0'
 
 And apply the plugin:
 
       plugins {
-        id 'com.prestongarno.kotlin1' version '0.3.0-RC2'
+        id 'com.prestongarno.kotlin1' version '0.3.0'
       }
 
 

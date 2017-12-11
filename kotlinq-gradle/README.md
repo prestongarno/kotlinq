@@ -1,8 +1,8 @@
 # kotlinq-gradle
 
-[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC2) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC2/link)
+[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0/link)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.kotlinq/kotlinq-gradle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.kotlinq/kotlinq-gradle)
- [ ![jcenter](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0-RC2) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0-RC2/link)
+ [ ![jcenter](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0/link)
 
 Generates a static representation of your schema
 
@@ -10,7 +10,7 @@ Generates a static representation of your schema
 
 1. Add the plugin to the buildscript classpath (where your kotlin plugin is)
 
-    `classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0-RC2`
+    `classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0`
 
 2. If you haven't already, specify either JCenter or maven Central Repository in the buildscript
 
