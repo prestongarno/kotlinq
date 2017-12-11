@@ -247,6 +247,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#patterns-used-by-kotlinq" title="Patterns used by kotlinq" class="md-nav__link">
+    Patterns used by kotlinq
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example-nested-query" title="Example nested query" class="md-nav__link">
     Example nested query
   </a>
@@ -492,6 +499,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#patterns-used-by-kotlinq" title="Patterns used by kotlinq" class="md-nav__link">
+    Patterns used by kotlinq
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example-nested-query" title="Example nested query" class="md-nav__link">
     Example nested query
   </a>
@@ -535,11 +549,22 @@ the gradle syntax for configuring compilation of graphql schema SDL as kotlin cl
 </pre></div>
 
 
+<h2 id="patterns-used-by-kotlinq"><span style="color:#f442c2">Patterns used by kotlinq</span><a class="headerlink" href="#patterns-used-by-kotlinq" title="Permanent link">&para;</a></h2>
+<p>The three key concepts which must be kept in mind when using kotlinq are:</p>
+<ol>
+<li>****Static Schema***: The Schema is represented as static objects.
+ These are all <a href="https://kotlinlang.org/docs/reference/delegated-properties.html#providing-a-delegate-since-11">delegate providers</a>,
+ which hold information about the schema field it represents for the next point</li>
+<li><strong><em>Composition of Models through delegates</em></strong>: When you want to model a type from the schema, it does not matter what you name your properties.
+ <strong>All you need to do is delegate to a property of a schema singleton/object*</strong>.</li>
+<li><strong><em>Nullability of fields</em></strong>: Fields are not-null for convenience, but you should never access an object without first checking if the property <code class="codehilite">QModel.isResolved</code> returns true.
+ Otherwise, accessing a property most likely <strong><em>will</em></strong> throw an exception (primitive/scalar ones, at least)</li>
+</ol>
 <h2 id="example-nested-query"><span style="color:#f442c2">Example nested query</span><a class="headerlink" href="#example-nested-query" title="Permanent link">&para;</a></h2>
 <p>For an example of how to build models, see the example below created for the Yelp Graphql API. </p>
 <div class="codehilite"><pre><span></span><span class="kr">class</span> <span class="nx">BusinessQuery</span><span class="p">(</span><span class="nx">searchTerm</span>: <span class="kt">String</span><span class="p">)</span> <span class="o">:</span> <span class="nx">QModel</span><span class="p">(</span><span class="nx">Query</span><span class="p">)</span> <span class="p">{</span>
 
-  <span class="nx">val</span> <span class="nx">result</span>: <span class="kt">List</span><span class="o">&lt;</span><span class="nx">BusinessNodes</span><span class="o">&gt;</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="o">::</span><span class="nx">BusinessesNodes</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">val</span> <span class="nx">result</span>: <span class="kt">List</span><span class="o">&lt;</span><span class="nx">BusinessModel</span><span class="o">&gt;</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">querying</span><span class="p">(</span><span class="o">::</span><span class="nx">BusinessesModel</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">config</span> <span class="p">{</span>
         <span class="nx">term</span> <span class="o">=</span> <span class="nx">searchTerm</span>
         <span class="nx">limit</span> <span class="o">=</span> <span class="mi">10</span>
@@ -547,12 +572,7 @@ the gradle syntax for configuring compilation of graphql schema SDL as kotlin cl
   <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">class</span> <span class="nx">BusinessesNodes</span> : <span class="kt">QModel</span><span class="p">(</span><span class="nx">Businesses</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">val</span> <span class="nx">resultCount</span>: <span class="kt">Int</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">total</span>
-  <span class="nx">val</span> <span class="nx">resultsNodes</span>: <span class="kt">List</span><span class="o">&lt;</span><span class="nx">BusinessQuery</span><span class="o">&gt;</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">business</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="o">::</span><span class="nx">BusinessQuery</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kr">class</span> <span class="nx">BusinessQuery</span> : <span class="kt">QModel</span><span class="p">(</span><span class="nx">Business</span><span class="p">)</span> <span class="p">{</span>
+<span class="kr">class</span> <span class="nx">BusinessModel</span> : <span class="kt">QModel</span><span class="p">(</span><span class="nx">Business</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">val</span> <span class="nx">name</span>: <span class="kt">String</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">name</span>
   <span class="nx">val</span> <span class="nx">phoneNumber</span>: <span class="kt">Int</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">display_phone</span>
   <span class="nx">val</span> <span class="nx">directUrl</span>: <span class="kt">String</span> <span class="nx">by</span> <span class="nx">model</span><span class="p">.</span><span class="nx">url</span>
@@ -562,11 +582,9 @@ the gradle syntax for configuring compilation of graphql schema SDL as kotlin cl
 
 <p>Note that while field types are specified, they are not necessary and can be inferred by the properties
 in the <code class="codehilite">model</code> instance which a concrete query/mutation class delegates its properties to.</p>
-<p>When initializing a <code class="codehilite">BusinessQuery</code> calling the <code class="codehilite"><span class="na">.toGraphql</span><span class="p">()</span></code> results in a valid graphql query as a String:</p>
-<p>E.g. <code class="codehilite">BusinessQuery(&quot;foobar&quot;).toGraphql()</code> returns (formatted by default):</p>
+<p>When initializing a <code class="codehilite">BusinessQuery(&quot;foobar&quot;).toGraphql(pretty = true)</code> results in a valid graphql query as a String:</p>
 <div class="codehilite"><pre><span></span>{
  search(limit: 10, term: &quot;foobar&quot;){
-   total,
    business {
      name,
      display_phone,
