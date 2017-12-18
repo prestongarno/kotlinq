@@ -21,6 +21,7 @@ lets you auto-complete your way to safe, reliable queries and mutations
 
 1. **Nullable fields**: Everything is assumed to be a non-null (see [this issue](https://github.com/prestongarno/kotlinq/issues/91), implementation is in the works)
 2. **Kotlin language keywords as identifiers** are not supported (i.e. 'object' is not a valid GraphQL field name)
+3. **'ID' scalar**: Is now part of the GraphQL specification, but you need to manually add it to your schema
 
 ## Documentation
 
@@ -33,9 +34,9 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](http://
 * `kotlinq-http`: HTTP Utilities using [http4k](http://http4k.org) as a dependency
 * `kotlinq-test-api`: Unless you are contributing, ignore this. Contains generated test APIs for `kotlinq-core` unit tests
 
-### Basic tutorial (how to query your github username):
+## Basic tutorial (how to query your github username):
 
-1.  Curl the GitHub public GraphQL API schema and save locally (requires a github.com OAuth token):
+1.  **Curl the GitHub public GraphQL API schema** (requires a github.com OAuth token):
 
 
 ```
@@ -48,7 +49,7 @@ curl -H "Authorization: bearer $YOUR_GITHUB_OAUTH_TOKEN_HERE" \
 ```
 
 
-2. Apply the Gradle plugin:
+2.  **Apply the Gradle plugin**:
 
 
 ```
@@ -68,7 +69,7 @@ curl -H "Authorization: bearer $YOUR_GITHUB_OAUTH_TOKEN_HERE" \
 
 ```
 
-3.  Configure gradle the plugin to generate a Kotlin API from the GitHub schema:
+3.  **Configure gradle the plugin to generate a Kotlin API from the GitHub schema**:
 
 
 ```
@@ -82,12 +83,12 @@ kotlinq {
 }
 ```
 
-4.  Add the generated source directory to include in compilation:
+4.  **Add the generated source directory to include in compilation**:
 
 `sourceSets.main.java.srcDirs +=  'src/generated/kotlin'`
 
 
-5.  Create a query and execute:
+5.  **Create a query and execute**:
 
 ```
 class ViewerQuery : QModel<Query>(Query) {
