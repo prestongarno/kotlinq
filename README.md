@@ -41,8 +41,10 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](http://
 ```
 curl -H "Authorization: bearer $YOUR_GITHUB_OAUTH_TOKEN_HERE" \
   -H "Accept: application/vnd.github.v4.idl" \
-  https://api.github.com/graphql \ 
-  > src/main/resources/github.graphqls
+  https://api.github.com/graphql | \
+  sed -e 's/^{\|^.\{11\}\|^}//g' | \
+  sed -e 's/\\n/\n/g' > \
+  src/main/resources/github.graphqls; echo 'scalar ID' >> src/main/resources/github.graphqls
 ```
 
 
