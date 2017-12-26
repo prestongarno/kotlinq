@@ -72,10 +72,12 @@ interface TypeStub<out T, out U, out A : ArgumentSpec> where  T : QModel<U>, U :
 
       /**
        * Oh, damn, this is actually something promising 12/25/2017C19:01:00
+       *
+       * Inversion of control/command pattern through an anonymous [DelegateProvider] object. I like.
        */
-      override fun <T : QModel<U>> query(init: () -> T) = configurableDelegate(this, { qModel: QModel<*> ->
+      override fun <T : QModel<U>> query(init: () -> T) = configurableDelegate(this) { qModel: QModel<*> ->
         TypeStubAdapter<T, U, ArgumentSpec>(qproperty, init, null).bindingTo(qModel)
-      })
+      }
       //NoArgConfig.new { TypeStubAdapter(qproperty, init, it) }
     }
   }
