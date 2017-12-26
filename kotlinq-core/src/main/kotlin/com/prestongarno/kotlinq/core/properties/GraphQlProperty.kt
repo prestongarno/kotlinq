@@ -17,8 +17,7 @@
 
 package com.prestongarno.kotlinq.core.properties
 
-import kotlin.reflect.KProperty
-
+import com.prestongarno.kotlinq.core.adapters.QField
 
 /**
  * The immutable object which ultimately ends up inside of
@@ -32,7 +31,7 @@ import kotlin.reflect.KProperty
 interface GraphQlProperty {
 
   /**
-   * The [com.prestongarno.ktq.properties.PropertyType] that this field is */
+   * The [PropertyType] that this field is */
   val typeKind: PropertyType
 
   /**
@@ -54,21 +53,21 @@ interface GraphQlProperty {
     /**
      * Factory method to create a property */
     fun from(
-        property: KProperty<*>,
         graphqlType: String,
         isList: Boolean,
         graphqlName: String,
         typeKind: PropertyType = PropertyType.from(graphqlType)
-    ): GraphQlProperty = PropertyImpl(graphqlType, property, isList, graphqlName, typeKind)
+    ): GraphQlProperty = PropertyImpl(graphqlType, isList, graphqlName, typeKind)
 
   }
 }
 
+interface GraphqlField<out T: Any?> : GraphQlProperty, QField<T>
+
 private data class PropertyImpl @JvmOverloads constructor(
     override val graphqlType: String,
-    private val kproperty: KProperty<*>,
     override val isList: Boolean,
-    override val graphqlName: String = kproperty.name,
+    override val graphqlName: String,
     override val typeKind: PropertyType = PropertyType.from(graphqlType)
 ) : GraphQlProperty {
 

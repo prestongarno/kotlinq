@@ -23,8 +23,12 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
 /**
  * Base class for all objects who produce immutable field delegates
+ *
+ * TODO make this a sealed class
  */
-internal abstract class PreDelegate(val qproperty: GraphQlProperty)
+internal abstract class PreDelegate<out T, out V>(val qproperty: GraphQlProperty) where T : QField<V>, T : Adapter, V : Any? {
+  abstract fun toDelegate(): T
+}
 
 internal
 fun <T> T.bind(inst: QModel<*>): T where T : Adapter = this.let(inst::register)

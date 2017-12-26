@@ -17,89 +17,49 @@
 
 package com.prestongarno.kotlinq.core.schema.stubs
 
-import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.schema.QEnumType
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
+import com.prestongarno.kotlinq.core.adapters.bind
+import com.prestongarno.kotlinq.core.adapters.enumAdapter
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
-import com.prestongarno.kotlinq.core.adapters.EnumConfigStubImpl
-import com.prestongarno.kotlinq.core.adapters.EnumNoArgStub
-import com.prestongarno.kotlinq.core.adapters.EnumOptionalArgStubQuery
-import com.prestongarno.kotlinq.core.adapters.QField
-import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.newGraphqlProperty
+import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 
-interface EnumStub<T, out A : ArgumentSpec> where T : QEnumType, T : Enum<*> {
-  var default: T?
-
-  fun config(argumentScope: A.() -> Unit)
+interface EnumStub<out T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
+    where T : QEnumType?,
+          T : Enum<*>? {
 
   companion object {
 
+    /**
+     * Creates a new GraphQL property stub.
+     * If this works across the whole type system it would be amazing.
+     * Had hoped to only refrain from adding classes, but this might
+     * remove 20+ classes. Might have found the most powerful abstraction to be at now. */
     internal
-    fun <T> noArgStub(
+    fun <T, A> stub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
-    ): EnumNoArgStub<T>
-        where T : QEnumType, T : Enum<*> =
-        EnumNoArgStub(qproperty, enumClass)
-
-    internal
-    fun <T, A> argStub(
-        qproperty: GraphQlProperty,
-        enumClass: KClass<T>
-    ): ConfigurableQuery<T, A>
+    ): GraphQLPropertyContext<EnumStub<T, A>, T>
         where T : QEnumType,
-              T : Enum<*>, A : ArgumentSpec =
-        EnumConfigStubImpl(qproperty, enumClass)
+              T : Enum<T>,
+              A : ArgumentSpec = newGraphqlProperty<EnumAdapterImpl<T, A>, A, T>(
+        { enumAdapter(qproperty, enumClass, it) },
+        { toDelegate().bind(it) })
 
     internal
-    fun <T, A> optionalArgStub(
+    fun <T, A> nullableStub(
         qproperty: GraphQlProperty,
-        enumClass: KClass<T>
-    ): OptionalConfigQuery<T, A>
+        enumClass: KClass<T> // TODO unsafe
+    ): GraphQLPropertyContext<EnumStub<T?, A>, T?>
         where T : QEnumType,
-              T : Enum<*>,
-              A : ArgumentSpec =
-        EnumOptionalArgStubQuery(qproperty, enumClass)
-  }
-
-  interface Query<T> : GraphQLPropertyContext<Any?> where T : QEnumType, T : Enum<*> {
-
-    operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-        TODO() //invoke(scope = empty()).provideDelegate(inst, property)
-
-    operator fun invoke(
-        arguments: ArgumentSpec = ArgBuilder(),
-        scope: EnumStub<T, ArgumentSpec>.() -> Unit = empty()
-    ): EnumStub<T, ArgumentSpec>
-  }
-
-  interface OptionalConfigQuery<T, A> : GraphQLPropertyContext<Any?> where T : QEnumType, T : Enum<*>, A : ArgumentSpec {
-
-    operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-        TODO()//invoke(empty()).provideDelegate(inst, property)
-
-    operator fun invoke(
-        arguments: A,
-        scope: EnumStub<T, A>.() -> Unit = empty()
-    ): EnumStub<T, A>
-
-    operator fun invoke(
-        scope: EnumStub<T, ArgumentSpec>.() -> Unit
-    ): EnumStub<T, ArgumentSpec>
-  }
-
-
-  interface ConfigurableQuery<T, A> : GraphQLPropertyContext<Any?> where T : QEnumType, T : Enum<*>, A : ArgumentSpec {
-
-    operator fun invoke(
-        arguments: A,
-        scope: EnumStub<T, A>.() -> Unit = empty()
-    ): EnumStub<T, A>
+              T : Enum<T>,
+              A : ArgumentSpec = newGraphqlProperty<EnumAdapterImpl<T, A>, A, T?>(
+        { enumAdapter(qproperty, enumClass, it) },
+        { toDelegate().bind(it) })
 
   }
-
 }

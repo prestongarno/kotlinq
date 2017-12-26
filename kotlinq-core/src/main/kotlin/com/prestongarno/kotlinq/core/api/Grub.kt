@@ -18,13 +18,21 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.properties.ConfigurableDelegateProvider
+import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface StubProvider<out T : GraphQLPropertyContext<Any?>> {
+interface StubProvider<
+    out T : GraphQLPropertyContext<D, RET>,
+    out D : GraphqlDslBuilder<*, RET>,
+    out RET : Any?
+    > {
 
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<T>
+
+  fun asNullable(): StubProvider<T, D, RET?>
 
   companion object {
 
@@ -34,12 +42,12 @@ interface StubProvider<out T : GraphQLPropertyContext<Any?>> {
 }
 
 
-interface Stub<out T : GraphQLPropertyContext<Any?>> {
+interface Stub<out T : GraphQLPropertyContext<*, *>> {
   operator fun getValue(inst: QSchemaType, property: KProperty<*>): T
 }
 
 private
-class StubLoaderImpl<out T : GraphQLPropertyContext<Any?>>(val value: T) : Stub<T> {
+class StubLoaderImpl<out T : GraphQLPropertyContext<*, *>>(private val value: T) : Stub<T> {
   override operator fun getValue(inst: QSchemaType, property: KProperty<*>): T = value
 }
 
@@ -58,12 +66,17 @@ class StubLoaderImpl<out T : GraphQLPropertyContext<Any?>>(val value: T) : Stub<
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 internal
-class Grub<out T : GraphQLPropertyContext<Any?>>(
+class Grub<out T : GraphQLPropertyContext<D, RET>, out D : GraphqlDslBuilder<*>, out RET: Any?>(
     private val typeName: String,
     private val isList: Boolean = false,
     private val toInit: (property: GraphQlProperty) -> T
-) : StubProvider<T> {
+) : StubProvider<T, D, RET> {
+
+  override fun asNullable(): StubProvider<T, D, RET?> {
+    return Grub<T, D, RET?>(typeName, isList) { toInit(it).asNullable() }
+    TODO("not implemented")
+  }
 
   override operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<T> =
-      StubLoaderImpl(toInit(GraphQlProperty.from(property, typeName, isList, property.name)))
+      StubLoaderImpl(toInit(GraphQlProperty.from(typeName, isList, property.name)))
 }

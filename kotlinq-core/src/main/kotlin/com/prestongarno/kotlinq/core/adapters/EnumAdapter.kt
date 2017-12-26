@@ -17,7 +17,6 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.QModel
@@ -28,82 +27,39 @@ import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal
-class EnumConfigStubImpl<T, A>(
-    private val qproperty: GraphQlProperty,
-    private val enumClass: KClass<T>
-) : EnumStub.ConfigurableQuery<T, A>
-    where T : Enum<*>, T : QEnumType, A : ArgumentSpec {
+internal fun <T, A> enumAdapter(
+    qproperty: GraphQlProperty,
+    enumClass: KClass<T>,
+    argBuilder: A?
+): EnumAdapterImpl<T, A>
+    where T : Enum<*>,
+          T : QEnumType,
+          A : ArgumentSpec = EnumAdapterImpl(qproperty, enumClass, argBuilder)
 
-  override fun invoke(arguments: A, scope: EnumStub<T, A>.() -> Unit): EnumStub<T, A> =
-      EnumAdapterImpl(qproperty, enumClass, arguments).apply(scope)
-
-}
 
 internal
-class EnumOptionalArgStubQuery<T, A>(
-    private val qproperty: GraphQlProperty,
-    private val enumClass: KClass<T>
-) : EnumStub.OptionalConfigQuery<T, A>
-    where T : Enum<*>, T : QEnumType, A : ArgumentSpec {
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(qproperty, enumClass, emptyMap()).bind(inst)
-
-  override fun invoke(arguments: A, scope: EnumStub<T, A>.() -> Unit): EnumStub<T, A> =
-      EnumAdapterImpl(qproperty, enumClass, arguments).apply(scope)
-
-  override fun invoke(scope: EnumStub<T, ArgumentSpec>.() -> Unit): EnumStub<T, ArgumentSpec> =
-      EnumAdapterImpl(qproperty, enumClass, ArgBuilder()).apply(scope)
-
-}
-
-@PublishedApi internal
-class EnumNoArgStub<T>(
-    private val qproperty: GraphQlProperty,
-    private val enumClass: KClass<T>
-) : EnumStub.Query<T>
-    where T : Enum<*>, T : QEnumType {
-
-  override fun provideDelegate(
-      inst: QModel<*>,
-      property: KProperty<*>
-  ): QField<T> = EnumFieldImpl(qproperty, enumClass, emptyMap()).bind(inst)
-
-  override fun invoke(
-      arguments: ArgumentSpec,
-      scope: EnumStub<T, ArgumentSpec>.() -> Unit
-  ): EnumStub<T, ArgumentSpec> =
-      EnumAdapterImpl(qproperty, enumClass, arguments).apply(scope)
-}
-
-private
 class EnumAdapterImpl<T, out A>(
     qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
     private val argBuilder: A?
-) : PreDelegate(qproperty),
+) : PreDelegate<EnumFieldImpl<T>, T>(qproperty),
     EnumStub<T, A>
 
     where T : Enum<*>,
           T : QEnumType,
           A : ArgumentSpec {
 
-  override var default: T? = null
+  override fun toDelegate(): EnumFieldImpl<T> =
+    EnumFieldImpl(qproperty, enumClass, argBuilder.toMap())
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
-      EnumFieldImpl(qproperty, enumClass, argBuilder.toMap(), default).bind(inst)
-
-  override fun config(argumentScope: A.() -> Unit) {
-    argBuilder?.argumentScope()
-  }
+  override fun config(block: A.() -> Unit) { argBuilder?.block() }
 }
 
 @ValueDelegate(Enum::class)
-private
+internal
 class EnumFieldImpl<T>(
     override val qproperty: GraphQlProperty,
-    val enumClass: KClass<T>,
+    private val enumClass: KClass<T>,
     override val args: Map<String, Any>,
     private val default: T? = null
 ) : QField<T>, Adapter where T : Enum<*>, T : QEnumType {

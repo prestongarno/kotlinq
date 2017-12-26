@@ -58,9 +58,7 @@ interface TypeStub<out T, out U, out A : ArgumentSpec> where  T : QModel<U>, U :
 
     companion object {
       internal
-      fun <U : QType> create(
-          qproperty: GraphQlProperty
-      ): Query<U> = QueryImpl(qproperty)
+      fun <U : QType> create(qproperty: GraphQlProperty): Query<U> = QueryImpl(qproperty)
     }
 
     private
