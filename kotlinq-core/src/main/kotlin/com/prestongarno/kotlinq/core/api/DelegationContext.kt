@@ -17,7 +17,10 @@
 
 package com.prestongarno.kotlinq.core.api
 
+import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.properties.ConfigurableDelegateProvider
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
@@ -187,19 +190,13 @@ class DefaultDelegationContext : DelegationContext {
 
   class QlEnum : GraphQLDelegate() {
 
-    fun <T> stub(clazz: KClass<T>)
+    fun <T, A> stub(clazz: KClass<T>)
         :
-        StubProvider<EnumStub.Query<T>>
+        StubProvider<GraphQLPropertyContext<EnumStub<T, A>, T>, EnumStub<T, A>, T>
         where T : kotlin.Enum<*>,
-              T : QEnumType
-        = Grub(clazz.graphQlName()) { EnumStub.noArgStub(it, clazz) }
-
-    fun <T, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
-        :
-        StubProvider<EnumStub.OptionalConfigQuery<T, A>>
-        where T : kotlin.Enum<*>,
-              T : QEnumType =
-        Grub(clazz.graphQlName()) { EnumStub.optionalArgStub<T, A>(it, clazz) }
+              T : QEnumType,
+              A : ArgBuilder
+        = Grub(clazz.graphQlName()) { EnumStub.stub<T, A>(it, clazz) }.apply { provideDelegate(TODO(), TODO()).getValue(TODO(), TODO()) }
 
     fun <T, A : ArgumentSpec> configStub(clazz: KClass<T>)
         :

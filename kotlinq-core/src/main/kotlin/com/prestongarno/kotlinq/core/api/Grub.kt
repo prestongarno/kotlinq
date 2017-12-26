@@ -26,7 +26,7 @@ import kotlin.reflect.KProperty
 
 interface StubProvider<
     out T : GraphQLPropertyContext<D, RET>,
-    out D : GraphqlDslBuilder<*, RET>,
+    out D : GraphqlDslBuilder<*>,
     out RET : Any?
     > {
 

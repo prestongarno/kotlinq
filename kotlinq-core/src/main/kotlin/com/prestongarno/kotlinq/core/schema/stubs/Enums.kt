@@ -45,7 +45,7 @@ interface EnumStub<out T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
         enumClass: KClass<T>
     ): GraphQLPropertyContext<EnumStub<T, A>, T>
         where T : QEnumType,
-              T : Enum<T>,
+              T : Enum<*>,
               A : ArgumentSpec = newGraphqlProperty<EnumAdapterImpl<T, A>, A, T>(
         { enumAdapter(qproperty, enumClass, it) },
         { toDelegate().bind(it) })
