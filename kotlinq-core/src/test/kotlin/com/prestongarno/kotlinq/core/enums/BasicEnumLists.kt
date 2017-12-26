@@ -17,10 +17,10 @@
 
 package com.prestongarno.kotlinq.core.enums
 
-import com.prestongarno.kotlinq.core.QEnumType
+import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
 import org.intellij.lang.annotations.Language
 import org.junit.Test

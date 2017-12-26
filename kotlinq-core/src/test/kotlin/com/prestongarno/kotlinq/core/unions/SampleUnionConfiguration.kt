@@ -22,8 +22,8 @@ package com.prestongarno.kotlinq.core.unions
 import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.QUnionType
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.QUnionType
 import org.junit.Test
 
 

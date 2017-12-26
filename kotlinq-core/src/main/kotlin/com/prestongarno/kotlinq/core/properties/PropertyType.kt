@@ -31,8 +31,8 @@ enum class PropertyType {
   CUSTOM_SCALAR;
 
   companion object {
-    fun from(name: String): PropertyType = all[name.toUpperCase()] ?: OBJECT
+    fun from(name: String): PropertyType = paired[name.toUpperCase()] ?: OBJECT
 
-    private val all = PropertyType.values().map { Pair(it.name, it) }.toMap()
+    private val paired = PropertyType.values().map { Pair(it.name, it) }.toMap()
   }
 }

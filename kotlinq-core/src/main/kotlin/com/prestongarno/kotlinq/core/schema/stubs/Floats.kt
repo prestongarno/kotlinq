@@ -15,21 +15,21 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.adapters.bind
 import com.prestongarno.kotlinq.core.adapters.toMap
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface IntArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<IntArrayStub> {
+interface FloatDelegate<out A : ArgumentSpec> : ScalarDelegate<FloatStub> {
 
-  var default: IntArray?
+  var default: Float
 
   fun config(scope: A.() -> Unit)
 
@@ -51,40 +51,41 @@ interface IntArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<IntArrayS
         qproperty: GraphQlProperty
     ): ConfigurableQuery<A> =
         ConfigurableQueryImpl(qproperty)
+
   }
 
-  interface Query : SchemaStub {
+  interface Query : GraphQLPropertyContext<Any?> {
+
     operator fun invoke(
         arguments: ArgumentSpec? = null,
-        scope: (IntArrayDelegate<ArgumentSpec>.() -> Unit)? = null
-    ): IntArrayDelegate<ArgumentSpec>
+        scope: (FloatDelegate<ArgumentSpec>.() -> Unit)? = null
+    ): FloatDelegate<ArgumentSpec>
 
     operator fun provideDelegate(
         inst: QModel<*>,
         property: KProperty<*>
-    ): IntArrayStub = invoke().provideDelegate(inst, property)
+    ): FloatStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgumentSpec> : SchemaStub {
+  interface OptionalConfigQuery<A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(
         arguments: A,
-        scope: (IntArrayDelegate<A>.() -> Unit)?
-    ): IntArrayDelegate<A>
+        scope: (FloatDelegate<A>.() -> Unit)?
+    ): FloatDelegate<A>
 
     operator fun provideDelegate(
         inst: QModel<*>,
         property: KProperty<*>
-    ): IntArrayStub
-
+    ): FloatStub
   }
 
-  interface ConfigurableQuery<A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(
         arguments: A,
-        scope: (IntArrayDelegate<A>.() -> Unit)? = null
-    ): IntArrayDelegate<A>
+        scope: (FloatDelegate<A>.() -> Unit)? = null
+    ): FloatDelegate<A>
   }
 
   /*********************************************************************************
@@ -92,41 +93,53 @@ interface IntArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<IntArrayS
    */
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
-    override fun invoke(arguments: ArgumentSpec?, scope: (IntArrayDelegate<ArgumentSpec>.() -> Unit)?
-    ) = IntArrayDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+    override fun invoke(
+        arguments: ArgumentSpec?, scope: (FloatDelegate<ArgumentSpec>.() -> Unit)?
+    ) = FloatDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private
-  class OptionalConfigQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
+  class OptionalConfigQueryImpl<A : ArgumentSpec>(
+      val qproperty: GraphQlProperty
+  ) : OptionalConfigQuery<A> {
 
-    override fun invoke(arguments: A, scope: (IntArrayDelegate<A>.() -> Unit)?): IntArrayDelegate<A> =
-        IntArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
+    override fun invoke(
+        arguments: A,
+        scope: (FloatDelegate<A>.() -> Unit)?
+    ): FloatDelegate<A> =
+        FloatDelegateImpl(qproperty, arguments).applyNotNull(scope)
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntArrayStub = IntArrayStub(qproperty).bind(inst)
+    override fun provideDelegate(
+        inst: QModel<*>,
+        property: KProperty<*>
+    ): FloatStub = FloatStub(qproperty).bind(inst)
   }
 
-
   private
-  class ConfigurableQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
+  class ConfigurableQueryImpl<A : ArgumentSpec>(
+      val qproperty: GraphQlProperty
+  ) : ConfigurableQuery<A> {
 
-    override fun invoke(arguments: A, scope: (IntArrayDelegate<A>.() -> Unit)?): IntArrayDelegate<A> =
-        IntArrayDelegateImpl(qproperty, arguments).applyNotNull(scope)
+    override fun invoke(
+        arguments: A,
+        scope: (FloatDelegate<A>.() -> Unit)?
+    ): FloatDelegate<A> =
+        FloatDelegateImpl(qproperty, arguments).applyNotNull(scope)
   }
 }
 
 private
-class IntArrayDelegateImpl<out A : ArgumentSpec>(
-    private val qproperty: GraphQlProperty,
-    private val argBuilder: A?
-) : IntArrayDelegate<A> {
+class FloatDelegateImpl<out A : ArgumentSpec>(
+    val qproperty: GraphQlProperty,
+    val argBuilder: A? = null
+) : FloatDelegate<A> {
 
-  override var default: IntArray? = null
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntArrayStub =
-      IntArrayStub(qproperty, default, argBuilder.toMap()).bind(inst)
+  override var default: Float = 0f
 
   override fun config(scope: A.() -> Unit) {
     argBuilder?.scope()
   }
-}
 
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): FloatStub =
+      FloatStub(qproperty, argBuilder.toMap(), default).bind(inst)
+}

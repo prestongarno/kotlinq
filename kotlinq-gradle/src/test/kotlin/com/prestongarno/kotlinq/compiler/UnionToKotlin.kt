@@ -39,12 +39,12 @@ class UnionToKotlinTest : JavacTest() {
 
     val expect = """
 
-        object Droid : com.prestongarno.kotlinq.core.QType {
-          val uuid: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
+        object Droid : com.prestongarno.kotlinq.core.schema.QType {
+          val uuid: com.prestongarno.kotlinq.core.schema.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
         }
 
 
-        object Actor : com.prestongarno.kotlinq.core.QUnionType by com.prestongarno.kotlinq.core.QUnionType.new() {
+        object Actor : com.prestongarno.kotlinq.core.schema.QUnionType by com.prestongarno.kotlinq.core.schema.QUnionType.new() {
           fun onJedi(init: () -> com.prestongarno.kotlinq.core.QModel<Jedi>) {
             on(init)}
 
@@ -53,8 +53,8 @@ class UnionToKotlinTest : JavacTest() {
         }
 
 
-        object Jedi : com.prestongarno.kotlinq.core.QType {
-          val name: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
+        object Jedi : com.prestongarno.kotlinq.core.schema.QType {
+          val name: com.prestongarno.kotlinq.core.schema.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
         }
 
         """.trimIndent()

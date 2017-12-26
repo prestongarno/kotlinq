@@ -21,7 +21,7 @@ import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.argumentsMatchin
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
 import com.prestongarno.kotlinq.compiler.ParameterQualification.Companion.nullability
 import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.stubs.IntDelegate

@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.QInputType
+import com.prestongarno.kotlinq.core.schema.QInputType
 import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
 import com.prestongarno.kotlinq.core.stubs.CustomScalarStub
 import com.prestongarno.kotlinq.core.stubs.EnumListStub

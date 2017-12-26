@@ -4,16 +4,16 @@ package com.prestongarno.kotlinq.core.fragments.equality
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.QEnumType
-import com.prestongarno.kotlinq.core.QInterface
+import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QEnum
 import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.QSchemaType.QUnion
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.QUnionType
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.internal.extractedPayload

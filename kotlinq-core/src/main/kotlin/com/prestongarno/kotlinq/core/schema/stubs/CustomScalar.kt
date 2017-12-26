@@ -17,13 +17,13 @@
 
 @file:Suppress("unused")
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.CustomScalar
-import com.prestongarno.kotlinq.core.DelegateProvider
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.properties.DelegateProvider
+import com.prestongarno.kotlinq.core.schema.CustomScalar
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.custom.QScalarMapper
 import com.prestongarno.kotlinq.core.adapters.newScalarDelegate
 import com.prestongarno.kotlinq.core.api.ConfiguredQuery
@@ -31,7 +31,7 @@ import com.prestongarno.kotlinq.core.api.NoArgConfig
 import com.prestongarno.kotlinq.core.api.OptionalConfiguration
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : DelegateProvider<V> {
+interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> {
 
   var default: V?
 
@@ -56,20 +56,20 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : Delegate
 
   }
 
-  interface Query<T : CustomScalar> : SchemaStub {
+  interface Query<T : CustomScalar> : GraphQLPropertyContext<Any?> {
     fun <U : QScalarMapper<V>, V> map(adapter: U)
-        : NoArgConfig<CustomScalarStub<T, V, ArgumentSpec>, V>
+        : DelegateProvider<V>
   }
 
   @Suppress("AddVarianceModifier") // THIS IS INTENTIONAL -> Needed for multi-inherited argument types
-  interface OptionalConfigQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
+  interface OptionalConfigQuery<T : CustomScalar, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
     fun <U : QScalarMapper<V>, V> map(
         adapter: U
     ): OptionalConfiguration<CustomScalarStub<T, V, ArgumentSpec>, V, A>
   }
 
   @Suppress("AddVarianceModifier") // THIS IS INTENTIONAL -> Needed for multi-inherited argument types
-  interface ConfigurableQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<T : CustomScalar, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
     fun <V> map(
         adapter: QScalarMapper<V>
     ): ConfiguredQuery<CustomScalarStub<T, V, ArgumentSpec>, A>

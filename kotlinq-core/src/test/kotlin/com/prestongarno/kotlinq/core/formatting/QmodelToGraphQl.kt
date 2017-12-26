@@ -20,12 +20,12 @@
 package com.prestongarno.kotlinq.core.formatting
 
 import com.google.common.truth.Truth.assertThat
-import com.prestongarno.kotlinq.core.QInterface
+import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QSchemaType.QTypes
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.stubs.StringDelegate

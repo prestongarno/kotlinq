@@ -15,11 +15,11 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
-import com.prestongarno.kotlinq.core.QInterface
+import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QType
 
 /**
  * To support no arguments on optional query and restricting use of config { } block

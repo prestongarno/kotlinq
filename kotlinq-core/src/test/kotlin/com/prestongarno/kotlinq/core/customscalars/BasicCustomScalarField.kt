@@ -17,10 +17,10 @@
 
 package com.prestongarno.kotlinq.core.customscalars
 
-import com.prestongarno.kotlinq.core.CustomScalar
+import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
 import com.prestongarno.kotlinq.core.eq
 import org.junit.Test

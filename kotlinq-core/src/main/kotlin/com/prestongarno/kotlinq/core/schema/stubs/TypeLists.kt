@@ -15,20 +15,19 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.TypeListAdapter
 import com.prestongarno.kotlinq.core.api.ConfiguredQuery
 import com.prestongarno.kotlinq.core.api.NoArgConfig
 import com.prestongarno.kotlinq.core.api.OptionalConfiguration
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface TypeListStub<out T : QModel<U>, out U : QType, out A : ArgumentSpec> : DelegateProvider<List<T>> {
+interface TypeListStub<out T : QModel<U>, out U : QType, out A : ArgumentSpec> {
 
   fun config(scope: A.() -> Unit)
 
@@ -49,7 +48,7 @@ interface TypeListStub<out T : QModel<U>, out U : QType, out A : ArgumentSpec> :
     ): ConfigurableQuery<U, A> = ConfigurableQuery.create(qproperty)
   }
 
-  interface Query<U : QType> : SchemaStub {
+  interface Query<U : QType> : GraphQLPropertyContext<Any?> {
     fun <T : QModel<U>> query(init: () -> T): NoArgConfig<TypeListStub<T, U, ArgumentSpec>, List<T>>
 
     companion object {
@@ -71,7 +70,7 @@ interface TypeListStub<out T : QModel<U>, out U : QType, out A : ArgumentSpec> :
 
   }
 
-  interface OptionalConfigQuery<U : QType, A : ArgumentSpec> : SchemaStub {
+  interface OptionalConfigQuery<U : QType, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
     fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<TypeListStub<T, U, A>, List<T>, A>
 
     companion object {
@@ -94,7 +93,7 @@ interface TypeListStub<out T : QModel<U>, out U : QType, out A : ArgumentSpec> :
     }
   }
 
-  interface ConfigurableQuery<U : QType, A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<U : QType, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
     fun <T : QModel<U>> query(init: () -> T): ConfiguredQuery<TypeListStub<T, U, A>, A>
 
     companion object {

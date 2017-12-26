@@ -40,20 +40,20 @@ class InterfaceToKotlin : JavacTest() {
 
     val expect = """
       |
-      |interface Droid : com.prestongarno.kotlinq.core.QType, com.prestongarno.kotlinq.core.QInterface {
-      |  val uuid: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query
+      |interface Droid : com.prestongarno.kotlinq.core.schema.QType, com.prestongarno.kotlinq.core.schema.QInterface {
+      |  val uuid: com.prestongarno.kotlinq.core.schema.stubs.StringDelegate.Query
       |}
       |
       |
-      |object Cyborg : com.prestongarno.kotlinq.core.QType {
-      |  val uuid: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
+      |object Cyborg : com.prestongarno.kotlinq.core.schema.QType {
+      |  val uuid: com.prestongarno.kotlinq.core.schema.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
       |
-      |  val humanName: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
+      |  val humanName: com.prestongarno.kotlinq.core.schema.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
       |}
       |
       |
-      |object Astromech : com.prestongarno.kotlinq.core.QType {
-      |  val uuid: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
+      |object Astromech : com.prestongarno.kotlinq.core.schema.QType {
+      |  val uuid: com.prestongarno.kotlinq.core.schema.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
       |}
       |""".trimMargin("|")
 

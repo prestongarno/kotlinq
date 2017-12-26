@@ -15,21 +15,21 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.adapters.bind
 import com.prestongarno.kotlinq.core.adapters.toMap
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface IntDelegate<out A : ArgumentSpec> : ScalarDelegate<IntStub> {
+interface StringDelegate<out A : ArgumentSpec> : ScalarDelegate<StringStub> {
 
-  var default: Int
+  var default: String?
 
   fun config(scope: A.() -> Unit)
 
@@ -54,38 +54,38 @@ interface IntDelegate<out A : ArgumentSpec> : ScalarDelegate<IntStub> {
 
   }
 
-  interface Query : SchemaStub {
+  interface Query : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(
         arguments: ArgumentSpec? = null,
-        scope: (IntDelegate<ArgumentSpec>.() -> Unit)? = null
-    ): IntDelegate<ArgumentSpec>
+        scope: (StringDelegate<ArgumentSpec>.() -> Unit)? = null
+    ): StringDelegate<ArgumentSpec>
 
     operator fun provideDelegate(
         inst: QModel<*>,
         property: KProperty<*>
-    ): IntStub = invoke().provideDelegate(inst, property)
+    ): StringStub = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgumentSpec> : SchemaStub {
+  interface OptionalConfigQuery<A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(
         arguments: A,
-        scope: (IntDelegate<A>.() -> Unit)?
-    ): IntDelegate<A>
+        scope: (StringDelegate<A>.() -> Unit)?
+    ): StringDelegate<A>
 
     operator fun provideDelegate(
         inst: QModel<*>,
         property: KProperty<*>
-    ): IntStub
+    ): StringStub
   }
 
-  interface ConfigurableQuery<A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(
         arguments: A,
-        scope: (IntDelegate<A>.() -> Unit)? = null
-    ): IntDelegate<A>
+        scope: (StringDelegate<A>.() -> Unit)? = null
+    ): StringDelegate<A>
   }
 
   /*********************************************************************************
@@ -93,41 +93,41 @@ interface IntDelegate<out A : ArgumentSpec> : ScalarDelegate<IntStub> {
    */
   private
   class QueryImpl(val qproperty: GraphQlProperty) : Query {
-    override fun invoke(
-        arguments: ArgumentSpec?, scope: (IntDelegate<ArgumentSpec>.() -> Unit)?
-    ) = IntDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
+    override fun invoke(arguments: ArgumentSpec?, scope: (StringDelegate<ArgumentSpec>.() -> Unit)?
+    ) = StringDelegateImpl(qproperty, arguments ?: ArgBuilder()).applyNotNull(scope)
   }
 
   private
   class OptionalConfigQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : OptionalConfigQuery<A> {
 
-    override fun invoke(arguments: A, scope: (IntDelegate<A>.() -> Unit)?): IntDelegate<A> =
-        IntDelegateImpl(qproperty, arguments).applyNotNull(scope)
+    override fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)?): StringDelegate<A> =
+        StringDelegateImpl(qproperty, arguments).applyNotNull(scope)
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntStub = IntStub(qproperty).bind(inst)
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringStub = StringStub(qproperty).bind(inst)
   }
 
   private
   class ConfigurableQueryImpl<A : ArgumentSpec>(val qproperty: GraphQlProperty) : ConfigurableQuery<A> {
 
-    override fun invoke(arguments: A, scope: (IntDelegate<A>.() -> Unit)?): IntDelegate<A> =
-        IntDelegateImpl(qproperty, arguments).applyNotNull(scope)
+    override fun invoke(arguments: A, scope: (StringDelegate<A>.() -> Unit)?): StringDelegate<A> =
+        StringDelegateImpl(qproperty, arguments).applyNotNull(scope)
   }
 }
 
 private
-class IntDelegateImpl<out A : ArgumentSpec>(
+class StringDelegateImpl<out A : ArgumentSpec>(
     val qproperty: GraphQlProperty,
     val argBuilder: A? = null
-) : IntDelegate<A> {
+) : StringDelegate<A> {
 
-  override var default: Int = 0
+  override var default: String? = null
 
   override fun config(scope: A.() -> Unit) {
     argBuilder?.scope()
   }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntStub =
-      IntStub(qproperty, argBuilder.toMap(), default).bind(inst)
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringStub =
+      StringStub(qproperty, argBuilder.toMap(), default).bind(inst)
 }
+
 

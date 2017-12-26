@@ -21,10 +21,10 @@ package com.prestongarno.kotlinq.core.enums
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.QEnumType
+import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QType
 import org.junit.Test
 
 class ArgumentStagesTest {

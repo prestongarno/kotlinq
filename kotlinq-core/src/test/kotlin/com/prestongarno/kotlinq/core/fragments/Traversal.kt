@@ -30,7 +30,7 @@ import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
 import com.prestongarno.kotlinq.core.getFragments
 import com.prestongarno.kotlinq.core.internal.resolve.resolve
 import com.prestongarno.kotlinq.core.mock_apis.starwars_schema.StarWarsQuery
-import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
 import com.prestongarno.kotlinq.core.eq
 import org.junit.Test
 

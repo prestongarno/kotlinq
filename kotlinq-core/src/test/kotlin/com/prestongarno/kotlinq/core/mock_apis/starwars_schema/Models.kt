@@ -28,7 +28,7 @@ import com.facebook.SearchResult
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
-import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
 
 
 class StarWarsQuery(

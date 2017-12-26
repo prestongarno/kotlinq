@@ -19,12 +19,12 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QEnumType
+import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 

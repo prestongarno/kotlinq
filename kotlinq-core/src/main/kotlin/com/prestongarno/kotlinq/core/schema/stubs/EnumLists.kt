@@ -15,23 +15,18 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.DelegateProvider
-import com.prestongarno.kotlinq.core.QEnumType
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.SchemaStub
-import com.prestongarno.kotlinq.core.adapters.QField
+import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.adapters.newEnumListDelegate
-import com.prestongarno.kotlinq.core.adapters.newEnumListField
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 
-interface EnumListStub<T, out A> : DelegateProvider<List<T>>
+interface EnumListStub<T, out A>
     where T : Enum<*>,
           T : QEnumType,
           A : ArgumentSpec {
@@ -66,7 +61,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         ConfigurableQueryImpl(qproperty, enumClass)
   }
 
-  interface Query<T> : DelegateProvider<List<T>>
+  interface Query<T>
       where T : Enum<*>,
             T : QEnumType {
 
@@ -83,9 +78,6 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
       val enumClass: KClass<T>
   ) : Query<T> where T : Enum<*>, T : QEnumType {
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<T>> =
-        invoke(ArgBuilder()).provideDelegate(inst, property)
-
     override fun invoke(
         arguments: ArgumentSpec?,
         scope: (EnumListStub<T, ArgumentSpec>.() -> Unit)?
@@ -97,7 +89,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
         ).applyNotNull(scope)
   }
 
-  interface OptionalConfigQuery<T, A> : DelegateProvider<List<T>>
+  interface OptionalConfigQuery<T, A>
       where T : Enum<*>,
             T : QEnumType,
             A : ArgumentSpec {
@@ -118,12 +110,6 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
       val enumClass: KClass<T>
   ) : OptionalConfigQuery<T, A> where T : Enum<*>, T : QEnumType, A : ArgumentSpec {
 
-    override fun provideDelegate(
-        inst: QModel<*>,
-        property: KProperty<*>
-    ): QField<List<T>> =
-        newEnumListField(qproperty, enumClass)
-
     override fun invoke(
         arguments: A,
         scope: (EnumListStub<T, A>.() -> Unit)?
@@ -132,7 +118,7 @@ interface EnumListStub<T, out A> : DelegateProvider<List<T>>
 
   }
 
-  interface ConfigurableQuery<T, A> : SchemaStub
+  interface ConfigurableQuery<T, A> : GraphQLPropertyContext<Any?>
       where T : Enum<*>,
             T : QEnumType,
             A : ArgumentSpec {

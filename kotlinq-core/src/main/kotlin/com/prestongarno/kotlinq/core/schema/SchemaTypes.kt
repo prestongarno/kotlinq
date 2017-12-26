@@ -15,8 +15,11 @@
  *
  */
 
-package com.prestongarno.kotlinq.core
+package com.prestongarno.kotlinq.core.schema
 
+import com.prestongarno.kotlinq.core.PropertyMapper
+import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.internal.bracket
 import com.prestongarno.kotlinq.core.internal.stringify
@@ -103,8 +106,8 @@ interface QInputType : QSchemaType {
         get() = this.field
 
       /**
-       * TODO -> [com.prestongarno.ktq.internal.formatAs] is used in
-       * [com.prestongarno.ktq.internal.stringify] and allows [QModel]
+       * TODO -> [com.prestongarno.kotlinq.core.internal.formatAs] is used in
+       * [com.prestongarno.kotlinq.core.internal.stringify] and allows [QModel]
        * values in the backing map. This is illegal in the GraphQL specificaton
        * for input object types
        */

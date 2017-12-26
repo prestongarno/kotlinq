@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core.properties
 
-import com.prestongarno.kotlinq.core.QUnionType
+import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.api.Fragment
 
 /**

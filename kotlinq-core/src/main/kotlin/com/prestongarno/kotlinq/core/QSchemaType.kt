@@ -21,24 +21,29 @@ package com.prestongarno.kotlinq.core
 
 import com.prestongarno.kotlinq.core.api.StubProvider
 import com.prestongarno.kotlinq.core.api.StubProvider.Companion.delegationContext
-import com.prestongarno.kotlinq.core.stubs.BooleanArrayDelegate
-import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
-import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
-import com.prestongarno.kotlinq.core.stubs.CustomScalarStub
-import com.prestongarno.kotlinq.core.stubs.EnumListStub
-import com.prestongarno.kotlinq.core.stubs.EnumStub
-import com.prestongarno.kotlinq.core.stubs.FloatArrayDelegate
-import com.prestongarno.kotlinq.core.stubs.FloatDelegate
-import com.prestongarno.kotlinq.core.stubs.IntArrayDelegate
-import com.prestongarno.kotlinq.core.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
-import com.prestongarno.kotlinq.core.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.stubs.StringArrayDelegate
-import com.prestongarno.kotlinq.core.stubs.StringDelegate
-import com.prestongarno.kotlinq.core.stubs.TypeListStub
-import com.prestongarno.kotlinq.core.stubs.TypeStub
-import com.prestongarno.kotlinq.core.stubs.UnionListStub
-import com.prestongarno.kotlinq.core.stubs.UnionStub
+import com.prestongarno.kotlinq.core.schema.CustomScalar
+import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.schema.QInterface
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.QUnionType
+import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
+import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
+import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionListStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 
 /**
  * The root type of all generated schema objects. Nested objects provide

@@ -17,14 +17,14 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.CustomScalar
-import com.prestongarno.kotlinq.core.QEnumType
-import com.prestongarno.kotlinq.core.QInputType
-import com.prestongarno.kotlinq.core.QInterface
+import com.prestongarno.kotlinq.core.schema.CustomScalar
+import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.schema.QInputType
+import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.QUnionType
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.stubs.BooleanArrayDelegate
 import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.stubs.FloatArrayDelegate

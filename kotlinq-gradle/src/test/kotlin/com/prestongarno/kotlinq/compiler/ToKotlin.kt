@@ -33,8 +33,8 @@ class ToKotlin {
 
     compileOut(mockSchema) eq """
       |
-      |object User : com.prestongarno.kotlinq.core.QType {
-      |  val name: com.prestongarno.kotlinq.core.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
+      |object User : com.prestongarno.kotlinq.core.schema.QType {
+      |  val name: com.prestongarno.kotlinq.core.schema.stubs.StringDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.String.stub()
       |}
       |""".trimMargin("|")
   }
@@ -50,10 +50,10 @@ class ToKotlin {
 
     val expect = """
       |
-      |object User : com.prestongarno.kotlinq.core.QType {
-      |  val value: com.prestongarno.kotlinq.core.stubs.FloatDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.Float.stub()
+      |object User : com.prestongarno.kotlinq.core.schema.QType {
+      |  val value: com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate.Query by com.prestongarno.kotlinq.core.QSchemaType.QScalar.Float.stub()
       |
-      |  val friends: com.prestongarno.kotlinq.core.stubs.TypeListStub.Query<User> by com.prestongarno.kotlinq.core.QSchemaType.QTypes.List.stub<User>()
+      |  val friends: com.prestongarno.kotlinq.core.schema.stubs.TypeListStub.Query<User> by com.prestongarno.kotlinq.core.QSchemaType.QTypes.List.stub<User>()
       |}
       |""".trimMargin("|")
 

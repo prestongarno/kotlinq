@@ -20,7 +20,7 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QType
 
 internal interface ModelProvider {
   val value: QModel<*>

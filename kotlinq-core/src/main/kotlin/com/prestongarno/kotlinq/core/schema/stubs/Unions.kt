@@ -15,18 +15,16 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.DelegateProvider
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QUnionType
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.schema.QUnionType
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.newUnionField
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface UnionStub<out T : QUnionType, out A : ArgumentSpec> : DelegateProvider<QModel<*>?> {
+interface UnionStub<out T : QUnionType, out A : ArgumentSpec> {
 
   fun config(scope: A.() -> Unit)
 
@@ -53,7 +51,7 @@ interface UnionStub<out T : QUnionType, out A : ArgumentSpec> : DelegateProvider
         ConfigurableQueryImpl(qproperty, unionObject)
   }
 
-  interface Query<out T : QUnionType> : SchemaStub {
+  interface Query<out T : QUnionType> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(arguments: ArgumentSpec? = null, scope: UnionStub<T, ArgumentSpec>.() -> Unit)
         :
@@ -69,7 +67,7 @@ interface UnionStub<out T : QUnionType, out A : ArgumentSpec> : DelegateProvider
 
   }
 
-  interface ConfigurableQuery<out T : QUnionType, A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<out T : QUnionType, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(arguments: A, scope: UnionStub<T, A>.() -> Unit)
         :

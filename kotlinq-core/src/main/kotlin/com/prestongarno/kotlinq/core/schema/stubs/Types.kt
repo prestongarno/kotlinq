@@ -15,22 +15,23 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.DelegateProvider
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.SchemaStub
 import com.prestongarno.kotlinq.core.adapters.TypeStubAdapter
 import com.prestongarno.kotlinq.core.api.ConfiguredQuery
-import com.prestongarno.kotlinq.core.api.NoArgConfig
 import com.prestongarno.kotlinq.core.api.OptionalConfiguration
+import com.prestongarno.kotlinq.core.properties.ConfigurableDelegateProvider
+import com.prestongarno.kotlinq.core.properties.DelegateProvider
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.configurableDelegate
+import com.prestongarno.kotlinq.core.schema.QType
 
 // TODO add something like enum class GraphQL.ResolutionStrategy
 // (for something like one of 'STRICT' or 'PERMISSIVE' for how to handle invalid responses)
-interface TypeStub<out T, out U, out A : ArgumentSpec> : DelegateProvider<T> where  T : QModel<U>, U : QType {
+interface TypeStub<out T, out U, out A : ArgumentSpec> where  T : QModel<U>, U : QType {
 
   fun config(argumentScope: A.() -> Unit)
 
@@ -51,8 +52,9 @@ interface TypeStub<out T, out U, out A : ArgumentSpec> : DelegateProvider<T> whe
     ): ConfigurableQuery<U, A> = ConfigurableQuery.create(qproperty)
   }
 
-  interface Query<U : QType> : SchemaStub {
-    fun <T : QModel<U>> query(init: () -> T): NoArgConfig<TypeStub<T, U, ArgumentSpec>, T>
+  interface Query<U : QType> : GraphQLPropertyContext<QModel<U>> {
+
+    fun <T : QModel<U>> query(init: () -> T): ConfigurableDelegateProvider<Query<U>, QModel<U>>
 
     companion object {
       internal
@@ -63,13 +65,23 @@ interface TypeStub<out T, out U, out A : ArgumentSpec> : DelegateProvider<T> whe
 
     private
     class QueryImpl<U : QType>(val qproperty: GraphQlProperty) : Query<U> {
-      override fun <T : QModel<U>> query(init: () -> T): NoArgConfig<TypeStub<T, U, ArgumentSpec>, T> =
-          NoArgConfig.new { TypeStubAdapter(qproperty, init, it) }
+
+      override fun asNullable(): GraphQLPropertyContext<QModel<U>?> {
+        TODO("not implemented")
+      }
+
+      /**
+       * Oh, damn, this is actually something promising 12/25/2017C19:01:00
+       */
+      override fun <T : QModel<U>> query(init: () -> T) = configurableDelegate(this, { qModel: QModel<*> ->
+        TypeStubAdapter<T, U, ArgumentSpec>(qproperty, init, null).bindingTo(qModel)
+      })
+      //NoArgConfig.new { TypeStubAdapter(qproperty, init, it) }
     }
   }
 
-  interface OptionalConfigQuery<U : QType, A : ArgumentSpec> : SchemaStub {
-    fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<TypeStub<T, U, A>, T, A>
+  interface OptionalConfigQuery<U : QType, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
+    fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<ConfigurableDelegateProvider<TypeStub<T, U, A>, QModel<T>>, T, A>
 
     companion object {
       internal
@@ -80,12 +92,12 @@ interface TypeStub<out T, out U, out A : ArgumentSpec> : DelegateProvider<T> whe
 
     private
     class OptionalConfigQueryImpl<U : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : OptionalConfigQuery<U, A> {
-      override fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<TypeStub<T, U, A>, T, A> =
+      override fun <T : QModel<U>> query(init: () -> T): OptionalConfiguration<ConfigurableDelegateProvider<TypeStub<T, U, A>, QModel<T>>, T, A> =
           OptionalConfiguration.new { TypeStubAdapter(qproperty, init, it) }
     }
   }
 
-  interface ConfigurableQuery<U : QType, A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<U : QType, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
     fun <T : QModel<U>> query(init: () -> T): ConfiguredQuery<TypeStub<T, U, A>, A>
 
     companion object {

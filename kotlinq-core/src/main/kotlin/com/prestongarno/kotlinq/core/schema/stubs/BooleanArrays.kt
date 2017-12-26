@@ -15,12 +15,12 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.adapters.bind
 import com.prestongarno.kotlinq.core.adapters.toMap
@@ -55,7 +55,7 @@ interface BooleanArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<Boole
 
   }
 
-  interface Query : SchemaStub {
+  interface Query : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(arguments: ArgumentSpec? = null,
         scope: (BooleanArrayDelegate<ArgumentSpec>.() -> Unit)? = null)
@@ -68,7 +68,7 @@ interface BooleanArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<Boole
         = invoke().provideDelegate(inst, property)
   }
 
-  interface OptionalConfigQuery<A : ArgumentSpec> : SchemaStub {
+  interface OptionalConfigQuery<A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(arguments: A, scope: (BooleanArrayDelegate<A>.() -> Unit)?)
         :
@@ -80,7 +80,7 @@ interface BooleanArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<Boole
 
   }
 
-  interface ConfigurableQuery<A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
     operator fun invoke(
         arguments: A,

@@ -19,9 +19,9 @@ package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.DelegateProvider
+import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import kotlin.reflect.KProperty
@@ -39,7 +39,7 @@ import kotlin.reflect.KProperty
  * @param D : The type of SchemaStub which will provide a delegate type <T>
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface ConfiguredQuery<out D : DelegateProvider<*>, in A : ArgumentSpec> : SchemaStub {
+interface ConfiguredQuery<out D : DelegateProvider<*>, in A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
@@ -58,7 +58,7 @@ interface ConfiguredQuery<out D : DelegateProvider<*>, in A : ArgumentSpec> : Sc
  * @param D : The type of [DelegateProvider] which this field supplies
  * @param A : The type of ArgBuilder which configures on this field
  */
-interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgumentSpec> : SchemaStub {
+interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
 
   operator fun invoke(arguments: A, scope: (D.() -> Unit)? = null): D
 
@@ -78,7 +78,7 @@ interface OptionalConfiguration<out D : DelegateProvider<T>, out T : Any?, in A 
  * This interface exists to support adding arguments arbitrarily to GraphQL queries/mutations
  * @param D : The type of [DelegateProvider] which this field supplies
  */
-interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : SchemaStub {
+interface NoArgConfig<out D : DelegateProvider<T>, out T : Any?> : GraphQLPropertyContext<Any?> {
 
   operator fun invoke(arguments: ArgumentSpec? = ArgBuilder(), scope: (D.() -> Unit)? = null): D
 

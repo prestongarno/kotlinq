@@ -15,22 +15,20 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.DelegateProvider
-import com.prestongarno.kotlinq.core.QInterface
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.schema.QInterface
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.InterfaceAdapterImpl
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
 /**
  * Remember -> compile generate all interface types to be *both* [QType] ***and*** [QInterface]
  */
-interface InterfaceStub<I, out A : ArgumentSpec> : FragmentStub<I>, DelegateProvider<QModel<I>?>
+interface InterfaceStub<in I, out A : ArgumentSpec> : FragmentStub<I>
     where I : QInterface,
           I : QType {
 
@@ -63,7 +61,7 @@ interface InterfaceStub<I, out A : ArgumentSpec> : FragmentStub<I>, DelegateProv
         ConfigurableQueryImpl(qproperty)
   }
 
-  interface Query<I> : SchemaStub where I : QInterface, I : QType {
+  interface Query<I> : GraphQLPropertyContext<Any?> where I : QInterface, I : QType {
 
     operator fun invoke(arguments: ArgumentSpec? = ArgBuilder(),
           scope: InterfaceStub<I, ArgumentSpec>.() -> Unit)
@@ -71,7 +69,7 @@ interface InterfaceStub<I, out A : ArgumentSpec> : FragmentStub<I>, DelegateProv
         InterfaceStub<I, ArgumentSpec>
   }
 
-  interface OptionalConfigQuery<I, A> : SchemaStub where I : QInterface, I : QType, A : ArgumentSpec {
+  interface OptionalConfigQuery<I, A> : GraphQLPropertyContext<Any?> where I : QInterface, I : QType, A : ArgumentSpec {
 
     operator fun invoke(scope: FragmentStub<I>.() -> Unit)
         :
@@ -83,7 +81,7 @@ interface InterfaceStub<I, out A : ArgumentSpec> : FragmentStub<I>, DelegateProv
 
   }
 
-  interface ConfigurableQuery<I, A> : SchemaStub where I : QInterface, I : QType, A : ArgumentSpec {
+  interface ConfigurableQuery<I, A> : GraphQLPropertyContext<Any?> where I : QInterface, I : QType, A : ArgumentSpec {
 
     operator fun invoke(arguments: A, scope: InterfaceStub<I, A>.() -> Unit)
         :

@@ -17,8 +17,8 @@
 
 package com.prestongarno.kotlinq.http.node.server
 
-import com.prestongarno.kotlinq.http.GraphQL
 import com.prestongarno.kotlinq.http.GraphHttpAdapter
+import com.prestongarno.kotlinq.http.GraphQL
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.junit.After
@@ -40,7 +40,7 @@ abstract class NodeServer {
   lateinit var graphql: GraphHttpAdapter
 
   @Before internal
-fun setUp() {
+  fun setUp() {
 
     graphqlServerPs = ProcessBuilder()
         .inheritIO()

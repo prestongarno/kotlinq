@@ -15,21 +15,18 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.DelegateProvider
-import com.prestongarno.kotlinq.core.QInterface
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QType
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.schema.QInterface
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.newInterfaceListStub
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
 interface InterfaceListStub<I, out A> :
-    FragmentStub<I>,
-    DelegateProvider<List<QModel<I>>>
+    FragmentStub<I>
     where I : QType,
           I : QInterface,
           A : ArgumentSpec {
@@ -58,7 +55,7 @@ interface InterfaceListStub<I, out A> :
         ConfigurableQueryImpl(qproperty)
   }
 
-  interface Query<I> : SchemaStub where I : QInterface, I : QType {
+  interface Query<I> : GraphQLPropertyContext<Any?> where I : QInterface, I : QType {
 
     operator fun invoke(
         arguments: ArgumentSpec? = null,
@@ -79,7 +76,7 @@ interface InterfaceListStub<I, out A> :
 
   }
 
-  interface ConfigurableQuery<I, A> : SchemaStub
+  interface ConfigurableQuery<I, A> : GraphQLPropertyContext<Any?>
       where I : QInterface,
             I : QType,
             A : ArgumentSpec {

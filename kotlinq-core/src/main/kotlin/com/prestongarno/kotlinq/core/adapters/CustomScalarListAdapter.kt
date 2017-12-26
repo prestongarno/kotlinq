@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.CustomScalar
+import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.kotlinq.core.adapters.custom.QScalarListMapper
@@ -26,7 +26,7 @@ import com.prestongarno.kotlinq.core.adapters.custom.StringScalarListMapper
 import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
+import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
 import kotlin.reflect.KProperty
 
 internal

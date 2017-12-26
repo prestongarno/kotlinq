@@ -17,12 +17,11 @@
 
 @file:Suppress("unused")
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.CustomScalar
-import com.prestongarno.kotlinq.core.DelegateProvider
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.schema.CustomScalar
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.custom.QScalarListMapper
 import com.prestongarno.kotlinq.core.adapters.newCustomScalarListField
 import com.prestongarno.kotlinq.core.api.ConfiguredQuery
@@ -31,7 +30,7 @@ import com.prestongarno.kotlinq.core.api.OptionalConfiguration
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
 @Suppress("AddVarianceModifier") // THIS IS INTENTIONAL -> Needed for multi-inherited argument types
-interface CustomScalarListStub<T : CustomScalar, V, out A : ArgumentSpec> : DelegateProvider<List<V>> {
+interface CustomScalarListStub<T : CustomScalar, V, out A : ArgumentSpec> {
 
   fun config(scope: A.() -> Unit)
 
@@ -54,18 +53,18 @@ interface CustomScalarListStub<T : CustomScalar, V, out A : ArgumentSpec> : Dele
 
   }
 
-  interface Query<T : CustomScalar> : SchemaStub {
+  interface Query<T : CustomScalar> : GraphQLPropertyContext<Any?> {
     fun <U : QScalarListMapper<V>, V> map(adapter: U)
         : NoArgConfig<CustomScalarListStub<T, V, ArgumentSpec>, List<V>>
   }
 
-  interface OptionalConfigQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
+  interface OptionalConfigQuery<T : CustomScalar, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
     fun <U : QScalarListMapper<V>, V> map(
         adapter: U
     ): OptionalConfiguration<CustomScalarListStub<T, V, ArgumentSpec>, List<V>, A>
   }
 
-  interface ConfigurableQuery<T : CustomScalar, A : ArgumentSpec> : SchemaStub {
+  interface ConfigurableQuery<T : CustomScalar, A : ArgumentSpec> : GraphQLPropertyContext<Any?> {
     fun <V> map(
         adapter: QScalarListMapper<V>
     ): ConfiguredQuery<CustomScalarListStub<T, V, ArgumentSpec>, A>

@@ -19,11 +19,11 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonArray
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QEnumType
+import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.stubs.EnumListStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 

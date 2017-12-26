@@ -15,17 +15,17 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.stubs
+package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.SchemaStub
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.formatAs
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface ScalarArrayDelegate<out D : PrimitiveArrayStub> : SchemaStub {
+interface ScalarArrayDelegate<out D : PrimitiveArrayStub> : GraphQLPropertyContext<Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
 }
 

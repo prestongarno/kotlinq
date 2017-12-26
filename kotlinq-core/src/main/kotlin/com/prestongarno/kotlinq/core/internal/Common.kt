@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.internal
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.PropertyMapper
-import com.prestongarno.kotlinq.core.QInputType
+import com.prestongarno.kotlinq.core.schema.QInputType
 
 
 @Suppress("UNCHECKED_CAST")
