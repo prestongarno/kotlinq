@@ -24,7 +24,7 @@ import com.prestongarno.kotlinq.core.adapters.enumAdapter
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.newGraphqlProperty
+import com.prestongarno.kotlinq.core.properties.newConfigurableGraphqlProperty
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
 
@@ -33,6 +33,22 @@ interface EnumStub<out T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
           T : Enum<*>? {
 
   companion object {
+
+    private class PropertyContext<T, out A>(
+        val qproperty: GraphQlProperty,
+        val enumClass: KClass<T>
+    ) : GraphQLPropertyContext<EnumStub<T, A>, T>
+    by newConfigurableGraphqlProperty<EnumAdapterImpl<T, A>, A, T>(
+        { enumAdapter(qproperty, enumClass, it) },
+        { toDelegate().bind(it) })
+        where T : QEnumType,
+              T : Enum<*>,
+              A : ArgumentSpec
+    {
+      override fun asNullable(): GraphQLPropertyContext<EnumStub<T, A>, T?> {
+        TODO("not implemented")
+      }
+    }
 
     /**
      * Creates a new GraphQL property stub.
@@ -46,18 +62,7 @@ interface EnumStub<out T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
     ): GraphQLPropertyContext<EnumStub<T, A>, T>
         where T : QEnumType,
               T : Enum<*>,
-              A : ArgumentSpec = newGraphqlProperty<EnumAdapterImpl<T, A>, A, T>(
-        { enumAdapter(qproperty, enumClass, it) },
-        { toDelegate().bind(it) })
-
-    internal
-    fun <T, A> nullableStub(
-        qproperty: GraphQlProperty,
-        enumClass: KClass<T> // TODO unsafe
-    ): GraphQLPropertyContext<EnumStub<T?, A>, T?>
-        where T : QEnumType,
-              T : Enum<T>,
-              A : ArgumentSpec = newGraphqlProperty<EnumAdapterImpl<T, A>, A, T?>(
+              A : ArgumentSpec = newConfigurableGraphqlProperty<EnumAdapterImpl<T, A>, A, T>(
         { enumAdapter(qproperty, enumClass, it) },
         { toDelegate().bind(it) })
 

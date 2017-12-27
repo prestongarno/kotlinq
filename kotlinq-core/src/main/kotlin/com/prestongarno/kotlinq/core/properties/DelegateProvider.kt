@@ -19,21 +19,49 @@ package com.prestongarno.kotlinq.core.properties
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.PreDelegate
 import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
+import com.prestongarno.kotlinq.core.api.Stub
 import kotlin.reflect.KProperty
 
 internal
-fun <D, A : ArgumentSpec, RET : Any?>
-    newGraphqlProperty(constructor: (A?) -> D, onDelegate: D.(QModel<*>) -> QField<RET>): GraphQLPropertyContext<D, RET>
-    where D : GraphqlDslBuilder<A>, D : PreDelegate<*, RET> =
-    TODO()
+fun <D, N, RET : Any?>
+    newConfigurableGraphqlProperty(
+    constructor: () -> D,
+    nullableCtor: () -> N,
+    onDelegate: D.(QModel<*>) -> QField<RET>
+): Stub<D>
+    where D : GraphqlDslBuilder<*>,
+          D : PreDelegate<*, RET>,
+          N : D =
+
+    object : GraphQLPropertyContext<D, RET>, Stub<D> {
+
+      override val constructor: () -> D get() = constructor
+
+      private val value by lazy { constructor() }
+
+      override fun getValue(inst: QSchemaType, property: KProperty<*>): D = value
+
+      private val nullable by lazy { Nullable(nullableCtor) }
+
+      override fun asNullable(): Nullable = nullable
+
+      private inner class Nullable(private val ctor: () -> N)
+        : GraphQLPropertyContext<N, RET?> {
+        override val constructor: () -> N get() = ctor
+        override fun asNullable() = this
+      }
+    }
 
 interface GraphQLPropertyContext<out D : GraphqlDslBuilder<*>, out RET : Any?> {
   // TODO overriders should be more restrictive of the type so DSL is still enabled
   fun asNullable(): GraphQLPropertyContext<D, RET?>
+
+  val constructor: () -> D
 }
 
 
