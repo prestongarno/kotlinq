@@ -305,12 +305,31 @@ interface QSchemaType {
 
   object QEnum {
 
-    inline fun <reified T> stub()
-        :
-        StubProvider<EnumStub.Query<T>>
+    private inline fun <reified T> stub()
         where T : Enum<*>,
               T : QEnumType =
-        delegationContext.enum.stub(T::class)
+        delegationContext.enum.stub<T, ArgBuilder>(T::class)
+
+    enum class FooNum : QEnumType {
+      BAR,
+      BAZ
+    }
+
+    object Foobar : QModel<QType>(TODO()), QSchemaType {
+      private val foo by stub<FooNum>()
+      private val b by foo {
+        config {
+          addArgument("Hello", "World")
+        }
+      }
+
+      init {
+        when (b) {
+          FooNum.BAR -> TODO()
+          FooNum.BAZ -> TODO()
+        }
+      }
+    }
 
     inline fun <reified T, A : ArgumentSpec> optionalConfigStub()
         :

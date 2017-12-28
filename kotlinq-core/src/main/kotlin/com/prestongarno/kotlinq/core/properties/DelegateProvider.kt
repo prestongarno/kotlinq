@@ -20,7 +20,7 @@ package com.prestongarno.kotlinq.core.properties
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.adapters.PreDelegate
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
@@ -28,57 +28,52 @@ import com.prestongarno.kotlinq.core.api.Stub
 import kotlin.reflect.KProperty
 
 internal
-fun <D, N, RET : Any?>
-    newConfigurableGraphqlProperty(
+fun <D, A : ArgumentSpec, RET : Any?> configurableGraphQlProperty(
     constructor: () -> D,
-    nullableCtor: () -> N,
-    onDelegate: D.(QModel<*>) -> QField<RET>
-): Stub<D>
-    where D : GraphqlDslBuilder<*>,
-          D : PreDelegate<*, RET>,
-          N : D =
+    onProvideDelegate: D.(QModel<*>) -> GraphqlPropertyDelegate<RET>
+): GraphQLPropertyContext<D, A, RET>
+    where D : GraphqlDslBuilder<A> = object : GraphQLPropertyContext<D, A, RET> {
+  private val value by lazy { configurableDelegate(constructor, onDelegate) }
 
-    object : GraphQLPropertyContext<D, RET>, Stub<D> {
+  override val constructor: () -> D get() = constructor
 
-      override val constructor: () -> D get() = constructor
+  override val onDelegate: D.(QModel<*>) -> GraphqlPropertyDelegate<RET> get() = onProvideDelegate
 
-      private val value by lazy { constructor() }
+  override fun getValue(
+      inst: QSchemaType,
+      property: KProperty<*>
+  ): ConfigurableDelegateProvider<D, A, RET> = value
 
-      override fun getValue(inst: QSchemaType, property: KProperty<*>): D = value
-
-      private val nullable by lazy { Nullable(nullableCtor) }
-
-      override fun asNullable(): Nullable = nullable
-
-      private inner class Nullable(private val ctor: () -> N)
-        : GraphQLPropertyContext<N, RET?> {
-        override val constructor: () -> N get() = ctor
-        override fun asNullable() = this
-      }
-    }
-
-interface GraphQLPropertyContext<out D : GraphqlDslBuilder<*>, out RET : Any?> {
-  // TODO overriders should be more restrictive of the type so DSL is still enabled
-  fun asNullable(): GraphQLPropertyContext<D, RET?>
-
-  val constructor: () -> D
 }
 
+internal
+interface GraphQLPropertyContext<
+    U : GraphqlDslBuilder<A>,
+    A : ArgumentSpec,
+    out RET : Any?
+    >
+  : Stub<ConfigurableDelegateProvider<U, A, RET>> {
+
+  val constructor: () -> U
+
+  val onDelegate: U.(QModel<*>) -> QField<RET>
+}
 
 interface DelegateProvider<out T : Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
 
 interface ConfiguredDelegateProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> {
-  fun invoke(args: A, block: U.() -> Unit): DelegateProvider<T>
+  operator fun invoke(args: A, block: U.() -> Unit): DelegateProvider<T>
 }
 
 interface ConfigurableDelegateProvider<
     out U : GraphqlDslBuilder<A>,
     A : ArgumentSpec,
-    out T>
+    out T : Any?>
   : DelegateProvider<T> {
-  fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T>
+  operator fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T>
+  operator fun invoke(block: U.() -> Unit): DelegateProvider<T>
 }
 
 private
@@ -89,26 +84,24 @@ fun <T> delegateProvider(onDelegate: (QModel<*>) -> QField<T>): DelegateProvider
 internal
 fun <U, A, T> configurableDelegate(
     constructor: () -> U,
-    onDsl: U.(A?) -> Unit,
     onDelegate: U.(QModel<*>) -> QField<T>
 ) where U : GraphqlDslBuilder<A>, A : ArgumentSpec =
-
     object : ConfigurableDelegateProvider<U, A, T> {
       override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> = constructor().onDelegate(inst)
-      override fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T> = delegateProvider {
-        constructor().apply { this@apply.onDsl(args) }.applyNotNull(block).onDelegate(it)
-      }
+      override fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T> =
+          delegateProvider { constructor().applyNotNull(block).onDelegate(it) }
+      override fun invoke(block: U.() -> Unit): DelegateProvider<T> =
+          delegateProvider { constructor().apply(block).onDelegate(it) }
     }
 
 internal
 fun <U, A, T> configuredDelegate(
     constructor: () -> U,
-    onDsl: U.(A) -> Unit,
     onDelegate: U.(QModel<*>) -> QField<T>
 ) where U : GraphqlDslBuilder<A>, A : ArgumentSpec, T : Any? =
 
     object : ConfiguredDelegateProvider<U, A, T> {
       override fun invoke(args: A, block: U.() -> Unit): DelegateProvider<T> = delegateProvider {
-        constructor().apply { this@apply.onDsl(args) }.apply(block).onDelegate(it)
+        constructor().apply(block).onDelegate(it)
       }
     }

@@ -17,8 +17,6 @@
 
 package com.prestongarno.kotlinq.core.properties
 
-import com.prestongarno.kotlinq.core.adapters.QField
-
 /**
  * The immutable object which ultimately ends up inside of
  * a field adapter class to denote reflective information about the GraphQL field
@@ -62,7 +60,12 @@ interface GraphQlProperty {
   }
 }
 
-interface GraphqlField<out T: Any?> : GraphQlProperty, QField<T>
+fun graphQlProperty(
+    graphqlType: String,
+    isList: Boolean,
+    graphqlName: String,
+    typeKind: PropertyType = PropertyType.from(graphqlType)
+) = GraphQlProperty.from(graphqlType, isList, graphqlName, typeKind)
 
 private data class PropertyImpl @JvmOverloads constructor(
     override val graphqlType: String,

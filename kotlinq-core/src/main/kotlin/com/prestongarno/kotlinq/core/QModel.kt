@@ -19,6 +19,7 @@ package com.prestongarno.kotlinq.core
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.internal.pretty
@@ -108,7 +109,7 @@ open class QModel<out T : QType>(val model: T) {
    * @return the field
    */
   internal
-  fun <T> register(field: T): T where T : Adapter, T : QField<T> {
+  fun <T : GraphqlPropertyDelegate<*>> register(field: T): T {
     fields[field.qproperty.graphqlName] = field
     return field
   }

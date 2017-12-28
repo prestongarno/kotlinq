@@ -18,13 +18,9 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
-import com.prestongarno.kotlinq.core.adapters.bind
 import com.prestongarno.kotlinq.core.adapters.enumAdapter
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
-import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.newConfigurableGraphqlProperty
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
 
@@ -33,23 +29,6 @@ interface EnumStub<out T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
           T : Enum<*>? {
 
   companion object {
-
-    private class PropertyContext<T, out A>(
-        val qproperty: GraphQlProperty,
-        val enumClass: KClass<T>
-    ) : GraphQLPropertyContext<EnumStub<T, A>, T>
-    by newConfigurableGraphqlProperty<EnumAdapterImpl<T, A>, A, T>(
-        { enumAdapter(qproperty, enumClass, it) },
-        { toDelegate().bind(it) })
-        where T : QEnumType,
-              T : Enum<*>,
-              A : ArgumentSpec
-    {
-      override fun asNullable(): GraphQLPropertyContext<EnumStub<T, A>, T?> {
-        TODO("not implemented")
-      }
-    }
-
     /**
      * Creates a new GraphQL property stub.
      * If this works across the whole type system it would be amazing.
@@ -59,12 +38,10 @@ interface EnumStub<out T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
     fun <T, A> stub(
         qproperty: GraphQlProperty,
         enumClass: KClass<T>
-    ): GraphQLPropertyContext<EnumStub<T, A>, T>
+    ): EnumStub<T, A>
         where T : QEnumType,
               T : Enum<*>,
-              A : ArgumentSpec = newConfigurableGraphqlProperty<EnumAdapterImpl<T, A>, A, T>(
-        { enumAdapter(qproperty, enumClass, it) },
-        { toDelegate().bind(it) })
+              A : ArgumentSpec = enumAdapter(qproperty, enumClass)
 
   }
 }

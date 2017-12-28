@@ -29,12 +29,11 @@ import kotlin.reflect.KProperty
 
 internal fun <T, A> enumAdapter(
     qproperty: GraphQlProperty,
-    enumClass: KClass<T>,
-    argBuilder: A?
+    enumClass: KClass<T>
 ): EnumAdapterImpl<T, A>
     where T : Enum<*>,
           T : QEnumType,
-          A : ArgumentSpec = EnumAdapterImpl(qproperty, enumClass, argBuilder)
+          A : ArgumentSpec = EnumAdapterImpl(qproperty, enumClass, null)
 
 
 internal
@@ -62,9 +61,11 @@ class EnumFieldImpl<T>(
     private val enumClass: KClass<T>,
     override val args: Map<String, Any>,
     private val default: T? = null
-) : QField<T>, Adapter where T : Enum<*>, T : QEnumType {
+) : GraphqlPropertyDelegate<T> where T : Enum<*>, T : QEnumType {
 
   var value: T? = default
+
+  override fun asNullable() = GraphqlPropertyDelegate.wrapAsNullable(this, this::value)
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default!!
 
@@ -74,9 +75,7 @@ class EnumFieldImpl<T>(
     return value != null
   }
 
-  override fun toRawPayload(): String {
-    return qproperty.graphqlName + args.stringify()
-  }
+  override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true

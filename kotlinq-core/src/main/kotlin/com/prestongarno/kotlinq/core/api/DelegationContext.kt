@@ -19,8 +19,10 @@ package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.properties.ConfigurableDelegateProvider
+import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.adapters.enumAdapter
 import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
+import com.prestongarno.kotlinq.core.properties.configurableGraphQlProperty
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
@@ -31,7 +33,6 @@ import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
-import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegate
@@ -45,6 +46,9 @@ import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionListStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
+
+internal
+typealias Property<U, A, T> = StubProvider<GraphQLPropertyContext<U, A, T>, GraphQLPropertyContext<U, A, T?>>
 
 @PublishedApi internal interface DelegationContext {
   val type: GraphQLDelegate.Type
@@ -189,21 +193,56 @@ class DefaultDelegationContext : DelegationContext {
   }
 
   class QlEnum : GraphQLDelegate() {
+    private enum class FooEnum : QEnumType {
+      ONE ,TWO
+    }
+
+    init {
+      object : QModel<QType>(TODO()) {
+        val ctor = stub<FooEnum, ArgBuilder>(FooEnum::class).provideDelegate(TODO(), TODO())
+        val foo by ctor {
+
+        }
+        init {
+        }
+
+      }
+    }
 
     fun <T, A> stub(clazz: KClass<T>)
-        :
-        StubProvider<GraphQLPropertyContext<EnumStub<T, A>, T>, EnumStub<T, A>, T>
-        where T : kotlin.Enum<*>,
+        where T : Enum<*>,
               T : QEnumType,
-              A : ArgBuilder
-        = Grub(clazz.graphQlName()) { EnumStub.stub<T, A>(it, clazz) }.apply { provideDelegate(TODO(), TODO()).getValue(TODO(), TODO()) }
+              A : ArgBuilder = StubProvider.create(
+        clazz.graphQlName(),
+        false,
+        {
+          configurableGraphQlProperty(
+              { enumAdapter<T, A>(it, clazz) },
+              { toDelegate().bindToContext(it) }
+          )
+        },
+        {
+          configurableGraphQlProperty(
+              { enumAdapter<T, A>(it, clazz) },
+              { toDelegate().asNullable().bindToContext(it) }
+          )
+        }
+    )
 
     fun <T, A : ArgumentSpec> configStub(clazz: KClass<T>)
-        :
-        StubProvider<EnumStub.ConfigurableQuery<T, A>>
         where T : kotlin.Enum<*>,
-              T : QEnumType
-        = Grub(clazz.graphQlName()) { EnumStub.argStub<T, A>(it, clazz) }
+              T : QEnumType = StubProvider.create(clazz.graphQlName(), false, {
+      configurableGraphQlProperty(
+          { enumAdapter<T, A>(it, clazz) },
+          { toDelegate().bindToContext(it) }
+      )
+    }, {
+      configurableGraphQlProperty(
+          { enumAdapter<T, A>(it, clazz) },
+          { toDelegate().bindToContext(it) }
+      )
+    })
+
 
     override val list: Lists.QlEnum = Lists.QlEnum()
 

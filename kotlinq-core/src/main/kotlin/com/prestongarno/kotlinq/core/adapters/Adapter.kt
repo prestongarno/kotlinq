@@ -17,7 +17,10 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
+import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
@@ -26,7 +29,7 @@ import kotlin.reflect.KProperty
  * to generate the correct representation of the GraphQL field query
  *
  * Base type of all delegates - this is the internal side of a property.
- * This class (internal API) and [com.prestongarno.ktq.adapters.QField] (public API delegate)
+ * This class (internal API) and [com.prestongarno.kotlinq.core.adapters.QField] (public API delegate)
  * generally are both implemented on a property delegate */
 interface Adapter {
 
@@ -48,3 +51,32 @@ interface QField<out T> {
 }
 
 
+/**
+ * Internal interface to represent a union between [Adapter] and [QField]
+ * @param T the return type of the field
+ */
+internal
+interface GraphqlPropertyDelegate<out T : Any?> : QField<T>, Adapter {
+  /**
+   * Called on construction of a graphql object model.
+   * Default behaviour: binds this property delegate to the instance of [graphqlModel]
+   */
+  fun bindToContext(graphqlModel: QModel<*>) = apply { graphqlModel.register(this) }
+
+  fun asNullable(): GraphqlPropertyDelegate<T?>
+
+  companion object {
+    internal
+    fun <T> wrapAsNullable(
+        instance: GraphqlPropertyDelegate<T>,
+        scope: () -> T?
+    ): GraphqlPropertyDelegate<T?> = object : GraphqlPropertyDelegate<T?> {
+      override val qproperty: GraphQlProperty get() = instance.qproperty
+      override val args: Map<String, Any> get() = instance.args
+      override fun accept(result: Any?) = instance.accept(result)
+      override fun toRawPayload() = instance.toRawPayload()
+      override fun getValue(inst: QModel<*>, property: KProperty<*>) = scope()
+      override fun asNullable(): GraphqlPropertyDelegate<T?> = instance.asNullable()
+    }
+  }
+}
