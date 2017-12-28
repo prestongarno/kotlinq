@@ -17,6 +17,7 @@
 
 package com.prestongarno.kotlinq.core.api
 
+import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
@@ -31,6 +32,10 @@ import com.prestongarno.kotlinq.core.properties.configuredDelegate
 import com.prestongarno.kotlinq.core.properties.graphQlProperty
 import kotlin.reflect.KProperty
 
+interface BaseStubProvider<out U : GraphqlDslBuilder<ArgumentSpec>, out T> : StubProvider<U, ArgumentSpec, T> {
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<BasicDelegateProvider<U, T>>
+}
+
 interface StubProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : ConfiguredStubProvider<U, A, T> {
 
   override operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<ConfigurableDelegateProvider<U, A, T>>
@@ -42,8 +47,8 @@ interface StubProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : 
     internal fun <T, V> stub(
         typeName: String,
         isList: Boolean = false,
-        onInit: (GraphQlProperty, ArgumentSpec?) -> T
-    ): StubProvider<T, ArgumentSpec, V>
+        onInit: (GraphQlProperty, ArgBuilder?) -> T
+    ): BaseStubProvider<T, V>
         where T : GraphqlDslBuilder<ArgumentSpec>,
               T : PreDelegate<GraphqlPropertyDelegate<V>, V> =
         BasicGrub(typeName, isList, onInit)
@@ -162,18 +167,17 @@ private class ConfiguredGrub<out U, A, out T>(
 private class BasicGrub<out T, out V>(
     typeName: String,
     isList: Boolean,
-    private val schemaPropertyInit: (GraphQlProperty, ArgumentSpec?) -> T
-) : Grub<T, ArgumentSpec, V>(typeName, isList), StubProvider<T, ArgumentSpec, V>
+    private val schemaPropertyInit: (GraphQlProperty, ArgBuilder?) -> T
+) : Grub<T, ArgBuilder, V>(typeName, isList), BaseStubProvider<T, V>
     where T : GraphqlDslBuilder<ArgumentSpec>,
           T : PreDelegate<GraphqlPropertyDelegate<V>, V> {
 
-  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<ConfigurableDelegateProvider<T, ArgumentSpec, V>> {
-    return object : Stub<BasicDelegateProvider<T, V>> {
-      private val qproperty = graphQlProperty(typeName, isList, property.name)
-      private val value = basicDelegate<T, V> { schemaPropertyInit(qproperty, it) }
-      override fun getValue(inst: QSchemaType, property: KProperty<*>): BasicDelegateProvider<T, V> = value
-    }
-  }
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<BasicDelegateProvider<T, V>> =
+      object : Stub<BasicDelegateProvider<T, V>> {
+        private val qproperty = graphQlProperty(typeName, isList, property.name)
+        private val value = basicDelegate<T, V> { schemaPropertyInit(qproperty, it as? ArgBuilder ?: ArgBuilder()) }
+        override fun getValue(inst: QSchemaType, property: KProperty<*>): BasicDelegateProvider<T, V> = value
+      }
 
   override fun asNullable(): StubProvider<T, ArgumentSpec, V?> =
       BasicGrub(typeName, isList) { graphQlProperty, argumentSpec ->
@@ -181,5 +185,4 @@ private class BasicGrub<out T, out V>(
           flagNullable(true)
         }
       }
-
 }

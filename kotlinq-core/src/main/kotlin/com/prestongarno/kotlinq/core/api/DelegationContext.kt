@@ -115,8 +115,10 @@ class DefaultDelegationContext : DelegationContext {
 
     fun <T> stub(schemaType: T)
         :
-        ConfiguredStubProvider<UnionStub<T, ArgumentSpec>, ArgumentSpec, QModel<*>?>
-        where T : QUnionType = configuredStub(schemaType)
+        BaseStubProvider<UnionStub<T, ArgBuilder>, QModel<*>?>
+        where T : QUnionType = StubProvider.stub(schemaType::class.graphQlName()) { graphQlProperty, argumentSpec ->
+      newUnionField(graphQlProperty, schemaType, argumentSpec ?: ArgBuilder())
+    }
 
     fun <T, A> configuredStub(schemaType: T)
         :
@@ -152,7 +154,7 @@ class DefaultDelegationContext : DelegationContext {
         }
       }
 
-      val opt: QModel<*>? by model.optSearch(ArgBuilder()) {
+      val opt: QModel<*>? by model.optSearch {
         fragment {
           onFoo(::TODO)
           onBar(::TODO)
