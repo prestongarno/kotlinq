@@ -18,36 +18,50 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.adapters.QField
-import com.prestongarno.kotlinq.core.properties.DelegateProvider
-import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
+import com.prestongarno.kotlinq.core.adapters.PreDelegate
+import com.prestongarno.kotlinq.core.properties.ConfigurableDelegateProvider
+import com.prestongarno.kotlinq.core.properties.ConfiguredDelegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.configurableDelegate
 import com.prestongarno.kotlinq.core.properties.graphQlProperty
 import kotlin.reflect.KProperty
 
-interface StubProvider<out D : Stub<*>, out N : Stub<*>> {
+interface StubProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> {
 
-  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): D
+  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<ConfiguredDelegateProvider<U, A, T>>
 
-  fun asNullable(): DelegateProvider<N>
+  fun asNullable(): Stub<ConfiguredDelegateProvider<U, A, T?>>
 
   companion object {
 
-    internal fun <T, A, Z> create(
+    internal fun <T, A, Z> configurable(
         typeName: String,
         isList: Boolean = false,
-        init: (GraphQlProperty) -> GraphQLPropertyContext<T, A, Z>,
-        asNullable: (GraphQlProperty) -> GraphQLPropertyContext<T, A, Z?>
-    ): StubProvider<GraphQLPropertyContext<T, A, Z>, GraphQLPropertyContext<T, A, Z?>>
+        onInit: (GraphQlProperty, A?) -> T
+    ): StubProvider<T, A, Z>
         where T : GraphqlDslBuilder<A>,
-              A : ArgumentSpec =
-        Grub(typeName, isList, init, asNullable)
+              T : PreDelegate<GraphqlPropertyDelegate<Z>, Z>,
+              A : ArgumentSpec = Grub(typeName, isList, onInit)
+
+    internal
+    fun <T, A, Z> configured(
+        typeName: String,
+        isList: Boolean,
+        onInit: (GraphQlProperty, A) -> T
+    ): ConfigurableStubProvider<T, A, Z>
+        where T : GraphqlDslBuilder<A>,
+              T : PreDelegate<GraphqlPropertyDelegate<Z>, Z>,
+              A : ArgumentSpec = TODO()
 
     internal
     @PublishedApi val delegationContext: DelegationContext = DefaultDelegationContext()
   }
+}
+
+interface ConfigurableStubProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : StubProvider<U, A, T> {
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<ConfigurableDelegateProvider<U, A, T>>
 }
 
 
@@ -70,24 +84,23 @@ interface Stub<out T> {
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 internal
-class Grub<out T : GraphQLPropertyContext<*, *, V>, out U : GraphQLPropertyContext<*, *, V?>, out V>(
+class Grub<out U, A : ArgumentSpec, out T>(
     private val typeName: String,
     private val isList: Boolean = false,
-    private val delegateCtor: (property: GraphQlProperty) -> T,
-    private val nullableCtor: (property: GraphQlProperty) -> U
-) : StubProvider<T, U> {
-  override fun asNullable(): DelegateProvider<U> {
-    return object : DelegateProvider<U> {
-      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<U> {
-        return object : QField<U> {
-          private val value = nullableCtor(graphQlProperty(typeName, isList, property.name))
-          override fun getValue(inst: QModel<*>, property: KProperty<*>): U = value
-        }
+    private val schemaPropertyInit: (GraphQlProperty, A?) -> U
+) : ConfigurableStubProvider<U, A, T>
+    where U : GraphqlDslBuilder<A>,
+          U : PreDelegate<GraphqlPropertyDelegate<T>, T> {
+
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<ConfigurableDelegateProvider<U, A, T>> =
+      object : Stub<ConfigurableDelegateProvider<U, A, T>> {
+        private val qproperty = graphQlProperty(typeName, isList, property.name)
+        private val value by lazy { configurableDelegate<U, A, T> { schemaPropertyInit(qproperty, it) } }
+
+        override fun getValue(inst: QSchemaType, property: KProperty<*>): ConfigurableDelegateProvider<U, A, T> = value
       }
-    }
+
+  override fun asNullable(): Stub<ConfigurableDelegateProvider<U, A, T?>> {
+    TODO("not implemented")
   }
-
-  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): T =
-      delegateCtor(graphQlProperty(typeName, isList, property.name))
-
 }

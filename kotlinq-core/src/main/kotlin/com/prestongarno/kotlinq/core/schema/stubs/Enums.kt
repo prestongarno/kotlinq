@@ -24,9 +24,11 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
 
-interface EnumStub<out T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
+interface EnumStub<T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
     where T : QEnumType?,
           T : Enum<*>? {
+
+  var default: T?
 
   companion object {
     /**
