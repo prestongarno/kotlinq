@@ -18,12 +18,16 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
-import com.prestongarno.kotlinq.core.properties.ConfiguredDelegateProvider
+import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
+import com.prestongarno.kotlinq.core.adapters.newUnionField
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
 
 @PublishedApi internal interface DelegationContext {
@@ -108,7 +112,53 @@ class DefaultDelegationContext : DelegationContext {
   }
 
   class Union : GraphQLDelegate() {
+
+    fun <T> stub(schemaType: T)
+        :
+        ConfiguredStubProvider<UnionStub<T, ArgumentSpec>, ArgumentSpec, QModel<*>?>
+        where T : QUnionType = configuredStub(schemaType)
+
+    fun <T, A> configuredStub(schemaType: T)
+        :
+        ConfiguredStubProvider<UnionStub<T, A>, A, QModel<*>?>
+        where T : QUnionType,
+              A : ArgumentSpec = StubProvider
+        .configured<UnionStubImpl<T, A>, A, QModel<*>?>(schemaType::class.graphQlName()) { graphQlProperty, args ->
+          newUnionField(graphQlProperty, schemaType, args)
+        }
+
     override val list: Lists.Union = Lists.Union()
+
+    private object Foo : QType
+    private object Bar : QType
+
+    private class SampleUnion : QUnionType by QUnionType.new() {
+      fun onFoo(init: () -> QModel<Foo>) = on(init)
+      fun onBar(init: () -> QModel<Bar>) = on(init)
+    }
+
+    private object SampleQuery : QType {
+      val searchUnions by Union().configuredStub<SampleUnion, ArgBuilder>(SampleUnion())
+      val optSearch by Union().stub(SampleUnion())
+    }
+
+    private class QuerySampleModel : QModel<SampleQuery>(SampleQuery) {
+
+      val search: QModel<*>? by model.searchUnions(ArgBuilder()) {
+        config { "Hello" with "World" }
+        fragment {
+          onFoo { TODO() }
+          onBar { TODO() }
+        }
+      }
+
+      val opt: QModel<*>? by model.optSearch(ArgBuilder()) {
+        fragment {
+          onFoo(::TODO)
+          onBar(::TODO)
+        }
+      }
+    }
   }
 
   class QlEnum : GraphQLDelegate() {
@@ -117,18 +167,19 @@ class DefaultDelegationContext : DelegationContext {
      * quick example TODO remove
      */
     private enum class FooEnum : QEnumType {
-      ONE ,TWO
+      ONE, TWO
     }
+
     private class FooArgs : ArgBuilder() {
       var isItGoodEnough: Boolean? by this.arguments
     }
 
     init {
       object : QModel<QType>(TODO()), QType {
-        val ctor = stub<FooEnum, FooArgs>(FooEnum::class).asNullable().getValue(TODO(), TODO())
-        val ctor2 = configuredStub<FooEnum, FooArgs>(FooEnum::class).asNullable().getValue(TODO(), TODO())
+        val ctor by stub<FooEnum, FooArgs>(FooEnum::class).asNullable()
+        val ctor2 by configuredStub<FooEnum, FooArgs>(FooEnum::class)
 
-        val foo by ctor(FooArgs()) {
+        val foo: FooEnum? by ctor(FooArgs()) {
           config { isItGoodEnough = false }
           default = FooEnum.ONE
         }
@@ -151,15 +202,17 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<EnumStub<T, A>, A, T>
         where T : Enum<*>,
               T : QEnumType,
-              A : ArgBuilder = TODO()
+              A : ArgBuilder = StubProvider.configurable<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
+      EnumAdapterImpl(graphQlProperty, clazz, args)
+    }
 
     fun <T, A> configuredStub(clazz: KClass<T>)
         :
         ConfiguredStubProvider<EnumStub<T, A>, A, T>
         where T : Enum<*>,
               T : QEnumType,
-              A : ArgBuilder = StubProvider.configured<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) {
-      graphQlProperty, args -> EnumAdapterImpl(graphQlProperty, clazz, args)
+              A : ArgBuilder = StubProvider.configured<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
+      EnumAdapterImpl(graphQlProperty, clazz, args)
     }
 
     override val list: Lists.QlEnum = Lists.QlEnum()

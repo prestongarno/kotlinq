@@ -17,6 +17,7 @@
 
 package com.prestongarno.kotlinq.core.properties
 
+import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
@@ -28,6 +29,10 @@ import kotlin.reflect.KProperty
 
 interface DelegateProvider<out T : Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
+}
+
+interface BasicDelegateProvider<out T : GraphqlDslBuilder<ArgumentSpec>, out V> : ConfigurableDelegateProvider<T, ArgumentSpec, V> {
+  operator fun invoke(block: T.() -> Unit): DelegateProvider<V>
 }
 
 interface ConfiguredDelegateProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> {
@@ -70,3 +75,22 @@ fun <U, A, T> configuredDelegate(
           delegateProvider { constructor(args).applyNotNull(block).toDelegate() }
 
     }
+
+internal
+fun <U : GraphqlDslBuilder<ArgumentSpec>, T> basicDelegate(
+    constructor: (ArgumentSpec?) -> U
+): BasicDelegateProvider<U, T> = object : BasicDelegateProvider<U, T> {
+
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> {
+    TODO("not implemented")
+  }
+
+  override fun invoke(block: U.() -> Unit): DelegateProvider<T> {
+    TODO()
+  }
+
+  override fun invoke(args: ArgumentSpec, block: (U.() -> Unit)?): DelegateProvider<T> {
+    TODO("not implemented")
+  }
+
+}

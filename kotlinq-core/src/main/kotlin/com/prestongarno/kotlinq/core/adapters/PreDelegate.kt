@@ -28,6 +28,8 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
  */
 internal abstract class PreDelegate<out T : GraphqlPropertyDelegate<V>, out V : Any?>(val qproperty: GraphQlProperty) {
   abstract fun toDelegate(): T
+
+  abstract val flagNullable: (Boolean) -> Unit
 }
 
 internal

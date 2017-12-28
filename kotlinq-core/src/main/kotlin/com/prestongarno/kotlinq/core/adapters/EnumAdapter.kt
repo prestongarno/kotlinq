@@ -41,21 +41,34 @@ class EnumAdapterImpl<T, out A>(
     qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
     private val argBuilder: A?
-) : PreDelegate<EnumFieldImpl<T>, T>(qproperty),
+) : PreDelegate<GraphqlPropertyDelegate<T>, T>(qproperty),
     EnumStub<T, A>
 
     where T : Enum<*>,
           T : QEnumType,
           A : ArgumentSpec {
 
-  override fun toDelegate(): EnumFieldImpl<T> =
-    EnumFieldImpl(qproperty, enumClass, argBuilder.toMap())
+
+  private var nullable = false
+
+  override val flagNullable: (Boolean) -> Unit = {
+    nullable = true
+  }
+
+  override var default: T? = null
+
+  override fun toDelegate(): GraphqlPropertyDelegate<T> =
+    EnumFieldImpl(qproperty, enumClass, argBuilder.toMap(), default).let {
+      // I think this is the best way to do because DSL must always have non-null [T] type args
+      @Suppress("UNCHECKED_CAST")
+      return@let if (nullable) (it.asNullable() as GraphqlPropertyDelegate<T>) else it
+    }
 
   override fun config(block: A.() -> Unit) { argBuilder?.block() }
 }
 
 @ValueDelegate(Enum::class)
-internal
+private
 class EnumFieldImpl<T>(
     override val qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
