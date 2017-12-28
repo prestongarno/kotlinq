@@ -22,7 +22,7 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.PreDelegate
-import com.prestongarno.kotlinq.core.properties.BasicDelegateProvider
+import com.prestongarno.kotlinq.core.properties.BaseDelegateProvider
 import com.prestongarno.kotlinq.core.properties.ConfigurableDelegateProvider
 import com.prestongarno.kotlinq.core.properties.ConfiguredDelegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
@@ -32,8 +32,8 @@ import com.prestongarno.kotlinq.core.properties.configuredDelegate
 import com.prestongarno.kotlinq.core.properties.graphQlProperty
 import kotlin.reflect.KProperty
 
-interface BaseStubProvider<out U : GraphqlDslBuilder<ArgumentSpec>, out T> : StubProvider<U, ArgumentSpec, T> {
-  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<BasicDelegateProvider<U, T>>
+interface BaseStubProvider<out U : GraphqlDslBuilder<ArgBuilder>, out T> : StubProvider<U, ArgBuilder, T> {
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<BaseDelegateProvider<U, T>>
 }
 
 interface StubProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : ConfiguredStubProvider<U, A, T> {
@@ -49,9 +49,10 @@ interface StubProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : 
         isList: Boolean = false,
         onInit: (GraphQlProperty, ArgBuilder?) -> T
     ): BaseStubProvider<T, V>
-        where T : GraphqlDslBuilder<ArgumentSpec>,
+        where T : GraphqlDslBuilder<ArgBuilder>,
               T : PreDelegate<GraphqlPropertyDelegate<V>, V> =
         BasicGrub(typeName, isList, onInit)
+
 
     internal fun <T, A, Z> configurable(
         typeName: String,
@@ -103,11 +104,7 @@ interface Stub<out T> {
  * fragment `getValue` for the schemastub it simply invokes the function with the prop of the graphqlName that it's
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
-internal
-sealed class Grub<out U, in A : ArgumentSpec, out T>(
-    val typeName: String,
-    val isList: Boolean = false
-)
+internal sealed class Grub<out U, in A : ArgumentSpec, out T>(val typeName: String, val isList: Boolean = false)
 
 private class ConfigurableGrub<out U, A : ArgumentSpec, out T>(
     typeName: String,
@@ -169,20 +166,21 @@ private class BasicGrub<out T, out V>(
     isList: Boolean,
     private val schemaPropertyInit: (GraphQlProperty, ArgBuilder?) -> T
 ) : Grub<T, ArgBuilder, V>(typeName, isList), BaseStubProvider<T, V>
-    where T : GraphqlDslBuilder<ArgumentSpec>,
+    where T : GraphqlDslBuilder<ArgBuilder>,
           T : PreDelegate<GraphqlPropertyDelegate<V>, V> {
 
-  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<BasicDelegateProvider<T, V>> =
-      object : Stub<BasicDelegateProvider<T, V>> {
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<BaseDelegateProvider<T, V>> =
+      object : Stub<BaseDelegateProvider<T, V>> {
         private val qproperty = graphQlProperty(typeName, isList, property.name)
         private val value = basicDelegate<T, V> { schemaPropertyInit(qproperty, it as? ArgBuilder ?: ArgBuilder()) }
-        override fun getValue(inst: QSchemaType, property: KProperty<*>): BasicDelegateProvider<T, V> = value
+        override fun getValue(inst: QSchemaType, property: KProperty<*>): BaseDelegateProvider<T, V> = value
       }
 
-  override fun asNullable(): StubProvider<T, ArgumentSpec, V?> =
+  override fun asNullable(): StubProvider<T, ArgBuilder, V?> =
       BasicGrub(typeName, isList) { graphQlProperty, argumentSpec ->
         schemaPropertyInit(graphQlProperty, argumentSpec).apply {
           flagNullable(true)
         }
       }
 }
+

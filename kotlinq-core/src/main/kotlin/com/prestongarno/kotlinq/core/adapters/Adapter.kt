@@ -17,10 +17,7 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
@@ -77,6 +74,8 @@ interface GraphqlPropertyDelegate<out T : Any?> : QField<T>, Adapter {
       override fun toRawPayload() = instance.toRawPayload()
       override fun getValue(inst: QModel<*>, property: KProperty<*>) = scope()
       override fun asNullable(): GraphqlPropertyDelegate<T?> = instance.asNullable()
+      override fun equals(other: Any?): Boolean = instance == other
+      override fun hashCode(): Int = instance.hashCode() * 31
     }
   }
 }

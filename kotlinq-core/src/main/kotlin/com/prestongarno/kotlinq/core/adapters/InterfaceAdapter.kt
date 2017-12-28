@@ -19,14 +19,14 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
-import com.prestongarno.kotlinq.core.internal.ValueDelegate
+import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.schema.QInterface
+import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
 import kotlin.reflect.KProperty
 
@@ -37,11 +37,16 @@ internal
 class InterfaceAdapterImpl<I, out A : ArgumentSpec>(
     qproperty: GraphQlProperty,
     val arguments: A? = null
-) : PreDelegate(qproperty),
+) : PreDelegate<GraphqlPropertyDelegate<QModel<I>?>, QModel<I>?>(qproperty),
     InterfaceStub<I, A>
 
     where I : QType,
           I : QInterface {
+
+  override fun toDelegate(): GraphqlPropertyDelegate<QModel<I>?> =
+      InterfaceDelegateImpl(qproperty, arguments.toMap(), fragments.toSet())
+
+  override val flagNullable: (Boolean) -> Unit = empty()
 
 
   private val fragments = mutableSetOf<Fragment>()
@@ -50,25 +55,20 @@ class InterfaceAdapterImpl<I, out A : ArgumentSpec>(
     fragments += Fragment(initializer)
   }
 
-  override fun config(argumentScope: A.() -> Unit) {
-    arguments?.argumentScope()
-  }
+  override fun config(block: A.() -> Unit) { arguments?.block() }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<QModel<I>?> =
-      InterfaceDelegateImpl<I>(qproperty, arguments.toMap(), fragments.toSet()).bind(inst)
 }
 
-@ValueDelegate(QModel::class)
 private
 class InterfaceDelegateImpl<I : QType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
-) : Adapter,
-    FragmentContext,
-    QField<QModel<I>?> {
+) : GraphqlPropertyDelegate<QModel<I>?>, FragmentContext {
 
   var value: QModel<I>? = null
+
+  override fun asNullable(): GraphqlPropertyDelegate<QModel<I>?> = this
 
   override fun accept(result: Any?): Boolean {
     if (result !is JsonObject) return false

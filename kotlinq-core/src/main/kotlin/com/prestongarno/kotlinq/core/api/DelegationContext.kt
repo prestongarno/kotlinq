@@ -21,12 +21,16 @@ import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
+import com.prestongarno.kotlinq.core.adapters.InterfaceAdapterImpl
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
 import com.prestongarno.kotlinq.core.adapters.newUnionField
+import com.prestongarno.kotlinq.core.properties.BaseDelegateProvider
 import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
 
@@ -108,6 +112,36 @@ class DefaultDelegationContext : DelegationContext {
   }
 
   class Interface : GraphQLDelegate() {
+
+    fun <T> stub(clazz: KClass<T>)
+        :
+        BaseStubProvider<InterfaceStub<T, ArgBuilder>, QModel<T>?>
+        where T : QInterface,
+              T : QType =
+        StubProvider.stub<InterfaceAdapterImpl<T, ArgBuilder>, QModel<T>?>(clazz.graphQlName()) { qproperty, args ->
+          InterfaceAdapterImpl(qproperty, args ?: ArgBuilder())
+        }
+
+    fun <T, A> configurableStub(clazz: KClass<T>)
+        :
+        StubProvider<InterfaceStub<T, A>, A, QModel<T>?>
+        where T : QInterface,
+              T : QType,
+              A : ArgumentSpec =
+        StubProvider.configurable<InterfaceAdapterImpl<T, A>, A, QModel<T>?>(clazz.graphQlName()) { qproperty, args ->
+          InterfaceAdapterImpl(qproperty, args)
+        }
+
+    fun <T, A> configuredStub(clazz: KClass<T>)
+        :
+        ConfiguredStubProvider<InterfaceStub<T, A>, A, QModel<T>?>
+        where T : QInterface,
+              T : QType,
+              A : ArgumentSpec =
+        StubProvider.configured<InterfaceAdapterImpl<T, A>, A, QModel<T>?>(clazz.graphQlName()) { qproperty, args ->
+          InterfaceAdapterImpl(qproperty, args)
+        }
+
     override val list: Lists.Interface = Lists.Interface()
   }
 
@@ -204,18 +238,20 @@ class DefaultDelegationContext : DelegationContext {
         StubProvider<EnumStub<T, A>, A, T>
         where T : Enum<*>,
               T : QEnumType,
-              A : ArgBuilder = StubProvider.configurable<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
-      EnumAdapterImpl(graphQlProperty, clazz, args)
-    }
+              A : ArgBuilder = StubProvider
+        .configurable<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
+          EnumAdapterImpl(graphQlProperty, clazz, args)
+        }
 
     fun <T, A> configuredStub(clazz: KClass<T>)
         :
         ConfiguredStubProvider<EnumStub<T, A>, A, T>
         where T : Enum<*>,
               T : QEnumType,
-              A : ArgBuilder = StubProvider.configured<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
-      EnumAdapterImpl(graphQlProperty, clazz, args)
-    }
+              A : ArgBuilder = StubProvider
+        .configured<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
+          EnumAdapterImpl(graphQlProperty, clazz, args)
+        }
 
     override val list: Lists.QlEnum = Lists.QlEnum()
 

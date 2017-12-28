@@ -17,6 +17,7 @@
 
 package com.prestongarno.kotlinq.core.properties
 
+import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
@@ -30,8 +31,7 @@ interface DelegateProvider<out T : Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
 
-interface BasicDelegateProvider<out T : GraphqlDslBuilder<ArgumentSpec>, out V> : ConfigurableDelegateProvider<T, ArgumentSpec, V> {
-  override operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<>
+interface BaseDelegateProvider<out T : GraphqlDslBuilder<ArgBuilder>, out V> : ConfigurableDelegateProvider<T, ArgBuilder, V> {
   operator fun invoke(block: T.() -> Unit): DelegateProvider<V>
 }
 
@@ -77,20 +77,21 @@ fun <U, A, T> configuredDelegate(
     }
 
 internal
-fun <U : GraphqlDslBuilder<ArgumentSpec>, T> basicDelegate(
-    constructor: (ArgumentSpec?) -> U
-): BasicDelegateProvider<U, T> = object : BasicDelegateProvider<U, T> {
+fun <U, T> basicDelegate(
+    constructor: (ArgBuilder?) -> U
+): BaseDelegateProvider<U, T>
+    where U : GraphqlDslBuilder<ArgBuilder>,
+          U : PreDelegate<GraphqlPropertyDelegate<T>, T> =
+    object : BaseDelegateProvider<U, T> {
 
-  override fun invoke(block: U.() -> Unit): DelegateProvider<T> {
-    TODO("not implemented")
-  }
+      override fun invoke(block: U.() -> Unit): DelegateProvider<T> =
+          delegateProvider { model -> constructor(null).apply(block).toDelegate().bindToContext(model) }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> {
-    TODO("not implemented")
-  }
+      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+          constructor(null).toDelegate().bindToContext(inst)
 
-  override fun invoke(args: ArgumentSpec, block: (U.() -> Unit)?): DelegateProvider<T> {
-    TODO("not implemented")
-  }
+      override fun invoke(args: ArgBuilder, block: (U.() -> Unit)?): DelegateProvider<T> =
+          delegateProvider { model -> constructor(args).applyNotNull(block).toDelegate().bindToContext(model) }
 
-}
+    }
+
