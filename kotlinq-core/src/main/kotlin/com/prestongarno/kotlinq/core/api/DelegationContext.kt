@@ -18,38 +18,13 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
-import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
-import com.prestongarno.kotlinq.core.properties.configurableGraphQlProperty
-import com.prestongarno.kotlinq.core.schema.CustomScalar
+import com.prestongarno.kotlinq.core.properties.ConfiguredDelegateProvider
 import com.prestongarno.kotlinq.core.schema.QEnumType
-import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.QUnionType
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
-import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
-import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
-import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
-import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
-import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
-import com.prestongarno.kotlinq.core.schema.stubs.UnionListStub
-import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
-
-internal
-typealias Property<U, A, T> = StubProvider<GraphQLPropertyContext<U, A, T>, GraphQLPropertyContext<U, A, T?>>
 
 @PublishedApi internal interface DelegationContext {
   val type: GraphQLDelegate.Type
@@ -125,75 +100,22 @@ class DefaultDelegationContext : DelegationContext {
   // TODO make typealias for ctors and allow passing in of functions
   // which make the StubProvider for the delegate creation on schema fields
   class Type : GraphQLDelegate() {
-
-    fun <T : QType> query(typeClazz: KClass<T>)
-        :
-        StubProvider<TypeStub.Query<T>> =
-        Grub(typeClazz.graphQlName()) { TypeStub.noArgStub<T>(it) }
-
-    fun <T : QType, A : ArgumentSpec> optionalConfigStub(typeClazz: KClass<T>)
-        :
-        StubProvider<TypeStub.OptionalConfigQuery<T, A>> =
-        Grub(typeClazz.graphQlName()) { TypeStub.optionalArgStub<T, A>(it) }
-
-    fun <T : QType, A : ArgumentSpec> configStub(typeClazz: KClass<T>)
-        :
-        StubProvider<TypeStub.ConfigurableQuery<T, A>> =
-        Grub(typeClazz.graphQlName()) { TypeStub.argStub<T, A>(it) }
-
     override val list: Lists.Type = Lists.Type()
   }
 
   class Interface : GraphQLDelegate() {
-
-    fun <T> stub(clazz: KClass<T>)
-        :
-        StubProvider<InterfaceStub.Query<T>>
-        where T : QType,
-              T : QInterface =
-        Grub(clazz.graphQlName()) { InterfaceStub.noArgStub<T>(it) }
-
-    fun <T, A> optionalConfigStub(clazz: KClass<T>)
-        :
-        StubProvider<InterfaceStub.OptionalConfigQuery<T, A>>
-        where T : QType,
-              T : QInterface,
-              A : ArgumentSpec =
-        Grub(clazz.graphQlName()) { InterfaceStub.optionalArgStub<T, A>(it) }
-
-    fun <T, A> configStub(clazz: KClass<T>)
-        :
-        StubProvider<InterfaceStub.ConfigurableQuery<T, A>>
-        where T : QType,
-              T : QInterface,
-              A : ArgumentSpec =
-        Grub(clazz.graphQlName()) { InterfaceStub.argStub<T, A>(it) }
-
     override val list: Lists.Interface = Lists.Interface()
   }
 
   class Union : GraphQLDelegate() {
-
-    fun <T : QUnionType> stub(union: T)
-        :
-        StubProvider<UnionStub.Query<T>> =
-        Grub(union::class.graphQlName()) { UnionStub.noArgStub(it, union) }
-
-    fun <T : QUnionType, A : ArgumentSpec> optionalConfigStub(union: T)
-        :
-        StubProvider<UnionStub.OptionalConfigQuery<T, A>> =
-        Grub(union::class.graphQlName()) { UnionStub.optionalArgStub<T, A>(it, union) }
-
-    fun <T : QUnionType, A : ArgumentSpec> configStub(union: T)
-        :
-        StubProvider<UnionStub.ConfigurableQuery<T, A>> =
-        Grub(union::class.graphQlName()) { UnionStub.argStub<T, A>(it, union) }
-
     override val list: Lists.Union = Lists.Union()
-
   }
 
   class QlEnum : GraphQLDelegate() {
+
+    /**
+     * quick example TODO remove
+     */
     private enum class FooEnum : QEnumType {
       ONE ,TWO
     }
@@ -213,10 +135,14 @@ class DefaultDelegationContext : DelegationContext {
         val by2 by ctor2(FooArgs())
 
         val foo3 by stub<FooEnum, FooArgs>(FooEnum::class)
-        val foo6 by configuredStub<FooEnum, FooArgs>(FooEnum::class)
+        val foo6 by configuredStub<FooEnum, FooArgs>(FooEnum::class).asNullable()
 
-        val foo4 by foo3(FooArgs())
-        val foo7 by foo6
+        val foo4: FooEnum by foo3(FooArgs())
+        val foo7: FooEnum? by foo6(FooArgs()) {
+          config {
+            isItGoodEnough = true && false
+          }
+        }
       }
     }
 
@@ -229,7 +155,7 @@ class DefaultDelegationContext : DelegationContext {
 
     fun <T, A> configuredStub(clazz: KClass<T>)
         :
-        ConfigurableStubProvider<EnumStub<T, A>, A, T>
+        ConfiguredStubProvider<EnumStub<T, A>, A, T>
         where T : Enum<*>,
               T : QEnumType,
               A : ArgBuilder = StubProvider.configured<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) {
@@ -241,103 +167,22 @@ class DefaultDelegationContext : DelegationContext {
   }
 
   class QlString : GraphQLDelegate() {
-
-    fun stub()
-        :
-        StubProvider<StringDelegate.Query> =
-        Grub("String") { StringDelegate.noArgStub(it) }
-
-    fun <A : ArgumentSpec> optionalConfigStub()
-        :
-        StubProvider<StringDelegate.OptionalConfigQuery<A>> =
-        Grub("String") { StringDelegate.optionalArgStub<A>(it) }
-
-    fun <A : ArgumentSpec> configStub()
-        :
-        StubProvider<StringDelegate.ConfigurableQuery<A>> =
-        Grub("String") { StringDelegate.argStub<A>(it) }
-
     override val list: Lists.QlString = Lists.QlString()
-
   }
 
   class QlInt : GraphQLDelegate() {
-
-    fun stub()
-        :
-        StubProvider<IntDelegate.Query> =
-        Grub("Int") { IntDelegate.noArgStub(it) }
-
-    fun <A : ArgumentSpec> optionalConfigStub()
-        :
-        StubProvider<IntDelegate.OptionalConfigQuery<A>> =
-        Grub("Int") { IntDelegate.optionalArgStub<A>(it) }
-
-    fun <A : ArgumentSpec> configStub()
-        :
-        StubProvider<IntDelegate.ConfigurableQuery<A>> =
-        Grub("Int") { IntDelegate.argStub<A>(it) }
-
     override val list: Lists.QlInt = Lists.QlInt()
-
   }
 
   class QlFloat : GraphQLDelegate() {
-
-    fun stub()
-        :
-        StubProvider<FloatDelegate.Query> =
-        Grub("Float") { FloatDelegate.noArgStub(it) }
-
-    fun <A : ArgumentSpec> optionalConfigStub()
-        :
-        StubProvider<FloatDelegate.OptionalConfigQuery<A>> =
-        Grub("Float") { FloatDelegate.optionalArgStub<A>(it) }
-
-    fun <A : ArgumentSpec> configStub()
-        :
-        StubProvider<FloatDelegate.ConfigurableQuery<A>> =
-        Grub("Float") { FloatDelegate.argStub<A>(it) }
-
     override val list: Lists.QlFloat = Lists.QlFloat()
   }
 
   class QlBoolean : GraphQLDelegate() {
-
-    fun stub()
-        : StubProvider<BooleanDelegate.Query> =
-        Grub("Boolean") { BooleanDelegate.noArgStub(it) }
-
-    fun <A : ArgumentSpec> optionalConfigStub()
-        :
-        StubProvider<BooleanDelegate.OptionalConfigQuery<A>> =
-        Grub("Boolean") { BooleanDelegate.optionalArgStub<A>(it) }
-
-    fun <A : ArgumentSpec> configStub()
-        :
-        StubProvider<BooleanDelegate.ConfigurableQuery<A>> =
-        Grub("Boolean") { BooleanDelegate.argStub<A>(it) }
-
     override val list: Lists.QlBoolean = Lists.QlBoolean()
   }
 
   class Scalar : GraphQLDelegate() {
-
-    fun <T : CustomScalar> stub(clazz: KClass<T>)
-        :
-        StubProvider<CustomScalarStub.Query<T>> =
-        Grub(clazz.graphQlName()) { CustomScalarStub.noArgStub<T>(it) }
-
-    fun <T : CustomScalar, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
-        :
-        StubProvider<CustomScalarStub.OptionalConfigQuery<T, A>> =
-        Grub(clazz.graphQlName()) { CustomScalarStub.optionalArgStub<T, A>(it) }
-
-    fun <T : CustomScalar, A : ArgumentSpec> configStub(clazz: KClass<T>)
-        :
-        StubProvider<CustomScalarStub.ConfigurableQuery<T, A>> =
-        Grub(clazz.graphQlName()) { CustomScalarStub.argStub<T, A>(it) }
-
     override val list: Lists.Scalar = Lists.Scalar()
   }
 
@@ -360,182 +205,23 @@ class DefaultDelegationContext : DelegationContext {
       override val list: GraphQLListDelegate get() = this
     }
 
-    class Type : GraphQLListDelegate() {
+    class Type : GraphQLListDelegate()
 
-      fun <T : QType> query(typeClazz: KClass<T>)
-          :
-          StubProvider<TypeListStub.Query<T>> =
-          Grub(typeClazz.graphQlName(), true) { TypeListStub.noArgStub<T>(it) }
+    class Interface : GraphQLListDelegate()
 
-      fun <T : QType, A : ArgumentSpec> optionalConfigStub(typeClazz: KClass<T>)
-          :
-          StubProvider<TypeListStub.OptionalConfigQuery<T, A>> =
-          Grub(typeClazz.graphQlName(), true) { TypeListStub.optionalArgStub<T, A>(it) }
+    class Union : GraphQLListDelegate()
 
-      fun <T : QType, A : ArgumentSpec> configStub(typeClazz: KClass<T>)
-          :
-          StubProvider<TypeListStub.ConfigurableQuery<T, A>> =
-          Grub(typeClazz.graphQlName(), true) { TypeListStub.argStub<T, A>(it) }
-    }
+    class QlEnum : GraphQLListDelegate()
 
-    class Interface : GraphQLListDelegate() {
+    class Scalar : GraphQLListDelegate()
 
-      fun <T> stub(clazz: KClass<T>)
-          :
-          StubProvider<InterfaceListStub.Query<T>>
-          where T : QType,
-                T : QInterface =
-          Grub(clazz.graphQlName(), true) { InterfaceListStub.noArgStub<T>(it) }
+    class QlString : GraphQLListDelegate()
 
-      fun <T, A> optionalConfigStub(clazz: KClass<T>)
-          :
-          StubProvider<InterfaceListStub.OptionalConfigQuery<T, A>>
-          where T : QType,
-                T : QInterface,
-                A : ArgumentSpec =
-          Grub(clazz.graphQlName(), true) { InterfaceListStub.optionalArgStub<T, A>(it) }
+    class QlInt : GraphQLListDelegate()
 
-      fun <T, A> configStub(clazz: KClass<T>)
-          :
-          StubProvider<InterfaceListStub.ConfigurableQuery<T, A>>
-          where T : QType,
-                T : QInterface,
-                A : ArgumentSpec =
-          Grub(clazz.graphQlName(), true) { InterfaceListStub.argStub<T, A>(it) }
-    }
+    class QlFloat : GraphQLListDelegate()
 
-    class Union : GraphQLListDelegate() {
-
-      fun <T : QUnionType> stub(union: T)
-          :
-          StubProvider<UnionListStub.Query<T>> =
-          Grub(union::class.graphQlName(), true) { UnionListStub.noArgStub(it, union) }
-
-      fun <T : QUnionType, A : ArgumentSpec> optionalConfigStub(union: T)
-          :
-          StubProvider<UnionListStub.OptionalConfigQuery<T, A>> =
-          Grub(union::class.graphQlName(), true) { UnionListStub.optionalArgStub<T, A>(it, union) }
-
-      fun <T : QUnionType, A : ArgumentSpec> configStub(union: T)
-          :
-          StubProvider<UnionListStub.ConfigurableQuery<T, A>> =
-          Grub(union::class.graphQlName(), true) { UnionListStub.argStub<T, A>(it, union) }
-    }
-
-    class QlEnum : GraphQLListDelegate() {
-
-      fun <T> stub(clazz: KClass<T>)
-          :
-          StubProvider<EnumListStub.Query<T>>
-          where T : kotlin.Enum<*>,
-                T : QEnumType
-          = Grub(clazz.graphQlName(), true) { EnumListStub.noArgStub(it, clazz) }
-
-      fun <T, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
-          :
-          StubProvider<EnumListStub.OptionalConfigQuery<T, A>>
-          where T : kotlin.Enum<*>,
-                T : QEnumType =
-          Grub(clazz.graphQlName(), true) { EnumListStub.optionalArgStub<T, A>(it, clazz) }
-
-      fun <T, A : ArgumentSpec> configStub(clazz: KClass<T>)
-          :
-          StubProvider<EnumListStub.ConfigurableQuery<T, A>>
-          where T : kotlin.Enum<*>,
-                T : QEnumType
-          = Grub(clazz.graphQlName(), true) { EnumListStub.argStub<T, A>(it, clazz) }
-
-    }
-
-    class Scalar : GraphQLListDelegate() {
-
-      fun <T : CustomScalar> stub(clazz: KClass<T>)
-          :
-          StubProvider<CustomScalarListStub.Query<T>> =
-          Grub(clazz.graphQlName()) { CustomScalarListStub.noArgStub<T>(it) }
-
-      fun <T : CustomScalar, A : ArgumentSpec> optionalConfigStub(clazz: KClass<T>)
-          :
-          StubProvider<CustomScalarListStub.OptionalConfigQuery<T, A>> =
-          Grub(clazz.graphQlName()) { CustomScalarListStub.optionalArgStub<T, A>(it) }
-
-      fun <T : CustomScalar, A : ArgumentSpec> configStub(clazz: KClass<T>)
-          :
-          StubProvider<CustomScalarListStub.ConfigurableQuery<T, A>> =
-          Grub(clazz.graphQlName()) { CustomScalarListStub.argStub<T, A>(it) }
-    }
-
-    class QlString : GraphQLListDelegate() {
-
-      fun stub()
-          :
-          StubProvider<StringArrayDelegate.Query> =
-          Grub("String", true) { StringArrayDelegate.noArgStub(it) }
-
-      fun <A : ArgumentSpec> optionalConfigStub()
-          :
-          StubProvider<StringArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("String", true) { StringArrayDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgumentSpec> configStub()
-          :
-          StubProvider<StringArrayDelegate.ConfigurableQuery<A>> =
-          Grub("String", true) { StringArrayDelegate.argStub<A>(it) }
-    }
-
-    class QlInt : GraphQLListDelegate() {
-
-      fun stub()
-          :
-          StubProvider<IntArrayDelegate.Query> =
-          Grub("Int", true) { IntArrayDelegate.noArgStub(it) }
-
-      fun <A : ArgumentSpec> optionalConfigStub()
-          :
-          StubProvider<IntArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("Int", true) { IntArrayDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgumentSpec> configStub()
-          :
-          StubProvider<IntArrayDelegate.ConfigurableQuery<A>> =
-          Grub("Int", true) { IntArrayDelegate.argStub<A>(it) }
-    }
-
-    class QlFloat : GraphQLListDelegate() {
-
-      fun stub()
-          :
-          StubProvider<FloatArrayDelegate.Query> =
-          Grub("Float", true) { FloatArrayDelegate.noArgStub(it) }
-
-      fun <A : ArgumentSpec> optionalConfigStub()
-          :
-          StubProvider<FloatArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("Float", true) { FloatArrayDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgumentSpec> configStub()
-          :
-          StubProvider<FloatArrayDelegate.ConfigurableQuery<A>> =
-          Grub("Float", true) { FloatArrayDelegate.argStub<A>(it) }
-    }
-
-    class QlBoolean : GraphQLListDelegate() {
-
-      fun stub()
-          :
-          StubProvider<BooleanArrayDelegate.Query> =
-          Grub("Boolean", true) { BooleanArrayDelegate.noArgStub(it) }
-
-      fun <A : ArgumentSpec> optionalConfigStub()
-          :
-          StubProvider<BooleanArrayDelegate.OptionalConfigQuery<A>> =
-          Grub("Boolean", true) { BooleanArrayDelegate.optionalArgStub<A>(it) }
-
-      fun <A : ArgumentSpec> configStub()
-          :
-          StubProvider<BooleanArrayDelegate.ConfigurableQuery<A>> =
-          Grub("Boolean", true) { BooleanArrayDelegate.argStub<A>(it) }
-    }
+    class QlBoolean : GraphQLListDelegate()
   }
 
   internal

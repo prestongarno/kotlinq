@@ -23,11 +23,8 @@ import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.PreDelegate
 import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
-import com.prestongarno.kotlinq.core.adapters.bind
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import kotlin.reflect.KProperty
-
-private fun <T : GraphqlPropertyDelegate<U>, U : Any?> PreDelegate<T, U>.createAndBind(inst: QModel<*>) = toDelegate().bind(inst)
 
 interface DelegateProvider<out T : Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
@@ -44,26 +41,32 @@ interface ConfigurableDelegateProvider<
   : DelegateProvider<T>, ConfiguredDelegateProvider<U, A, T>
 
 private
-fun <T> delegateProvider(onDelegate: (QModel<*>) -> QField<T>): DelegateProvider<T> = object : DelegateProvider<T> {
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> = onDelegate(inst)
+fun <T> delegateProvider(onDelegate: (QModel<*>) -> GraphqlPropertyDelegate<T>): DelegateProvider<T> = object : DelegateProvider<T> {
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> = onDelegate(inst).bindToContext(inst)
 }
 
 internal
 fun <U, A, T> configurableDelegate(
     constructor: (A?) -> U
 ) where U : GraphqlDslBuilder<A>, U : PreDelegate<GraphqlPropertyDelegate<T>, T>, A : ArgumentSpec =
+
     object : ConfigurableDelegateProvider<U, A, T> {
-      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> = constructor(null).toDelegate().bindToContext(inst)
+
+      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+          constructor(null).toDelegate().bindToContext(inst)
+
       override fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T> =
-          delegateProvider { constructor(args).applyNotNull(block).createAndBind(it) }
+          delegateProvider { constructor(args).applyNotNull(block).toDelegate() }
     }
 
 internal
 fun <U, A, T> configuredDelegate(
-    constructor: (A?) -> U
+    constructor: (A) -> U
 ) where U : GraphqlDslBuilder<A>, U : PreDelegate<GraphqlPropertyDelegate<T>, T>, A : ArgumentSpec =
+
     object : ConfiguredDelegateProvider<U, A, T> {
-      override fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T> {
-        return delegateProvider { constructor(args).applyNotNull(block).createAndBind(it) }
-      }
+
+      override fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T> =
+          delegateProvider { constructor(args).applyNotNull(block).toDelegate() }
+
     }
