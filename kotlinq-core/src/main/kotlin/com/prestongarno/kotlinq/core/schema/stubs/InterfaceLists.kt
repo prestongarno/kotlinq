@@ -23,6 +23,7 @@ import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.newInterfaceListStub
+import com.prestongarno.kotlinq.core.api.GraphQLDelegate
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
 interface InterfaceListStub<I, out A> :
@@ -31,99 +32,10 @@ interface InterfaceListStub<I, out A> :
           I : QInterface,
           A : ArgumentSpec {
 
-  fun config(argumentScope: A.() -> Unit)
-
   companion object {
-    internal
-    fun <I> noArgStub(
-        qproperty: GraphQlProperty
-    ): Query<I> where I : QInterface, I : QType =
-        QueryImpl(qproperty)
+    internal object Delegates : GraphQLDelegate.Lists.GraphQLListDelegate() {
+      //TODO
+    }
 
-    internal
-    fun <I, A> optionalArgStub(
-        qproperty: GraphQlProperty
-    ): OptionalConfigQuery<I, A>
-        where I : QInterface, I : QType, A : ArgumentSpec =
-        OptionalConfigQueryImpl(qproperty)
-
-    internal
-    fun <I, A> argStub(
-        qproperty: GraphQlProperty
-    ): ConfigurableQuery<I, A>
-        where I : QInterface, I : QType, A : ArgumentSpec =
-        ConfigurableQueryImpl(qproperty)
-  }
-
-  interface Query<I> : GraphQLPropertyContext<Any?> where I : QInterface, I : QType {
-
-    operator fun invoke(
-        arguments: ArgumentSpec? = null,
-        scope: InterfaceListStub<I, ArgumentSpec>.() -> Unit
-    ): InterfaceListStub<I, ArgumentSpec>
-
-  }
-
-  interface OptionalConfigQuery<I, A> : ConfigurableQuery<I, A>
-      where I : QInterface,
-            I : QType,
-            A : ArgumentSpec {
-
-    /** Create stub for field without any arguments */
-    operator fun invoke(
-        scope: FragmentStub<I>.() -> Unit
-    ): InterfaceListStub<I, A>
-
-  }
-
-  interface ConfigurableQuery<I, A> : GraphQLPropertyContext<Any?>
-      where I : QInterface,
-            I : QType,
-            A : ArgumentSpec {
-
-    operator fun invoke(
-        arguments: A,
-        scope: InterfaceListStub<I, A>.() -> Unit
-    ): InterfaceListStub<I, A>
-
-  }
-
-  /*********************************************************************************
-   * Private default implementations
-   */
-  private
-  class QueryImpl<I>(val qproperty: GraphQlProperty) : Query<I> where I : QInterface, I : QType {
-    override fun invoke(arguments: ArgumentSpec?, scope: InterfaceListStub<I, ArgumentSpec>.() -> Unit)
-        : InterfaceListStub<I, ArgumentSpec> =
-        newInterfaceListStub<I, ArgumentSpec>(qproperty, arguments ?: ArgBuilder()).apply(scope)
-  }
-
-  private
-  class OptionalConfigQueryImpl<I, A>(
-      val qproperty: GraphQlProperty
-  ) : OptionalConfigQuery<I, A>
-      where I : QInterface,
-            I : QType,
-            A : ArgumentSpec {
-
-    override fun invoke(arguments: A, scope: InterfaceListStub<I, A>.() -> Unit): InterfaceListStub<I, A> =
-        newInterfaceListStub<I, A>(qproperty, arguments).apply(scope)
-
-    override fun invoke(scope: FragmentStub<I>.() -> Unit): InterfaceListStub<I, A> =
-        newInterfaceListStub<I, A>(qproperty, null).apply(scope)
-  }
-
-  private
-  class ConfigurableQueryImpl<I, A>(
-      val qproperty: GraphQlProperty
-  ) : ConfigurableQuery<I, A>
-      where I : QInterface,
-            I : QType,
-            A : ArgumentSpec {
-
-    override fun invoke(
-        arguments: A, scope: InterfaceListStub<I, A>.() -> Unit
-    ): InterfaceListStub<I, A> =
-        newInterfaceListStub<I, A>(qproperty, arguments).apply(scope)
   }
 }

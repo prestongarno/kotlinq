@@ -24,7 +24,6 @@ import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
 import com.prestongarno.kotlinq.core.adapters.InterfaceAdapterImpl
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
 import com.prestongarno.kotlinq.core.adapters.newUnionField
-import com.prestongarno.kotlinq.core.properties.BaseDelegateProvider
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
@@ -105,8 +104,6 @@ class DefaultDelegationContext : DelegationContext {
   abstract val list: Lists.GraphQLListDelegate
 
 
-  // TODO make typealias for ctors and allow passing in of functions
-  // which make the StubProvider for the delegate creation on schema fields
   class Type : GraphQLDelegate() {
     override val list: Lists.Type = Lists.Type()
   }
@@ -198,40 +195,6 @@ class DefaultDelegationContext : DelegationContext {
   }
 
   class QlEnum : GraphQLDelegate() {
-
-    /**
-     * quick example TODO remove
-     */
-    private enum class FooEnum : QEnumType {
-      ONE, TWO
-    }
-
-    private class FooArgs : ArgBuilder() {
-      var isItGoodEnough: Boolean? by this.arguments
-    }
-
-    init {
-      object : QModel<QType>(TODO()), QType {
-        val ctor by stub<FooEnum, FooArgs>(FooEnum::class).asNullable()
-        val ctor2 by configuredStub<FooEnum, FooArgs>(FooEnum::class)
-
-        val foo: FooEnum? by ctor(FooArgs()) {
-          config { isItGoodEnough = false }
-          default = FooEnum.ONE
-        }
-        val by2 by ctor2(FooArgs())
-
-        val foo3 by stub<FooEnum, FooArgs>(FooEnum::class)
-        val foo6 by configuredStub<FooEnum, FooArgs>(FooEnum::class).asNullable()
-
-        val foo4: FooEnum by foo3(FooArgs())
-        val foo7: FooEnum? by foo6(FooArgs()) {
-          config {
-            isItGoodEnough = true && false
-          }
-        }
-      }
-    }
 
     fun <T, A> stub(clazz: KClass<T>)
         :

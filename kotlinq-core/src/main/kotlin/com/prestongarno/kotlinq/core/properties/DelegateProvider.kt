@@ -27,23 +27,24 @@ import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import kotlin.reflect.KProperty
 
+
+interface GraphQlDelegateProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> {
+  operator fun invoke(args: A, block: (U.() -> Unit)? = null): DelegateProvider<T>
+}
+
 interface DelegateProvider<out T : Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 }
 
-interface BaseDelegateProvider<out T : GraphqlDslBuilder<ArgBuilder>, out V> : ConfigurableDelegateProvider<T, ArgBuilder, V> {
+interface BasicDelegateProvider<out T : GraphqlDslBuilder<ArgBuilder>, out V> : ConfigurableDelegateProvider<T, ArgBuilder, V> {
   operator fun invoke(block: T.() -> Unit): DelegateProvider<V>
-}
-
-interface ConfiguredDelegateProvider<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> {
-  operator fun invoke(args: A, block: (U.() -> Unit)? = null): DelegateProvider<T>
 }
 
 interface ConfigurableDelegateProvider<
     out U : GraphqlDslBuilder<A>,
     A : ArgumentSpec,
     out T : Any?>
-  : DelegateProvider<T>, ConfiguredDelegateProvider<U, A, T>
+  : DelegateProvider<T>, GraphQlDelegateProvider<U, A, T>
 
 private
 fun <T> delegateProvider(onDelegate: (QModel<*>) -> GraphqlPropertyDelegate<T>): DelegateProvider<T> = object : DelegateProvider<T> {
@@ -69,7 +70,7 @@ fun <U, A, T> configuredDelegate(
     constructor: (A) -> U
 ) where U : GraphqlDslBuilder<A>, U : PreDelegate<GraphqlPropertyDelegate<T>, T>, A : ArgumentSpec =
 
-    object : ConfiguredDelegateProvider<U, A, T> {
+    object : GraphQlDelegateProvider<U, A, T> {
 
       override fun invoke(args: A, block: (U.() -> Unit)?): DelegateProvider<T> =
           delegateProvider { constructor(args).applyNotNull(block).toDelegate() }
@@ -79,10 +80,10 @@ fun <U, A, T> configuredDelegate(
 internal
 fun <U, T> basicDelegate(
     constructor: (ArgBuilder?) -> U
-): BaseDelegateProvider<U, T>
+): BasicDelegateProvider<U, T>
     where U : GraphqlDslBuilder<ArgBuilder>,
           U : PreDelegate<GraphqlPropertyDelegate<T>, T> =
-    object : BaseDelegateProvider<U, T> {
+    object : BasicDelegateProvider<U, T> {
 
       override fun invoke(block: U.() -> Unit): DelegateProvider<T> =
           delegateProvider { model -> constructor(null).apply(block).toDelegate().bindToContext(model) }

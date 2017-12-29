@@ -19,6 +19,7 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
 /**
@@ -26,10 +27,10 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
  *
  * TODO make this a sealed class
  */
-internal abstract class PreDelegate<out T : GraphqlPropertyDelegate<V>, out V : Any?>(val qproperty: GraphQlProperty) {
-  abstract fun toDelegate(): T
+internal abstract class PreDelegate<out T: Any?, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
-  abstract val flagNullable: (Boolean) -> Unit
+  abstract fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T>
+
 }
 
 internal

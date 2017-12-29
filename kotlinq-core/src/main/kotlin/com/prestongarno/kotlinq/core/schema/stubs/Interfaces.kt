@@ -25,5 +25,7 @@ import com.prestongarno.kotlinq.core.schema.QType
 /**
  * Remember -> compile generate all interface types to be *both* [QType] ***and*** [QInterface]
  */
-interface InterfaceStub<in I, out A : ArgumentSpec> : FragmentStub<I>, GraphqlDslBuilder<A>
+interface InterfaceStub<in I, out A : ArgumentSpec>
+  : FragmentStub<I>,
+    GraphqlDslBuilder<A>
     where I : QInterface, I : QType

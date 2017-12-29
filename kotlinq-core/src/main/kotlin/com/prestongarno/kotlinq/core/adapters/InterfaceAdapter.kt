@@ -34,28 +34,28 @@ import kotlin.reflect.KProperty
  * Base type of a R.H.S. delegate provider
  */
 internal
-class InterfaceAdapterImpl<I, out A : ArgumentSpec>(
-    qproperty: GraphQlProperty,
-    val arguments: A? = null
-) : PreDelegate<GraphqlPropertyDelegate<QModel<I>?>, QModel<I>?>(qproperty),
+class InterfaceAdapterImpl<I, out A : ArgumentSpec>(val arguments: A?)
+  : PreDelegate<QModel<I>?, A>(),
     InterfaceStub<I, A>
-
     where I : QType,
           I : QInterface {
 
-  override fun toDelegate(): GraphqlPropertyDelegate<QModel<I>?> =
-      InterfaceDelegateImpl(qproperty, arguments.toMap(), fragments.toSet())
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<I>?> =
+      InterfaceDelegateImpl(property, arguments?.applyNotNull(configBlock).toMap(), fragments.toSet())
 
-  override val flagNullable: (Boolean) -> Unit = empty()
+  private var configBlock: A.() -> Unit = empty()
 
 
-  private val fragments = mutableSetOf<Fragment>()
+  private
+  val fragments = mutableSetOf<Fragment>()
 
   override fun <T : I> on(initializer: () -> QModel<T>) {
     fragments += Fragment(initializer)
   }
 
-  override fun config(block: A.() -> Unit) { arguments?.block() }
+  override fun config(block: A.() -> Unit) {
+    configBlock = block
+  }
 
 }
 
