@@ -1,11 +1,11 @@
-package com.prestongarno.kotlinq.core.api
+package com.prestongarno.kotlinq.core.properties
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.PreDelegate
+import com.prestongarno.kotlinq.core.api.Stub
 import com.prestongarno.kotlinq.core.internal.empty
-import com.prestongarno.kotlinq.core.properties.GraphQlDelegateProvider
-import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
 
@@ -23,7 +23,7 @@ interface GraphQlPropertyContext<
   fun toField(
       block: U.() -> Unit = empty(),
       arguments: A? = null
-  ) = newDslBuilder(arguments)
+  ): GraphqlPropertyDelegate<T> = newDslBuilder(arguments)
       .apply(block)
       .toDelegate(qproperty)
 
@@ -32,7 +32,7 @@ interface GraphQlPropertyContext<
 
     internal
     class Builder<U : PreDelegate<T, A>, A : ArgumentSpec, T : Any?>(
-        private val dslConstructor: ((ArgumentSpec?) -> U)
+        private val dslConstructor: ((A?) -> U)
     ) {
       /**
        * @throws NullPointerException if any of the following were not done:
