@@ -20,17 +20,14 @@ package com.prestongarno.kotlinq.core.api
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
-import com.prestongarno.kotlinq.core.adapters.InterfaceAdapterImpl
-import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
-import com.prestongarno.kotlinq.core.adapters.newUnionField
-import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
+import com.prestongarno.kotlinq.core.properties.GraphQlDelegate
+import com.prestongarno.kotlinq.core.properties.GraphQlDelegate.Companion.configuredBlock
+import com.prestongarno.kotlinq.core.properties.GraphQlDelegate.Companion.noArgBlock
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.QUnionType
-import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
 
 @PublishedApi internal interface DelegationContext {
@@ -99,7 +96,8 @@ class DefaultDelegationContext : DelegationContext {
  * This is better because it's no longer inlining internal code into client class
  * files and also enables mocked delegate providers for testing
  */
-@PublishedApi internal sealed class GraphQLDelegate {
+internal
+sealed class GraphQLDelegate {
 
   abstract val list: Lists.GraphQLListDelegate
 
@@ -110,114 +108,59 @@ class DefaultDelegationContext : DelegationContext {
 
   class Interface : GraphQLDelegate() {
 
-    fun <T> stub(clazz: KClass<T>)
-        :
-        BaseStubProvider<InterfaceStub<T, ArgBuilder>, QModel<T>?>
-        where T : QInterface,
-              T : QType =
-        StubProvider.stub<InterfaceAdapterImpl<T, ArgBuilder>, QModel<T>?>(clazz.graphQlName()) { qproperty, args ->
-          InterfaceAdapterImpl(qproperty, args ?: ArgBuilder())
-        }
+    interface Foo : QInterface, QType
+    object Bar : Foo {
+      val foos by Interface().stub(Foo::class).asNullable<GraphQlDelegate.NoArgBlock<InterfaceStub<Foo, ArgBuilder>, QModel<Foo>?>>()
+      val bars by Interface().configuredStub<Foo, FooArgs>(Foo::class)
 
-    fun <T, A> configurableStub(clazz: KClass<T>)
-        :
-        StubProvider<InterfaceStub<T, A>, A, QModel<T>?>
-        where T : QInterface,
-              T : QType,
-              A : ArgumentSpec =
-        StubProvider.configurable<InterfaceAdapterImpl<T, A>, A, QModel<T>?>(clazz.graphQlName()) { qproperty, args ->
-          InterfaceAdapterImpl(qproperty, args)
-        }
+      class FooArgs : ArgBuilder() {
+        var a: String? by arguments
+        var b: Int? by arguments
+        var c: Float? by arguments
+        var d: Boolean? by arguments
+      }
+    }
 
-    fun <T, A> configuredStub(clazz: KClass<T>)
-        :
-        ConfiguredStubProvider<InterfaceStub<T, A>, A, QModel<T>?>
-        where T : QInterface,
-              T : QType,
-              A : ArgumentSpec =
-        StubProvider.configured<InterfaceAdapterImpl<T, A>, A, QModel<T>?>(clazz.graphQlName()) { qproperty, args ->
-          InterfaceAdapterImpl(qproperty, args)
+    class Baz : QModel<Bar>(Bar) {
+      val foos by model.foos {
+        config { "Hello" with "World" }
+        on(::Baz)
+      }
+
+      val bars by model.bars(Bar.FooArgs()) {
+        on(::Baz)
+        config {
+          a = "Hello"
+          b = 9000
+          c = 9.0f
+          d = false
         }
+      }
+    }
+
+    fun <I> stub(clazz: KClass<I>)
+        : StubProvider<GraphQlDelegate.NoArgBlock<InterfaceStub<I, ArgBuilder>, QModel<I>?>, QModel<I>?>
+        where I : QInterface, I : QType =
+        Grub(clazz.graphQlName(), false, GraphQlPropertyContext.Companion.Builder { qproperty ->
+          noArgBlock(qproperty, { InterfaceStubImpl<I, ArgBuilder>(it) })
+        })
+
+    fun <I, A> configuredStub(clazz: KClass<I>)
+        : StubProvider<GraphQlDelegate.ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>, QModel<I>?>
+        where I : QInterface, I : QType, A : ArgumentSpec =
+        Grub(clazz.graphQlName(), false, GraphQlPropertyContext.Companion.Builder { qproperty ->
+          configuredBlock<InterfaceStubImpl<I, A>, A, QModel<I>?>(qproperty, { InterfaceStubImpl(it) })
+        })
 
     override val list: Lists.Interface = Lists.Interface()
   }
 
   class Union : GraphQLDelegate() {
-
-    fun <T> stub(schemaType: T)
-        :
-        BaseStubProvider<UnionStub<T, ArgBuilder>, QModel<*>?>
-        where T : QUnionType = StubProvider.stub(schemaType::class.graphQlName()) { graphQlProperty, argumentSpec ->
-      newUnionField(graphQlProperty, schemaType, argumentSpec ?: ArgBuilder())
-    }
-
-    fun <T, A> configuredStub(schemaType: T)
-        :
-        ConfiguredStubProvider<UnionStub<T, A>, A, QModel<*>?>
-        where T : QUnionType,
-              A : ArgumentSpec = StubProvider
-        .configured<UnionStubImpl<T, A>, A, QModel<*>?>(schemaType::class.graphQlName()) { graphQlProperty, args ->
-          newUnionField(graphQlProperty, schemaType, args)
-        }
-
     override val list: Lists.Union = Lists.Union()
-
-    private object Foo : QType
-    private object Bar : QType
-
-    private class SampleUnion : QUnionType by QUnionType.new() {
-      fun onFoo(init: () -> QModel<Foo>) = on(init)
-      fun onBar(init: () -> QModel<Bar>) = on(init)
-    }
-
-    private object SampleQuery : QType {
-      val searchUnions by Union().configuredStub<SampleUnion, ArgBuilder>(SampleUnion())
-      val optSearch by Union().stub(SampleUnion())
-    }
-
-    private class QuerySampleModel : QModel<SampleQuery>(SampleQuery) {
-
-      val search: QModel<*>? by model.searchUnions(ArgBuilder()) {
-        config { "Hello" with "World" }
-        fragment {
-          onFoo { TODO() }
-          onBar { TODO() }
-        }
-      }
-
-      val opt: QModel<*>? by model.optSearch {
-        fragment {
-          onFoo(::TODO)
-          onBar(::TODO)
-        }
-      }
-    }
   }
 
   class QlEnum : GraphQLDelegate() {
-
-    fun <T, A> stub(clazz: KClass<T>)
-        :
-        StubProvider<EnumStub<T, A>, A, T>
-        where T : Enum<*>,
-              T : QEnumType,
-              A : ArgBuilder = StubProvider
-        .configurable<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
-          EnumAdapterImpl(graphQlProperty, clazz, args)
-        }
-
-    fun <T, A> configuredStub(clazz: KClass<T>)
-        :
-        ConfiguredStubProvider<EnumStub<T, A>, A, T>
-        where T : Enum<*>,
-              T : QEnumType,
-              A : ArgBuilder = StubProvider
-        .configured<EnumAdapterImpl<T, A>, A, T>(clazz.graphQlName(), false) { graphQlProperty, args ->
-          EnumAdapterImpl(graphQlProperty, clazz, args)
-        }
-
     override val list: Lists.QlEnum = Lists.QlEnum()
-
   }
 
   class QlString : GraphQLDelegate() {

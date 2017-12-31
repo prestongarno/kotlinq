@@ -20,7 +20,6 @@
 package com.prestongarno.kotlinq.core
 
 import com.prestongarno.kotlinq.core.api.StubProvider
-import com.prestongarno.kotlinq.core.api.StubProvider.Companion.delegationContext
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface

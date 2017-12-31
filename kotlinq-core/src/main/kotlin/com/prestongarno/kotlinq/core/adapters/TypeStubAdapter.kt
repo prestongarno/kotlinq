@@ -29,17 +29,16 @@ import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import kotlin.reflect.KProperty
 
 internal
-class TypeStubAdapter<out T : QModel<U>, out U : QType, out A : ArgumentSpec>(
-    private val qproperty: GraphQlProperty,
+class TypeStubAdapter<out U : QType, out T : QModel<U>, out A : ArgumentSpec>(
     private val init: () -> T,
     private val argBuilder: A?
-) : TypeStub<T, U, A> {
+) : PreDelegate<T, A>(), TypeStub<U, A> {
 
-  fun bindingTo(inst: QModel<*>): QField<T> =
-      TypeStubImpl(qproperty, init, argBuilder.toMap()).bind(inst)
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T> =
+      TypeStubImpl(property, init, argBuilder.toMap())
 
-  override fun config(argumentScope: A.() -> Unit) {
-    argBuilder?.apply(argumentScope)
+  override fun config(block: A.() -> Unit) {
+    argBuilder?.apply(block)
   }
 }
 
@@ -48,11 +47,12 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
-) : QField<P>,
-    Adapter,
+) : GraphqlPropertyDelegate<P>,
     ModelProvider {
 
   override val value by lazy(init)
+
+  override fun asNullable(): GraphqlPropertyDelegate<P?> = nullable
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): P = value
 
@@ -82,5 +82,15 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     if (args != other.args) return false
 
     return true
+  }
+
+  val nullable: GraphqlPropertyDelegate<P?> by lazy {
+    object : Adapter by this, GraphqlPropertyDelegate<P?> {
+
+      override fun asNullable(): GraphqlPropertyDelegate<P?> = this
+
+      override fun getValue(inst: QModel<*>, property: KProperty<*>): P? =
+          if (value.isResolved) value else null
+    }
   }
 }

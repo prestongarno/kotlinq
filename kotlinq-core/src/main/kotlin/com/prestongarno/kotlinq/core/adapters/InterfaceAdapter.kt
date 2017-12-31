@@ -34,14 +34,14 @@ import kotlin.reflect.KProperty
  * Base type of a R.H.S. delegate provider
  */
 internal
-class InterfaceAdapterImpl<I, out A : ArgumentSpec>(val arguments: A?)
+class InterfaceStubImpl<I, out A : ArgumentSpec>(val arguments: A?)
   : PreDelegate<QModel<I>?, A>(),
     InterfaceStub<I, A>
     where I : QType,
           I : QInterface {
 
   override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<I>?> =
-      InterfaceDelegateImpl(property, arguments?.applyNotNull(configBlock).toMap(), fragments.toSet())
+      InterfaceAdapterImpl(property, arguments?.applyNotNull(configBlock).toMap(), fragments.toSet())
 
   private var configBlock: A.() -> Unit = empty()
 
@@ -59,8 +59,8 @@ class InterfaceAdapterImpl<I, out A : ArgumentSpec>(val arguments: A?)
 
 }
 
-private
-class InterfaceDelegateImpl<I : QType>(
+internal
+class InterfaceAdapterImpl<I : QType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
@@ -101,7 +101,7 @@ class InterfaceDelegateImpl<I : QType>(
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as InterfaceDelegateImpl<*>
+    other as InterfaceAdapterImpl<*>
 
     if (qproperty != other.qproperty) return false
     if (args != other.args) return false
