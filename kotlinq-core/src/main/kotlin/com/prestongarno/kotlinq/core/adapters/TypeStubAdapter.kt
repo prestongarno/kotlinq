@@ -32,7 +32,7 @@ internal
 class TypeStubAdapter<out U : QType, out T : QModel<U>, out A : ArgumentSpec>(
     private val init: () -> T,
     private val argBuilder: A?
-) : PreDelegate<T, A>(), TypeStub<U, A> {
+) : PreDelegate<T, A>(), TypeStub<A> {
 
   override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T> =
       TypeStubImpl(property, init, argBuilder.toMap())
@@ -91,6 +91,9 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
 
       override fun getValue(inst: QModel<*>, property: KProperty<*>): P? =
           if (value.isResolved) value else null
+
+      override fun equals(other: Any?): Boolean = this@TypeStubImpl == other
+      override fun hashCode(): Int = this@TypeStubImpl.hashCode() * 31
     }
   }
 }

@@ -20,41 +20,28 @@ package com.prestongarno.kotlinq.core.adapters
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KProperty
 
 internal
-fun <T : QUnionType, A : ArgumentSpec> newUnionField(
-    qproperty: GraphQlProperty,
-    unionObject: T,
-    arguments: A?
-): UnionStubImpl<T, A> = UnionStubImpl(qproperty, unionObject, arguments)
-
-internal
 class UnionStubImpl<out T : QUnionType, out A : ArgumentSpec>(
-    qproperty: GraphQlProperty,
     private val unionObject: T,
     val arguments: A? = null
-) : PreDelegate<GraphqlPropertyDelegate<QModel<*>?>, QModel<*>?>(qproperty), UnionStub<T, A> {
+) : PreDelegate<QModel<*>?, A>(), UnionStub<T, A> {
 
-  override fun toDelegate(): GraphqlPropertyDelegate<QModel<*>?> =
-    UnionAdapterImpl(qproperty, fragments ?: emptySet(), arguments.toMap())
-
-  private var nullable: Boolean = false
-  override val flagNullable = { value: Boolean -> nullable = value }
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<*>?> =
+      UnionAdapterImpl(property, fragments ?: emptySet(), arguments.toMap())
 
   private var fragments: Set<Fragment>? = null
 
-  override fun fragment(scope: T.() -> Unit) = unionObject.queue(unionObject, scope) {
-    fragments = reset()
-  }
+  override fun fragment(scope: T.() -> Unit) = unionObject.queue(unionObject, scope) { fragments = reset() }
 
   override fun config(block: A.() -> Unit) {
     arguments?.apply(block)
@@ -62,7 +49,7 @@ class UnionStubImpl<out T : QUnionType, out A : ArgumentSpec>(
 
 }
 
-@ValueDelegate(QModel::class) private
+private
 data class UnionAdapterImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
@@ -107,6 +94,7 @@ data class UnionAdapterImpl(
       args[it.key] == null
     } == null
   }
+
   override fun hashCode(): Int =
       (qproperty.hashCode() * 31) +
           (args.hashCode() * 31) +

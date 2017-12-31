@@ -31,19 +31,11 @@ interface EnumStub<T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
   var default: T?
 
   companion object {
-    /**
-     * Creates a new GraphQL property stub.
-     * If this works across the whole type system it would be amazing.
-     * Had hoped to only refrain from adding classes, but this might
-     * remove 20+ classes. Might have found the most powerful abstraction to be at now. */
+
     internal
-    fun <T, A> stub(
-        qproperty: GraphQlProperty,
-        enumClass: KClass<T>
-    ): EnumStub<T, A>
-        where T : QEnumType,
-              T : Enum<*>,
-              A : ArgumentSpec = enumAdapter(qproperty, enumClass)
+    fun <T, A> stub(qproperty: GraphQlProperty, enumClass: KClass<T>): EnumStub<T, A>
+        where T : QEnumType, T : Enum<*>, A : ArgumentSpec =
+        enumAdapter(qproperty, enumClass)
 
   }
 }

@@ -18,16 +18,21 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.properties.GraphQlDelegate
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyDelegate
+import com.prestongarno.kotlinq.core.properties.contextBuilder
 import kotlin.reflect.KProperty
 
-interface StubProvider<out X : GraphQlDelegate<T>, T : Any?> {
+interface StubProvider<out X : GraphQlPropertyDelegate<T>, out Y : GraphQlPropertyDelegate<T?>, out T : Any?> {
 
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 
-  fun <Y : GraphQlDelegate<T?>> asNullable(): StubProvider<Y, T?>
+  fun asNullable(): NullableStubProvider<Y>
+}
+
+interface NullableStubProvider<out X : GraphQlPropertyDelegate<*>> {
+  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 }
 
 interface Stub<out T> {
@@ -49,14 +54,17 @@ interface Stub<out T> {
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 internal
-class Grub<out X : GraphQlDelegate<T>, T: Any?>(
+class Grub<out X : GraphQlPropertyDelegate<T>, out Y : GraphQlPropertyDelegate<T?>, out T: Any?>(
     val typeName: String,
     val isList: Boolean = false,
-    val builder: GraphQlPropertyContext.Companion.Builder<X, T>
-) : StubProvider<X, T> {
+    val builder: GraphQlPropertyContext.Companion.Builder<X>,
+    val nullableBuilder: GraphQlPropertyContext.Companion.Builder<Y>
+) : StubProvider<X, Y, T> {
 
-  override fun <Y : GraphQlDelegate<T?>> asNullable(): StubProvider<Y, T?> =
-      Grub(typeName, isList, builder.asNullable())
+  override fun asNullable(): NullableStubProvider<Y> = object : NullableStubProvider<Y> {
+    override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<Y> =
+        nullableBuilder.build(GraphQlProperty.from(typeName, isList, property.name))
+  }
 
   override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X> =
       builder.build(GraphQlProperty.from(typeName, isList, property.name))

@@ -41,10 +41,7 @@ class InterfaceStubImpl<I, out A : ArgumentSpec>(val arguments: A?)
           I : QInterface {
 
   override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<I>?> =
-      InterfaceAdapterImpl(property, arguments?.applyNotNull(configBlock).toMap(), fragments.toSet())
-
-  private var configBlock: A.() -> Unit = empty()
-
+      InterfaceAdapterImpl(property, arguments.toMap(), fragments.toSet())
 
   private
   val fragments = mutableSetOf<Fragment>()
@@ -54,7 +51,7 @@ class InterfaceStubImpl<I, out A : ArgumentSpec>(val arguments: A?)
   }
 
   override fun config(block: A.() -> Unit) {
-    configBlock = block
+    arguments?.apply(block)
   }
 
 }

@@ -21,13 +21,17 @@ import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
-import com.prestongarno.kotlinq.core.properties.GraphQlDelegate
-import com.prestongarno.kotlinq.core.properties.GraphQlDelegate.Companion.configuredBlock
-import com.prestongarno.kotlinq.core.properties.GraphQlDelegate.Companion.noArgBlock
-import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
+import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyDelegate
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyDelegate.Companion.configuredBlock
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyDelegate.Companion.noArgBlock
+import com.prestongarno.kotlinq.core.properties.contextBuilder
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
 
 @PublishedApi internal interface DelegationContext {
@@ -103,52 +107,67 @@ sealed class GraphQLDelegate {
 
 
   class Type : GraphQLDelegate() {
+
+    object Foo : QType {
+      val bars by Type().stub(Foo::class)
+      val nullableBars by Type().stub(Foo::class).asNullable()
+      val optArgBars by Type().optionallyConfigured<Foo, FooArgs>(Foo::class)
+      val optNullArgBars by Type().optionallyConfigured<Foo, FooArgs>(Foo::class).asNullable()
+      val reqArgBars by Type().configured<Foo, FooArgs>(Foo::class)
+      val nullReqArgBars by Type().configured<Foo, FooArgs>(Foo::class).asNullable()
+
+      class FooArgs : ArgBuilder() {
+        var arg: String? by arguments
+      }
+    }
+
+    class Bar : QModel<Foo>(Foo) {
+      val barsImpl: Bar by model.bars(::Bar)
+      val nullBarsImpl: Bar? by model.nullableBars(::Bar)
+      val argBarsImpl: Bar by model.optArgBars(::Bar, Foo.FooArgs()) { config { arg = "Hello, World" } }
+      val nullArgBarsImpl: Bar? by model.optNullArgBars(::Bar)
+      val reqArgBars: Bar by model.reqArgBars(::Bar, Foo.FooArgs())
+      val nullReqArgBars: Bar? by model.nullReqArgBars(::Bar, Foo.FooArgs())
+    }
+
+    fun <T : QType> stub(clazz: KClass<T>)
+        : StubProvider<TypeStub.NoArg<T>, TypeStub.NoArg.Nullable<T>, QModel<T>> =
+        Grub(clazz.graphQlName(), false,
+            builder = contextBuilder { TypeStub.noArg<T>(it) },
+            nullableBuilder = contextBuilder { TypeStub.noArg<T>(it).asNullable() })
+
+    fun <T : QType, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
+        : StubProvider<TypeStub.OptionalConfigured<T, A>, TypeStub.OptionalConfigured.Nullable<T, A>, QModel<T>> =
+        Grub(clazz.graphQlName(), false,
+            builder = contextBuilder { TypeStub.optionallyConfigured<T, A>(it) },
+            nullableBuilder = contextBuilder { TypeStub.optionallyConfigured<T, A>(it).asNullable() })
+
+    fun <T : QType, A : ArgumentSpec> configured(clazz: KClass<T>)
+        : StubProvider<TypeStub.Configured<T, A>, TypeStub.Configured.Nullable<T, A>, QModel<T>> =
+        optionallyConfigured(clazz)
+
     override val list: Lists.Type = Lists.Type()
   }
 
   class Interface : GraphQLDelegate() {
 
-    interface Foo : QInterface, QType
-    object Bar : Foo {
-      val foos by Interface().stub(Foo::class).asNullable<GraphQlDelegate.NoArgBlock<InterfaceStub<Foo, ArgBuilder>, QModel<Foo>?>>()
-      val bars by Interface().configuredStub<Foo, FooArgs>(Foo::class)
-
-      class FooArgs : ArgBuilder() {
-        var a: String? by arguments
-        var b: Int? by arguments
-        var c: Float? by arguments
-        var d: Boolean? by arguments
-      }
-    }
-
-    class Baz : QModel<Bar>(Bar) {
-      val foos by model.foos {
-        config { "Hello" with "World" }
-        on(::Baz)
-      }
-
-      val bars by model.bars(Bar.FooArgs()) {
-        on(::Baz)
-        config {
-          a = "Hello"
-          b = 9000
-          c = 9.0f
-          d = false
-        }
-      }
-    }
-
     fun <I> stub(clazz: KClass<I>)
-        : StubProvider<GraphQlDelegate.NoArgBlock<InterfaceStub<I, ArgBuilder>, QModel<I>?>, QModel<I>?>
+        : StubProvider<GraphQlPropertyDelegate.NoArgBlock<InterfaceStub<I, ArgBuilder>, QModel<I>?>,
+        GraphQlPropertyDelegate.NoArgBlock<InterfaceStub<I, ArgBuilder>, QModel<I>?>, QModel<I>?>
         where I : QInterface, I : QType =
-        Grub(clazz.graphQlName(), false, GraphQlPropertyContext.Companion.Builder { qproperty ->
+        Grub(clazz.graphQlName(), false, contextBuilder { qproperty ->
+          noArgBlock(qproperty, { InterfaceStubImpl<I, ArgBuilder>(it) })
+        }, contextBuilder { qproperty ->
           noArgBlock(qproperty, { InterfaceStubImpl<I, ArgBuilder>(it) })
         })
 
-    fun <I, A> configuredStub(clazz: KClass<I>)
-        : StubProvider<GraphQlDelegate.ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>, QModel<I>?>
+    fun <I, A> configured(clazz: KClass<I>)
+        : StubProvider<GraphQlPropertyDelegate.ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>,
+        GraphQlPropertyDelegate.ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>, QModel<I>?>
         where I : QInterface, I : QType, A : ArgumentSpec =
-        Grub(clazz.graphQlName(), false, GraphQlPropertyContext.Companion.Builder { qproperty ->
+        Grub(clazz.graphQlName(), false, contextBuilder { qproperty ->
+          configuredBlock<InterfaceStubImpl<I, A>, A, QModel<I>?>(qproperty, { InterfaceStubImpl(it) })
+        }, contextBuilder { qproperty ->
           configuredBlock<InterfaceStubImpl<I, A>, A, QModel<I>?>(qproperty, { InterfaceStubImpl(it) })
         })
 
@@ -156,6 +175,17 @@ sealed class GraphQLDelegate {
   }
 
   class Union : GraphQLDelegate() {
+
+    fun <T : QUnionType> stub(obj: T)
+        : StubProvider<
+        GraphQlPropertyDelegate.NoArgBlock<UnionStub<T, ArgBuilder>, QModel<*>?>,
+        GraphQlPropertyDelegate.NoArgBlock<UnionStub<T, ArgBuilder>, QModel<*>?>,
+        QModel<*>?> = contextBuilder {
+      noArgBlock(it, { args -> UnionStubImpl(obj, args) })
+    }.let { context ->
+      Grub(obj::class.graphQlName(), false, builder = context, nullableBuilder = context)
+    }
+
     override val list: Lists.Union = Lists.Union()
   }
 
