@@ -27,42 +27,21 @@ import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal fun <T, A> enumAdapter(
-    qproperty: GraphQlProperty,
-    enumClass: KClass<T>
-): EnumAdapterImpl<T, A>
-    where T : Enum<*>,
-          T : QEnumType,
-          A : ArgumentSpec = EnumAdapterImpl(qproperty, enumClass, null)
-
-
 internal
 class EnumAdapterImpl<T, out A>(
-    qproperty: GraphQlProperty,
     private val enumClass: KClass<T>,
     private val argBuilder: A?
-) : PreDelegate<GraphqlPropertyDelegate<T>, T>(qproperty),
+) : PreDelegate<T, A>(),
     EnumStub<T, A>
 
     where T : Enum<*>,
           T : QEnumType,
           A : ArgumentSpec {
 
-
-  private var nullable = false
-
-  override val flagNullable: (Boolean) -> Unit = {
-    nullable = true
-  }
-
   override var default: T? = null
 
-  override fun toDelegate(): GraphqlPropertyDelegate<T> =
-    EnumFieldImpl(qproperty, enumClass, argBuilder.toMap(), default).let {
-      // I think this is the best way to do because DSL must always have non-null [T] type args
-      @Suppress("UNCHECKED_CAST")
-      return@let if (nullable) (it.asNullable() as GraphqlPropertyDelegate<T>) else it
-    }
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T> =
+    EnumFieldImpl(property, enumClass, argBuilder.toMap(), default)
 
   override fun config(block: A.() -> Unit) { argBuilder?.block() }
 }

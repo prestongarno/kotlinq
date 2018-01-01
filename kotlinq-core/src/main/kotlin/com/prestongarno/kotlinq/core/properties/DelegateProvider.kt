@@ -36,9 +36,12 @@ import kotlin.reflect.KProperty
 interface DelegateProvider<out T : Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 
-  interface Configurable<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T>
+  interface Configured<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T>
     : GraphQlPropertyDelegate.Configured<U, A, T>,
-      DelegateProvider<T>
+      DelegateProvider<T> {
+
+    interface Nullable<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T> : Configured<U, A, T?>
+  }
 
   interface ConfiguredBlock<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T>
     : GraphQlPropertyDelegate.ConfiguredBlock<U, A, T>,
