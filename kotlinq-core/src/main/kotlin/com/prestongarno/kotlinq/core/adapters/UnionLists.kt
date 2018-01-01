@@ -56,7 +56,7 @@ private class UnionListAdapter<I : QUnionType, out A : ArgumentSpec>(
     fragments = reset()
   }
 
-  override fun provideDelegate(
+  fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
   ): QField<List<QModel<*>>> =
@@ -64,7 +64,7 @@ private class UnionListAdapter<I : QUnionType, out A : ArgumentSpec>(
           qproperty,
           fragments ?: emptySet(),
           arguments.toMap()
-      ).bind(inst)
+      )
 
 }
 
@@ -75,9 +75,9 @@ data class UnionListStubImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any>
-) : Adapter,
-    QField<List<QModel<*>>>,
-    FragmentContext {
+) : GraphqlPropertyDelegate<List<QModel<*>>>, FragmentContext {
+
+  override fun asNullable(): GraphqlPropertyDelegate<List<QModel<*>>?> { TODO("not implemented") }
 
   private var value: List<QModel<QType>> = emptyList()
 

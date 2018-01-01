@@ -18,7 +18,6 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.InputStreamScalarMapper
 import com.prestongarno.kotlinq.core.adapters.custom.QScalarMapper
@@ -26,31 +25,26 @@ import com.prestongarno.kotlinq.core.adapters.custom.StringScalarMapper
 import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import kotlin.reflect.KProperty
 
-fun <E : CustomScalar, P : QScalarMapper<Q>, Q, A : ArgumentSpec> newScalarDelegate(
-    qproperty: GraphQlProperty,
-    mapper: P,
-    arguments: A?
-): CustomScalarStub<E, Q, A> = CustomScalarAdapter(qproperty, mapper, arguments)
-
-private
+internal
 class CustomScalarAdapter<E : CustomScalar, out P : QScalarMapper<Q>, Q, out B : ArgumentSpec>(
-    qproperty: GraphQlProperty,
     val mapper: P,
     val arguments: B? = null
-) : PreDelegate(qproperty),
+) : PreDelegate<Q, B>(),
     CustomScalarStub<E, Q, B> {
+
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<Q> {
+    return CustomScalarFieldImpl(property, arguments.toMap(), mapper, default)
+  }
 
   override var default: Q? = null
 
   override fun config(scope: B.() -> Unit) {
     arguments?.scope()
   }
-
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<Q> =
-      CustomScalarFieldImpl(qproperty, arguments.toMap(), mapper, default).bind(inst)
 
 }
 
@@ -60,8 +54,9 @@ private data class CustomScalarFieldImpl<out Q>(
     override val args: Map<String, Any> = emptyMap(),
     val adapter: QScalarMapper<Q>,
     val default: Q?
-) : Adapter,
-    QField<Q> {
+) : GraphqlPropertyDelegate<Q> {
+
+  private val nullable by lazy { Nullable(this) }
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = adapter.value ?: default!!
 
@@ -76,10 +71,18 @@ private data class CustomScalarFieldImpl<out Q>(
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 
+  override fun asNullable(): GraphqlPropertyDelegate<Q?> = nullable
+
   override fun equals(other: Any?): Boolean {
     return (qproperty == (other as? Adapter)?.qproperty)
         && other.args == args
   }
 
   override fun hashCode(): Int = (qproperty.hashCode() * 31) + (args.hashCode() * 31)
+
+  private class Nullable<Q>(val adapter: CustomScalarFieldImpl<Q>) : Adapter by adapter, GraphqlPropertyDelegate<Q?> {
+    override fun asNullable(): GraphqlPropertyDelegate<Q?> = this
+    override fun getValue(inst: QModel<*>, property: KProperty<*>): Q? =
+        adapter.adapter.value ?: adapter.default
+  }
 }

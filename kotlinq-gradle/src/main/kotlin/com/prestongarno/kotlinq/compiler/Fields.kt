@@ -18,16 +18,16 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.schema.QInputType
-import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
-import com.prestongarno.kotlinq.core.stubs.CustomScalarStub
-import com.prestongarno.kotlinq.core.stubs.EnumListStub
-import com.prestongarno.kotlinq.core.stubs.EnumStub
-import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
-import com.prestongarno.kotlinq.core.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.stubs.TypeListStub
-import com.prestongarno.kotlinq.core.stubs.TypeStub
-import com.prestongarno.kotlinq.core.stubs.UnionListStub
-import com.prestongarno.kotlinq.core.stubs.UnionStub
+import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
+import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionListStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName

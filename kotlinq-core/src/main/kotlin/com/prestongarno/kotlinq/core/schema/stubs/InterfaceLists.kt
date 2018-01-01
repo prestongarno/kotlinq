@@ -17,25 +17,15 @@
 
 package com.prestongarno.kotlinq.core.schema.stubs
 
-import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.api.GraphQLDelegate
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
-import com.prestongarno.kotlinq.core.adapters.newInterfaceListStub
-import com.prestongarno.kotlinq.core.api.GraphQLDelegate
-import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
-interface InterfaceListStub<I, out A> :
+interface InterfaceListStub<I, out A>
+  : GraphqlDslBuilder<A>,
     FragmentStub<I>
     where I : QType,
           I : QInterface,
-          A : ArgumentSpec {
-
-  companion object {
-    internal object Delegates : GraphQLDelegate.Lists.GraphQLListDelegate() {
-      //TODO
-    }
-
-  }
-}
+          A : ArgumentSpec

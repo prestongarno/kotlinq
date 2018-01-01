@@ -42,7 +42,17 @@ interface QSchemaType {
 
     object Boolean
 
-    object List
+    object List {
+
+      object String
+
+      object Int
+
+      object Float
+
+      object Boolean
+
+    }
   }
 
   object QTypes {

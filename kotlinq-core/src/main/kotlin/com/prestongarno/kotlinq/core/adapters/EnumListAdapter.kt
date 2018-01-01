@@ -27,21 +27,6 @@ import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-@PublishedApi internal
-fun <T, A> newEnumListDelegate(
-    qproperty: GraphQlProperty,
-    arguments: A?,
-    enumClass: KClass<T>
-): EnumListStub<T, A> where T : Enum<*>, T : QEnumType, A : ArgumentSpec =
-    EnumListStubImpl(qproperty, arguments, enumClass)
-
-@PublishedApi internal
-fun <T> newEnumListField(
-    qproperty: GraphQlProperty,
-    enumClass: KClass<T>
-): QField<List<T>> where T : Enum<*>, T : QEnumType =
-    EnumListAdapterImpl(qproperty, emptyMap(), enumClass)
-
 private data class EnumListStubImpl<T, out A>(
     val qproperty: GraphQlProperty,
     val arguments: A? = null,
@@ -57,11 +42,11 @@ private data class EnumListStubImpl<T, out A>(
     arguments?.scope()
   }
 
-  override fun provideDelegate(
+  fun provideDelegate(
       inst: QModel<*>,
       property: KProperty<*>
   ): QField<List<T>> =
-      EnumListAdapterImpl(qproperty, arguments.toMap(), enumClass).bind(inst)
+      EnumListAdapterImpl(qproperty, arguments.toMap(), enumClass)
 
 }
 
@@ -69,9 +54,13 @@ private data class EnumListAdapterImpl<T>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     val enumClass: KClass<T>
-) : QField<List<T>>, Adapter
+) : GraphqlPropertyDelegate<List<T>>
     where T : Enum<*>,
           T : QEnumType {
+
+  override fun asNullable(): GraphqlPropertyDelegate<List<T>?> {
+    TODO("not implemented")
+  }
 
   private var value = listOf<T>()
 

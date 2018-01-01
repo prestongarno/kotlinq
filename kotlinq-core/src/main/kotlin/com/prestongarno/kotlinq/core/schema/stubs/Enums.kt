@@ -174,7 +174,7 @@ class OptionallyConfiguredImpl<T, A>(
           .bindToContext(inst)
 
   override fun invoke(args: A, block: (EnumStub<T, A>.() -> Unit)?): DelegateProvider<T> =
-      DelegateProvider.delegateProvider { qModel, kProperty ->
+      DelegateProvider.delegateProvider { qModel, _ ->
         EnumAdapterImpl(clazz, args)
             .toDelegate(qproperty)
             .bindToContext(qModel)

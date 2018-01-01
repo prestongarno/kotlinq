@@ -49,8 +49,7 @@ private data class InterfaceListStubImpl<I, out A>(
 
   private val fragments = mutableSetOf<Fragment>()
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<QModel<I>>> =
-      InterfaceListField<I>(qproperty, fragments, argBuilder.toMap()).bind(inst)
+      //InterfaceListField<I>(qproperty, fragments, argBuilder.toMap()).bind(inst)
 
   override fun <T : I> on(initializer: () -> QModel<T>) {
     fragments += Fragment(initializer)

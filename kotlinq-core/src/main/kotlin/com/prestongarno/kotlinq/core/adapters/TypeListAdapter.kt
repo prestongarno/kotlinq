@@ -33,18 +33,18 @@ import kotlin.reflect.KProperty
 
 internal
 class TypeListAdapter<out P : QModel<I>, I : QType, out A : ArgumentSpec>(
-    qproperty: GraphQlProperty,
     val init: () -> P,
     val argBuilder: A? = null
-) : PreDelegate(qproperty),
+) : PreDelegate<List<P>, A>(),
     TypeListStub<P, I, A> {
 
-  override fun config(scope: A.() -> Unit) {
-    argBuilder?.scope()
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<List<P>> {
+    return TypeListStubImpl(property, init, argBuilder.toMap())
   }
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<P>> =
-      TypeListStubImpl(qproperty, init, argBuilder.toMap()).bind(inst)
+  override fun config(block: A.() -> Unit) {
+    argBuilder?.block()
+  }
 }
 
 @CollectionDelegate(QModel::class)
@@ -52,29 +52,30 @@ private data class TypeListStubImpl<P : QModel<*>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any>
-) : QField<List<P>>,
-    Adapter,
-    ModelProvider {
+) : GraphqlPropertyDelegate<List<P>>, ModelProvider {
 
-  val results: MutableList<P> = mutableListOf()
+  private val nullable by lazy { Nullable(this) }
+  val results: List<P>? = null
 
   override val value: QModel<*> by lazy { init() }
 
   override fun toRawPayload(): String =
       qproperty.graphqlName + args.stringify() + value.toGraphql()
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P> = results ?: emptyList()
 
   override fun accept(result: Any?): Boolean {
     return if (result is JsonArray<*>) {
       result.filterIsInstance<JsonObject>().filterNot { element ->
         init().let {
-          this.results.add(it)
+          //this.results.add(it)
           it.accept(element)
         }
       }.isEmpty()
     } else false
   }
+
+  override fun asNullable(): GraphqlPropertyDelegate<List<P>?> = nullable
 
   override fun hashCode(): Int =
       (value.hashCode() * 31) +
@@ -91,6 +92,11 @@ private data class TypeListStubImpl<P : QModel<*>>(
     if (args != other.args) return false
 
     return true
+  }
+
+  private class Nullable<P: QModel<*>>(val wrapped: TypeListStubImpl<P>) : Adapter by wrapped, GraphqlPropertyDelegate<List<P>?> {
+    override fun getValue(inst: QModel<*>, property: KProperty<*>): List<P>? = wrapped.results
+    override fun asNullable(): GraphqlPropertyDelegate<List<P>?> = this
   }
 
 }

@@ -18,14 +18,12 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.properties.GraphQLPropertyContext
 import com.prestongarno.kotlinq.core.adapters.Adapter
-import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.formatAs
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import kotlin.reflect.KProperty
 
-interface ScalarArrayDelegate<out D : PrimitiveArrayStub> : GraphQLPropertyContext<Any?> {
+interface ScalarArrayDelegate<out D : PrimitiveArrayStub> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
 }
 
@@ -46,7 +44,6 @@ sealed class PrimitiveArrayStub(
   }
 }
 
-@CollectionDelegate(Array<String>::class)
 class StringArrayStub(
     graphqlProperty: GraphQlProperty,
     private val default: Array<String>? = null,
@@ -73,7 +70,6 @@ class StringArrayStub(
 
 }
 
-@CollectionDelegate(IntArray::class)
 class IntArrayStub(
     property: GraphQlProperty,
     private val default: IntArray? = null,
@@ -107,7 +103,6 @@ class IntArrayStub(
   }
 }
 
-@CollectionDelegate(FloatArray::class)
 class FloatArrayStub(
     property: GraphQlProperty,
     private val default: FloatArray? = null,
@@ -141,7 +136,6 @@ class FloatArrayStub(
   }
 }
 
-@CollectionDelegate(BooleanArray::class)
 class BooleanArrayStub(
     property: GraphQlProperty,
     private val default: BooleanArray? = null,

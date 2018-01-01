@@ -23,7 +23,6 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.custom.InputStreamScalarListMapper
 import com.prestongarno.kotlinq.core.adapters.custom.QScalarListMapper
 import com.prestongarno.kotlinq.core.adapters.custom.StringScalarListMapper
-import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
@@ -31,35 +30,35 @@ import kotlin.reflect.KProperty
 
 internal
 fun <E : CustomScalar, P : QScalarListMapper<Q>, Q, A : ArgumentSpec> newCustomScalarListField(
-    qproperty: GraphQlProperty,
     mapper: P,
     arguments: A?
-): CustomScalarListStub<E, Q, A> = CustomScalarListAdapter(qproperty, mapper, arguments)
+): CustomScalarListStub<E, Q, A> = CustomScalarListAdapter(mapper, arguments)
 
-private
+internal
 class CustomScalarListAdapter<E : CustomScalar, out P : QScalarListMapper<Q>, Q, out A : ArgumentSpec>(
-    qproperty: GraphQlProperty,
     val mapper: P,
     val arguments: A?
-) : PreDelegate(qproperty),
+) : PreDelegate<List<Q>, A>(),
     CustomScalarListStub<E, Q, A> {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<List<Q>> =
-      CustomScalarListStubImpl(qproperty, mapper, arguments.toMap()).bind(inst)
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<List<Q>> =
+    CustomScalarListStubImpl(property, mapper, arguments.toMap())
 
-  override fun config(scope: A.() -> Unit) {
-    arguments?.scope()
+  override fun config(block: A.() -> Unit) {
+    arguments?.block()
   }
 
 }
 
-@CollectionDelegate(Any::class)
 private data class CustomScalarListStubImpl<out Q>(
     override val qproperty: GraphQlProperty,
     val adapter: QScalarListMapper<Q>,
     override val args: Map<String, Any>
-) : QField<List<Q>>,
-    Adapter {
+) : GraphqlPropertyDelegate<List<Q>> {
+
+  override fun asNullable(): GraphqlPropertyDelegate<List<Q>?> {
+    TODO("not implemented")
+  }
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 
