@@ -27,7 +27,7 @@ import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.GraphQlPropertyDelegate
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -78,7 +78,7 @@ internal
 class EnumNoArgImpl<T>(
     val clazz: KClass<T>,
     val qproperty: GraphQlProperty
-) : GraphQlPropertyDelegate.NoArg<EnumStub<T, ArgBuilder>, T>
+) : GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T>
     where T : Enum<*>,
           T : QEnumType {
 
@@ -90,7 +90,7 @@ class EnumNoArgImpl<T>(
             .bindToContext(qModel)
       }
 
-  fun asNullable(): GraphQlPropertyDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> = object : GraphQlPropertyDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> {
+  fun asNullable(): GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> = object : GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> {
 
     val clazz = this@EnumNoArgImpl.clazz
     val prop = this@EnumNoArgImpl.qproperty

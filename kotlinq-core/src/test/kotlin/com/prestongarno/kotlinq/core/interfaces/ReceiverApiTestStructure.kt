@@ -25,8 +25,8 @@ import com.prestongarno.kotlinq.core.QSchemaType.QEnum
 import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.stubs.EnumStub
-import com.prestongarno.kotlinq.core.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 

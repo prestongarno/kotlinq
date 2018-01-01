@@ -23,6 +23,7 @@ import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.argumentsMatching
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
+import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import org.junit.After
 import org.junit.Before
@@ -58,7 +59,7 @@ class EnumCompileTest : JavacTest() {
     }
 
     kprop("enumProperty") { gqlEnum ->
-      gqlEnum requireReturns EnumStub.Query::class
+      gqlEnum requireReturns DelegateProvider.NoArg::class
       gqlEnum.returnType mustHave reifiedArgumentsMatching(enumClazz)
     }
   }.ignore()
@@ -74,7 +75,7 @@ class EnumCompileTest : JavacTest() {
     }
 
     kprop("enumProp") {
-      it requireReturns EnumStub.OptionalConfigQuery::class
+      it requireReturns EnumStub.OptionallyConfigured::class
       it.returnType mustHave argumentsMatching("GraphQLEnum", "Bar.EnumPropArgs")
     }
   }.ignore()

@@ -26,12 +26,12 @@ import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.GraphQlPropertyDelegate
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import com.prestongarno.kotlinq.core.schema.QType
 
 interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
-  interface NoArg<T : QType> : GraphQlPropertyDelegate<QModel<T>> {
+  interface NoArg<T : QType> : GraphQlPropertyPreDelegate<QModel<T>> {
 
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
@@ -39,7 +39,7 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
         block: TypeStub<ArgBuilder>.() -> Unit = empty()
     ): DelegateProvider<U>
 
-    interface Nullable<T : QType> : GraphQlPropertyDelegate<QModel<T>> {
+    interface Nullable<T : QType> : GraphQlPropertyPreDelegate<QModel<T>> {
       operator fun <U : QModel<T>> invoke(
           constructor: () -> U,
           arguments: ArgBuilder = ArgBuilder(),
@@ -48,14 +48,14 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
     }
   }
 
-  interface Configured<T : QType, A : ArgumentSpec> : GraphQlPropertyDelegate<QModel<T>> {
+  interface Configured<T : QType, A : ArgumentSpec> : GraphQlPropertyPreDelegate<QModel<T>> {
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
         arguments: A,
         block: TypeStub<A>.() -> Unit = empty()
     ): DelegateProvider<U>
 
-    interface Nullable<T : QType, A : ArgumentSpec> : GraphQlPropertyDelegate<QModel<T>> {
+    interface Nullable<T : QType, A : ArgumentSpec> : GraphQlPropertyPreDelegate<QModel<T>> {
       operator fun <U : QModel<T>> invoke(
           constructor: () -> U,
           arguments: A,

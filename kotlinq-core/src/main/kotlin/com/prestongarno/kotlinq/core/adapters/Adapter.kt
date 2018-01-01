@@ -63,15 +63,12 @@ interface GraphqlPropertyDelegate<out T : Any?> : QField<T>, Adapter {
   fun asNullable(): GraphqlPropertyDelegate<T?>
 
   companion object {
+
     internal
     fun <T> wrapAsNullable(
         instance: GraphqlPropertyDelegate<T>,
         scope: () -> T?
-    ): GraphqlPropertyDelegate<T?> = object : GraphqlPropertyDelegate<T?> {
-      override val qproperty: GraphQlProperty get() = instance.qproperty
-      override val args: Map<String, Any> get() = instance.args
-      override fun accept(result: Any?) = instance.accept(result)
-      override fun toRawPayload() = instance.toRawPayload()
+    ): GraphqlPropertyDelegate<T?> = object : Adapter by instance, GraphqlPropertyDelegate<T?> {
       override fun getValue(inst: QModel<*>, property: KProperty<*>) = scope()
       override fun asNullable(): GraphqlPropertyDelegate<T?> = instance.asNullable()
       override fun equals(other: Any?): Boolean = instance == other

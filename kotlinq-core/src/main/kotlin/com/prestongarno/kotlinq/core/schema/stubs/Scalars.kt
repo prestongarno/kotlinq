@@ -21,6 +21,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.api.StubProvider
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.formatAs
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty

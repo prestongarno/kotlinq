@@ -24,10 +24,10 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
-import com.prestongarno.kotlinq.core.stubs.BooleanDelegate
-import com.prestongarno.kotlinq.core.stubs.FloatDelegate
-import com.prestongarno.kotlinq.core.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import org.junit.Test
 import kotlin.reflect.full.declaredMembers
 

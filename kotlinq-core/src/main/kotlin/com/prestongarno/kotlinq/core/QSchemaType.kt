@@ -20,6 +20,7 @@
 package com.prestongarno.kotlinq.core
 
 import com.prestongarno.kotlinq.core.api.StubProvider.Companion.delegationContext
+import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
@@ -118,6 +119,16 @@ interface QSchemaType {
   }
 
   object QCustomScalar {
+
+    inline fun <reified T : CustomScalar> stub() =
+        delegationContext.scalar.stub(T::class)
+
+    inline fun <reified T : CustomScalar, A : ArgumentSpec> optionallyConfigured() =
+        delegationContext.scalar.optionallyConfigured<T, A>(T::class)
+
+    inline fun <reified T : CustomScalar, A : ArgumentSpec> configured() =
+        delegationContext.scalar.configured<T, A>(T::class)
+
     object List
   }
 

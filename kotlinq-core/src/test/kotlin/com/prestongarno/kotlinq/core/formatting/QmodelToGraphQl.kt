@@ -27,10 +27,10 @@ import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
-import com.prestongarno.kotlinq.core.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.stubs.StringDelegate
-import com.prestongarno.kotlinq.core.stubs.TypeListStub
-import com.prestongarno.kotlinq.core.stubs.TypeStub
+import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import com.yelp.graphql.Business
 import com.yelp.graphql.Location
 import com.yelp.graphql.Review

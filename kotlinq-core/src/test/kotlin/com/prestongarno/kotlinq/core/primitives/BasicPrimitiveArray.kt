@@ -22,10 +22,10 @@ package com.prestongarno.kotlinq.core.primitives
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.stubs.BooleanArrayDelegate
-import com.prestongarno.kotlinq.core.stubs.FloatArrayDelegate
-import com.prestongarno.kotlinq.core.stubs.IntArrayDelegate
-import com.prestongarno.kotlinq.core.stubs.StringArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
 import org.junit.Test
 import com.prestongarno.kotlinq.core.eq
 
