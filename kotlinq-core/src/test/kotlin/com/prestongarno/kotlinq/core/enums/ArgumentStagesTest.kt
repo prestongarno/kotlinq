@@ -120,9 +120,9 @@ class ArgumentStagesTest {
 object Class : QType {
   val classLevel by QSchemaType.QEnum.stub<ClassLevel>()
 
-  val classLevelWithArgs by QSchemaType.QEnum.configStub<ClassLevel, ClassLevelArgs>()
+  val classLevelWithArgs by QSchemaType.QEnum.configured<ClassLevel, ClassLevelArgs>()
 
-  val classLevelOptionalArgs by QSchemaType.QEnum.optionalConfigStub<ClassLevel, OptionalClassLevelArgs>()
+  val classLevelOptionalArgs by QSchemaType.QEnum.optionallyConfigured<ClassLevel, OptionalClassLevelArgs>()
 
   class OptionalClassLevelArgs : ArgBuilder() {
     var intArgument: Int? by arguments

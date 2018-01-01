@@ -48,8 +48,8 @@ import com.squareup.kotlinpoet.asTypeName
 import kotlin.reflect.KClass
 
 private const val DEFAULT_NO_ARG = "stub<%T>()"
-private const val DEFAULT_OPTIONAL_ARG = "optionalConfigStub<%T, %T>()"
-private const val DEFAULT_REQ_ARG = "configStub<%T, %T>()"
+private const val DEFAULT_OPTIONAL_ARG = "optionallyConfigured<%T, %T>()"
+private const val DEFAULT_REQ_ARG = "configured<%T, %T>()"
 
 sealed class SchemaType : KotlinTypeElement, NamedElement {
 
@@ -245,8 +245,8 @@ sealed class ScalarType : SchemaType() {
   override fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
     field.arguments.isEmpty() -> "stub()" to emptyList()
     field.arguments.isNotEmpty() && field.arguments.find { !it.nullable } == null ->
-      "optionalConfigStub<%T>()" to listOf(field.argBuilder!!.name)
-    else -> "configStub<%T>()" to listOf(field.argBuilder!!.name)
+      "optionallyConfigured<%T>()" to listOf(field.argBuilder!!.name)
+    else -> "configured<%T>()" to listOf(field.argBuilder!!.name)
   }.let { (format, typeNames) ->
     CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray())
   }

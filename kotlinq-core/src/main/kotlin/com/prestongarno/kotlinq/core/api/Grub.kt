@@ -29,6 +29,12 @@ interface StubProvider<out X : GraphQlPropertyDelegate<T>, out Y : GraphQlProper
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 
   fun asNullable(): NullableStubProvider<Y>
+
+  companion object {
+    @PublishedApi
+    internal
+    val delegationContext: DelegationContext by lazy { DefaultDelegationContext() }
+  }
 }
 
 interface NullableStubProvider<out X : GraphQlPropertyDelegate<*>> {

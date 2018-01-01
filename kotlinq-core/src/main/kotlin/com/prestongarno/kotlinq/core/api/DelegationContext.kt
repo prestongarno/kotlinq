@@ -36,7 +36,9 @@ import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
 
-@PublishedApi internal interface DelegationContext {
+@PublishedApi
+internal
+interface DelegationContext {
   val type: GraphQLDelegate.Type
 
   val iface: GraphQLDelegate.Interface
@@ -70,6 +72,7 @@ import kotlin.reflect.KClass
  * stub delegate provider type. This is restricted by the sealed class [GraphQLDelegate]
  */
 
+@PublishedApi
 internal
 class DefaultDelegationContext : DelegationContext {
 
@@ -102,35 +105,13 @@ class DefaultDelegationContext : DelegationContext {
  * This is better because it's no longer inlining internal code into client class
  * files and also enables mocked delegate providers for testing
  */
+@PublishedApi
 internal
 sealed class GraphQLDelegate {
 
   abstract val list: Lists.GraphQLListDelegate
 
-
   class Type : GraphQLDelegate() {
-
-    object Foo : QType {
-      val bars by Type().stub(Foo::class)
-      val nullableBars by Type().stub(Foo::class).asNullable()
-      val optArgBars by Type().optionallyConfigured<Foo, FooArgs>(Foo::class)
-      val optNullArgBars by Type().optionallyConfigured<Foo, FooArgs>(Foo::class).asNullable()
-      val reqArgBars by Type().configured<Foo, FooArgs>(Foo::class)
-      val nullReqArgBars by Type().configured<Foo, FooArgs>(Foo::class).asNullable()
-
-      class FooArgs : ArgBuilder() {
-        var arg: String? by arguments
-      }
-    }
-
-    class Bar : QModel<Foo>(Foo) {
-      val barsImpl: Bar by model.bars(::Bar)
-      val nullBarsImpl: Bar? by model.nullableBars(::Bar)
-      val argBarsImpl: Bar by model.optArgBars(::Bar, Foo.FooArgs()) { config { arg = "Hello, World" } }
-      val nullArgBarsImpl: Bar? by model.optNullArgBars(::Bar)
-      val reqArgBars: Bar by model.reqArgBars(::Bar, Foo.FooArgs())
-      val nullReqArgBars: Bar? by model.nullReqArgBars(::Bar, Foo.FooArgs())
-    }
 
     fun <T : QType> stub(clazz: KClass<T>)
         : StubProvider<TypeStub.NoArg<T>, TypeStub.NoArg.Nullable<T>, QModel<T>> =
@@ -185,48 +166,6 @@ sealed class GraphQLDelegate {
 
   class Union : GraphQLDelegate() {
 
-    object Foo : QType
-    object Bar : QType
-
-    object FooMeetsBar : QUnionType by QUnionType.new() {
-      fun onFoo(init: () -> QModel<Foo>) = on(init)
-      fun onBar(init: () -> QModel<Bar>) = on(init)
-    }
-
-    object Query : QType {
-      val fooOrBar by Union().stub(FooMeetsBar)
-      val fooOrBarWithArgs by Union().optionallyConfigured<FooMeetsBar, FooOrBarArgs>(FooMeetsBar)
-
-      class FooOrBarArgs : ArgBuilder() {
-        var argumentsBar: String? by arguments
-        var argumentsFoo: Int? by arguments
-      }
-    }
-
-    class FooImpl : QModel<Foo>(Foo)
-    class BarImpl : QModel<Bar>(Bar)
-
-    class QueryImpl : QModel<Query>(Query) {
-      val fooOrBarField by model.fooOrBar {
-        fragment {
-          onFoo(::FooImpl)
-          onBar(::BarImpl)
-        }
-      }
-
-      val fooOrBarOptArgs by model.fooOrBarWithArgs(Query.FooOrBarArgs()) {
-        fragment { onFoo(::FooImpl) }
-        config {
-          argumentsBar = "Hello"
-          argumentsFoo = 9000
-        }
-      }
-
-      val passingOptArgs by model.fooOrBarWithArgs {
-        fragment { onFoo(::FooImpl) }
-      }
-    }
-
     fun <T : QUnionType> stub(obj: T)
         : NullableStubProvider<GraphQlPropertyDelegate.NoArgBlock<UnionStub<T, ArgBuilder>, QModel<*>?>> =
         contextBuilder {
@@ -262,6 +201,12 @@ sealed class GraphQLDelegate {
         Grub(clazz.graphQlName(), false,
             builder = contextBuilder { EnumStub.noArg(clazz, it) },
             nullableBuilder = contextBuilder { EnumStub.noArg(clazz, it).asNullable() })
+
+    fun <T, A> optionallyConfigured(clazz: KClass<T>)
+        : StubProvider<EnumStub.OptionallyConfigured<T, A>, EnumStub.OptionallyConfigured.Nullable<T, A>, T?>
+        where T : Enum<*>, T : QEnumType, A : ArgumentSpec = Grub(clazz.graphQlName(), false,
+        builder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it) },
+        nullableBuilder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it).asNullable() })
 
     fun <T, A> configured(clazz: KClass<T>)
         : StubProvider<GraphQlPropertyDelegate.Configured<EnumStub<T, A>, A, T>, GraphQlPropertyDelegate.Configured<EnumStub<T, A>, A, T?>, T>

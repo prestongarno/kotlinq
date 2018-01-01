@@ -72,7 +72,7 @@ class InterfaceMultiInheritance : JavacTest() {
         |
         |
         |object Wookie : QType, Entity, Actor {
-        |  override val friends: InterfaceListStub.ConfigurableQuery<Entity, FriendsArgs> by QInterfaces.List.configStub<Entity, FriendsArgs>()
+        |  override val friends: InterfaceListStub.ConfigurableQuery<Entity, FriendsArgs> by QInterfaces.List.configured<Entity, FriendsArgs>()
         |
         |  class FriendsArgs(query: String) : ArgBuilder(), Entity.BaseFriendsArgs, Actor.BaseFriendsArgs {
         |    override val query: String by arguments.notNull<String>("query", query)

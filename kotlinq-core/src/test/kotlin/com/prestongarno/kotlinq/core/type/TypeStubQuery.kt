@@ -32,9 +32,9 @@ import org.junit.Test
 object Order : QType {
   val owner by QTypes.stub<Person>()
 
-  val ownerAddress by QTypes.optionalConfigStub<Address, OwnerAddressArgs>()
+  val ownerAddress by QTypes.optionallyConfigured<Address, OwnerAddressArgs>()
 
-  val destination by QTypes.configStub<Address, DestinationArgs>()
+  val destination by QTypes.configured<Address, DestinationArgs>()
 
   class OwnerAddressArgs : ArgBuilder() {
     var addressType: ContactAddressType? by arguments
