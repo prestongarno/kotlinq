@@ -60,11 +60,11 @@ data class UnionAdapterImpl(
   override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> = this
 
   override fun accept(result: Any?): Boolean {
-    if (result is JsonObject) value = acceptAndReturn(result)
+    if (result is JsonObject) value = transform(result)
     return value == null || value?.isResolved ?: false
   }
 
-  override fun acceptAndReturn(obj: Any?): QModel<*>? = (obj as? JsonObject)?.let { jsonObject ->
+  override fun transform(obj: Any?): QModel<*>? = (obj as? JsonObject)?.let { jsonObject ->
     jsonObject["__typename"]?.let { typeName ->
 
       fragments.find { it.model.graphqlType == typeName }
@@ -86,7 +86,7 @@ data class UnionAdapterImpl(
 
   override fun equals(other: Any?): Boolean {
     if (other !is Adapter) return false
-    if (other !is QField<*>) return false
+    if (other !is GraphQlField<*>) return false
     if (other !is FragmentContext) return false
 
     if (other.qproperty != qproperty) return false

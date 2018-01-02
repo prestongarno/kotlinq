@@ -23,7 +23,7 @@ import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.CustomScalarStubImpl
-import com.prestongarno.kotlinq.core.adapters.QField
+import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.DelegateProvider
@@ -157,7 +157,7 @@ private class CustomScalarPreDelegateImpl<T : CustomScalar, A : ArgumentSpec>(
       block: CustomScalarStub<T, V, ArgBuilder>.() -> Unit
   ): DelegateProvider<V> = customProvider(mapper, arguments, qproperty, block)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<String> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<String> =
       CustomScalarStubImpl<T, String, ArgBuilder>(CustomScalarStub.Mapper.IDENTITY, ArgBuilder())
           .toDelegate(qproperty)
           .bindToContext(inst)
@@ -183,7 +183,7 @@ private class NullableCustomScalarPreDelegateImpl<T : CustomScalar, A : Argument
   ): DelegateProvider<V?> =
       nullableCustomProvider(mapper, arguments, qproperty, block)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<String?> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<String?> =
       CustomScalarStubImpl<T, String, ArgBuilder>(CustomScalarStub.Mapper.IDENTITY, ArgBuilder())
           .toDelegate(qproperty)
           .asNullable()

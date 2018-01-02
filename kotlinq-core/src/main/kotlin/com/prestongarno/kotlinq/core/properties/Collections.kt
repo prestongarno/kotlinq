@@ -29,14 +29,14 @@ class ListDelegate<out T : Any>(val adapter: GraphqlPropertyDelegate<T>)
 
   override fun asList(): GraphqlPropertyDelegate<List<List<T>>> = ListDelegate(this)
 
-  override fun acceptAndReturn(obj: Any?): List<T>? =
+  override fun transform(obj: Any?): List<T>? =
       (obj as? JsonObject)
           ?.values
           ?.filterNotNull()
-          ?.mapNotNull(adapter::acceptAndReturn)
+          ?.mapNotNull(adapter::transform)
 
   override fun accept(result: Any?): Boolean {
-    value = acceptAndReturn(result)
+    value = transform(result)
     return true
   }
 
@@ -60,11 +60,11 @@ class NullableElementListDelegate<out T : Any?>(val adapter: GraphqlPropertyDele
   override fun asList(): GraphqlPropertyDelegate<List<List<T?>>> =
       ListDelegate(this)
 
-  override fun acceptAndReturn(obj: Any?): List<T?>? =
+  override fun transform(obj: Any?): List<T?>? =
       (obj as? JsonObject)
           ?.entries
           ?.map(MutableMap.MutableEntry<String, Any?>::value)
-          ?.map(adapter::acceptAndReturn)
+          ?.map(adapter::transform)
 }
 
 internal

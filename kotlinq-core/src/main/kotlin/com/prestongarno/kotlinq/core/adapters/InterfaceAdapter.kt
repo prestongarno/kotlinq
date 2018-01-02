@@ -68,11 +68,11 @@ class InterfaceAdapterImpl<I : QType>(
 
   override fun accept(result: Any?): Boolean {
     if (result !is JsonObject) return false
-    value = acceptAndReturn(result)
+    value = transform(result)
     return value?.isResolved == true
   }
 
-  override fun acceptAndReturn(obj: Any?): QModel<I>? = if (obj !is JsonObject) null else
+  override fun transform(obj: Any?): QModel<I>? = if (obj !is JsonObject) null else
     fragments.find { it.model.graphqlType == obj["__typename"] }
         ?.initializer?.invoke()?.let {
       it.accept(obj)

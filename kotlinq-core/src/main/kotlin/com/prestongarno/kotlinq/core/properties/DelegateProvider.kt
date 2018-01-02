@@ -21,7 +21,7 @@ import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.PreDelegate
-import com.prestongarno.kotlinq.core.adapters.QField
+import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate.Companion.configuredBlock
@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty
  * TODO @prestongarno should maybe use type intersections with [GraphQlPropertyPreDelegate] to remove the [DelegateProvider] nested interfaces
  */
 interface DelegateProvider<out T : Any?> {
-  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
+  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T>
 
   interface CollectionDelegate<out T : DelegateProvider<V>, out V : Any?> : DelegateProvider<List<V>>, GraphQlPropertyPreDelegate
 
@@ -58,8 +58,8 @@ interface DelegateProvider<out T : Any?> {
       DelegateProvider<T>
 
   companion object {
-    internal fun <T> delegateProvider(constructor: (QModel<*>, KProperty<*>) -> QField<T>) = object : DelegateProvider<T> {
-      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> = constructor(inst, property)
+    internal fun <T> delegateProvider(constructor: (QModel<*>, KProperty<*>) -> GraphQlField<T>) = object : DelegateProvider<T> {
+      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T> = constructor(inst, property)
     }
   }
 }

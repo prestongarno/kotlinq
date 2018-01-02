@@ -20,6 +20,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.TypeStubAdapter
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.internal.empty
@@ -27,6 +28,7 @@ import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
+import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QType
 
 interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
@@ -115,7 +117,7 @@ internal
 class OptionalConfiguredImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured<T, A> {
 
   override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): DelegateProvider<U> =
-      createTypeDelegate(qproperty, constructor, null, block)
+      createTypeDelegate(qproperty, constructor, ArgBuilder(), block)
 
   override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U> =
       createTypeDelegate(qproperty, constructor, arguments, block)
@@ -156,3 +158,4 @@ private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createNullableTypeDeleg
       .asNullable()
       .bindToContext(model)
 }
+

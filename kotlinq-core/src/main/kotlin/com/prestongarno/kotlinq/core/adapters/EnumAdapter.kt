@@ -65,11 +65,11 @@ class EnumFieldImpl<T>(
 
   override fun accept(result: Any?): Boolean {
     // TODO don't call the java reflection type - use kotlin enums only
-    value = acceptAndReturn(result)
+    value = transform(result)
     return value != null
   }
 
-  override fun acceptAndReturn(obj: Any?): T? =
+  override fun transform(obj: Any?): T? =
       enumClass.java.enumConstants?.find { it.name == "$obj" } ?: default
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()

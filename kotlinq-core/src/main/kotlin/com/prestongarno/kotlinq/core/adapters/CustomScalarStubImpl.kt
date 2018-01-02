@@ -61,12 +61,12 @@ private data class CustomScalarFieldImpl<Q>(
   override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = value!!
 
   override fun accept(result: Any?): Boolean {
-    _value = acceptAndReturn(result)
+    _value = transform(result)
     return true
   }
 
   // TODO lazily evaluate this
-  override fun acceptAndReturn(obj: Any?): Q? {
+  override fun transform(obj: Any?): Q? {
     return when (adapter) {
       is CustomScalarStub.Mapper.InputStreamMapper<Q> -> adapter.invoke("${obj ?: ""}".byteInputStream())
       is CustomScalarStub.Mapper.StringMapper<Q> -> adapter.invoke("${obj ?: ""}")

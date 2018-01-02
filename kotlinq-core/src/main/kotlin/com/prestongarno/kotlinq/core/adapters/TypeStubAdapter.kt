@@ -71,11 +71,11 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
       value
 
   override fun accept(result: Any?): Boolean {
-    _value = acceptAndReturn(result)
+    _value = transform(result)
     return _value?.isResolved == true
   }
 
-  override fun acceptAndReturn(obj: Any?): P? = if (obj !is JsonObject) null else init().apply {
+  override fun transform(obj: Any?): P? = if (obj !is JsonObject) null else init().apply {
     resolved = fields.filterNot { (_, value) -> value.accept(obj[value.qproperty.graphqlName]) }.isEmpty()
   }
 

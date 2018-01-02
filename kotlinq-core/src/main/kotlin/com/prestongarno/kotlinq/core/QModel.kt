@@ -20,7 +20,6 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
-import com.prestongarno.kotlinq.core.adapters.QField
 import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.internal.pretty
 import com.prestongarno.kotlinq.core.schema.QType

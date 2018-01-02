@@ -21,7 +21,7 @@ import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
-import com.prestongarno.kotlinq.core.adapters.QField
+import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.DelegateProvider
@@ -114,7 +114,7 @@ class EnumConfigImpl<T, A>(
           T : QEnumType,
           A : ArgumentSpec {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T> =
       EnumAdapterImpl(clazz, null)
           .toDelegate(qproperty)
           .bindToContext(inst)
@@ -143,7 +143,7 @@ class EnumConfigImpl<T, A>(
               .bindToContext(inst)
         }
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T?> =
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> =
         EnumAdapterImpl(clazz, null)
             .toDelegate(qproperty)
             .asNullable()
@@ -168,7 +168,7 @@ class OptionallyConfiguredImpl<T, A>(
           T : QEnumType,
           A : ArgumentSpec {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T> =
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T> =
       EnumAdapterImpl(clazz, null)
           .toDelegate(qproperty)
           .bindToContext(inst)
