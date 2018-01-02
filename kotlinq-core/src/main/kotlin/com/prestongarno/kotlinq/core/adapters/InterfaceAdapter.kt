@@ -22,7 +22,6 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
-import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.schema.QInterface
@@ -69,14 +68,17 @@ class InterfaceAdapterImpl<I : QType>(
 
   override fun accept(result: Any?): Boolean {
     if (result !is JsonObject) return false
-    value = fragments.find { it.model.graphqlType == result["__typename"] }
+    value = acceptAndReturn(result)
+    return value?.isResolved == true
+  }
+
+  override fun acceptAndReturn(obj: Any?): QModel<I>? = if (obj !is JsonObject) null else
+    fragments.find { it.model.graphqlType == obj["__typename"] }
         ?.initializer?.invoke()?.let {
-      it.accept(result)
+      it.accept(obj)
       @Suppress("UNCHECKED_CAST")
       it as? QModel<I>
     }
-    return value?.isResolved == true
-  }
 
   override fun toRawPayload(): String =
       qproperty.graphqlName + args.stringify() + fragments.joinToString(

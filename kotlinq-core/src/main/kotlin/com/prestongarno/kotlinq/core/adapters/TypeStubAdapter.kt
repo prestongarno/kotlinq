@@ -20,11 +20,12 @@ package com.prestongarno.kotlinq.core.adapters
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.api.ModelProvider
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import kotlin.reflect.KProperty
 
@@ -52,16 +53,16 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
 
   override val value by lazy(init)
 
+  val nullable: GraphqlPropertyDelegate<P?> by lazy { wrapAsNullable(this, this::value) }
+
   override fun asNullable(): GraphqlPropertyDelegate<P?> = nullable
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): P = value
 
-  override fun accept(result: Any?): Boolean {
-    value.resolved = true
-    return result is JsonObject
-        && value.fields.filterNot { f ->
-      f.value.accept(result[f.value.qproperty.graphqlName])
-    }.isEmpty() && value.resolved
+  override fun accept(result: Any?) = acceptAndReturn(result)?.resolved == true
+
+  override fun acceptAndReturn(obj: Any?): P? = if (obj !is JsonObject) null else value.apply {
+    resolved = fields.filterNot { (_, value) -> value.accept(obj[value.qproperty.graphqlName]) }.isEmpty()
   }
 
   override fun toRawPayload(): String =
@@ -82,18 +83,5 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     if (args != other.args) return false
 
     return true
-  }
-
-  val nullable: GraphqlPropertyDelegate<P?> by lazy {
-    object : Adapter by this, GraphqlPropertyDelegate<P?> {
-
-      override fun asNullable(): GraphqlPropertyDelegate<P?> = this
-
-      override fun getValue(inst: QModel<*>, property: KProperty<*>): P? =
-          if (value.isResolved) value else null
-
-      override fun equals(other: Any?): Boolean = this@TypeStubImpl == other
-      override fun hashCode(): Int = this@TypeStubImpl.hashCode() * 31
-    }
   }
 }

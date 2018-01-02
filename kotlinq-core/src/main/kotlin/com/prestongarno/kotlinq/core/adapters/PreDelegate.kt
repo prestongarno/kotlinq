@@ -24,10 +24,11 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 
 /**
  * Base class for all objects who produce immutable field delegates
- *
- * TODO make this a sealed class
+ * @param T the type of object that the resulting [GraphqlPropertyDelegate] provides
+ * @param A the arguments required for this field
  */
-internal abstract class PreDelegate<out T: Any?, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
+internal
+abstract class PreDelegate<out T: Any?, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   abstract fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T>
 

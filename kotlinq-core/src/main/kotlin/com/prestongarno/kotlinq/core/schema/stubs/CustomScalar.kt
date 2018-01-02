@@ -113,7 +113,8 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
         : GraphQlPropertyContext.Companion.Builder<Configured<T, A>> =
         new()
 
-    private fun <T : CustomScalar, A : ArgumentSpec> new() = contextBuilder { prop -> CustomScalarPreDelegateImpl<T, A>(prop) }
+    private fun <T : CustomScalar, A : ArgumentSpec> new() =
+        contextBuilder { prop -> CustomScalarPreDelegateImpl<T, A>(prop) }
 
     internal
     object Nullables {
@@ -137,7 +138,6 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
           contextBuilder { prop -> NullableCustomScalarPreDelegateImpl<T, A>(prop) }
 
     }
-    // NullableCustomScalarPreDelegateImpl
   }
 }
 

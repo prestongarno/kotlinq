@@ -18,11 +18,11 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -41,9 +41,11 @@ class EnumAdapterImpl<T, out A>(
   override var default: T? = null
 
   override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T> =
-    EnumFieldImpl(property, enumClass, argBuilder.toMap(), default)
+      EnumFieldImpl(property, enumClass, argBuilder.toMap(), default)
 
-  override fun config(block: A.() -> Unit) { argBuilder?.block() }
+  override fun config(block: A.() -> Unit) {
+    argBuilder?.block()
+  }
 }
 
 @ValueDelegate(Enum::class)
@@ -63,9 +65,12 @@ class EnumFieldImpl<T>(
 
   override fun accept(result: Any?): Boolean {
     // TODO don't call the java reflection type - use kotlin enums only
-    value = enumClass.java.enumConstants?.find { it.name == "$result" } ?: default
+    value = acceptAndReturn(result)
     return value != null
   }
+
+  override fun acceptAndReturn(obj: Any?): T? =
+      enumClass.java.enumConstants?.find { it.name == "$obj" } ?: default
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 

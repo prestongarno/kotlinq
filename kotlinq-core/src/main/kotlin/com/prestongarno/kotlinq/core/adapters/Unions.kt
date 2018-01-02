@@ -22,10 +22,8 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
-import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KProperty
@@ -57,19 +55,23 @@ data class UnionAdapterImpl(
 ) : GraphqlPropertyDelegate<QModel<*>?>,
     FragmentContext {
 
-  var value: QModel<QType>? = null
+  var value: QModel<*>? = null
 
   override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> = this
 
   override fun accept(result: Any?): Boolean {
-    return if (result is JsonObject) {
-      value = result["__typename"]?.let { resultType ->
-        fragments.find {
-          it.model.graphqlType == resultType
-        }?.initializer?.invoke()
-      }
-      return value?.accept(result) == true
-    } else false
+    if (result is JsonObject) value = acceptAndReturn(result)
+    return value == null || value?.isResolved ?: false
+  }
+
+  override fun acceptAndReturn(obj: Any?): QModel<*>? = (obj as? JsonObject)?.let { jsonObject ->
+    jsonObject["__typename"]?.let { typeName ->
+
+      fragments.find { it.model.graphqlType == typeName }
+          ?.initializer
+          ?.invoke()
+          ?.apply { accept(jsonObject) }
+    }
   }
 
   override fun toRawPayload(): String = qproperty.graphqlName +
@@ -80,7 +82,7 @@ data class UnionAdapterImpl(
         }
       }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<QType>? = value
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>? = value
 
   override fun equals(other: Any?): Boolean {
     if (other !is Adapter) return false

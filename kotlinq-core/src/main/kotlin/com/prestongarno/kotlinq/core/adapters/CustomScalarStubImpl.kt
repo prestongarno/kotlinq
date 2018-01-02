@@ -19,7 +19,6 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.schema.CustomScalar
@@ -39,7 +38,9 @@ class CustomScalarStubImpl<E : CustomScalar, Q, out A : ArgumentSpec>(
 
   override var default: Q? = null
 
-  override fun config(block: A.() -> Unit) { arguments?.block() }
+  override fun config(block: A.() -> Unit) {
+    arguments?.block()
+  }
 }
 
 private data class CustomScalarFieldImpl<Q>(
@@ -59,13 +60,17 @@ private data class CustomScalarFieldImpl<Q>(
 
   override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = value!!
 
-  // TODO lazily evaluate this
   override fun accept(result: Any?): Boolean {
-    _value = when (adapter) {
-      is CustomScalarStub.Mapper.InputStreamMapper<Q> -> adapter.invoke("${result ?: ""}".byteInputStream())
-      is CustomScalarStub.Mapper.StringMapper<Q> -> adapter.invoke("${result ?: ""}")
-    }
+    _value = acceptAndReturn(result)
     return true
+  }
+
+  // TODO lazily evaluate this
+  override fun acceptAndReturn(obj: Any?): Q? {
+    return when (adapter) {
+      is CustomScalarStub.Mapper.InputStreamMapper<Q> -> adapter.invoke("${obj ?: ""}".byteInputStream())
+      is CustomScalarStub.Mapper.StringMapper<Q> -> adapter.invoke("${obj ?: ""}")
+    }
   }
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()

@@ -18,7 +18,9 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.api.ModelProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import kotlin.reflect.KProperty
 
 /**
@@ -53,24 +55,39 @@ interface QField<out T> {
  * @param T the return type of the field
  */
 internal
-interface GraphqlPropertyDelegate<out T : Any?> : QField<T>, Adapter {
+interface GraphqlPropertyDelegate<out T> : QField<T>, Adapter {
+
+  fun asNullable(): GraphqlPropertyDelegate<T?>
+
+  fun asList(): GraphqlPropertyDelegate<List<T>> = ListDelegate(this)
+
+  fun acceptAndReturn(obj: Any?): T?
+
   /**
    * Called on construction of a graphql object model.
    * Default behaviour: binds this property delegate to the instance of [graphqlModel]
    */
   fun bindToContext(graphqlModel: QModel<*>) = apply { graphqlModel.register(this) }
 
-  fun asNullable(): GraphqlPropertyDelegate<T?>
-
   companion object {
 
     internal
     fun <T> wrapAsNullable(
         instance: GraphqlPropertyDelegate<T>,
-        scope: () -> T?
+        ref: () -> T?
     ): GraphqlPropertyDelegate<T?> = object : Adapter by instance, GraphqlPropertyDelegate<T?> {
-      override fun getValue(inst: QModel<*>, property: KProperty<*>) = scope()
+
+      override fun accept(result: Any?): Boolean {
+        instance.accept(result)
+        return when (instance) {
+          is ModelProvider -> ref().let { it == null || instance.value.isResolved }
+          else -> true
+        }
+      }
+
+      override fun acceptAndReturn(obj: Any?): T? = instance.acceptAndReturn(obj)
       override fun asNullable(): GraphqlPropertyDelegate<T?> = instance.asNullable()
+      override fun getValue(inst: QModel<*>, property: KProperty<*>) = ref()
       override fun equals(other: Any?): Boolean = instance == other
       override fun hashCode(): Int = instance.hashCode() * 31
     }
