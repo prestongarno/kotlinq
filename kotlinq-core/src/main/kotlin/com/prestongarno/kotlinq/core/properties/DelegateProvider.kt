@@ -20,8 +20,9 @@ package com.prestongarno.kotlinq.core.properties
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.adapters.PreDelegate
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
+import com.prestongarno.kotlinq.core.adapters.PreDelegate
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate.Companion.configuredBlock
@@ -34,9 +35,10 @@ import kotlin.reflect.KProperty
  * TODO @prestongarno should maybe use type intersections with [GraphQlPropertyPreDelegate] to remove the [DelegateProvider] nested interfaces
  */
 interface DelegateProvider<out T : Any?> {
+
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T>
 
-  interface CollectionDelegate<out T : DelegateProvider<V>, out V : Any?> : DelegateProvider<List<V>>, GraphQlPropertyPreDelegate
+  interface CollectionDelegate<out V : Any?> : DelegateProvider<List<V>>, GraphQlPropertyPreDelegate
 
   interface Configured<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T>
     : GraphQlPropertyPreDelegate.Configured<U, A, T>,
@@ -58,11 +60,30 @@ interface DelegateProvider<out T : Any?> {
       DelegateProvider<T>
 
   companion object {
-    internal fun <T> delegateProvider(constructor: (QModel<*>, KProperty<*>) -> GraphQlField<T>) = object : DelegateProvider<T> {
+
+    internal
+    fun <T> delegateProvider(constructor: (QModel<*>, KProperty<*>) -> GraphQlField<T>) = object : DelegateProvider<T> {
       override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T> = constructor(inst, property)
     }
+
+    internal
+    fun <T> collectionDelegate(
+        constructor: (QModel<*>, KProperty<*>) -> GraphqlPropertyDelegate<T>
+    ): DelegateProvider<List<T>> =
+
+        object : DelegateProvider<List<T>> {
+
+          override fun provideDelegate(inst: QModel<*>, property: KProperty<*>)
+              : GraphQlField<List<T>> =
+              constructor(inst, property).asList()
+        }
+
   }
 }
+
+internal
+fun <T : Any, A : ArgumentSpec> PreDelegate<T, A>.toListDelegate(qproperty: GraphQlProperty): DelegateProvider<List<T>> =
+    delegateProvider { inst, prop -> toDelegate(qproperty).asList() }
 
 /**
  * Resulting static schema property base type. Sub-interfaces allow for different scenarios (i.e. if fragments should be given,

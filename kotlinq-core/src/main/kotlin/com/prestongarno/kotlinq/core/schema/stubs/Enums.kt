@@ -28,6 +28,7 @@ import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -55,21 +56,18 @@ interface EnumStub<T, out A : ArgumentSpec> : GraphqlDslBuilder<A>
     internal fun <T> noArg(
         clazz: KClass<T>,
         qproperty: GraphQlProperty
-    ) where T : QEnumType, T : Enum<*> =
-        EnumNoArgImpl(clazz, qproperty)
+    ) where T : QEnumType, T : Enum<T> = EnumNoArgImpl(clazz, qproperty)
 
     internal fun <T, A> optionallyConfigured(
         clazz: KClass<T>,
         qproperty: GraphQlProperty
-    ) where T : QEnumType, T : Enum<*>, A : ArgumentSpec =
-        OptionallyConfiguredImpl<T, A>(clazz, qproperty)
+    ) where T : QEnumType, T : Enum<T>, A : ArgumentSpec = OptionallyConfiguredImpl<T, A>(clazz, qproperty)
 
     internal
     fun <T, A> configured(
         clazz: KClass<T>,
         qproperty: GraphQlProperty
-    ) where T : QEnumType, T : Enum<*>, A : ArgumentSpec =
-        EnumConfigImpl<T, A>(clazz, qproperty)
+    ) where T : QEnumType, T : Enum<T>, A : ArgumentSpec = EnumConfigImpl<T, A>(clazz, qproperty)
   }
 
 }
@@ -78,9 +76,14 @@ internal
 class EnumNoArgImpl<T>(
     val clazz: KClass<T>,
     val qproperty: GraphQlProperty
-) : GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T>
-    where T : Enum<*>,
+) : DelegateProvider.NoArg<EnumStub<T, ArgBuilder>, T>
+    where T : Enum<T>,
           T : QEnumType {
+
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T> =
+      EnumAdapterImpl(clazz, ArgBuilder())
+          .toDelegate(qproperty)
+          .bindToContext(inst)
 
   override fun invoke(args: ArgBuilder, block: (EnumStub<T, ArgBuilder>.() -> Unit)?): DelegateProvider<T> =
       DelegateProvider.delegateProvider { qModel, kProperty ->
@@ -90,27 +93,28 @@ class EnumNoArgImpl<T>(
             .bindToContext(qModel)
       }
 
-  fun asNullable(): GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> = object : GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> {
+  fun asNullable(): GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> =
+      object : GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T?> {
 
-    val clazz = this@EnumNoArgImpl.clazz
-    val prop = this@EnumNoArgImpl.qproperty
+        val clazz = this@EnumNoArgImpl.clazz
+        val prop = this@EnumNoArgImpl.qproperty
 
-    override fun invoke(args: ArgBuilder, block: (EnumStub<T, ArgBuilder>.() -> Unit)?): DelegateProvider<T?> =
-        DelegateProvider.delegateProvider { qModel, kProperty ->
-          EnumAdapterImpl(clazz, args)
-              .applyNotNull(block)
-              .toDelegate(prop)
-              .asNullable()
-              .bindToContext(qModel)
-        }
-  }
+        override fun invoke(args: ArgBuilder, block: (EnumStub<T, ArgBuilder>.() -> Unit)?): DelegateProvider<T?> =
+            DelegateProvider.delegateProvider { qModel, kProperty ->
+              EnumAdapterImpl(clazz, args)
+                  .applyNotNull(block)
+                  .toDelegate(prop)
+                  .asNullable()
+                  .bindToContext(qModel)
+            }
+      }
 }
 
 internal
 class EnumConfigImpl<T, A>(
     val clazz: KClass<T>, val qproperty: GraphQlProperty
 ) : DelegateProvider.Configured<EnumStub<T, A>, A, T>
-    where T : Enum<*>,
+    where T : Enum<T>,
           T : QEnumType,
           A : ArgumentSpec {
 
@@ -132,7 +136,7 @@ class EnumConfigImpl<T, A>(
   internal class Nullable<T, A : ArgumentSpec>(
       val clazz: KClass<T>,
       val qproperty: GraphQlProperty
-  ) : EnumStub.OptionallyConfigured.Nullable<T, A> where T : QEnumType, T : Enum<*> {
+  ) : EnumStub.OptionallyConfigured.Nullable<T, A> where T : QEnumType, T : Enum<T> {
 
     override fun invoke(block: EnumStub<T, ArgBuilder>.() -> Unit): DelegateProvider<T?> =
         delegateProvider { inst, prop ->
@@ -164,7 +168,7 @@ class OptionallyConfiguredImpl<T, A>(
     val clazz: KClass<T>,
     val qproperty: GraphQlProperty
 ) : EnumStub.OptionallyConfigured<T, A>
-    where T : Enum<*>,
+    where T : Enum<T>,
           T : QEnumType,
           A : ArgumentSpec {
 
@@ -187,6 +191,6 @@ class OptionallyConfiguredImpl<T, A>(
             .bindToContext(qModel)
       }
 
-  fun asNullable() : EnumStub.OptionallyConfigured.Nullable<T, A> = EnumConfigImpl.Nullable(clazz, qproperty)
+  fun asNullable(): EnumStub.OptionallyConfigured.Nullable<T, A> = EnumConfigImpl.Nullable(clazz, qproperty)
 
 }

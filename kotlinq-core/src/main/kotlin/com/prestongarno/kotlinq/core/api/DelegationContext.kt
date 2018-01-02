@@ -20,12 +20,14 @@ package com.prestongarno.kotlinq.core.api
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
 import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate.Companion.configuredBlock
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate.Companion.noArgBlock
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.properties.contextBuilder
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
@@ -38,6 +40,7 @@ import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 @PublishedApi
 internal
@@ -200,20 +203,20 @@ sealed class GraphQLDelegate {
 
     fun <T> stub(clazz: KClass<T>)
         : StubProvider<GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T>, GraphQlPropertyPreDelegate.NoArg<EnumStub<T, ArgBuilder>, T?>, T>
-        where T : Enum<*>, T : QEnumType =
+        where T : Enum<T>, T : QEnumType =
         Grub(clazz.graphQlName(), false,
             builder = contextBuilder { EnumStub.noArg(clazz, it) },
             nullableBuilder = contextBuilder { EnumStub.noArg(clazz, it).asNullable() })
 
     fun <T, A> optionallyConfigured(clazz: KClass<T>)
         : StubProvider<EnumStub.OptionallyConfigured<T, A>, EnumStub.OptionallyConfigured.Nullable<T, A>, T?>
-        where T : Enum<*>, T : QEnumType, A : ArgumentSpec = Grub(clazz.graphQlName(), false,
+        where T : Enum<T>, T : QEnumType, A : ArgumentSpec = Grub(clazz.graphQlName(), false,
         builder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it) },
         nullableBuilder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it).asNullable() })
 
     fun <T, A> configured(clazz: KClass<T>)
         : StubProvider<GraphQlPropertyPreDelegate.Configured<EnumStub<T, A>, A, T>, GraphQlPropertyPreDelegate.Configured<EnumStub<T, A>, A, T?>, T>
-        where T : Enum<*>, T : QEnumType, A : ArgumentSpec =
+        where T : Enum<T>, T : QEnumType, A : ArgumentSpec =
         Grub(clazz.graphQlName(), false,
             builder = contextBuilder { EnumStub.configured<T, A>(clazz, it) },
             nullableBuilder = contextBuilder { EnumStub.configured<T, A>(clazz, it).asNullable() })
@@ -281,18 +284,16 @@ sealed class GraphQLDelegate {
     }
 
     class Type : GraphQLListDelegate() {
-      fun <T : QType> stub(clazz: KClass<T>)
-          : StubProvider<DelegateProvider.CollectionDelegate<TypeStub.NoArg<T>, QModel<T>>, TypeStub.NoArg.Nullable<T>, List<QModel<T>>> =
-          Grub(clazz.graphQlName(), true,
-              builder = contextBuilder { TypeStub.noArg<T>(it) },
-              nullableBuilder = contextBuilder { TypeStub.noArg<T>(it).asNullable() })
     }
 
     class Interface : GraphQLListDelegate()
 
     class Union : GraphQLListDelegate()
 
-    class QlEnum : GraphQLListDelegate()
+    class QlEnum : GraphQLListDelegate() {
+
+      //fun <T> stub(clazz: KClass<T>) : StubProvider<DelegateProvider.CollectionDelegate<DelegateProvider.NoArg<EnumStub<T, ArgBuilder>, T>, T>, DelegateProvider.CollectionDelegate<DelegateProvider.NoArg<EnumStub<T, ArgBuilder>>, List<T>>, List<T>> where T : Enum<T>, T : QEnumType = TODO() //Grub(clazz.graphQlName(), true, builder = contextBuilder { EnumStub.noArg(clazz, it) })
+    }
 
     class Scalar : GraphQLListDelegate()
 
@@ -310,3 +311,11 @@ sealed class GraphQLDelegate {
 
 }
 
+internal
+fun <X : DelegateProvider<V>, V : Any> X.asListDelegate(transformer: (X) -> DelegateProvider.CollectionDelegate<V>)
+    : DelegateProvider.CollectionDelegate<V> = object : DelegateProvider.CollectionDelegate<V> {
+
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<List<V>> {
+
+  }
+}

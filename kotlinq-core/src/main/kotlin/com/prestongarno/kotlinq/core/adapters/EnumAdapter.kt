@@ -22,6 +22,7 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import kotlin.reflect.KClass
@@ -34,7 +35,7 @@ class EnumAdapterImpl<T, out A>(
 ) : PreDelegate<T, A>(),
     EnumStub<T, A>
 
-    where T : Enum<*>,
+    where T : Enum<T>,
           T : QEnumType,
           A : ArgumentSpec {
 
@@ -55,13 +56,15 @@ class EnumFieldImpl<T>(
     private val enumClass: KClass<T>,
     override val args: Map<String, Any>,
     private val default: T? = null
-) : GraphqlPropertyDelegate<T> where T : Enum<*>, T : QEnumType {
+) : GraphqlPropertyDelegate<T> where T : Enum<T>, T : QEnumType {
 
   var value: T? = default
 
-  override fun asNullable() = GraphqlPropertyDelegate.wrapAsNullable(this, this::value)
-
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default!!
+
+  override fun asList(): GraphqlPropertyDelegate<List<T>> = ListDelegate(this)
+
+  override fun asNullable() = GraphqlPropertyDelegate.wrapAsNullable(this, this::value)
 
   override fun accept(result: Any?): Boolean {
     // TODO don't call the java reflection type - use kotlin enums only
@@ -95,3 +98,4 @@ class EnumFieldImpl<T>(
   }
 
 }
+
