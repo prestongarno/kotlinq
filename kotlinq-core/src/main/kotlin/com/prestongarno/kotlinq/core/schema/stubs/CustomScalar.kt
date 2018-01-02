@@ -42,9 +42,9 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
 
   @Suppress("AddVarianceModifier")
   interface CustomScalarDelegate<T : CustomScalar>
-    : GraphQlPropertyPreDelegate<T>,
+    : GraphQlPropertyPreDelegate,
       DelegateProvider<String> {
-    interface Nullable<T : CustomScalar> : GraphQlPropertyPreDelegate<T>, DelegateProvider<String?>
+    interface Nullable<T : CustomScalar> : GraphQlPropertyPreDelegate, DelegateProvider<String?>
   }
 
   interface NoArg<T : CustomScalar> : CustomScalarDelegate<T> {
@@ -67,7 +67,7 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
     interface Nullable<T : CustomScalar, A : ArgumentSpec> : CustomScalarDelegate.Nullable<T>, NoArg.Nullable<T>, Configured.Nullable<T, A>
   }
 
-  interface Configured<T : CustomScalar, A : ArgumentSpec> : GraphQlPropertyPreDelegate<T> {
+  interface Configured<T : CustomScalar, A : ArgumentSpec> : GraphQlPropertyPreDelegate {
     operator fun <V : Any> invoke(
         arguments: A,
         mapper: Mapper<V>,
@@ -80,7 +80,7 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
     ): DelegateProvider<String> =
         invoke(arguments, Mapper.IDENTITY, block)
 
-    interface Nullable<T : CustomScalar, A : ArgumentSpec> : GraphQlPropertyPreDelegate<T> {
+    interface Nullable<T : CustomScalar, A : ArgumentSpec> : GraphQlPropertyPreDelegate {
       operator fun <V : Any> invoke(arguments: A, mapper: Mapper<V>, block: CustomScalarStub<T, V, A>.() -> Unit = empty()): DelegateProvider<V?>
       operator fun invoke(arguments: A, block: CustomScalarStub<T, String, A>.() -> Unit): DelegateProvider<String?> = invoke(arguments, Mapper.IDENTITY, block)
     }

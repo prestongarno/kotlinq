@@ -18,12 +18,13 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import kotlin.reflect.KProperty
 
-interface StubProvider<out X : GraphQlPropertyPreDelegate<T>, out Y : GraphQlPropertyPreDelegate<T?>, out T : Any?> {
+interface StubProvider<out X : GraphQlPropertyPreDelegate, out Y : GraphQlPropertyPreDelegate, out T : Any?> {
 
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 
@@ -36,7 +37,7 @@ interface StubProvider<out X : GraphQlPropertyPreDelegate<T>, out Y : GraphQlPro
   }
 }
 
-interface NullableStubProvider<out X : GraphQlPropertyPreDelegate<*>> {
+interface NullableStubProvider<out X : GraphQlPropertyPreDelegate> {
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 }
 
@@ -59,7 +60,7 @@ interface Stub<out T> {
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 internal
-class Grub<out X : GraphQlPropertyPreDelegate<T>, out Y : GraphQlPropertyPreDelegate<T?>, out T: Any?>(
+class Grub<out X : GraphQlPropertyPreDelegate, out Y : GraphQlPropertyPreDelegate, out T: Any?>(
     val typeName: String,
     val isList: Boolean = false,
     val builder: GraphQlPropertyContext.Companion.Builder<X>,

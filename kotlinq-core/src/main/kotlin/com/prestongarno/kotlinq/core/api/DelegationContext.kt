@@ -22,6 +22,7 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
+import com.prestongarno.kotlinq.core.properties.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate.Companion.configuredBlock
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate.Companion.noArgBlock
@@ -279,7 +280,13 @@ sealed class GraphQLDelegate {
       override val list: GraphQLListDelegate get() = this
     }
 
-    class Type : GraphQLListDelegate()
+    class Type : GraphQLListDelegate() {
+      fun <T : QType> stub(clazz: KClass<T>)
+          : StubProvider<DelegateProvider.CollectionDelegate<TypeStub.NoArg<T>, QModel<T>>, TypeStub.NoArg.Nullable<T>, List<QModel<T>>> =
+          Grub(clazz.graphQlName(), true,
+              builder = contextBuilder { TypeStub.noArg<T>(it) },
+              nullableBuilder = contextBuilder { TypeStub.noArg<T>(it).asNullable() })
+    }
 
     class Interface : GraphQLListDelegate()
 

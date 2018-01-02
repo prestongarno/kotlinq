@@ -35,13 +35,12 @@ abstract class PreDelegate<out T: Any?, out A : ArgumentSpec> : GraphqlDslBuilde
 }
 
 internal
-fun <T : GraphqlPropertyDelegate<*>> T.bind(inst: QModel<*>): T = this.let(inst::register)
+fun <T : Any> T.applyNotNull(scope: (T.() -> Unit)?): T =
+    scope?.let { this.apply(it) } ?: this
 
 internal
-fun <T : Any> T.applyNotNull(scope: (T.() -> Unit)?): T {
-  return scope?.let { this.apply(it) } ?: this
-}
-
-internal
-fun <A : ArgumentSpec?> A?.toMap(): Map<String, Any> = this?.arguments?.invoke() ?: emptyMap()
+fun <A : ArgumentSpec?> A?.toMap(): Map<String, Any> =
+    this?.arguments
+        ?.invoke()
+        ?: emptyMap()
 

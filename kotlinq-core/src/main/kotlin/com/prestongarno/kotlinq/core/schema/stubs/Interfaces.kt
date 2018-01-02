@@ -29,9 +29,7 @@ import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 
-/**
- * Remember -> compile generate all interface types to be *both* [QType] ***and*** [QInterface]
- */
+
 interface InterfaceStub<in I, out A : ArgumentSpec>
   : FragmentStub<I>,
     GraphqlDslBuilder<A>

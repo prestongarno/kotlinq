@@ -25,6 +25,7 @@ import com.prestongarno.kotlinq.core.api.ModelProvider
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import kotlin.reflect.KProperty
@@ -51,17 +52,30 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
 ) : GraphqlPropertyDelegate<P>,
     ModelProvider {
 
-  override val value by lazy(init)
+  private var _value: P? = null
 
-  val nullable: GraphqlPropertyDelegate<P?> by lazy { wrapAsNullable(this, this::value) }
+  override val value get() = _value ?: init().also { _value = it }
 
-  override fun asNullable(): GraphqlPropertyDelegate<P?> = nullable
+  val nullable: GraphqlPropertyDelegate<P?> by lazy { wrapAsNullable(this, this::_value) }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): P = value
+  override fun asNullable()
+      : GraphqlPropertyDelegate<P?> =
+      nullable
 
-  override fun accept(result: Any?) = acceptAndReturn(result)?.resolved == true
+  override fun asList()
+      : GraphqlPropertyDelegate<List<P>> =
+      ListDelegate(this)
 
-  override fun acceptAndReturn(obj: Any?): P? = if (obj !is JsonObject) null else value.apply {
+  override fun getValue(inst: QModel<*>, property: KProperty<*>)
+      : P =
+      value
+
+  override fun accept(result: Any?): Boolean {
+    _value = acceptAndReturn(result)
+    return _value?.isResolved == true
+  }
+
+  override fun acceptAndReturn(obj: Any?): P? = if (obj !is JsonObject) null else init().apply {
     resolved = fields.filterNot { (_, value) -> value.accept(obj[value.qproperty.graphqlName]) }.isEmpty()
   }
 

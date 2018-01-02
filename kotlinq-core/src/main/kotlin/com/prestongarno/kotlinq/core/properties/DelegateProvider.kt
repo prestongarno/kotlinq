@@ -36,22 +36,24 @@ import kotlin.reflect.KProperty
 interface DelegateProvider<out T : Any?> {
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): QField<T>
 
-  interface Configured<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T>
+  interface CollectionDelegate<out T : DelegateProvider<V>, out V : Any?> : DelegateProvider<List<V>>, GraphQlPropertyPreDelegate
+
+  interface Configured<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T>
     : GraphQlPropertyPreDelegate.Configured<U, A, T>,
       DelegateProvider<T> {
 
-    interface Nullable<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T> : Configured<U, A, T?>
+    interface Nullable<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : Configured<U, A, T?>
   }
 
-  interface ConfiguredBlock<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T>
+  interface ConfiguredBlock<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T>
     : GraphQlPropertyPreDelegate.ConfiguredBlock<U, A, T>,
       DelegateProvider<T>
 
-  interface NoArg<out U : GraphqlDslBuilder<ArgBuilder>, T>
+  interface NoArg<out U : GraphqlDslBuilder<ArgBuilder>, out T>
     : GraphQlPropertyPreDelegate.NoArg<U, T>,
       DelegateProvider<T>
 
-  interface NoArgBlock<out U : GraphqlDslBuilder<ArgBuilder>, T>
+  interface NoArgBlock<out U : GraphqlDslBuilder<ArgBuilder>, out T>
     : GraphQlPropertyPreDelegate.NoArgBlock<U, T>,
       DelegateProvider<T>
 
@@ -65,24 +67,22 @@ interface DelegateProvider<out T : Any?> {
 /**
  * Resulting static schema property base type. Sub-interfaces allow for different scenarios (i.e. if fragments should be given,
  * then use [GraphQlPropertyPreDelegate.Configured] to force a DSL block which is where fragments are defined)
- *
- * TODO @prestongarno maybe remove the "T" argument, and have that taken care of by [com.prestongarno.kotlinq.core.adapters.PreDelegate] argument
  */
-interface GraphQlPropertyPreDelegate<out T : Any?> {
+interface GraphQlPropertyPreDelegate {
 
-  interface Configured<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T> : GraphQlPropertyPreDelegate<T> {
+  interface Configured<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : GraphQlPropertyPreDelegate {
     operator fun invoke(args: A, block: (U.() -> Unit)? = null): DelegateProvider<T>
   }
 
-  interface ConfiguredBlock<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, T> : GraphQlPropertyPreDelegate<T> {
+  interface ConfiguredBlock<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : GraphQlPropertyPreDelegate {
     operator fun invoke(args: A, block: U.() -> Unit): DelegateProvider<T>
   }
 
-  interface NoArg<out U : GraphqlDslBuilder<ArgBuilder>, T> : GraphQlPropertyPreDelegate<T> {
+  interface NoArg<out U : GraphqlDslBuilder<ArgBuilder>, out T> : GraphQlPropertyPreDelegate {
     operator fun invoke(args: ArgBuilder = ArgBuilder(), block: (U.() -> Unit)? = null): DelegateProvider<T>
   }
 
-  interface NoArgBlock<out U : GraphqlDslBuilder<ArgBuilder>, T> : GraphQlPropertyPreDelegate<T> {
+  interface NoArgBlock<out U : GraphqlDslBuilder<ArgBuilder>, out T> : GraphQlPropertyPreDelegate {
     operator fun invoke(args: ArgBuilder = ArgBuilder(), block: U.() -> Unit): DelegateProvider<T>
   }
 
@@ -108,7 +108,7 @@ interface GraphQlPropertyPreDelegate<out T : Any?> {
 }
 
 internal
-class NoArgImpl<out U : PreDelegate<T, ArgBuilder>, T>(
+class NoArgImpl<out U : PreDelegate<T, ArgBuilder>, out T>(
     private val qproperty: GraphQlProperty,
     private val constructor: (ArgBuilder) -> U,
     private val onDelegate: (ArgBuilder, U.() -> Unit) -> DelegateProvider<T>
@@ -124,7 +124,7 @@ class NoArgImpl<out U : PreDelegate<T, ArgBuilder>, T>(
   override fun invoke(args: ArgBuilder, block: U.() -> Unit): DelegateProvider<T> = onDelegate(args, block)
 }
 
-internal class ConfiguredBlockImpl<out U : PreDelegate<T, A>, A : ArgumentSpec, T>(
+internal class ConfiguredBlockImpl<out U : PreDelegate<T, A>, A : ArgumentSpec, out T>(
     private val qproperty: GraphQlProperty,
     private val constructor: (A) -> U,
     private val onDelegate: (A, U.() -> Unit) -> DelegateProvider<T>
@@ -133,6 +133,6 @@ internal class ConfiguredBlockImpl<out U : PreDelegate<T, A>, A : ArgumentSpec, 
   override fun invoke(args: A, block: U.() -> Unit): DelegateProvider<T> = onDelegate(args, block)
 
   fun asNullable(): GraphQlPropertyPreDelegate.ConfiguredBlock<U, A, T?> = configuredBlock(qproperty, constructor) { args, block ->
-    delegateProvider { model, property -> constructor(args).apply(block).toDelegate(qproperty).asNullable().bindToContext(model) }
+    delegateProvider { model, _ -> constructor(args).apply(block).toDelegate(qproperty).asNullable().bindToContext(model) }
   }
 }
