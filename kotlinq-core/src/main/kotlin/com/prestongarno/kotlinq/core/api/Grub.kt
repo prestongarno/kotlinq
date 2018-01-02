@@ -18,26 +18,24 @@
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
-import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import kotlin.reflect.KProperty
 
-interface StubProvider<out X : GraphQlPropertyPreDelegate, out Y : GraphQlPropertyPreDelegate, out T : Any?> {
+interface NullStubProvider<out X, out Y> {
 
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 
-  fun asNullable(): NullableStubProvider<Y>
+  fun asNullable(): StubProvider<Y>
 
   companion object {
     @PublishedApi
     internal
-    val delegationContext: DelegationContext by lazy { DefaultDelegationContext() }
+    val delegationContext: DelegationContext by lazy(::DefaultDelegationContext)
   }
 }
 
-interface NullableStubProvider<out X : GraphQlPropertyPreDelegate> {
+interface StubProvider<out X> {
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 }
 
@@ -60,14 +58,14 @@ interface Stub<out T> {
  * delegating to. This way, the delegate property can be passed to the delegate/schemastub type without having
  * to resort to hard-wired  &/or needlessly complex metadata methods such as (god forbid) annotations */
 internal
-class Grub<out X : GraphQlPropertyPreDelegate, out Y : GraphQlPropertyPreDelegate, out T: Any?>(
+class Grub<out X, out Y>(
     val typeName: String,
     val isList: Boolean = false,
     val builder: GraphQlPropertyContext.Companion.Builder<X>,
     val nullableBuilder: GraphQlPropertyContext.Companion.Builder<Y>
-) : StubProvider<X, Y, T> {
+) : NullStubProvider<X, Y> {
 
-  override fun asNullable(): NullableStubProvider<Y> = object : NullableStubProvider<Y> {
+  override fun asNullable(): StubProvider<Y> = object : StubProvider<Y> {
     override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<Y> =
         nullableBuilder.build(GraphQlProperty.from(typeName, isList, property.name))
   }

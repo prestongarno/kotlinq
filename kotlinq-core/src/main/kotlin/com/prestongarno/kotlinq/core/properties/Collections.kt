@@ -3,9 +3,11 @@ package com.prestongarno.kotlinq.core.properties
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty.Companion.from
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
 
 
@@ -66,6 +68,17 @@ class NullableElementListDelegate<out T : Any?>(val adapter: GraphqlPropertyDele
           ?.map(MutableMap.MutableEntry<String, Any?>::value)
           ?.map(adapter::transform)
 }
+
+internal
+fun <T> collectionDelegate(
+    constructor: (QModel<*>, KProperty<*>) -> GraphqlPropertyDelegate<T>
+) = object : DelegateProvider<List<T>> {
+
+      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>)
+          : GraphQlField<List<T>> =
+          constructor(inst, property).asList()
+    }
+
 
 internal
 fun GraphQlProperty.toList() = if (!isList) from(

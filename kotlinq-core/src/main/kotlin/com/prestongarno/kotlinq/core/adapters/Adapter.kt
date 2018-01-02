@@ -84,7 +84,7 @@ interface GraphqlPropertyDelegate<out T : Any?> : GraphQlField<T>, Adapter {
   companion object {
 
     internal
-    fun <T : Any> wrapAsNullable(
+    fun <T : Any?> wrapAsNullable(
         instance: GraphqlPropertyDelegate<T>,
         ref: () -> T?
     ): GraphqlPropertyDelegate<T?> = NullableDelegate(instance, ref)

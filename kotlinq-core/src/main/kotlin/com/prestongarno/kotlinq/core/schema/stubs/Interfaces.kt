@@ -22,10 +22,10 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
-import com.prestongarno.kotlinq.core.properties.DelegateProvider
-import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
+import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 
@@ -35,12 +35,13 @@ interface InterfaceStub<in I, out A : ArgumentSpec>
     GraphqlDslBuilder<A>
     where I : QInterface, I : QType {
 
-  interface OptionallyConfigured<I, A> : GraphQlPropertyPreDelegate.ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>
+  interface OptionallyConfigured<I, A> : ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>
       where I : QInterface, I : QType, A : ArgumentSpec {
     operator fun invoke(block: InterfaceStub<I, ArgBuilder>.() -> Unit): DelegateProvider<QModel<I>?>
   }
 
   companion object {
+
     internal
     fun <I, A> optionallyConfigured(qproperty: GraphQlProperty): InterfaceStub.OptionallyConfigured<I, A>
         where I : QInterface, I : QType, A : ArgumentSpec =

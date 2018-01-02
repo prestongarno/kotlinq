@@ -24,6 +24,7 @@ import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.NullableElementListDelegate
 import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KProperty
@@ -58,6 +59,9 @@ data class UnionAdapterImpl(
   var value: QModel<*>? = null
 
   override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> = this
+
+  override fun asList(): GraphqlPropertyDelegate<List<QModel<*>?>> =
+      NullableElementListDelegate(this)
 
   override fun accept(result: Any?): Boolean {
     if (result is JsonObject) value = transform(result)

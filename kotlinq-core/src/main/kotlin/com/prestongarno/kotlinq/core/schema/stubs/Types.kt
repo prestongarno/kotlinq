@@ -20,20 +20,17 @@ package com.prestongarno.kotlinq.core.schema.stubs
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.TypeStubAdapter
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.internal.empty
-import com.prestongarno.kotlinq.core.properties.DelegateProvider
-import com.prestongarno.kotlinq.core.properties.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.GraphQlPropertyPreDelegate
-import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.schema.QType
 
 interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
-  interface NoArg<in T : QType> : GraphQlPropertyPreDelegate {
+  interface NoArg<in T : QType> {
 
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
@@ -41,7 +38,7 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
         block: TypeStub<ArgBuilder>.() -> Unit = empty()
     ): DelegateProvider<U>
 
-    interface Nullable<in T : QType> : GraphQlPropertyPreDelegate {
+    interface Nullable<in T : QType> {
       operator fun <U : QModel<T>> invoke(
           constructor: () -> U,
           arguments: ArgBuilder = ArgBuilder(),
@@ -50,14 +47,14 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
     }
   }
 
-  interface Configured<in T : QType, A : ArgumentSpec> : GraphQlPropertyPreDelegate {
+  interface Configured<in T : QType, A : ArgumentSpec> {
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
         arguments: A,
         block: TypeStub<A>.() -> Unit = empty()
     ): DelegateProvider<U>
 
-    interface Nullable<in T : QType, A : ArgumentSpec> : GraphQlPropertyPreDelegate {
+    interface Nullable<in T : QType, A : ArgumentSpec> {
       operator fun <U : QModel<T>> invoke(
           constructor: () -> U,
           arguments: A,
@@ -131,7 +128,7 @@ class NullableOptionalConfigImpl<in T : QType, A : ArgumentSpec>(val qproperty: 
       createNullableTypeDelegate(qproperty, constructor, arguments, block)
 
   override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): DelegateProvider<U?> =
-    createNullableTypeDelegate(qproperty, constructor, ArgBuilder(), block)
+      createNullableTypeDelegate(qproperty, constructor, ArgBuilder(), block)
 }
 
 private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createTypeDelegate(

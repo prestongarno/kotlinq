@@ -18,15 +18,10 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.core.schema.QInputType
-import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
-import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
-import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
-import com.prestongarno.kotlinq.core.schema.stubs.UnionListStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -40,6 +35,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import org.antlr.v4.runtime.ParserRuleContext
+import kotlin.reflect.KClass
 
 sealed class ScopedSymbol : SymbolElement {
   abstract val nullable: Boolean
@@ -132,15 +128,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
       is ScalarType -> ScalarSymbols.named[type.name]!!.typeDef.stubClass
     }
 
-    fun `type name for list field`() = when (type) {
-      is EnumDef -> EnumListStub::class
-      is InterfaceDef -> InterfaceListStub::class
-      is ScalarDef -> CustomScalarListStub::class
-      is InputDef -> QInputType::class
-      is TypeDef -> TypeListStub::class
-      is UnionDef -> UnionListStub::class
-      is ScalarType -> ScalarSymbols.named[type.name]!!.typeDef.arrayStubClass
-    }
+    fun `type name for list field`(): KClass<*> = throw UnsupportedOperationException("Need to implement")
     // hell kotlinpoet why do you try to be so helpful with imports
     val baseTypeName = (if (isList) `type name for list field`() else `type name for non-collection field`())
         .asTypeName()

@@ -17,14 +17,7 @@
 
 package com.prestongarno.kotlinq.core.schema.stubs
 
-import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.adapters.applyNotNull
-import com.prestongarno.kotlinq.core.adapters.bind
-import com.prestongarno.kotlinq.core.adapters.toMap
-import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import kotlin.reflect.KProperty
 
 interface StringArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<StringArrayStub> {
 

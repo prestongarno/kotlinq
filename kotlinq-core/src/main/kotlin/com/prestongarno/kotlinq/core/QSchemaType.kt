@@ -19,7 +19,7 @@
 
 package com.prestongarno.kotlinq.core
 
-import com.prestongarno.kotlinq.core.api.StubProvider.Companion.delegationContext
+import com.prestongarno.kotlinq.core.api.NullStubProvider.Companion.delegationContext
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
@@ -98,18 +98,18 @@ interface QSchemaType {
   object QEnum {
 
     inline fun <reified T> stub()
-        where T : Enum<*>,
+        where T : Enum<T>,
               T : QEnumType =
         delegationContext.enum.stub(T::class)
 
     inline fun <reified T, A : ArgumentSpec> optionallyConfigured()
-        where T : Enum<*>,
+        where T : Enum<T>,
               T : QEnumType =
         delegationContext.enum.optionallyConfigured<T, A>(T::class)
 
 
     inline fun <reified T, A : ArgumentSpec> configured()
-        where T : Enum<*>,
+        where T : Enum<T>,
               T : QEnumType =
         delegationContext.enum.configured<T, A>(T::class)
 

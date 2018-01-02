@@ -19,14 +19,16 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import kotlin.reflect.KProperty
 
 internal
-class CustomScalarStubImpl<E : CustomScalar, Q, out A : ArgumentSpec>(
+class CustomScalarStubImpl<E : CustomScalar, Q : Any, out A : ArgumentSpec>(
     private val mapper: CustomScalarStub.Mapper<Q>,
     val arguments: A? = null
 ) : PreDelegate<Q, A>(),
@@ -43,16 +45,17 @@ class CustomScalarStubImpl<E : CustomScalar, Q, out A : ArgumentSpec>(
   }
 }
 
-private data class CustomScalarFieldImpl<Q>(
+private data class CustomScalarFieldImpl<Q : Any>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: CustomScalarStub.Mapper<Q>,
     val default: Q?
 ) : GraphqlPropertyDelegate<Q> {
 
-  private val nullable by lazy {
-    GraphqlPropertyDelegate.wrapAsNullable(this, this::value)
-  }
+  private val nullable by lazy { wrapAsNullable(this, this::value) }
+
+  override fun asList(): GraphqlPropertyDelegate<List<Q>> =
+      ListDelegate(this)
 
   private var _value: Q? = null
 

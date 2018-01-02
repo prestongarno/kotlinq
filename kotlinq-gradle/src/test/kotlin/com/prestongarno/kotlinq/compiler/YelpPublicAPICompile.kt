@@ -22,13 +22,6 @@ import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArguments
 import com.prestongarno.kotlinq.compiler.ParameterQualification.Companion.nullability
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
-import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import org.junit.Test
 
 /**

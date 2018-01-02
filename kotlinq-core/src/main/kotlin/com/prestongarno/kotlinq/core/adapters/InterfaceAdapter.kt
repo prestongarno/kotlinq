@@ -24,6 +24,8 @@ import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.ListDelegate
+import com.prestongarno.kotlinq.core.properties.NullableElementListDelegate
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
@@ -65,6 +67,9 @@ class InterfaceAdapterImpl<I : QType>(
   var value: QModel<I>? = null
 
   override fun asNullable(): GraphqlPropertyDelegate<QModel<I>?> = this
+
+  override fun asList(): GraphqlPropertyDelegate<List<QModel<I>?>> =
+      NullableElementListDelegate(this)
 
   override fun accept(result: Any?): Boolean {
     if (result !is JsonObject) return false

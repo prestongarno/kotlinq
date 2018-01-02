@@ -23,7 +23,7 @@ import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.argumentsMatching
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
-import com.prestongarno.kotlinq.core.properties.DelegateProvider
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import org.junit.After
 import org.junit.Before
@@ -59,7 +59,7 @@ class EnumCompileTest : JavacTest() {
     }
 
     kprop("enumProperty") { gqlEnum ->
-      gqlEnum requireReturns DelegateProvider.NoArg::class
+      gqlEnum requireReturns DelegateProvider.NoArgDelegate::class
       gqlEnum.returnType mustHave reifiedArgumentsMatching(enumClazz)
     }
   }.ignore()

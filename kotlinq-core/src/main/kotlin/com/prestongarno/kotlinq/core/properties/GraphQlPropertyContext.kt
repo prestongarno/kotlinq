@@ -5,17 +5,19 @@ import com.prestongarno.kotlinq.core.api.Stub
 import kotlin.reflect.KProperty
 
 
-interface GraphQlPropertyContext<out X : GraphQlPropertyPreDelegate> : Stub<X> {
+interface GraphQlPropertyContext<out X> : Stub<X> {
   companion object {
+
     internal
-    class Builder<out S : GraphQlPropertyPreDelegate>(val delegateProvider: (GraphQlProperty) -> S) {
+    class Builder<out S>(val delegateProvider: (GraphQlProperty) -> S) {
       fun build(property: GraphQlProperty): GraphQlPropertyContext<S> =
           GraphQlPropertyContextImpl(delegateProvider(property), property)
     }
+
   }
 }
 
-private class GraphQlPropertyContextImpl<out X : GraphQlPropertyPreDelegate>(
+private class GraphQlPropertyContextImpl<out X>(
     val provider: X,
     val property: GraphQlProperty
 ) : GraphQlPropertyContext<X> {
@@ -23,5 +25,5 @@ private class GraphQlPropertyContextImpl<out X : GraphQlPropertyPreDelegate>(
 }
 
 internal
-fun <X : GraphQlPropertyPreDelegate> contextBuilder(init: (GraphQlProperty) -> X): GraphQlPropertyContext.Companion.Builder<X> =
+fun <X> contextBuilder(init: (GraphQlProperty) -> X): GraphQlPropertyContext.Companion.Builder<X> =
     GraphQlPropertyContext.Companion.Builder(init)
