@@ -24,19 +24,19 @@ interface TypeList<in T : QType> {
 
   }
 
-  interface OptionallyConfigured<in T : QType, in A : ArgumentSpec, out Z : List<*>?> : TypeList<T>, Configured<T, A?, Z> {
+  interface OptionallyConfigured<in T : QType, in A : ArgumentSpec, out Z : List<*>?> : TypeList<T>, Configured<T, A?> {
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
         block: TypeStub<ArgBuilder>.() -> Unit = empty()
-    ): DelegateProvider<Z> = invoke(constructor, null, empty())
+    ): DelegateProvider<List<U>> = invoke(constructor, null, empty())
   }
 
-  interface Configured<in T : QType, in A : ArgumentSpec?, out Z : List<*>?> : TypeList<T> {
+  interface Configured<in T : QType, in A : ArgumentSpec?> : TypeList<T> {
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
         arguments: A,
         block: TypeStub<ArgBuilder>.() -> Unit = empty()
-    ): DelegateProvider<Z>
+    ): DelegateProvider<List<U>>
   }
 
 }
