@@ -24,13 +24,15 @@ import com.prestongarno.kotlinq.core.adapters.TypeStubAdapter
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
+import com.prestongarno.kotlinq.core.properties.delegates.InternalDelegateProvider
 import com.prestongarno.kotlinq.core.schema.QType
 
 interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
-  interface NoArg<in T : QType> {
+  interface NoArg<in T : QType>  {
 
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
@@ -38,7 +40,7 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
         block: TypeStub<ArgBuilder>.() -> Unit = empty()
     ): DelegateProvider<U>
 
-    interface Nullable<in T : QType> {
+    interface Nullable<in T : QType>  {
       operator fun <U : QModel<T>> invoke(
           constructor: () -> U,
           arguments: ArgBuilder = ArgBuilder(),
@@ -47,7 +49,7 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
     }
   }
 
-  interface Configured<in T : QType, A : ArgumentSpec> {
+  interface Configured<in T : QType, A : ArgumentSpec>  {
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
         arguments: A,
@@ -90,30 +92,37 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 }
 
 internal
-class NoArgImpl<in T : QType>(val qproperty: GraphQlProperty) : TypeStub.NoArg<T> {
+class NoArgImpl<in T : QType>(
+    val qproperty: GraphQlProperty
+) : TypeStub.NoArg<T> {
+
   override fun <U : QModel<T>> invoke(
       constructor: () -> U,
       arguments: ArgBuilder,
       block: TypeStub<ArgBuilder>.() -> Unit
   ): DelegateProvider<U> = createTypeDelegate(qproperty, constructor, arguments, block)
 
-  fun asNullable(): TypeStub.NoArg.Nullable<T> = NullableNoArgImpl(qproperty)
+  fun asNullable(): TypeStub.NoArg.Nullable<T> = NullableNoArgImpl<T>(qproperty)
 }
 
-private
-class NullableNoArgImpl<in T : QType>(val qproperty: GraphQlProperty) : TypeStub.NoArg.Nullable<T> {
+internal
+class NullableNoArgImpl<in T : QType>(
+    val qproperty: GraphQlProperty
+) : TypeStub.NoArg.Nullable<T> {
 
   override fun <U : QModel<T>> invoke(
       constructor: () -> U,
       arguments: ArgBuilder,
       block: TypeStub<ArgBuilder>.() -> Unit
-  ): DelegateProvider<U?> = createNullableTypeDelegate(qproperty, constructor, arguments, block)
+  ): DelegateProvider<U?> =
+      createNullableTypeDelegate(qproperty, constructor, arguments, block)
+
 }
 
 internal
 class OptionalConfiguredImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured<T, A> {
 
-  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): DelegateProvider<U> =
+  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): InternalDelegateProvider<U> =
       createTypeDelegate(qproperty, constructor, ArgBuilder(), block)
 
   override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U> =
@@ -136,7 +145,7 @@ private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createTypeDelegate(
     ctor: () -> U,
     args: A? = null,
     block: TypeStub<A>.() -> Unit = empty()
-): DelegateProvider<U> = delegateProvider { model, _ ->
+): InternalDelegateProvider<U> = delegateProvider { model, _ ->
   TypeStubAdapter(ctor, args)
       .apply(block)
       .toDelegate(property)
@@ -148,7 +157,7 @@ private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createNullableTypeDeleg
     ctor: () -> U,
     args: A? = null,
     block: TypeStub<A>.() -> Unit = empty()
-): DelegateProvider<U?> = delegateProvider { model, _ ->
+): InternalDelegateProvider<U?> = delegateProvider { model, _ ->
   TypeStubAdapter(ctor, args)
       .apply(block)
       .toDelegate(property)
@@ -156,3 +165,46 @@ private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createNullableTypeDeleg
       .bindToContext(model)
 }
 
+
+interface TypeList<in T : QType, out Z : List<*>?> {
+
+  fun asList(): TypeList<T, List<Z>>
+  fun asNullable(): TypeList<T, List<Z>?>
+
+  interface NoArg<in T : QType, out Z : List<*>?> : TypeList<T, Z>, Configured<T, ArgBuilder?, Z> {
+    override fun <U : QModel<T>> invoke(
+        constructor: () -> U,
+        arguments: ArgBuilder?,
+        block: TypeStub<ArgBuilder>.() -> Unit
+    ): DelegateProvider<Z> = invoke(constructor, arguments ?: ArgBuilder(), block)
+  }
+
+  interface OptionallyConfigured<in T : QType, in A : ArgumentSpec, out Z : List<*>?> : TypeList<T, Z>, Configured<T, A?, Z> {
+    operator fun <U : QModel<T>> invoke(
+        constructor: () -> U,
+        block: TypeStub<ArgBuilder>.() -> Unit = empty()
+    ): DelegateProvider<Z> = invoke(constructor, null, empty())
+  }
+
+  interface Configured<in T : QType, in A : ArgumentSpec?, out Z : List<*>?> : TypeList<T, Z> {
+    operator fun <U : QModel<T>> invoke(
+        constructor: () -> U,
+        arguments: A,
+        block: TypeStub<ArgBuilder>.() -> Unit = empty()
+    ): DelegateProvider<Z>
+  }
+}
+
+internal
+class TypeListImpl<in T : QType, out Z : List<X>?, out X: Any?>(
+    val graphQlProperty: GraphQlProperty
+) : TypeList.NoArg<T, Z> {
+
+  override fun asList(): TypeList<T, List<Z>> {
+    TODO()
+  }
+
+  override fun asNullable(): TypeList<T, List<Z>?> {
+    TODO("not implemented")
+  }
+}

@@ -26,11 +26,11 @@ import com.prestongarno.kotlinq.core.adapters.CustomScalarStubImpl
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.internal.empty
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
 import com.prestongarno.kotlinq.core.properties.contextBuilder
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import java.io.InputStream
 import kotlin.reflect.KProperty
@@ -41,7 +41,8 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
 
   @Suppress("AddVarianceModifier")
   interface CustomScalarDelegate<T : CustomScalar>
-    :      DelegateProvider<String> {
+    : DelegateProvider<String> {
+
     interface Nullable<T : CustomScalar> : DelegateProvider<String?>
   }
 
@@ -65,7 +66,7 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
     interface Nullable<T : CustomScalar, A : ArgumentSpec> : CustomScalarDelegate.Nullable<T>, NoArg.Nullable<T>, Configured.Nullable<T, A>
   }
 
-  interface Configured<T : CustomScalar, A : ArgumentSpec>  {
+  interface Configured<T : CustomScalar, A : ArgumentSpec> {
     operator fun <V : Any> invoke(
         arguments: A,
         mapper: Mapper<V>,
@@ -78,7 +79,7 @@ interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlD
     ): DelegateProvider<String> =
         invoke(arguments, Mapper.IDENTITY, block)
 
-    interface Nullable<T : CustomScalar, A : ArgumentSpec>  {
+    interface Nullable<T : CustomScalar, A : ArgumentSpec> {
       operator fun <V : Any> invoke(arguments: A, mapper: Mapper<V>, block: CustomScalarStub<T, V, A>.() -> Unit = empty()): DelegateProvider<V?>
       operator fun invoke(arguments: A, block: CustomScalarStub<T, String, A>.() -> Unit): DelegateProvider<String?> = invoke(arguments, Mapper.IDENTITY, block)
     }

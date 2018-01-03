@@ -119,19 +119,19 @@ sealed class GraphQLDelegate {
   class Type : GraphQLDelegate() {
 
     fun <T : QType> stub(clazz: KClass<T>)
-        : NullStubProvider<TypeStub.NoArg<T>, TypeStub.NoArg.Nullable<T>> =
+        : NullableStubProvider<TypeStub.NoArg<T>, TypeStub.NoArg.Nullable<T>> =
         Grub(clazz.graphQlName(), false,
             builder = contextBuilder { TypeStub.noArg<T>(it) },
             nullableBuilder = contextBuilder { TypeStub.noArg<T>(it).asNullable() })
 
     fun <T : QType, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
-        : NullStubProvider<TypeStub.OptionalConfigured<T, A>, TypeStub.OptionalConfigured.Nullable<T, A>> =
+        : NullableStubProvider<TypeStub.OptionalConfigured<T, A>, TypeStub.OptionalConfigured.Nullable<T, A>> =
         Grub(clazz.graphQlName(), false,
             builder = contextBuilder { TypeStub.optionallyConfigured<T, A>(it) },
             nullableBuilder = contextBuilder { TypeStub.optionallyConfigured<T, A>(it).asNullable() })
 
     fun <T : QType, A : ArgumentSpec> configured(clazz: KClass<T>)
-        : NullStubProvider<TypeStub.Configured<T, A>, TypeStub.Configured.Nullable<T, A>> =
+        : NullableStubProvider<TypeStub.Configured<T, A>, TypeStub.Configured.Nullable<T, A>> =
         optionallyConfigured(clazz)
 
     override val list: Lists.Type = Lists.Type()
@@ -202,20 +202,20 @@ sealed class GraphQLDelegate {
   class QlEnum : GraphQLDelegate() {
 
     fun <T> stub(clazz: KClass<T>)
-        : NullStubProvider<DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T>, DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T?>>
+        : NullableStubProvider<DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T>, DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T?>>
         where T : Enum<T>, T : QEnumType =
         Grub(clazz.graphQlName(), false,
             builder = contextBuilder { EnumStub.noArg(clazz, it) },
             nullableBuilder = contextBuilder { EnumStub.noArg(clazz, it).asNullable() })
 
     fun <T, A> optionallyConfigured(clazz: KClass<T>)
-        : NullStubProvider<EnumStub.OptionallyConfigured<T, A>, EnumStub.OptionallyConfigured.Nullable<T, A>>
+        : NullableStubProvider<EnumStub.OptionallyConfigured<T, A>, EnumStub.OptionallyConfigured.Nullable<T, A>>
         where T : Enum<T>, T : QEnumType, A : ArgumentSpec = Grub(clazz.graphQlName(), false,
         builder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it) },
         nullableBuilder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it).asNullable() })
 
     fun <T, A> configured(clazz: KClass<T>)
-        : NullStubProvider<Configured<EnumStub<T, A>, A, T>, Configured<EnumStub<T, A>, A, T?>>
+        : NullableStubProvider<Configured<EnumStub<T, A>, A, T>, Configured<EnumStub<T, A>, A, T?>>
         where T : Enum<T>, T : QEnumType, A : ArgumentSpec =
         Grub(clazz.graphQlName(), false,
             builder = contextBuilder { EnumStub.configured<T, A>(clazz, it) },
@@ -244,19 +244,19 @@ sealed class GraphQLDelegate {
   class Scalar : GraphQLDelegate() {
 
     fun <T : CustomScalar> stub(clazz: KClass<T>)
-        : NullStubProvider<CustomScalarStub.NoArg<T>, CustomScalarStub.NoArg.Nullable<T>> =
+        : NullableStubProvider<CustomScalarStub.NoArg<T>, CustomScalarStub.NoArg.Nullable<T>> =
         Grub(clazz.graphQlName(), false,
             builder = CustomScalarStub.noArg(),
             nullableBuilder = CustomScalarStub.Companion.Nullables.noArg())
 
     fun <T : CustomScalar, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
-        : NullStubProvider<CustomScalarStub.OptionallyConfigured<T, A>, CustomScalarStub.OptionallyConfigured.Nullable<T, A>> =
+        : NullableStubProvider<CustomScalarStub.OptionallyConfigured<T, A>, CustomScalarStub.OptionallyConfigured.Nullable<T, A>> =
         Grub(clazz.graphQlName(), false,
             builder = CustomScalarStub.optionallyConfigured(),
             nullableBuilder = CustomScalarStub.Companion.Nullables.optionallyConfigured())
 
     fun <T : CustomScalar, A : ArgumentSpec> configured(clazz: KClass<T>)
-        : NullStubProvider<CustomScalarStub.Configured<T, A>, CustomScalarStub.Configured.Nullable<T, A>> =
+        : NullableStubProvider<CustomScalarStub.Configured<T, A>, CustomScalarStub.Configured.Nullable<T, A>> =
         Grub(clazz.graphQlName(), false,
             builder = CustomScalarStub.configured(),
             nullableBuilder = CustomScalarStub.Companion.Nullables.configured())

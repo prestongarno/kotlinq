@@ -22,7 +22,7 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
 import kotlin.reflect.KProperty
 
-interface NullStubProvider<out X, out Y> {
+interface NullableStubProvider<out X, out Y> {
 
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 
@@ -63,7 +63,7 @@ class Grub<out X, out Y>(
     val isList: Boolean = false,
     val builder: GraphQlPropertyContext.Companion.Builder<X>,
     val nullableBuilder: GraphQlPropertyContext.Companion.Builder<Y>
-) : NullStubProvider<X, Y> {
+) : NullableStubProvider<X, Y> {
 
   override fun asNullable(): StubProvider<Y> = object : StubProvider<Y> {
     override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<Y> =

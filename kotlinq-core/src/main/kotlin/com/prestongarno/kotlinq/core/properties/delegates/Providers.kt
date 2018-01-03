@@ -61,11 +61,22 @@ interface DelegateProvider<out T : Any?> {
   companion object {
 
     internal
-    fun <T> delegateProvider(constructor: (QModel<*>, KProperty<*>) -> GraphqlPropertyDelegate<T>) = object : DelegateProvider<T> {
-      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>)
-          : GraphQlField<T> =
-          constructor(inst, property)
-    }
+    fun <T> delegateProvider(constructor: (QModel<*>, KProperty<*>) -> GraphqlPropertyDelegate<T>): InternalDelegateProvider<T> =
+        object : InternalDelegateProvider<T> {
+          override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) = constructor(inst, property)
+        }
+  }
+}
+
+internal
+interface InternalDelegateProvider<out T : Any?> : DelegateProvider<T> {
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphqlPropertyDelegate<T>
+
+  fun asListDelegate(): DelegateProvider<List<T>> =
+      delegateProvider { qModel, kProperty -> provideDelegate(qModel, kProperty).asList() }
+
+  fun asNullableDelegate(): InternalDelegateProvider<T?> = delegateProvider { model, prop ->
+    provideDelegate(model, prop).asNullable()
   }
 }
 
@@ -89,7 +100,7 @@ internal
 fun <U : PreDelegate<T, ArgBuilder>, T> noArgBlock(
     qproperty: GraphQlProperty,
     constructor: (ArgBuilder) -> U,
-    onDelegate: (ArgBuilder, U.() -> Unit) -> DelegateProvider<T> = { args, block ->
+    onDelegate: (ArgBuilder, U.() -> Unit) -> InternalDelegateProvider<T> = { args, block ->
       DelegateProvider.delegateProvider { qModel, kProperty ->
         constructor(args).apply(block).toDelegate(qproperty).bindToContext(qModel)
       }
@@ -105,12 +116,12 @@ internal
 class NoArgImpl<out U : PreDelegate<T, ArgBuilder>, out T>(
     private val qproperty: GraphQlProperty,
     private val constructor: (ArgBuilder) -> U,
-    private val onDelegate: (ArgBuilder, U.() -> Unit) -> DelegateProvider<T>
+    private val onDelegate: (ArgBuilder, U.() -> Unit) -> InternalDelegateProvider<T>
 ) : NoArgBlock<U, T> {
 
   fun asNullable(): NoArgBlock<U, T?> =
       noArgBlock(qproperty, constructor) { argBuilder, block ->
-        DelegateProvider.delegateProvider { qModel, kProperty ->
+        DelegateProvider.delegateProvider { qModel, _ ->
           constructor(argBuilder).apply(block).toDelegate(qproperty).asNullable().bindToContext(qModel)
         }
       }

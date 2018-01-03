@@ -19,12 +19,14 @@
 
 package com.prestongarno.kotlinq.core
 
-import com.prestongarno.kotlinq.core.api.NullStubProvider.Companion.delegationContext
+import com.prestongarno.kotlinq.core.api.NullableStubProvider
+import com.prestongarno.kotlinq.core.api.NullableStubProvider.Companion.delegationContext
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
+import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 
 /**
  * The root type of all generated schema objects. Nested objects provide
@@ -120,7 +122,8 @@ interface QSchemaType {
 
   object QCustomScalar {
 
-    inline fun <reified T : CustomScalar> stub() =
+    inline fun <reified T : CustomScalar> stub()
+        : NullableStubProvider<CustomScalarStub.NoArg<T>, CustomScalarStub.NoArg.Nullable<T>> =
         delegationContext.scalar.stub(T::class)
 
     inline fun <reified T : CustomScalar, A : ArgumentSpec> optionallyConfigured() =
