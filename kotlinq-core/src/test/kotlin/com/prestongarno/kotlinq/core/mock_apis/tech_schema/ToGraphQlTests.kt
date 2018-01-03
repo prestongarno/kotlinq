@@ -1,6 +1,6 @@
 @file:SuppressWarnings("UNUSED_VARIABLE")
 /*
- * Copyright (C) 2017 Preston Garno
+ * Copyright (C) 2018 Preston Garno
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
