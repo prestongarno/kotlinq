@@ -37,6 +37,7 @@ import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeList
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass

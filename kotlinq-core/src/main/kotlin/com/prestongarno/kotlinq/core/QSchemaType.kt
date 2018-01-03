@@ -70,7 +70,11 @@ interface QSchemaType {
         delegationContext.type.configured<T, A>(T::class)
 
 
-    object List
+    object List {
+      inline fun <reified T : QType> stub() =
+          delegationContext.type.list.stub(T::class)
+
+    }
   }
 
   object QInterfaces {

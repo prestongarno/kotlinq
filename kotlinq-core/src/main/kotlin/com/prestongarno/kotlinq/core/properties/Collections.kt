@@ -87,3 +87,4 @@ fun GraphQlProperty.toList() = if (!isList) from(
     isList = true
 ) else
   this
+

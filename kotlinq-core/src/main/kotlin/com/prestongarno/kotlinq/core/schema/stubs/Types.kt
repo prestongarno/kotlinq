@@ -24,7 +24,6 @@ import com.prestongarno.kotlinq.core.adapters.TypeStubAdapter
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.InternalDelegateProvider
@@ -32,7 +31,7 @@ import com.prestongarno.kotlinq.core.schema.QType
 
 interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
-  interface NoArg<in T : QType>  {
+  interface NoArg<in T : QType> {
 
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
@@ -40,7 +39,7 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
         block: TypeStub<ArgBuilder>.() -> Unit = empty()
     ): DelegateProvider<U>
 
-    interface Nullable<in T : QType>  {
+    interface Nullable<in T : QType> {
       operator fun <U : QModel<T>> invoke(
           constructor: () -> U,
           arguments: ArgBuilder = ArgBuilder(),
@@ -49,7 +48,7 @@ interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
     }
   }
 
-  interface Configured<in T : QType, A : ArgumentSpec>  {
+  interface Configured<in T : QType, A : ArgumentSpec> {
     operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
         arguments: A,
@@ -100,9 +99,9 @@ class NoArgImpl<in T : QType>(
       constructor: () -> U,
       arguments: ArgBuilder,
       block: TypeStub<ArgBuilder>.() -> Unit
-  ): DelegateProvider<U> = createTypeDelegate(qproperty, constructor, arguments, block)
+  ): InternalDelegateProvider<U> = createTypeDelegate(qproperty, constructor, arguments, block)
 
-  fun asNullable(): TypeStub.NoArg.Nullable<T> = NullableNoArgImpl<T>(qproperty)
+  fun asNullable(): TypeStub.NoArg.Nullable<T> = NullableNoArgImpl(qproperty)
 }
 
 internal
@@ -163,48 +162,4 @@ private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createNullableTypeDeleg
       .toDelegate(property)
       .asNullable()
       .bindToContext(model)
-}
-
-
-interface TypeList<in T : QType, out Z : List<*>?> {
-
-  fun asList(): TypeList<T, List<Z>>
-  fun asNullable(): TypeList<T, List<Z>?>
-
-  interface NoArg<in T : QType, out Z : List<*>?> : TypeList<T, Z>, Configured<T, ArgBuilder?, Z> {
-    override fun <U : QModel<T>> invoke(
-        constructor: () -> U,
-        arguments: ArgBuilder?,
-        block: TypeStub<ArgBuilder>.() -> Unit
-    ): DelegateProvider<Z> = invoke(constructor, arguments ?: ArgBuilder(), block)
-  }
-
-  interface OptionallyConfigured<in T : QType, in A : ArgumentSpec, out Z : List<*>?> : TypeList<T, Z>, Configured<T, A?, Z> {
-    operator fun <U : QModel<T>> invoke(
-        constructor: () -> U,
-        block: TypeStub<ArgBuilder>.() -> Unit = empty()
-    ): DelegateProvider<Z> = invoke(constructor, null, empty())
-  }
-
-  interface Configured<in T : QType, in A : ArgumentSpec?, out Z : List<*>?> : TypeList<T, Z> {
-    operator fun <U : QModel<T>> invoke(
-        constructor: () -> U,
-        arguments: A,
-        block: TypeStub<ArgBuilder>.() -> Unit = empty()
-    ): DelegateProvider<Z>
-  }
-}
-
-internal
-class TypeListImpl<in T : QType, out Z : List<X>?, out X: Any?>(
-    val graphQlProperty: GraphQlProperty
-) : TypeList.NoArg<T, Z> {
-
-  override fun asList(): TypeList<T, List<Z>> {
-    TODO()
-  }
-
-  override fun asNullable(): TypeList<T, List<Z>?> {
-    TODO("not implemented")
-  }
 }

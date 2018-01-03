@@ -72,12 +72,11 @@ internal
 interface InternalDelegateProvider<out T : Any?> : DelegateProvider<T> {
   override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphqlPropertyDelegate<T>
 
-  fun asListDelegate(): DelegateProvider<List<T>> =
+  fun asListDelegate(): InternalDelegateProvider<List<T>> =
       delegateProvider { qModel, kProperty -> provideDelegate(qModel, kProperty).asList() }
 
-  fun asNullableDelegate(): InternalDelegateProvider<T?> = delegateProvider { model, prop ->
-    provideDelegate(model, prop).asNullable()
-  }
+  fun asNullableDelegate(): InternalDelegateProvider<T?> =
+      delegateProvider { model, prop -> provideDelegate(model, prop).asNullable() }
 }
 
 interface Configured<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> {
