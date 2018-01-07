@@ -22,12 +22,12 @@ import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
+import com.prestongarno.kotlinq.core.properties.contextBuilder
 import com.prestongarno.kotlinq.core.properties.delegates.Configured
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
 import com.prestongarno.kotlinq.core.properties.delegates.configuredBlock
-import com.prestongarno.kotlinq.core.properties.contextBuilder
 import com.prestongarno.kotlinq.core.properties.delegates.noArgBlock
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
@@ -37,7 +37,8 @@ import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.schema.stubs.TypeList
+import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
@@ -284,7 +285,26 @@ sealed class GraphQLDelegate {
       override val list: GraphQLListDelegate get() = this
     }
 
-    class Type : GraphQLListDelegate()
+    class Type : GraphQLListDelegate() {
+
+      fun <T : QType> stub(clazz: KClass<T>)
+          : NullableStubProvider<TypeListStub.NoArg.NotNull<T>, TypeListStub.NoArg<T>> =
+          Grub(clazz.graphQlName(), true,
+              builder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.NoArg.NotNull<T>>()),
+              nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.NoArg<T>>()))
+
+      fun <T : QType, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
+          : NullableStubProvider<TypeListStub.OptionallyConfigured.NotNull<T, A>, TypeListStub.OptionallyConfigured<T, A>> =
+          Grub(clazz.graphQlName(), true,
+              builder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.OptionallyConfigured.NotNull<T, A>>()),
+              nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.OptionallyConfigured<T, A>>()))
+
+      fun <T : QType, A : ArgumentSpec> configured(clazz: KClass<T>)
+          : NullableStubProvider<TypeListStub.Configured.NotNull<T, A>, TypeListStub.Configured<T, A>> =
+          Grub(clazz.graphQlName(), true,
+              builder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.Configured.NotNull<T, A>>()),
+              nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.Configured<T, A>>()))
+    }
 
     class Interface : GraphQLListDelegate()
 

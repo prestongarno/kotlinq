@@ -29,7 +29,7 @@ import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Compa
 import com.prestongarno.kotlinq.core.properties.delegates.InternalDelegateProvider
 import com.prestongarno.kotlinq.core.schema.QType
 
-interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface TypeStub<A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   interface NoArg<in T : QType> {
 
@@ -118,27 +118,6 @@ class NullableNoArgImpl<in T : QType>(
 
 }
 
-internal
-class OptionalConfiguredImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured<T, A> {
-
-  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): InternalDelegateProvider<U> =
-      createTypeDelegate(qproperty, constructor, ArgBuilder(), block)
-
-  override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U> =
-      createTypeDelegate(qproperty, constructor, arguments, block)
-
-  fun asNullable(): TypeStub.OptionalConfigured.Nullable<T, A> = NullableOptionalConfigImpl(qproperty)
-}
-
-private
-class NullableOptionalConfigImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured.Nullable<T, A> {
-  override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U?> =
-      createNullableTypeDelegate(qproperty, constructor, arguments, block)
-
-  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): DelegateProvider<U?> =
-      createNullableTypeDelegate(qproperty, constructor, ArgBuilder(), block)
-}
-
 private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createTypeDelegate(
     property: GraphQlProperty,
     ctor: () -> U,
@@ -162,4 +141,25 @@ private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createNullableTypeDeleg
       .toDelegate(property)
       .asNullable()
       .bindToContext(model)
+}
+
+internal
+class OptionalConfiguredImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured<T, A> {
+
+  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): InternalDelegateProvider<U> =
+      createTypeDelegate(qproperty, constructor, ArgBuilder(), block)
+
+  override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U> =
+      createTypeDelegate(qproperty, constructor, arguments, block)
+
+  fun asNullable(): TypeStub.OptionalConfigured.Nullable<T, A> = NullableOptionalConfigImpl(qproperty)
+}
+
+private
+class NullableOptionalConfigImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured.Nullable<T, A> {
+  override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U?> =
+      createNullableTypeDelegate(qproperty, constructor, arguments, block)
+
+  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): DelegateProvider<U?> =
+      createNullableTypeDelegate(qproperty, constructor, ArgBuilder(), block)
 }
