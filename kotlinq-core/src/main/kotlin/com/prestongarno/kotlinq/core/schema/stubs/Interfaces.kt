@@ -30,7 +30,7 @@ import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 
 
-interface InterfaceStub<in I, out A : ArgumentSpec>
+interface InterfaceStub<in I, A : ArgumentSpec>
   : FragmentStub<I>,
     GraphqlDslBuilder<A>
     where I : QInterface, I : QType {

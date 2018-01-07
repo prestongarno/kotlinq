@@ -35,11 +35,17 @@ import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
+import com.prestongarno.kotlinq.core.schema.stubs.EnumListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionListStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KClass
 
@@ -306,11 +312,75 @@ sealed class GraphQLDelegate {
               nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.Configured<T, A>>()))
     }
 
-    class Interface : GraphQLListDelegate()
+    class Interface : GraphQLListDelegate() {
 
-    class Union : GraphQLListDelegate()
+      fun <T> stub(clazz: KClass<T>)
+          : NullableStubProvider<InterfaceListStub.NoArg.NotNull<T>, InterfaceListStub.NoArg<T>>
+          where T : QType, T : QInterface =
+          Grub(clazz.graphQlName(), true,
+              builder = InterfaceListStubImpl.newStub<InterfaceListStubImpl.NoArg.NotNull<T>, T, ArgBuilder>(),
+              nullableBuilder = InterfaceListStubImpl.newStub<InterfaceListStubImpl.NoArg<T>, T, ArgBuilder>())
 
-    class QlEnum : GraphQLListDelegate()
+      fun <T, A> optionallyConfigured(clazz: KClass<T>)
+          : NullableStubProvider<InterfaceListStub.OptionallyConfigured.NotNull<T, A>, InterfaceListStub.OptionallyConfigured<T, A>>
+          where T : QType, T : QInterface, A : ArgumentSpec =
+          Grub(clazz.graphQlName(), true,
+              builder = InterfaceListStubImpl.newStub<InterfaceListStubImpl.OptionallyConfigured.NotNull<T, A>, T, A>(),
+              nullableBuilder = InterfaceListStubImpl.newStub<InterfaceListStubImpl.OptionallyConfigured<T, A>, T, A>())
+
+      fun <T, A> configured(clazz: KClass<T>)
+          : NullableStubProvider<InterfaceListStub.Configured.NotNull<T, A>, InterfaceListStub.Configured<T, A>>
+          where T : QType, T : QInterface, A : ArgumentSpec =
+          Grub(clazz.graphQlName(), true,
+              builder = InterfaceListStubImpl.newStub<InterfaceListStubImpl.Configured.NotNull<T, A>, T, A>(),
+              nullableBuilder = InterfaceListStubImpl.newStub<InterfaceListStubImpl.Configured<T, A>, T, A>())
+
+    }
+
+    class Union : GraphQLListDelegate() {
+
+      fun <T : QUnionType> stub(unionObject: T)
+          : NullableStubProvider<UnionListStub.NoArg.NotNull<T>, UnionListStub.NoArg<T>> =
+          Grub(unionObject::class.graphQlName(), true,
+              builder = UnionListStubImpl.newStub<UnionListStubImpl.NoArg.NotNull<T>, T, ArgBuilder>(unionObject),
+              nullableBuilder = UnionListStubImpl.newStub<UnionListStubImpl.NoArg<T>, T, ArgBuilder>(unionObject))
+
+      fun <T : QUnionType, A : ArgumentSpec> optionallyConfigured(unionObject: T)
+          : NullableStubProvider<UnionListStub.OptionallyConfigured.NotNull<T, A>, UnionListStub.OptionallyConfigured<T, A>> =
+          Grub(unionObject::class.graphQlName(), true,
+              builder = UnionListStubImpl.newStub<UnionListStubImpl.OptionallyConfigured.NotNull<T, A>, T, A>(unionObject),
+              nullableBuilder = UnionListStubImpl.newStub<UnionListStubImpl.OptionallyConfigured<T, A>, T, A>(unionObject))
+
+      fun <T : QUnionType, A : ArgumentSpec> configured(unionObject: T)
+          : NullableStubProvider<UnionListStub.Configured.NotNull<T, A>, UnionListStub.Configured<T, A>> =
+          Grub(unionObject::class.graphQlName(), true,
+              builder = UnionListStubImpl.newStub<UnionListStubImpl.Configured.NotNull<T, A>, T, A>(unionObject),
+              nullableBuilder = UnionListStubImpl.newStub<UnionListStubImpl.Configured<T, A>, T, A>(unionObject))
+    }
+
+    class QlEnum : GraphQLListDelegate() {
+      fun <T> stub(clazz: KClass<T>)
+          : NullableStubProvider<EnumListStub.NoArg.NotNull<T>, EnumListStub.NoArg<T>>
+          where T : QEnumType, T : Enum<T> =
+          Grub(clazz.graphQlName(), true,
+              builder = EnumListStubImpl.newStub<EnumListStubImpl.NoArg.NotNull<T>, T, ArgBuilder>(clazz),
+              nullableBuilder = EnumListStubImpl.newStub<EnumListStubImpl.NoArg<T>, T, ArgBuilder>(clazz))
+
+      fun <T, A> optionallyConfigured(clazz: KClass<T>)
+          : NullableStubProvider<EnumListStub.OptionallyConfigured.NotNull<T, A>, EnumListStub.OptionallyConfigured<T, A>>
+          where T : QEnumType, T : Enum<T>, A : ArgumentSpec =
+          Grub(clazz.graphQlName(), true,
+              builder = EnumListStubImpl.newStub<EnumListStubImpl.OptionallyConfigured.NotNull<T, A>, T, A>(clazz),
+              nullableBuilder = EnumListStubImpl.newStub<EnumListStubImpl.OptionallyConfigured<T, A>, T, A>(clazz))
+
+      fun <T, A> configured(clazz: KClass<T>)
+          : NullableStubProvider<EnumListStub.Configured.NotNull<T, A>, EnumListStub.Configured<T, A>>
+          where T : QEnumType, T : Enum<T>, A : ArgumentSpec =
+          Grub(clazz.graphQlName(), true,
+              builder = EnumListStubImpl.newStub<EnumListStubImpl.Configured.NotNull<T, A>, T, A>(clazz),
+              nullableBuilder = EnumListStubImpl.newStub<EnumListStubImpl.Configured<T, A>, T, A>(clazz))
+
+    }
 
     class Scalar : GraphQLListDelegate()
 
@@ -327,5 +397,4 @@ sealed class GraphQLDelegate {
   fun <T : Any> KClass<T>.graphQlName() = "${this.simpleName}"
 
 }
-
 

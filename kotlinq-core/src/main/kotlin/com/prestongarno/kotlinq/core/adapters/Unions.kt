@@ -24,18 +24,18 @@ import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.NullableElementListDelegate
+import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import kotlin.reflect.KProperty
 
 internal
-class UnionStubImpl<out T : QUnionType, out A : ArgumentSpec>(
+class UnionStubImpl<out T : QUnionType, A : ArgumentSpec>(
     private val unionObject: T,
     val arguments: A? = null
 ) : PreDelegate<QModel<*>?, A>(), UnionStub<T, A> {
 
-  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<*>?> =
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<*>> =
       UnionAdapterImpl(property, fragments ?: emptySet(), arguments.toMap())
 
   private var fragments: Set<Fragment>? = null
@@ -53,15 +53,16 @@ data class UnionAdapterImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
-) : GraphqlPropertyDelegate<QModel<*>?>,
+) : GraphqlPropertyDelegate<QModel<*>>,
     FragmentContext {
 
   var value: QModel<*>? = null
 
-  override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> = this
+  override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> =
+      GraphqlPropertyDelegate.wrapAsNullable(this, this::value)
 
-  override fun asList(): GraphqlPropertyDelegate<List<QModel<*>?>> =
-      NullableElementListDelegate(this)
+  override fun asList(): GraphqlPropertyDelegate<List<QModel<*>>> =
+      ListDelegate(this)
 
   override fun accept(result: Any?): Boolean {
     if (result is JsonObject) value = transform(result)
@@ -86,7 +87,7 @@ data class UnionAdapterImpl(
         }
       }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*>? = value
+  override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*> = value!!
 
   override fun equals(other: Any?): Boolean {
     if (other !is Adapter) return false

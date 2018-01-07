@@ -27,16 +27,16 @@ interface NullableStubProvider<out X, out Y> {
   operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 
   fun asNullable(): StubProvider<Y>
+}
+
+interface StubProvider<out X> {
+  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 
   companion object {
     @PublishedApi
     internal
     val delegationContext: DelegationContext by lazy(::DefaultDelegationContext)
   }
-}
-
-interface StubProvider<out X> {
-  operator fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X>
 }
 
 interface Stub<out T> {

@@ -20,7 +20,7 @@
 package com.prestongarno.kotlinq.core
 
 import com.prestongarno.kotlinq.core.api.NullableStubProvider
-import com.prestongarno.kotlinq.core.api.NullableStubProvider.Companion.delegationContext
+import com.prestongarno.kotlinq.core.api.StubProvider.Companion.delegationContext
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
@@ -74,6 +74,11 @@ interface QSchemaType {
       inline fun <reified T : QType> stub() =
           delegationContext.type.list.stub(T::class)
 
+      inline fun <reified T : QType, A : ArgumentSpec> optionallyConfigured() =
+          delegationContext.type.list.optionallyConfigured<T, A>(T::class)
+
+      inline fun <reified T : QType, A : ArgumentSpec> configured() =
+          delegationContext.type.list.configured<T, A>(T::class)
     }
   }
 
@@ -98,7 +103,19 @@ interface QSchemaType {
         delegationContext.iface.configured<T, A>(T::class)
 
 
-    object List
+    object List {
+      inline fun <reified T> stub()
+          where T : QType, T : QInterface =
+          delegationContext.iface.list.stub(T::class)
+
+      inline fun <reified T, A : ArgumentSpec> optionallyConfigured()
+          where T : QType, T : QInterface =
+          delegationContext.iface.list.optionallyConfigured<T, A>(T::class)
+
+      inline fun <reified T, A : ArgumentSpec> configured()
+          where T : QType, T : QInterface =
+          delegationContext.iface.list.configured<T, A>(T::class)
+    }
   }
 
   object QEnum {

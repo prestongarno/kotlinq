@@ -31,7 +31,7 @@ import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import kotlin.reflect.KProperty
 
 internal
-class TypeStubAdapter<out U : QType, out T : QModel<U>, out A : ArgumentSpec>(
+class TypeStubAdapter<out U : QType, out T : QModel<U>, A : ArgumentSpec>(
     private val init: () -> T,
     private val argBuilder: A?
 ) : PreDelegate<T, A>(), TypeStub<A> {

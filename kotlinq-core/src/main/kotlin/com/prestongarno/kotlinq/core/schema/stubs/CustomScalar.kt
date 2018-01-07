@@ -35,11 +35,10 @@ import com.prestongarno.kotlinq.core.schema.CustomScalar
 import java.io.InputStream
 import kotlin.reflect.KProperty
 
-interface CustomScalarStub<T : CustomScalar, V, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface CustomScalarStub<T : CustomScalar, V, A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   var default: V?
 
-  @Suppress("AddVarianceModifier")
   interface CustomScalarDelegate<T : CustomScalar>
     : DelegateProvider<String> {
 

@@ -25,7 +25,6 @@ import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.ListDelegate
-import com.prestongarno.kotlinq.core.properties.NullableElementListDelegate
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
@@ -35,13 +34,13 @@ import kotlin.reflect.KProperty
  * Base type of a R.H.S. delegate provider
  */
 internal
-class InterfaceStubImpl<I, out A : ArgumentSpec>(val arguments: A?)
+class InterfaceStubImpl<I, A : ArgumentSpec>(val arguments: A?)
   : PreDelegate<QModel<I>?, A>(),
     InterfaceStub<I, A>
     where I : QType,
           I : QInterface {
 
-  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<I>?> =
+  override fun toDelegate(property: GraphQlProperty): InterfaceAdapterImpl<I> =
       InterfaceAdapterImpl(property, arguments.toMap(), fragments.toSet())
 
   private
@@ -68,8 +67,15 @@ class InterfaceAdapterImpl<I : QType>(
 
   override fun asNullable(): GraphqlPropertyDelegate<QModel<I>?> = this
 
-  override fun asList(): GraphqlPropertyDelegate<List<QModel<I>?>> =
-      NullableElementListDelegate(this)
+  override fun asList(): GraphqlPropertyDelegate<List<QModel<I>>> =
+      ListDelegate(object : GraphqlPropertyDelegate<QModel<I>>,
+          FragmentContext by this@InterfaceAdapterImpl,
+          Adapter by this@InterfaceAdapterImpl {
+        override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<I> = value!!
+        override fun asNullable(): GraphqlPropertyDelegate<QModel<I>?> = this@InterfaceAdapterImpl
+        override fun asList(): GraphqlPropertyDelegate<List<QModel<I>>> = ListDelegate(this)
+        override fun transform(obj: Any?): QModel<I>? = this@InterfaceAdapterImpl.transform(obj)
+      })
 
   override fun accept(result: Any?): Boolean {
     if (result !is JsonObject) return false

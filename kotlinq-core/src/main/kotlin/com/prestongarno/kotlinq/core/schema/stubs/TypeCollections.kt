@@ -21,14 +21,18 @@ typealias Block<A> = TypeStub<A>.() -> Unit
 interface TypeListStub {
 
   interface NoArg<in T : QType> : TypeListStub {
-    fun <U : QModel<T>> invoke(
+    operator fun <U : QModel<T>> invoke(
         constructor: () -> U,
         arguments: ArgBuilder = ArgBuilder(),
         block: Block<ArgBuilder> = empty()
     ): DelegateProvider<List<U?>>
 
-    interface NotNull<in T : QType> : NoArg<T> {
-      override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: ArgBuilder, block: Block<ArgBuilder>)
+    interface NotNull<in T : QType> {
+      operator fun <U : QModel<T>> invoke(
+          constructor: () -> U,
+          arguments: ArgBuilder = ArgBuilder(),
+          block: Block<ArgBuilder> = empty()
+      )
           : DelegateProvider<List<U>>
     }
 
@@ -61,8 +65,6 @@ interface TypeListStub {
     }
   }
 
-  companion object {
-  }
 }
 
 
@@ -149,6 +151,10 @@ sealed class TypeListStubImpl(val qproperty: GraphQlProperty) {
 
   companion object {
 
+    /**
+     * Don't know why sealed class [TypeListStubImpl] does not smart-cast this to the generic reified argument.
+     * TODO this is pretty safe, but should test thoroughly
+     */
     internal
     inline fun <T : QType, A : ArgumentSpec, reified Z : TypeListStubImpl> newStub(): (GraphQlProperty) -> Z =
         when (Z::class) {

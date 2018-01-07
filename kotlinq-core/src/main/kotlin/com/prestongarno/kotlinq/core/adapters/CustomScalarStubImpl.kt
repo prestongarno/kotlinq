@@ -28,15 +28,14 @@ import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import kotlin.reflect.KProperty
 
 internal
-class CustomScalarStubImpl<E : CustomScalar, Q : Any, out A : ArgumentSpec>(
+class CustomScalarStubImpl<E : CustomScalar, Q: Any, A : ArgumentSpec>(
     private val mapper: CustomScalarStub.Mapper<Q>,
     val arguments: A? = null
 ) : PreDelegate<Q, A>(),
     CustomScalarStub<E, Q, A> {
 
-  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<Q> {
-    return CustomScalarFieldImpl(property, arguments.toMap(), mapper, default)
-  }
+  override fun toDelegate(property: GraphQlProperty) =
+    CustomScalarFieldImpl(property, arguments.toMap(), mapper, default)
 
   override var default: Q? = null
 
@@ -45,7 +44,8 @@ class CustomScalarStubImpl<E : CustomScalar, Q : Any, out A : ArgumentSpec>(
   }
 }
 
-private data class CustomScalarFieldImpl<Q : Any>(
+
+internal data class CustomScalarFieldImpl<Q: Any>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),
     val adapter: CustomScalarStub.Mapper<Q>,
