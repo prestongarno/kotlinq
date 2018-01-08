@@ -24,10 +24,10 @@ import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.applyNotNull
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.delegates.Configured
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
-import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -85,31 +85,30 @@ class EnumNoArgImpl<T>(
           .bindToContext(inst)
 
   override fun invoke(args: ArgBuilder, block: (EnumStub<T, ArgBuilder>.() -> Unit)?): DelegateProvider<T> =
-      DelegateProvider.delegateProvider { qModel, kProperty ->
+      DelegateProvider.delegateProvider { qModel, _ ->
         EnumAdapterImpl(clazz, args)
             .applyNotNull(block)
             .toDelegate(qproperty)
             .bindToContext(qModel)
       }
 
-  fun asNullable(): DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T?> =
-      object : DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T?> {
+  fun asNullable() = object : DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T?> {
 
-        override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> =
-            invoke().provideDelegate(inst, property)
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> =
+        invoke().provideDelegate(inst, property)
 
-        val clazz = this@EnumNoArgImpl.clazz
-        val prop = this@EnumNoArgImpl.qproperty
+    val clazz = this@EnumNoArgImpl.clazz
+    val prop = this@EnumNoArgImpl.qproperty
 
-        override fun invoke(args: ArgBuilder, block: (EnumStub<T, ArgBuilder>.() -> Unit)?): DelegateProvider<T?> =
-            DelegateProvider.delegateProvider { qModel, kProperty ->
-              EnumAdapterImpl(clazz, args)
-                  .applyNotNull(block)
-                  .toDelegate(prop)
-                  .asNullable()
-                  .bindToContext(qModel)
-            }
-      }
+    override fun invoke(args: ArgBuilder, block: (EnumStub<T, ArgBuilder>.() -> Unit)?): DelegateProvider<T?> =
+        DelegateProvider.delegateProvider { qModel, _ ->
+          EnumAdapterImpl(clazz, args)
+              .applyNotNull(block)
+              .toDelegate(prop)
+              .asNullable()
+              .bindToContext(qModel)
+        }
+  }
 }
 
 internal
@@ -121,7 +120,7 @@ class EnumConfigImpl<T, A>(
           A : ArgumentSpec {
 
   override fun invoke(args: A, block: (EnumStub<T, A>.() -> Unit)?): DelegateProvider<T> =
-      DelegateProvider.delegateProvider { qModel, kProperty ->
+      DelegateProvider.delegateProvider { qModel, _ ->
         EnumAdapterImpl(clazz, null)
             .toDelegate(qproperty)
             .bindToContext(qModel)
@@ -136,7 +135,7 @@ class EnumConfigImpl<T, A>(
   ) : EnumStub.OptionallyConfigured.Nullable<T, A> where T : QEnumType, T : Enum<T> {
 
     override fun invoke(block: EnumStub<T, ArgBuilder>.() -> Unit): DelegateProvider<T?> =
-        delegateProvider { inst, prop ->
+        delegateProvider { inst, _ ->
           EnumAdapterImpl(clazz, ArgBuilder())
               .apply(block)
               .toDelegate(qproperty)
@@ -145,7 +144,7 @@ class EnumConfigImpl<T, A>(
         }
 
     override fun invoke(args: A, block: (EnumStub<T, A>.() -> Unit)?): DelegateProvider<T?> =
-        DelegateProvider.delegateProvider { qModel, kProperty ->
+        DelegateProvider.delegateProvider { qModel, _ ->
           EnumAdapterImpl(clazz, args)
               .toDelegate(qproperty)
               .asNullable()
@@ -177,7 +176,7 @@ class OptionallyConfiguredImpl<T, A>(
       }
 
   override fun invoke(block: EnumStub<T, ArgBuilder>.() -> Unit): DelegateProvider<T> =
-      DelegateProvider.delegateProvider { qModel, kProperty ->
+      DelegateProvider.delegateProvider { qModel, _ ->
         EnumAdapterImpl(clazz, ArgBuilder())
             .toDelegate(qproperty)
             .bindToContext(qModel)

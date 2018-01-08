@@ -41,13 +41,24 @@ interface CustomScalarListStub {
   companion object {
 
     internal
+    fun <T : CustomScalar> noArg()
+        : GraphQlPropertyContext.Companion.Builder<CustomScalarListStub.NoArg<T>> =
+        contextBuilder { CustomNoArgImpl<T>(it) }
+
+    internal
+    fun <T : CustomScalar, A : ArgumentSpec> optionallyConfigured()
+        : GraphQlPropertyContext.Companion.Builder<CustomScalarListStub.OptionallyConfigured<T, A>> =
+        contextBuilder { ConfiguredImpl<T, A>(it) }
+
+    internal
     fun <T : CustomScalar, A : ArgumentSpec> configured()
         : GraphQlPropertyContext.Companion.Builder<CustomScalarListStub.Configured<T, A>> =
         contextBuilder { ConfiguredImpl<T, A>(it) }
   }
 }
 
-private class ConfiguredImpl<T : CustomScalar, A : ArgumentSpec>(val property: GraphQlProperty)
+private
+class ConfiguredImpl<T : CustomScalar, A : ArgumentSpec>(val property: GraphQlProperty)
   : CustomScalarListStub.OptionallyConfigured<T, A> {
 
 
@@ -76,7 +87,8 @@ private class ConfiguredImpl<T : CustomScalar, A : ArgumentSpec>(val property: G
   }
 }
 
-private class CustomNoArgImpl<T : CustomScalar>(val property: GraphQlProperty) : CustomScalarListStub.NoArg<T> {
+private
+class CustomNoArgImpl<T : CustomScalar>(val property: GraphQlProperty) : CustomScalarListStub.NoArg<T> {
 
   override fun <V : Any> invoke(
       mapper: CustomScalarStub.Mapper<V>,

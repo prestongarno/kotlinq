@@ -113,5 +113,8 @@ open class QModel<out T : QType>(val model: T) {
     return field
   }
 
+  internal fun <T : Adapter> register(field: T): T =
+      field.also { this.fields[field.qproperty.graphqlName] = it }
+
 }
 

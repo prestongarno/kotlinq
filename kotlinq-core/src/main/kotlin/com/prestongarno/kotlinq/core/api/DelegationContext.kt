@@ -34,13 +34,30 @@ import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
+import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.BooleanProvider
+import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredBooleanProvider
+import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredFloatProvider
+import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredIntProvider
+import com.prestongarno.kotlinq.core.schema.stubs.StringProvider
+import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredStringProvider
+import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.FloatProvider
+import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.IntProvider
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
+import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredBooleanProvider
+import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredFloatProvider
+import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredIntProvider
+import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredStringProvider
+import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
@@ -234,18 +251,70 @@ sealed class GraphQLDelegate {
   }
 
   class QlString : GraphQLDelegate() {
+
+    fun stub()
+        : StringProvider =
+        StringDelegate.noArg()
+
+    fun <A : ArgumentSpec> optionallyConfigured()
+        : OptionallyConfiguredStringProvider<A> =
+        StringDelegate.optionallyConfigured()
+
+    fun <A : ArgumentSpec> configured()
+        : ConfiguredStringProvider<A> =
+        StringDelegate.configured()
+
     override val list: Lists.QlString = Lists.QlString()
   }
 
   class QlInt : GraphQLDelegate() {
+
+    fun stub()
+        : IntProvider =
+        IntDelegate.stub()
+
+    fun <A : ArgumentSpec> optionallyConfigured()
+        : OptionallyConfiguredIntProvider<A> =
+        IntDelegate.optionallyConfigured()
+
+    fun <A : ArgumentSpec> configured()
+        : ConfiguredIntProvider<A> =
+        IntDelegate.configured()
+
     override val list: Lists.QlInt = Lists.QlInt()
   }
 
   class QlFloat : GraphQLDelegate() {
+
+    fun stub()
+        : FloatProvider =
+        FloatDelegate.stub()
+
+    fun <A : ArgumentSpec> optionallyConfigured()
+        : OptionallyConfiguredFloatProvider<A> =
+        FloatDelegate.optionallyConfigured()
+
+    fun <A : ArgumentSpec> configured()
+        : ConfiguredFloatProvider<A> =
+        FloatDelegate.configured()
+
     override val list: Lists.QlFloat = Lists.QlFloat()
   }
 
   class QlBoolean : GraphQLDelegate() {
+
+    fun stub()
+        : BooleanProvider =
+        BooleanDelegate.stub()
+
+    fun <A : ArgumentSpec> optionallyConfigured()
+        : OptionallyConfiguredBooleanProvider<A> =
+        BooleanDelegate.optionallyConfigured()
+
+    fun <A : ArgumentSpec> configured()
+        : ConfiguredBooleanProvider<A> =
+        BooleanDelegate.configured()
+
     override val list: Lists.QlBoolean = Lists.QlBoolean()
   }
 
@@ -382,7 +451,20 @@ sealed class GraphQLDelegate {
 
     }
 
-    class Scalar : GraphQLListDelegate()
+    class Scalar : GraphQLListDelegate() {
+
+      fun <T : CustomScalar> stub(clazz: KClass<T>)
+          : StubProvider<CustomScalarListStub.NoArg<T>> =
+          Grub.singleBuilder(clazz.graphQlName(), true, CustomScalarListStub.noArg())
+
+      fun <T : CustomScalar, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
+          : StubProvider<CustomScalarListStub.OptionallyConfigured<T, A>> =
+          Grub.singleBuilder(clazz.graphQlName(), false, CustomScalarListStub.optionallyConfigured())
+
+      fun <T : CustomScalar, A : ArgumentSpec> configured(clazz: KClass<T>)
+          : StubProvider<CustomScalarListStub.Configured<T, A>> =
+          Grub.singleBuilder(clazz.graphQlName(), false, CustomScalarListStub.configured())
+    }
 
     class QlString : GraphQLListDelegate()
 

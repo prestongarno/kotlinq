@@ -48,9 +48,9 @@ interface InterfaceStub<in I, A : ArgumentSpec>
 
         object : OptionallyConfigured<I, A> {
           override fun invoke(block: InterfaceStub<I, ArgBuilder>.() -> Unit): DelegateProvider<QModel<I>?> =
-              delegateProvider { model, prop -> InterfaceStubImpl<I, ArgBuilder>(ArgBuilder()).apply(block).toDelegate(qproperty).bindToContext(model) }
+              delegateProvider { model, _ -> InterfaceStubImpl<I, ArgBuilder>(ArgBuilder()).apply(block).toDelegate(qproperty).bindToContext(model) }
           override fun invoke(args: A, block: InterfaceStub<I, A>.() -> Unit): DelegateProvider<QModel<I>?> =
-              delegateProvider { model, prop -> InterfaceStubImpl<I, A>(args).apply(block).toDelegate(qproperty).bindToContext(model) }
+              delegateProvider { model, _ -> InterfaceStubImpl<I, A>(args).apply(block).toDelegate(qproperty).bindToContext(model) }
         }
   }
 }

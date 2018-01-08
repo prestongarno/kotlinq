@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 internal
-class EnumAdapterImpl<T, out A>(
+class EnumAdapterImpl<T, A>(
     private val enumClass: KClass<T>,
     private val argBuilder: A?
 ) : PreDelegate<T, A>(),

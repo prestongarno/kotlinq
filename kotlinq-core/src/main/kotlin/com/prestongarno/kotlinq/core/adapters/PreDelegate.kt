@@ -27,7 +27,7 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
  * @param A the arguments required for this field
  */
 internal
-abstract class PreDelegate<out T: Any?, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
+abstract class PreDelegate<out T: Any?, A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   abstract fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T>
 
@@ -36,7 +36,7 @@ abstract class PreDelegate<out T: Any?, out A : ArgumentSpec> : GraphqlDslBuilde
 }
 
 private
-class ListPreDelegate<out T : PreDelegate<U, A>, out A : ArgumentSpec, out U : Any?>(val root: T)
+class ListPreDelegate<out T : PreDelegate<U, A>, A : ArgumentSpec, out U : Any?>(val root: T)
   : GraphqlDslBuilder<A> by root, PreDelegate<List<U>, A>() {
   override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<List<U>> =
       root.toDelegate(property).asList()

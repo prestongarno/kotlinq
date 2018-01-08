@@ -36,11 +36,24 @@ interface StubProvider<out X> {
     @PublishedApi
     internal
     val delegationContext: DelegationContext by lazy(::DefaultDelegationContext)
+
+    internal
+    fun <T> provide(init: (QSchemaType, KProperty<*>) -> T) = object : StubProvider<T> {
+      override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<T> = Stub.stub(init(inst, property))
+    }
   }
 }
 
 interface Stub<out T> {
   operator fun getValue(inst: QSchemaType, property: KProperty<*>): T
+
+  companion object {
+
+    internal
+    fun <T> stub(value: T) = object : Stub<T> {
+      override fun getValue(inst: QSchemaType, property: KProperty<*>): T = value
+    }
+  }
 }
 
 /**
@@ -65,12 +78,31 @@ class Grub<out X, out Y>(
     val nullableBuilder: GraphQlPropertyContext.Companion.Builder<Y>
 ) : NullableStubProvider<X, Y> {
 
-  override fun asNullable(): StubProvider<Y> = object : StubProvider<Y> {
-    override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<Y> =
-        nullableBuilder.build(GraphQlProperty.from(typeName, isList, property.name))
-  }
+  override fun asNullable(): StubProvider<Y> =
+      singleBuilder(typeName, isList, nullableBuilder)
 
   override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<X> {
     return builder.build(GraphQlProperty.from(typeName, isList, property.name))
+  }
+
+  companion object {
+
+    fun <X> singleBuilder(
+        typeName: String,
+        isList: Boolean,
+        builder: GraphQlPropertyContext.Companion.Builder<X>
+    ): StubProvider<X> = SingleProvider(typeName, isList, builder)
+
+  }
+
+  private
+  class SingleProvider<out Y>(
+      val typeName: String,
+      val isList: Boolean,
+      val builder: GraphQlPropertyContext.Companion.Builder<Y>
+  ) : StubProvider<Y> {
+
+    override fun provideDelegate(inst: QSchemaType, property: KProperty<*>): Stub<Y> =
+        builder.build(GraphQlProperty.from(typeName, isList, property.name))
   }
 }

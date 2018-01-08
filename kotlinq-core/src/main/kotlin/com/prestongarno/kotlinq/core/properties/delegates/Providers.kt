@@ -31,31 +31,14 @@ import kotlin.reflect.KProperty
 /**
  * Base interface for instance property delegation.
  *
- * TODO @prestongarno should maybe use type intersections with [GraphQlPropertyPreDelegate] to remove the [DelegateProvider] nested interfaces
+ * TODO @prestongarno should maybe use type intersections with GraphQlPropertyPreDelegate to remove the [DelegateProvider] nested interfaces
  */
 interface DelegateProvider<out T : Any?> {
 
   operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T>
 
-  interface CollectionDelegate<out V : Any?> : DelegateProvider<List<V>>
-
-  interface ConfiguredDelegate<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T>
-    : Configured<U, A, T>,
-      DelegateProvider<T> {
-
-    interface Nullable<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T> : Configured<U, A, T?>
-  }
-
-  interface ConfiguredBlockDelegate<out U : GraphqlDslBuilder<A>, A : ArgumentSpec, out T>
-    : ConfiguredBlock<U, A, T>,
-      DelegateProvider<T>
-
   interface NoArgDelegate<out U : GraphqlDslBuilder<ArgBuilder>, out T>
     : NoArg<U, T>,
-      DelegateProvider<T>
-
-  interface NoArgBlockDelegate<out U : GraphqlDslBuilder<ArgBuilder>, out T>
-    : NoArgBlock<U, T>,
       DelegateProvider<T>
 
   companion object {
@@ -100,7 +83,7 @@ fun <U : PreDelegate<T, ArgBuilder>, T> noArgBlock(
     qproperty: GraphQlProperty,
     constructor: (ArgBuilder) -> U,
     onDelegate: (ArgBuilder, U.() -> Unit) -> InternalDelegateProvider<T> = { args, block ->
-      DelegateProvider.delegateProvider { qModel, kProperty ->
+      DelegateProvider.delegateProvider { qModel, _ ->
         constructor(args).apply(block).toDelegate(qproperty).bindToContext(qModel)
       }
     }
