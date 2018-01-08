@@ -18,11 +18,8 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 
-interface StringArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<StringArrayStub> {
-
+interface StringArrayDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
   var default: Array<String>?
-
-  fun config(scope: A.() -> Unit)
-
 }

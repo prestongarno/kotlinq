@@ -18,11 +18,9 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 
-interface FloatArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<FloatArrayStub> {
+interface FloatArrayDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   var default: FloatArray?
-
-  fun config(scope: A.() -> Unit)
-
 }

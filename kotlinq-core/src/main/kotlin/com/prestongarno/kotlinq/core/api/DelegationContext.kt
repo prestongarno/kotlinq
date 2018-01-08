@@ -468,7 +468,13 @@ sealed class GraphQLDelegate {
 
     class QlString : GraphQLListDelegate()
 
-    class QlInt : GraphQLListDelegate()
+    class QlInt : GraphQLListDelegate() {
+
+      fun stub() : NullableStubProvider<
+          DelegateProvider.NoArgDelegate<IntDelegate<ArgBuilder>, IntArray>,
+          DelegateProvider.NoArgDelegate<IntDelegate<ArgBuilder>, IntArray?>> =
+          Grub()
+    }
 
     class QlFloat : GraphQLListDelegate()
 

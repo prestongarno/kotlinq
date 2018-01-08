@@ -32,8 +32,7 @@ interface TypeListStub {
           constructor: () -> U,
           arguments: ArgBuilder = ArgBuilder(),
           block: Block<ArgBuilder> = empty()
-      )
-          : DelegateProvider<List<U>>
+      ): DelegateProvider<List<U>>
     }
 
   }

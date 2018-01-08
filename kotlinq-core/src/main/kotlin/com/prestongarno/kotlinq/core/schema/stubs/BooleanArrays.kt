@@ -18,11 +18,10 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 
-interface BooleanArrayDelegate<out A : ArgumentSpec> : ScalarArrayDelegate<BooleanArrayStub> {
+interface BooleanArrayDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   var default: BooleanArray?
-
-  fun config(scope: A.() -> Unit)
 
 }
