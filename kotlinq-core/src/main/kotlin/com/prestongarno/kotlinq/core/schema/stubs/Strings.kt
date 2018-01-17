@@ -30,6 +30,10 @@ import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
 
+typealias StringProperty = ScalarDelegate.NoArg<StringDelegate<ArgBuilder>, StringStub>
+typealias OptionallyConfiguredStringProperty<A> = StringDelegate.OptionallyConfigured<A>
+typealias ConfiguredStringProperty<A> = ScalarDelegate.Configured<StringDelegate<ArgBuilder>, StringStub, A>
+
 typealias StringProvider = NullableStubProvider<StringDelegate.NoArg, StringDelegate.NoArg.Nullable>
 
 typealias ConfiguredStringProvider<A> = NullableStubProvider<
@@ -40,7 +44,7 @@ typealias OptionallyConfiguredStringProvider<A> = NullableStubProvider<
     StringDelegate.OptionallyConfigured<A>,
     StringDelegate.OptionallyConfigured.Nullable<A>>
 
-interface StringDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface StringDelegate<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   var default: String?
 

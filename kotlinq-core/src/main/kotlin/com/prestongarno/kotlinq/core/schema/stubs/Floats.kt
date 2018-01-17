@@ -31,6 +31,10 @@ import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
 
+typealias FloatProperty = ScalarDelegate.NoArg<FloatDelegate<ArgBuilder>, FloatStub>
+typealias OptionallyConfiguredFloatProperty<A> = FloatDelegate.OptionallyConfigured<A>
+typealias ConfiguredFloatProperty<A> = ScalarDelegate.Configured<FloatDelegate<ArgBuilder>, FloatStub, A>
+
 typealias FloatProvider = NullableStubProvider<ScalarDelegate.NoArg<FloatDelegate<ArgBuilder>, FloatStub>,
     ScalarDelegate.NoArg.Nullable<FloatDelegate<ArgBuilder>, Float>>
 
@@ -42,7 +46,7 @@ typealias ConfiguredFloatProvider<A> = NullableStubProvider<
     ScalarDelegate.Configured<FloatDelegate<A>, FloatStub, A>,
     ScalarDelegate.Configured.Nullable<FloatDelegate<A>, A, Float>>
 
-interface FloatDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface FloatDelegate<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   var default: Float
 

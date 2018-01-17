@@ -18,11 +18,13 @@ import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.neq
-import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
+import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
+import com.prestongarno.kotlinq.core.schema.stubs.FloatProperty
 import com.prestongarno.kotlinq.core.schema.stubs.FloatStub
-import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
 import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.StringStub
+import com.prestongarno.kotlinq.core.schema.stubs.UnionProperty
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import com.prestongarno.kotlinq.core.type.BasicTypeList.PersonModel
 import com.prestongarno.kotlinq.core.type.Person
@@ -43,25 +45,25 @@ object Entity : QUnionType by QUnionType.new() {
 
 interface Vehicle : QInterface, QType {
 
-  val model: StringDelegate.Query
+  val model: StringDelegate.NoArg
 
-  val owner: UnionStub.Query<Entity>
+  val owner: UnionProperty<Entity>
 
-  val maxSpeed: FloatDelegate.Query
+  val maxSpeed: FloatProperty
 
 }
 
 object Airplane : Vehicle {
 
-  override val model by QScalar.String.stub()
+  override val model: StringDelegate.NoArg by QScalar.String.stub()
 
-  override val maxSpeed by QScalar.Float.stub()
+  override val maxSpeed: FloatProperty by QScalar.Float.stub()
 
   val engineHours by QScalar.Float.stub()
 
   val maxPassengers by QScalar.Int.stub()
 
-  override val owner by QUnion.stub(Entity)
+  override val owner: NoArgBlock<UnionStub<Entity, ArgBuilder>, QModel<*>?> by QUnion.stub(Entity)
 }
 
 object Car : Vehicle {
@@ -93,7 +95,7 @@ enum class OrganizationType : QEnumType {
 }
 
 object EqualityQuery : QType {
-  val search by QInterfaces.List.configStub<Vehicle, EqualityQuery.SearchArgs>()
+  val search by QInterfaces.List.configured<Vehicle, EqualityQuery.SearchArgs>()
 
   class SearchArgs(keyword: String) : ArgBuilder() {
 
@@ -108,7 +110,7 @@ object EqualityQuery : QType {
 
 class EqualityImpl(
     keyword: String,
-    fragment: InterfaceListStub<Vehicle, EqualityQuery.SearchArgs>.() -> Unit
+    fragment: InterfaceStub<Vehicle, EqualityQuery.SearchArgs>.() -> Unit
 ) : QModel<EqualityQuery>(EqualityQuery) {
 
   val searchResult by model.search(EqualityQuery.SearchArgs(keyword), fragment)
@@ -130,12 +132,12 @@ open class AirplaneFrag2(spread: Entity.() -> Unit) : AirplaneFrag1() {
 }
 
 open class MPersonModel : PersonModel() {
-  val address by model.address.query(::DefaultAddress)
+  val address by model.address(::DefaultAddress)
 }
 
 open class OrganizationModel : QModel<Organization>(Organization) {
   val name by model.name
-  val members by model.members.query(::PersonModel)
+  val members by model.members(::PersonModel)
   val type by model.type
 }
 
