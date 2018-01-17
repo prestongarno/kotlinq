@@ -31,6 +31,10 @@ import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
 
+typealias BooleanProperty = ScalarDelegate.NoArg<BooleanDelegate<ArgBuilder>, BooleanStub>
+typealias OptionallyConfiguredBooleanProperty<A> = BooleanDelegate.OptionallyConfigured<A>
+typealias ConfiguredBooleanProperty<A> = ScalarDelegate.Configured<BooleanDelegate<ArgBuilder>, BooleanStub, A>
+
 typealias BooleanProvider = NullableStubProvider<ScalarDelegate.NoArg<BooleanDelegate<ArgBuilder>, BooleanStub>,
     ScalarDelegate.NoArg.Nullable<BooleanDelegate<ArgBuilder>, Boolean>>
 
