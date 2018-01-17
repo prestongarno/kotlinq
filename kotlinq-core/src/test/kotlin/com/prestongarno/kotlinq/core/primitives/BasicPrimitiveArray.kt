@@ -23,8 +23,8 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegates
+import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
 import org.junit.Test
 import com.prestongarno.kotlinq.core.eq
@@ -34,10 +34,10 @@ object AnonymousClassroom : QType {
   val studentNames: StringArrayDelegate.Query
       by QScalar.List.String.stub()
 
-  val studentAges: IntArrayDelegate.Query
+  val studentAges: IntArrayDelegates.Query
       by QScalar.List.Int.stub()
 
-  val studentGpa: FloatArrayDelegate.Query
+  val studentGpa: FloatArrayDelegates.Query
       by QScalar.List.Float.stub()
 
   val studentPassing: BooleanArrayDelegate.Query

@@ -37,23 +37,97 @@ interface QSchemaType {
 
   object QScalar {
 
-    object String
+    object String {
 
-    object Int
+      fun stub() = delegationContext.stringScalar.stub()
 
-    object Float
+      fun <A : ArgumentSpec> optionallyConfigured() =
+          delegationContext.stringScalar.optionallyConfigured<A>()
 
-    object Boolean
+      fun <A : ArgumentSpec> configured() =
+          delegationContext.stringScalar.configured<A>()
+    }
+
+    object Int {
+
+      fun stub() = delegationContext.intScalar.stub()
+
+      fun <A : ArgumentSpec> optionallyConfigured() =
+          delegationContext.intScalar.optionallyConfigured<A>()
+
+      fun <A : ArgumentSpec> configured() =
+          delegationContext.intScalar.configured<A>()
+
+    }
+
+    object Float {
+
+      fun stub() = delegationContext.floatScalar.stub()
+
+      fun <A : ArgumentSpec> optionallyConfigured() =
+          delegationContext.floatScalar.optionallyConfigured<A>()
+
+      fun <A : ArgumentSpec> configured() =
+          delegationContext.floatScalar.configured<A>()
+    }
+
+    object Boolean {
+
+      fun stub() = delegationContext.booleanScalar.stub()
+
+      fun <A : ArgumentSpec> optionallyConfigured() =
+          delegationContext.booleanScalar.optionallyConfigured<A>()
+
+      fun <A : ArgumentSpec> configured() =
+          delegationContext.booleanScalar.configured<A>()
+    }
 
     object List {
 
-      object String
+      object String {
 
-      object Int
+        fun stub() = delegationContext.stringScalar.list.stub()
 
-      object Float
+        fun <A : ArgumentSpec> optionallyConfigured() =
+            delegationContext.stringScalar.list.optionallyConfigured<A>()
 
-      object Boolean
+        fun <A : ArgumentSpec> configured() =
+            delegationContext.stringScalar.list.configured<A>()
+      }
+
+      object Int {
+
+        fun stub() = delegationContext.intScalar.list.stub()
+
+        fun <A : ArgumentSpec> optionallyConfigured() =
+            delegationContext.intScalar.list.optionallyConfigured<A>()
+
+        fun <A : ArgumentSpec> configured() =
+            delegationContext.intScalar.list.configured<A>()
+
+      }
+
+      object Float {
+
+        fun stub() = delegationContext.floatScalar.list.stub()
+
+        fun <A : ArgumentSpec> optionallyConfigured() =
+            delegationContext.floatScalar.list.optionallyConfigured<A>()
+
+        fun <A : ArgumentSpec> configured() =
+            delegationContext.floatScalar.list.configured<A>()
+      }
+
+      object Boolean {
+
+        fun stub() = delegationContext.booleanScalar.list.stub()
+
+        fun <A : ArgumentSpec> optionallyConfigured() =
+            delegationContext.booleanScalar.list.optionallyConfigured<A>()
+
+        fun <A : ArgumentSpec> configured() =
+            delegationContext.booleanScalar.list.configured<A>()
+      }
 
     }
   }
@@ -137,7 +211,24 @@ interface QSchemaType {
         delegationContext.enum.configured<T, A>(T::class)
 
 
-    object List
+    object List {
+
+    inline fun <reified T> stub()
+        where T : Enum<T>,
+              T : QEnumType =
+        delegationContext.enum.list.stub(T::class)
+
+    inline fun <reified T, A : ArgumentSpec> optionallyConfigured()
+        where T : Enum<T>,
+              T : QEnumType =
+        delegationContext.enum.list.optionallyConfigured<T, A>(T::class)
+
+
+    inline fun <reified T, A : ArgumentSpec> configured()
+        where T : Enum<T>,
+              T : QEnumType =
+        delegationContext.enum.list.configured<T, A>(T::class)
+    }
 
   }
 
@@ -153,7 +244,17 @@ interface QSchemaType {
     inline fun <reified T : CustomScalar, A : ArgumentSpec> configured() =
         delegationContext.scalar.configured<T, A>(T::class)
 
-    object List
+    object List {
+
+      inline fun <reified T : CustomScalar> stub() =
+          delegationContext.scalar.list.stub(T::class)
+
+      inline fun <reified T : CustomScalar, A : ArgumentSpec> optionallyConfigured() =
+          delegationContext.scalar.list.optionallyConfigured<T, A>(T::class)
+
+      inline fun <reified T : CustomScalar, A : ArgumentSpec> configured() =
+          delegationContext.scalar.list.configured<T, A>(T::class)
+    }
   }
 
   object QUnion {
@@ -164,11 +265,20 @@ interface QSchemaType {
     fun <T : QUnionType, A : ArgumentSpec> optionallyConfigured(union: T) =
         delegationContext.union.optionallyConfigured<T, A>(union)
 
-
     fun <T : QUnionType, A : ArgumentSpec> configured(union: T) =
         delegationContext.union.configured<T, A>(union)
 
-    object List
+    object List {
+
+      fun <T : QUnionType> stub(union: T) =
+          delegationContext.union.list.stub(union)
+
+      fun <T : QUnionType, A : ArgumentSpec> optionallyConfigured(union: T) =
+          delegationContext.union.list.optionallyConfigured<T, A>(union)
+
+      fun <T : QUnionType, A : ArgumentSpec> configured(union: T) =
+          delegationContext.union.list.configured<T, A>(union)
+    }
 
   }
 }

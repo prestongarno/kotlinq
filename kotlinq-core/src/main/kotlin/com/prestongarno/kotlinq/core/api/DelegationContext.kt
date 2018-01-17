@@ -34,6 +34,7 @@ import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
+import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanProvider
 import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredBooleanProvider
@@ -46,8 +47,10 @@ import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
 import com.prestongarno.kotlinq.core.schema.stubs.EnumListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.FloatProvider
+import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.IntProvider
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
@@ -57,6 +60,7 @@ import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredBooleanPro
 import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredFloatProvider
 import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredIntProvider
 import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredStringProvider
+import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStubImpl
@@ -466,19 +470,65 @@ sealed class GraphQLDelegate {
           Grub.singleBuilder(clazz.graphQlName(), false, CustomScalarListStub.configured())
     }
 
-    class QlString : GraphQLListDelegate()
+    class QlString : GraphQLListDelegate() {
+
+      fun stub()
+          : NoArgProvider<Array<String>> =
+          StringArrayDelegates.noArg()
+
+      fun <A : ArgumentSpec> optionallyConfigured()
+          : OptionallyConfiguredProvider<Array<String>, A> =
+          StringArrayDelegates.optionallyConfigured()
+
+      fun <A : ArgumentSpec> configured()
+          : ConfiguredProvider<Array<String>, A> =
+          StringArrayDelegates.configured()
+    }
 
     class QlInt : GraphQLListDelegate() {
 
-      fun stub() : NullableStubProvider<
-          DelegateProvider.NoArgDelegate<IntDelegate<ArgBuilder>, IntArray>,
-          DelegateProvider.NoArgDelegate<IntDelegate<ArgBuilder>, IntArray?>> =
-          Grub()
+      fun stub()
+          : NoArgProvider<IntArray> =
+          IntArrayDelegates.noArg()
+
+      fun <A : ArgumentSpec> optionallyConfigured()
+          : OptionallyConfiguredProvider<IntArray, A> =
+          IntArrayDelegates.optionallyConfigured()
+
+      fun <A : ArgumentSpec> configured()
+          : ConfiguredProvider<IntArray, A> =
+          IntArrayDelegates.configured()
     }
 
-    class QlFloat : GraphQLListDelegate()
+    class QlFloat : GraphQLListDelegate() {
 
-    class QlBoolean : GraphQLListDelegate()
+      fun stub()
+          : NoArgProvider<FloatArray> =
+          FloatArrayDelegates.noArg()
+
+      fun <A : ArgumentSpec> optionallyConfigured()
+          : OptionallyConfiguredProvider<FloatArray, A> =
+          FloatArrayDelegates.optionallyConfigured()
+
+      fun <A : ArgumentSpec> configured()
+          : ConfiguredProvider<FloatArray, A> =
+          FloatArrayDelegates.configured()
+    }
+
+    class QlBoolean : GraphQLListDelegate() {
+
+      fun stub()
+          : NoArgProvider<BooleanArray> =
+          BooleanArrayDelegates.noArg()
+
+      fun <A : ArgumentSpec> optionallyConfigured()
+          : OptionallyConfiguredProvider<BooleanArray, A> =
+          BooleanArrayDelegates.optionallyConfigured()
+
+      fun <A : ArgumentSpec> configured()
+          : ConfiguredProvider<BooleanArray, A> =
+          BooleanArrayDelegates.configured()
+    }
   }
 
   internal

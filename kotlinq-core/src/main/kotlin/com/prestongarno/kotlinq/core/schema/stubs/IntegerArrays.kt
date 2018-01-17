@@ -17,135 +17,66 @@
 
 package com.prestongarno.kotlinq.core.schema.stubs
 
-import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType
-import com.prestongarno.kotlinq.core.adapters.BooleanArrayStub
-import com.prestongarno.kotlinq.core.adapters.FloatArrayStub
-import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.IntArrayStub
-import com.prestongarno.kotlinq.core.adapters.StringArrayStub
 import com.prestongarno.kotlinq.core.adapters.toMap
+import com.prestongarno.kotlinq.core.api.ConfiguredProvider
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.configuredContext
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.noArgContext
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.optionallyConfiguredContext
 import com.prestongarno.kotlinq.core.api.Grub
-import com.prestongarno.kotlinq.core.api.NullableStubProvider
-import com.prestongarno.kotlinq.core.api.Stub
-import com.prestongarno.kotlinq.core.api.StubProvider
-import com.prestongarno.kotlinq.core.properties.GraphQlProperty.Companion.from
-import com.prestongarno.kotlinq.core.properties.contextBuilder
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
-import kotlin.reflect.KProperty
-
-typealias IntArrayNoArgContext<A> = NullableStubProvider<DelegateProvider.NoArgDelegate<IntDelegate<A>, IntArray>, DelegateProvider.NoArgDelegate<IntDelegate<A>, IntArray?>>
-
-interface IntArrayDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
-  var default: IntArray?
-
-  companion object {
-
-    fun stub() = object : IntArrayNoArgContext<ArgBuilder> {
-      override fun provideDelegate(inst: QSchemaType, property: KProperty<*>)
-          : Stub<DelegateProvider.NoArgDelegate<IntDelegate<ArgBuilder>, IntArray>> {
-        TODO()
-      }
-
-      override fun asNullable()
-          : StubProvider<DelegateProvider.NoArgDelegate<IntDelegate<ArgBuilder>, IntArray?>> {
-        TODO("not implemented")
-      }
-
-    }
-  }
-}
-
+import com.prestongarno.kotlinq.core.api.NoArgProvider
+import com.prestongarno.kotlinq.core.api.OptionallyConfiguredProvider
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext.Companion.Builder
 
 internal
-sealed class ArrayPreDelegate<out T, out A : ArgumentSpec>(val args: A) {
-
-  abstract fun toDelegate(propertyName: String): GraphqlPropertyDelegate<T>
+object IntArrayDelegates {
 
   internal
-  class PreIntArray<A : ArgumentSpec>(args: A)
-    : ArrayPreDelegate<IntArray, A>(args),
-      IntArrayDelegate<A> {
-    override fun toDelegate(propertyName: String) =
-        IntArrayStub(from("Int", true, propertyName), default, args.toMap())
-
-    override fun config(block: A.() -> Unit) {
-      args.block()
-    }
-
-    override var default: IntArray? = null
-
-    companion object {
-      fun basic(args: ArgBuilder): GraphqlDslBuilder<ArgBuilder> = PreIntArray(args)
-    }
-  }
+  fun noArg(): NoArgProvider<IntArray> =
+      Grub("Int", true, Builder(::notNullNoArg), Builder(::nullableNoArg))
 
   internal
-  class PreFloatArray<A : ArgumentSpec>(args: A)
-    : ArrayPreDelegate<FloatArray, A>(args),
-      FloatArrayDelegate<A> {
-    override fun toDelegate(propertyName: String) =
-        FloatArrayStub(from("Float", true, propertyName), default, args.toMap())
-
-    override fun config(block: A.() -> Unit) {
-      args.block()
-    }
-
-    override var default: FloatArray? = null
-  }
+  fun <A : ArgumentSpec> optionallyConfigured(): OptionallyConfiguredProvider<IntArray, A> =
+      Grub("Int", true, Builder(::optionallyNotNullConfigured), Builder(::optionallyNullableConfigured))
 
   internal
-  class PreBooleanArray<A : ArgumentSpec>(args: A)
-    : ArrayPreDelegate<BooleanArray, A>(args),
-      BooleanArrayDelegate<A> {
-    override fun toDelegate(propertyName: String) =
-        BooleanArrayStub(from("Boolean", true, propertyName), default, args.toMap())
+  fun <A : ArgumentSpec> configured(): ConfiguredProvider<IntArray, A> =
+      Grub("Int", true, Builder { configured<A>(it) }, Builder {
+        configuredContext<IntArray?, A>(IntArray(0)) { args, defaultBuilder ->
+          IntArrayStub(it, defaultBuilder.default, args.toMap()).asNullable()
+        }
+      })
 
-    override fun config(block: A.() -> Unit) {
-      args.block()
-    }
-
-    override var default: BooleanArray? = null
-  }
-
-  internal
-  class PreStringArray<A : ArgumentSpec>(args: A)
-    : ArrayPreDelegate<Array<String>, A>(args),
-      StringArrayDelegate<A> {
-    override fun toDelegate(propertyName: String) =
-        StringArrayStub(from("String", true, propertyName), default, args.toMap())
-
-    override fun config(block: A.() -> Unit) {
-      args.block()
-    }
-
-    override var default: Array<String>? = null
-  }
 }
 
-private class NoArgArrImpl<out T, out X>(val ctor: (ArgBuilder) -> T)
-  : DelegateProvider.NoArgDelegate<T, X>
-    where T : ArrayPreDelegate<X, ArgBuilder>,
-          T : GraphqlDslBuilder<ArgBuilder> {
+private
+fun notNullNoArg(property: GraphQlProperty): GraphqlDslBuilder.NoArgContext<IntArray> =
+    noArgContext(IntArray(0), newCtor(property))
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
-      ctor(ArgBuilder())
-          .toDelegate(property.name)
-          .bindToContext(inst)
+private
+fun nullableNoArg(property: GraphQlProperty) =
+    noArgContext(IntArray(0), newNullableCtor(property))
 
-  override fun invoke(args: ArgBuilder, block: (T.() -> Unit)?) =
-      DelegateProvider.delegateProvider { inst, prop ->
-        ctor(args).toDelegate(prop.name).bindToContext(inst)
-      }
+private
+fun <A : ArgumentSpec> optionallyNotNullConfigured(property: GraphQlProperty) =
+    optionallyConfiguredContext<IntArray, A>(IntArray(0), newCtor(property))
 
-  companion object {
-    fun <T, X> new(ctor: (ArgBuilder) -> T): DelegateProvider.NoArgDelegate<T, X>
-        where T : ArrayPreDelegate<X, ArgBuilder>,
-              T : GraphqlDslBuilder<ArgBuilder> = NoArgArrImpl(ctor)
-  }
+private
+fun <A : ArgumentSpec> optionallyNullableConfigured(property: GraphQlProperty) =
+    optionallyConfiguredContext<IntArray?, A>(IntArray(0), newNullableCtor(property))
 
-}
+private
+fun <A : ArgumentSpec> configured(property: GraphQlProperty) =
+    configuredContext<IntArray, A>(IntArray(0), newCtor(property))
+
+private fun <A : ArgumentSpec> newCtor(property: GraphQlProperty):
+    (A?, GraphqlDslBuilder.DefaultBuilder<IntArray, A>) -> GraphqlPropertyDelegate<IntArray> =
+    { args, builder -> IntArrayStub(property, builder.default, args.toMap()) }
+
+private fun <A : ArgumentSpec> newNullableCtor(property: GraphQlProperty):
+    (A?, GraphqlDslBuilder.DefaultBuilder<IntArray?, A>) -> GraphqlPropertyDelegate<IntArray?> =
+    { args, builder -> IntArrayStub(property, builder.default, args.toMap()).asNullable() }

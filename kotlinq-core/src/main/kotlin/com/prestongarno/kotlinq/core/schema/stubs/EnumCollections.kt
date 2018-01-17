@@ -3,15 +3,22 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
+import com.prestongarno.kotlinq.core.adapters.GraphQlField
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
+import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty.Companion.from
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
+import com.prestongarno.kotlinq.core.properties.PropertyType
 import com.prestongarno.kotlinq.core.properties.contextBuilder
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.InternalDelegateProvider
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 typealias EBlock<T, A> = EnumStub<T, A>.() -> Unit
 
@@ -22,7 +29,25 @@ typealias EBlock<T, A> = EnumStub<T, A>.() -> Unit
  */
 interface EnumListStub {
 
-  interface NoArg<T> : EnumListStub where T : QEnumType, T : Enum<T> {
+  companion object {
+
+    fun <T, A> stub(clazz: KClass<T>, propertyName: String)
+        : GraphqlDslBuilder.ConfiguredContext<T, A>
+        where T : QEnumType,
+              T : Enum<T>,
+              A : ArgumentSpec =
+        GraphqlDslBuilder.DefaultBuilder.configuredContext { args, builder ->
+          EnumAdapterImpl(clazz, args)
+              .toDelegate(newProperty(typeName = "${clazz.simpleName}", propertyName = propertyName))
+        }
+
+    private
+    fun newProperty(typeName: String, propertyName: String) =
+        from(typeName, true, propertyName, PropertyType.ENUM)
+
+  }
+
+  interface NoArg<T> : DelegateProvider<List<T>> where T : QEnumType, T : Enum<T> {
     operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: EBlock<T, ArgBuilder>): DelegateProvider<List<T?>>
 
     interface NotNull<T> where T : QEnumType, T : Enum<T> {
@@ -31,7 +56,7 @@ interface EnumListStub {
 
   }
 
-  interface OptionallyConfigured<T, A : ArgumentSpec> : EnumListStub, Configured<T, A> where T : QEnumType, T : Enum<T> {
+  interface OptionallyConfigured<T, A : ArgumentSpec> : Configured<T, A> where T : QEnumType, T : Enum<T> {
     operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: EBlock<T, ArgBuilder>): DelegateProvider<List<T?>>
 
     interface NotNull<T, A : ArgumentSpec> : Configured.NotNull<T, A> where T : QEnumType, T : Enum<T> {
@@ -39,7 +64,7 @@ interface EnumListStub {
     }
   }
 
-  interface Configured<T, A : ArgumentSpec> : EnumListStub where T : QEnumType, T : Enum<T> {
+  interface Configured<T, A : ArgumentSpec> where T : QEnumType, T : Enum<T> {
 
     operator fun invoke(arguments: A, block: EBlock<T, A>): DelegateProvider<List<T?>>
 
@@ -56,6 +81,9 @@ sealed class EnumListStubImpl<T, A>(val clazz: KClass<T>, val qproperty: GraphQl
 
   internal
   class NoArg<T>(clazz: KClass<T>, qprop: GraphQlProperty) : EnumListStubImpl<T, ArgBuilder>(clazz, qprop), EnumListStub.NoArg<T> where T : QEnumType, T : Enum<T> {
+
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<List<T>> =
+        newDelegate(clazz, ArgBuilder(), empty()).provideDelegate(inst, property)
 
     override fun invoke(arguments: ArgBuilder, block: EBlock<T, ArgBuilder>)
         : InternalDelegateProvider<List<T?>> =

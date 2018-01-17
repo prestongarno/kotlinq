@@ -3,6 +3,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.adapters.CustomScalarStubImpl
+import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
 import com.prestongarno.kotlinq.core.properties.contextBuilder
@@ -18,7 +19,7 @@ interface CustomScalarListStub {
     operator fun <V : Any> invoke(
         mapper: CustomScalarStub.Mapper<V>,
         arguments: ArgBuilder? = ArgBuilder(),
-        block: CBlock<T, V, ArgBuilder>
+        block: CBlock<T, V, ArgBuilder> = empty()
     ): DelegateProvider<List<V>>
   }
 
@@ -26,7 +27,7 @@ interface CustomScalarListStub {
     operator fun <V : Any> invoke(
         mapper: CustomScalarStub.Mapper<V>,
         arguments: ArgBuilder = ArgBuilder(),
-        block: CBlock<T, V, ArgBuilder>
+        block: CBlock<T, V, ArgBuilder> = empty()
     ): DelegateProvider<List<V>>
   }
 
@@ -34,7 +35,7 @@ interface CustomScalarListStub {
     operator fun <V : Any> invoke(
         mapper: CustomScalarStub.Mapper<V>,
         arguments: A,
-        block: CBlock<T, V, A>
+        block: CBlock<T, V, A> = empty()
     ): DelegateProvider<List<V>>
   }
 

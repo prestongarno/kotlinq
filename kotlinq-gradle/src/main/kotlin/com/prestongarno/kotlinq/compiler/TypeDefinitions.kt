@@ -27,11 +27,8 @@ import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.ScalarArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.ScalarDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
@@ -254,7 +251,7 @@ sealed class ScalarType : SchemaType() {
 
 object IntType : ScalarType() {
   override val stubClass = IntDelegate::class
-  override val arrayStubClass = IntArrayDelegate::class
+  override val arrayStubClass = IntArrayDelegates::class
   override val name: String get() = "Int"
   override fun toKotlin(): TypeSpec = throw UnsupportedOperationException()
 

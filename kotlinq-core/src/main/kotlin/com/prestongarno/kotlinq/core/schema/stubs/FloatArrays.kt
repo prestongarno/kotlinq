@@ -18,9 +18,66 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.adapters.FloatArrayStub
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
+import com.prestongarno.kotlinq.core.adapters.toMap
+import com.prestongarno.kotlinq.core.api.ConfiguredProvider
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.configuredContext
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.noArgContext
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.optionallyConfiguredContext
+import com.prestongarno.kotlinq.core.api.Grub
+import com.prestongarno.kotlinq.core.api.NoArgProvider
+import com.prestongarno.kotlinq.core.api.OptionallyConfiguredProvider
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext.Companion.Builder
 
-interface FloatArrayDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
+internal
+object FloatArrayDelegates {
 
-  var default: FloatArray?
+  internal
+  fun noArg(): NoArgProvider<FloatArray> =
+      Grub("Float", true, Builder(::notNullNoArg), Builder(::nullableNoArg))
+
+  internal
+  fun <A : ArgumentSpec> optionallyConfigured(): OptionallyConfiguredProvider<FloatArray, A> =
+      Grub("Float", true, Builder(::optionallyNotNullConfigured), Builder(::optionallyNullableConfigured))
+
+  internal
+  fun <A : ArgumentSpec> configured(): ConfiguredProvider<FloatArray, A> =
+      Grub("Float", true, Builder { configured<A>(it) }, Builder {
+        configuredContext<FloatArray?, A>(FloatArray(0)) { args, defaultBuilder ->
+          FloatArrayStub(it, defaultBuilder.default, args.toMap()).asNullable()
+        }
+      })
+
 }
+
+private
+fun notNullNoArg(property: GraphQlProperty): GraphqlDslBuilder.NoArgContext<FloatArray> =
+    noArgContext(FloatArray(0), newCtor(property))
+
+private
+fun nullableNoArg(property: GraphQlProperty) =
+    noArgContext(FloatArray(0), newNullableCtor(property))
+
+private
+fun <A : ArgumentSpec> optionallyNotNullConfigured(property: GraphQlProperty) =
+    optionallyConfiguredContext<FloatArray, A>(FloatArray(0), newCtor(property))
+
+private
+fun <A : ArgumentSpec> optionallyNullableConfigured(property: GraphQlProperty) =
+    optionallyConfiguredContext<FloatArray?, A>(FloatArray(0), newNullableCtor(property))
+
+private
+fun <A : ArgumentSpec> configured(property: GraphQlProperty) =
+    configuredContext<FloatArray, A>(FloatArray(0), newCtor(property))
+
+private fun <A : ArgumentSpec> newCtor(property: GraphQlProperty):
+    (A?, GraphqlDslBuilder.DefaultBuilder<FloatArray, A>) -> GraphqlPropertyDelegate<FloatArray> =
+    { args, builder -> FloatArrayStub(property, builder.default, args.toMap()) }
+
+private fun <A : ArgumentSpec> newNullableCtor(property: GraphQlProperty):
+    (A?, GraphqlDslBuilder.DefaultBuilder<FloatArray?, A>) -> GraphqlPropertyDelegate<FloatArray?> =
+    { args, builder -> FloatArrayStub(property, builder.default, args.toMap()).asNullable() }
+

@@ -18,8 +18,66 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
+import com.prestongarno.kotlinq.core.adapters.StringArrayStub
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
+import com.prestongarno.kotlinq.core.adapters.toMap
+import com.prestongarno.kotlinq.core.api.ConfiguredProvider
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.configuredContext
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.noArgContext
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder.DefaultBuilder.Companion.optionallyConfiguredContext
+import com.prestongarno.kotlinq.core.api.Grub
+import com.prestongarno.kotlinq.core.api.NoArgProvider
+import com.prestongarno.kotlinq.core.api.OptionallyConfiguredProvider
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext.Companion.Builder
 
-interface StringArrayDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
-  var default: Array<String>?
+internal
+object StringArrayDelegates {
+
+  internal
+  fun noArg(): NoArgProvider<Array<String>> =
+      Grub("String", true, Builder(::notNullNoArg), Builder(::nullableNoArg))
+
+  internal
+  fun <A : ArgumentSpec> optionallyConfigured(): OptionallyConfiguredProvider<Array<String>, A> =
+      Grub("String", true, Builder(::optionallyNotNullConfigured), Builder(::optionallyNullableConfigured))
+
+  internal
+  fun <A : ArgumentSpec> configured(): ConfiguredProvider<Array<String>, A> =
+      Grub("String", true, Builder { configured<A>(it) }, Builder {
+        configuredContext<Array<String>?, A>(emptyArray()) { args, defaultBuilder ->
+          StringArrayStub(it, defaultBuilder.default, args.toMap()).asNullable()
+        }
+      })
+
 }
+
+private
+fun notNullNoArg(property: GraphQlProperty): GraphqlDslBuilder.NoArgContext<Array<String>> =
+    noArgContext(emptyArray(), newCtor(property))
+
+private
+fun nullableNoArg(property: GraphQlProperty) =
+    noArgContext(emptyArray(), newNullableCtor(property))
+
+private
+fun <A : ArgumentSpec> optionallyNotNullConfigured(property: GraphQlProperty) =
+    optionallyConfiguredContext<Array<String>, A>(emptyArray(), newCtor(property))
+
+private
+fun <A : ArgumentSpec> optionallyNullableConfigured(property: GraphQlProperty) =
+    optionallyConfiguredContext<Array<String>?, A>(emptyArray(), newNullableCtor(property))
+
+private
+fun <A : ArgumentSpec> configured(property: GraphQlProperty) =
+    configuredContext<Array<String>, A>(emptyArray(), newCtor(property))
+
+private fun <A : ArgumentSpec> newCtor(property: GraphQlProperty):
+    (A?, GraphqlDslBuilder.DefaultBuilder<Array<String>, A>) -> GraphqlPropertyDelegate<Array<String>> =
+    { args, builder -> StringArrayStub(property, builder.default, args.toMap()) }
+
+private fun <A : ArgumentSpec> newNullableCtor(property: GraphQlProperty):
+    (A?, GraphqlDslBuilder.DefaultBuilder<Array<String>?, A>) -> GraphqlPropertyDelegate<Array<String>?> =
+    { args, builder -> StringArrayStub(property, builder.default, args.toMap()).asNullable() }
+

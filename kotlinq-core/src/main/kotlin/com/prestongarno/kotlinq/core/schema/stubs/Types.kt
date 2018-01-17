@@ -29,7 +29,7 @@ import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Compa
 import com.prestongarno.kotlinq.core.properties.delegates.InternalDelegateProvider
 import com.prestongarno.kotlinq.core.schema.QType
 
-interface TypeStub<A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   interface NoArg<in T : QType> {
 
