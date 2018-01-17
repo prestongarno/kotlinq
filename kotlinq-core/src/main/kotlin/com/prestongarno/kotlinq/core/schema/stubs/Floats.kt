@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
 
 typealias FloatProperty = ScalarDelegate.NoArg<FloatDelegate<ArgBuilder>, FloatStub>
 typealias OptionallyConfiguredFloatProperty<A> = FloatDelegate.OptionallyConfigured<A>
-typealias ConfiguredFloatProperty<A> = ScalarDelegate.Configured<FloatDelegate<ArgBuilder>, FloatStub, A>
+typealias ConfiguredFloatProperty<A> = ScalarDelegate.Configured<FloatDelegate<A>, FloatStub, A>
 
 typealias FloatProvider = NullableStubProvider<ScalarDelegate.NoArg<FloatDelegate<ArgBuilder>, FloatStub>,
     ScalarDelegate.NoArg.Nullable<FloatDelegate<ArgBuilder>, Float>>

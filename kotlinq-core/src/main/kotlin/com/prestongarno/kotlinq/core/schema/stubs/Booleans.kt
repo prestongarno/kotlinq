@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
 
 typealias BooleanProperty = ScalarDelegate.NoArg<BooleanDelegate<ArgBuilder>, BooleanStub>
 typealias OptionallyConfiguredBooleanProperty<A> = BooleanDelegate.OptionallyConfigured<A>
-typealias ConfiguredBooleanProperty<A> = ScalarDelegate.Configured<BooleanDelegate<ArgBuilder>, BooleanStub, A>
+typealias ConfiguredBooleanProperty<A> = ScalarDelegate.Configured<BooleanDelegate<A>, BooleanStub, A>
 
 typealias BooleanProvider = NullableStubProvider<ScalarDelegate.NoArg<BooleanDelegate<ArgBuilder>, BooleanStub>,
     ScalarDelegate.NoArg.Nullable<BooleanDelegate<ArgBuilder>, Boolean>>
@@ -46,7 +46,7 @@ typealias ConfiguredBooleanProvider<A> = NullableStubProvider<
     ScalarDelegate.Configured<BooleanDelegate<A>, BooleanStub, A>,
     ScalarDelegate.Configured.Nullable<BooleanDelegate<A>, A, Boolean>>
 
-interface BooleanDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface BooleanDelegate<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
   var default: Boolean
 
