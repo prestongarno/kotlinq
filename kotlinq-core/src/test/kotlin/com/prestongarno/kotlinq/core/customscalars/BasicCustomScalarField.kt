@@ -22,7 +22,6 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
-import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub.Mapper.Companion.fromString
 import org.junit.Test
 import java.io.File
 
@@ -37,7 +36,7 @@ class BasicCustomScalarField {
   @Test fun `custom scalar field is possible`() {
 
     val query = object : QModel<Item>(Item) {
-      val url by model.url(mapper = fromString { File(it).toURI().toURL() })
+      val url by model.url.fromString { File(it).toURI().toURL() }
     }
 
     query::url.returnType.classifier eq String::class
@@ -48,7 +47,7 @@ class BasicCustomScalarField {
   @Test fun `custom scalar field is possible 2`() {
 
     val query = object : QModel<Item>(Item) {
-      val url by model.url(mapper = fromString(String::toIntOrNull))
+      val url by model.url.fromString(String::toIntOrNull)
 
     }
 

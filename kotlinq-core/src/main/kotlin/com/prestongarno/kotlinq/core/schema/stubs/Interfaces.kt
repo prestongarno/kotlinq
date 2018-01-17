@@ -26,8 +26,23 @@ import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
+
+/*
+
+TODO -> Easy namespaces for typeAliases
+typealias Interfaces {
+  Property<T, A> = ConfiguredBlock<InterfaceStub<T, A>, A, QModel<T>?>
+}
+
+*/
+
+
+typealias InterfaceProperty<T> = NoArgBlock<InterfaceStub<T, ArgBuilder>, QModel<T>?>
+typealias OptionallyConfiguredInterfaceProperty<T, A> = InterfaceStub.OptionallyConfigured<InterfaceStub<T, A>, A>
+typealias ConfiguredInterfaceProperty<T, A> = ConfiguredBlock<InterfaceStub<T, A>, A, QModel<T>?>
 
 
 interface InterfaceStub<in I, out A : ArgumentSpec>

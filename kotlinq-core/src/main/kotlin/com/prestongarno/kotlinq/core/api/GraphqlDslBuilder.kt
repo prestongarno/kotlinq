@@ -18,7 +18,7 @@ typealias OptionallyConfiguredListProvider<T, A> = StubProvider<GraphqlDslBuilde
 typealias NoArgProvider<T> = NullableStubProvider<GraphqlDslBuilder.NoArgContext<T>, GraphqlDslBuilder.NoArgContext<T?>>
 typealias NoArgListProvider<T> = StubProvider<GraphqlDslBuilder.NoArgContext<List<T>>>
 
-typealias DefaultBuilderBlock<T, A> = GraphqlDslBuilder.DefaultBuilder<out T, A>.() -> Unit
+typealias DefaultBuilderBlock<T, A> = GraphqlDslBuilder.DefaultBuilder<T, A>.() -> Unit
 
 internal
 typealias DslEvaluationResult<T> = Pair<ArgumentSpec?, DefaultBuilderImpl<T, ArgumentSpec>>

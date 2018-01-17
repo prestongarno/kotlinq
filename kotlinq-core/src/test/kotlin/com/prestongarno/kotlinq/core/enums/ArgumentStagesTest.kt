@@ -24,7 +24,10 @@ import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.schema.QType
+import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredProperty
+import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredProperty
 import org.junit.Test
 
 class ArgumentStagesTest {
@@ -118,11 +121,14 @@ class ArgumentStagesTest {
 }
 
 object Class : QType {
-  val classLevel by QSchemaType.QEnum.stub<ClassLevel>()
+  val classLevel: GraphqlDslBuilder.NoArgContext<ClassLevel>
+      by QSchemaType.QEnum.stub<ClassLevel>()
 
-  val classLevelWithArgs by QSchemaType.QEnum.configured<ClassLevel, ClassLevelArgs>()
+  val classLevelWithArgs: ConfiguredProperty<ClassLevel, ClassLevelArgs>
+      by QSchemaType.QEnum.configured()
 
-  val classLevelOptionalArgs by QSchemaType.QEnum.optionallyConfigured<ClassLevel, OptionalClassLevelArgs>()
+  val classLevelOptionalArgs: OptionallyConfiguredProperty<ClassLevel?, OptionalClassLevelArgs>
+      by QSchemaType.QEnum.optionallyConfigured<ClassLevel, OptionalClassLevelArgs>().asNullable()
 
   class OptionalClassLevelArgs : ArgBuilder() {
     var intArgument: Int? by arguments

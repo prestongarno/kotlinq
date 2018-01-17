@@ -75,6 +75,7 @@ class PropertyMapper {
     values[key] = value
   }
 
+  // TODO remove manual passing of the key as argument, use with [DelegateProvider.provideDelegate]
   @Suppress("UNCHECKED_CAST")
   fun <T: Any> notNull(key: String, value: T): ReadOnlyProperty<Any, T> {
     put(key, value)

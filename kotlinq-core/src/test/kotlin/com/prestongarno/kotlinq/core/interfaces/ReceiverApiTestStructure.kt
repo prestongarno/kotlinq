@@ -18,15 +18,21 @@
 package com.prestongarno.kotlinq.core.interfaces
 
 import com.google.common.truth.Truth.assertThat
+import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QEnum
 import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
+import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
+import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceProperty
+import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
+import com.prestongarno.kotlinq.core.schema.stubs.Property
 import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.StringProperty
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 
@@ -37,9 +43,9 @@ enum class ConceptType : QEnumType {
 
 interface Concept : QType, QInterface {
   // TODO -> 3-factor API with argbuilders
-  val name : StringDelegate.Query
+  val name : StringProperty
 
-  val type : EnumStub.Query<ConceptType>
+  val type : Property<ConceptType>
 }
 
 object Persistence : Concept {
@@ -55,7 +61,20 @@ object Unknown : Concept {
 }
 
 object Random : QType {
-  val getRandomConcept by QInterfaces.stub<Concept>()
+  val getRandomConcept: InterfaceProperty<Concept> by QInterfaces.stub<Concept>()
+
+  val singleConcept: ConfiguredBlock<InterfaceStub<Concept, SingleConceptArgs>, SingleConceptArgs, QModel<Concept>?> by QInterfaces.configured<Concept, SingleConceptArgs>()
+  val singleOptionalConcept: InterfaceStub.OptionallyConfigured<Concept, SingleOptionalConceptArgs> by QInterfaces.optionallyConfigured<Concept, SingleOptionalConceptArgs>()
+
+  class SingleOptionalConceptArgs : ArgBuilder() {
+    val match: String? by arguments
+    val matchSensitivity: Int? by arguments
+
+  }
+  class SingleConceptArgs(match: String) : ArgBuilder() {
+    val match by arguments.notNull("match", match)
+    val matchSensitivity: Int? by arguments
+  }
 }
 
 class ReceiverApiTestStructure {
@@ -71,7 +90,6 @@ class ReceiverApiTestStructure {
 
   @Test fun `single interface field query with parsing response`() {
     val query = object : QModel<Random>(Random) {
-      // TODO -> not allow a providedelegate without fragmenting!
       val result by Random.getRandomConcept {
         on(ReceiverApiTestStructure::MyPersistence)
         on(ReceiverApiTestStructure::UnknownModel)
