@@ -17,38 +17,19 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.ListDelegate
-import com.prestongarno.kotlinq.core.schema.CustomScalar
-import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
+import com.prestongarno.kotlinq.core.schema.stubs.Mapper
 import kotlin.reflect.KProperty
 
-internal
-class CustomScalarStubImpl<E : CustomScalar, Q: Any, A : ArgumentSpec>(
-    private val mapper: CustomScalarStub.Mapper<Q>,
-    val arguments: A? = null
-) : PreDelegate<Q, A>(),
-    CustomScalarStub<E, Q, A> {
-
-  override fun toDelegate(property: GraphQlProperty) =
-    CustomScalarFieldImpl(property, arguments.toMap(), mapper, default)
-
-  override var default: Q? = null
-
-  override fun config(block: A.() -> Unit) {
-    arguments?.block()
-  }
-}
-
-
-internal data class CustomScalarFieldImpl<Q: Any>(
+internal data
+class CustomScalarField<out Q: Any>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any> = emptyMap(),
-    val adapter: CustomScalarStub.Mapper<Q>,
+    val adapter: Mapper<*, Q>,
     val default: Q?
 ) : GraphqlPropertyDelegate<Q> {
 
@@ -68,12 +49,10 @@ internal data class CustomScalarFieldImpl<Q: Any>(
     return true
   }
 
-  // TODO lazily evaluate this
-  override fun transform(obj: Any?): Q? {
-    return when (adapter) {
-      is CustomScalarStub.Mapper.InputStreamMapper<Q> -> adapter.invoke("${obj ?: ""}".byteInputStream())
-      is CustomScalarStub.Mapper.StringMapper<Q> -> adapter.invoke("${obj ?: ""}")
-    }
+  // TODO lazily evaluate this and actually use streams correctly
+  override fun transform(obj: Any?): Q? = when (adapter) {
+    is Mapper.StringMapper<Q> -> adapter.transform(obj.toString())
+    is Mapper.StreamMapper<Q> -> adapter.transform(obj.toString().byteInputStream())
   }
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()

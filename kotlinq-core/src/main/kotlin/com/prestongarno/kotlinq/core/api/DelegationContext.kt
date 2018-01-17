@@ -20,12 +20,19 @@ package com.prestongarno.kotlinq.core.api
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.adapters.BooleanArrayStub
+import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
+import com.prestongarno.kotlinq.core.adapters.FloatArrayStub
+import com.prestongarno.kotlinq.core.adapters.IntArrayStub
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
+import com.prestongarno.kotlinq.core.adapters.StringArrayStub
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Always
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Never
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Sometimes
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Companion.newBuilder
 import com.prestongarno.kotlinq.core.properties.contextBuilder
-import com.prestongarno.kotlinq.core.properties.delegates.Configured
 import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
 import com.prestongarno.kotlinq.core.properties.delegates.configuredBlock
 import com.prestongarno.kotlinq.core.properties.delegates.noArgBlock
@@ -34,23 +41,18 @@ import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanProvider
 import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredBooleanProvider
 import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredFloatProvider
 import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredIntProvider
-import com.prestongarno.kotlinq.core.schema.stubs.StringProvider
 import com.prestongarno.kotlinq.core.schema.stubs.ConfiguredStringProvider
+import com.prestongarno.kotlinq.core.schema.stubs.CustomListStubHandle
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarListStub
 import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
-import com.prestongarno.kotlinq.core.schema.stubs.EnumListStub
-import com.prestongarno.kotlinq.core.schema.stubs.EnumListStubImpl
-import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
-import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegates
+import com.prestongarno.kotlinq.core.schema.stubs.CustomStubHandle
 import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.FloatProvider
-import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.IntProvider
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceListStub
@@ -60,11 +62,12 @@ import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredBooleanPro
 import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredFloatProvider
 import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredIntProvider
 import com.prestongarno.kotlinq.core.schema.stubs.OptionallyConfiguredStringProvider
-import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegates
 import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.stubs.StringProvider
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStub
 import com.prestongarno.kotlinq.core.schema.stubs.TypeListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
+import com.prestongarno.kotlinq.core.schema.stubs.TypeStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.UnionListStub
 import com.prestongarno.kotlinq.core.schema.stubs.UnionListStubImpl
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
@@ -145,26 +148,29 @@ sealed class GraphQLDelegate {
 
   abstract val list: Lists.GraphQLListDelegate
 
+
   class Type : GraphQLDelegate() {
 
-    fun <T : QType> stub(clazz: KClass<T>)
-        : NullableStubProvider<TypeStub.NoArg<T>, TypeStub.NoArg.Nullable<T>> =
-        Grub(clazz.graphQlName(), false,
-            builder = contextBuilder { TypeStub.noArg<T>(it) },
-            nullableBuilder = contextBuilder { TypeStub.noArg<T>(it).asNullable() })
+    fun <T : QType> stub(clazz: KClass<T>): NullableStubProvider<TypeStub.NoArg.NotNull<T>, TypeStub.NoArg<T>> =
+        schemaProvider {
+          TypeStubImpl.NoArg.NotNull(clazz, it.second.name)
+        }.withAlternate { it.asNullable() }
 
     fun <T : QType, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
-        : NullableStubProvider<TypeStub.OptionalConfigured<T, A>, TypeStub.OptionalConfigured.Nullable<T, A>> =
-        Grub(clazz.graphQlName(), false,
-            builder = contextBuilder { TypeStub.optionallyConfigured<T, A>(it) },
-            nullableBuilder = contextBuilder { TypeStub.optionallyConfigured<T, A>(it).asNullable() })
+        : NullableStubProvider<TypeStub.OptionallyConfigured.NotNull<T, A>, TypeStub.OptionallyConfigured<T, A>> =
+        schemaProvider {
+          TypeStubImpl.OptionallyConfigured.NotNull<T, A>(clazz, it.second.name)
+        }.withAlternate { it.asNullable() }
 
     fun <T : QType, A : ArgumentSpec> configured(clazz: KClass<T>)
-        : NullableStubProvider<TypeStub.Configured<T, A>, TypeStub.Configured.Nullable<T, A>> =
-        optionallyConfigured(clazz)
+        : NullableStubProvider<TypeStub.Configured.NotNull<T, A>, TypeStub.Configured<T, A>> =
+        schemaProvider {
+          TypeStubImpl.Configured.NotNull<T, A>(clazz, it.second.name)
+        }.withAlternate { it.asNullable() }
 
     override val list: Lists.Type = Lists.Type()
   }
+
 
   class Interface : GraphQLDelegate() {
 
@@ -198,6 +204,7 @@ sealed class GraphQLDelegate {
     override val list: Lists.Interface = Lists.Interface()
   }
 
+
   class Union : GraphQLDelegate() {
 
     fun <T : QUnionType> stub(obj: T)
@@ -228,31 +235,46 @@ sealed class GraphQLDelegate {
 
   }
 
+
   class QlEnum : GraphQLDelegate() {
 
+
     fun <T> stub(clazz: KClass<T>)
-        : NullableStubProvider<DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T>, DelegateProvider.NoArgDelegate<EnumStub<T, ArgBuilder>, T?>>
-        where T : Enum<T>, T : QEnumType =
-        Grub(clazz.graphQlName(), false,
-            builder = contextBuilder { EnumStub.noArg(clazz, it) },
-            nullableBuilder = contextBuilder { EnumStub.noArg(clazz, it).asNullable() })
+        : NoArgProvider<T>
+        where T : QEnumType,
+              T : Enum<T> = schemaProvider { kontext ->
+
+      newBuilder<T>() takingArguments ::Never resultingIn {
+        EnumAdapterImpl(clazz, it.first, it.second.default).toDelegate(kontext)
+      }
+
+    }.withAlternate { it allowing Nothing::class }
 
     fun <T, A> optionallyConfigured(clazz: KClass<T>)
-        : NullableStubProvider<EnumStub.OptionallyConfigured<T, A>, EnumStub.OptionallyConfigured.Nullable<T, A>>
-        where T : Enum<T>, T : QEnumType, A : ArgumentSpec = Grub(clazz.graphQlName(), false,
-        builder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it) },
-        nullableBuilder = contextBuilder { EnumStub.optionallyConfigured<T, A>(clazz, it).asNullable() })
+        : OptionallyConfiguredProvider<T, A>
+        where T : QEnumType,
+              T : Enum<T>,
+              A : ArgumentSpec =
+        schemaProvider { kdelegateContext ->
+          newBuilder<T>().withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
+            EnumAdapterImpl(clazz, args, builder.default).toDelegate(kdelegateContext)
+          }
+        }.withAlternate { it allowing Nothing::class }
 
     fun <T, A> configured(clazz: KClass<T>)
-        : NullableStubProvider<Configured<EnumStub<T, A>, A, T>, Configured<EnumStub<T, A>, A, T?>>
-        where T : Enum<T>, T : QEnumType, A : ArgumentSpec =
-        Grub(clazz.graphQlName(), false,
-            builder = contextBuilder { EnumStub.configured<T, A>(clazz, it) },
-            nullableBuilder = contextBuilder { EnumStub.configured<T, A>(clazz, it).asNullable() })
+        : ConfiguredProvider<T, A>
+        where T : QEnumType,
+              T : Enum<T>,
+              A : ArgumentSpec = schemaProvider { kdelegateContext ->
+      newBuilder<T>().withArgs<A>() takingArguments ::Always resultingIn { (args, builder) ->
+        EnumAdapterImpl(clazz, args, builder.default).toDelegate(kdelegateContext)
+      }
+    }.withAlternate { it allowing Nothing::class }
 
 
     override val list: Lists.QlEnum = Lists.QlEnum()
   }
+
 
   class QlString : GraphQLDelegate() {
 
@@ -271,6 +293,7 @@ sealed class GraphQLDelegate {
     override val list: Lists.QlString = Lists.QlString()
   }
 
+
   class QlInt : GraphQLDelegate() {
 
     fun stub()
@@ -287,6 +310,7 @@ sealed class GraphQLDelegate {
 
     override val list: Lists.QlInt = Lists.QlInt()
   }
+
 
   class QlFloat : GraphQLDelegate() {
 
@@ -305,6 +329,7 @@ sealed class GraphQLDelegate {
     override val list: Lists.QlFloat = Lists.QlFloat()
   }
 
+
   class QlBoolean : GraphQLDelegate() {
 
     fun stub()
@@ -322,28 +347,24 @@ sealed class GraphQLDelegate {
     override val list: Lists.QlBoolean = Lists.QlBoolean()
   }
 
+
   class Scalar : GraphQLDelegate() {
 
     fun <T : CustomScalar> stub(clazz: KClass<T>)
-        : NullableStubProvider<CustomScalarStub.NoArg<T>, CustomScalarStub.NoArg.Nullable<T>> =
-        Grub(clazz.graphQlName(), false,
-            builder = CustomScalarStub.noArg(),
-            nullableBuilder = CustomScalarStub.Companion.Nullables.noArg())
+        : StubProvider<CustomScalarStub.NoArg<T>> =
+        CustomStubHandle.stub(clazz)
 
     fun <T : CustomScalar, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
-        : NullableStubProvider<CustomScalarStub.OptionallyConfigured<T, A>, CustomScalarStub.OptionallyConfigured.Nullable<T, A>> =
-        Grub(clazz.graphQlName(), false,
-            builder = CustomScalarStub.optionallyConfigured(),
-            nullableBuilder = CustomScalarStub.Companion.Nullables.optionallyConfigured())
+        : StubProvider<CustomScalarStub.OptionallyConfigured<T, A>> =
+        CustomStubHandle.optionallyConfiguredStub(clazz)
 
     fun <T : CustomScalar, A : ArgumentSpec> configured(clazz: KClass<T>)
-        : NullableStubProvider<CustomScalarStub.Configured<T, A>, CustomScalarStub.Configured.Nullable<T, A>> =
-        Grub(clazz.graphQlName(), false,
-            builder = CustomScalarStub.configured(),
-            nullableBuilder = CustomScalarStub.Companion.Nullables.configured())
+        : StubProvider<CustomScalarStub.Configured<T, A>> =
+        CustomStubHandle.configuredStub(clazz)
 
     override val list: Lists.Scalar = Lists.Scalar()
   }
+
 
   /**
    * Trying to find out how to do lists/collections without adding a set of interfaces
@@ -363,6 +384,7 @@ sealed class GraphQLDelegate {
     abstract class GraphQLListDelegate : GraphQLDelegate() {
       override val list: GraphQLListDelegate get() = this
     }
+
 
     class Type : GraphQLListDelegate() {
 
@@ -384,6 +406,7 @@ sealed class GraphQLDelegate {
               builder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.Configured.NotNull<T, A>>()),
               nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.Configured<T, A>>()))
     }
+
 
     class Interface : GraphQLListDelegate() {
 
@@ -410,6 +433,7 @@ sealed class GraphQLDelegate {
 
     }
 
+
     class Union : GraphQLListDelegate() {
 
       fun <T : QUnionType> stub(unionObject: T)
@@ -431,103 +455,168 @@ sealed class GraphQLDelegate {
               nullableBuilder = UnionListStubImpl.newStub<UnionListStubImpl.Configured<T, A>, T, A>(unionObject))
     }
 
+
     class QlEnum : GraphQLListDelegate() {
+
       fun <T> stub(clazz: KClass<T>)
-          : NullableStubProvider<EnumListStub.NoArg.NotNull<T>, EnumListStub.NoArg<T>>
-          where T : QEnumType, T : Enum<T> =
-          Grub(clazz.graphQlName(), true,
-              builder = EnumListStubImpl.newStub<EnumListStubImpl.NoArg.NotNull<T>, T, ArgBuilder>(clazz),
-              nullableBuilder = EnumListStubImpl.newStub<EnumListStubImpl.NoArg<T>, T, ArgBuilder>(clazz))
+          : NoArgListProvider<T>
+          where T : QEnumType,
+                T : Enum<T> = schemaProvider { kontext ->
+        newBuilder<T>() takingArguments ::Never resultingIn {
+          EnumAdapterImpl(clazz, it.first, it.second.default).toDelegate(kontext)
+        } providingInstead List::class
+      }
 
       fun <T, A> optionallyConfigured(clazz: KClass<T>)
-          : NullableStubProvider<EnumListStub.OptionallyConfigured.NotNull<T, A>, EnumListStub.OptionallyConfigured<T, A>>
-          where T : QEnumType, T : Enum<T>, A : ArgumentSpec =
-          Grub(clazz.graphQlName(), true,
-              builder = EnumListStubImpl.newStub<EnumListStubImpl.OptionallyConfigured.NotNull<T, A>, T, A>(clazz),
-              nullableBuilder = EnumListStubImpl.newStub<EnumListStubImpl.OptionallyConfigured<T, A>, T, A>(clazz))
+          : OptionallyConfiguredListProvider<T, A>
+          where T : QEnumType,
+                T : Enum<T>,
+                A : ArgumentSpec =
+          schemaProvider { kdelegateContext ->
+            newBuilder<T>().withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
+              EnumAdapterImpl(clazz, args, builder.default).toDelegate(kdelegateContext)
+            } providingInstead List::class
+          }
 
       fun <T, A> configured(clazz: KClass<T>)
-          : NullableStubProvider<EnumListStub.Configured.NotNull<T, A>, EnumListStub.Configured<T, A>>
-          where T : QEnumType, T : Enum<T>, A : ArgumentSpec =
-          Grub(clazz.graphQlName(), true,
-              builder = EnumListStubImpl.newStub<EnumListStubImpl.Configured.NotNull<T, A>, T, A>(clazz),
-              nullableBuilder = EnumListStubImpl.newStub<EnumListStubImpl.Configured<T, A>, T, A>(clazz))
+          : ConfiguredListProvider<T, A>
+          where T : QEnumType,
+                T : Enum<T>,
+                A : ArgumentSpec = schemaProvider { kdelegateContext ->
+
+        newBuilder<T>().withArgs<A>() takingArguments ::Always resultingIn { (args, builder) ->
+          EnumAdapterImpl(clazz, args, builder.default).toDelegate(kdelegateContext)
+        } providingInstead List::class
+
+      }
 
     }
+
 
     class Scalar : GraphQLListDelegate() {
 
       fun <T : CustomScalar> stub(clazz: KClass<T>)
           : StubProvider<CustomScalarListStub.NoArg<T>> =
-          Grub.singleBuilder(clazz.graphQlName(), true, CustomScalarListStub.noArg())
+          CustomListStubHandle.stub(clazz)
 
       fun <T : CustomScalar, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
           : StubProvider<CustomScalarListStub.OptionallyConfigured<T, A>> =
-          Grub.singleBuilder(clazz.graphQlName(), false, CustomScalarListStub.optionallyConfigured())
+          CustomListStubHandle.optionallyConfiguredStub(clazz)
 
       fun <T : CustomScalar, A : ArgumentSpec> configured(clazz: KClass<T>)
           : StubProvider<CustomScalarListStub.Configured<T, A>> =
-          Grub.singleBuilder(clazz.graphQlName(), false, CustomScalarListStub.configured())
+          CustomListStubHandle.configuredStub(clazz)
     }
+
 
     class QlString : GraphQLListDelegate() {
 
-      fun stub()
-          : NoArgProvider<Array<String>> =
-          StringArrayDelegates.noArg()
+      fun stub(): NoArgProvider<Array<String>> = schemaProvider { (_, prop) ->
+        newBuilder<Array<String>>() takingArguments ::Never resultingIn { (args, builder) ->
+          StringArrayStub.create(prop.name, args, builder.default)
+        }
+      }.withAlternate { it.asNullable() }
 
       fun <A : ArgumentSpec> optionallyConfigured()
-          : OptionallyConfiguredProvider<Array<String>, A> =
-          StringArrayDelegates.optionallyConfigured()
+          : OptionallyConfiguredProvider<Array<String>, A> = schemaProvider { (_, prop) ->
+        newBuilder<Array<String>>().withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
+          StringArrayStub.create(prop.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
 
       fun <A : ArgumentSpec> configured()
-          : ConfiguredProvider<Array<String>, A> =
-          StringArrayDelegates.configured()
+          : ConfiguredProvider<Array<String>, A> = schemaProvider { (_, prop) ->
+        newBuilder<Array<String>>().withArgs<A>() takingArguments ::Always resultingIn { (args, builder) ->
+          StringArrayStub.create(prop.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
     }
+
 
     class QlInt : GraphQLListDelegate() {
 
       fun stub()
-          : NoArgProvider<IntArray> =
-          IntArrayDelegates.noArg()
+          : NoArgProvider<IntArray> = schemaProvider { kontext ->
+
+        newBuilder(IntArray(0)) takingArguments ::Never resultingIn { (args, builder) ->
+          IntArrayStub.create(kontext.second.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
 
       fun <A : ArgumentSpec> optionallyConfigured()
-          : OptionallyConfiguredProvider<IntArray, A> =
-          IntArrayDelegates.optionallyConfigured()
+          : OptionallyConfiguredProvider<IntArray, A> = schemaProvider { kontext ->
+
+        newBuilder(IntArray(0)).withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
+          IntArrayStub.create(kontext.second.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
+
 
       fun <A : ArgumentSpec> configured()
-          : ConfiguredProvider<IntArray, A> =
-          IntArrayDelegates.configured()
+          : ConfiguredProvider<IntArray, A> = schemaProvider { kontext ->
+
+        newBuilder<IntArray>().withArgs<A>() takingArguments ::Always resultingIn {
+          IntArrayStub.create(kontext.second.name, it.first, it.second.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
     }
+
 
     class QlFloat : GraphQLListDelegate() {
 
       fun stub()
-          : NoArgProvider<FloatArray> =
-          FloatArrayDelegates.noArg()
+          : NoArgProvider<FloatArray> = schemaProvider { kontext ->
+
+        newBuilder(FloatArray(0)) takingArguments ::Never resultingIn { (args, builder) ->
+          FloatArrayStub.create(kontext.second.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
 
       fun <A : ArgumentSpec> optionallyConfigured()
-          : OptionallyConfiguredProvider<FloatArray, A> =
-          FloatArrayDelegates.optionallyConfigured()
+          : OptionallyConfiguredProvider<FloatArray, A> = schemaProvider { kontext ->
+
+        newBuilder(FloatArray(0)).withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
+          FloatArrayStub.create(kontext.second.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
+
 
       fun <A : ArgumentSpec> configured()
-          : ConfiguredProvider<FloatArray, A> =
-          FloatArrayDelegates.configured()
+          : ConfiguredProvider<FloatArray, A> = schemaProvider { kontext ->
+
+        newBuilder<FloatArray>().withArgs<A>() takingArguments ::Always resultingIn {
+          FloatArrayStub.create(kontext.second.name, it.first, it.second.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
     }
+
 
     class QlBoolean : GraphQLListDelegate() {
 
       fun stub()
-          : NoArgProvider<BooleanArray> =
-          BooleanArrayDelegates.noArg()
+          : NoArgProvider<BooleanArray> = schemaProvider { kontext ->
+
+        newBuilder(BooleanArray(0)) takingArguments ::Never resultingIn { (args, builder) ->
+          BooleanArrayStub.create(kontext.second.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
 
       fun <A : ArgumentSpec> optionallyConfigured()
-          : OptionallyConfiguredProvider<BooleanArray, A> =
-          BooleanArrayDelegates.optionallyConfigured()
+          : OptionallyConfiguredProvider<BooleanArray, A> = schemaProvider { kontext ->
+
+        newBuilder(BooleanArray(0)).withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
+          BooleanArrayStub.create(kontext.second.name, args, builder.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
+
 
       fun <A : ArgumentSpec> configured()
-          : ConfiguredProvider<BooleanArray, A> =
-          BooleanArrayDelegates.configured()
+          : ConfiguredProvider<BooleanArray, A> = schemaProvider { kontext ->
+
+        newBuilder<BooleanArray>().withArgs<A>() takingArguments ::Always resultingIn {
+          BooleanArrayStub.create(kontext.second.name, it.first, it.second.default)
+        }
+      }.withAlternate { it allowing Nothing::class }
     }
   }
 

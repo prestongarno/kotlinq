@@ -30,22 +30,8 @@ import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import kotlin.reflect.KProperty
 
-internal
-class TypeStubAdapter<out U : QType, out T : QModel<U>, A : ArgumentSpec>(
-    private val init: () -> T,
-    private val argBuilder: A?
-) : PreDelegate<T, A>(), TypeStub<A> {
-
-  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T> =
-      TypeStubImpl(property, init, argBuilder.toMap())
-
-  override fun config(block: A.() -> Unit) {
-    argBuilder?.apply(block)
-  }
-}
-
-@ValueDelegate(QModel::class)
-private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
+internal data
+class TypeStubAdapter<out I : QType, out P : QModel<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
@@ -91,7 +77,7 @@ private data class TypeStubImpl<out I : QType, out P : QModel<I>>(
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as TypeStubImpl<*, *>
+    other as TypeStubAdapter<*, *>
 
     if (qproperty != other.qproperty) return false
     if (args != other.args) return false

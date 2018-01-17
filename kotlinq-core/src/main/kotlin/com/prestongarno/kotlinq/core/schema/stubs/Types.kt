@@ -17,149 +17,159 @@
 
 package com.prestongarno.kotlinq.core.schema.stubs
 
-import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.TypeStubAdapter
+import com.prestongarno.kotlinq.core.adapters.toMap
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Always
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Never
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Sometimes
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Companion.newBuilder
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
-import com.prestongarno.kotlinq.core.internal.empty
+import com.prestongarno.kotlinq.core.api.allowing
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
-import com.prestongarno.kotlinq.core.properties.delegates.InternalDelegateProvider
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty.Companion.from
+import com.prestongarno.kotlinq.core.properties.PropertyType
 import com.prestongarno.kotlinq.core.schema.QType
+import kotlin.reflect.KClass
 
-interface TypeStub<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface TypeStub<in E : QType> {
 
-  interface NoArg<in T : QType> {
+  operator fun <U : QModel<E>> invoke(init: () -> U): GraphqlDslBuilder.Context<U?>
 
-    operator fun <U : QModel<T>> invoke(
-        constructor: () -> U,
-        arguments: ArgBuilder = ArgBuilder(),
-        block: TypeStub<ArgBuilder>.() -> Unit = empty()
-    ): DelegateProvider<U>
 
-    interface Nullable<in T : QType> {
-      operator fun <U : QModel<T>> invoke(
-          constructor: () -> U,
-          arguments: ArgBuilder = ArgBuilder(),
-          block: TypeStub<ArgBuilder>.() -> Unit = empty()
-      ): DelegateProvider<U?>
+  interface NoArg<in E : QType> : TypeStub<E> {
+    override fun <U : QModel<E>> invoke(init: () -> U): GraphqlDslBuilder.NoArgContext<U?>
+
+    interface NotNull<in E : QType> : TypeStub<E> {
+      override fun <U : QModel<E>> invoke(init: () -> U): GraphqlDslBuilder.NoArgContext<U>
     }
   }
 
-  interface Configured<in T : QType, A : ArgumentSpec> {
-    operator fun <U : QModel<T>> invoke(
-        constructor: () -> U,
-        arguments: A,
-        block: TypeStub<A>.() -> Unit = empty()
-    ): DelegateProvider<U>
 
-    interface Nullable<in T : QType, A : ArgumentSpec> {
-      operator fun <U : QModel<T>> invoke(
-          constructor: () -> U,
-          arguments: A,
-          block: TypeStub<A>.() -> Unit = empty()
-      ): DelegateProvider<U?>
+  interface OptionallyConfigured<in E : QType, A : ArgumentSpec> : TypeStub<E> {
+    override fun <U : QModel<E>> invoke(init: () -> U): GraphqlDslBuilder.OptionallyConfiguredContext<U?, A>
+
+    interface NotNull<in E : QType, A : ArgumentSpec> : TypeStub<E> {
+      override fun <U : QModel<E>> invoke(init: () -> U): GraphqlDslBuilder.OptionallyConfiguredContext<U, A>
+    }
+  }
+
+
+  interface Configured<in E : QType, A : ArgumentSpec> : TypeStub<E> {
+    override fun <U : QModel<E>> invoke(init: () -> U): GraphqlDslBuilder.ConfiguredContext<U?, A>
+
+    interface NotNull<in E : QType, A : ArgumentSpec> : TypeStub<E> {
+      override fun <U : QModel<E>> invoke(init: () -> U): GraphqlDslBuilder.ConfiguredContext<U, A>
+    }
+  }
+}
+
+
+internal
+sealed class TypeStubImpl<in E : QType>(val typeName: String, propertyName: String) {
+
+  abstract fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.Context<U?>
+
+  val qproperty: GraphQlProperty = from(typeName, false, propertyName, PropertyType.OBJECT)
+
+  abstract
+  class NotNullStub<in E : QType, out T : TypeStubImpl<E>>(typeName: String, propertyName: String) : TypeStubImpl<E>(typeName, propertyName) {
+    abstract fun asNullable(): T
+  }
+
+
+  class Configured<in E : QType, A : ArgumentSpec>(
+      clazz: KClass<E>,
+      propertyName: String
+  ) : TypeStubImpl<E>(clazz.graphQlName(), propertyName), TypeStub.Configured<E, A> {
+
+    override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
+
+    override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.ConfiguredContext<U?, A> =
+        newBuilder<U>().withArgs<A>() takingArguments ::Always resultingIn {
+          TypeStubAdapter(qproperty, init, it.first.toMap())
+        } allowing Nothing::class
+
+
+    class NotNull<in E : QType, A : ArgumentSpec>(
+        private val clazz: KClass<E>,
+        propertyName: String
+    ) : NotNullStub<E, Configured<E, A>>(clazz.graphQlName(), propertyName), TypeStub.Configured.NotNull<E, A> {
+
+      override fun asNullable(): Configured<E, A> = Configured(clazz, qproperty.graphqlName)
+
+      override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
+
+      override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.ConfiguredContext<U, A> =
+          newBuilder<U>().withArgs<A>() takingArguments ::Always resultingIn {
+            TypeStubAdapter(qproperty, init, it.first.toMap())
+          }
     }
 
   }
 
-  interface OptionalConfigured<in T : QType, A : ArgumentSpec> : Configured<T, A> {
-    operator fun <U : QModel<T>> invoke(
-        constructor: () -> U,
-        block: TypeStub<ArgBuilder>.() -> Unit = empty()
-    ): DelegateProvider<U>
 
-    interface Nullable<in T : QType, A : ArgumentSpec> : Configured.Nullable<T, A> {
-      operator fun <U : QModel<T>> invoke(
-          constructor: () -> U,
-          block: TypeStub<ArgBuilder>.() -> Unit = empty()
-      ): DelegateProvider<U?>
+  class OptionallyConfigured<in E : QType, A : ArgumentSpec>(
+      clazz: KClass<E>,
+      propertyName: String
+  ) : TypeStubImpl<E>(clazz.graphQlName(), propertyName), TypeStub.OptionallyConfigured<E, A> {
+
+    override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
+
+    override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.OptionallyConfiguredContext<U?, A> =
+        newBuilder<U>().withArgs<A>() takingArguments ::Sometimes resultingIn {
+          TypeStubAdapter(qproperty, init, it.first.toMap())
+        } allowing Nothing::class
+
+
+    class NotNull<in E : QType, A : ArgumentSpec>(
+        private val clazz: KClass<E>,
+        propertyName: String
+    ) : NotNullStub<E, OptionallyConfigured<E, A>>(clazz.graphQlName(), propertyName), TypeStub.OptionallyConfigured.NotNull<E, A> {
+
+      override fun asNullable() = OptionallyConfigured<E, A>(clazz, qproperty.graphqlName)
+
+      override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
+
+      override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.OptionallyConfiguredContext<U, A> =
+          newBuilder<U>().withArgs<A>() takingArguments ::Sometimes resultingIn {
+            TypeStubAdapter(qproperty, init, it.first.toMap())
+          }
     }
+
   }
 
-  companion object {
-    internal
-    fun <T : QType> noArg(qproperty: GraphQlProperty): NoArgImpl<T> =
-        NoArgImpl(qproperty)
 
-    internal
-    fun <T : QType, A : ArgumentSpec> optionallyConfigured(qproperty: GraphQlProperty): OptionalConfiguredImpl<T, A> =
-        OptionalConfiguredImpl(qproperty)
+  class NoArg<in E : QType>(
+      clazz: KClass<E>,
+      propertyName: String
+  ) : TypeStubImpl<E>(clazz.graphQlName(), propertyName), TypeStub.NoArg<E> {
+
+    override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
+
+    override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.NoArgContext<U?> =
+        newBuilder<U>() takingArguments ::Never resultingIn {
+          TypeStubAdapter(qproperty, init, it.first.toMap())
+        } allowing Nothing::class
+
+
+    class NotNull<in E : QType>(
+        private val clazz: KClass<E>,
+        propertyName: String
+    ) : NotNullStub<E, NoArg<E>>(clazz.graphQlName(), propertyName), TypeStub.NoArg.NotNull<E> {
+
+      override fun asNullable() = NoArg(clazz, qproperty.graphqlName)
+
+      override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
+
+      override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.NoArgContext<U> =
+          newBuilder<U>() takingArguments ::Never resultingIn {
+            TypeStubAdapter(qproperty, init, it.first.toMap())
+          }
+    }
+
   }
 }
 
-internal
-class NoArgImpl<in T : QType>(
-    val qproperty: GraphQlProperty
-) : TypeStub.NoArg<T> {
-
-  override fun <U : QModel<T>> invoke(
-      constructor: () -> U,
-      arguments: ArgBuilder,
-      block: TypeStub<ArgBuilder>.() -> Unit
-  ): InternalDelegateProvider<U> = createTypeDelegate(qproperty, constructor, arguments, block)
-
-  fun asNullable(): TypeStub.NoArg.Nullable<T> = NullableNoArgImpl(qproperty)
-}
-
-internal
-class NullableNoArgImpl<in T : QType>(
-    val qproperty: GraphQlProperty
-) : TypeStub.NoArg.Nullable<T> {
-
-  override fun <U : QModel<T>> invoke(
-      constructor: () -> U,
-      arguments: ArgBuilder,
-      block: TypeStub<ArgBuilder>.() -> Unit
-  ): DelegateProvider<U?> =
-      createNullableTypeDelegate(qproperty, constructor, arguments, block)
-
-}
-
-private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createTypeDelegate(
-    property: GraphQlProperty,
-    ctor: () -> U,
-    args: A? = null,
-    block: TypeStub<A>.() -> Unit = empty()
-): InternalDelegateProvider<U> = delegateProvider { model, _ ->
-  TypeStubAdapter(ctor, args)
-      .apply(block)
-      .toDelegate(property)
-      .bindToContext(model)
-}
-
-private fun <U : QModel<T>, T : QType, A : ArgumentSpec> createNullableTypeDelegate(
-    property: GraphQlProperty,
-    ctor: () -> U,
-    args: A? = null,
-    block: TypeStub<A>.() -> Unit = empty()
-): InternalDelegateProvider<U?> = delegateProvider { model, _ ->
-  TypeStubAdapter(ctor, args)
-      .apply(block)
-      .toDelegate(property)
-      .asNullable()
-      .bindToContext(model)
-}
-
-internal
-class OptionalConfiguredImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured<T, A> {
-
-  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): InternalDelegateProvider<U> =
-      createTypeDelegate(qproperty, constructor, ArgBuilder(), block)
-
-  override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U> =
-      createTypeDelegate(qproperty, constructor, arguments, block)
-
-  fun asNullable(): TypeStub.OptionalConfigured.Nullable<T, A> = NullableOptionalConfigImpl(qproperty)
-}
-
-private
-class NullableOptionalConfigImpl<in T : QType, A : ArgumentSpec>(val qproperty: GraphQlProperty) : TypeStub.OptionalConfigured.Nullable<T, A> {
-  override fun <U : QModel<T>> invoke(constructor: () -> U, arguments: A, block: TypeStub<A>.() -> Unit): DelegateProvider<U?> =
-      createNullableTypeDelegate(qproperty, constructor, arguments, block)
-
-  override fun <U : QModel<T>> invoke(constructor: () -> U, block: TypeStub<ArgBuilder>.() -> Unit): DelegateProvider<U?> =
-      createNullableTypeDelegate(qproperty, constructor, ArgBuilder(), block)
-}
+private fun KClass<*>.graphQlName() = "$simpleName"

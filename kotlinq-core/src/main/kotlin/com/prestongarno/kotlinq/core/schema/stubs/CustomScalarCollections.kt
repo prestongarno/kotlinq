@@ -1,105 +1,182 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
-import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.adapters.CustomScalarStubImpl
-import com.prestongarno.kotlinq.core.internal.empty
+import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.adapters.CustomScalarField
+import com.prestongarno.kotlinq.core.adapters.GraphQlField
+import com.prestongarno.kotlinq.core.adapters.toMap
+import com.prestongarno.kotlinq.core.api.DslEvaluationResult
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Always
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Never
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Sometimes
+import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Companion.newBuilder
+import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
+import com.prestongarno.kotlinq.core.api.providingInstead
+import com.prestongarno.kotlinq.core.api.schemaProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
-import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
-import com.prestongarno.kotlinq.core.properties.contextBuilder
+import com.prestongarno.kotlinq.core.properties.PropertyType
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.schema.CustomScalar
+import java.io.InputStream
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
-typealias CBlock<T, V, A> = CustomScalarStub<T, V, A>.() -> Unit
 
-interface CustomScalarListStub {
+interface CustomScalarListStub<X : CustomScalar> {
 
-  interface NoArg<T : CustomScalar> {
-    operator fun <V : Any> invoke(
-        mapper: CustomScalarStub.Mapper<V>,
-        arguments: ArgBuilder? = ArgBuilder(),
-        block: CBlock<T, V, ArgBuilder> = empty()
-    ): DelegateProvider<List<V>>
+  fun <T : Any> fromString(deserializer: (String) -> T?): GraphqlDslBuilder.Context<List<T>>
+
+  fun <T : Any> fromStream(deserializer: (InputStream) -> T?): GraphqlDslBuilder.Context<List<T>>
+
+
+  interface NoArg<X : CustomScalar> : CustomScalarListStub<X>, DelegateProvider<List<String>> {
+    override fun <T : Any> fromString(deserializer: (String) -> T?): GraphqlDslBuilder.NoArgContext<List<T>>
+    override fun <T : Any> fromStream(deserializer: (InputStream) -> T?): GraphqlDslBuilder.NoArgContext<List<T>>
   }
 
-  interface OptionallyConfigured<T : CustomScalar, A : ArgumentSpec> : Configured<T, A> {
-    operator fun <V : Any> invoke(
-        mapper: CustomScalarStub.Mapper<V>,
-        arguments: ArgBuilder = ArgBuilder(),
-        block: CBlock<T, V, ArgBuilder> = empty()
-    ): DelegateProvider<List<V>>
+
+  interface Configured<X : CustomScalar, A : ArgumentSpec> : CustomScalarListStub<X> {
+    override fun <T : Any> fromString(deserializer: (String) -> T?): GraphqlDslBuilder.ConfiguredContext<List<T>, A>
+    override fun <T : Any> fromStream(deserializer: (InputStream) -> T?): GraphqlDslBuilder.ConfiguredContext<List<T>, A>
   }
 
-  interface Configured<T : CustomScalar, A : ArgumentSpec> {
-    operator fun <V : Any> invoke(
-        mapper: CustomScalarStub.Mapper<V>,
-        arguments: A,
-        block: CBlock<T, V, A> = empty()
-    ): DelegateProvider<List<V>>
+
+  interface OptionallyConfigured<X : CustomScalar, A : ArgumentSpec> : CustomScalarListStub<X>, DelegateProvider<List<String>> {
+    override fun <T : Any> fromString(deserializer: (String) -> T?): GraphqlDslBuilder.OptionallyConfiguredContext<List<T>, A>
+    override fun <T : Any> fromStream(deserializer: (InputStream) -> T?): GraphqlDslBuilder.OptionallyConfiguredContext<List<T>, A>
+  }
+
+}
+
+internal
+sealed class CustomScalarListPreDelegate<X, T : Any>(
+    val graphqlProperty: GraphQlProperty,
+    val deserializer: Mapper<*, T>
+) where X : GraphqlDslBuilder.Context<List<T>>,
+        X : GraphQlDelegateContext<List<T>, *> {
+
+  fun toDelegate(result: DslEvaluationResult<T>) = CustomScalarField(
+      graphqlProperty,
+      result.first.toMap(),
+      deserializer,
+      result.second.default
+  )
+
+  abstract fun newContext(): X
+
+
+  class ConfiguredDelegate<T : Any, A : ArgumentSpec>(qproperty: GraphQlProperty, deserializer: Mapper<*, T>)
+    : CustomScalarListPreDelegate<GraphQlDelegateContext.Configured<List<T>, A>, T>(qproperty, deserializer) {
+
+    override fun newContext() =
+        newBuilder<T>().withArgs<A>() takingArguments ::Always resultingIn this::toDelegate providingInstead List::class
+  }
+
+
+  class OptionallyConfiguredDelegate<T : Any, A : ArgumentSpec>(qproperty: GraphQlProperty, deserializer: Mapper<*, T>)
+    : CustomScalarListPreDelegate<GraphQlDelegateContext.OptionallyConfigured<List<T>, A>, T>(qproperty, deserializer) {
+
+    override fun newContext() =
+        newBuilder<T>().withArgs<A>() takingArguments ::Sometimes resultingIn this::toDelegate providingInstead List::class
+  }
+
+
+  class NoArgDelegate<T : Any>(qproperty: GraphQlProperty, deserializer: Mapper<*, T>)
+    : CustomScalarListPreDelegate<GraphQlDelegateContext.NoArg<List<T>>, T>(qproperty, deserializer) {
+
+    override fun newContext() =
+        newBuilder<T>() takingArguments ::Never resultingIn this::toDelegate providingInstead List::class
+
+  }
+
+
+}
+
+
+internal
+sealed class CustomListStubHandle<out E : CustomScalar>(qpropertyName: String, typeName: String) {
+
+  val qproperty = GraphQlProperty.from(typeName, false, qpropertyName, PropertyType.CUSTOM_SCALAR)
+
+
+  class NoArgImpl<E : CustomScalar>(qpropertyName: String, typeName: String)
+    : CustomListStubHandle<E>(qpropertyName, typeName), CustomScalarListStub.NoArg<E> {
+
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) = CustomScalarListPreDelegate
+        .NoArgDelegate(qproperty, Mapper.StringMapper { it })
+        .newContext()
+        .provideDelegate(inst, property)
+        .bindToContext(inst)
+
+    override fun <T : Any> fromString(deserializer: (String) -> T?) = CustomScalarListPreDelegate
+        .NoArgDelegate(qproperty, Mapper.StringMapper(deserializer))
+        .newContext()
+
+    override fun <T : Any> fromStream(deserializer: (InputStream) -> T?) = CustomScalarListPreDelegate
+        .NoArgDelegate(qproperty, Mapper.StreamMapper(deserializer))
+        .newContext()
+  }
+
+
+  class ConfiguredImpl<E : CustomScalar, A : ArgumentSpec>(qpropertyName: String, typeName: String)
+    : CustomListStubHandle<E>(qpropertyName, typeName), CustomScalarListStub.Configured<E, A> {
+
+    override fun <T : Any> fromString(deserializer: (String) -> T?) = CustomScalarListPreDelegate
+        .ConfiguredDelegate<T, A>(qproperty, Mapper.StringMapper(deserializer))
+        .newContext()
+
+    override fun <T : Any> fromStream(deserializer: (InputStream) -> T?) = CustomScalarListPreDelegate
+        .ConfiguredDelegate<T, A>(qproperty, Mapper.StreamMapper(deserializer))
+        .newContext()
+  }
+
+
+  class OptionallyConfiguredImpl<E : CustomScalar, A : ArgumentSpec>(qpropertyName: String, typeName: String)
+    : CustomListStubHandle<E>(qpropertyName, typeName),
+      CustomScalarListStub.OptionallyConfigured<E, A> {
+
+    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+        CustomScalarListPreDelegate
+            .OptionallyConfiguredDelegate<String, A>(qproperty, Mapper.StringMapper { it })
+            .newContext()
+            .provideDelegate(inst, property)
+            .bindToContext(inst)
+
+    override fun <T : Any> fromString(deserializer: (String) -> T?) = CustomScalarListPreDelegate
+        .OptionallyConfiguredDelegate<T, A>(qproperty, Mapper.StringMapper(deserializer))
+        .newContext()
+
+    override fun <T : Any> fromStream(deserializer: (InputStream) -> T?) = CustomScalarListPreDelegate
+        .OptionallyConfiguredDelegate<T, A>(qproperty, Mapper.StreamMapper(deserializer))
+        .newContext()
   }
 
   companion object {
 
     internal
-    fun <T : CustomScalar> noArg()
-        : GraphQlPropertyContext.Companion.Builder<CustomScalarListStub.NoArg<T>> =
-        contextBuilder { CustomNoArgImpl<T>(it) }
+    fun <E : CustomScalar> stub(clazz: KClass<E>) = schemaProvider {
+      create<CustomListStubHandle.NoArgImpl<E>>("${clazz.simpleName}", it.second.name)
+    }
 
     internal
-    fun <T : CustomScalar, A : ArgumentSpec> optionallyConfigured()
-        : GraphQlPropertyContext.Companion.Builder<CustomScalarListStub.OptionallyConfigured<T, A>> =
-        contextBuilder { ConfiguredImpl<T, A>(it) }
+    fun <E : CustomScalar, A : ArgumentSpec> optionallyConfiguredStub(clazz: KClass<E>) = schemaProvider {
+      create<CustomListStubHandle.OptionallyConfiguredImpl<E, A>>("${clazz.simpleName}", it.second.name)
+    }
 
     internal
-    fun <T : CustomScalar, A : ArgumentSpec> configured()
-        : GraphQlPropertyContext.Companion.Builder<CustomScalarListStub.Configured<T, A>> =
-        contextBuilder { ConfiguredImpl<T, A>(it) }
-  }
-}
+    fun <E : CustomScalar, A : ArgumentSpec> configuredStub(clazz: KClass<E>) = schemaProvider {
+      create<CustomListStubHandle.ConfiguredImpl<E, A>>("${clazz.simpleName}", it.second.name)
+    }
 
-private
-class ConfiguredImpl<T : CustomScalar, A : ArgumentSpec>(val property: GraphQlProperty)
-  : CustomScalarListStub.OptionallyConfigured<T, A> {
+    private
+    inline fun <reified T : CustomListStubHandle<CustomScalar>> create(typeName: String, propertyName: String): T = when (T::class) {
+      CustomListStubHandle.NoArgImpl::class -> CustomListStubHandle.NoArgImpl<CustomScalar>(propertyName, typeName) as T
+      CustomListStubHandle.OptionallyConfiguredImpl::class -> CustomListStubHandle.OptionallyConfiguredImpl<CustomScalar, ArgumentSpec>(propertyName, typeName) as T
+      CustomListStubHandle.ConfiguredImpl::class -> CustomListStubHandle.ConfiguredImpl<CustomScalar, ArgumentSpec>(propertyName, typeName) as T
+      else -> TODO("learn me some algebraic data types in kotlin")
+    }
 
-
-  override fun <V : Any> invoke(
-      mapper: CustomScalarStub.Mapper<V>,
-      arguments: ArgBuilder,
-      block: CBlock<T, V, ArgBuilder>
-  ): DelegateProvider<List<V>> = delegateProvider { inst, _ ->
-    CustomScalarStubImpl<T, V, ArgBuilder>(mapper, arguments)
-        .apply(block)
-        .toDelegate(property)
-        .asList()
-        .bindToContext(inst)
   }
 
-  override fun <V : Any> invoke(
-      mapper: CustomScalarStub.Mapper<V>,
-      arguments: A,
-      block: CBlock<T, V, A>
-  ): DelegateProvider<List<V>> = delegateProvider { inst, _ ->
-    CustomScalarStubImpl<T, V, A>(mapper, arguments)
-        .apply(block)
-        .toDelegate(property)
-        .asList()
-        .bindToContext(inst)
-  }
-}
-
-private
-class CustomNoArgImpl<T : CustomScalar>(val property: GraphQlProperty) : CustomScalarListStub.NoArg<T> {
-
-  override fun <V : Any> invoke(
-      mapper: CustomScalarStub.Mapper<V>,
-      arguments: ArgBuilder?,
-      block: CBlock<T, V, ArgBuilder>
-  ): DelegateProvider<List<V>> = delegateProvider { inst, _ ->
-    CustomScalarStubImpl<T, V, ArgBuilder>(mapper, arguments)
-        .apply(block)
-        .toDelegate(property)
-        .asList()
-        .bindToContext(inst)
-  }
 }

@@ -17,11 +17,13 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.formatAs
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty.Companion.from
 import com.prestongarno.kotlinq.core.properties.ListDelegate
 import kotlin.reflect.KProperty
 
@@ -69,6 +71,11 @@ class StringArrayStub(
 
   override fun transform(obj: Any?): Array<String>? =
       (obj as? Array<*>)?.map(Any?::toString)?.toTypedArray()
+
+  companion object {
+    fun create(propertyName: String, args: ArgumentSpec? = null, default: Array<String>? = null) =
+        StringArrayStub(from("String", true, propertyName), default, args.toMap())
+  }
 }
 
 @CollectionDelegate(IntArray::class)
@@ -104,6 +111,11 @@ class IntArrayStub(
       obj as? IntArray ?: (obj as? Array<*>)
           ?.mapNotNull { it.toString().toIntOrNull() }
           ?.toIntArray()
+
+  companion object {
+    fun create(propertyName: String, args: ArgumentSpec? = null, default: IntArray? = null) =
+        IntArrayStub(from("Int", true, propertyName), default, args.toMap())
+  }
 }
 
 @CollectionDelegate(FloatArray::class)
@@ -138,6 +150,11 @@ class FloatArrayStub(
 
   override fun asNullable(): GraphqlPropertyDelegate<FloatArray?> =
       wrapAsNullable(this, this::value)
+
+  companion object {
+    fun create(propertyName: String, args: ArgumentSpec? = null, default: FloatArray? = null) =
+        FloatArrayStub(from("Float", true, propertyName), default, args.toMap())
+  }
 }
 
 @CollectionDelegate(BooleanArray::class)
@@ -170,5 +187,10 @@ class BooleanArrayStub(
       ?: (obj as? Array<*>)
       ?.mapNotNull { it.toString().toBoolean() }
       ?.toBooleanArray()
+
+  companion object {
+    fun create(propertyName: String, args: ArgumentSpec? = null, default: BooleanArray? = null) =
+        BooleanArrayStub(from("Boolean", true, propertyName), default, args.toMap())
+  }
 }
 

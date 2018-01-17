@@ -234,8 +234,7 @@ interface QSchemaType {
 
   object QCustomScalar {
 
-    inline fun <reified T : CustomScalar> stub()
-        : NullableStubProvider<CustomScalarStub.NoArg<T>, CustomScalarStub.NoArg.Nullable<T>> =
+    inline fun <reified T : CustomScalar> stub() =
         delegationContext.scalar.stub(T::class)
 
     inline fun <reified T : CustomScalar, A : ArgumentSpec> optionallyConfigured() =

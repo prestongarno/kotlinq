@@ -19,30 +19,39 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.api.KDelegateContext
+import com.prestongarno.kotlinq.core.api.toGraphQlProperty
 import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.ListDelegate
+import com.prestongarno.kotlinq.core.properties.PropertyType
 import com.prestongarno.kotlinq.core.schema.QEnumType
-import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 internal
 class EnumAdapterImpl<T, A>(
     private val enumClass: KClass<T>,
-    private val argBuilder: A?
-) : PreDelegate<T, A>(),
-    EnumStub<T, A>
+    private val argBuilder: A?,
+    var default: T? = null
+) : PreDelegate<T, A>()
 
     where T : Enum<T>,
           T : QEnumType,
           A : ArgumentSpec {
 
-  override var default: T? = null
-
   override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<T> =
       EnumFieldImpl(property, enumClass, argBuilder.toMap(), default)
+
+  fun toDelegate(kontext: KDelegateContext<QSchemaType>): GraphqlPropertyDelegate<T> =
+      EnumFieldImpl(
+          kontext.toGraphQlProperty("${enumClass.simpleName}", false, PropertyType.ENUM),
+          enumClass,
+          argBuilder.toMap(),
+          default
+      )
 
   override fun config(block: A.() -> Unit) {
     argBuilder?.block()

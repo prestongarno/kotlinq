@@ -15,21 +15,50 @@
  *
  */
 
-/**For organizing the utility objects/classes which provide stubs for schema types
- */
 package com.prestongarno.kotlinq.core.api
 
+import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.properties.GraphQlProperty
+import com.prestongarno.kotlinq.core.properties.PropertyType
 import com.prestongarno.kotlinq.core.schema.QType
+import kotlin.reflect.KProperty
 
-internal interface ModelProvider {
+typealias KDelegateContext<X> = Pair<X, KProperty<*>>
+
+internal
+fun <T> schemaProvider(onProvide: (KDelegateContext<QSchemaType>) -> T) = object : StubProvider<T> {
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>) = Stub.stub(onProvide(inst to property))
+}
+
+fun <T, U> StubProvider<T>.withAlternate(onProvide: (T) -> U) = object : NullableStubProvider<T, U> {
+  override fun provideDelegate(inst: QSchemaType, property: KProperty<*>) = this@withAlternate.provideDelegate(inst, property)
+  override fun asNullable(): StubProvider<U> = schemaProvider { (inst, property) ->
+        this@withAlternate
+            .provideDelegate(inst, property)
+            .getValue(inst, property)
+            .let(onProvide)
+  }
+}
+
+internal
+fun KDelegateContext<QSchemaType>.toGraphQlProperty(
+    typeName: String,
+    isList: Boolean = false,
+    type: PropertyType = PropertyType.from(typeName)
+) = GraphQlProperty.from(typeName, isList, second.name, type)
+
+internal
+interface ModelProvider {
   val value: QModel<*>
 }
 
 /**
  * TODO -> Add type arguments for this and [Fragment] so no type casting on resolving interface fragment types
  */
-internal interface FragmentContext/*<I> where I : QType, I : QInterface*/ {
+internal
+interface FragmentContext/*<I> where I : QType, I : QInterface*/ {
   val fragments: Set<Fragment>
 }
 
