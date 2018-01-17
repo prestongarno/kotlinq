@@ -27,11 +27,11 @@ import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import org.junit.Test
 
 interface Thing : QType, QInterface {
-  val name : StringDelegate.Query
+  val name : Any
 }
 
 object Concrete : Thing {
-  override val name: StringDelegate.Query by QScalar.String.stub()
+  override val name by QScalar.String.stub()
 }
 
 object Get : QType {

@@ -31,7 +31,7 @@ object Team : QType {
 
   val members by QTypes.List.stub<Person>()
 
-  val configMembers by QTypes.List.configStub<Person, ConfigMembersArgs>()
+  val configMembers by QTypes.List.configured<Person, ConfigMembersArgs>()
 
   class ConfigMembersArgs(limit: Int) : ArgBuilder() {
 
@@ -59,7 +59,7 @@ class BasicTypeList {
   @Test fun `type list field is possible`() {
     
     val query = object : QModel<Team>(Team) {
-      val teamMembers by Team.members.query(BasicTypeList::PersonModel)
+      val teamMembers by Team.members(BasicTypeList::PersonModel)
     }
 
     query::teamMembers.returnType.arguments
@@ -70,8 +70,7 @@ class BasicTypeList {
   @Test fun `configured type list field is possible`() {
 
     val query = object : QModel<Team>(Team) {
-      val members by Team.configMembers
-          .query(BasicTypeList::PersonModel)(Team.ConfigMembersArgs(100))
+      val members by Team.configMembers(BasicTypeList::PersonModel)(Team.ConfigMembersArgs(100))
     }
     query::members.returnType.arguments
         .firstOrNull()?.type?.classifier eq PersonModel::class

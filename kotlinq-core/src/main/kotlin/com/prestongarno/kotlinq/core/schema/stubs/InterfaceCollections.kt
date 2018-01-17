@@ -22,6 +22,7 @@ typealias IBlock<T, A> = InterfaceStub<T, A>.() -> Unit
  */
 interface InterfaceListStub {
 
+
   interface NoArg<T> : InterfaceListStub where T : QInterface, T : QType {
     operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<QModel<T>?>>
 
@@ -31,6 +32,7 @@ interface InterfaceListStub {
 
   }
 
+
   interface OptionallyConfigured<T, A : ArgumentSpec> : InterfaceListStub, Configured<T, A> where T : QInterface, T : QType {
     operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<QModel<T>?>>
 
@@ -38,6 +40,7 @@ interface InterfaceListStub {
       operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<QModel<T>>>
     }
   }
+
 
   interface Configured<T, A : ArgumentSpec> : InterfaceListStub where T : QInterface, T : QType {
 

@@ -31,6 +31,7 @@ import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.Argument
 import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Never
 import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Sometimes
 import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Companion.newBuilder
+import com.prestongarno.kotlinq.core.api.Grub.Companion.singleBuilder
 import com.prestongarno.kotlinq.core.properties.contextBuilder
 import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
 import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
@@ -158,15 +159,13 @@ sealed class GraphQLDelegate {
 
     fun <T : QType, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
         : NullableStubProvider<TypeStub.OptionallyConfigured.NotNull<T, A>, TypeStub.OptionallyConfigured<T, A>> =
-        schemaProvider {
-          TypeStubImpl.OptionallyConfigured.NotNull<T, A>(clazz, it.second.name)
-        }.withAlternate { it.asNullable() }
+        schemaProvider { TypeStubImpl.OptionallyConfigured.NotNull<T, A>(clazz, it.second.name) }
+            .withAlternate { it.asNullable() }
 
     fun <T : QType, A : ArgumentSpec> configured(clazz: KClass<T>)
         : NullableStubProvider<TypeStub.Configured.NotNull<T, A>, TypeStub.Configured<T, A>> =
-        schemaProvider {
-          TypeStubImpl.Configured.NotNull<T, A>(clazz, it.second.name)
-        }.withAlternate { it.asNullable() }
+        schemaProvider { TypeStubImpl.Configured.NotNull<T, A>(clazz, it.second.name) }.withAlternate { it.asNullable() }
+
 
     override val list: Lists.Type = Lists.Type()
   }
@@ -179,9 +178,7 @@ sealed class GraphQLDelegate {
         where I : QInterface, I : QType =
         contextBuilder { qproperty ->
           noArgBlock(qproperty, { InterfaceStubImpl<I, ArgBuilder>(it) })
-        }.let {
-          Grub(clazz.graphQlName(), false, builder = it, nullableBuilder = it).asNullable()
-        }
+        }.let { singleBuilder(clazz.graphQlName(), false, builder = it) }
 
     fun <I, A> optionallyConfigured(clazz: KClass<I>)
         : StubProvider<InterfaceStub.OptionallyConfigured<I, A>>
@@ -189,7 +186,7 @@ sealed class GraphQLDelegate {
         contextBuilder { property ->
           InterfaceStub.optionallyConfigured<I, A>(property)
         }.let { context ->
-          Grub(clazz.graphQlName(), false, builder = context, nullableBuilder = context).asNullable()
+          singleBuilder(clazz.graphQlName(), false, builder = context)
         }
 
     fun <I, A> configured(clazz: KClass<I>)
@@ -197,9 +194,7 @@ sealed class GraphQLDelegate {
         where I : QInterface, I : QType, A : ArgumentSpec =
         contextBuilder { qproperty ->
           configuredBlock<InterfaceStubImpl<I, A>, A, QModel<I>?>(qproperty, { InterfaceStubImpl(it) })
-        }.let {
-          Grub(clazz.graphQlName(), false, builder = it, nullableBuilder = it).asNullable()
-        }
+        }.let { singleBuilder(clazz.graphQlName(), false, builder = it) }
 
     override val list: Lists.Interface = Lists.Interface()
   }
@@ -278,8 +273,7 @@ sealed class GraphQLDelegate {
 
   class QlString : GraphQLDelegate() {
 
-    fun stub()
-        : StringProvider =
+    fun stub(): StringProvider =
         StringDelegate.noArg()
 
     fun <A : ArgumentSpec> optionallyConfigured()
@@ -388,23 +382,18 @@ sealed class GraphQLDelegate {
 
     class Type : GraphQLListDelegate() {
 
-      fun <T : QType> stub(clazz: KClass<T>)
-          : NullableStubProvider<TypeListStub.NoArg.NotNull<T>, TypeListStub.NoArg<T>> =
-          Grub(clazz.graphQlName(), true,
-              builder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.NoArg.NotNull<T>>()),
-              nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.NoArg<T>>()))
+      fun <T : QType> stub(clazz: KClass<T>): StubProvider<TypeListStub.NoArg<T>> =
+          schemaProvider { TypeListStubImpl.NoArg(clazz, it.second.name) }
 
       fun <T : QType, A : ArgumentSpec> optionallyConfigured(clazz: KClass<T>)
-          : NullableStubProvider<TypeListStub.OptionallyConfigured.NotNull<T, A>, TypeListStub.OptionallyConfigured<T, A>> =
-          Grub(clazz.graphQlName(), true,
-              builder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.OptionallyConfigured.NotNull<T, A>>()),
-              nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.OptionallyConfigured<T, A>>()))
+          : StubProvider<TypeListStub.OptionallyConfigured<T, A>> =
+          schemaProvider { TypeListStubImpl.OptionallyConfigured<T, A>(clazz, it.second.name) }
 
       fun <T : QType, A : ArgumentSpec> configured(clazz: KClass<T>)
-          : NullableStubProvider<TypeListStub.Configured.NotNull<T, A>, TypeListStub.Configured<T, A>> =
-          Grub(clazz.graphQlName(), true,
-              builder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.Configured.NotNull<T, A>>()),
-              nullableBuilder = contextBuilder(TypeListStubImpl.newStub<T, ArgumentSpec, TypeListStubImpl.Configured<T, A>>()))
+          : StubProvider<TypeListStub.Configured<T, A>> =
+          schemaProvider { TypeListStubImpl.Configured<T, A>(clazz, it.second.name) }
+
+      override val list: Lists.Type = this
     }
 
 

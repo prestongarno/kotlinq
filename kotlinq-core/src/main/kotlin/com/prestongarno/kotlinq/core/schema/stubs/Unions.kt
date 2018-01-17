@@ -28,7 +28,7 @@ import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
 import com.prestongarno.kotlinq.core.schema.QUnionType
 
-interface UnionStub<out T : QUnionType, A : ArgumentSpec> : GraphqlDslBuilder<A> {
+interface UnionStub<out T : QUnionType, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
   fun fragment(scope: T.() -> Unit)
 
   interface OptionallyConfigured<out T : QUnionType, A : ArgumentSpec> : ConfiguredBlock<UnionStub<T, A>, A, QModel<*>?> {

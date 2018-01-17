@@ -22,26 +22,18 @@ package com.prestongarno.kotlinq.core.primitives
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.FloatArrayDelegates
-import com.prestongarno.kotlinq.core.schema.stubs.IntArrayDelegates
-import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
 import org.junit.Test
 import com.prestongarno.kotlinq.core.eq
 
 object AnonymousClassroom : QType {
 
-  val studentNames: StringArrayDelegate.Query
-      by QScalar.List.String.stub()
+  val studentNames by QScalar.List.String.stub()
 
-  val studentAges: IntArrayDelegates.Query
-      by QScalar.List.Int.stub()
+  val studentAges by QScalar.List.Int.stub()
 
-  val studentGpa: FloatArrayDelegates.Query
-      by QScalar.List.Float.stub()
+  val studentGpa by QScalar.List.Float.stub()
 
-  val studentPassing: BooleanArrayDelegate.Query
-      by QScalar.List.Boolean.stub()
+  val studentPassing by QScalar.List.Boolean.stub()
 }
 
 class BasicPrimitiveArray {

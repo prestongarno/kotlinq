@@ -84,7 +84,10 @@ fun <U : PreDelegate<T, ArgBuilder>, T> noArgBlock(
     constructor: (ArgBuilder) -> U,
     onDelegate: (ArgBuilder, U.() -> Unit) -> InternalDelegateProvider<T> = { args, block ->
       DelegateProvider.delegateProvider { qModel, _ ->
-        constructor(args).apply(block).toDelegate(qproperty).bindToContext(qModel)
+        constructor(args)
+            .apply(block)
+            .toDelegate(qproperty)
+            .bindToContext(qModel)
       }
     }
 ): NoArgBlock<U, T> = NoArgImpl(qproperty, constructor, onDelegate)

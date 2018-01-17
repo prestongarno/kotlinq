@@ -22,24 +22,20 @@ package com.prestongarno.kotlinq.core.primitives
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
-import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.QType
 import org.junit.Test
 import kotlin.reflect.full.declaredMembers
 
 object Person : QType {
 
-  val name: StringDelegate.Query by QScalar.String.stub()
+  val name by QScalar.String.stub()
 
-  val age: IntDelegate.Query by QScalar.Int.stub()
+  val age by QScalar.Int.stub()
 
-  val gpa: FloatDelegate.Query by QScalar.Float.stub()
+  val gpa by QScalar.Float.stub()
 
-  val hasHighSchoolDiploma: BooleanDelegate.Query by QScalar.Boolean.stub()
+  val hasHighSchoolDiploma by QScalar.Boolean.stub()
 
 }
 
@@ -174,10 +170,13 @@ class BasicPrimitiveTests {
         "{name(Hello: \"World\"),age(Number: 69),gpa(Boolean: false),hasHighSchoolDiploma(floatArgument: 4.0000067f)}"
   }
 
-  /** This is so fucking key right here. */
+  /**
+   * This is so fucking key right here.
+   * EDIT: 1/17/2017 now delegates are single-use ONLY, so it's impossible to even attempt to re-configure the context of a query
+   */
   @Test fun `delegate to reusable delegate object is possible`() {
 
-    val delegateStub = Person.name().apply {
+    val delegateStub = Person.name {
       default = "First Query Expected Default"
       config { arguments.put("Hello", "World") }
     }
@@ -186,7 +185,6 @@ class BasicPrimitiveTests {
       val name by delegateStub
     }
 
-    delegateStub.default = "Second Query Expected Default"
 
     val query2 = object : QModel<Person>(Person) {
       val name by delegateStub
@@ -195,11 +193,8 @@ class BasicPrimitiveTests {
     query.toGraphql() eq "{name(Hello: \"World\")}"
     query2.toGraphql() eq query.toGraphql()
 
-    delegateStub.default = null
     query.name eq "First Query Expected Default"
-    delegateStub.default eq null
-    query2.name eq "Second Query Expected Default"
-    delegateStub.default eq null
+    query2.name eq "First Query Expected Default"
   }
 
 }

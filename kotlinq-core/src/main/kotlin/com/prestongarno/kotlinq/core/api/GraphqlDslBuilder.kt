@@ -41,15 +41,16 @@ interface GraphqlDslBuilder<out A : ArgumentSpec> {
   }
 
 
-  interface OptionallyConfiguredContext<T, A : ArgumentSpec> : ConfiguredContext<T, A> {
-    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: DefaultBuilderBlock<T, ArgBuilder> = empty())
-        : DelegateProvider<T>
+  interface OptionallyConfiguredContext<T, A : ArgumentSpec> : ConfiguredContext<T, A>, DelegateProvider<T> {
+
+    operator fun invoke(block: DefaultBuilderBlock<T, ArgBuilder> = empty()): DelegateProvider<T>
 
     override fun asNullable(): OptionallyConfiguredContext<T?, A>
   }
 
 
   interface ConfiguredContext<T, A : ArgumentSpec> : Context<T> {
+
     operator fun invoke(arguments: A, block: DefaultBuilderBlock<T, A> = empty())
         : DelegateProvider<T>
 
@@ -154,14 +155,14 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
 
     override fun asNullable(): GraphqlDslBuilder.OptionallyConfiguredContext<T?, A> = nullable
 
-    override fun invoke(arguments: ArgBuilder, block: DefaultBuilderBlock<T, ArgBuilder>) =
-        delegateProvider { qmodel, _ -> create(default, arguments, block, ctor).bindToContext(qmodel) }
+    override fun invoke(block: DefaultBuilderBlock<T, ArgBuilder>) =
+        delegateProvider { qmodel, _ -> create(default, ArgBuilder(), block, ctor).bindToContext(qmodel) }
 
     override fun invoke(arguments: A, block: DefaultBuilderBlock<T, A>) =
         delegateProvider { qmodel, _ -> create(default, arguments, block, ctor).bindToContext(qmodel) }
 
     override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
-        invoke(ArgBuilder(), empty()).provideDelegate(inst, property)
+        invoke(empty()).provideDelegate(inst, property)
 
     override fun asList(): OptionallyConfigured<List<T>, A> = object : OptionallyConfigured<List<T>, A>(
         default = emptyList(),
@@ -170,11 +171,19 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
     internal
     inner class Nullable : GraphqlDslBuilder.OptionallyConfiguredContext<T?, A>, DelegateContext<T, A> {
 
+      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> {
+        return invoke(empty())
+            .provideDelegate(inst, property)
+            .asNullable()
+            .bindToContext(inst)
+      }
+
       override fun asList() = this@OptionallyConfigured.asList()
 
       override fun asNullable() = this
-      override fun invoke(arguments: ArgBuilder, block: DefaultBuilderBlock<T?, ArgBuilder>) = delegateProvider { model, _ ->
-        create(default, arguments, block, ctor)
+
+      override fun invoke(block: DefaultBuilderBlock<T?, ArgBuilder>) = delegateProvider { model, _ ->
+        create(default, ArgBuilder(), block, ctor)
             .asNullable()
             .bindToContext(model)
       }

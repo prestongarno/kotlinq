@@ -21,14 +21,20 @@ import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
+import com.prestongarno.kotlinq.core.api.DefaultBuilderImpl
 import com.prestongarno.kotlinq.core.api.ModelProvider
-import com.prestongarno.kotlinq.core.internal.ValueDelegate
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.ListDelegate
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
 import kotlin.reflect.KProperty
+
+internal
+fun <I : QType, T : QModel<I>> typeAdapter(
+    qproperty: GraphQlProperty,
+    init: () -> T,
+    context: Pair<ArgumentSpec?, DefaultBuilderImpl<T, ArgumentSpec>>
+): GraphqlPropertyDelegate<T> = TypeStubAdapter(qproperty, init, context.first.toMap())
 
 internal data
 class TypeStubAdapter<out I : QType, out P : QModel<I>>(

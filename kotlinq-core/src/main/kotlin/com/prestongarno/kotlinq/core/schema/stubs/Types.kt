@@ -19,8 +19,10 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.adapters.TypeStubAdapter
-import com.prestongarno.kotlinq.core.adapters.toMap
+import com.prestongarno.kotlinq.core.QSchemaType
+import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
+import com.prestongarno.kotlinq.core.adapters.typeAdapter
+import com.prestongarno.kotlinq.core.api.DefaultBuilderImpl
 import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Always
 import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Never
 import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext.Builder.ArgumentPolicy.Sometimes
@@ -87,9 +89,7 @@ sealed class TypeStubImpl<in E : QType>(val typeName: String, propertyName: Stri
     override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
 
     override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.ConfiguredContext<U?, A> =
-        newBuilder<U>().withArgs<A>() takingArguments ::Always resultingIn {
-          TypeStubAdapter(qproperty, init, it.first.toMap())
-        } allowing Nothing::class
+        newBuilder<U>().withArgs<A>() takingArguments ::Always resultingIn adapter(init) allowing Nothing::class
 
 
     class NotNull<in E : QType, A : ArgumentSpec>(
@@ -102,9 +102,7 @@ sealed class TypeStubImpl<in E : QType>(val typeName: String, propertyName: Stri
       override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
 
       override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.ConfiguredContext<U, A> =
-          newBuilder<U>().withArgs<A>() takingArguments ::Always resultingIn {
-            TypeStubAdapter(qproperty, init, it.first.toMap())
-          }
+          newBuilder<U>().withArgs<A>() takingArguments ::Always resultingIn adapter(init)
     }
 
   }
@@ -118,9 +116,7 @@ sealed class TypeStubImpl<in E : QType>(val typeName: String, propertyName: Stri
     override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
 
     override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.OptionallyConfiguredContext<U?, A> =
-        newBuilder<U>().withArgs<A>() takingArguments ::Sometimes resultingIn {
-          TypeStubAdapter(qproperty, init, it.first.toMap())
-        } allowing Nothing::class
+        newBuilder<U>().withArgs<A>() takingArguments ::Sometimes resultingIn adapter(init) allowing Nothing::class
 
 
     class NotNull<in E : QType, A : ArgumentSpec>(
@@ -133,9 +129,7 @@ sealed class TypeStubImpl<in E : QType>(val typeName: String, propertyName: Stri
       override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
 
       override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.OptionallyConfiguredContext<U, A> =
-          newBuilder<U>().withArgs<A>() takingArguments ::Sometimes resultingIn {
-            TypeStubAdapter(qproperty, init, it.first.toMap())
-          }
+          newBuilder<U>().withArgs<A>() takingArguments ::Sometimes resultingIn adapter(init)
     }
 
   }
@@ -149,9 +143,7 @@ sealed class TypeStubImpl<in E : QType>(val typeName: String, propertyName: Stri
     override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
 
     override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.NoArgContext<U?> =
-        newBuilder<U>() takingArguments ::Never resultingIn {
-          TypeStubAdapter(qproperty, init, it.first.toMap())
-        } allowing Nothing::class
+        newBuilder<U>() takingArguments ::Never resultingIn adapter(init) allowing Nothing::class
 
 
     class NotNull<in E : QType>(
@@ -164,12 +156,17 @@ sealed class TypeStubImpl<in E : QType>(val typeName: String, propertyName: Stri
       override fun <U : QModel<E>> invoke(init: () -> U) = build(init)
 
       override fun <U : QModel<E>> build(init: () -> U): GraphqlDslBuilder.NoArgContext<U> =
-          newBuilder<U>() takingArguments ::Never resultingIn {
-            TypeStubAdapter(qproperty, init, it.first.toMap())
-          }
+          newBuilder<U>() takingArguments ::Never resultingIn adapter(init)
     }
 
   }
 }
 
-private fun KClass<*>.graphQlName() = "$simpleName"
+internal
+fun KClass<out QSchemaType>.graphQlName() = "$simpleName"
+
+
+private
+fun <U : QModel<E>, E : QType> TypeStubImpl<E>.adapter(init: () -> U)
+    : (Pair<ArgumentSpec?, DefaultBuilderImpl<U, ArgumentSpec>>) -> GraphqlPropertyDelegate<U> =
+    { typeAdapter(qproperty, init, it) }
