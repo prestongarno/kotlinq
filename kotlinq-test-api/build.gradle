@@ -36,7 +36,7 @@ dependencies {
 }
 
 kotlinq {
-  schema {
+/*  schema {
     target = "$project.name/src/main/resources/graphql.schema.graphqls"
     kotlinFileName = "GitHubGraphQl.kt"
     packageName = "com.github.graphql"
@@ -59,7 +59,7 @@ kotlinq {
     kotlinFileName = "YelpGraphQl.kt"
     packageName = "com.yelp.graphql"
     outputDir = generationTarget
-  }
+  }*/
 }
 
 compileJava.mustRunAfter(compileGraphQL)
