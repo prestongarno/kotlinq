@@ -26,12 +26,10 @@ import com.prestongarno.kotlinq.core.QSchemaType.QEnum
 import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
-import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceProperty
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.schema.stubs.Property
-import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
+import com.prestongarno.kotlinq.core.schema.properties.Property
 import com.prestongarno.kotlinq.core.schema.stubs.StringProperty
 import org.intellij.lang.annotations.Language
 import org.junit.Test

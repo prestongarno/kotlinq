@@ -36,7 +36,7 @@ class GraphQLsLexer(val schema: Schema) {
       val currentType = GraphQLType.match(typeToken)
       // make sure it's one of the 6 types allowed by gql
       if (Rule.match(typeToken) != Rule.TYPE_LIT || currentType == null) {
-        throw err(typeToken, " Expected one of { type, input, enum, interface, scalar, union }")
+        throw err(typeToken, " Expected one of { type, input, enum, iface, scalar, union }")
       }
 
       val name = try {

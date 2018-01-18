@@ -206,25 +206,19 @@ sealed class GraphQLDelegate {
         : StubProvider<NoArgBlock<UnionStub<T, ArgBuilder>, QModel<*>?>> =
         contextBuilder {
           noArgBlock(it, { args -> UnionStubImpl(obj, args) })
-        }.let { context ->
-          Grub(obj::class.graphQlName(), false, builder = context, nullableBuilder = context).asNullable()
-        }
+        }.let { context -> Grub.singleBuilder(obj::class.graphQlName(), false, builder = context) }
 
     fun <T : QUnionType, A : ArgumentSpec> optionallyConfigured(obj: T)
         : StubProvider<UnionStub.OptionallyConfigured<T, A>> =
         contextBuilder {
           UnionStub.optionallyConfigured<T, A>(it, obj)
-        }.let { context ->
-          Grub(obj::class.graphQlName(), false, builder = context, nullableBuilder = context).asNullable()
-        }
+        }.let { context -> Grub.singleBuilder(obj::class.graphQlName(), false, builder = context) }
 
     fun <T : QUnionType, A : ArgumentSpec> configured(obj: T)
         : StubProvider<ConfiguredBlock<UnionStub<T, A>, A, QModel<*>?>> =
         contextBuilder {
           configuredBlock<UnionStubImpl<T, A>, A, QModel<*>?>(it, { UnionStubImpl(obj, it) })
-        }.let { context ->
-          Grub(obj::class.graphQlName(), false, builder = context, nullableBuilder = context).asNullable()
-        }
+        }.let { context -> Grub.singleBuilder(obj::class.graphQlName(), false, builder = context) }
 
     override val list: Lists.Union = Lists.Union()
 
@@ -360,19 +354,7 @@ sealed class GraphQLDelegate {
   }
 
 
-  /**
-   * Trying to find out how to do lists/collections without adding a set of interfaces
-   * on top of the already somewhat complicated type->argument config->delegate structure already...
-   *
-   *    delegationContext.type.stub<Actual>().asList()
-   *
-   * is a little complicated because for every iface
-   * in the delegation hierarchy there is also a delegate provider
-   *
-   *    delegateContext.type.stub<Actual>().asNullable()
-   *
-   * will definitely have to be the way to support nullables
-   */
+
   object Lists {
 
     abstract class GraphQLListDelegate : GraphQLDelegate() {
@@ -553,16 +535,14 @@ sealed class GraphQLDelegate {
 
     class QlFloat : GraphQLListDelegate() {
 
-      fun stub()
-          : NoArgProvider<FloatArray> = schemaProvider { kontext ->
+      fun stub(): NoArgProvider<FloatArray> = schemaProvider { kontext ->
 
         newBuilder(FloatArray(0)) takingArguments ::Never resultingIn { (args, builder) ->
           FloatArrayStub.create(kontext.second.name, args, builder.default)
         }
       }.withAlternate { it allowing Nothing::class }
 
-      fun <A : ArgumentSpec> optionallyConfigured()
-          : OptionallyConfiguredProvider<FloatArray, A> = schemaProvider { kontext ->
+      fun <A : ArgumentSpec> optionallyConfigured(): OptionallyConfiguredProvider<FloatArray, A> = schemaProvider { kontext ->
 
         newBuilder(FloatArray(0)).withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
           FloatArrayStub.create(kontext.second.name, args, builder.default)
@@ -570,8 +550,7 @@ sealed class GraphQLDelegate {
       }.withAlternate { it allowing Nothing::class }
 
 
-      fun <A : ArgumentSpec> configured()
-          : ConfiguredProvider<FloatArray, A> = schemaProvider { kontext ->
+      fun <A : ArgumentSpec> configured(): ConfiguredProvider<FloatArray, A> = schemaProvider { kontext ->
 
         newBuilder<FloatArray>().withArgs<A>() takingArguments ::Always resultingIn {
           FloatArrayStub.create(kontext.second.name, it.first, it.second.default)
@@ -584,7 +563,6 @@ sealed class GraphQLDelegate {
 
       fun stub()
           : NoArgProvider<BooleanArray> = schemaProvider { kontext ->
-
         newBuilder(BooleanArray(0)) takingArguments ::Never resultingIn { (args, builder) ->
           BooleanArrayStub.create(kontext.second.name, args, builder.default)
         }

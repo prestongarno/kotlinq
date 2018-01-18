@@ -30,10 +30,6 @@ import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
 
-typealias StringProperty = ScalarDelegate.NoArg<StringDelegate<ArgBuilder>, StringStub>
-typealias OptionallyConfiguredStringProperty<A> = StringDelegate.OptionallyConfigured<A>
-typealias ConfiguredStringProperty<A> = ScalarDelegate.Configured<StringDelegate<A>, StringStub, A>
-
 typealias StringProvider = NullableStubProvider<StringDelegate.NoArg, StringDelegate.NoArg.Nullable>
 
 typealias ConfiguredStringProvider<A> = NullableStubProvider<

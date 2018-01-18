@@ -128,7 +128,7 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
       override fun asNullable() = this
 
       override fun invoke(arguments: A, block: DefaultBuilderBlock<T?, A>) = delegateProvider { model, _ ->
-        create(default, arguments, block, ctor)
+        createMismatched(default, arguments, block, ctor)
             .asNullable()
             .bindToContext(model)
       }
@@ -183,13 +183,13 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
       override fun asNullable() = this
 
       override fun invoke(block: DefaultBuilderBlock<T?, ArgBuilder>) = delegateProvider { model, _ ->
-        create(default, ArgBuilder(), block, ctor)
+        createMismatched(default, ArgBuilder(), block, ctor)
             .asNullable()
             .bindToContext(model)
       }
 
       override fun invoke(arguments: A, block: DefaultBuilderBlock<T?, A>) = delegateProvider { model, _ ->
-        create(default, arguments, block, ctor)
+        createMismatched(default, arguments, block, ctor)
             .asNullable()
             .bindToContext(model)
       }
@@ -229,7 +229,7 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
 
       override fun invoke(arguments: ArgBuilder, block: DefaultBuilderBlock<T?, ArgBuilder>) =
           delegateProvider { model, _ ->
-            create(default, arguments, block, ctor)
+            createMismatched(default, arguments, block, ctor)
                 .asNullable()
                 .bindToContext(model)
           }
@@ -330,6 +330,17 @@ fun <T, A : ArgumentSpec> create(
     onDelegate: (Pair<ArgumentSpec?, DefaultBuilderImpl<T, ArgumentSpec>>) -> GraphqlPropertyDelegate<T>
 ) = DefaultBuilderImpl.Builder(arguments, default).let {
   onDelegate(arguments to it.apply(block))
+}
+
+private
+fun <T, A : ArgumentSpec> createMismatched(
+    default: T? = null,
+    arguments: A? = null,
+    block: DefaultBuilderImpl<T?, A>.() -> Unit = empty(),
+    onDelegate: (Pair<ArgumentSpec?, DefaultBuilderImpl<T, ArgumentSpec>>) -> GraphqlPropertyDelegate<T>
+) = DefaultBuilderImpl.Builder(arguments, default).let {
+  onDelegate(arguments to DefaultBuilderImpl.Builder<T?, A>(it.args, it.default).apply(block)
+      .let { DefaultBuilderImpl.Builder(it.args, it.default) })
 }
 
 internal

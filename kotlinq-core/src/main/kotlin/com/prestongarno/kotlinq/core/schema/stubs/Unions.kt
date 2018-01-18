@@ -26,12 +26,7 @@ import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Companion.delegateProvider
-import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
 import com.prestongarno.kotlinq.core.schema.QUnionType
-
-typealias UnionProperty<T> = NoArgBlock<UnionStub<T, ArgBuilder>, QModel<*>?>
-typealias OptionallyConfiguredUnionProperty<T, A> = UnionStub.OptionallyConfigured<T, A>
-typealias ConfiguredUnionProperty<T, A> = ConfiguredBlock<UnionStub<T, A>, A, T>
 
 interface UnionStub<out T : QUnionType, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
   fun fragment(scope: T.() -> Unit)

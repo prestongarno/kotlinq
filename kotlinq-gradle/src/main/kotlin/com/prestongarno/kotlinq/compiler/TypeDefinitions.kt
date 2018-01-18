@@ -115,7 +115,7 @@ class InterfaceDef(
   }.toSet()
 
   override fun toKotlin(): TypeSpec = TypeSpec.interfaceBuilder(name).apply {
-    // interface needs to subtype QType *&* QInterface for interface fragment stubs
+    // iface needs to subtype QType *&* QInterface for iface fragment stubs
     addSuperinterface(QType::class)
     addSuperinterface(schemaTypeClass)
     addProperties(fields.map(FieldDefinition::toKotlin))

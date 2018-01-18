@@ -31,10 +31,6 @@ import com.prestongarno.kotlinq.core.internal.empty
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
 
-typealias IntProperty = ScalarDelegate.NoArg<IntDelegate<ArgBuilder>, IntStub>
-typealias OptionallyConfiguredIntProperty<A> = IntDelegate.OptionallyConfigured<A>
-typealias ConfiguredIntProperty<A> = ScalarDelegate.Configured<IntDelegate<A>, IntStub, A>
-
 typealias IntProvider = NullableStubProvider<ScalarDelegate.NoArg<IntDelegate<ArgBuilder>, IntStub>,
     ScalarDelegate.NoArg.Nullable<IntDelegate<ArgBuilder>, Int>>
 

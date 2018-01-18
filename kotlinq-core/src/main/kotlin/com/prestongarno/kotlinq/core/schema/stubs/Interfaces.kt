@@ -40,11 +40,6 @@ typealias Interfaces {
 */
 
 
-typealias InterfaceProperty<T> = NoArgBlock<InterfaceStub<T, ArgBuilder>, QModel<T>?>
-typealias OptionallyConfiguredInterfaceProperty<T, A> = InterfaceStub.OptionallyConfigured<InterfaceStub<T, A>, A>
-typealias ConfiguredInterfaceProperty<T, A> = ConfiguredBlock<InterfaceStub<T, A>, A, QModel<T>?>
-
-
 interface InterfaceStub<in I, out A : ArgumentSpec>
   : FragmentStub<I>,
     GraphqlDslBuilder<A>

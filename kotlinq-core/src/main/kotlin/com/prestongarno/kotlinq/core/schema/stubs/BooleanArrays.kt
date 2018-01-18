@@ -35,22 +35,6 @@ import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext.Companion
 internal
 object BooleanArrayDelegates {
 
-  internal
-  fun noArg(): NoArgProvider<BooleanArray> =
-      Grub("Boolean", true, Builder(::notNullNoArg), Builder(::nullableNoArg))
-
-  internal
-  fun <A : ArgumentSpec> optionallyConfigured(): OptionallyConfiguredProvider<BooleanArray, A> =
-      Grub("Boolean", true, Builder(::optionallyNotNullConfigured), Builder(::optionallyNullableConfigured))
-
-  internal
-  fun <A : ArgumentSpec> configured(): ConfiguredProvider<BooleanArray, A> =
-      Grub("Boolean", true, Builder { configured<A>(it) }, Builder {
-        configuredContext<BooleanArray?, A>(BooleanArray(0)) { args, defaultBuilder ->
-          BooleanArrayStub(it, defaultBuilder.default, args.toMap()).asNullable()
-        }
-      })
-
 }
 
 private
@@ -74,10 +58,10 @@ fun <A : ArgumentSpec> configured(property: GraphQlProperty) =
     configuredContext<BooleanArray, A>(BooleanArray(0), newCtor(property))
 
 private fun <A : ArgumentSpec> newCtor(property: GraphQlProperty):
-    (A?, GraphqlDslBuilder.DefaultBuilder<BooleanArray, A>) -> GraphqlPropertyDelegate<BooleanArray> =
-    { args, builder -> BooleanArrayStub(property, builder.default, args.toMap()) }
+    (Pair<A?, GraphqlDslBuilder.DefaultBuilder<BooleanArray, A>>) -> GraphqlPropertyDelegate<BooleanArray> =
+    { (args, builder) -> BooleanArrayStub(property, builder.default, args.toMap()) }
 
 private fun <A : ArgumentSpec> newNullableCtor(property: GraphQlProperty):
-    (A?, GraphqlDslBuilder.DefaultBuilder<BooleanArray?, A>) -> GraphqlPropertyDelegate<BooleanArray?> =
-    { args, builder -> BooleanArrayStub(property, builder.default, args.toMap()).asNullable() }
+    (Pair<A?, GraphqlDslBuilder.DefaultBuilder<BooleanArray?, A>>) -> GraphqlPropertyDelegate<BooleanArray?> =
+    { (args, builder) -> BooleanArrayStub(property, builder.default, args.toMap()).asNullable() }
 
