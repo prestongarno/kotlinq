@@ -35,6 +35,13 @@ import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.schema.properties.ConfiguredProperty
 import com.prestongarno.kotlinq.core.schema.properties.OptionallyConfiguredProperty
+import com.prestongarno.kotlinq.core.schema.properties.Property
+import com.prestongarno.kotlinq.core.schema.properties.iface.ConfiguredInterfaceListProperty
+import com.prestongarno.kotlinq.core.schema.properties.iface.ConfiguredInterfaceProperty
+import com.prestongarno.kotlinq.core.schema.properties.iface.InterfaceListProperty
+import com.prestongarno.kotlinq.core.schema.properties.iface.InterfaceProperty
+import com.prestongarno.kotlinq.core.schema.properties.iface.OptionallyConfiguredInterfaceListProperty
+import com.prestongarno.kotlinq.core.schema.properties.iface.OptionallyConfiguredInterfaceProperty
 import com.prestongarno.kotlinq.core.schema.properties.scalar.BooleanProperty
 import com.prestongarno.kotlinq.core.schema.properties.scalar.ConfiguredCustomScalarListProperty
 import com.prestongarno.kotlinq.core.schema.properties.scalar.ConfiguredCustomScalarProperty
@@ -204,7 +211,7 @@ object Class : QType {
   }
 }
 
-interface WritingInstrument : QInterface, QType {
+interface WritingInstrument : QType, QInterface {
   val isPermanent: BooleanProperty
   val assignmentsUsedFor: ConfiguredTypeListProperty<Assignment, AssignmentsUsedForArgs>
 
@@ -237,7 +244,41 @@ object Assignment : QType {
   val daysWorkedOnWithArgs: OptionallyConfiguredCustomScalarListProperty<Date, DatesArgs> by QCustomScalar.List.optionallyConfigured()
   val daysWorkedOnOnArgs: ConfiguredCustomScalarListProperty<Date, DatesArgs> by QCustomScalar.List.configured()
 
+  val lastInstrumentsUsed: InterfaceProperty<WritingInstrument> by QSchemaType.QInterfaces.stub()
+  val lastInstrumentsUsedArgs: OptionallyConfiguredInterfaceProperty<WritingInstrument, Assignment.BlahArgs> by QSchemaType.QInterfaces.optionallyConfigured()
+  val lastInstrumentsUsedWithArgs: ConfiguredInterfaceProperty<WritingInstrument, Assignment.BlahArgs> by QSchemaType.QInterfaces.configured()
+
+  val instrumentsUsed: InterfaceListProperty<WritingInstrument> by QSchemaType.QInterfaces.List.stub()
+  val instrumentsUsedArgs: OptionallyConfiguredInterfaceListProperty<WritingInstrument, BlahArgs> by QSchemaType.QInterfaces.List.optionallyConfigured()
+  val instrumentsUsedWithArgs: ConfiguredInterfaceListProperty<WritingInstrument, BlahArgs> by QSchemaType.QInterfaces.List.configured()
+
+  val f by QSchemaType.QInterfaces.List.stub<WritingInstrument>()
+
+  class BlahArgs : ArgBuilder()
   class DatesArgs : ArgBuilder()
+
+  private
+  class AssignmentModel : QModel<Assignment>(Assignment) {
+
+    val lastInstrumentUsed by model.lastInstrumentsUsed { on(::PenModel); on(::MarkerModel) }
+    val lastInstrumentUsedArgs by model.lastInstrumentsUsedArgs { on(::PenModel); on(::MarkerModel) }
+    val lastInstrumentUsedArgsDef by model.lastInstrumentsUsedWithArgs(BlahArgs()) { on(::PenModel); on(::MarkerModel) }
+
+    val instrumentUsed by model.instrumentsUsed { on(::PenModel); on(::MarkerModel) }
+    val instrumentUsedArgs by model.instrumentsUsedArgs { on(::PenModel); on(::MarkerModel) }
+    val instrumentUsedArgsDef by model.instrumentsUsedWithArgs(BlahArgs()) { on(::PenModel); on(::MarkerModel) }
+
+    val f: List<QModel<WritingInstrument>> by model.f(block = { on(::PenModel) })
+  }
+
+  private
+  class PenModel : QModel<Pen>(Pen) {
+    val isPermanent by model.isPermanent { default = true }
+  }
+  private
+  class MarkerModel : QModel<Marker>(Marker) {
+    val isPermanent by model.isPermanent { default = true }
+  }
 }
 
 object Mark : QUnionType by QUnionType.new() {
@@ -288,3 +329,37 @@ object Person : QType {
   val marksArgs: OptionallyConfiguredUnionListProperty<Mark, Assignment.DatesArgs> by QSchemaType.QUnion.List.optionallyConfigured(Mark)
   val marksOnArgs: ConfiguredUnionListProperty<Mark, Assignment.DatesArgs> by QSchemaType.QUnion.List.configured(Mark)
 }
+
+
+
+enum class Numbers : QEnumType { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE }
+
+
+private
+object CounterObject : QType {
+
+  val numbers by QEnum.stub<Numbers>()
+  val numbersOpt by QEnum.optionallyConfigured<Numbers, Blah>()
+  val numbersReq by QEnum.configured<Numbers, Blah>()
+
+  val nullNumbers: Property<Numbers?> by QEnum.stub<Numbers>().asNullable()
+  val nullNumbersOpt: OptionallyConfiguredProperty<Numbers?, Blah> by QEnum.optionallyConfigured<Numbers, Blah>().asNullable()
+  val nullNumbersReq: ConfiguredProperty<Numbers?, Blah> by QEnum.configured<Numbers, Blah>().asNullable()
+
+  val numbersList: Property<List<Numbers>> by QEnum.List.stub()
+  val numbersOptList: OptionallyConfiguredProperty<List<Numbers>, Blah> by QEnum.List.optionallyConfigured()
+  val numbersReqList: ConfiguredProperty<List<Numbers>, Blah> by QEnum.List.configured()
+
+  class Blah : ArgBuilder()
+}
+
+
+
+
+
+
+
+
+
+
+

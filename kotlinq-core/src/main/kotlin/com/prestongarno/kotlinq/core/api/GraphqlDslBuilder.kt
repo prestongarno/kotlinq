@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER")
+
 package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
@@ -342,11 +344,6 @@ fun <T, A : ArgumentSpec> createMismatched(
   onDelegate(arguments to DefaultBuilderImpl.Builder<T?, A>(it.args, it.default).apply(block)
       .let { DefaultBuilderImpl.Builder(it.args, it.default) })
 }
-
-internal
-fun <T : Any> DefaultBuilderImpl.Builder<T, ArgBuilder>.toContext(
-    ctor: (Pair<ArgumentSpec?, DefaultBuilderImpl<T, ArgumentSpec>>) -> GraphqlPropertyDelegate<T>
-) = GraphQlDelegateContext.NoArg(default, ctor)
 
 
 internal infix

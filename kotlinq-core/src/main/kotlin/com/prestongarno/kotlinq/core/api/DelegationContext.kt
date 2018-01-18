@@ -182,7 +182,7 @@ sealed class GraphQLDelegate {
 
     fun <I, A> optionallyConfigured(clazz: KClass<I>)
         : StubProvider<InterfaceStub.OptionallyConfigured<I, A>>
-        where I : QInterface, I : QType, A : ArgumentSpec =
+        where I : QType, I : QInterface, A : ArgumentSpec =
         contextBuilder { property ->
           InterfaceStub.optionallyConfigured<I, A>(property)
         }.let { context ->

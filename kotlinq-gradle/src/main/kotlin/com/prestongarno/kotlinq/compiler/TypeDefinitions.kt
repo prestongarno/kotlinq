@@ -25,12 +25,10 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.ScalarDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.StringArrayDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock

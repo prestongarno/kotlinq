@@ -19,21 +19,50 @@
 
 package com.prestongarno.kotlinq.core.primitives
 
+import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.schema.QType
 import org.junit.Test
 import com.prestongarno.kotlinq.core.eq
+import com.prestongarno.kotlinq.core.schema.properties.ConfiguredProperty
+import com.prestongarno.kotlinq.core.schema.properties.OptionallyConfiguredProperty
+import com.prestongarno.kotlinq.core.schema.properties.Property
 
 object AnonymousClassroom : QType {
 
-  val studentNames by QScalar.List.String.stub()
+  val studentNames: Property<Array<String>> by QScalar.List.String.stub()
+  val studentAges: Property<IntArray> by QScalar.List.Int.stub()
+  val studentGpa: Property<FloatArray> by QScalar.List.Float.stub()
+  val studentPassing: Property<BooleanArray> by QScalar.List.Boolean.stub()
 
-  val studentAges by QScalar.List.Int.stub()
+  val studentNamesArgs: OptionallyConfiguredProperty<Array<String>, FooArgs> by QScalar.List.String.optionallyConfigured()
+  val studentAgesArgs: OptionallyConfiguredProperty<IntArray, FooArgs> by QScalar.List.Int.optionallyConfigured()
+  val studentGpaArgs: OptionallyConfiguredProperty<FloatArray, FooArgs> by QScalar.List.Float.optionallyConfigured()
+  val studentPassingArgs: OptionallyConfiguredProperty<BooleanArray, FooArgs> by QScalar.List.Boolean.optionallyConfigured()
 
-  val studentGpa by QScalar.List.Float.stub()
+  val studentWithNamesArgs: ConfiguredProperty<Array<String>, FooArgs> by QScalar.List.String.configured()
+  val studentWithAgesArgs: ConfiguredProperty<IntArray, FooArgs> by QScalar.List.Int.configured()
+  val studentWithGpaArgs: ConfiguredProperty<FloatArray, FooArgs> by QScalar.List.Float.configured()
+  val studentWithPassingArgs: ConfiguredProperty<BooleanArray, FooArgs> by QScalar.List.Boolean.configured()
 
-  val studentPassing by QScalar.List.Boolean.stub()
+
+  val nullStudentNames: Property<Array<String>?> by QScalar.List.String.stub().asNullable()
+  val nullStudentAges: Property<IntArray?> by QScalar.List.Int.stub().asNullable()
+  val nullStudentGpa: Property<FloatArray?> by QScalar.List.Float.stub().asNullable()
+  val nullStudentPassing: Property<BooleanArray?> by QScalar.List.Boolean.stub().asNullable()
+
+  val nullStudentNamesArgs: OptionallyConfiguredProperty<Array<String>?, FooArgs> by QScalar.List.String.optionallyConfigured<FooArgs>().asNullable()
+  val nullStudentAgesArgs: OptionallyConfiguredProperty<IntArray?, FooArgs> by QScalar.List.Int.optionallyConfigured<FooArgs>().asNullable()
+  val nullStudentGpaArgs: OptionallyConfiguredProperty<FloatArray?, FooArgs> by QScalar.List.Float.optionallyConfigured<FooArgs>().asNullable()
+  val nullStudentPassingArgs: OptionallyConfiguredProperty<BooleanArray?, FooArgs> by QScalar.List.Boolean.optionallyConfigured<FooArgs>().asNullable()
+
+  val nullStudentWithNamesArgs: ConfiguredProperty<Array<String>?, FooArgs> by QScalar.List.String.configured<FooArgs>().asNullable()
+  val nullStudentWithAgesArgs: ConfiguredProperty<IntArray?, FooArgs> by QScalar.List.Int.configured<FooArgs>().asNullable()
+  val nullStudentWithGpaArgs: ConfiguredProperty<FloatArray?, FooArgs> by QScalar.List.Float.configured<FooArgs>().asNullable()
+  val nullStudentWithPassingArgs: ConfiguredProperty<BooleanArray?, FooArgs> by QScalar.List.Boolean.configured<FooArgs>().asNullable()
+
+  class FooArgs : ArgBuilder()
 }
 
 class BasicPrimitiveArray {
