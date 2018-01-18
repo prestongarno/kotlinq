@@ -98,9 +98,9 @@ interface DelegationContext {
 }
 
 /**
- * The interface structure is a bit bloated with 3 different delegation interfaces
+ * The iface structure is a bit bloated with 3 different delegation interfaces
  * to support the 3 scenarios a graphql field can require: zero arguments, all nullable arguments,
- * or 1 or more non-null arguments. This isn't easily put into an interface and abstracted, since
+ * or 1 or more non-null arguments. This isn't easily put into an iface and abstracted, since
  * each type has different requirements for the parameters and/or the DSL flow.
  *
  * However, the GraphQL type hierarchy is finite, so a sealed class hierarchy will make it easy
@@ -366,7 +366,7 @@ sealed class GraphQLDelegate {
    *
    *    delegationContext.type.stub<Actual>().asList()
    *
-   * is a little complicated because for every interface
+   * is a little complicated because for every iface
    * in the delegation hierarchy there is also a delegate provider
    *
    *    delegateContext.type.stub<Actual>().asNullable()

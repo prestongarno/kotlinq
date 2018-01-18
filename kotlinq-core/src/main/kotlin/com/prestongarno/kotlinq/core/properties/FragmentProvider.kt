@@ -21,7 +21,7 @@ import com.prestongarno.kotlinq.core.schema.QUnionType
 import com.prestongarno.kotlinq.core.api.Fragment
 
 /**
- * This is simply a hook into the generated API interface to
+ * This is simply a hook into the generated API iface to
  * be able to call a 'SomeUnionObjectType.() -> Unit' on the correct object
  * and get the fragments from the context for the DSL
  */

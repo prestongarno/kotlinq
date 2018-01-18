@@ -15,7 +15,7 @@
  *
  */
 
-package com.prestongarno.kotlinq.core.schema.stubs
+package com.prestongarno.kotlinq.core.schema.properties
 
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 

@@ -29,7 +29,7 @@ import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider.Compa
 import kotlin.reflect.KProperty
 
 /**
- * Base interface for instance property delegation.
+ * Base iface for instance property delegation.
  *
  * TODO @prestongarno should maybe use type intersections with GraphQlPropertyPreDelegate to remove the [DelegateProvider] nested interfaces
  */

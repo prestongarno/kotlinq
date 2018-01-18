@@ -51,7 +51,7 @@ interface GraphQlField<out T> {
 
 
 /**
- * Internal interface to represent a union between [Adapter] and [GraphQlField]
+ * Internal iface to represent a union between [Adapter] and [GraphQlField]
  * @param T the return type of the field
  */
 internal

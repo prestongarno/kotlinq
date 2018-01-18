@@ -54,7 +54,7 @@ interface ModelProvider {
 }
 
 /**
- * TODO -> Add type arguments for this and [Fragment] so no type casting on resolving interface fragment types
+ * TODO -> Add type arguments for this and [Fragment] so no type casting on resolving iface fragment types
  */
 internal
 interface FragmentContext/*<I> where I : QType, I : QInterface*/ {

@@ -16,7 +16,7 @@ import com.prestongarno.kotlinq.core.schema.QType
 typealias IBlock<T, A> = InterfaceStub<T, A>.() -> Unit
 
 /**
- * This is an interface with nested sub-interfaces
+ * This is an iface with nested sub-interfaces
  * which are required in order to retain exact type information/avoid erasure from
  * passing an initializer for the GraphQL type query implementation for this field
  */
