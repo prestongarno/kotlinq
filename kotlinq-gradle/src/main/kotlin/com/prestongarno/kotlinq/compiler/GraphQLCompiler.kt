@@ -75,6 +75,7 @@ class GraphQLCompiler(
     inspectFields(*scopedSymbolRules.toTypedArray())
   }
 
+
   /**
    * Fix for [UnionDef] class signature for implicit delegation
    */
@@ -84,6 +85,15 @@ class GraphQLCompiler(
       compile()
     if (definitions.isEmpty())
       throw IllegalArgumentException("No schema types defined")
+
+    // gets all property alias types that we need to import manually
+    val propertyImports: List<String> = definitions
+        .filterIsInstance<ScopedDeclarationType>()
+        .map(ScopedDeclarationType::fields)
+        .flatten()
+        .map { it.type.getPropertyStubTypeAlias(it) }
+        .map(GraphQlPropertyAlias::fqName)
+        .distinct()
 
     val specs = definitions.associate { it to it.toKotlin() }
 
@@ -103,7 +113,13 @@ class GraphQLCompiler(
 
     val metadata = FileSpec.builder(config.packageName, config.kotlinFileName).apply {
       definitions.forEach { addType(it.toKotlin()) }
-    }.build().let { if (it.packageName.isNotEmpty()) "package ${it.packageName}\n\n" else "\n" }
+    }.build()
+        .let { if (it.packageName.isNotEmpty()) "package ${it.packageName}\n\n" else "\n" }
+        .plus(propertyImports.joinToString(
+            prefix = "import ",
+            separator = "\nimport ",
+            postfix = "\n"
+        ))
 
     return metadata + sourceClasses
   }
@@ -187,6 +203,8 @@ inline fun <reified T> Collection<*>.on(action: T.() -> Unit) = this.filterIsIns
 private fun ScopedSymbol.unknownTypeExc(idlContext: ScopedDeclarationType) = IllegalArgumentException(
     "Unknown type '$typeName' for field ${idlContext.name}::$name at " + context.start.toCoordinates()
 )
+
+private inline fun <reified T, U> Iterable<out T>.mapOn(combinator: T.() -> U): List<U> = filterIsInstance<T>().map { it.combinator() }
 
 private fun ScopedDeclarationType.expandSymbols() = run {
   listOf<Iterable<ScopedSymbol>>(this@expandSymbols.fields,

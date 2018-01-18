@@ -53,13 +53,13 @@ kotlinq {
     kotlinFileName = "LanguagesGraphQL.kt"
     packageName = "com.languages"
     outputDir = generationTarget
-  }
+  }*/
   schema {
     target = "$project.name/src/main/resources/yelp.graphqls"
     kotlinFileName = "YelpGraphQl.kt"
     packageName = "com.yelp.graphql"
     outputDir = generationTarget
-  }*/
+  }
 }
 
 compileJava.mustRunAfter(compileGraphQL)

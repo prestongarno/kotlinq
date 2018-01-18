@@ -16,7 +16,7 @@
  */
 
 buildscript {
-  ext.kotlin_version = '1.2.10'
+  ext.kotlin_version = '1.2.20'
   ext.clientId = projects.project.name
   ext.sourceCompatibility = 1.8
   ext.projectDescription = "kotlinq: a kotlin client for graphql"

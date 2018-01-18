@@ -319,18 +319,21 @@ private fun SchemaType.stubFor(field: FieldDefinition, typeArgs: List<String>): 
     }.toList()
 
 private
-fun calculateTypeAlias(type: SchemaType, property: FieldDefinition): TypeName =
+fun calculateTypeAlias(type: SchemaType, property: FieldDefinition) =
     property.getArgumentContext()
         .prefix
         .plus(type.baseName())
         .let { if (property.isList) it + "List" else it }
         .plus("Property").let {
       if (property.arguments.isEmpty())
-        bestGuess(it)
+        GraphQlPropertyAlias.from(bestGuess(it.prepend(type.packageDirective.plus(".")).prepend(ALIAS_IMPORT_ROOT))).let {
+          if (property.type is ScalarType) it else GraphQlPropertyAlias.from(it.context.parameterizeOn(property.type.name.asTypeName()).value)
+        }
       else
         ParameterizedTypeName.get(bestGuess(it.prepend(type.packageDirective.plus(".")).prepend(ALIAS_IMPORT_ROOT)),
             bestGuess(type.name),
             bestGuess(property.argBuilder!!.name))
+            .let { GraphQlPropertyAlias.from(it) }
     }
 
 private
@@ -338,6 +341,7 @@ fun FieldDefinition.getArgumentContext(): ArgumentContext =
     if (arguments.isEmpty()) ArgumentContext.NO_ARG
     else if (arguments.isNotEmpty() && !requiresConfiguration) ArgumentContext.OPTIONAL
     else ArgumentContext.REQUIRED
+
 private enum class ArgumentContext(val prefix: String) {
   NO_ARG(""), OPTIONAL("OptionallyConfigured"), REQUIRED("Configured")
 }
@@ -353,4 +357,43 @@ fun SchemaType.baseName() = when (this) {
 }
 
 
+class GraphQlPropertyAlias private constructor(val context: Either) {
+
+  fun fqName() = when (context) {
+    is Either.ParameterizedE -> context.value.rawType.canonicalName
+    is Either.ClassNameE -> context.value.canonicalName
+  }
+
+  fun simpleName() = when (context) {
+    is Either.ParameterizedE -> context.value.rawType.simpleName()
+    is Either.ClassNameE -> context.value.simpleName()
+  }
+
+  fun asTypeName(): TypeName = when (context) {
+    is Either.ParameterizedE -> context.value
+    is Either.ClassNameE -> context.value
+  }
+
+  companion object {
+    fun from(name: ParameterizedTypeName) = GraphQlPropertyAlias(Either.ParameterizedE(name))
+    fun from(name: ClassName) = GraphQlPropertyAlias(Either.ClassNameE(name))
+  }
+
+  sealed
+  class Either {
+
+    abstract fun parameterizeOn(type: TypeName): ParameterizedE
+
+    class ParameterizedE(val value: ParameterizedTypeName) : Either() {
+      override fun parameterizeOn(type: TypeName): ParameterizedE =
+          ParameterizedE(ParameterizedTypeName.Companion.get(value.rawType, type))
+    }
+
+    class ClassNameE(val value: ClassName) : Either() {
+      override fun parameterizeOn(type: TypeName): ParameterizedE =
+          ParameterizedE(ParameterizedTypeName.Companion.get(value, type))
+    }
+
+  }
+}
 
