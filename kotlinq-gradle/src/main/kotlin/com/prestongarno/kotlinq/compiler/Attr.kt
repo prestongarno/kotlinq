@@ -106,16 +106,6 @@ private fun TypeDef.assignArgumentSpec(field: FieldDefinition) {
     field.argBuilder = ArgumentSpecDef(field, this)
 }
 
-/**
- * Checks the subtype and assigns the supertype field's argbuilder definition (if applicable)
- *
- * The rule is that:
- *
- *    If a single concrete type is enforced configured, all superinterfaces and their fields must also match.
- *         |-> i.e. 'Optionally' configured fields are given lowest priority because they exist only for convenience
- *
- * By now, the field -> superfield inheritance checks have been done
- */
 @Suppress("LocalVariableName")
 private fun InterfaceDef.assignArgumentSpec(subType: TypeDef, symbol: String) {
 

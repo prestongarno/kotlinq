@@ -17,25 +17,15 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.schema.QInputType
-import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
-import com.prestongarno.kotlinq.core.schema.stubs.EnumStub
-import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.schema.stubs.TypeStub
-import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.asTypeName
 import org.antlr.v4.runtime.ParserRuleContext
-import kotlin.reflect.KClass
 
 sealed class ScopedSymbol : SymbolElement {
   abstract val nullable: Boolean
@@ -86,80 +76,13 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
   override fun toKotlin(): PropertySpec =
       PropertySpec.builder(
           name,
-          ktqGraphQLDelegateKotlinpoetTypeName()
+          type.getPropertyStubTypeAlias(this)
       ).apply {
         if (!isAbstract)
           delegate(type.getStubDelegationCall(this@FieldDefinition))
         if (inheritsFrom.isNotEmpty())
           addModifiers(KModifier.OVERRIDE)
       }.build()
-
-  /**
-   * ***Finally*** a simple and consistent API call structure for all types,
-   * where all combinations of field configurations are covered. The structure
-   * of the ktq type is described like this:
-   *
-   * [ StubType ].[ Query<T> | OptionalConfigQuery<T, A> | ConfigurableQuery<T, A> ]
-   *
-   *
-   * ***where***
-   *
-   *
-   * StubType: [ [String|Float|Int|Boolean]{Array}Delegate | [Type|Interface|Union|Enum|CustomScalar]{List}Stub ]
-   *
-   * Primitive delegates/stubs don't have a type argument.
-   * Only for the the associated ArgumentSpec class on the graphql primitive field
-   */
-  private fun ktqGraphQLDelegateKotlinpoetTypeName(): TypeName {
-
-    fun FieldDefinition.configurationTypeClassName(): String = when {
-      arguments.isEmpty() -> "Query"
-      !requiresConfiguration -> "OptionalConfigQuery"
-      else -> "ConfigurableQuery"
-    }
-
-    fun `type name for non-collection field`() = when (type) {
-      is EnumDef -> EnumStub::class
-      is InterfaceDef -> InterfaceStub::class
-      is ScalarDef -> CustomScalarStub::class
-      is InputDef -> QInputType::class
-      is TypeDef -> TypeStub::class
-      is UnionDef -> UnionStub::class
-      is ScalarType -> ScalarSymbols.named[type.name]!!.typeDef.stubClass
-    }
-
-    fun `type name for list field`(): KClass<*> = throw UnsupportedOperationException("Need to implement")
-    // hell kotlinpoet why do you try to be so helpful with imports
-    val baseTypeName = (if (isList) `type name for list field`() else `type name for non-collection field`())
-        .asTypeName()
-        .nestedClass(configurationTypeClassName())
-    //
-
-    fun FieldDefinition.argBuilderTypeName(): TypeName {
-      require(arguments.isNotEmpty())
-      return ClassName.bestGuess(argBuilder!!.context.name)
-          .nestedClass(argBuilder!!.name)
-    }
-
-    // When scalar/primitive type -> no type arg,
-    val parameterizedTypeNames: List<TypeName> = mutableListOf<TypeName>().apply {
-      if (type !is ScalarType) add(type.name.asTypeName())
-      if (arguments.isNotEmpty()) add(argBuilderTypeName())
-    }
-
-    return if (type is ScalarType && arguments.isEmpty()) baseTypeName else ParameterizedTypeName.get(
-        ClassName(
-            baseTypeName.packageName(),
-            baseTypeName.enclosingClassName()!!.simpleName(),
-            baseTypeName.simpleName()
-        ),
-        *parameterizedTypeNames.toTypedArray().let {
-          if (isAbstract)
-            it[it.size - 1] = it.last().annotated(AnnotationSpec.builder(Nothing::class).build())
-          it
-        }
-    )
-  }
 
   companion object {
     // not exactly sure how to do 'out' variance on parameterized types

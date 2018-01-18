@@ -17,20 +17,16 @@
 
 package com.prestongarno.kotlinq.compiler
 
+import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInputType
 import com.prestongarno.kotlinq.core.schema.QInterface
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
-import com.prestongarno.kotlinq.core.schema.stubs.BooleanDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.FloatDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.IntDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.ScalarDelegate
-import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.LambdaTypeName
@@ -42,6 +38,8 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import kotlin.reflect.KClass
 
+const val ALIAS_IMPORT_ROOT = "com.prestongarno.kotlinq.core.schema.properties."
+
 private const val DEFAULT_NO_ARG = "stub<%T>()"
 private const val DEFAULT_OPTIONAL_ARG = "optionallyConfigured<%T, %T>()"
 private const val DEFAULT_REQ_ARG = "configured<%T, %T>()"
@@ -49,19 +47,27 @@ private const val DEFAULT_REQ_ARG = "configured<%T, %T>()"
 sealed class SchemaType : KotlinTypeElement, NamedElement {
 
   abstract val schemaTypeClass: KClass<out QSchemaType>
-  // the delegate stub creator objects which you invoke method for the right delegate field on
+
   abstract val delegateStubClass: KClass<*>
   abstract val delegateListStubClass: KClass<*>
 
+  open val canBeExplicitlyNulled = false
+  abstract val packageDirective: String
+
+  open fun getPropertyStubTypeAlias(field: FieldDefinition) =
+      calculateTypeAlias(this, field)
+
   // this is literally hundreds of lines simpler than the last one
   open fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
+
     field.arguments.isEmpty() -> DEFAULT_NO_ARG to listOf(name)
+
     field.arguments.isNotEmpty() && field.arguments.find { !it.nullable } == null ->
       DEFAULT_OPTIONAL_ARG to listOf(name, field.argBuilder!!.name)
+
     else -> DEFAULT_REQ_ARG to listOf(name, field.argBuilder!!.name)
-  }.let { (format, typeNames) ->
-    CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray())
-  }
+  }.let { if (field.nullable && canBeExplicitlyNulled) it.first.plus(".asNullable()") to it.second else it }
+      .let { (format, typeNames) -> CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray()) }
 
   companion object {
     val CLASS_DELEGATE_MARKER = "__BY_CLASS_DELEGATE__"
@@ -77,6 +83,7 @@ sealed class ScopedDeclarationType : SchemaType() {
     fields.associate { it.name to it }.toMap()
   }
 }
+
 
 class TypeDef(
     override val name: String,
@@ -100,7 +107,11 @@ class TypeDef(
   override val schemaTypeClass = QType::class
   override val delegateStubClass = QSchemaType.QTypes::class
   override val delegateListStubClass = QSchemaType.QTypes.List::class
+
+  override val canBeExplicitlyNulled = true
+  override val packageDirective = "type"
 }
+
 
 class InterfaceDef(
     override val name: String,
@@ -112,21 +123,24 @@ class InterfaceDef(
     it.inheritsFrom = emptySet() // initialize lateinit var
   }.toSet()
 
-  override fun toKotlin(): TypeSpec = TypeSpec.interfaceBuilder(name).apply {
-    // iface needs to subtype QType *&* QInterface for iface fragment stubs
-    addSuperinterface(QType::class)
-    addSuperinterface(schemaTypeClass)
-    addProperties(fields.map(FieldDefinition::toKotlin))
-    addTypes(fields
-        .mapNotNull(FieldDefinition::argBuilder)
-        .map(ArgumentSpecDef::toKotlin))
-  }.build()
+  override fun toKotlin(): TypeSpec = TypeSpec.interfaceBuilder(name)
+      // iface needs to subtype QType *&* QInterface for iface fragment stubs
+      .addSuperinterface(QType::class)
+      .addSuperinterface(schemaTypeClass)
+      .addProperties(fields.map(FieldDefinition::toKotlin))
+      .addTypes(fields
+          .mapNotNull(FieldDefinition::argBuilder)
+          .map(ArgumentSpecDef::toKotlin))
+      .build()
 
   override val schemaTypeClass = QInterface::class
+
   override val delegateStubClass: KClass<*> = QSchemaType.QInterfaces::class
   override val delegateListStubClass: KClass<*> = QSchemaType.QInterfaces.List::class
 
+  override val packageDirective = "iface"
 }
+
 
 class UnionDef(override val name: String, val types: List<String>) : SchemaType() {
 
@@ -155,15 +169,17 @@ class UnionDef(override val name: String, val types: List<String>) : SchemaType(
         addCode("on(init)")
       }.build()
     }.forEach {
-      addFunction(it)
-    }
+          addFunction(it)
+        }
 
   }.build()
 
   override val schemaTypeClass = QUnionType::class
   override val delegateStubClass: KClass<*> = QSchemaType.QUnion::class
   override val delegateListStubClass: KClass<*> = QSchemaType.QUnion.List::class
+  override val packageDirective = "union"
 }
+
 
 class ScalarDef(override val name: String) : SchemaType() {
 
@@ -174,7 +190,9 @@ class ScalarDef(override val name: String) : SchemaType() {
   override val schemaTypeClass = CustomScalar::class
   override val delegateStubClass: KClass<*> = QSchemaType.QCustomScalar::class
   override val delegateListStubClass: KClass<*> = QSchemaType.QCustomScalar.List::class
+  override val packageDirective = "scalar"
 }
+
 
 class EnumDef(override val name: String, private val options: List<String>)
   : SchemaType() {
@@ -187,8 +205,9 @@ class EnumDef(override val name: String, private val options: List<String>)
   override val schemaTypeClass = QEnumType::class
   override val delegateStubClass: KClass<*> = QSchemaType.QEnum::class
   override val delegateListStubClass: KClass<*> = QSchemaType.QEnum.List::class
-
+  override val packageDirective = "enums"
 }
+
 
 class InputDef(override val name: String, override val fields: Set<FieldDefinition>)
   : ScopedDeclarationType() {
@@ -201,11 +220,11 @@ class InputDef(override val name: String, override val fields: Set<FieldDefiniti
         if (required.isList) ParameterizedTypeName.get(ClassName("kotlin.collections", "List"), it) else it
       }).build()
     }.also { params ->
-      FunSpec.constructorBuilder()
-          .addParameters(params)
-          .build()
-          .let(this::primaryConstructor)
-    }
+          FunSpec.constructorBuilder()
+              .addParameters(params)
+              .build()
+              .let(this::primaryConstructor)
+        }
     // add others as nullable props
     this@InputDef.fields.filter { it.nullable }.map {
       PropertySpec.builder(it.name, it.type.name.asTypeName()
@@ -227,12 +246,12 @@ class InputDef(override val name: String, override val fields: Set<FieldDefiniti
   override val delegateStubClass: KClass<*> = Nothing::class
   override val delegateListStubClass: KClass<*> = Nothing::class
 
+  override val canBeExplicitlyNulled get() = null!!
+  override val packageDirective get() = null!!
 }
 
-sealed class ScalarType : SchemaType() {
 
-  abstract val stubClass: KClass<out ScalarDelegate<*>>
-  abstract val arrayStubClass: KClass<out ScalarArrayDelegate<*>>
+sealed class ScalarType : SchemaType() {
 
   override val schemaTypeClass
     get() = throw IllegalArgumentException("No schema stub class for primitives!")
@@ -245,11 +264,12 @@ sealed class ScalarType : SchemaType() {
   }.let { (format, typeNames) ->
     CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray())
   }
+
+  override val packageDirective = "scalar"
 }
 
+
 object IntType : ScalarType() {
-  override val stubClass = IntDelegate::class
-  override val arrayStubClass = IntArrayDelegates::class
   override val name: String get() = "Int"
   override fun toKotlin(): TypeSpec = throw UnsupportedOperationException()
 
@@ -257,9 +277,8 @@ object IntType : ScalarType() {
   override val delegateListStubClass: KClass<*> = QSchemaType.QScalar.List.Int::class
 }
 
+
 object StringType : ScalarType() {
-  override val stubClass = StringDelegate::class
-  override val arrayStubClass = StringArrayDelegate::class
   override val name: String get() = "String"
   override fun toKotlin(): TypeSpec = throw UnsupportedOperationException()
 
@@ -267,9 +286,8 @@ object StringType : ScalarType() {
   override val delegateListStubClass: KClass<*> = QSchemaType.QScalar.List.String::class
 }
 
+
 object FloatType : ScalarType() {
-  override val stubClass = FloatDelegate::class
-  override val arrayStubClass = FloatArrayDelegate::class
   override val name: String get() = "Float"
   override fun toKotlin(): TypeSpec = throw UnsupportedOperationException()
 
@@ -277,9 +295,8 @@ object FloatType : ScalarType() {
   override val delegateListStubClass: KClass<*> = QSchemaType.QScalar.List.Float::class
 }
 
+
 object BooleanType : ScalarType() {
-  override val stubClass = BooleanDelegate::class
-  override val arrayStubClass = BooleanArrayDelegate::class
   override val name: String get() = "Boolean"
   override fun toKotlin(): TypeSpec = throw UnsupportedOperationException()
 
@@ -300,4 +317,40 @@ private fun SchemaType.stubFor(field: FieldDefinition, typeArgs: List<String>): 
       // all are generated in same package for now
       addAll(typeArgs.map { ClassName("", it) })
     }.toList()
+
+private
+fun calculateTypeAlias(type: SchemaType, property: FieldDefinition): TypeName =
+    property.getArgumentContext()
+        .prefix
+        .plus(type.baseName())
+        .let { if (property.isList) it + "List" else it }
+        .plus("Property").let {
+      if (property.arguments.isEmpty())
+        bestGuess(it)
+      else
+        ParameterizedTypeName.get(bestGuess(it.prepend(type.packageDirective.plus(".")).prepend(ALIAS_IMPORT_ROOT)),
+            bestGuess(type.name),
+            bestGuess(property.argBuilder!!.name))
+    }
+
+private
+fun FieldDefinition.getArgumentContext(): ArgumentContext =
+    if (arguments.isEmpty()) ArgumentContext.NO_ARG
+    else if (arguments.isNotEmpty() && !requiresConfiguration) ArgumentContext.OPTIONAL
+    else ArgumentContext.REQUIRED
+private enum class ArgumentContext(val prefix: String) {
+  NO_ARG(""), OPTIONAL("OptionallyConfigured"), REQUIRED("Configured")
+}
+
+private
+fun SchemaType.baseName() = when (this) {
+  is ScalarType -> name
+  is TypeDef -> "Type"
+  is EnumDef -> "Enum"
+  is InterfaceDef -> "Interface"
+  is UnionDef -> "Union"
+  else -> null!!
+}
+
+
 
