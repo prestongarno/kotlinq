@@ -94,6 +94,7 @@ class GraphQLCompiler(
         .map { it.type.getPropertyStubTypeAlias(it) }
         .map(GraphQlPropertyAlias::fqName)
         .distinct()
+        .sorted()
 
     val specs = definitions.associate { it to it.toKotlin() }
 
@@ -101,8 +102,8 @@ class GraphQLCompiler(
       var exact = kotlinSpec.toString()
 
       if (kotlinSpec.superinterfaces.find {
-        it.toString().contains(SchemaType.CLASS_DELEGATE_MARKER)
-      } != null) exact = exact.replace(SchemaType.CLASS_DELEGATE_MARKER,
+            it.toString().contains(SchemaType.CLASS_DELEGATE_MARKER)
+          } != null) exact = exact.replace(SchemaType.CLASS_DELEGATE_MARKER,
           " by ${ir.schemaTypeClass.qualifiedName}.new()")
           .replace("^import.*\n".toRegex(), "")
 
@@ -115,11 +116,8 @@ class GraphQLCompiler(
       definitions.forEach { addType(it.toKotlin()) }
     }.build()
         .let { if (it.packageName.isNotEmpty()) "package ${it.packageName}\n\n" else "\n" }
-        .plus(propertyImports.joinToString(
-            prefix = "import ",
-            separator = "\nimport ",
-            postfix = "\n"
-        ))
+        .plus(propertyImports.map { "import " + it }
+            .joinToString(prefix = "\n", separator = "\n", postfix = "\n\n"))
 
     return metadata + sourceClasses
   }
@@ -127,21 +125,18 @@ class GraphQLCompiler(
   private fun attrFieldTypes() = definitions.filterIsInstance<ScopedDeclarationType>()
       .flatMap(ScopedDeclarationType::expandSymbols)
       .forEach { (symbol, typeContext) ->
-        symbol.type = this@GraphQLCompiler.symtab[symbol.typeName] ?: throw symbol.unknownTypeExc(typeContext)
+        symbol.type = this@GraphQLCompiler.symtab[symbol.typeName]
+            ?: throw symbol.unknownTypeExc(typeContext)
       }
 
   private fun attrUnions() {
-    fun UnionDef.setLateinitPossibilities(defs: Set<TypeDef>) {
-      possibilities = defs
-    }
+    fun UnionDef.setLateinitPossibilities(defs: Set<TypeDef>) { possibilities = defs }
 
-    definitions.filterIsInstance<UnionDef>().forEach {
+    definitions.filterIsInstance<UnionDef>().forEach { union ->
 
-      it.types.map {
-        symtab[it] as? TypeDef ?: throw IllegalArgumentException("Unknown type '$it'")
-      }.also { options ->
-        it.setLateinitPossibilities(options.toSet())
-      }
+      union.types.map { type ->
+        symtab[type] as? TypeDef ?: throw IllegalArgumentException("Unknown type '$type'")
+      }.also { union.setLateinitPossibilities(it.toSet()) }
     }
   }
 

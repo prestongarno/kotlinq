@@ -14,10 +14,11 @@ class TypeAliasImports {
         .readLines()
         .joinToString("\n") { it }.let { schema ->
 
+      println(generateSequence { "=".repeat(30) }.take(10).joinToString(separator = "\n"))
       GraphQLCompiler(StringSchema(schema))
           .apply(GraphQLCompiler::compile)
           .toKotlinApi()
-          //.let(::println)
+          .let(::println)
 
     }
   }

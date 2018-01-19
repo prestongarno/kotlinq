@@ -12,6 +12,3 @@ typealias StringProperty = ScalarDelegate.NoArg<StringDelegate<ArgBuilder>, Stri
 typealias OptionallyConfiguredStringProperty<A> = StringDelegate.OptionallyConfigured<A>
 typealias ConfiguredStringProperty<A> = ScalarDelegate.Configured<StringDelegate<A>, StringStub, A>
 
-typealias StringListProperty = Property<List<String>>
-typealias OptionallyConfiguredStringListProperty<A> = OptionallyConfiguredProperty<List<String>, A>
-typealias ConfiguredStringListProperty<A> = ConfiguredProperty<List<String>, A>

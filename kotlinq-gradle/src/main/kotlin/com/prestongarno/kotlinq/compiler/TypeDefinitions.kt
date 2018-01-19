@@ -17,6 +17,7 @@
 
 package com.prestongarno.kotlinq.compiler
 
+import com.prestongarno.kotlinq.compiler.GraphQlPropertyAlias.Companion.from
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.schema.CustomScalar
@@ -32,6 +33,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.get
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
@@ -51,11 +53,11 @@ sealed class SchemaType : KotlinTypeElement, NamedElement {
   abstract val delegateStubClass: KClass<*>
   abstract val delegateListStubClass: KClass<*>
 
-  open val canBeExplicitlyNulled = false
   abstract val packageDirective: String
 
-  open fun getPropertyStubTypeAlias(field: FieldDefinition) =
-      calculateTypeAlias(this, field)
+  open fun canBeExplicitlyNulled(field: FieldDefinition) = false
+
+  open fun getPropertyStubTypeAlias(field: FieldDefinition) = field.calculateTypeAlias()
 
   // this is literally hundreds of lines simpler than the last one
   open fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
@@ -66,7 +68,8 @@ sealed class SchemaType : KotlinTypeElement, NamedElement {
       DEFAULT_OPTIONAL_ARG to listOf(name, field.argBuilder!!.name)
 
     else -> DEFAULT_REQ_ARG to listOf(name, field.argBuilder!!.name)
-  }.let { if (field.nullable && canBeExplicitlyNulled) it.first.plus(".asNullable()") to it.second else it }
+
+  }.let { if (field.nullable && canBeExplicitlyNulled(field)) it.first.plus(".asNullable()") to it.second else it }
       .let { (format, typeNames) -> CodeBlock.of("%T.$format", *stubFor(field, typeNames).toTypedArray()) }
 
   companion object {
@@ -108,7 +111,7 @@ class TypeDef(
   override val delegateStubClass = QSchemaType.QTypes::class
   override val delegateListStubClass = QSchemaType.QTypes.List::class
 
-  override val canBeExplicitlyNulled = true
+  override fun canBeExplicitlyNulled(field: FieldDefinition) = !field.isList
   override val packageDirective = "type"
 }
 
@@ -205,6 +208,7 @@ class EnumDef(override val name: String, private val options: List<String>)
   override val schemaTypeClass = QEnumType::class
   override val delegateStubClass: KClass<*> = QSchemaType.QEnum::class
   override val delegateListStubClass: KClass<*> = QSchemaType.QEnum.List::class
+  override fun canBeExplicitlyNulled(field: FieldDefinition) = !field.isList
   override val packageDirective = "enums"
 }
 
@@ -246,7 +250,7 @@ class InputDef(override val name: String, override val fields: Set<FieldDefiniti
   override val delegateStubClass: KClass<*> = Nothing::class
   override val delegateListStubClass: KClass<*> = Nothing::class
 
-  override val canBeExplicitlyNulled get() = null!!
+  override fun canBeExplicitlyNulled(field: FieldDefinition) = null!!
   override val packageDirective get() = null!!
 }
 
@@ -255,6 +259,8 @@ sealed class ScalarType : SchemaType() {
 
   override val schemaTypeClass
     get() = throw IllegalArgumentException("No schema stub class for primitives!")
+
+  open val listTypeName: TypeName = bestGuess("$name\\Array")
 
   override fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
     field.arguments.isEmpty() -> "stub()" to emptyList()
@@ -266,6 +272,7 @@ sealed class ScalarType : SchemaType() {
   }
 
   override val packageDirective = "scalar"
+  override fun canBeExplicitlyNulled(field: FieldDefinition) = !field.isList
 }
 
 
@@ -279,7 +286,11 @@ object IntType : ScalarType() {
 
 
 object StringType : ScalarType() {
+
   override val name: String get() = "String"
+
+  override val listTypeName = ParameterizedTypeName.get(List::class, String::class)
+
   override fun toKotlin(): TypeSpec = throw UnsupportedOperationException()
 
   override val delegateStubClass: KClass<*> = QSchemaType.QScalar.String::class
@@ -319,21 +330,26 @@ private fun SchemaType.stubFor(field: FieldDefinition, typeArgs: List<String>): 
     }.toList()
 
 private
-fun calculateTypeAlias(type: SchemaType, property: FieldDefinition) =
-    property.getArgumentContext()
+fun FieldDefinition.calculateTypeAlias() = (type as? ScalarType)?.primitiveTypeAlias(this)
+    ?: getArgumentContext()
         .prefix
         .plus(type.baseName())
-        .let { if (property.isList) it + "List" else it }
+        .let { if (nullable && type.canBeExplicitlyNulled(this)) "Nullable$it" else it }
+        .let { if (isList) it + "List" else it }
         .plus("Property").let {
-      if (property.arguments.isEmpty())
-        GraphQlPropertyAlias.from(bestGuess(it.prepend(type.packageDirective.plus(".")).prepend(ALIAS_IMPORT_ROOT))).let {
-          if (property.type is ScalarType) it else GraphQlPropertyAlias.from(it.context.parameterizeOn(property.type.name.asTypeName()).value)
+
+      val fqAliasName = "$ALIAS_IMPORT_ROOT${type.packageDirective}.$it"
+
+      if (arguments.isEmpty()) {
+        from(bestGuess(fqAliasName)).let {
+          from(it.context.parameterizeOn(type.name.asTypeName()).value)
         }
-      else
-        ParameterizedTypeName.get(bestGuess(it.prepend(type.packageDirective.plus(".")).prepend(ALIAS_IMPORT_ROOT)),
+      } else {
+        ParameterizedTypeName.get(bestGuess(fqAliasName),
             bestGuess(type.name),
-            bestGuess(property.argBuilder!!.name))
+            bestGuess(argBuilder!!.name))
             .let { GraphQlPropertyAlias.from(it) }
+      }
     }
 
 private
@@ -356,9 +372,30 @@ fun SchemaType.baseName() = when (this) {
   else -> null!!
 }
 
+private
+fun ScalarType.primitiveTypeAlias(field: FieldDefinition): GraphQlPropertyAlias {
+  require(field.type === this)
 
-class GraphQlPropertyAlias private constructor(val context: Either) {
+  return if (field.isList) {
+    ("$ALIAS_IMPORT_ROOT${if (this !== StringType) "$packageDirective." else ""}" +
+        "${field.getArgumentContext().prefix}Property").let {
+      from(get(bestGuess(it), listTypeName))
+    }
+  } else (field.getArgumentContext().prefix + name + "Property")
+      .let { if (!field.isList) "$packageDirective.$it" else it }
+      .prepend(ALIAS_IMPORT_ROOT)
+      .let { fqName ->
+        println(fqName)
+        ClassName.bestGuess(fqName).let {
+          if (field.arguments.isEmpty()) from(it) else from(ParameterizedTypeName.get(it, field.argBuilder!!.name.asTypeName()))
+        }
+      }
+}
 
+
+class GraphQlPropertyAlias private constructor(val context: Either<TypeName>) {
+
+  /** get the fully qualified name of the type alias for this property **NOTE:** does not contain parameterized information */
   fun fqName() = when (context) {
     is Either.ParameterizedE -> context.value.rawType.canonicalName
     is Either.ClassNameE -> context.value.canonicalName
@@ -369,10 +406,7 @@ class GraphQlPropertyAlias private constructor(val context: Either) {
     is Either.ClassNameE -> context.value.simpleName()
   }
 
-  fun asTypeName(): TypeName = when (context) {
-    is Either.ParameterizedE -> context.value
-    is Either.ClassNameE -> context.value
-  }
+  fun asTypeName(): TypeName = context.value
 
   companion object {
     fun from(name: ParameterizedTypeName) = GraphQlPropertyAlias(Either.ParameterizedE(name))
@@ -380,16 +414,16 @@ class GraphQlPropertyAlias private constructor(val context: Either) {
   }
 
   sealed
-  class Either {
+  class Either<out T>(val value: T) {
 
     abstract fun parameterizeOn(type: TypeName): ParameterizedE
 
-    class ParameterizedE(val value: ParameterizedTypeName) : Either() {
+    class ParameterizedE(value: ParameterizedTypeName) : Either<ParameterizedTypeName>(value) {
       override fun parameterizeOn(type: TypeName): ParameterizedE =
           ParameterizedE(ParameterizedTypeName.Companion.get(value.rawType, type))
     }
 
-    class ClassNameE(val value: ClassName) : Either() {
+    class ClassNameE(value: ClassName) : Either<ClassName>(value) {
       override fun parameterizeOn(type: TypeName): ParameterizedE =
           ParameterizedE(ParameterizedTypeName.Companion.get(value, type))
     }
