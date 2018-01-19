@@ -116,10 +116,7 @@ class TypeDef(
 }
 
 
-class InterfaceDef(
-    override val name: String,
-    fields: Set<FieldDefinition>
-) : ScopedDeclarationType() {
+class InterfaceDef(override val name: String, fields: Set<FieldDefinition>) : ScopedDeclarationType() {
 
   override val fields = fields.onEach {
     it.isAbstract = true // flag as abstract
@@ -260,7 +257,7 @@ sealed class ScalarType : SchemaType() {
   override val schemaTypeClass
     get() = throw IllegalArgumentException("No schema stub class for primitives!")
 
-  open val listTypeName: TypeName = bestGuess("$name\\Array")
+  open val listTypeName: TypeName = bestGuess(name + "Array")
 
   override fun getStubDelegationCall(field: FieldDefinition): CodeBlock = when {
     field.arguments.isEmpty() -> "stub()" to emptyList()
@@ -330,8 +327,8 @@ private fun SchemaType.stubFor(field: FieldDefinition, typeArgs: List<String>): 
     }.toList()
 
 private
-fun FieldDefinition.calculateTypeAlias() = (type as? ScalarType)?.primitiveTypeAlias(this)
-    ?: getArgumentContext()
+fun FieldDefinition.calculateTypeAlias() =
+    (type as? ScalarType)?.primitiveTypeAlias(this) ?: getArgumentContext()
         .prefix
         .plus(type.baseName())
         .let { if (nullable && type.canBeExplicitlyNulled(this)) "Nullable$it" else it }
@@ -354,7 +351,7 @@ fun FieldDefinition.calculateTypeAlias() = (type as? ScalarType)?.primitiveTypeA
 
 private
 fun FieldDefinition.getArgumentContext(): ArgumentContext =
-    if (arguments.isEmpty()) ArgumentContext.NO_ARG
+    if (arguments.isEmpty() && !requiresConfiguration) ArgumentContext.NO_ARG
     else if (arguments.isNotEmpty() && !requiresConfiguration) ArgumentContext.OPTIONAL
     else ArgumentContext.REQUIRED
 
@@ -370,7 +367,7 @@ fun SchemaType.baseName() = when (this) {
   is InterfaceDef -> "Interface"
   is UnionDef -> "Union"
   is ScalarDef -> "CustomScalar"
-  else -> null!!
+  else -> also { println(this) }.let { null!! }
 }
 
 private
@@ -378,10 +375,8 @@ fun ScalarType.primitiveTypeAlias(field: FieldDefinition): GraphQlPropertyAlias 
   require(field.type === this)
 
   return if (field.isList) {
-    ("$ALIAS_IMPORT_ROOT${if (this !== StringType) "$packageDirective." else ""}" +
-        "${field.getArgumentContext().prefix}Property").let {
-      from(get(bestGuess(it), listTypeName))
-    }
+    (ALIAS_IMPORT_ROOT + "${field.getArgumentContext().prefix}Property")
+        .let { from(get(bestGuess(it), listTypeName)) }
   } else (field.getArgumentContext().prefix + name + "Property")
       .let { if (!field.isList) "$packageDirective.$it" else it }
       .prepend(ALIAS_IMPORT_ROOT)

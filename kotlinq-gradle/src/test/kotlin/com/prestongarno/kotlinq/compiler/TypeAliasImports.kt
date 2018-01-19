@@ -1,6 +1,5 @@
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import org.junit.Test
 import java.io.File
 
@@ -8,7 +7,7 @@ class TypeAliasImports {
 
   @Test fun importsAreGenerated() {
 
-    File("/home/preston/IdeaProjects/kotlinq/kotlinq-test-api/src/main/resources/programmingLanguages.graphqls")
+    File("/home/preston/IdeaProjects/kotlinq/kotlinq-test-api/src/main/resources/starwars.graphqls")
         .reader()
         .readLines()
         .joinToString("\n") { it }.let { schema ->

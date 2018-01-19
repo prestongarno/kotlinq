@@ -41,13 +41,13 @@ kotlinq {
     kotlinFileName = "GitHubGraphQl.kt"
     packageName = "com.github.graphql"
     outputDir = generationTarget
-  }
+  }*/
   schema {
     target = "$project.name/src/main/resources/starwars.graphqls"
     kotlinFileName = "StarWars.kt"
     packageName = "com.facebook"
     outputDir = generationTarget
-  }*/
+  }
   schema {
     target = "$project.name/src/main/resources/programmingLanguages.graphqls"
     kotlinFileName = "LanguagesGraphQL.kt"

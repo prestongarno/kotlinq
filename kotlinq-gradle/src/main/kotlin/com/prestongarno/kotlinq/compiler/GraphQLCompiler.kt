@@ -89,11 +89,10 @@ class GraphQLCompiler(
     // gets all property alias types that we need to import manually
     val propertyImports: List<String> = definitions
         .filterIsInstance<ScopedDeclarationType>()
+        .filterNot { it is InputDef }
         .map(ScopedDeclarationType::fields)
         .flatten()
-        .map {
-            it.type.getPropertyStubTypeAlias(it)
-        }
+        .map { it.type.getPropertyStubTypeAlias(it) }
         .map(GraphQlPropertyAlias::fqName)
         .distinct()
         .sorted()
@@ -117,9 +116,8 @@ class GraphQLCompiler(
     val metadata = FileSpec.builder(config.packageName, config.kotlinFileName).apply {
       definitions.forEach { addType(it.toKotlin()) }
     }.build()
-        .let { if (it.packageName.isNotEmpty()) "package ${it.packageName}\n\n" else "\n" }
-        .plus(propertyImports.map { "import " + it }
-            .joinToString(prefix = "\n", separator = "\n", postfix = "\n\n"))
+        .let { if (it.packageName.isNotEmpty()) "package ${it.packageName}\n\n" else "\n" } +
+        propertyImports.joinToString("\n", "\n", "\n\n") { "import $it" }
 
     return metadata + sourceClasses
   }
@@ -132,7 +130,9 @@ class GraphQLCompiler(
       }
 
   private fun attrUnions() {
-    fun UnionDef.setLateinitPossibilities(defs: Set<TypeDef>) { possibilities = defs }
+    fun UnionDef.setLateinitPossibilities(defs: Set<TypeDef>) {
+      possibilities = defs
+    }
 
     definitions.filterIsInstance<UnionDef>().forEach { union ->
 
@@ -200,8 +200,6 @@ inline fun <reified T> Collection<*>.on(action: T.() -> Unit) = this.filterIsIns
 private fun ScopedSymbol.unknownTypeExc(idlContext: ScopedDeclarationType) = IllegalArgumentException(
     "Unknown type '$typeName' for field ${idlContext.name}::$name at " + context.start.toCoordinates()
 )
-
-private inline fun <reified T, U> Iterable<out T>.mapOn(combinator: T.() -> U): List<U> = filterIsInstance<T>().map { it.combinator() }
 
 private fun ScopedDeclarationType.expandSymbols() = run {
   listOf<Iterable<ScopedSymbol>>(this@expandSymbols.fields,
