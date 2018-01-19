@@ -44,7 +44,7 @@ class InputTypes : JavacTest() {
       |}
       """.trimMargin("|")
 
-    jvmCompileAndLoad(schema, "com.prestongarno").apply {
+    jvmCompileAndLoad(schema, "com.prestongarno", System.out).apply {
 
       val inputTypeClass = loadClass("com.prestongarno.InputDef") {
 

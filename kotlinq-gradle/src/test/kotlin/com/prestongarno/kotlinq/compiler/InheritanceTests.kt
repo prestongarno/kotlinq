@@ -155,7 +155,7 @@ class InheritanceTests {
 
   @Test fun `inconsistent return type override fails`() {
     val mockSchema = """
-      |iface Bar {
+      |interface Bar {
       |  name(val1: Int!): Foo
       |}
       |

@@ -17,11 +17,13 @@
 
 package com.prestongarno.kotlinq.compiler
 
+import org.junit.Ignore
 import org.junit.Test
 
 class InterfaceToKotlin : JavacTest() {
 
 
+  @Ignore
   @Test fun interfaceKotlinCodeGen() {
     val schema = """
       |

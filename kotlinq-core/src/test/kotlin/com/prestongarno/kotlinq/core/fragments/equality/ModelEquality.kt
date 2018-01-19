@@ -29,6 +29,7 @@ import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import com.prestongarno.kotlinq.core.type.BasicTypeList.PersonModel
 import com.prestongarno.kotlinq.core.type.Person
 import com.prestongarno.kotlinq.core.type.TypeStubQueryable.*
+import org.junit.Ignore
 import org.junit.Test
 
 /*********************************************************
@@ -196,6 +197,7 @@ class ModelEquality {
     ctor().hashCode() eq ctor().hashCode()
   }
 
+  @Ignore
   @Test fun toGraphQL() {
 
     extractedPayload(MPersonModel()).assertBracketsMatch()

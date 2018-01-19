@@ -26,6 +26,7 @@ import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.getFragments
+import org.junit.Ignore
 import org.junit.Test
 
 object Team : QType {
@@ -57,6 +58,7 @@ class BasicTypeList {
     val age by model.age
   }
 
+  @Ignore
   @Test fun `type list field is possible`() {
     
     val query = object : QModel<Team>(Team) {
@@ -65,11 +67,10 @@ class BasicTypeList {
 
     query::teamMembers.returnType.arguments
         .firstOrNull()?.type?.classifier eq PersonModel::class
-    println(query.getFragments())
-    println(query.toGraphql(pretty = true))
     query.toGraphql() eq "{members{name,age}}"
   }
 
+  @Ignore
   @Test fun `configured type list field is possible`() {
 
     val query = object : QModel<Team>(Team) {

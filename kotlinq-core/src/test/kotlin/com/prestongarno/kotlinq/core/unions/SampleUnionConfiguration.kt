@@ -24,6 +24,7 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
+import org.junit.Ignore
 import org.junit.Test
 
 
@@ -74,6 +75,7 @@ class SampleUnionConfiguration {
         "fragment fragHamburger1 on Hamburger{ingredients}"
   }
 
+  @Ignore
   @Test fun `union list field and fragments is possible`() {
 
     val query = object : QModel<Query>(Query) {
