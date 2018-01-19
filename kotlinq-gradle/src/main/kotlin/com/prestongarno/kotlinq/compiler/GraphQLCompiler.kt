@@ -91,7 +91,9 @@ class GraphQLCompiler(
         .filterIsInstance<ScopedDeclarationType>()
         .map(ScopedDeclarationType::fields)
         .flatten()
-        .map { it.type.getPropertyStubTypeAlias(it) }
+        .map {
+            it.type.getPropertyStubTypeAlias(it)
+        }
         .map(GraphQlPropertyAlias::fqName)
         .distinct()
         .sorted()

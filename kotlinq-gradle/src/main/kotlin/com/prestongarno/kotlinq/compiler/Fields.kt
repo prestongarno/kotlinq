@@ -76,8 +76,7 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
   override fun toKotlin(): PropertySpec =
       PropertySpec.builder(
           name,
-          type.getPropertyStubTypeAlias(this)
-              .asTypeName().also { println(it.toString()) }
+          type.getPropertyStubTypeAlias(this).asTypeName()
       ).apply {
         if (!isAbstract)
           delegate(type.getStubDelegationCall(this@FieldDefinition))

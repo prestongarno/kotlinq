@@ -39,7 +39,7 @@ class BasicCustomScalarField {
       val url by model.url.fromString { File(it).toURI().toURL() }
     }
 
-    query::url.returnType.classifier eq URL::class
+    query::url.returnType.classifier eq java.net.URL::class
     query::url.returnType.isMarkedNullable eq false
     query.toGraphql() eq "{url}"
   }

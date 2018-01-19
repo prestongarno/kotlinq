@@ -369,6 +369,7 @@ fun SchemaType.baseName() = when (this) {
   is EnumDef -> "Enum"
   is InterfaceDef -> "Interface"
   is UnionDef -> "Union"
+  is ScalarDef -> "CustomScalar"
   else -> null!!
 }
 
@@ -385,7 +386,6 @@ fun ScalarType.primitiveTypeAlias(field: FieldDefinition): GraphQlPropertyAlias 
       .let { if (!field.isList) "$packageDirective.$it" else it }
       .prepend(ALIAS_IMPORT_ROOT)
       .let { fqName ->
-        println(fqName)
         ClassName.bestGuess(fqName).let {
           if (field.arguments.isEmpty()) from(it) else from(ParameterizedTypeName.get(it, field.argBuilder!!.name.asTypeName()))
         }
