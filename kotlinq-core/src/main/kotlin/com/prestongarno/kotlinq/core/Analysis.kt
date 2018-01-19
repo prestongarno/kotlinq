@@ -17,6 +17,7 @@
 
 package com.prestongarno.kotlinq.core
 
+import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider

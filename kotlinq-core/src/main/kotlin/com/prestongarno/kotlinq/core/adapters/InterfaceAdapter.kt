@@ -61,7 +61,8 @@ class InterfaceAdapterImpl<I : QType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
-) : GraphqlPropertyDelegate<QModel<I>?>, FragmentContext {
+) : GraphqlPropertyDelegate<QModel<I>?>,
+    FragmentContext {
 
   var value: QModel<I>? = null
 
@@ -73,7 +74,7 @@ class InterfaceAdapterImpl<I : QType>(
           Adapter by this@InterfaceAdapterImpl {
         override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<I> = value!!
         override fun asNullable(): GraphqlPropertyDelegate<QModel<I>?> = this@InterfaceAdapterImpl
-        override fun asList(): GraphqlPropertyDelegate<List<QModel<I>>> = ListDelegate(this)
+        override fun asList(): GraphqlPropertyDelegate<List<QModel<I>>> = this@InterfaceAdapterImpl.asList()
         override fun transform(obj: Any?): QModel<I>? = this@InterfaceAdapterImpl.transform(obj)
       })
 

@@ -20,6 +20,7 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
+import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
 import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.internal.pretty
 import com.prestongarno.kotlinq.core.schema.QType
@@ -98,9 +99,15 @@ open class QModel<out T : QType>(val model: T) {
   override fun toString() = "${this::class.simpleName}<${model::class.simpleName}>" +
       fields.entries.joinToString(",", "[", "]") { it.value.qproperty.toString() }
 
+  /**
+   * @param erasedTypeAdapters if true, base type adapters are returned.
+   *   This is convenient sometimes for consistency in hashcode/equals values
+   */
   internal
-  fun getFields(): Sequence<Adapter> =
-      fields.entries.asSequence().map(MutableMap.MutableEntry<String, Adapter>::value)
+  fun getFields(erasedTypeAdapters: Boolean = false): Sequence<Adapter> =
+      fields.entries.asSequence().map { it.value }.map {
+        if (erasedTypeAdapters && it is WrapperDelegate<*>) it.baseContext() else it
+      }
 
   /**
    * Add the field to the instance of this model

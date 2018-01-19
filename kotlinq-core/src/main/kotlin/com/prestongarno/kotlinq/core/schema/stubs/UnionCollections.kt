@@ -141,6 +141,7 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
       delegateProvider { inst, _ ->
         UnionStubImpl(obj, args)
             .apply(block)
+            .asNotNull()
             .toDelegate(qproperty)
             .asList()
             .bindToContext(inst)

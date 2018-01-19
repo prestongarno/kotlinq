@@ -83,7 +83,7 @@ class TypeStubAdapter<out I : QType, out P : QModel<I>>(
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as TypeStubAdapter<*, *>
+    other as Adapter
 
     if (qproperty != other.qproperty) return false
     if (args != other.args) return false

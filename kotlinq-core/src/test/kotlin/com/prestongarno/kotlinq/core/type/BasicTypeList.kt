@@ -25,6 +25,7 @@ import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
+import com.prestongarno.kotlinq.core.getFragments
 import org.junit.Test
 
 object Team : QType {
@@ -64,6 +65,8 @@ class BasicTypeList {
 
     query::teamMembers.returnType.arguments
         .firstOrNull()?.type?.classifier eq PersonModel::class
+    println(query.getFragments())
+    println(query.toGraphql(pretty = true))
     query.toGraphql() eq "{members{name,age}}"
   }
 

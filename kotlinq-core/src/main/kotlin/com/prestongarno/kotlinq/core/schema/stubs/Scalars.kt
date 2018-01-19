@@ -234,7 +234,8 @@ fun BooleanStub.wrapAsNullable() =
     wrapAsNullable { if (!isResolved) null else value }
 
 fun <T> NullablePrimitive<T?>.delegatingTo() = object : DelegateProvider<T?> {
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> = inst.register(this@delegatingTo)
+  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> =
+      this@delegatingTo.bindingWith(inst)
 }
 
 fun <T> NullablePrimitive<T?>.bindingWith(inst: QModel<*>) =

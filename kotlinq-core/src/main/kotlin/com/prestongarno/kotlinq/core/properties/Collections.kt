@@ -2,10 +2,10 @@ package com.prestongarno.kotlinq.core.properties
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
+import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty.Companion.from
 import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
@@ -15,9 +15,9 @@ import kotlin.reflect.KProperty
  * support lists/arrays of arbitrarily nested dimensions
  */
 internal
-class ListDelegate<out T : Any>(val adapter: GraphqlPropertyDelegate<T>)
-  : GraphqlPropertyDelegate<List<T>>,
-    Adapter by adapter {
+class ListDelegate<out T : Any>(adapter: GraphqlPropertyDelegate<T>)
+  : WrapperDelegate<T>(adapter),
+    GraphqlPropertyDelegate<List<T>> {
 
   private var value: List<T>? = null
 
@@ -35,10 +35,11 @@ class ListDelegate<out T : Any>(val adapter: GraphqlPropertyDelegate<T>)
       (obj as? JsonObject)
           ?.values
           ?.filterNotNull()
-          ?.mapNotNull(adapter::transform)
+          ?.mapNotNull(context::transform)
 
   override fun accept(result: Any?): Boolean {
-    value = transform(result)
+    value = (result as? Collection<*>)
+        ?.mapNotNull { context.transform(it) }
     return true
   }
 
@@ -46,8 +47,8 @@ class ListDelegate<out T : Any>(val adapter: GraphqlPropertyDelegate<T>)
 
 internal
 class NullableElementListDelegate<out T : Any?>(val adapter: GraphqlPropertyDelegate<T>)
-  : GraphqlPropertyDelegate<List<T?>>,
-    Adapter by adapter {
+  : WrapperDelegate<T>(adapter),
+    GraphqlPropertyDelegate<List<T?>> {
 
   private var value: List<T?>? = null
 
@@ -70,21 +71,9 @@ class NullableElementListDelegate<out T : Any?>(val adapter: GraphqlPropertyDele
 }
 
 internal
-fun <T> collectionDelegate(
-    constructor: (QModel<*>, KProperty<*>) -> GraphqlPropertyDelegate<T>
-) = object : DelegateProvider<List<T>> {
-
-      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>)
-          : GraphQlField<List<T>> =
-          constructor(inst, property).asList()
-    }
-
-
-internal
 fun GraphQlProperty.toList() = if (!isList) from(
     graphqlType = graphqlType,
     graphqlName = graphqlName,
     isList = true
-) else
-  this
+) else this
 

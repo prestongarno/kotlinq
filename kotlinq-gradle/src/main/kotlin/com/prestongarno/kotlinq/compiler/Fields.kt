@@ -18,12 +18,14 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import org.antlr.v4.runtime.ParserRuleContext
 
@@ -74,15 +76,24 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
 
 
   override fun toKotlin(): PropertySpec =
-      PropertySpec.builder(
-          name,
-          type.getPropertyStubTypeAlias(this).asTypeName()
-      ).apply {
+      PropertySpec.builder(name, getAliasName()).apply {
         if (!isAbstract)
           delegate(type.getStubDelegationCall(this@FieldDefinition))
         if (inheritsFrom.isNotEmpty())
           addModifiers(KModifier.OVERRIDE)
       }.build()
+
+  private
+  fun getAliasName(): TypeName {
+    val typeAlias = type.getPropertyStubTypeAlias(this).asTypeName()
+
+    return (typeAlias as? ParameterizedTypeName)?.let {
+      if (isAbstract && argBuilder != null)
+        ParameterizedTypeName.get(it.rawType, it.typeArguments.first(), it.typeArguments.last().annotated(
+            AnnotationSpec.builder(Nothing::class).build()
+        )) else it
+    } ?: typeAlias
+  }
 
   companion object {
     // not exactly sure how to do 'out' variance on parameterized types
@@ -129,12 +140,12 @@ data class ArgumentDefinition(
           type.name.asTypeName().let {
             if (isList) ParameterizedTypeName.get(ClassName("kotlin.collections", "List"), it) else it
           }.let {
-            if (this@ArgumentDefinition.nullable) it.asNullable() else it
-          }, // modifiers
+                if (this@ArgumentDefinition.nullable) it.asNullable() else it
+              }, // modifiers
           *(if (!isAbstract && field.inheritsFrom.find { superiface ->
-            superiface.symtab[field.name]?.arguments
-                ?.find { arg -> arg.name == name } != null
-          } != null)
+                superiface.symtab[field.name]?.arguments
+                    ?.find { arg -> arg.name == name } != null
+              } != null)
             arrayOf(KModifier.OVERRIDE)
           else if (isAbstract) arrayOf(KModifier.ABSTRACT)
           else emptyArray())
@@ -187,4 +198,5 @@ data class ArgumentDefinition(
         }
   }
 }
+
 

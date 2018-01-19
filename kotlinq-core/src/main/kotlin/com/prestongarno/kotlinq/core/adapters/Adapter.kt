@@ -50,6 +50,22 @@ interface GraphQlField<out T> {
 }
 
 
+internal open
+class WrapperDelegate<out T>(val context: GraphqlPropertyDelegate<T>): Adapter by context {
+
+  fun baseContext(): Adapter {
+    var curr: Adapter = context
+    while (curr is WrapperDelegate<*>)
+      curr = curr.context
+    return curr
+  }
+
+  override fun equals(other: Any?): Boolean = context.equals(other)
+
+  override fun hashCode(): Int = context.hashCode()// * 31
+}
+
+
 /**
  * Internal iface to represent a union between [Adapter] and [GraphQlField]
  * @param T the return type of the field

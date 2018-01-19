@@ -69,6 +69,13 @@ class EnumFieldImpl<T>(
 
   var value: T? = default
 
+  private
+  val constValues by lazy {
+    enumClass.java.enumConstants
+        .map { it.name to it }
+        .toMap()
+  }
+
   override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default!!
 
   override fun asList(): GraphqlPropertyDelegate<List<T>> = ListDelegate(this)
@@ -81,8 +88,7 @@ class EnumFieldImpl<T>(
     return value != null
   }
 
-  override fun transform(obj: Any?): T? =
-      enumClass.java.enumConstants?.find { it.name == "$obj" } ?: default
+  override fun transform(obj: Any?): T? = constValues["$obj"] ?: default
 
   override fun toRawPayload(): String = qproperty.graphqlName + args.stringify()
 

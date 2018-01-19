@@ -19,6 +19,7 @@ package com.prestongarno.kotlinq.core.internal
 
 import com.prestongarno.kotlinq.core.QModel
 import com.prestongarno.kotlinq.core.adapters.Adapter
+import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
@@ -152,14 +153,14 @@ fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, buil
 
       while (stack.isNotEmpty()
           && (stack.first is QModel<*>
-          || stack.first is FragmentContext)) {
+              || stack.first is FragmentContext)) {
 
         stack.removeFirst()
         builder.append(EXIT_SCOPE)
 
         if (stack.isNotEmpty() && stack.first.let {
-          it is Adapter && it !is FragmentContext
-        }) builder.append(",")
+              it is Adapter && it !is FragmentContext
+            }) builder.append(",")
 
       }
     } else if (stack.isNotEmpty() && (stack.first is Adapter)) {

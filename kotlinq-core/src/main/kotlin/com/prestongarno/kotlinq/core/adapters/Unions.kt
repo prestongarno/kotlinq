@@ -35,8 +35,12 @@ class UnionStubImpl<out T : QUnionType, A : ArgumentSpec>(
     val arguments: A? = null
 ) : PreDelegate<QModel<*>?, A>(), UnionStub<T, A> {
 
-  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<*>> =
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<*>?> =
       UnionAdapterImpl(property, fragments ?: emptySet(), arguments.toMap())
+
+  // type cast is fine here, as long as we don't call this in context of providing a single property
+  @Suppress("UNCHECKED_CAST")
+  fun asNotNull(): PreDelegate<QModel<*>, A> = this as PreDelegate<QModel<*>, A>
 
   private var fragments: Set<Fragment>? = null
 
@@ -53,16 +57,12 @@ data class UnionAdapterImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
-) : GraphqlPropertyDelegate<QModel<*>>,
+) : GraphqlPropertyDelegate<QModel<*>?>,
     FragmentContext {
 
   var value: QModel<*>? = null
 
-  override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> =
-      GraphqlPropertyDelegate.wrapAsNullable(this, this::value)
-
-  override fun asList(): GraphqlPropertyDelegate<List<QModel<*>>> =
-      ListDelegate(this)
+  override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> = this
 
   override fun accept(result: Any?): Boolean {
     if (result is JsonObject) value = transform(result)
@@ -106,5 +106,17 @@ data class UnionAdapterImpl(
       (qproperty.hashCode() * 31) +
           (args.hashCode() * 31) +
           (fragments.hashCode() * 31)
+
+  override fun asList(): GraphqlPropertyDelegate<List<QModel<*>>> =
+      object : GraphqlPropertyDelegate<QModel<*>>,
+          Adapter by this@UnionAdapterImpl,
+          FragmentContext by this@UnionAdapterImpl {
+        override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*> = this@UnionAdapterImpl.value!! // this should never happen
+        override fun asNullable() = this@UnionAdapterImpl.asNullable()
+        override fun asList() = this@UnionAdapterImpl.asList()
+        override fun transform(obj: Any?) = this@UnionAdapterImpl.transform(obj)
+        override fun equals(other: Any?) = this@UnionAdapterImpl == other
+        override fun hashCode() = this@UnionAdapterImpl.hashCode()
+      }.let { ListDelegate(it) }
 }
 
