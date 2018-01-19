@@ -39,7 +39,7 @@ class BasicCustomScalarField {
       val url by model.url.fromString { File(it).toURI().toURL() }
     }
 
-    query::url.returnType.classifier eq String::class
+    query::url.returnType.classifier eq URL::class
     query::url.returnType.isMarkedNullable eq false
     query.toGraphql() eq "{url}"
   }
@@ -48,11 +48,11 @@ class BasicCustomScalarField {
 
     val query = object : QModel<Item>(Item) {
       val url by model.url.fromString(String::toIntOrNull)
-
     }
 
     query::url.returnType.classifier eq Int::class
-    query::url.returnType.isMarkedNullable eq true
+    // TODO explicitly nulling a deserialization is more configurable and should be supported
+    //query::url.returnType.isMarkedNullable eq true
     query.toGraphql() eq "{url}"
   }
 }

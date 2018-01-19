@@ -27,10 +27,10 @@ import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
 import com.prestongarno.kotlinq.core.schema.QType
-import com.prestongarno.kotlinq.core.schema.stubs.InterfaceProperty
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
 import com.prestongarno.kotlinq.core.schema.properties.Property
-import com.prestongarno.kotlinq.core.schema.stubs.StringProperty
+import com.prestongarno.kotlinq.core.schema.properties.iface.InterfaceProperty
+import com.prestongarno.kotlinq.core.schema.properties.scalar.StringProperty
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 

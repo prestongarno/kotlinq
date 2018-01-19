@@ -19,12 +19,12 @@ import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.neq
 import com.prestongarno.kotlinq.core.properties.delegates.NoArgBlock
-import com.prestongarno.kotlinq.core.schema.stubs.FloatProperty
+import com.prestongarno.kotlinq.core.schema.properties.scalar.FloatProperty
+import com.prestongarno.kotlinq.core.schema.properties.union.UnionProperty
 import com.prestongarno.kotlinq.core.schema.stubs.FloatStub
 import com.prestongarno.kotlinq.core.schema.stubs.InterfaceStub
 import com.prestongarno.kotlinq.core.schema.stubs.StringDelegate
 import com.prestongarno.kotlinq.core.schema.stubs.StringStub
-import com.prestongarno.kotlinq.core.schema.stubs.UnionProperty
 import com.prestongarno.kotlinq.core.schema.stubs.UnionStub
 import com.prestongarno.kotlinq.core.type.BasicTypeList.PersonModel
 import com.prestongarno.kotlinq.core.type.Person

@@ -482,22 +482,22 @@ sealed class GraphQLDelegate {
 
     class QlString : GraphQLListDelegate() {
 
-      fun stub(): NoArgProvider<Array<String>> = schemaProvider { (_, prop) ->
-        newBuilder<Array<String>>() takingArguments ::Never resultingIn { (args, builder) ->
+      fun stub(): NoArgProvider<List<String>> = schemaProvider { (_, prop) ->
+        newBuilder<List<String>>() takingArguments ::Never resultingIn { (args, builder) ->
           StringArrayStub.create(prop.name, args, builder.default)
         }
       }.withAlternate { it.asNullable() }
 
       fun <A : ArgumentSpec> optionallyConfigured()
-          : OptionallyConfiguredProvider<Array<String>, A> = schemaProvider { (_, prop) ->
-        newBuilder<Array<String>>().withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
+          : OptionallyConfiguredProvider<List<String>, A> = schemaProvider { (_, prop) ->
+        newBuilder<List<String>>().withArgs<A>() takingArguments ::Sometimes resultingIn { (args, builder) ->
           StringArrayStub.create(prop.name, args, builder.default)
         }
       }.withAlternate { it allowing Nothing::class }
 
       fun <A : ArgumentSpec> configured()
-          : ConfiguredProvider<Array<String>, A> = schemaProvider { (_, prop) ->
-        newBuilder<Array<String>>().withArgs<A>() takingArguments ::Always resultingIn { (args, builder) ->
+          : ConfiguredProvider<List<String>, A> = schemaProvider { (_, prop) ->
+        newBuilder<List<String>>().withArgs<A>() takingArguments ::Always resultingIn { (args, builder) ->
           StringArrayStub.create(prop.name, args, builder.default)
         }
       }.withAlternate { it allowing Nothing::class }

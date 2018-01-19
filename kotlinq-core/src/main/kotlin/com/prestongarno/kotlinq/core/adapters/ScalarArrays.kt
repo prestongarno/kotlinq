@@ -48,17 +48,16 @@ sealed class PrimitiveArrayStub<out T : Any>(
   }
 }
 
-@CollectionDelegate(Array<String>::class)
 internal
 class StringArrayStub(
     graphqlProperty: GraphQlProperty,
-    private val default: Array<String>? = null,
+    private val default: List<String>? = null,
     args: Map<String, Any> = emptyMap()
-) : PrimitiveArrayStub<Array<String>>(graphqlProperty, args) {
+) : PrimitiveArrayStub<List<String>>(graphqlProperty, args) {
 
-  var value: Array<String>? = null
+  var value: List<String>? = null
 
-  override operator fun getValue(inst: QModel<*>, property: KProperty<*>): Array<String> {
+  override operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<String> {
     return value ?: default ?: throw NullPointerException(
         "Graphql property ${this.qproperty.graphqlName} was null (kotlin property $property)")
   }
@@ -66,14 +65,14 @@ class StringArrayStub(
   override fun accept(result: Any?): Boolean =
       transform(result)?.also { value = it } != null
 
-  override fun asNullable(): GraphqlPropertyDelegate<Array<String>?> =
+  override fun asNullable(): GraphqlPropertyDelegate<List<String>?> =
       wrapAsNullable(this, this::value)
 
-  override fun transform(obj: Any?): Array<String>? =
-      (obj as? Array<*>)?.map(Any?::toString)?.toTypedArray()
+  override fun transform(obj: Any?): List<String>? =
+      (obj as? Array<*>)?.map(Any?::toString)
 
   companion object {
-    fun create(propertyName: String, args: ArgumentSpec? = null, default: Array<String>? = null) =
+    fun create(propertyName: String, args: ArgumentSpec? = null, default: List<String>? = null) =
         StringArrayStub(from("String", true, propertyName), default, args.toMap())
   }
 }
