@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.api.ModelProvider
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.NullableElementListDelegate
@@ -46,12 +46,12 @@ interface Adapter {
  * the backing field information & value(s) for a GraphQL property
  * @param T : The type of object or value which this provides */
 interface GraphQlField<out T> {
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): T
+  operator fun getValue(inst: Model<*>, property: KProperty<*>): T
 }
 
 
 internal open
-class WrapperDelegate<out T>(val context: GraphqlPropertyDelegate<T>): Adapter by context {
+class WrapperDelegate<out T : Any?>(val context: GraphqlPropertyDelegate<T>): Adapter by context {
 
   fun baseContext(): Adapter {
     var curr: Adapter = context
@@ -95,7 +95,7 @@ interface GraphqlPropertyDelegate<out T : Any?> : GraphQlField<T>, Adapter {
    * Called on construction of a graphql object model.
    * Default behaviour: binds this property delegate to the instance of [graphqlModel]
    */
-  fun bindToContext(graphqlModel: QModel<*>) = apply { graphqlModel.register(this) }
+  fun bindToContext(graphqlModel: Model<*>) = apply { graphqlModel.register(this) }
 
   companion object {
 
@@ -111,7 +111,7 @@ private
 class NullableDelegate<out T: Any?>(
     private val instance: GraphqlPropertyDelegate<T>,
     private val ref: () -> T?
-) : Adapter by instance, GraphqlPropertyDelegate<T?> {
+) : WrapperDelegate<T?>(instance), GraphqlPropertyDelegate<T?> by instance {
 
   override fun asList(): GraphqlPropertyDelegate<List<T?>> =
       NullableElementListDelegate(this)
@@ -126,7 +126,15 @@ class NullableDelegate<out T: Any?>(
 
   override fun transform(obj: Any?): T? = instance.transform(obj)
   override fun asNullable(): GraphqlPropertyDelegate<T?> = this
-  override fun getValue(inst: QModel<*>, property: KProperty<*>) = ref()
+  override fun getValue(inst: Model<*>, property: KProperty<*>) = ref()
   override fun equals(other: Any?): Boolean = instance == other
   override fun hashCode(): Int = instance.hashCode() * 31
+  override val args: Map<String, Any>
+    get() = instance.args
+  override val qproperty: GraphQlProperty
+    get() = instance.qproperty
+
+  override fun toRawPayload(): String {
+    return instance.toRawPayload()
+  }
 }

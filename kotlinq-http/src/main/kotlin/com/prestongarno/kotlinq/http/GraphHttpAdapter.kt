@@ -19,7 +19,7 @@
 
 package com.prestongarno.kotlinq.http
 
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.http.internal.Http4k
 import com.prestongarno.kotlinq.http.internal.RequestType
 
@@ -29,15 +29,15 @@ interface GraphHttpAdapter {
 
   var authorization: Authorization?
 
-  fun <T : QModel<*>> query(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(RequestType.QUERY, this, `for`)
+  fun <T : Model<*>> query(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(RequestType.QUERY, this, `for`)
 
-  fun <T : QModel<*>> mutate(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(RequestType.MUTATION, this, `for`)
+  fun <T : Model<*>> mutate(`for`: (() -> T)): GraphQlRequest<T> = RequestBuilder(RequestType.MUTATION, this, `for`)
 }
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 /**
  * A wrapper class for a GraphQL request */
-interface GraphQlRequest<T : QModel<*>> {
+interface GraphQlRequest<T : Model<*>> {
   fun onSuccess(handler: (T) -> Unit): GraphQlRequest<T>
 
   fun onError(handler: (errorCode: Int, message: String) -> Unit): GraphQlRequest<T>
@@ -48,7 +48,7 @@ interface GraphQlRequest<T : QModel<*>> {
 }
 
 internal
-class RequestBuilder<T : QModel<*>>(
+class RequestBuilder<T : Model<*>>(
     internal val type: RequestType,
     internal val adapter: GraphHttpAdapter,
     internal val `for`: (() -> T)) : GraphQlRequest<T> {

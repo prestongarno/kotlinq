@@ -17,13 +17,11 @@
 
 package com.prestongarno.kotlinq.core.customscalars
 
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
-import com.prestongarno.kotlinq.core.schema.stubs.CustomScalarStub
 import org.junit.Test
-import java.net.URI
 
 object ResourceBundle : QType {
   val urls by QSchemaType.QCustomScalar.List.stub<URL>()
@@ -33,7 +31,7 @@ class BasicCustomScalarLists {
 
   @Test fun `custom scalar list is possible`() {
 
-    val query = object : QModel<ResourceBundle>(ResourceBundle) {
+    val query = object : Model<ResourceBundle>(ResourceBundle) {
       val urls by model.urls
     }
     query::urls.returnType.arguments

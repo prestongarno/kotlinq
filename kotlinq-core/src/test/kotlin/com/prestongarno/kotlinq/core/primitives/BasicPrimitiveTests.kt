@@ -20,7 +20,7 @@
 package com.prestongarno.kotlinq.core.primitives
 
 import com.google.common.truth.Truth.assertThat
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.eq
 import com.prestongarno.kotlinq.core.schema.QType
@@ -42,7 +42,7 @@ object Person : QType {
 class BasicPrimitiveTests {
 
   @Test fun `string field is possible`() {
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
       val name by model.name
     }
     assertThat(query::name.returnType.classifier)
@@ -52,7 +52,7 @@ class BasicPrimitiveTests {
   }
 
   @Test fun `integer field is possible`() {
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
       val age by model.age
     }
     assertThat(query::age.returnType.classifier)
@@ -62,7 +62,7 @@ class BasicPrimitiveTests {
   }
 
   @Test fun `float field is possible`() {
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
       val gpa by model.gpa
     }
     assertThat(query::gpa.returnType.classifier)
@@ -72,7 +72,7 @@ class BasicPrimitiveTests {
   }
 
   @Test fun `boolean field is possible`() {
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
       val gradated by model.hasHighSchoolDiploma
     }
     assertThat(query::gradated.returnType.classifier)
@@ -82,7 +82,7 @@ class BasicPrimitiveTests {
   }
 
   @Test fun `delegate with empty invocation blocks is possible`() {
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
       val name by model.name { /* Nothing */ }
       val age by model.age { /* Nothing */ }
       val gpa by model.gpa { /* Nothing */ }
@@ -117,7 +117,7 @@ class BasicPrimitiveTests {
 
   @Test fun `graphql string with default value is possible`() {
 
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
 
       val name by model.name {
         default = "Preston Garno"
@@ -147,7 +147,7 @@ class BasicPrimitiveTests {
 
   @Test fun `graphql with custom arguments added is possible`() {
 
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
 
       val name by model.name {
         config { arguments.put("Hello", "World") }
@@ -181,12 +181,12 @@ class BasicPrimitiveTests {
       config { arguments.put("Hello", "World") }
     }
 
-    val query = object : QModel<Person>(Person) {
+    val query = object : Model<Person>(Person) {
       val name by delegateStub
     }
 
 
-    val query2 = object : QModel<Person>(Person) {
+    val query2 = object : Model<Person>(Person) {
       val name by delegateStub
     }
 

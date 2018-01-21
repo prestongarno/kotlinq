@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.BooleanArrayStub
 import com.prestongarno.kotlinq.core.adapters.EnumAdapterImpl
 import com.prestongarno.kotlinq.core.adapters.FloatArrayStub
@@ -174,7 +174,7 @@ sealed class GraphQLDelegate {
   class Interface : GraphQLDelegate() {
 
     fun <I> stub(clazz: KClass<I>)
-        : StubProvider<NoArgBlock<InterfaceStub<I, ArgBuilder>, QModel<I>?>>
+        : StubProvider<NoArgBlock<InterfaceStub<I, ArgBuilder>, Model<I>?>>
         where I : QInterface, I : QType =
         contextBuilder { qproperty ->
           noArgBlock(qproperty, { InterfaceStubImpl<I, ArgBuilder>(it) })
@@ -190,10 +190,10 @@ sealed class GraphQLDelegate {
         }
 
     fun <I, A> configured(clazz: KClass<I>)
-        : StubProvider<ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>>
+        : StubProvider<ConfiguredBlock<InterfaceStub<I, A>, A, Model<I>?>>
         where I : QInterface, I : QType, A : ArgumentSpec =
         contextBuilder { qproperty ->
-          configuredBlock<InterfaceStubImpl<I, A>, A, QModel<I>?>(qproperty, { InterfaceStubImpl(it) })
+          configuredBlock<InterfaceStubImpl<I, A>, A, Model<I>?>(qproperty, { InterfaceStubImpl(it) })
         }.let { singleBuilder(clazz.graphQlName(), false, builder = it) }
 
     override val list: Lists.Interface = Lists.Interface()
@@ -203,7 +203,7 @@ sealed class GraphQLDelegate {
   class Union : GraphQLDelegate() {
 
     fun <T : QUnionType> stub(obj: T)
-        : StubProvider<NoArgBlock<UnionStub<T, ArgBuilder>, QModel<*>?>> =
+        : StubProvider<NoArgBlock<UnionStub<T, ArgBuilder>, Model<*>?>> =
         contextBuilder {
           noArgBlock(it, { args -> UnionStubImpl(obj, args) })
         }.let { context -> Grub.singleBuilder(obj::class.graphQlName(), false, builder = context) }
@@ -215,9 +215,9 @@ sealed class GraphQLDelegate {
         }.let { context -> Grub.singleBuilder(obj::class.graphQlName(), false, builder = context) }
 
     fun <T : QUnionType, A : ArgumentSpec> configured(obj: T)
-        : StubProvider<ConfiguredBlock<UnionStub<T, A>, A, QModel<*>?>> =
+        : StubProvider<ConfiguredBlock<UnionStub<T, A>, A, Model<*>?>> =
         contextBuilder {
-          configuredBlock<UnionStubImpl<T, A>, A, QModel<*>?>(it, { UnionStubImpl(obj, it) })
+          configuredBlock<UnionStubImpl<T, A>, A, Model<*>?>(it, { UnionStubImpl(obj, it) })
         }.let { context -> Grub.singleBuilder(obj::class.graphQlName(), false, builder = context) }
 
     override val list: Lists.Union = Lists.Union()

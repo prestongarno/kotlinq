@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.enums
 
 import com.prestongarno.kotlinq.core.schema.QEnumType
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
@@ -50,7 +50,7 @@ class BasicEnumLists {
 
   @Test fun `enum list basic delegate type is possible`() {
 
-    val query = object : QModel<Data>(Data) {
+    val query = object : Model<Data>(Data) {
       val numbers by model.numberEnums
     }
     query::numbers.returnType
@@ -60,7 +60,7 @@ class BasicEnumLists {
 
   @Test fun `enum list from response is valid`() {
 
-    val query = object : QModel<Data>(Data) {
+    val query = object : Model<Data>(Data) {
       val numbers by model.numberEnums
     }
     query.toGraphql() eq "{numberEnums}"

@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.schema
 
 import com.prestongarno.kotlinq.core.PropertyMapper
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.internal.bracket
@@ -60,7 +60,7 @@ interface QUnionType : QType {
 
   val queue: FragmentProvider
 
-  fun on(init: () -> QModel<QType>)
+  fun on(init: () -> Model<QType>)
 
   companion object {
     fun new(): QUnionType = QUnionTypeImpl()
@@ -71,7 +71,7 @@ interface QUnionType : QType {
 
     override val queue: FragmentProvider = FragmentProvider()
 
-    override fun on(init: () -> QModel<QType>) {
+    override fun on(init: () -> Model<QType>) {
       queue.addFragment(Fragment(init))
     }
   }
@@ -107,7 +107,7 @@ interface QInputType : QSchemaType {
 
       /**
        * TODO -> [com.prestongarno.kotlinq.core.internal.formatAs] is used in
-       * [com.prestongarno.kotlinq.core.internal.stringify] and allows [QModel]
+       * [com.prestongarno.kotlinq.core.internal.stringify] and allows [Model]
        * values in the backing map. This is illegal in the GraphQL specificaton
        * for input object types
        */

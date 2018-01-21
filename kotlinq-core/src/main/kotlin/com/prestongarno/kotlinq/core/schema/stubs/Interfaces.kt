@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.delegates.ConfiguredBlock
@@ -44,9 +44,9 @@ interface InterfaceStub<in I, out A : ArgumentSpec>
     GraphqlDslBuilder<A>
     where I : QInterface, I : QType {
 
-  interface OptionallyConfigured<I, A> : ConfiguredBlock<InterfaceStub<I, A>, A, QModel<I>?>
+  interface OptionallyConfigured<I, A> : ConfiguredBlock<InterfaceStub<I, A>, A, Model<I>?>
       where I : QInterface, I : QType, A : ArgumentSpec {
-    operator fun invoke(block: InterfaceStub<I, ArgBuilder>.() -> Unit): DelegateProvider<QModel<I>?>
+    operator fun invoke(block: InterfaceStub<I, ArgBuilder>.() -> Unit): DelegateProvider<Model<I>?>
   }
 
   companion object {
@@ -56,9 +56,9 @@ interface InterfaceStub<in I, out A : ArgumentSpec>
         where I : QInterface, I : QType, A : ArgumentSpec =
 
         object : OptionallyConfigured<I, A> {
-          override fun invoke(block: InterfaceStub<I, ArgBuilder>.() -> Unit): DelegateProvider<QModel<I>?> =
+          override fun invoke(block: InterfaceStub<I, ArgBuilder>.() -> Unit): DelegateProvider<Model<I>?> =
               delegateProvider { model, _ -> InterfaceStubImpl<I, ArgBuilder>(ArgBuilder()).apply(block).toDelegate(qproperty).bindToContext(model) }
-          override fun invoke(args: A, block: InterfaceStub<I, A>.() -> Unit): DelegateProvider<QModel<I>?> =
+          override fun invoke(args: A, block: InterfaceStub<I, A>.() -> Unit): DelegateProvider<Model<I>?> =
               delegateProvider { model, _ -> InterfaceStubImpl<I, A>(args).apply(block).toDelegate(qproperty).bindToContext(model) }
         }
   }

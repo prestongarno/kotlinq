@@ -2,7 +2,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.InterfaceStubImpl
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
@@ -24,30 +24,30 @@ interface InterfaceListStub {
 
 
   interface NoArg<T> : InterfaceListStub where T : QInterface, T : QType {
-    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<QModel<T>?>>
+    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<Model<T>?>>
 
     interface NotNull<T> where T : QInterface, T : QType {
-      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<QModel<T>>>
+      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<Model<T>>>
     }
 
   }
 
 
   interface OptionallyConfigured<T, A : ArgumentSpec> : InterfaceListStub, Configured<T, A> where T : QInterface, T : QType {
-    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<QModel<T>?>>
+    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<Model<T>?>>
 
     interface NotNull<T, A : ArgumentSpec> : Configured.NotNull<T, A> where T : QInterface, T : QType {
-      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<QModel<T>>>
+      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: IBlock<T, ArgBuilder>): DelegateProvider<List<Model<T>>>
     }
   }
 
 
   interface Configured<T, A : ArgumentSpec> : InterfaceListStub where T : QInterface, T : QType {
 
-    operator fun invoke(arguments: A, block: IBlock<T, A>): DelegateProvider<List<QModel<T>?>>
+    operator fun invoke(arguments: A, block: IBlock<T, A>): DelegateProvider<List<Model<T>?>>
 
     interface NotNull<T, A : ArgumentSpec> where T : QInterface, T : QType {
-      operator fun invoke(arguments: A, block: IBlock<T, A>): DelegateProvider<List<QModel<T>>>
+      operator fun invoke(arguments: A, block: IBlock<T, A>): DelegateProvider<List<Model<T>>>
     }
   }
 
@@ -61,7 +61,7 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
   class NoArg<T>(qprop: GraphQlProperty) : InterfaceListStubImpl<T, ArgBuilder>(qprop), InterfaceListStub.NoArg<T> where T : QInterface, T : QType {
 
     override fun invoke(arguments: ArgBuilder, block: IBlock<T, ArgBuilder>)
-        : InternalDelegateProvider<List<QModel<T>?>> =
+        : InternalDelegateProvider<List<Model<T>?>> =
         newNullableDelegate(arguments, block)
 
 
@@ -73,7 +73,7 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
               T : QType {
 
       override fun invoke(arguments: ArgBuilder, block: IBlock<T, ArgBuilder>)
-          : DelegateProvider<List<QModel<T>>> =
+          : DelegateProvider<List<Model<T>>> =
           newDelegate(arguments, block)
     }
   }
@@ -85,11 +85,11 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
       where T : QInterface,
             T : QType {
     override fun invoke(arguments: ArgBuilder, block: IBlock<T, ArgBuilder>)
-        : DelegateProvider<List<QModel<T>?>> =
+        : DelegateProvider<List<Model<T>?>> =
         newNullableDelegate(arguments, block)
 
     override fun invoke(arguments: A, block: IBlock<T, A>)
-        : DelegateProvider<List<QModel<T>?>> =
+        : DelegateProvider<List<Model<T>?>> =
         newNullableDelegate(arguments, block)
 
 
@@ -101,11 +101,11 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
               T : QType {
 
       override fun invoke(arguments: ArgBuilder, block: IBlock<T, ArgBuilder>)
-          : DelegateProvider<List<QModel<T>>> =
+          : DelegateProvider<List<Model<T>>> =
           newDelegate(arguments, block)
 
       override fun invoke(arguments: A, block: IBlock<T, A>)
-          : DelegateProvider<List<QModel<T>>> =
+          : DelegateProvider<List<Model<T>>> =
           newDelegate(arguments, block)
     }
   }
@@ -118,7 +118,7 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
             T : QType {
 
     override fun invoke(arguments: A, block: IBlock<T, A>)
-        : DelegateProvider<List<QModel<T>?>> =
+        : DelegateProvider<List<Model<T>?>> =
         newNullableDelegate(arguments, block)
 
 
@@ -130,7 +130,7 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
               T : QType {
 
       override fun invoke(arguments: A, block: IBlock<T, A>)
-          : DelegateProvider<List<QModel<T>>> =
+          : DelegateProvider<List<Model<T>>> =
           newDelegate(arguments, block)
     }
   }
@@ -138,7 +138,7 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
   fun <T, X : ArgumentSpec> newDelegate(
       args: X,
       block: IBlock<T, X>
-  ): InternalDelegateProvider<List<QModel<T>>>
+  ): InternalDelegateProvider<List<Model<T>>>
       where T : QInterface,
             T : QType
       = delegateProvider { inst, _ ->
@@ -152,7 +152,7 @@ sealed class InterfaceListStubImpl<T, A>(val qproperty: GraphQlProperty)
   fun <T, X : ArgumentSpec> newNullableDelegate(
       args: X,
       block: IBlock<T, X>
-  ): InternalDelegateProvider<List<QModel<T>?>>
+  ): InternalDelegateProvider<List<Model<T>?>>
       where T : QInterface,
             T : QType
       = delegateProvider { inst, _ ->

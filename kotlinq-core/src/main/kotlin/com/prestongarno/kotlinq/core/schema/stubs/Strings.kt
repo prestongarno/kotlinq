@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
@@ -100,13 +100,13 @@ interface StringDelegate<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
 internal
 fun <T : PrimitiveStub> T.asProvider() = object : ScalarDelegate<T> {
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): T =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>): T =
       inst.register(this@asProvider)
 }
 
 private class StringNoArgImpl(val propertyName: String) : StringDelegate.NoArg {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): StringStub =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>): StringStub =
       ScalarPreDelegate
           .PreString(ArgBuilder())
           .toDelegate(propertyName)
@@ -117,7 +117,7 @@ private class StringNoArgImpl(val propertyName: String) : StringDelegate.NoArg {
 
   internal
   fun asNullable(): StringDelegate.NoArg.Nullable = object : StringDelegate.NoArg.Nullable {
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<String?> =
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphQlField<String?> =
         ScalarPreDelegate.PreString(ArgBuilder())
             .toDelegate(propertyName)
             .wrapAsNullable()
@@ -160,7 +160,7 @@ private class OptionalStringImpl<A : ArgumentSpec>(val propertyName: String) : S
   override fun invoke(block: StringDelegate<ArgBuilder>.() -> Unit) =
       new(propertyName, ArgBuilder(), block)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
       ScalarPreDelegate
           .PreString(ArgBuilder())
           .toDelegate(propertyName)
@@ -178,7 +178,7 @@ private class OptionalStringImpl<A : ArgumentSpec>(val propertyName: String) : S
             .wrapAsNullable()
             .delegatingTo()
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
         ScalarPreDelegate
             .PreString(ArgBuilder())
             .toDelegate(propertyName)

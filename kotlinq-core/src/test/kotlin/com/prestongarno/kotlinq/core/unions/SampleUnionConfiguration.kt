@@ -20,7 +20,7 @@
 package com.prestongarno.kotlinq.core.unions
 
 import com.prestongarno.kotlinq.core.eq
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.schema.QUnionType
@@ -29,8 +29,8 @@ import org.junit.Test
 
 
 object Thing : QUnionType by QUnionType.new() {
-  fun onCar(init: () -> QModel<Car>) = on(init)
-  fun onHamburger(init: () -> QModel<Hamburger>) = on(init)
+  fun onCar(init: () -> Model<Car>) = on(init)
+  fun onHamburger(init: () -> Model<Hamburger>) = on(init)
 }
 
 object Hamburger : QType {
@@ -50,17 +50,17 @@ object Query : QType {
 
 class SampleUnionConfiguration {
 
-  class CarModel : QModel<Car>(Car) {
+  class CarModel : Model<Car>(Car) {
     val make by Car.make
     val carModel by Car.carModel
   }
-  class HamburgerModel : QModel<Hamburger>(Hamburger) {
+  class HamburgerModel : Model<Hamburger>(Hamburger) {
     val ingredientsList by Hamburger.ingredients
   }
 
   @Test fun `union field and fragments is possible`() {
 
-    val query = object : QModel<Query>(Query) {
+    val query = object : Model<Query>(Query) {
 
       val thing by Query.thing {
         fragment {
@@ -78,7 +78,7 @@ class SampleUnionConfiguration {
   @Ignore
   @Test fun `union list field and fragments is possible`() {
 
-    val query = object : QModel<Query>(Query) {
+    val query = object : Model<Query>(Query) {
 
       val thingList by Query.things {
         fragment {

@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.customscalars
 
 import com.prestongarno.kotlinq.core.schema.CustomScalar
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.*
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
@@ -35,7 +35,7 @@ class BasicCustomScalarField {
 
   @Test fun `custom scalar field is possible`() {
 
-    val query = object : QModel<Item>(Item) {
+    val query = object : Model<Item>(Item) {
       val url by model.url.fromString { File(it).toURI().toURL() }
     }
 
@@ -46,7 +46,7 @@ class BasicCustomScalarField {
 
   @Test fun `custom scalar field is possible 2`() {
 
-    val query = object : QModel<Item>(Item) {
+    val query = object : Model<Item>(Item) {
       val url by model.url.fromString(String::toIntOrNull)
     }
 

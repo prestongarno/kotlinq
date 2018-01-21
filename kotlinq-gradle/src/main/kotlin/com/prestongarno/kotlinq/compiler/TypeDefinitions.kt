@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.compiler
 
 import com.prestongarno.kotlinq.compiler.GraphQlPropertyAlias.Companion.from
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.schema.CustomScalar
 import com.prestongarno.kotlinq.core.schema.QEnumType
@@ -164,7 +164,7 @@ class UnionDef(override val name: String, val types: List<String>) : SchemaType(
       }).apply {
         // ugly java calling code wtf
         addParameter(ParameterSpec.builder("init",
-            LambdaTypeName.get(returnType = ParameterizedTypeName.get(QModel::class.asTypeName(),
+            LambdaTypeName.get(returnType = ParameterizedTypeName.get(Model::class.asTypeName(),
                 type.name.asTypeName()))).build())
         addCode("on(init)")
       }.build()

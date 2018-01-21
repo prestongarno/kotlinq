@@ -4,7 +4,7 @@ package com.prestongarno.kotlinq.core.api
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.internal.empty
@@ -163,7 +163,7 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
     override fun invoke(arguments: A, block: DefaultBuilderBlock<T, A>) =
         delegateProvider { qmodel, _ -> create(default, arguments, block, ctor).bindToContext(qmodel) }
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
         invoke(empty()).provideDelegate(inst, property)
 
     override fun asList(): OptionallyConfigured<List<T>, A> = object : OptionallyConfigured<List<T>, A>(
@@ -173,7 +173,7 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
     internal
     inner class Nullable : GraphqlDslBuilder.OptionallyConfiguredContext<T?, A>, DelegateContext<T, A> {
 
-      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> {
+      override fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphQlField<T?> {
         return invoke(empty())
             .provideDelegate(inst, property)
             .asNullable()
@@ -218,7 +218,7 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
     override fun asList(): GraphQlDelegateContext.NoArg<List<T>> =
         ContextWrapper(this)
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) = ArgBuilder().let {
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) = ArgBuilder().let {
       ctor(it to DefaultBuilderImpl.Builder(it, default))
     }.bindToContext(inst)
 
@@ -237,7 +237,7 @@ class GraphQlDelegateContext<T, A : ArgumentSpec>(
           }
 
 
-      override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) = ArgBuilder().let {
+      override fun provideDelegate(inst: Model<*>, property: KProperty<*>) = ArgBuilder().let {
         ctor(it to DefaultBuilderImpl.Builder(it, default))
       }.asNullable()
           .bindToContext(inst)

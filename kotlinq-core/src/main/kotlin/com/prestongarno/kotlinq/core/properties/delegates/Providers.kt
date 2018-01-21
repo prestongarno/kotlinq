@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.properties.delegates
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.PreDelegate
@@ -35,7 +35,7 @@ import kotlin.reflect.KProperty
  */
 interface DelegateProvider<out T : Any?> {
 
-  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T>
+  operator fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphQlField<T>
 
   interface NoArgDelegate<out U : GraphqlDslBuilder<ArgBuilder>, out T>
     : NoArg<U, T>,
@@ -44,16 +44,16 @@ interface DelegateProvider<out T : Any?> {
   companion object {
 
     internal
-    fun <T> delegateProvider(constructor: (QModel<*>, KProperty<*>) -> GraphqlPropertyDelegate<T>): InternalDelegateProvider<T> =
+    fun <T> delegateProvider(constructor: (Model<*>, KProperty<*>) -> GraphqlPropertyDelegate<T>): InternalDelegateProvider<T> =
         object : InternalDelegateProvider<T> {
-          override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) = constructor(inst, property)
+          override fun provideDelegate(inst: Model<*>, property: KProperty<*>) = constructor(inst, property)
         }
   }
 }
 
 internal
 interface InternalDelegateProvider<out T : Any?> : DelegateProvider<T> {
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphqlPropertyDelegate<T>
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphqlPropertyDelegate<T>
 
   fun asListDelegate(): InternalDelegateProvider<List<T>> =
       delegateProvider { qModel, kProperty -> provideDelegate(qModel, kProperty).asList() }

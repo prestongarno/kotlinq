@@ -17,9 +17,8 @@
 
 package com.prestongarno.kotlinq.core.internal
 
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.Adapter
-import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
@@ -32,7 +31,7 @@ private const val ENTER_SCOPE: String = "{"
 private const val EXIT_SCOPE: String = "}"
 
 internal
-fun QModel<*>.pretty(): String {
+fun Model<*>.pretty(): String {
   val fragments = getFragments().mapIndexed { index, fragment -> fragment to "frag${fragment.model.graphqlType}$index" }.toMap()
   return printNode(fragments).let {
     if (fragments.isEmpty()) it else it + fragments.entries.sortedBy(Map.Entry<Fragment, String>::value)
@@ -46,7 +45,7 @@ fun QModel<*>.pretty(): String {
  * what even is a stack? mutual recursion is all I know
  */
 private
-fun QModel<*>.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
+fun Model<*>.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
   val indent = "\n${INDENT.repeat(indentLevel)}"
   return this.fields.entries.map(MutableMap.MutableEntry<String, Adapter>::value)
       .joinToString(prefix = "{" + indent, separator = indent, postfix = "\n${INDENT.repeat(indentLevel - 1)}}") {
@@ -77,8 +76,8 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
  * Stack-based algorithm to print GraphQL requests
  *
  * Rules:
- *   * Stack is type Any, but only [Adapter] & [QModel] ever added/removed
- *   * [QModel] & [FragmentContext] are critical points
+ *   * Stack is type Any, but only [Adapter] & [Model] ever added/removed
+ *   * [Model] & [FragmentContext] are critical points
  *
  *   * Algorithm:
  *      - If [curr] is an [GraphQlProperty], print field name and arguments
@@ -101,10 +100,10 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
  *
  * **WARNING** this reverses the order of printing, need to fix tests before using this by default
  */
-internal fun extractedPayload(root: QModel<*>): String = extractedPayload(root, null)
+internal fun extractedPayload(root: Model<*>): String = extractedPayload(root, null)
 
 private
-fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
+fun extractedPayload(root: Model<*>, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
 
   val stack = LinkedList<Any>()
   val fragments = frags ?: root.getFragments().mapIndexed { index, fragment ->
@@ -142,17 +141,17 @@ fun extractedPayload(root: QModel<*>, frags: Map<Fragment, String>? = null, buil
     } else if (curr is Fragment) {
       builder.append("...")
       builder.append(fragments[curr]!!) // fail fast
-    } else if (curr is QModel<*>) {
+    } else if (curr is Model<*>) {
       stack.addFirst(curr)
       curr.getFields().asIterable().reversed().forEach(pushField)
       builder.append(ENTER_SCOPE)
       continue
     }
 
-    if (stack.isNotEmpty() && (stack.first is QModel<*> || stack.first is FragmentContext)) {
+    if (stack.isNotEmpty() && (stack.first is Model<*> || stack.first is FragmentContext)) {
 
       while (stack.isNotEmpty()
-          && (stack.first is QModel<*>
+          && (stack.first is Model<*>
               || stack.first is FragmentContext)) {
 
         stack.removeFirst()

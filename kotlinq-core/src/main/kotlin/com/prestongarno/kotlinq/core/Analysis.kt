@@ -17,17 +17,15 @@
 
 package com.prestongarno.kotlinq.core
 
-import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.api.ModelProvider
-import kotlin.coroutines.experimental.buildSequence
 
 internal
-fun QModel<*>.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
+fun Model<*>.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
 
 private
-fun getFragments(root: QModel<*>, collector: Set<QModel<*>>): Set<Fragment> {
+fun getFragments(root: Model<*>, collector: Set<Model<*>>): Set<Fragment> {
   val fragmentEdges = root.getFields()
       .asSequence()
       .filterIsInstance<FragmentContext>()

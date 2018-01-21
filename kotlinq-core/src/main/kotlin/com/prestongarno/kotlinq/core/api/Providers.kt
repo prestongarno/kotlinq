@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core.api
 
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.PropertyType
@@ -50,7 +50,7 @@ fun KDelegateContext<QSchemaType>.toGraphQlProperty(
 
 internal
 interface ModelProvider {
-  val value: QModel<*>
+  val value: Model<*>
 }
 
 /**
@@ -61,7 +61,7 @@ interface FragmentContext/*<I> where I : QType, I : QInterface*/ {
   val fragments: Set<Fragment>
 }
 
-class Fragment(val initializer: () -> QModel<QType>) {
+class Fragment(val initializer: () -> Model<QType>) {
   internal val model by lazy(initializer)
 
   override fun toString(): String {

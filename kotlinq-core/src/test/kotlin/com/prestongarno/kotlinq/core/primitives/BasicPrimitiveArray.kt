@@ -20,7 +20,7 @@
 package com.prestongarno.kotlinq.core.primitives
 
 import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.schema.QType
 import org.junit.Test
@@ -70,7 +70,7 @@ class BasicPrimitiveArray {
 
   @Test fun `string array is possible`() {
 
-    val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
+    val query = object : Model<AnonymousClassroom>(AnonymousClassroom) {
       val names by model.studentNames
     }
 
@@ -81,7 +81,7 @@ class BasicPrimitiveArray {
 
   @Test fun `integer array is possible`() {
 
-    val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
+    val query = object : Model<AnonymousClassroom>(AnonymousClassroom) {
       val ages by model.studentAges
     }
     query::ages.returnType.classifier eq IntArray::class
@@ -90,7 +90,7 @@ class BasicPrimitiveArray {
 
   @Test fun `float array is possible`() {
 
-    val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
+    val query = object : Model<AnonymousClassroom>(AnonymousClassroom) {
       val gpas by model.studentGpa
     }
     query::gpas.returnType.classifier eq FloatArray::class
@@ -98,7 +98,7 @@ class BasicPrimitiveArray {
   }
 
   @Test fun `boolean array is possible`() {
-    val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
+    val query = object : Model<AnonymousClassroom>(AnonymousClassroom) {
       val passing by model.studentPassing
     }
     query::passing.returnType.classifier eq BooleanArray::class
@@ -107,7 +107,7 @@ class BasicPrimitiveArray {
 
   @Test fun `arrays of all types with empty invocation blocks is possible`() {
 
-    val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
+    val query = object : Model<AnonymousClassroom>(AnonymousClassroom) {
 
       val names by model.studentNames { /* nothing */ }
 
@@ -124,7 +124,7 @@ class BasicPrimitiveArray {
 
   @Test fun `arrays of all types with dynamic arguments is possible`() {
 
-    val query = object : QModel<AnonymousClassroom>(AnonymousClassroom) {
+    val query = object : Model<AnonymousClassroom>(AnonymousClassroom) {
 
       val names by model.studentNames {
         config {

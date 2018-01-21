@@ -21,11 +21,10 @@ package com.prestongarno.kotlinq.core.type
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.schema.QEnumType
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.QTypes
 import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.core.eq
-import com.prestongarno.kotlinq.core.getFragments
 import org.junit.Ignore
 import org.junit.Test
 
@@ -53,7 +52,7 @@ enum class ListOrder : QEnumType {
 
 class BasicTypeList {
 
-  open class PersonModel : QModel<Person>(Person) {
+  open class PersonModel : Model<Person>(Person) {
     val name by model.name
     val age by model.age
   }
@@ -61,7 +60,7 @@ class BasicTypeList {
   @Ignore
   @Test fun `type list field is possible`() {
     
-    val query = object : QModel<Team>(Team) {
+    val query = object : Model<Team>(Team) {
       val teamMembers by Team.members(BasicTypeList::PersonModel)
     }
 
@@ -73,7 +72,7 @@ class BasicTypeList {
   @Ignore
   @Test fun `configured type list field is possible`() {
 
-    val query = object : QModel<Team>(Team) {
+    val query = object : Model<Team>(Team) {
       val members by Team.configMembers(BasicTypeList::PersonModel)(Team.ConfigMembersArgs(100))
     }
     query::members.returnType.arguments

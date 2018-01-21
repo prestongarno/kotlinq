@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.core.adapters
 
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.internal.stringify
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
@@ -42,7 +42,7 @@ class CustomScalarField<out Q: Any>(
 
   private val value: Q? get() = _value ?: default
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): Q = value!!
+  override fun getValue(inst: Model<*>, property: KProperty<*>): Q = value!!
 
   override fun accept(result: Any?): Boolean {
     _value = transform(result)

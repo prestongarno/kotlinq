@@ -21,7 +21,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.toMap
@@ -35,7 +35,7 @@ import kotlin.reflect.KProperty
 
 interface ScalarDelegate<out D : PrimitiveStub> {
 
-  operator fun provideDelegate(inst: QModel<*>, property: KProperty<*>): D
+  operator fun provideDelegate(inst: Model<*>, property: KProperty<*>): D
 
   interface NoArg<out T : GraphqlDslBuilder<ArgBuilder>, out S : PrimitiveStub> : ScalarDelegate<S> {
     operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: T.() -> Unit = empty()): ScalarDelegate<S>
@@ -124,7 +124,7 @@ sealed class PrimitiveStub(
 
 }
 
-internal fun <T : PrimitiveStub> T.bindToContext(inst: QModel<*>) = apply {
+internal fun <T : PrimitiveStub> T.bindToContext(inst: Model<*>) = apply {
   inst.register(this)
 }
 
@@ -138,7 +138,7 @@ class StringStub(
   internal
   var value: String? = null
 
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): String {
+  operator fun getValue(inst: Model<*>, property: KProperty<*>): String {
     return value ?: default ?: throw NullPointerException(
         "GraphQL property ${this.qproperty.graphqlName} was null (kotlin property $property)")
   }
@@ -160,7 +160,7 @@ class IntStub(
   internal
   var value = default
 
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): Int = value
+  operator fun getValue(inst: Model<*>, property: KProperty<*>): Int = value
 
   override fun accept(result: Any?): Boolean {
     value = result as? Int ?: (result?.toString()?.toIntOrNull() ?: value)
@@ -178,7 +178,7 @@ class FloatStub(
 
   internal var value = default
 
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): Float = value
+  operator fun getValue(inst: Model<*>, property: KProperty<*>): Float = value
 
   override fun accept(result: Any?): Boolean {
     value = result as? Float ?: (result?.toString()?.toFloatOrNull() ?: value)
@@ -196,7 +196,7 @@ class BooleanStub(
 
   internal var value: Boolean = default
 
-  operator fun getValue(inst: QModel<*>, property: KProperty<*>): Boolean = value
+  operator fun getValue(inst: Model<*>, property: KProperty<*>): Boolean = value
 
   override fun accept(result: Any?): Boolean {
     if (result is Boolean) value = result else result?.toString()?.let { it == "true" || value }
@@ -211,7 +211,7 @@ interface NullablePrimitive<out T> : GraphQlField<T?>, Adapter
 internal
 fun <T> PrimitiveStub.wrapAsNullable(get: () -> T?): NullablePrimitive<T> =
     object : NullablePrimitive<T>, Adapter by this@wrapAsNullable {
-      override fun getValue(inst: QModel<*>, property: KProperty<*>): T? = get()
+      override fun getValue(inst: Model<*>, property: KProperty<*>): T? = get()
       override fun hashCode(): Int = super.hashCode() * 31
       override fun equals(other: Any?): Boolean =
           super.equals(other) && other is NullablePrimitive<*>
@@ -234,9 +234,9 @@ fun BooleanStub.wrapAsNullable() =
     wrapAsNullable { if (!isResolved) null else value }
 
 fun <T> NullablePrimitive<T?>.delegatingTo() = object : DelegateProvider<T?> {
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<T?> =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphQlField<T?> =
       this@delegatingTo.bindingWith(inst)
 }
 
-fun <T> NullablePrimitive<T?>.bindingWith(inst: QModel<*>) =
+fun <T> NullablePrimitive<T?>.bindingWith(inst: Model<*>) =
     apply { inst.register(this) }

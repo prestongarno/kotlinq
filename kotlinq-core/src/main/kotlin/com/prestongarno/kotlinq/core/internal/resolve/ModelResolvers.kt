@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.internal.resolve
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import java.io.InputStream
 
 /**
@@ -27,7 +27,7 @@ import java.io.InputStream
  *
  * @return true if resolved correctly, false if not
  */
-fun QModel<*>.resolve(response: InputStream): Boolean {
+fun Model<*>.resolve(response: InputStream): Boolean {
 
   resolved = Parser().parse(response)
       ?.let { it as? JsonObject }

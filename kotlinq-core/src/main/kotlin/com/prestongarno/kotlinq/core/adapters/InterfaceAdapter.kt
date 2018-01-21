@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.stringify
@@ -35,7 +35,7 @@ import kotlin.reflect.KProperty
  */
 internal
 class InterfaceStubImpl<I, A : ArgumentSpec>(val arguments: A?)
-  : PreDelegate<QModel<I>?, A>(),
+  : PreDelegate<Model<I>?, A>(),
     InterfaceStub<I, A>
     where I : QType,
           I : QInterface {
@@ -46,7 +46,7 @@ class InterfaceStubImpl<I, A : ArgumentSpec>(val arguments: A?)
   private
   val fragments = mutableSetOf<Fragment>()
 
-  override fun <T : I> on(initializer: () -> QModel<T>) {
+  override fun <T : I> on(initializer: () -> Model<T>) {
     fragments += Fragment(initializer)
   }
 
@@ -61,21 +61,21 @@ class InterfaceAdapterImpl<I : QType>(
     override val qproperty: GraphQlProperty,
     override val args: Map<String, Any>,
     override val fragments: Set<Fragment>
-) : GraphqlPropertyDelegate<QModel<I>?>,
+) : GraphqlPropertyDelegate<Model<I>?>,
     FragmentContext {
 
-  var value: QModel<I>? = null
+  var value: Model<I>? = null
 
-  override fun asNullable(): GraphqlPropertyDelegate<QModel<I>?> = this
+  override fun asNullable(): GraphqlPropertyDelegate<Model<I>?> = this
 
-  override fun asList(): GraphqlPropertyDelegate<List<QModel<I>>> =
-      ListDelegate(object : GraphqlPropertyDelegate<QModel<I>>,
+  override fun asList(): GraphqlPropertyDelegate<List<Model<I>>> =
+      ListDelegate(object : GraphqlPropertyDelegate<Model<I>>,
           FragmentContext by this@InterfaceAdapterImpl,
           Adapter by this@InterfaceAdapterImpl {
-        override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<I> = value!!
-        override fun asNullable(): GraphqlPropertyDelegate<QModel<I>?> = this@InterfaceAdapterImpl
-        override fun asList(): GraphqlPropertyDelegate<List<QModel<I>>> = this@InterfaceAdapterImpl.asList()
-        override fun transform(obj: Any?): QModel<I>? = this@InterfaceAdapterImpl.transform(obj)
+        override fun getValue(inst: Model<*>, property: KProperty<*>): Model<I> = value!!
+        override fun asNullable(): GraphqlPropertyDelegate<Model<I>?> = this@InterfaceAdapterImpl
+        override fun asList(): GraphqlPropertyDelegate<List<Model<I>>> = this@InterfaceAdapterImpl.asList()
+        override fun transform(obj: Any?): Model<I>? = this@InterfaceAdapterImpl.transform(obj)
       })
 
   override fun accept(result: Any?): Boolean {
@@ -84,12 +84,12 @@ class InterfaceAdapterImpl<I : QType>(
     return value?.isResolved == true
   }
 
-  override fun transform(obj: Any?): QModel<I>? = if (obj !is JsonObject) null else
+  override fun transform(obj: Any?): Model<I>? = if (obj !is JsonObject) null else
     fragments.find { it.model.graphqlType == obj["__typename"] }
         ?.initializer?.invoke()?.let {
       it.accept(obj)
       @Suppress("UNCHECKED_CAST")
-      it as? QModel<I>
+      it as? Model<I>
     }
 
   override fun toRawPayload(): String =
@@ -99,9 +99,9 @@ class InterfaceAdapterImpl<I : QType>(
           transform = Fragment::toString)
 
   override operator fun getValue(
-      inst: QModel<*>,
+      inst: Model<*>,
       property: KProperty<*>
-  ): QModel<I>? = value
+  ): Model<I>? = value
 
   override fun hashCode(): Int =
       (qproperty.hashCode() * 31) +

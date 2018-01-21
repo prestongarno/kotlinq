@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.internal.CollectionDelegate
 import com.prestongarno.kotlinq.core.internal.formatAs
@@ -57,7 +57,7 @@ class StringArrayStub(
 
   var value: List<String>? = null
 
-  override operator fun getValue(inst: QModel<*>, property: KProperty<*>): List<String> {
+  override operator fun getValue(inst: Model<*>, property: KProperty<*>): List<String> {
     return value ?: default ?: throw NullPointerException(
         "Graphql property ${this.qproperty.graphqlName} was null (kotlin property $property)")
   }
@@ -87,7 +87,7 @@ class IntArrayStub(
 
   var value: IntArray? = null
 
-  override operator fun getValue(inst: QModel<*>, property: KProperty<*>): IntArray {
+  override operator fun getValue(inst: Model<*>, property: KProperty<*>): IntArray {
     return value ?: default ?: throw NullPointerException(
         "Graphql qproperty ${this.qproperty.graphqlName} was null (kotlin qproperty $property)")
   }
@@ -127,7 +127,7 @@ class FloatArrayStub(
 
   var value: FloatArray? = null
 
-  override operator fun getValue(inst: QModel<*>, property: KProperty<*>): FloatArray {
+  override operator fun getValue(inst: Model<*>, property: KProperty<*>): FloatArray {
     return value ?: default ?: throw NullPointerException(
         "Graphql property ${this.qproperty.graphqlName} was null (kotlin property $property)")
   }
@@ -166,7 +166,7 @@ class BooleanArrayStub(
 
   var value: BooleanArray? = null
 
-  override operator fun getValue(inst: QModel<*>, property: KProperty<*>): BooleanArray {
+  override operator fun getValue(inst: Model<*>, property: KProperty<*>): BooleanArray {
     return value ?: default ?: throw NullPointerException(
         "Graphql property ${this.qproperty.graphqlName} was null (kotlin property $property)")
   }

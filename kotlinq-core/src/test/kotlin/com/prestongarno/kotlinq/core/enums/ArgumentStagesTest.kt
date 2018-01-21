@@ -21,7 +21,7 @@ package com.prestongarno.kotlinq.core.enums
 
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.QSchemaType.QCustomScalar
 import com.prestongarno.kotlinq.core.QSchemaType.QEnum
@@ -77,7 +77,7 @@ class ArgumentStagesTest {
   }
 
   @Test fun `config block on NoArg stub shows up`() {
-    val query = object : QModel<Class>(Class) {
+    val query = object : Model<Class>(Class) {
       val level by Class.classLevel {
         config { arguments.put("Hello", "World") }
       }
@@ -92,7 +92,7 @@ class ArgumentStagesTest {
     // Arguments to pass to the graphql query
     val arguments = Class.ClassLevelArgs(100, "100", 100.0f, true)
 
-    val query = object : QModel<Class>(Class) {
+    val query = object : Model<Class>(Class) {
       val levelWithArgs by Class.classLevelWithArgs(arguments) {
         config {
           integer = 1200
@@ -115,7 +115,7 @@ class ArgumentStagesTest {
   }
 
   @Test fun `optional arguments with no args passed`() {
-    val query = object : QModel<Class>(Class) {
+    val query = object : Model<Class>(Class) {
       val levelNoArgs by model.classLevelOptionalArgs
     }
     assertThat(query.toGraphql())
@@ -123,7 +123,7 @@ class ArgumentStagesTest {
   }
 
   @Test fun `optional arguments with arguments passed in DSL closure`() {
-    val query = object : QModel<Class>(Class) {
+    val query = object : Model<Class>(Class) {
       val levelWithArgs by Class.classLevelOptionalArgs(Class.OptionalClassLevelArgs()) {
         default = ClassLevel.HIGH_SCHOOL
         config {
@@ -140,7 +140,7 @@ class ArgumentStagesTest {
   }
 
   @Test fun `optional arguments with not all arguments set in config block`() {
-    val query = object : QModel<Class>(Class) {
+    val query = object : Model<Class>(Class) {
       val levelWithArgs by Class.classLevelOptionalArgs(Class.OptionalClassLevelArgs()) {
         default = ClassLevel.HIGH_SCHOOL
         config {
@@ -258,7 +258,7 @@ object Assignment : QType {
   class DatesArgs : ArgBuilder()
 
   private
-  class AssignmentModel : QModel<Assignment>(Assignment) {
+  class AssignmentModel : Model<Assignment>(Assignment) {
 
     val lastInstrumentUsed by model.lastInstrumentsUsed { on(::PenModel); on(::MarkerModel) }
     val lastInstrumentUsedArgs by model.lastInstrumentsUsedArgs { on(::PenModel); on(::MarkerModel) }
@@ -268,22 +268,22 @@ object Assignment : QType {
     val instrumentUsedArgs by model.instrumentsUsedArgs { on(::PenModel); on(::MarkerModel) }
     val instrumentUsedArgsDef by model.instrumentsUsedWithArgs(BlahArgs()) { on(::PenModel); on(::MarkerModel) }
 
-    val f: List<QModel<WritingInstrument>> by model.f(block = { on(::PenModel) })
+    val f: List<Model<WritingInstrument>> by model.f(block = { on(::PenModel) })
   }
 
   private
-  class PenModel : QModel<Pen>(Pen) {
+  class PenModel : Model<Pen>(Pen) {
     val isPermanent by model.isPermanent { default = true }
   }
   private
-  class MarkerModel : QModel<Marker>(Marker) {
+  class MarkerModel : Model<Marker>(Marker) {
     val isPermanent by model.isPermanent { default = true }
   }
 }
 
 object Mark : QUnionType by QUnionType.new() {
-  fun <U : QModel<Person>> onPerson(init: () -> U) = on(init)
-  fun <U : QModel<Assignment>> onAssignment(init: () -> U) = on(init)
+  fun <U : Model<Person>> onPerson(init: () -> U) = on(init)
+  fun <U : Model<Assignment>> onAssignment(init: () -> U) = on(init)
 }
 
 object Date : CustomScalar
@@ -296,14 +296,14 @@ enum class ClassLevel : QEnumType {
   GRADUATE
 }
 
-class ClassQuery1 : QModel<Class>(Class) {
+class ClassQuery1 : Model<Class>(Class) {
   val level by model.classLevel {
     default = ClassLevel.UNDERGRADUATE
   }
 }
 
 
-class AssignmentModel : QModel<Assignment>(Assignment) {
+class AssignmentModel : Model<Assignment>(Assignment) {
 
   val dueDate: String by model.dueDate
   val dueDateOpt: String by model.dueDatesWithArgs

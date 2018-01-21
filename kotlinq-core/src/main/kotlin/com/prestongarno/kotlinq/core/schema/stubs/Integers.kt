@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
@@ -97,7 +97,7 @@ interface IntDelegate<A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
 private class IntNoArgImpl(val propertyName: String) : ScalarDelegate.NoArg<IntDelegate<ArgBuilder>, IntStub> {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): IntStub =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>): IntStub =
       ScalarPreDelegate.PreInt(ArgBuilder())
           .toDelegate(propertyName)
           .bindToContext(inst)
@@ -113,7 +113,7 @@ private class IntNoArgImpl(val propertyName: String) : ScalarDelegate.NoArg<IntD
 
       object : ScalarDelegate.NoArg.Nullable<IntDelegate<ArgBuilder>, Int> {
 
-        override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<Int?> =
+        override fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphQlField<Int?> =
             ScalarPreDelegate.PreInt(ArgBuilder())
                 .toDelegate(propertyName)
                 .wrapAsNullable()
@@ -136,7 +136,7 @@ private class OptionalIntImpl<A : ArgumentSpec>(val propertyName: String) : IntD
   override fun invoke(block: IntDelegate<ArgBuilder>.() -> Unit) =
       new(propertyName, ArgBuilder(), block)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
       ScalarPreDelegate
           .PreInt(ArgBuilder())
           .toDelegate(propertyName)
@@ -154,7 +154,7 @@ private class OptionalIntImpl<A : ArgumentSpec>(val propertyName: String) : IntD
             .wrapAsNullable()
             .delegatingTo()
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
         ScalarPreDelegate
             .PreInt(ArgBuilder())
             .toDelegate(propertyName)

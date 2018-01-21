@@ -21,7 +21,7 @@ import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.QEnum
 import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
@@ -61,7 +61,7 @@ object Unknown : Concept {
 object Random : QType {
   val getRandomConcept: InterfaceProperty<Concept> by QInterfaces.stub<Concept>()
 
-  val singleConcept: ConfiguredBlock<InterfaceStub<Concept, SingleConceptArgs>, SingleConceptArgs, QModel<Concept>?> by QInterfaces.configured<Concept, SingleConceptArgs>()
+  val singleConcept: ConfiguredBlock<InterfaceStub<Concept, SingleConceptArgs>, SingleConceptArgs, Model<Concept>?> by QInterfaces.configured<Concept, SingleConceptArgs>()
   val singleOptionalConcept: InterfaceStub.OptionallyConfigured<Concept, SingleOptionalConceptArgs> by QInterfaces.optionallyConfigured<Concept, SingleOptionalConceptArgs>()
 
   class SingleOptionalConceptArgs : ArgBuilder() {
@@ -77,17 +77,17 @@ object Random : QType {
 
 class ReceiverApiTestStructure {
 
-  class MyPersistence : QModel<Persistence>(Persistence) {
+  class MyPersistence : Model<Persistence>(Persistence) {
     val name by model.name
     val type by model.type
   }
-  class UnknownModel : QModel<Unknown>(Unknown) {
+  class UnknownModel : Model<Unknown>(Unknown) {
     val name by model.name
     val type by model.type
   }
 
   @Test fun `single interface field query with parsing response`() {
-    val query = object : QModel<Random>(Random) {
+    val query = object : Model<Random>(Random) {
       val result by Random.getRandomConcept {
         on(ReceiverApiTestStructure::MyPersistence)
         on(ReceiverApiTestStructure::UnknownModel)
@@ -117,8 +117,8 @@ class ReceiverApiTestStructure {
       """
 
     require(query.onResponse(response))
-    assertThat(query.result).isInstanceOf(QModel::class.java)
-    assertThat((query.result as QModel<*>).model)
+    assertThat(query.result).isInstanceOf(Model::class.java)
+    assertThat((query.result as Model<*>).model)
         .isEqualTo(Persistence)
     assertThat((query.result as MyPersistence).name)
         .isEqualTo("Pretty sure this isn't how a GraphQL API would be but whatever")

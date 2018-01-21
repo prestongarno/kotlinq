@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.api.Fragment
 import com.prestongarno.kotlinq.core.api.FragmentContext
 import com.prestongarno.kotlinq.core.internal.stringify
@@ -33,14 +33,14 @@ internal
 class UnionStubImpl<out T : QUnionType, A : ArgumentSpec>(
     private val unionObject: T,
     val arguments: A? = null
-) : PreDelegate<QModel<*>?, A>(), UnionStub<T, A> {
+) : PreDelegate<Model<*>?, A>(), UnionStub<T, A> {
 
-  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<QModel<*>?> =
+  override fun toDelegate(property: GraphQlProperty): GraphqlPropertyDelegate<Model<*>?> =
       UnionAdapterImpl(property, fragments ?: emptySet(), arguments.toMap())
 
   // type cast is fine here, as long as we don't call this in context of providing a single property
   @Suppress("UNCHECKED_CAST")
-  fun asNotNull(): PreDelegate<QModel<*>, A> = this as PreDelegate<QModel<*>, A>
+  fun asNotNull(): PreDelegate<Model<*>, A> = this as PreDelegate<Model<*>, A>
 
   private var fragments: Set<Fragment>? = null
 
@@ -57,19 +57,19 @@ data class UnionAdapterImpl(
     override val qproperty: GraphQlProperty,
     override val fragments: Set<Fragment>,
     override val args: Map<String, Any> = emptyMap()
-) : GraphqlPropertyDelegate<QModel<*>?>,
+) : GraphqlPropertyDelegate<Model<*>?>,
     FragmentContext {
 
-  var value: QModel<*>? = null
+  var value: Model<*>? = null
 
-  override fun asNullable(): GraphqlPropertyDelegate<QModel<*>?> = this
+  override fun asNullable(): GraphqlPropertyDelegate<Model<*>?> = this
 
   override fun accept(result: Any?): Boolean {
     if (result is JsonObject) value = transform(result)
     return value == null || value?.isResolved ?: false
   }
 
-  override fun transform(obj: Any?): QModel<*>? = (obj as? JsonObject)?.let { jsonObject ->
+  override fun transform(obj: Any?): Model<*>? = (obj as? JsonObject)?.let { jsonObject ->
     jsonObject["__typename"]?.let { typeName ->
 
       fragments.find { it.model.graphqlType == typeName }
@@ -87,7 +87,7 @@ data class UnionAdapterImpl(
         }
       }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*> = value!!
+  override fun getValue(inst: Model<*>, property: KProperty<*>): Model<*> = value!!
 
   override fun equals(other: Any?): Boolean {
     if (other !is Adapter) return false
@@ -107,11 +107,11 @@ data class UnionAdapterImpl(
           (args.hashCode() * 31) +
           (fragments.hashCode() * 31)
 
-  override fun asList(): GraphqlPropertyDelegate<List<QModel<*>>> =
-      object : GraphqlPropertyDelegate<QModel<*>>,
+  override fun asList(): GraphqlPropertyDelegate<List<Model<*>>> =
+      object : GraphqlPropertyDelegate<Model<*>>,
           Adapter by this@UnionAdapterImpl,
           FragmentContext by this@UnionAdapterImpl {
-        override fun getValue(inst: QModel<*>, property: KProperty<*>): QModel<*> = this@UnionAdapterImpl.value!! // this should never happen
+        override fun getValue(inst: Model<*>, property: KProperty<*>): Model<*> = this@UnionAdapterImpl.value!! // this should never happen
         override fun asNullable() = this@UnionAdapterImpl.asNullable()
         override fun asList() = this@UnionAdapterImpl.asList()
         override fun transform(obj: Any?) = this@UnionAdapterImpl.transform(obj)

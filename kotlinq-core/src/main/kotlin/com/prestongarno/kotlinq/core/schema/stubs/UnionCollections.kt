@@ -2,7 +2,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
 import com.prestongarno.kotlinq.core.properties.GraphQlPropertyContext
@@ -23,28 +23,28 @@ typealias UBlock<T, A> = UnionStub<T, A>.() -> Unit
 interface UnionListStub {
 
   interface NoArg<T> : UnionListStub where T : QUnionType, T : QType {
-    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<QModel<*>?>>
+    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<Model<*>?>>
 
     interface NotNull<T> where T : QUnionType, T : QType {
-      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<QModel<*>>>
+      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<Model<*>>>
     }
 
   }
 
   interface OptionallyConfigured<T, A : ArgumentSpec> : UnionListStub, Configured<T, A> where T : QUnionType, T : QType {
-    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<QModel<*>?>>
+    operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<Model<*>?>>
 
     interface NotNull<T, A : ArgumentSpec> : Configured.NotNull<T, A> where T : QUnionType, T : QType {
-      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<QModel<*>>>
+      operator fun invoke(arguments: ArgBuilder = ArgBuilder(), block: UBlock<T, ArgBuilder>): DelegateProvider<List<Model<*>>>
     }
   }
 
   interface Configured<T, A : ArgumentSpec> : UnionListStub where T : QUnionType, T : QType {
 
-    operator fun invoke(arguments: A, block: UBlock<T, A>): DelegateProvider<List<QModel<*>?>>
+    operator fun invoke(arguments: A, block: UBlock<T, A>): DelegateProvider<List<Model<*>?>>
 
     interface NotNull<T, A : ArgumentSpec> where T : QUnionType, T : QType {
-      operator fun invoke(arguments: A, block: UBlock<T, A>): DelegateProvider<List<QModel<*>>>
+      operator fun invoke(arguments: A, block: UBlock<T, A>): DelegateProvider<List<Model<*>>>
     }
   }
 
@@ -58,7 +58,7 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
   class NoArg<T>(obj: T, qprop: GraphQlProperty) : UnionListStubImpl<T, ArgBuilder>(obj, qprop), UnionListStub.NoArg<T> where T : QUnionType, T : QType {
 
     override fun invoke(arguments: ArgBuilder, block: UBlock<T, ArgBuilder>)
-        : InternalDelegateProvider<List<QModel<*>?>> =
+        : InternalDelegateProvider<List<Model<*>?>> =
         newNullableDelegate(unionObject, arguments, block)
 
 
@@ -70,7 +70,7 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
               T : QType {
 
       override fun invoke(arguments: ArgBuilder, block: UBlock<T, ArgBuilder>)
-          : DelegateProvider<List<QModel<*>>> =
+          : DelegateProvider<List<Model<*>>> =
           newDelegate(unionObject, arguments, block)
     }
   }
@@ -82,11 +82,11 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
       where T : QUnionType,
             T : QType {
     override fun invoke(arguments: ArgBuilder, block: UBlock<T, ArgBuilder>)
-        : DelegateProvider<List<QModel<*>?>> =
+        : DelegateProvider<List<Model<*>?>> =
         newNullableDelegate(unionObject, arguments, block)
 
     override fun invoke(arguments: A, block: UBlock<T, A>)
-        : DelegateProvider<List<QModel<*>?>> =
+        : DelegateProvider<List<Model<*>?>> =
         newNullableDelegate(unionObject, arguments, block)
 
 
@@ -98,11 +98,11 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
               T : QType {
 
       override fun invoke(arguments: ArgBuilder, block: UBlock<T, ArgBuilder>)
-          : DelegateProvider<List<QModel<*>>> =
+          : DelegateProvider<List<Model<*>>> =
           newDelegate(unionObject, arguments, block)
 
       override fun invoke(arguments: A, block: UBlock<T, A>)
-          : DelegateProvider<List<QModel<*>>> =
+          : DelegateProvider<List<Model<*>>> =
           newDelegate(unionObject, arguments, block)
     }
   }
@@ -115,7 +115,7 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
             T : QType {
 
     override fun invoke(arguments: A, block: UBlock<T, A>)
-        : DelegateProvider<List<QModel<*>?>> =
+        : DelegateProvider<List<Model<*>?>> =
         newNullableDelegate(unionObject, arguments, block)
 
 
@@ -127,7 +127,7 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
               T : QType {
 
       override fun invoke(arguments: A, block: UBlock<T, A>)
-          : DelegateProvider<List<QModel<*>>> =
+          : DelegateProvider<List<Model<*>>> =
           newDelegate(unionObject, arguments, block)
     }
   }
@@ -136,7 +136,7 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
       obj: T,
       args: X,
       block: UBlock<T, X>
-  ): InternalDelegateProvider<List<QModel<*>>>
+  ): InternalDelegateProvider<List<Model<*>>>
       where T : QUnionType =
       delegateProvider { inst, _ ->
         UnionStubImpl(obj, args)
@@ -151,7 +151,7 @@ sealed class UnionListStubImpl<T, A>(val unionObject: T, val qproperty: GraphQlP
       obj: T,
       args: X,
       block: UBlock<T, X>
-  ): InternalDelegateProvider<List<QModel<*>?>>
+  ): InternalDelegateProvider<List<Model<*>?>>
       where T : QUnionType =
       delegateProvider { inst, _ ->
         UnionStubImpl(obj, args)

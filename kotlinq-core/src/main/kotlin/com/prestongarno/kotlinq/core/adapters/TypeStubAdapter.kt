@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.adapters
 
 import com.beust.klaxon.JsonObject
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.api.DefaultBuilderImpl
 import com.prestongarno.kotlinq.core.api.ModelProvider
@@ -30,14 +30,14 @@ import com.prestongarno.kotlinq.core.schema.QType
 import kotlin.reflect.KProperty
 
 internal
-fun <I : QType, T : QModel<I>> typeAdapter(
+fun <I : QType, T : Model<I>> typeAdapter(
     qproperty: GraphQlProperty,
     init: () -> T,
     context: Pair<ArgumentSpec?, DefaultBuilderImpl<T, ArgumentSpec>>
 ): GraphqlPropertyDelegate<T> = TypeStubAdapter(qproperty, init, context.first.toMap())
 
 internal data
-class TypeStubAdapter<out I : QType, out P : QModel<I>>(
+class TypeStubAdapter<out I : QType, out P : Model<I>>(
     override val qproperty: GraphQlProperty,
     val init: () -> P,
     override val args: Map<String, Any> = emptyMap()
@@ -58,7 +58,7 @@ class TypeStubAdapter<out I : QType, out P : QModel<I>>(
       : GraphqlPropertyDelegate<List<P>> =
       ListDelegate(this)
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>)
+  override fun getValue(inst: Model<*>, property: KProperty<*>)
       : P =
       value
 

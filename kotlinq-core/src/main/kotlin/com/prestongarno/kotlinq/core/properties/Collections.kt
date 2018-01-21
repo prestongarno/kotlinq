@@ -1,13 +1,11 @@
 package com.prestongarno.kotlinq.core.properties
 
 import com.beust.klaxon.JsonObject
-import com.prestongarno.kotlinq.core.QModel
-import com.prestongarno.kotlinq.core.adapters.GraphQlField
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate.Companion.wrapAsNullable
 import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty.Companion.from
-import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import kotlin.reflect.KProperty
 
 
@@ -23,7 +21,7 @@ class ListDelegate<out T : Any>(adapter: GraphqlPropertyDelegate<T>)
 
   override val qproperty: GraphQlProperty = adapter.qproperty.toList()
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<T> =
+  override fun getValue(inst: Model<*>, property: KProperty<*>): List<T> =
       value ?: emptyList()
 
   override fun asNullable(): GraphqlPropertyDelegate<List<T>?> =
@@ -54,7 +52,7 @@ class NullableElementListDelegate<out T : Any?>(val adapter: GraphqlPropertyDele
 
   override val qproperty: GraphQlProperty = adapter.qproperty.toList()
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): List<T?> =
+  override fun getValue(inst: Model<*>, property: KProperty<*>): List<T?> =
       value ?: emptyList()
 
   override fun asNullable(): GraphqlPropertyDelegate<List<T?>?> =

@@ -20,7 +20,7 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.CustomScalarField
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.toMap
@@ -131,7 +131,7 @@ sealed class CustomStubHandle<out E : CustomScalar>(qpropertyName: String, typeN
   class NoArgImpl<E : CustomScalar>(qpropertyName: String, typeName: String)
     : CustomStubHandle<E>(qpropertyName, typeName), CustomScalarStub.NoArg<E> {
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) = CustomScalarPreDelegate
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) = CustomScalarPreDelegate
         .NoArgDelegate(qproperty, Mapper.StringMapper { it })
         .newContext()
         .provideDelegate(inst, property)
@@ -163,7 +163,7 @@ sealed class CustomStubHandle<out E : CustomScalar>(qpropertyName: String, typeN
   class OptionallyConfiguredImpl<E : CustomScalar, A : ArgumentSpec>(qpropertyName: String, typeName: String)
     : CustomStubHandle<E>(qpropertyName, typeName), CustomScalarStub.OptionallyConfigured<E, A> {
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<String> {
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphQlField<String> {
       return CustomScalarPreDelegate
           .OptionallyConfiguredDelegate<String, A>(qproperty, Mapper.StringMapper { it })
           .newContext()

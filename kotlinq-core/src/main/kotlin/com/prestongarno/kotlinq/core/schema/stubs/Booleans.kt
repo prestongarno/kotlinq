@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
@@ -97,7 +97,7 @@ interface BooleanDelegate<out A : ArgumentSpec> : GraphqlDslBuilder<A> {
 
 private class BooleanNoArgImpl(val propertyName: String) : ScalarDelegate.NoArg<BooleanDelegate<ArgBuilder>, BooleanStub> {
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): BooleanStub =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>): BooleanStub =
       ScalarPreDelegate.PreBoolean(ArgBuilder())
           .toDelegate(propertyName)
           .bindToContext(inst)
@@ -113,7 +113,7 @@ private class BooleanNoArgImpl(val propertyName: String) : ScalarDelegate.NoArg<
 
       object : ScalarDelegate.NoArg.Nullable<BooleanDelegate<ArgBuilder>, Boolean> {
 
-        override fun provideDelegate(inst: QModel<*>, property: KProperty<*>): GraphQlField<Boolean?> =
+        override fun provideDelegate(inst: Model<*>, property: KProperty<*>): GraphQlField<Boolean?> =
             ScalarPreDelegate.PreBoolean(ArgBuilder())
                 .toDelegate(propertyName)
                 .wrapAsNullable()
@@ -136,7 +136,7 @@ private class OptionalBooleanImpl<A : ArgumentSpec>(val propertyName: String) : 
   override fun invoke(block: BooleanDelegate<ArgBuilder>.() -> Unit) =
       new(propertyName, ArgBuilder(), block)
 
-  override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
       ScalarPreDelegate
           .PreBoolean(ArgBuilder())
           .toDelegate(propertyName)
@@ -154,7 +154,7 @@ private class OptionalBooleanImpl<A : ArgumentSpec>(val propertyName: String) : 
             .wrapAsNullable()
             .delegatingTo()
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
         ScalarPreDelegate
             .PreBoolean(ArgBuilder())
             .toDelegate(propertyName)

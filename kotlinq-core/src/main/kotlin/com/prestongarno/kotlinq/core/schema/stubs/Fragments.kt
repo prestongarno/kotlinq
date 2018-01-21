@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.schema.QInterface
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.schema.QType
 
 /**
@@ -28,5 +28,5 @@ interface FragmentStub<in I> where I : QType, I : QInterface {
   /**
    * Create a fragment on an field
    * @param T The concrete type. Bounded by [I] and [QType] */
-  fun <T : I> on(initializer: () -> QModel<T>)
+  fun <T : I> on(initializer: () -> Model<T>)
 }

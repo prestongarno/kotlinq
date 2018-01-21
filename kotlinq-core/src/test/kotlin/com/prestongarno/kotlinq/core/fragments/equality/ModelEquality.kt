@@ -6,7 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.schema.QEnumType
 import com.prestongarno.kotlinq.core.schema.QInterface
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.QEnum
 import com.prestongarno.kotlinq.core.QSchemaType.QInterfaces
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
@@ -38,9 +38,9 @@ import org.junit.Test
 
 object Entity : QUnionType by QUnionType.new() {
 
-  fun onPerson(init: () -> QModel<Person>) = on(init)
+  fun onPerson(init: () -> Model<Person>) = on(init)
 
-  fun onOrganization(init: () -> QModel<Organization>) = on(init)
+  fun onOrganization(init: () -> Model<Organization>) = on(init)
 
 }
 
@@ -64,7 +64,7 @@ object Airplane : Vehicle {
 
   val maxPassengers by QScalar.Int.stub()
 
-  override val owner: NoArgBlock<UnionStub<Entity, ArgBuilder>, QModel<*>?> by QUnion.stub(Entity)
+  override val owner: NoArgBlock<UnionStub<Entity, ArgBuilder>, Model<*>?> by QUnion.stub(Entity)
 }
 
 object Car : Vehicle {
@@ -112,19 +112,19 @@ object EqualityQuery : QType {
 class EqualityImpl(
     keyword: String,
     fragment: InterfaceStub<Vehicle, EqualityQuery.SearchArgs>.() -> Unit
-) : QModel<EqualityQuery>(EqualityQuery) {
+) : Model<EqualityQuery>(EqualityQuery) {
 
   val searchResult by model.search(EqualityQuery.SearchArgs(keyword), fragment)
 }
 
 
-open class AirplaneFrag0 : QModel<Airplane>(Airplane) {
+open class AirplaneFrag0 : Model<Airplane>(Airplane) {
   val modelName by model.model
 
   val maxSpeed by model.maxSpeed
 }
 
-open class AirplaneFrag1 : QModel<Airplane>(Airplane) {
+open class AirplaneFrag1 : Model<Airplane>(Airplane) {
   val modelName by model.model
 }
 
@@ -136,7 +136,7 @@ open class MPersonModel : PersonModel() {
   val address by model.address(::DefaultAddress)
 }
 
-open class OrganizationModel : QModel<Organization>(Organization) {
+open class OrganizationModel : Model<Organization>(Organization) {
   val name by model.name
   val members by model.members(::PersonModel)
   val type by model.type
@@ -223,7 +223,7 @@ class ModelEquality {
   }
 }
 
-@Suppress("UNCHECKED_CAST") private fun <Z : Adapter> QModel<*>.getDelegate(named: String): Z =
+@Suppress("UNCHECKED_CAST") private fun <Z : Adapter> Model<*>.getDelegate(named: String): Z =
     fields[named] as? Z ?: throw IllegalArgumentException("Field $named is not of that type!")
 
 private fun Any?.println() = println(this)

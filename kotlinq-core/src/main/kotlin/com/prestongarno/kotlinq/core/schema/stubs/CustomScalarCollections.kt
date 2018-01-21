@@ -1,9 +1,8 @@
 package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.CustomScalarField
-import com.prestongarno.kotlinq.core.adapters.GraphQlField
 import com.prestongarno.kotlinq.core.adapters.toMap
 import com.prestongarno.kotlinq.core.api.DslEvaluationResult
 import com.prestongarno.kotlinq.core.api.GraphQlDelegateContext
@@ -103,7 +102,7 @@ sealed class CustomListStubHandle<out E : CustomScalar>(qpropertyName: String, t
   class NoArgImpl<E : CustomScalar>(qpropertyName: String, typeName: String)
     : CustomListStubHandle<E>(qpropertyName, typeName), CustomScalarListStub.NoArg<E> {
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) = CustomScalarListPreDelegate
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) = CustomScalarListPreDelegate
         .NoArgDelegate(qproperty, Mapper.StringMapper { it })
         .newContext()
         .provideDelegate(inst, property)
@@ -136,7 +135,7 @@ sealed class CustomListStubHandle<out E : CustomScalar>(qpropertyName: String, t
     : CustomListStubHandle<E>(qpropertyName, typeName),
       CustomScalarListStub.OptionallyConfigured<E, A> {
 
-    override fun provideDelegate(inst: QModel<*>, property: KProperty<*>) =
+    override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
         CustomScalarListPreDelegate
             .OptionallyConfiguredDelegate<String, A>(qproperty, Mapper.StringMapper { it })
             .newContext()

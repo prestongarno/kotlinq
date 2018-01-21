@@ -19,7 +19,7 @@ package com.prestongarno.kotlinq.core.schema.stubs
 
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.adapters.UnionStubImpl
 import com.prestongarno.kotlinq.core.api.GraphqlDslBuilder
 import com.prestongarno.kotlinq.core.properties.GraphQlProperty
@@ -31,21 +31,21 @@ import com.prestongarno.kotlinq.core.schema.QUnionType
 interface UnionStub<out T : QUnionType, out A : ArgumentSpec> : GraphqlDslBuilder<A> {
   fun fragment(scope: T.() -> Unit)
 
-  interface OptionallyConfigured<out T : QUnionType, A : ArgumentSpec> : ConfiguredBlock<UnionStub<T, A>, A, QModel<*>?> {
-    operator fun invoke(block: UnionStub<T, ArgBuilder>.() -> Unit): DelegateProvider<QModel<*>?>
+  interface OptionallyConfigured<out T : QUnionType, A : ArgumentSpec> : ConfiguredBlock<UnionStub<T, A>, A, Model<*>?> {
+    operator fun invoke(block: UnionStub<T, ArgBuilder>.() -> Unit): DelegateProvider<Model<*>?>
   }
 
   companion object {
     internal
     fun <T : QUnionType, A : ArgumentSpec> optionallyConfigured(qproperty: GraphQlProperty, unionObject: T): OptionallyConfigured<T, A> =
         object : OptionallyConfigured<T, A> {
-          override fun invoke(args: A, block: UnionStub<T, A>.() -> Unit): DelegateProvider<QModel<*>?> = delegateProvider { qModel, _ ->
+          override fun invoke(args: A, block: UnionStub<T, A>.() -> Unit): DelegateProvider<Model<*>?> = delegateProvider { qModel, _ ->
             UnionStubImpl(unionObject, args).apply(block).toDelegate(qproperty).bindToContext(qModel)
           }
 
           override fun invoke(
               block: UnionStub<T, ArgBuilder>.() -> Unit
-          ): DelegateProvider<QModel<*>?> = delegateProvider { qModel, _ ->
+          ): DelegateProvider<Model<*>?> = delegateProvider { qModel, _ ->
             UnionStubImpl(unionObject, ArgBuilder())
                 .apply(block)
                 .toDelegate(qproperty)

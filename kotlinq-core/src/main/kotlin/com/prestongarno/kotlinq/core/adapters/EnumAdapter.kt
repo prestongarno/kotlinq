@@ -18,7 +18,7 @@
 package com.prestongarno.kotlinq.core.adapters
 
 import com.prestongarno.kotlinq.core.ArgumentSpec
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType
 import com.prestongarno.kotlinq.core.api.KDelegateContext
 import com.prestongarno.kotlinq.core.api.toGraphQlProperty
@@ -76,7 +76,7 @@ class EnumFieldImpl<T>(
         .toMap()
   }
 
-  override fun getValue(inst: QModel<*>, property: KProperty<*>): T = value ?: default!!
+  override fun getValue(inst: Model<*>, property: KProperty<*>): T = value ?: default!!
 
   override fun asList(): GraphqlPropertyDelegate<List<T>> = ListDelegate(this)
 

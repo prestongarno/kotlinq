@@ -21,6 +21,7 @@ import com.beust.klaxon.Parser
 import com.prestongarno.kotlinq.core.adapters.Adapter
 import com.prestongarno.kotlinq.core.adapters.GraphqlPropertyDelegate
 import com.prestongarno.kotlinq.core.adapters.WrapperDelegate
+import com.prestongarno.kotlinq.core.internal.GraphQlNode
 import com.prestongarno.kotlinq.core.internal.extractedPayload
 import com.prestongarno.kotlinq.core.internal.pretty
 import com.prestongarno.kotlinq.core.schema.QType
@@ -33,7 +34,16 @@ import java.io.InputStream
  * @param T the upper bounds for the type (should be the same as the ^ usually)
  * @author prestongarno
  */
-open class QModel<out T : QType>(val model: T) {
+open class Model<out T : QType>(val model: T) {
+
+  private
+  var delegateConstructor: GraphQlNode.Constructor? = GraphQlNode.Constructor()
+
+  internal
+  val reflect by lazy {
+    delegateConstructor?.toNode()
+    delegateConstructor = null
+  }
 
   internal
   val fields = mutableMapOf<String, Adapter>()
@@ -47,14 +57,14 @@ open class QModel<out T : QType>(val model: T) {
   val isResolved: Boolean get() = resolved
 
   /**
-   * Constructs a GraphQL query from this [QModel]. Fragments are named according to this rule:
+   * Constructs a GraphQL query from this [Model]. Fragments are named according to this rule:
    *
    *
-   * ***`frag${[QModel.model].class.simpleName}${index}`***
+   * ***`frag${[Model.model].class.simpleName}${index}`***
    *
    * and are printed in alphabetical order.
    * The ${index} mentioned in the last sentence is primarily assigned by the depth of the fragment in the
-   * graph & secondarily the order in which the properties/fragments are declared in a [QModel]
+   * graph & secondarily the order in which the properties/fragments are declared in a [Model]
    *
    * ***Remember:*** Kotlinq does not distinguish between a root query/mutation
    * and therefore treats this instance as a root query.
@@ -83,7 +93,7 @@ open class QModel<out T : QType>(val model: T) {
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
-    if (other !is QModel<*>) return false
+    if (other !is Model<*>) return false
     if (graphqlType != other.graphqlType) return false
     if (fields.size != other.fields.size) return false
 

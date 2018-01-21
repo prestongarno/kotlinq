@@ -22,7 +22,7 @@ package com.prestongarno.kotlinq.core.type
 import com.google.common.truth.Truth.assertThat
 import com.prestongarno.kotlinq.core.ArgBuilder
 import com.prestongarno.kotlinq.core.schema.QEnumType
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.QSchemaType.QEnum
 import com.prestongarno.kotlinq.core.QSchemaType.QScalar
 import com.prestongarno.kotlinq.core.QSchemaType.QTypes
@@ -80,20 +80,20 @@ enum class State : QEnumType {
 
 class TypeStubQueryable {
 
-  class Me : QModel<Person>(Person) {
+  class Me : Model<Person>(Person) {
     val name by model.name {
       default = "Preston Garno"
     }
   }
 
-  class DefaultAddress : QModel<Address>(Address) {
+  class DefaultAddress : Model<Address>(Address) {
     val lineOne by Address.line1 {
       default = "1234 GraphQL"
     }
   }
 
   @Test fun `no arg type stub is possible`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val personWhoPlacedTheOrder by Order.owner(TypeStubQueryable::Me)
     }
     assertThat(query.toGraphql())
@@ -101,7 +101,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `noArg type stub with invocation is possible`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val personWhoPlacedTheOrder by Order.owner(TypeStubQueryable::Me)() {
         config { }
       }
@@ -111,7 +111,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `noArg type stub with custom configuration is possible`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val personWhoPlacedTheOrder by Order.owner(TypeStubQueryable::Me)() {
         config { this.arguments.put("Hello", "World") }
       }
@@ -121,7 +121,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `noArg type stub with default field value returns value`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val personWhoPlacedTheOrder by Order.owner(TypeStubQueryable::Me)
     }
     assertThat(query.personWhoPlacedTheOrder.name)
@@ -129,7 +129,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `noArg type stub multiple custom arguments toGraphQL()`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val personWhoPlacedTheOrder by Order.owner(TypeStubQueryable::Me).invoke {
         config {
           this.arguments.put("Hello", "World")
@@ -143,7 +143,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `optionalArg type stub with no arguments is possible`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val address by Order.ownerAddress(TypeStubQueryable::DefaultAddress)
     }
     assertThat(query.toGraphql())
@@ -151,7 +151,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `optionalArg type stub with arguments is possible`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val address by Order.ownerAddress(TypeStubQueryable::DefaultAddress)(Order.OwnerAddressArgs()) {
         config {
           addressType = ContactAddressType.WORK
@@ -163,7 +163,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `optionalArg type stub with provided + dynamic arguments is possible`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val address by Order.ownerAddress(TypeStubQueryable::DefaultAddress)(Order.OwnerAddressArgs()) {
         config {
           addressType = ContactAddressType.WORK
@@ -176,7 +176,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `optionalArg type stub with arguments default values return correctly`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val address by Order.ownerAddress(TypeStubQueryable::DefaultAddress)(Order.OwnerAddressArgs()) {
         config {
           addressType = ContactAddressType.WORK
@@ -189,7 +189,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `required config type stub enforces argument passed to stub`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val destinationAddress by Order.destination(TypeStubQueryable::DefaultAddress)(
           Order.DestinationArgs(ContactAddressType.HOME, false)
       )
@@ -200,7 +200,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `required config type stub with optional arguments`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val destinationAddress by Order.destination(TypeStubQueryable::DefaultAddress)(
           Order.DestinationArgs(ContactAddressType.HOME, false)) {
         config { unrelatedMagicString = "DSLs are fucking unbelievable" }
@@ -212,7 +212,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `required config type stub with dynamic arguments`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val destinationAddress by Order.destination(TypeStubQueryable::DefaultAddress)(
           Order.DestinationArgs(ContactAddressType.HOME, false)) {
         config { "expletive" with "censored" }
@@ -224,7 +224,7 @@ class TypeStubQueryable {
   }
 
   @Test fun `required config type stub returns nested scalar correctly`() {
-    val query = object : QModel<Order>(Order) {
+    val query = object : Model<Order>(Order) {
       val destinationAddress by Order.destination(TypeStubQueryable::DefaultAddress)(
           Order.DestinationArgs(ContactAddressType.HOME, false)) {
         config { "expletive" with "censored" }
