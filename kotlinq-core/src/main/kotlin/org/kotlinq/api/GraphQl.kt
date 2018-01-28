@@ -8,7 +8,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+@Component
 interface Kotlinq {
-   fun utilities()
+
 }
 

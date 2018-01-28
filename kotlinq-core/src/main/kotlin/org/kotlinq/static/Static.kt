@@ -83,10 +83,6 @@ internal
 fun <T : Enum<T>> enumMapper(): Provider<EnumStub<T>> = EnumProvider()
 
 
-/***********************************************
- * Private implementations
- ***********************************************/
-
 private
 class ReadOnlyImpl<out T>(val value: T) : ReadOnlyProperty<Any, T> {
   override operator fun getValue(thisRef: Any, property: KProperty<*>): T = value
