@@ -30,9 +30,8 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](http://
 
 ## Known Issues
 
-1. **Nullable fields**: Everything is assumed to be a non-null (see [this issue](https://github.com/prestongarno/kotlinq/issues/91), implementation is in the works)
-2. **Kotlin language keywords as identifiers** are not supported (i.e. 'object' is not a valid GraphQL field name)
-3. **'ID' scalar**: Is now part of the GraphQL specification, but you need to manually add it to your schema
+1. **Kotlin language keywords as identifiers** are not supported (i.e. 'object' is not a valid GraphQL field name)
+2. **'ID' scalar**: Is now part of the GraphQL specification, but you need to manually add it to your schema
 
 ## Basic tutorial (how to query your github username):
 
