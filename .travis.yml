@@ -7,8 +7,7 @@ script:
   - ./gradlew evaluateTestApi build test
 
 branches:
-  except:
-  - gh-pages
+  - null
 
 sudo: false
 
@@ -37,4 +36,4 @@ before_install:
   #- ./kotlinq-core/src/test/resources/test-server/install.sh
 
 after_success:
-  - ./.buildscript/snapshot.sh
+  #- ./.buildscript/snapshot.sh
