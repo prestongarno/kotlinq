@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Preston Garno
+ * Copyright (C) 2018 Preston Garno
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,6 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.QInputType
-import com.prestongarno.kotlinq.core.stubs.CustomScalarListStub
-import com.prestongarno.kotlinq.core.stubs.CustomScalarStub
-import com.prestongarno.kotlinq.core.stubs.EnumListStub
-import com.prestongarno.kotlinq.core.stubs.EnumStub
-import com.prestongarno.kotlinq.core.stubs.InterfaceListStub
-import com.prestongarno.kotlinq.core.stubs.InterfaceStub
-import com.prestongarno.kotlinq.core.stubs.TypeListStub
-import com.prestongarno.kotlinq.core.stubs.TypeStub
-import com.prestongarno.kotlinq.core.stubs.UnionListStub
-import com.prestongarno.kotlinq.core.stubs.UnionStub
 import com.prestongarno.kotlinq.org.antlr4.definitions.GraphQLSchemaParser
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -38,7 +27,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.asTypeName
 import org.antlr.v4.runtime.ParserRuleContext
 
 sealed class ScopedSymbol : SymbolElement {
@@ -88,89 +76,23 @@ data class FieldDefinition(override val context: GraphQLSchemaParser.FieldDefCon
 
 
   override fun toKotlin(): PropertySpec =
-      PropertySpec.builder(
-          name,
-          ktqGraphQLDelegateKotlinpoetTypeName()
-      ).apply {
+      PropertySpec.builder(name, getAliasName()).apply {
         if (!isAbstract)
           delegate(type.getStubDelegationCall(this@FieldDefinition))
         if (inheritsFrom.isNotEmpty())
           addModifiers(KModifier.OVERRIDE)
       }.build()
 
-  /**
-   * ***Finally*** a simple and consistent API call structure for all types,
-   * where all combinations of field configurations are covered. The structure
-   * of the ktq type is described like this:
-   *
-   * [ StubType ].[ Query<T> | OptionalConfigQuery<T, A> | ConfigurableQuery<T, A> ]
-   *
-   *
-   * ***where***
-   *
-   *
-   * StubType: [ [String|Float|Int|Boolean]{Array}Delegate | [Type|Interface|Union|Enum|CustomScalar]{List}Stub ]
-   *
-   * Primitive delegates/stubs don't have a type argument.
-   * Only for the the associated ArgumentSpec class on the graphql primitive field
-   */
-  private fun ktqGraphQLDelegateKotlinpoetTypeName(): TypeName {
+  private
+  fun getAliasName(): TypeName {
+    val typeAlias = type.getPropertyStubTypeAlias(this).asTypeName()
 
-    fun FieldDefinition.configurationTypeClassName(): String = when {
-      arguments.isEmpty() -> "Query"
-      !requiresConfiguration -> "OptionalConfigQuery"
-      else -> "ConfigurableQuery"
-    }
-
-    fun `type name for non-collection field`() = when (type) {
-      is EnumDef -> EnumStub::class
-      is InterfaceDef -> InterfaceStub::class
-      is ScalarDef -> CustomScalarStub::class
-      is InputDef -> QInputType::class
-      is TypeDef -> TypeStub::class
-      is UnionDef -> UnionStub::class
-      is ScalarType -> ScalarSymbols.named[type.name]!!.typeDef.stubClass
-    }
-
-    fun `type name for list field`() = when (type) {
-      is EnumDef -> EnumListStub::class
-      is InterfaceDef -> InterfaceListStub::class
-      is ScalarDef -> CustomScalarListStub::class
-      is InputDef -> QInputType::class
-      is TypeDef -> TypeListStub::class
-      is UnionDef -> UnionListStub::class
-      is ScalarType -> ScalarSymbols.named[type.name]!!.typeDef.arrayStubClass
-    }
-    // hell kotlinpoet why do you try to be so helpful with imports
-    val baseTypeName = (if (isList) `type name for list field`() else `type name for non-collection field`())
-        .asTypeName()
-        .nestedClass(configurationTypeClassName())
-    //
-
-    fun FieldDefinition.argBuilderTypeName(): TypeName {
-      require(arguments.isNotEmpty())
-      return ClassName.bestGuess(argBuilder!!.context.name)
-          .nestedClass(argBuilder!!.name)
-    }
-
-    // When scalar/primitive type -> no type arg,
-    val parameterizedTypeNames: List<TypeName> = mutableListOf<TypeName>().apply {
-      if (type !is ScalarType) add(type.name.asTypeName())
-      if (arguments.isNotEmpty()) add(argBuilderTypeName())
-    }
-
-    return if (type is ScalarType && arguments.isEmpty()) baseTypeName else ParameterizedTypeName.get(
-        ClassName(
-            baseTypeName.packageName(),
-            baseTypeName.enclosingClassName()!!.simpleName(),
-            baseTypeName.simpleName()
-        ),
-        *parameterizedTypeNames.toTypedArray().let {
-          if (isAbstract)
-            it[it.size - 1] = it.last().annotated(AnnotationSpec.builder(Nothing::class).build())
-          it
-        }
-    )
+    return (typeAlias as? ParameterizedTypeName)?.let {
+      if (isAbstract && argBuilder != null)
+        ParameterizedTypeName.get(it.rawType, it.typeArguments.first(), it.typeArguments.last().annotated(
+            AnnotationSpec.builder(Nothing::class).build()
+        )) else it
+    } ?: typeAlias
   }
 
   companion object {
@@ -218,12 +140,12 @@ data class ArgumentDefinition(
           type.name.asTypeName().let {
             if (isList) ParameterizedTypeName.get(ClassName("kotlin.collections", "List"), it) else it
           }.let {
-            if (this@ArgumentDefinition.nullable) it.asNullable() else it
-          }, // modifiers
+                if (this@ArgumentDefinition.nullable) it.asNullable() else it
+              }, // modifiers
           *(if (!isAbstract && field.inheritsFrom.find { superiface ->
-            superiface.symtab[field.name]?.arguments
-                ?.find { arg -> arg.name == name } != null
-          } != null)
+                superiface.symtab[field.name]?.arguments
+                    ?.find { arg -> arg.name == name } != null
+              } != null)
             arrayOf(KModifier.OVERRIDE)
           else if (isAbstract) arrayOf(KModifier.ABSTRACT)
           else emptyArray())
@@ -276,4 +198,5 @@ data class ArgumentDefinition(
         }
   }
 }
+
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Preston Garno
+ * Copyright (C) 2018 Preston Garno
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 package com.prestongarno.kotlinq.http.internal
 
-import com.prestongarno.kotlinq.core.QModel
+import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.core.internal.resolve.resolve
 import com.prestongarno.kotlinq.http.RequestBuilder
 import org.http4k.client.OkHttp
@@ -36,7 +36,7 @@ internal enum class RequestType {
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 internal object Http4k {
 
-  suspend fun <T : QModel<*>> send(requestBuilder: RequestBuilder<T>): T {
+  suspend fun <T : Model<*>> send(requestBuilder: RequestBuilder<T>): T {
     val client: HttpHandler = OkHttp()
 
     val obj = requestBuilder.`for`()

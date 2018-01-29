@@ -36,7 +36,7 @@ class GraphQLsLexer(val schema: Schema) {
       val currentType = GraphQLType.match(typeToken)
       // make sure it's one of the 6 types allowed by gql
       if (Rule.match(typeToken) != Rule.TYPE_LIT || currentType == null) {
-        throw err(typeToken, " Expected one of { type, input, enum, interface, scalar, union }")
+        throw err(typeToken, " Expected one of { type, input, enum, iface, scalar, union }")
       }
 
       val name = try {
@@ -157,32 +157,32 @@ enum class GraphQLType {
   }
 }
 
-enum class Rule(number: Int) {
-  EOF(-1),
-  LCURLY(1),
-  WS(2),
-  NAME(3),
-  TYPE_DEC(4),
-  COMMENT(5),
-  COLON(6),
-  WORD(7),
-  BLOCK(8),
-  NEWLINE(9),
-  TYPE_LIT(10),
-  RCURLY(11),
-  OTHER(12),
-  UNION_WS(13),
-  EQ(14),
-  WS_UNION(15),
-  WS_SCALAR(16),
-  WS_TYPE(17),
-  IMPL_(18),
-  IMPLEMENTS(18),
-  EXIT_TYPE(19),
-  WS_TYPE_CTX(20),
-  COMMA(21),
-  BREAK(22),
-  STR(23);
+enum class Rule {
+  EOF,
+  LCURLY,
+  WS,
+  NAME,
+  TYPE_DEC,
+  COMMENT,
+  COLON,
+  WORD,
+  BLOCK,
+  NEWLINE,
+  TYPE_LIT,
+  RCURLY,
+  OTHER,
+  UNION_WS,
+  EQ,
+  WS_UNION,
+  WS_SCALAR,
+  WS_TYPE,
+  IMPL_,
+  IMPLEMENTS,
+  EXIT_TYPE,
+  WS_TYPE_CTX,
+  COMMA,
+  BREAK,
+  STR;
 
   companion object {
 

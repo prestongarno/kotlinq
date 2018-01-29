@@ -3,7 +3,7 @@ package com.prestongarno.kotlinq.org.antlr4.definitions;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
- * This interface defines a complete listener for a parse tree produced by
+ * This iface defines a complete listener for a parse tree produced by
  * {@link GraphQLSchemaParser}.
  */
 public interface GraphQLSchemaListener extends ParseTreeListener {

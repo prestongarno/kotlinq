@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Preston Garno
+ * Copyright (C) 2018 Preston Garno
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 
 package com.prestongarno.kotlinq.http.node.server
 
-import com.prestongarno.kotlinq.http.GraphQL
 import com.prestongarno.kotlinq.http.GraphHttpAdapter
+import com.prestongarno.kotlinq.http.GraphQL
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.junit.After
@@ -40,7 +40,7 @@ abstract class NodeServer {
   lateinit var graphql: GraphHttpAdapter
 
   @Before internal
-fun setUp() {
+  fun setUp() {
 
     graphqlServerPs = ProcessBuilder()
         .inheritIO()

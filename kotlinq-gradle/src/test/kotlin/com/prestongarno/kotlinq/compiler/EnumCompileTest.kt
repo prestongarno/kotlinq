@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Preston Garno
+ * Copyright (C) 2018 Preston Garno
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
 
 package com.prestongarno.kotlinq.compiler
 
-import com.prestongarno.kotlinq.core.QEnumType
-import com.prestongarno.kotlinq.core.QType
+import com.prestongarno.kotlinq.core.schema.QEnumType
+import com.prestongarno.kotlinq.core.schema.QType
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.argumentsMatching
 import com.prestongarno.kotlinq.compiler.KTypeSubject.Companion.reifiedArgumentsMatching
-import com.prestongarno.kotlinq.core.stubs.EnumStub
+import com.prestongarno.kotlinq.core.properties.delegates.DelegateProvider
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -58,7 +58,7 @@ class EnumCompileTest : JavacTest() {
     }
 
     kprop("enumProperty") { gqlEnum ->
-      gqlEnum requireReturns EnumStub.Query::class
+      gqlEnum requireReturns DelegateProvider.NoArgDelegate::class
       gqlEnum.returnType mustHave reifiedArgumentsMatching(enumClazz)
     }
   }.ignore()
@@ -74,7 +74,7 @@ class EnumCompileTest : JavacTest() {
     }
 
     kprop("enumProp") {
-      it requireReturns EnumStub.OptionalConfigQuery::class
+      //it requireReturns EnumStub.OptionallyConfigured::class
       it.returnType mustHave argumentsMatching("GraphQLEnum", "Bar.EnumPropArgs")
     }
   }.ignore()

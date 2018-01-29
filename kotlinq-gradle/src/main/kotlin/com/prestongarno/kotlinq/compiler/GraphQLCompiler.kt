@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Preston Garno
+ * Copyright (C) 2018 Preston Garno
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,7 @@ class GraphQLCompiler(
     inspectFields(*scopedSymbolRules.toTypedArray())
   }
 
+
   /**
    * Fix for [UnionDef] class signature for implicit delegation
    */
@@ -85,14 +86,25 @@ class GraphQLCompiler(
     if (definitions.isEmpty())
       throw IllegalArgumentException("No schema types defined")
 
+    // gets all property alias types that we need to import manually
+    val propertyImports: List<String> = definitions
+        .filterIsInstance<ScopedDeclarationType>()
+        .filterNot { it is InputDef }
+        .map(ScopedDeclarationType::fields)
+        .flatten()
+        .map { it.type.getPropertyStubTypeAlias(it) }
+        .map(GraphQlPropertyAlias::fqName)
+        .distinct()
+        .sorted()
+
     val specs = definitions.associate { it to it.toKotlin() }
 
     val sourceClasses = specs.map { (ir, kotlinSpec) ->
       var exact = kotlinSpec.toString()
 
       if (kotlinSpec.superinterfaces.find {
-        it.toString().contains(SchemaType.CLASS_DELEGATE_MARKER)
-      } != null) exact = exact.replace(SchemaType.CLASS_DELEGATE_MARKER,
+            it.toString().contains(SchemaType.CLASS_DELEGATE_MARKER)
+          } != null) exact = exact.replace(SchemaType.CLASS_DELEGATE_MARKER,
           " by ${ir.schemaTypeClass.qualifiedName}.new()")
           .replace("^import.*\n".toRegex(), "")
 
@@ -103,7 +115,9 @@ class GraphQLCompiler(
 
     val metadata = FileSpec.builder(config.packageName, config.kotlinFileName).apply {
       definitions.forEach { addType(it.toKotlin()) }
-    }.build().let { if (it.packageName.isNotEmpty()) "package ${it.packageName}\n\n" else "\n" }
+    }.build()
+        .let { if (it.packageName.isNotEmpty()) "package ${it.packageName}\n\n" else "\n" } +
+        propertyImports.joinToString("\n", "\n", "\n\n") { "import $it" }
 
     return metadata + sourceClasses
   }
@@ -111,7 +125,8 @@ class GraphQLCompiler(
   private fun attrFieldTypes() = definitions.filterIsInstance<ScopedDeclarationType>()
       .flatMap(ScopedDeclarationType::expandSymbols)
       .forEach { (symbol, typeContext) ->
-        symbol.type = this@GraphQLCompiler.symtab[symbol.typeName] ?: throw symbol.unknownTypeExc(typeContext)
+        symbol.type = this@GraphQLCompiler.symtab[symbol.typeName]
+            ?: throw symbol.unknownTypeExc(typeContext)
       }
 
   private fun attrUnions() {
@@ -119,13 +134,11 @@ class GraphQLCompiler(
       possibilities = defs
     }
 
-    definitions.filterIsInstance<UnionDef>().forEach {
+    definitions.filterIsInstance<UnionDef>().forEach { union ->
 
-      it.types.map {
-        symtab[it] as? TypeDef ?: throw IllegalArgumentException("Unknown type '$it'")
-      }.also { options ->
-        it.setLateinitPossibilities(options.toSet())
-      }
+      union.types.map { type ->
+        symtab[type] as? TypeDef ?: throw IllegalArgumentException("Unknown type '$type'")
+      }.also { union.setLateinitPossibilities(it.toSet()) }
     }
   }
 

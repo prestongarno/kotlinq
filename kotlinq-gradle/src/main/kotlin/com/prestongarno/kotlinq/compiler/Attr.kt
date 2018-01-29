@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Preston Garno
+ * Copyright (C) 2018 Preston Garno
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ internal fun GraphQLCompiler.attrInheritance() = schemaTypes.on<TypeDef> {
 /** get the supertype from schema type symbol table */
 private fun GraphQLCompiler.fromSymtab(sym: String): InterfaceDef {
   val superTypeDef = symtab[sym] ?: throw IllegalArgumentException("Unknown supertype name $sym on type declaration")
-  return superTypeDef as? InterfaceDef ?: throw IllegalArgumentException("Supertype declaration '$sym' is not an interface type!")
+  return superTypeDef as? InterfaceDef ?: throw IllegalArgumentException("Supertype declaration '$sym' is not an iface type!")
 }
 
 /** explicit lateinit property access */
@@ -106,21 +106,11 @@ private fun TypeDef.assignArgumentSpec(field: FieldDefinition) {
     field.argBuilder = ArgumentSpecDef(field, this)
 }
 
-/**
- * Checks the subtype and assigns the supertype field's argbuilder definition (if applicable)
- *
- * The rule is that:
- *
- *    If a single concrete type is enforced configured, all superinterfaces and their fields must also match.
- *         |-> i.e. 'Optionally' configured fields are given lowest priority because they exist only for convenience
- *
- * By now, the field -> superfield inheritance checks have been done
- */
 @Suppress("LocalVariableName")
 private fun InterfaceDef.assignArgumentSpec(subType: TypeDef, symbol: String) {
 
   val subField = subType.symtab[symbol]
-      ?: throw IllegalArgumentException("Expected overriden subtype field of interface $name on ${subType.name}")
+      ?: throw IllegalArgumentException("Expected overriden subtype field of iface $name on ${subType.name}")
   val superField = symtab[symbol]
       ?: throw IllegalArgumentException("Expected superinterface field '$symbol' on def '$name'")
 
@@ -138,7 +128,7 @@ private fun InterfaceDef.assignArgumentSpec(subType: TypeDef, symbol: String) {
 
 
   // Check the **CONCRETE** field for it's argument requirements
-  // and set the interface argument builder type based off of that
+  // and set the iface argument builder type based off of that
   // supertype field should match the same 1/3 arg type
   superField.argBuilder = when (argumentRequirements(superField, subField)) {
     Req_Args -> ArgumentSpecDef(superField, this)

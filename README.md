@@ -30,63 +30,9 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](http://
 
 ## Known Issues
 
-0. Basically everything. This was a cool idea at first but the size of the project requires a complete overhaul to be maintainable going forward. Please do not use this right now
+0. Basically everything. This was neat cool idea at first but requires a complete overhaul to be even remotely maintainable going forward. Do not use
 
-## Basic tutorial (how to query your github username):
-
-1.  **Curl the GitHub public GraphQL API schema** (requires a github.com OAuth token):
-
-
-```
-curl -H "Authorization: bearer $YOUR_GITHUB_OAUTH_TOKEN_HERE" \
-  -H "Accept: application/vnd.github.v4.idl" \
-  https://api.github.com/graphql | \
-  sed -e 's/^{\|^.\{11\}\|^}//g' | \
-  sed -e 's/\\n/\n/g' > \
-  src/main/resources/github.graphqls; echo 'scalar ID' >> src/main/resources/github.graphqls
-```
-
-
-2.  **Apply the Gradle plugin**:
-
-
-```
-  buildscript {
-
-    repositories {
-      jcenter()
-    }
-
-    dependencies {
-      classpath 'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0'
-    }
-
-  }
-
-  apply plugin: 'com.prestongarno.kotlinq'
-
-```
-
-3.  **Configure gradle the plugin to generate a Kotlin API from the GitHub schema**:
-
-
-```
-kotlinq {
-  schema {
-    target = "src/main/resources/github.graphqls"
-    kotlinFileName = "GitHubGraphQl.kt"
-    packageName = "com.github.graphql"
-    outputDir = 'src/generated/kotlin'
-  }
-}
-```
-
-4.  **Add the generated source directory to include in compilation**:
-
-`sourceSets.main.java.srcDirs +=  'src/generated/kotlin'`
-
-
-5.  **Create a query and execute**:
+## Github query example
 
 ```
 class ViewerQuery : QModel<Query>(Query) {
