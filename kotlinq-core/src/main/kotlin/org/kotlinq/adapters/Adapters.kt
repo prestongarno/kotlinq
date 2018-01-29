@@ -1,15 +1,12 @@
 package org.kotlinq.adapters
 
-import dagger.Module
 import org.kotlinq.Model
 import org.kotlinq.api.GraphQlProperty
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-@Module
-@Singleton
-internal
+
+// TODO module
 interface AdapterService {
 
 

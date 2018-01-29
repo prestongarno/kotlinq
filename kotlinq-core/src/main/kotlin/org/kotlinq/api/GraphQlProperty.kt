@@ -2,13 +2,13 @@ package org.kotlinq.api
 
 import org.kotlinq.Model
 import org.kotlinq.adapters.Adapter
+import org.kotlinq.adapters.AdapterService
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 
 
-internal
 interface GraphQlProperty<out T> : ReadOnlyProperty<Model<*>, T> {
 
   val propertyName: String
@@ -18,15 +18,16 @@ interface GraphQlProperty<out T> : ReadOnlyProperty<Model<*>, T> {
 
   companion object {
 
+    // TODO module
+    val adapterFactory: AdapterService = TODO()
+
     @Suppress("UNCHECKED_CAST")
     internal fun <T> graphQlProperty(
         name: String,
         property: KProperty<*>,
-        default: T? = null,
-        adapter: Adapter
+        default: T? = null
     ): GraphQlProperty<T> =
-        GraphQlPropertyImpl<T>(name, property.returnType, adapter)
-            as GraphQlProperty<T>
+        GraphQlPropertyImpl<T>(name, property.returnType, TODO()) as GraphQlProperty<T>
 
   }
 }

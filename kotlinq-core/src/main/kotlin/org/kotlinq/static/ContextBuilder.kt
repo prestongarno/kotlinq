@@ -10,7 +10,6 @@ import org.kotlinq.delegates.InitializingStub
 import org.kotlinq.dsl.ArgBuilder
 import org.kotlinq.dsl.ArgumentSpec
 import org.kotlinq.static.PredicateProvider.Companion.using
-import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -34,8 +33,7 @@ class ConfiguredContextBuilder<out T : GraphQlPropertyStub, in A : ArgumentSpec>
   fun build(): PredicateProvider<A, T> = using<A>().build(clazz)
 }
 
-
-class CollectionPropertyBuilder<Z> internal constructor() {
+class CollectionPropertyBuilder<Z> {
 
   fun <A : ArgumentSpec> requiringArguments()
       : ConfiguredContextBuilder<CollectionStub1<Z>, A> =
@@ -47,7 +45,7 @@ class CollectionPropertyBuilder<Z> internal constructor() {
 
 
   /* Builder for a property delegate returning a property providing a nested list */
-  class Nested<Z> internal constructor(context: CollectionPropertyBuilder<Z>) {
+  class Nested<Z> (context: CollectionPropertyBuilder<Z>) {
 
     fun asList() = MultiDimensional.from(this)
 
@@ -61,7 +59,7 @@ class CollectionPropertyBuilder<Z> internal constructor() {
         buildWithArguments(CollectionStub2::class)
   }
 
-  class MultiDimensional<Z, T : List<List<List<*>>>> internal constructor(val builder: CollectionPropertyStub.Builder<Z, T>) {
+  class MultiDimensional<Z, T : List<List<List<*>>>> (val builder: CollectionPropertyStub.Builder<Z, T>) {
 
     fun asList() = MultiDimensional(builder.asList())
 

@@ -12,7 +12,7 @@ repositories {
 apply plugin: 'maven'
 
 dependencies {
-  implementation 'com.beust:klaxon:0.30'
+  compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
   compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
   testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',

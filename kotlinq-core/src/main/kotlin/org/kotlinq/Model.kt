@@ -1,7 +1,6 @@
 package org.kotlinq
 
 import org.kotlinq.api.GraphQlProperty
-import org.kotlinq.adapters.validation.isNullable
 
 
 open class Model<out T>(val model: T) {
@@ -15,7 +14,4 @@ open class Model<out T>(val model: T) {
     return property
   }
 
-  internal fun isResolved(): Boolean = properties.values.find {
-    !it.isNullable() && it.adapter.getValue() != null
-  } == null
 }
