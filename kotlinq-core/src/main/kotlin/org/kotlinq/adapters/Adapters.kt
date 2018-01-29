@@ -1,32 +1,6 @@
 package org.kotlinq.adapters
 
-import kotlin.reflect.KType
-
-
-
-interface AdapterService {
-
-
-  fun deserializer(type: KType, init: (java.io.InputStream) -> Any?)
-      : Adapter
-
-  fun parser(type: KType, init: (String) -> Any?)
-      : Adapter
-
-  fun  initializer(type: KType, init: () -> Any?)
-      : Adapter
-
-  fun enumDeserializer(type: KType)
-      : Adapter
-
-}
-
-
-interface Adapter {
-  val name: String
-  val type: KType
-  fun getValue(): Any?
-}
+import org.kotlinq.api.Adapter
 
 interface ModelAdapter: Adapter {
   fun resolve(value: Map<String, Any?>): Boolean

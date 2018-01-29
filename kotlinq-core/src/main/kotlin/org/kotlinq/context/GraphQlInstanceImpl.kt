@@ -1,6 +1,7 @@
-package org.kotlinq.api
+package org.kotlinq.context
 
-import org.kotlinq.adapters.Adapter
+import org.kotlinq.api.Adapter
+import org.kotlinq.api.GraphQlInstance
 
 
 /**
@@ -9,6 +10,9 @@ import org.kotlinq.adapters.Adapter
 internal
 class GraphQlInstanceImpl(override val graphQlTypeName: String)
   : GraphQlInstance {
+
+  fun resolve(name: String, value: String) {
+  }
 
   private
   val instanceProperties

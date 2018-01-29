@@ -11,6 +11,7 @@ open class Model<out T : Any>(val model: T) {
    */
   internal
   val propertyContainer: GraphQlInstance by lazy {
+    // TODO DI component for presentation calls
     Kotlinq.createGraphQlInstance(model::class.simpleName!!)
   }
 
