@@ -1,31 +1,29 @@
 package org.kotlinq.adapters
 
-import org.kotlinq.Model
-import org.kotlinq.api.GraphQlProperty
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 
-// TODO module
+
 interface AdapterService {
 
 
-  fun <Z> deserializer(type: KType, init: (java.io.InputStream) -> Z)
-      : GraphQlProperty<Z> = TODO()
+  fun deserializer(type: KType, init: (java.io.InputStream) -> Any?)
+      : Adapter
 
-  fun <Z> parser(type: KType, init: (String) -> Z)
-      : GraphQlProperty<Z> = TODO()
+  fun parser(type: KType, init: (String) -> Any?)
+      : Adapter
 
-  fun <Z : Model<*>> initializer(type: KType, init: () -> Z)
-      : GraphQlProperty<Z> = TODO()
+  fun  initializer(type: KType, init: () -> Any?)
+      : Adapter
 
-  fun <Z : Enum<Z>> enumDeserializer(clazz: KClass<Z>, type: KType)
-      : GraphQlProperty<Z> = TODO()
+  fun enumDeserializer(type: KType)
+      : Adapter
 
 }
 
 
 interface Adapter {
+  val name: String
   val type: KType
   fun getValue(): Any?
 }

@@ -1,16 +1,19 @@
-package org.kotlinq
+package org.kotlinq.api
 
 import org.kotlinq.adapters.Adapter
-import org.kotlinq.api.GraphQlInstance
 
 
-class GraphQlInstanceImpl(val impl: Model<*>) : GraphQlInstance {
+/**
+ * I thought callhacks were so 2017...
+ */
+internal
+class GraphQlInstanceImpl(override val graphQlTypeName: String)
+  : GraphQlInstance {
 
   private
-  val instanceProperties: MutableMap<String, Adapter> = mutableMapOf()
-
-  override val graphQlTypeName: String =
-      impl.model::class.simpleName!!
+  val instanceProperties
+      : MutableMap<String, Adapter> =
+      mutableMapOf()
 
   // provides a read-only set of properties for the back end to view
   override val properties: Map<String, Adapter>

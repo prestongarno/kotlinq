@@ -1,6 +1,5 @@
 package org.kotlinq.resolvers
 
-import org.kotlinq.Model
 import org.kotlinq.adapters.Adapter
 import org.kotlinq.api.Resolver
 

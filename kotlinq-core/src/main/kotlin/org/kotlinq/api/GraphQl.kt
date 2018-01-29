@@ -1,15 +1,16 @@
 package org.kotlinq.api
 
-import dagger.Binds
-import dagger.Component
-import dagger.Module
-import dagger.Provides
-import javax.inject.Inject
-import javax.inject.Singleton
 
-
-@Component
+// TODO module component
 interface Kotlinq {
 
+  fun <T> createPropertyDelegate()
+
+  fun createGraphQlInstance(typeName: String): GraphQlInstance
+
+  // TODO make this delegate to runtime dependency configuration
+  companion object : Kotlinq by TODO() {
+
+  }
 }
 
