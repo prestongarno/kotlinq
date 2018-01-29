@@ -30,8 +30,7 @@ The documentation is moving (slowly) to a dedicated site. [Check it out](http://
 
 ## Known Issues
 
-1. **Kotlin language keywords as identifiers** are not supported (i.e. 'object' is not a valid GraphQL field name)
-2. **'ID' scalar**: Is now part of the GraphQL specification, but you need to manually add it to your schema
+0. Basically everything. This was a cool idea at first but the size of the project requires a complete overhaul to be maintainable going forward. Please do not use this right now
 
 ## Basic tutorial (how to query your github username):
 
