@@ -1,4 +1,4 @@
-package providers
+package org.kotlinq.providers
 
 import org.kotlinq.Model
 import org.kotlinq.delegates.GraphQlProperty
