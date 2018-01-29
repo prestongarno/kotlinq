@@ -5,6 +5,11 @@ import org.kotlinq.api.GraphQlProperty
 
 open class Model<out T>(val model: T) {
 
+  /**
+   * There needs to be an object here which
+   * implements a simple interface in the presentation layer
+   */
+
   internal
   val properties = mutableMapOf<String, GraphQlProperty<*>>()
 

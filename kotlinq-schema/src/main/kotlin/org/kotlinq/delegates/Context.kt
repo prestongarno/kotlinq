@@ -4,7 +4,7 @@ import org.kotlinq.Model
 import org.kotlinq.dsl.ArgBuilder
 import org.kotlinq.dsl.ArgumentSpec
 import org.kotlinq.dsl.DslBuilder
-import org.kotlinq.providers.GraphQlPropertyProvider
+import providers.GraphQlPropertyProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -73,7 +73,7 @@ class DeserializingStub(
 
 class EnumStub<Z : Enum<Z>>(
     private val propertyName: String,
-    args: ArgumentSpec = ArgBuilder()
+    args: ArgumentSpec? = null
 ) : GraphQlPropertyStub(), GraphQlPropertyProvider<Z> {
 
   override fun withArguments(arguments: ArgumentSpec): EnumStub<Z> = EnumStub(propertyName, arguments)
@@ -122,7 +122,7 @@ class CollectionPropertyStub(
     fun asList(): Builder<X, List<T>> = Builder(listOf(token))
 
     fun build(name: String, args: ArgumentSpec = ArgBuilder())
-        : CollectionStubN<X, T> = CollectionStubN.explicit<X, T>(name, ArgBuilder(), this)
+        : CollectionStubN<X, T> = CollectionStubN.explicit(name, ArgBuilder(), this)
   }
 }
 

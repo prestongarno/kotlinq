@@ -4,10 +4,7 @@ import org.kotlinq.Model
 import org.kotlinq.dsl.ArgBuilder
 import org.kotlinq.dsl.ArgumentSpec
 import org.kotlinq.dsl.DslBuilder
-import org.kotlinq.providers.GraphQlPropertyProvider
-import kotlin.reflect.KClass
-
-
+import providers.GraphQlPropertyProvider
 
 
 class CollectionStub1<T>(
@@ -56,7 +53,7 @@ class CollectionStubN<X, T : List<List<List<*>>>> private constructor(
 
   operator fun invoke(init: () -> X)
       // TODO fix this
-      : GraphQlPropertyProvider<T> = collectionProvider<T>(name, init as () -> Model<*>)
+      : GraphQlPropertyProvider<T> = collectionProvider(name, init as () -> Model<*>)
 
   operator fun invoke(init: () -> X, block: DslBuilder<X, ArgumentSpec>.() -> Unit)
       : GraphQlPropertyProvider<T> = TODO()

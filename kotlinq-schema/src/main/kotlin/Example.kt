@@ -1,5 +1,4 @@
 import org.kotlinq.Model
-import org.kotlinq.api.DaggerKotlinq
 import org.kotlinq.delegates.CollectionStubN
 import org.kotlinq.dsl.ArgBuilder
 import org.kotlinq.static.ContextBuilder.Companion.schema
@@ -74,46 +73,3 @@ class ContextDaoQuery : Model<ContextDao>(model = ContextDao) {
   val singleList by model.modelList(::BasicModelQuery)
 }
 
-fun main(args: Array<String>) {
-
-  DaggerKotlinq.create()
-
-
-
-  val foo = ContextDaoQuery()
-
-  require(foo.properties.values.find {
-
-    !it.adapter.accept(
-        when (it.propertyName) {
-          "response" -> "NO"
-          "modelQuery" -> "{NO}"
-          "model2D" -> "[[{\"response\": \"YES\"]]"
-          else -> ""
-        }
-
-    )
-  } == null)
-
-  foo.apply {
-    require(enumMapped == Response.NO)
-    println(modelImpl)
-    require(model2DImpl.firstOrNull()?.firstOrNull()?.parsedResponse == Response.NO)
-    require(model2DArgsImpl.firstOrNull()?.firstOrNull()?.parsedResponse == Response.YES)
-    require(singleList.firstOrNull()?.parsedResponse == Response.YES)
-
-    val passesNDimensionTest = modelNDimenstion.firstOrNull()
-        ?.firstOrNull()
-        ?.firstOrNull()
-        ?.firstOrNull()
-        ?.let { it as? BasicModelQuery }
-        ?.let {
-          it.parsedResponse == Response.NO
-        } ?: false
-
-    require(passesNDimensionTest) // !!!
-  }
-}
-
-internal
-fun <T> List<T>.nested() = listOf(this)
