@@ -2,6 +2,7 @@ package org.kotlinq.context
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.api.GraphQlJsonParser
 
 
 /**
@@ -11,16 +12,19 @@ internal
 class GraphQlInstanceImpl(override val graphQlTypeName: String)
   : GraphQlInstance {
 
-  fun resolve(name: String, value: String) {
-  }
 
   private
-  val instanceProperties
-      : MutableMap<String, Adapter> =
+  val instanceProperties : MutableMap<String, Adapter> =
       mutableMapOf()
 
-  // provides a read-only set of properties for the back end to view
+  fun onResolve(name: String, value: String): Boolean =
+      instanceProperties[name]?.take(value) == true
+
   override val properties: Map<String, Adapter>
     get() = instanceProperties
+
+  override fun isResolved(): Boolean {
+    TODO("not implemented")
+  }
 
 }
