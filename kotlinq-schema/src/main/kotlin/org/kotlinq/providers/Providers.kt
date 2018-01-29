@@ -1,7 +1,7 @@
 package providers
 
 import org.kotlinq.Model
-import org.kotlinq.api.GraphQlProperty
+import org.kotlinq.delegates.GraphQlProperty
 
 
 // TODO module
@@ -20,6 +20,6 @@ interface PropertyProviders {
 }
 
 fun <T : GraphQlProperty<*>> T.bindTo(model: Model<*>) = apply {
-  model.bind(this)
+  // bind the property here to the instance
 }
 

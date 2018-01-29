@@ -1,4 +1,4 @@
-package org.kotlinq.api
+package org.kotlinq.delegates
 
 import org.kotlinq.Model
 import org.kotlinq.adapters.Adapter
@@ -11,8 +11,10 @@ import kotlin.reflect.KType
 
 interface GraphQlProperty<out T> : ReadOnlyProperty<Model<*>, T> {
 
+  // TODO this shouldn't be here
   val propertyName: String
 
+  // TODO this shouldn't be here (it doesn't give a f*** what type it is
   val type: KType
 
 

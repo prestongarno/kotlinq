@@ -1,22 +1,17 @@
 package org.kotlinq
 
-import org.kotlinq.api.GraphQlProperty
+import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.api.Kotlinq
 
 
-open class Model<out T>(val model: T) {
+open class Model<out T : Any>(val model: T) {
 
   /**
-   * There needs to be an object here which
-   * implements a simple interface in the presentation layer
+   * The context container for this [Model] implementation instance
    */
-
   internal
-  val properties = mutableMapOf<String, GraphQlProperty<*>>()
-
-  internal
-  fun <T> bind(property: GraphQlProperty<T>): GraphQlProperty<T> {
-    properties[property.propertyName] = property
-    return property
+  val propertyContainer: GraphQlInstance by lazy {
+    Kotlinq.createGraphQlInstance(model::class.simpleName!!)
   }
 
 }

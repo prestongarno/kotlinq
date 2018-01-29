@@ -33,7 +33,7 @@ class ConfiguredContextBuilder<out T : GraphQlPropertyStub, in A : ArgumentSpec>
   fun build(): PredicateProvider<A, T> = using<A>().build(clazz)
 }
 
-class CollectionPropertyBuilder<Z> {
+class CollectionPropertyBuilder<Z : Any> {
 
   fun <A : ArgumentSpec> requiringArguments()
       : ConfiguredContextBuilder<CollectionStub1<Z>, A> =
@@ -45,7 +45,7 @@ class CollectionPropertyBuilder<Z> {
 
 
   /* Builder for a property delegate returning a property providing a nested list */
-  class Nested<Z> (context: CollectionPropertyBuilder<Z>) {
+  class Nested<Z : Any> (context: CollectionPropertyBuilder<Z>) {
 
     fun asList() = MultiDimensional.from(this)
 
@@ -59,7 +59,7 @@ class CollectionPropertyBuilder<Z> {
         buildWithArguments(CollectionStub2::class)
   }
 
-  class MultiDimensional<Z, T : List<List<List<*>>>> (val builder: CollectionPropertyStub.Builder<Z, T>) {
+  class MultiDimensional<Z : Any, T : List<List<List<*>>>> (val builder: CollectionPropertyStub.Builder<Z, T>) {
 
     fun asList() = MultiDimensional(builder.asList())
 
@@ -73,7 +73,7 @@ class CollectionPropertyBuilder<Z> {
         buildWithArguments(CollectionStub2::class)
 
     companion object {
-      internal fun <Z> from(nestedBuilder: Nested<Z>) = MultiDimensional(
+      internal fun <Z : Any> from(nestedBuilder: Nested<Z>) = MultiDimensional(
           CollectionPropertyStub.Builder<Model<Z>, List<List<List<Model<Z>>>>>(listOf()))
     }
   }

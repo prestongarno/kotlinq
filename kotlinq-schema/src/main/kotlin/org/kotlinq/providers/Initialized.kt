@@ -1,7 +1,6 @@
 package providers
 
 import org.kotlinq.Model
-import org.kotlinq.api.GraphQlProperty.Companion.graphQlProperty
 import org.kotlinq.dsl.ArgBuilder
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -17,5 +16,5 @@ class InitializingProviderImpl<Z : Model<*>>(
   override fun config(block: ArgBuilder.() -> Unit) = args.block()
 
   override operator fun provideDelegate(inst: Model<*>, property: KProperty<*>)
-      : ReadOnlyProperty<Model<*>, Z> = graphQlProperty<Z>(name, property).bindTo(inst)
+      : ReadOnlyProperty<Model<*>, Z> = TODO()
 }

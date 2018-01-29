@@ -60,7 +60,7 @@ class CollectionStubN<X, T : List<List<List<*>>>> private constructor(
 
   companion object {
 
-    fun <X> from(ancestor: CollectionStub2<X>)
+    fun <X : Any> from(ancestor: CollectionStub2<X>)
         : CollectionStubN<X, List<List<List<Model<X>>>>>
         = CollectionStubN(ancestor.name, ancestor.args)
 
