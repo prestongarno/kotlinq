@@ -19,7 +19,5 @@ class InitializingProviderImpl<Z : Model<*>>(
 
   override operator fun provideDelegate(inst: Model<*>, property: KProperty<*>)
       : ReadOnlyProperty<Model<*>, Z> =
-      Kotlinq.adapterService.instanceProperty(name, property.returnType) {
-        init().propertyContainer
-      }.bind(inst)
+      Kotlinq.adapterService.instanceProperty(name, property.returnType, init).bind(inst)
 }

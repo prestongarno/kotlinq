@@ -52,8 +52,8 @@ class CollectionStubN<X, T : List<List<List<*>>>> private constructor(
       : CollectionStub1<T> = CollectionStub1(name, arguments)
 
   operator fun invoke(init: () -> X)
-      // TODO fix this
-      : GraphQlPropertyProvider<T> = collectionProvider(name, init as () -> Model<*>)
+      : GraphQlPropertyProvider<T> =
+      collectionProvider(name, init as () -> Model<*>)
 
   operator fun invoke(init: () -> X, block: DslBuilder<X, ArgumentSpec>.() -> Unit)
       : GraphQlPropertyProvider<T> = TODO()

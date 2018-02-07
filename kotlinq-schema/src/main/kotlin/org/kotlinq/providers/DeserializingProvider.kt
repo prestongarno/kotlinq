@@ -5,7 +5,7 @@ import org.kotlinq.dsl.ArgBuilder
 import kotlin.reflect.KProperty
 
 class DeserializingProviderImpl<Z>(
-    val name: String,
+    override val name: String,
     val init: (java.io.InputStream) -> Z
 ) : DslBuilderProvider<Z> {
 

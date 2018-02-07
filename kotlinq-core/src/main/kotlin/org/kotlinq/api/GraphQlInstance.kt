@@ -1,6 +1,10 @@
 package org.kotlinq.api
 
 
+interface TypeContext {
+  val graphQlInstance: GraphQlInstance
+}
+
 /**
  * This is used for a query class for property delegates
  * to bind themselves to during object construction

@@ -68,10 +68,10 @@ class UnionToKotlinTest : JavacTest() {
 
       loadClass("com.test.Actor") {
 
-        func("onDroid") { it.parameters[0].toString() eq "instance of fun com.test.Actor.onDroid(" +
+        func("onDroid") { it.parameters[0].toString() eq "graphQlInstance of fun com.test.Actor.onDroid(" +
                   "() -> com.prestongarno.kotlinq.core.QModel<com.test.Droid>): kotlin.Unit" }
 
-        func("onJedi") { it.parameters[0].toString() eq "instance of fun com.test.Actor.onJedi(" +
+        func("onJedi") { it.parameters[0].toString() eq "graphQlInstance of fun com.test.Actor.onJedi(" +
                   "() -> com.prestongarno.kotlinq.core.QModel<com.test.Jedi>): kotlin.Unit" }
 
       }

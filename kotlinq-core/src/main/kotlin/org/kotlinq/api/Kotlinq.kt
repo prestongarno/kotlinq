@@ -5,7 +5,10 @@ interface Kotlinq {
 
   val adapterService: AdapterService
 
-  fun createGraphQlInstance(typeName: String): GraphQlInstance
+  fun createGraphQlInstance(
+      typeName: String,
+      context: TypeContext
+  ): GraphQlInstance
 
 
   companion object : Kotlinq {
@@ -14,8 +17,8 @@ interface Kotlinq {
     val adapterService: AdapterService
       get() = Configuration.adapterService
 
-    override fun createGraphQlInstance(typeName: String): GraphQlInstance =
-        GraphQlInstanceProvider.createNewInstance(typeName)
+    override fun createGraphQlInstance(typeName: String, context: TypeContext): GraphQlInstance =
+        GraphQlInstanceProvider.createNewInstance(typeName, context)
   }
 }
 

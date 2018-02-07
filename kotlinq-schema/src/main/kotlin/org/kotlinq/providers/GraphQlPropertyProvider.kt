@@ -11,7 +11,6 @@ interface GraphQlPropertyProvider<out Z> {
       : ReadOnlyProperty<Model<*>, Z>
 }
 
-//internal
 interface DslBuilderProvider<Z> : DslBuilder<Z, ArgBuilder>, GraphQlPropertyProvider<Z> {
   val name: String
 }

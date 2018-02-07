@@ -14,7 +14,7 @@ interface AdapterService {
 
   val enumDeserializer: (name: String, type: KType) -> Adapter
 
-  val instanceProperty: (name: String, type: KType, init: () -> GraphQlInstance) -> Adapter
+  val instanceProperty: (name: String, type: KType, init: () -> TypeContext) -> Adapter
 
 }
 
