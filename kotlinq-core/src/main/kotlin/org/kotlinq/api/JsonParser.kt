@@ -7,5 +7,7 @@ interface JsonParser {
 
   fun parseToArray(string: String): Sequence<String>
 
+  fun parseFragment(string: String): Pair<String, String>
+
   companion object : JsonParser by Configuration.jsonParser
 }

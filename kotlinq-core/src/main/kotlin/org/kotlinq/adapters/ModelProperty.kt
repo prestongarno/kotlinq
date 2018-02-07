@@ -22,12 +22,12 @@ class ModelPropertyImpl(
   }
 
   override fun resolve(value: Sequence<Pair<String, String>>): Boolean {
-    require(this.instance == null) {
-      "GraphQL queries are non-reusable operation"
-    }
+    require(this.instance == null) { "GraphQL queries are non-reusable operation" }
+
     instance = init().also { context ->
       value.forEach { (name, value) -> context.graphQlInstance.properties[name]?.take(value) }
     }
+
     return instance?.graphQlInstance?.isResolved() == true
   }
 

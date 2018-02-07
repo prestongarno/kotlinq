@@ -1,6 +1,7 @@
 package org.kotlinq.adapters
 
 import org.kotlinq.api.Adapter
+import org.kotlinq.api.Fragment
 
 internal
 interface ModelAdapter: Adapter {
@@ -8,8 +9,9 @@ interface ModelAdapter: Adapter {
 }
 
 internal
-interface ModelListAdapter : Adapter {
-  fun resolve(value: Sequence<String>): Boolean
+interface FragmentAdapter : Adapter {
+  fun resolve(result: Pair<String, String>): Boolean
+  val fragments: Map<String, Fragment>
 }
 
 internal
