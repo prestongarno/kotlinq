@@ -1,7 +1,7 @@
 package org.kotlinq.adapters
 
 import org.kotlinq.api.GraphQlInstance
-import org.kotlinq.api.GraphQlJsonParser
+import org.kotlinq.api.JsonParser
 import kotlin.reflect.KType
 
 internal
@@ -20,7 +20,7 @@ class ModelPropertyImpl(
   }
 
   override fun take(value: String): Boolean {
-    return resolve(GraphQlJsonParser.parseToObject(value))
+    return resolve(JsonParser.parseToObject(value))
   }
 
   override fun resolve(value: Sequence<Pair<String, String>>): Boolean {
@@ -31,6 +31,5 @@ class ModelPropertyImpl(
     return true
   }
 
-  override fun getValue(): Any? = TODO("Fix circular dependency here")
-
+  override fun getValue(): Any? = instance
 }

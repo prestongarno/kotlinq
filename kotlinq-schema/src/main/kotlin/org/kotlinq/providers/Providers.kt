@@ -4,7 +4,6 @@ import org.kotlinq.Model
 import org.kotlinq.delegates.GraphQlProperty
 
 
-// TODO module
 interface PropertyProviders {
 
 
@@ -17,9 +16,5 @@ interface PropertyProviders {
   fun <Z : Model<*>> initializingProvider(name: String, init: () -> Z)
       : DslBuilderProvider<Z>
 
-}
-
-fun <T : GraphQlProperty<*>> T.bindTo(model: Model<*>) = apply {
-  // bind the property here to the instance
 }
 

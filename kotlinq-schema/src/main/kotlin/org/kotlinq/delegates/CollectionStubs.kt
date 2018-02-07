@@ -4,7 +4,7 @@ import org.kotlinq.Model
 import org.kotlinq.dsl.ArgBuilder
 import org.kotlinq.dsl.ArgumentSpec
 import org.kotlinq.dsl.DslBuilder
-import providers.GraphQlPropertyProvider
+import org.kotlinq.providers.GraphQlPropertyProvider
 
 
 class CollectionStub1<T>(

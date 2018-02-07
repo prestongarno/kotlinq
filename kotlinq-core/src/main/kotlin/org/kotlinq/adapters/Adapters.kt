@@ -4,18 +4,12 @@ import org.kotlinq.api.Adapter
 
 internal
 interface ModelAdapter: Adapter {
-
-  /**
-   * Called when the model is resolved
-   *
-   * Lazy sequence just to see how good these things really are
-   */
   fun resolve(value: Sequence<Pair<String, String>>): Boolean
 }
 
 internal
 interface ModelListAdapter : Adapter {
-  fun resolve(value: List<Map<String, String>>): Boolean
+  fun resolve(value: Sequence<String>): Boolean
 }
 
 internal

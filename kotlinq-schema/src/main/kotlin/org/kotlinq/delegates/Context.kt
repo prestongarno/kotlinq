@@ -111,7 +111,7 @@ class CollectionPropertyStub(
         : T = when (clazz) {
       CollectionStub1::class -> CollectionStub1<Any>(name, args)
       CollectionStub2::class -> CollectionStub2<Any>(name, args)
-      CollectionStubN::class -> CollectionStubN.from(CollectionStub2<Any>(name, args))
+      CollectionStubN::class -> CollectionStubN.from(CollectionStub2(name, args))
       else -> throw IllegalArgumentException()
     } as T
   }

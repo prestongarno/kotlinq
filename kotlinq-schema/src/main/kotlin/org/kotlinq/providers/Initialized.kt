@@ -1,13 +1,15 @@
 package org.kotlinq.providers
 
 import org.kotlinq.Model
+import org.kotlinq.api.Kotlinq
+import org.kotlinq.delegates.bind
 import org.kotlinq.dsl.ArgBuilder
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 
 class InitializingProviderImpl<Z : Model<*>>(
-    val name: String,
+    override val name: String,
     val init: () -> Z
 ) : DslBuilderProvider<Z> {
 
@@ -16,5 +18,8 @@ class InitializingProviderImpl<Z : Model<*>>(
   override fun config(block: ArgBuilder.() -> Unit) = args.block()
 
   override operator fun provideDelegate(inst: Model<*>, property: KProperty<*>)
-      : ReadOnlyProperty<Model<*>, Z> = TODO()
+      : ReadOnlyProperty<Model<*>, Z> =
+      Kotlinq.adapterService.instanceProperty(name, property.returnType) {
+        init().propertyContainer
+      }.bind(inst)
 }

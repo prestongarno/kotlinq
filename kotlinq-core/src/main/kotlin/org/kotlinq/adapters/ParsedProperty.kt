@@ -1,6 +1,5 @@
 package org.kotlinq.adapters
 
-import java.lang.ref.WeakReference
 import kotlin.reflect.KType
 
 
@@ -12,7 +11,7 @@ class ParsedProperty(
 ) : ParsingAdapter {
 
   lateinit var textResult: String
-  // TODO best way to handle this
+
   private val result: Any? by lazy {
     if (!this::textResult.isInitialized) initializer("") else initializer(textResult)
   }
@@ -23,5 +22,7 @@ class ParsedProperty(
     textResult = value
     return true
   }
+
+  override fun isResolved() = this::textResult.isInitialized
 
 }

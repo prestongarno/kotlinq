@@ -1,14 +1,21 @@
 package org.kotlinq.api
 
 
-// TODO module component
 interface Kotlinq {
 
   val adapterService: AdapterService
 
   fun createGraphQlInstance(typeName: String): GraphQlInstance
 
-  // TODO make this delegate to runtime dependency configuration
-  companion object : Kotlinq by TODO()
+
+  companion object : Kotlinq {
+
+    override
+    val adapterService: AdapterService
+      get() = Configuration.adapterService
+
+    override fun createGraphQlInstance(typeName: String): GraphQlInstance =
+        GraphQlInstanceProvider.createNewInstance(typeName)
+  }
 }
 

@@ -24,7 +24,7 @@ interface Provider<out T> {
   companion object {
 
     internal
-    fun <T> provideCollection(builder: CollectionPropertyBuilder<T>): Provider<CollectionStub1<T>> =
+    fun <T : Any> provideCollection(builder: CollectionPropertyBuilder<T>): Provider<CollectionStub1<T>> =
 
         object : Provider<CollectionStub1<T>> {
 

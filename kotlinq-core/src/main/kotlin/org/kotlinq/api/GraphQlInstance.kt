@@ -9,4 +9,6 @@ interface GraphQlInstance {
   val graphQlTypeName: String
   val properties: Map<String, Adapter>
   fun isResolved(): Boolean
+  fun bindProperty(adapter: Adapter)
+  fun toGraphQl(pretty: Boolean = false, extractFragments: Boolean = false): String
 }

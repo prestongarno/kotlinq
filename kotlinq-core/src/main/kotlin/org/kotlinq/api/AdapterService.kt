@@ -3,19 +3,18 @@ package org.kotlinq.api
 import kotlin.reflect.KType
 
 
+// Provides adapters (entities) for properties with different return types (use cases)
 interface AdapterService {
 
-  fun deserializer(type: KType, init: (java.io.InputStream) -> Any?)
-      : Adapter
+  val deserializer: (name: String, type: KType, init: (java.io.InputStream) -> Any?) -> Adapter
 
-  fun parser(type: KType, init: (String) -> Any?)
-      : Adapter
+  val parser: (name: String, type: KType, init: (String) -> Any?) -> Adapter
 
-  fun  initializer(type: KType, init: () -> Any?)
-      : Adapter
+  val initializer: (name: String, type: KType, init: () -> Any?) -> Adapter
 
-  fun enumDeserializer(type: KType)
-      : Adapter
+  val enumDeserializer: (name: String, type: KType) -> Adapter
+
+  val instanceProperty: (name: String, type: KType, init: () -> GraphQlInstance) -> Adapter
 
 }
 
