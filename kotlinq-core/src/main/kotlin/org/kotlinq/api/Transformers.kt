@@ -1,7 +1,11 @@
 package org.kotlinq.api
 
+import org.kotlinq.adapters.ModelAdapter
+
 
 // TODO module?
+internal
 interface Resolver {
-  fun transform(value: String, target: Adapter): Boolean
+
+  val modelResolver: (value: String, target: ModelAdapter) -> Boolean
 }

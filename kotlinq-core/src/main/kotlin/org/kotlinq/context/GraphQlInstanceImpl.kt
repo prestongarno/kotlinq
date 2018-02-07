@@ -17,14 +17,11 @@ class GraphQlInstanceImpl(override val graphQlTypeName: String)
   val instanceProperties : MutableMap<String, Adapter> =
       mutableMapOf()
 
-  fun onResolve(name: String, value: String): Boolean =
-      instanceProperties[name]?.take(value) == true
-
   override val properties: Map<String, Adapter>
     get() = instanceProperties
 
-  override fun isResolved(): Boolean {
-    TODO("not implemented")
-  }
+  override fun isResolved(): Boolean =
+      instanceProperties.filterNot { it.value.type.isMarkedNullable }
+          .count { it.value.isResolved() } == 0
 
 }

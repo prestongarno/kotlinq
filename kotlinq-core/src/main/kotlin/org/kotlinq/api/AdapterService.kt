@@ -5,7 +5,6 @@ import kotlin.reflect.KType
 
 interface AdapterService {
 
-
   fun deserializer(type: KType, init: (java.io.InputStream) -> Any?)
       : Adapter
 

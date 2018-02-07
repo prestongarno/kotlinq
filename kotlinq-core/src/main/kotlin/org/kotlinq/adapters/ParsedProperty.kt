@@ -8,16 +8,13 @@ internal
 class ParsedProperty(
     override val name: String,
     override val type: KType,
-    override val initializer: (String) -> Any?,
-    override val context: WeakReference<ModelAdapter>
+    override val initializer: (String) -> Any?
 ) : ParsingAdapter {
 
   lateinit var textResult: String
   // TODO best way to handle this
   private val result: Any? by lazy {
-    if (!this::textResult.isInitialized || context.get()?.parseField(this) == false)
-      initializer("")
-    else initializer(textResult)
+    if (!this::textResult.isInitialized) initializer("") else initializer(textResult)
   }
 
   override fun getValue(): Any? = result
