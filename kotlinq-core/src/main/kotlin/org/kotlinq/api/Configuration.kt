@@ -10,51 +10,18 @@ import kotlin.reflect.KProperty
 internal
 interface Configuration {
 
-
-  val adapterService: AdapterService
-
-  val printer: GraphQlFormatter
-
-  val resolver: Resolver
-
-  val jsonParser: JsonParser
-
-  val graphQlInstanceProvider: GraphQlInstanceProvider
+  val kodein: Kodein
 
 
   companion object : Configuration {
 
     private lateinit var container: Kodein
 
-    override val adapterService: AdapterService
+    override val kodein: Kodein
       get() {
         assertConfigured()
-        return container.instance()
+        return container
       }
-
-    override val printer: GraphQlFormatter
-      get() {
-        assertConfigured()
-        return container.instance()
-      }
-
-    override val resolver: Resolver
-      get() {
-        assertConfigured()
-        return container.instance()
-      }
-
-    override val jsonParser: JsonParser
-      get() {
-        assertConfigured()
-        return container.instance()
-      }
-    override val graphQlInstanceProvider: GraphQlInstanceProvider
-      get() {
-        assertConfigured()
-        return container.instance()
-      }
-
 
     fun configure(configuration: Builder) {
       this.container = configuration.kodein

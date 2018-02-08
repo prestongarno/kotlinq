@@ -2,10 +2,10 @@ package org.kotlinq
 
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Kotlinq
-import org.kotlinq.api.TypeContext
+import org.kotlinq.api.Context
 
 
-open class Model<out T : Any>(val model: T) : TypeContext {
+open class Model<out T : Any>(val model: T) : Context {
 
 
   override val graphQlInstance: GraphQlInstance by lazy {

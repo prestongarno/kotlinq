@@ -10,8 +10,10 @@ interface Adapter {
 
   fun getValue(): Any?
 
-  /** Callhack for giving this adapter a value */
-  fun take(value: String): Boolean
+  /**
+   * Visitor pattern for setting values of the query on response
+   */
+  fun accept(resolver: Resolver)
 
   fun isResolved(): Boolean
 }

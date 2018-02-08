@@ -1,12 +1,19 @@
 package org.kotlinq.api
 
-import org.kotlinq.adapters.ModelAdapter
+import com.github.salomonbrys.kodein.instance
 
 
-internal
 interface Resolver {
 
-  fun resolve(value: String, target: TypeContext): Boolean
+  fun resolve(value: Map<String, Any?>, target: Context): Boolean
 
-  companion object : Resolver by Configuration.resolver
+  fun visitModel(name: String, target: ModelAdapter)
+
+  fun visitFragment(name: String, target: FragmentAdapter)
+
+  fun visitScalar(name: String, target: ParsingAdapter)
+
+  fun visitDeserializer(name: String, target: DeserializingAdapter)
+
+  companion object : Resolver by Configuration.kodein.instance()
 }

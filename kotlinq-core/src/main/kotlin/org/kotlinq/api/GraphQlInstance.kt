@@ -1,7 +1,7 @@
 package org.kotlinq.api
 
 
-interface TypeContext {
+interface Context {
   val graphQlInstance: GraphQlInstance
 }
 

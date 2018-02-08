@@ -1,13 +1,13 @@
 package org.kotlinq.printer
 
-import org.kotlinq.adapters.FragmentAdapter
-import org.kotlinq.adapters.ModelAdapter
+import org.kotlinq.api.FragmentAdapter
+import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Printer
-import org.kotlinq.api.TypeContext
+import org.kotlinq.api.Context
 import java.util.*
 
 class PrinterImpl(
@@ -55,10 +55,10 @@ private const val EXIT_SCOPE: String = "}"
  * **WARNING** this reverses the order of printing, need to fix tests before using this by default
  */
 internal
-fun print(root: TypeContext): String = print(root, null)
+fun print(root: Context): String = print(root, null)
 
 private
-fun print(root: TypeContext, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
+fun print(root: Context, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
 
   val stack = LinkedList<Any>()
   val fragments: Map<Fragment, String> = frags
@@ -168,10 +168,10 @@ fun print(root: TypeContext, frags: Map<Fragment, String>? = null, builder: Stri
 }
 
 internal
-fun TypeContext.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
+fun Context.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
 
 private
-fun getFragments(root: TypeContext, collector: Set<TypeContext>): Set<Fragment> {
+fun getFragments(root: Context, collector: Set<Context>): Set<Fragment> {
   val fragmentEdges = root.graphQlInstance.properties
       .asSequence()
       .map { it.value }
@@ -190,7 +190,7 @@ private fun Map<String, String>.stringify(): String = TODO()
 
 
 internal
-fun pretty(context: TypeContext): String {
+fun pretty(context: Context): String {
   val fragments = context.getFragments().mapIndexed { index, fragment ->
     fragment to "frag${fragment.prototype.graphQlInstance.graphQlTypeName}$index"
   }.toMap()
@@ -204,7 +204,7 @@ fun pretty(context: TypeContext): String {
 }
 
 private
-fun TypeContext.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
+fun Context.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
   val indent = "\n${INDENT.repeat(indentLevel)}"
   return this.graphQlInstance.properties.entries.map { it.value }
       .joinToString(prefix = "{" + indent, separator = indent, postfix = "\n${INDENT.repeat(indentLevel - 1)}}") {

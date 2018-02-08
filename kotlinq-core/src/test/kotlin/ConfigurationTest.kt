@@ -1,5 +1,5 @@
 import org.junit.Test
-import org.kotlinq.adapters.ModelAdapter
+import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.AdapterService
 import org.kotlinq.api.Configuration
@@ -9,7 +9,7 @@ import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.JsonParser
 import org.kotlinq.api.Printer
 import org.kotlinq.api.Resolver
-import org.kotlinq.api.TypeContext
+import org.kotlinq.api.Context
 import java.io.InputStream
 import kotlin.reflect.KType
 
@@ -45,7 +45,7 @@ class ConfigurationTest {
           override fun enumDeserializer(name: String, type: KType): Adapter =
               TODO("not implemented")
 
-          override fun instanceProperty(name: String, type: KType, init: () -> TypeContext): Adapter =
+          override fun instanceProperty(name: String, type: KType, init: () -> Context): Adapter =
               TODO("not implemented")
 
         },
@@ -60,7 +60,7 @@ class ConfigurationTest {
 
         parser,
         object : GraphQlInstanceProvider {
-          override fun createNewInstance(typeName: String, typeContext: TypeContext): GraphQlInstance {
+          override fun createNewInstance(typeName: String, context: Context): GraphQlInstance {
             TODO("not implemented")
           }
 

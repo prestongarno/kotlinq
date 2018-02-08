@@ -1,7 +1,9 @@
 package org.kotlinq.api
 
+import com.github.salomonbrys.kodein.instance
 
-typealias Printer = (TypeContext) -> String
+
+typealias Printer = (Context) -> String
 
 
 internal
@@ -16,9 +18,9 @@ interface GraphQlFormatter {
   val optimizedPrinter: Printer
 
 
-  companion object : GraphQlFormatter by Configuration.printer {
+  companion object : GraphQlFormatter by Configuration.kodein.instance() {
 
-    fun printGraphQl(pretty: Boolean, extractFragments: Boolean, instance: TypeContext): String {
+    fun printGraphQl(pretty: Boolean, extractFragments: Boolean, instance: Context): String {
       return when {
         pretty && extractFragments -> prettyOptimizedPrinter
         pretty && !extractFragments -> prettyPrinter

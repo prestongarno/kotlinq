@@ -1,11 +1,14 @@
 package org.kotlinq.resolvers
 
-import org.kotlinq.adapters.ModelAdapter
-import org.kotlinq.api.JsonParser
 import org.kotlinq.api.Resolver
+import org.kotlinq.api.Context
 
 internal
-class ObjectTransformerImpl(
-    override val modelResolver: (value: String, target: ModelAdapter) -> Boolean
-) : Resolver
+class ObjectTransformerImpl : Resolver {
+
+  override fun resolve(value: Map<String, Any?>, target: Context): Boolean {
+    TODO("not implemented")
+  }
+
+}
 

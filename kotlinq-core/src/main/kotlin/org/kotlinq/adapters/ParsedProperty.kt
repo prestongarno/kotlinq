@@ -1,5 +1,7 @@
 package org.kotlinq.adapters
 
+import org.kotlinq.api.ParsingAdapter
+import org.kotlinq.api.Resolver
 import kotlin.reflect.KType
 
 
@@ -19,11 +21,15 @@ class ParsedProperty(
 
   override fun getValue(): Any? = result
 
-  override fun take(value: String): Boolean {
-    textResult = value
-    return true
+  override fun setValue(value: String?): Boolean {
+    this.textResult = value ?: ""
+    return result != null || type.isMarkedNullable
   }
 
-  override fun isResolved() = this::textResult.isInitialized
+  override fun accept(resolver: Resolver) {
+    resolver.visitScalar(name, this)
+  }
+
+  override fun isResolved() = this::textResult.isInitialized || type.isMarkedNullable
 
 }

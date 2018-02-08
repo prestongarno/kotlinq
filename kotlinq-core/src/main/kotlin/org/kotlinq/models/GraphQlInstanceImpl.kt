@@ -5,13 +5,13 @@ import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
-import org.kotlinq.api.TypeContext
+import org.kotlinq.api.Context
 
 
 internal
 class GraphQlInstanceImpl private constructor(
     override val graphQlTypeName: String,
-    val context: TypeContext
+    val context: Context
 ) : GraphQlInstance {
 
   private

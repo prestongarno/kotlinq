@@ -1,8 +1,9 @@
 package org.kotlinq.adapters
 
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.JsonParser
-import org.kotlinq.api.TypeContext
+import org.kotlinq.api.FragmentAdapter
+import org.kotlinq.api.Resolver
+import org.kotlinq.api.Context
 import kotlin.reflect.KType
 
 
@@ -12,23 +13,22 @@ class FragmentProperty(
     override val type: KType,
     override val arguments: Map<String, String>
 ) : FragmentAdapter {
+  private var value: Context? = null
 
-  private var value: TypeContext? = null
+  override fun getValue(): Context? = value
 
-  override fun resolve(result: Pair<String, String>): Boolean {
-    value = fragments[result.first]?.initializer?.invoke()?.also { context ->
-
-      JsonParser.parseToObject(result.second).forEach { (name, value) ->
-        context.graphQlInstance.properties[name]?.take(value)
-      }
-
+  override fun setValue(typeName: String, values: Map<String, String>): Boolean {
+    this.value = fragments[typeName]?.initializer?.invoke()?.apply {
+      Resolver.resolve(values, this)
     }
-    return this.value?.graphQlInstance?.isResolved() == true
+    return isResolved()
   }
 
-  override fun getValue(): Any? = value
+  override fun accept(resolver: Resolver) {
+    resolver.visitFragment(name, this)
+  }
 
-  override fun take(value: String): Boolean = resolve(JsonParser.parseFragment(value))
-
-  override fun isResolved() = value != null || type.isMarkedNullable
+  override fun isResolved() =
+      value?.graphQlInstance?.isResolved() == true
+          || type.isMarkedNullable
 }

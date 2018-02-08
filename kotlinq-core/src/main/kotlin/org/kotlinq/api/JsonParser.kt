@@ -1,5 +1,7 @@
 package org.kotlinq.api
 
+import com.github.salomonbrys.kodein.instance
+
 
 interface JsonParser {
 
@@ -7,5 +9,5 @@ interface JsonParser {
 
   fun parseToArray(string: String): Map<String, Any?>
 
-  companion object : JsonParser by Configuration.jsonParser
+  companion object : JsonParser by Configuration.kodein.instance()
 }

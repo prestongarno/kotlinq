@@ -12,9 +12,11 @@ interface AdapterService {
 
   fun initializer(name: String, type: KType, init: () -> Any?): Adapter
 
-  fun enumDeserializer(name: String, type: KType) : Adapter
+  fun enumDeserializer(name: String, type: KType): Adapter
 
-  fun instanceProperty(name: String, type: KType, init: () -> TypeContext) : Adapter
+  fun instanceProperty(name: String, type: KType, init: () -> Context): Adapter
+
+  fun fragmentProperty(name: String, type: KType, fragments: Set<() -> Context>): Adapter
 
 }
 
