@@ -6,7 +6,7 @@ import org.kotlinq.adapters.ModelAdapter
 internal
 interface Resolver {
 
-  val modelResolver: (value: String, target: ModelAdapter) -> Boolean
+  fun resolve(value: String, target: TypeContext): Boolean
 
   companion object : Resolver by Configuration.resolver
 }

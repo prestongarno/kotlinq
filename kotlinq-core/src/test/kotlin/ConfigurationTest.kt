@@ -1,6 +1,5 @@
 import org.junit.Test
 import org.kotlinq.adapters.ModelAdapter
-import org.kotlinq.adapters.ParsedProperty
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.AdapterService
 import org.kotlinq.api.Configuration
@@ -10,6 +9,7 @@ import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.JsonParser
 import org.kotlinq.api.Printer
 import org.kotlinq.api.Resolver
+import org.kotlinq.api.TypeContext
 import java.io.InputStream
 import kotlin.reflect.KType
 
@@ -18,6 +18,11 @@ class ConfigurationTest {
   @Test fun assertDependencyIsInitialized() {
 
     val parser: JsonParser = object : JsonParser {
+
+      override fun parseFragment(string: String): Pair<String, String> {
+        TODO("not implemented")
+      }
+
       override fun parseToObject(string: String): Sequence<Pair<String, String>> {
         var count = 0
         return generateSequence { if (count++ > 0) null else string.split(":").let { it[0] to it[1] } }
@@ -27,11 +32,22 @@ class ConfigurationTest {
     }
     Configuration.configure(Configuration.Companion.Builder(
         object : AdapterService {
-          override val instanceProperty: (name: String, type: KType, init: () -> GraphQlInstance) -> Adapter get() = TODO()
-          override val deserializer = { name: String, type: KType, init: (InputStream) -> Any? -> ParsedProperty("", TODO(), TODO()) }
-          override val parser: (name: String, type: KType, init: (String) -> Any?) -> Adapter = { name, type, init -> TODO() }
-          override val initializer: (name: String, type: KType, init: () -> Any?) -> Adapter = { name, type, init -> TODO() }
-          override val enumDeserializer: (name: String, type: KType) -> Adapter get() = TODO()
+
+          override fun deserializer(name: String, type: KType, init: (InputStream) -> Any?): Adapter =
+              TODO("not implemented")
+
+          override fun parser(name: String, type: KType, init: (String) -> Any?): Adapter =
+              TODO("not implemented")
+
+          override fun initializer(name: String, type: KType, init: () -> Any?): Adapter =
+              TODO("not implemented")
+
+          override fun enumDeserializer(name: String, type: KType): Adapter =
+              TODO("not implemented")
+
+          override fun instanceProperty(name: String, type: KType, init: () -> TypeContext): Adapter =
+              TODO("not implemented")
+
         },
         object : GraphQlFormatter {
           override val prettyPrinter: Printer = { "" }
@@ -44,7 +60,7 @@ class ConfigurationTest {
 
         parser,
         object : GraphQlInstanceProvider {
-          override fun createNewInstance(typeName: String): GraphQlInstance {
+          override fun createNewInstance(typeName: String, typeContext: TypeContext): GraphQlInstance {
             TODO("not implemented")
           }
 

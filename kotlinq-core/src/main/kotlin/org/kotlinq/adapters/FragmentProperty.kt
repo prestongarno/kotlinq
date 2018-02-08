@@ -9,7 +9,8 @@ import kotlin.reflect.KType
 class FragmentProperty(
     override val fragments: Map<String, Fragment>,
     override val name: String,
-    override val type: KType
+    override val type: KType,
+    override val arguments: Map<String, String>
 ) : FragmentAdapter {
 
   private var value: TypeContext? = null

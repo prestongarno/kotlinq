@@ -4,7 +4,7 @@ import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
 
 internal
-interface ModelAdapter: Adapter {
+interface ModelAdapter: Adapter, Fragment {
   fun resolve(value: Sequence<Pair<String, String>>): Boolean
 }
 

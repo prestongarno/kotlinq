@@ -5,10 +5,15 @@ import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
+import org.kotlinq.api.TypeContext
 
 
 internal
-class GraphQlInstanceImpl private constructor(override val graphQlTypeName: String) : GraphQlInstance {
+class GraphQlInstanceImpl private constructor(
+    override val graphQlTypeName: String,
+    val context: TypeContext
+) : GraphQlInstance {
+
   private
   val instanceProperties: MutableMap<String, Adapter> =
       mutableMapOf()
@@ -22,7 +27,7 @@ class GraphQlInstanceImpl private constructor(override val graphQlTypeName: Stri
           .count { it.value.isResolved() } == 0
 
   override fun toGraphQl(pretty: Boolean, extractFragments: Boolean): String =
-      GraphQlFormatter.printGraphQl(pretty, extractFragments, this)
+      GraphQlFormatter.printGraphQl(pretty, extractFragments, context)
 
   override fun bindProperty(adapter: Adapter) {
     instanceProperties[adapter.name] = adapter

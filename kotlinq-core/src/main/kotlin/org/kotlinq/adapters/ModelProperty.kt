@@ -8,10 +8,13 @@ internal
 class ModelPropertyImpl(
     override val name: String,
     override val type: KType,
-    val init: () -> TypeContext
+    override val arguments: Map<String, String>,
+    override val initializer: () -> TypeContext
 ) : ModelAdapter {
 
   private var instance: TypeContext? = null
+
+  override val prototype: TypeContext by lazy { initializer() }
 
   override fun isResolved(): Boolean {
     return instance?.graphQlInstance?.isResolved() == true
@@ -24,7 +27,7 @@ class ModelPropertyImpl(
   override fun resolve(value: Sequence<Pair<String, String>>): Boolean {
     require(this.instance == null) { "GraphQL queries are non-reusable operation" }
 
-    instance = init().also { context ->
+    instance = initializer().also { context ->
       value.forEach { (name, value) -> context.graphQlInstance.properties[name]?.take(value) }
     }
 

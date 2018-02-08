@@ -7,7 +7,8 @@ import kotlin.reflect.KType
 class DeserializingProperty(
     override val name: String,
     override val type: KType,
-    val init: (java.io.InputStream) -> Any?
+    val init: (java.io.InputStream) -> Any?,
+    override val arguments: Map<String, String>
 ) : DeserializingAdapter {
 
   private var value: Any? = null

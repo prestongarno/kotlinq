@@ -6,8 +6,6 @@ import org.kotlinq.api.Resolver
 
 internal
 class ObjectTransformerImpl(
-    override val modelResolver: (value: String, target: ModelAdapter) -> Boolean = { value, target ->
-      target.resolve(JsonParser.parseToObject(value))
-    }
+    override val modelResolver: (value: String, target: ModelAdapter) -> Boolean
 ) : Resolver
 
