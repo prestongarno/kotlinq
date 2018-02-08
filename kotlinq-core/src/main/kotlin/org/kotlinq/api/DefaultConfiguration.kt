@@ -10,22 +10,27 @@ import org.kotlinq.resolvers.ResolverImpl
 internal
 object DefaultConfiguration {
 
-  val adapterService by lazy { AdapterServiceImpl() }
+  val adapterService: AdapterService
+      by lazy(::AdapterServiceImpl)
 
-  val printerService by lazy { PrinterImpl() }
+  val graphQlInstanceProvider: GraphQlInstanceProvider
+      by lazy(::GraphQlInstanceProviderImpl)
 
-  val resolver by lazy { ResolverImpl() }
+  val jsonParser: JsonParser
+      by lazy(::JsonParserImpl)
 
-  val jsonParser by lazy { JsonParserImpl() }
+  val printerService: GraphQlFormatter
+      by lazy { PrinterImpl() }
 
-  val graphQlInstanceProvider by lazy { GraphQlInstanceProviderImpl() }
+  val resolver: Resolver
+      by lazy(::ResolverImpl)
 
   fun useDefaults(configuration: Configuration) {
     configuration.configure(Configuration.Companion.Builder(
-        AdapterServiceImpl(),
-        PrinterImpl(),
-        ResolverImpl(),
-        JsonParserImpl(),
-        GraphQlInstanceProviderImpl()))
+        adapterService,
+        printerService,
+        resolver,
+        jsonParser,
+        graphQlInstanceProvider))
   }
 }
