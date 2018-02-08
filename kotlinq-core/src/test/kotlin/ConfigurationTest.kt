@@ -69,6 +69,7 @@ class ConfigurationTest {
 
 
     val parseToObject = JsonParser.parseToObject("Hello:World")
+
     parseToObject.iterator().next().let { (name, value) ->
       require(name == "Hello" && value == "World")
     }
@@ -87,9 +88,10 @@ class ConfigurationTest {
           }
     }
 
-    Resolver.resolve(parseToObject, context)
+    require(Resolver.resolve(parseToObject, context))
 
     require(context.graphQlInstance.properties["Hello"]?.getValue() == "World")
+
     context.graphQlInstance.toGraphQl(pretty = true, extractFragments = false).let {
       require(it == """
         |{

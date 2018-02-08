@@ -15,25 +15,23 @@ class ResolverImpl : Resolver {
   override fun resolve(value: Map<String, Any?>, target: Context): Boolean =
       InstanceResolver(target, value).resolveFromRoot()
 
-  override fun visitModel(name: String, target: ModelAdapter): Unit =
-      throw UnsupportedOperationException()
+  override fun visitModel(name: String, target: ModelAdapter) = Unit
 
-  override fun visitFragment(name: String, target: FragmentAdapter): Unit =
-      throw UnsupportedOperationException()
+  override fun visitFragment(name: String, target: FragmentAdapter) = Unit
 
-  override fun visitScalar(name: String, target: ParsingAdapter): Unit =
-      throw UnsupportedOperationException()
+  override fun visitScalar(name: String, target: ParsingAdapter) = Unit
 
-  override fun visitDeserializer(name: String, target: DeserializingAdapter): Unit =
-      throw UnsupportedOperationException()
+  override fun visitDeserializer(name: String, target: DeserializingAdapter) = Unit
 
   private
   class InstanceResolver(private val context: Context, private val values: Map<String, Any?>) : Resolver {
 
-    val stack = LinkedList(listOf(values))
+    val stack = LinkedList<Map<String, Any?>>()
 
     fun push(values: Map<String, Any?>) = stack.addFirst(values)
-    fun pop() { stack.removeFirst() }
+    fun pop() {
+      stack.removeFirst()
+    }
 
     fun resolveFromRoot(): Boolean = resolve(values, context)
 
@@ -63,7 +61,7 @@ class ResolverImpl : Resolver {
     }
 
     override fun visitScalar(name: String, target: ParsingAdapter) {
-      stack.peek()[name]?.toString()?.let(target::setValue)
+      target.setValue(stack.peek()[name]?.toString())
     }
 
     override fun visitDeserializer(name: String, target: DeserializingAdapter) {

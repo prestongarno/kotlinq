@@ -22,7 +22,7 @@ class GraphQlInstanceImpl(override val graphQlTypeName: String, val context: Con
 
   override fun isResolved(): Boolean =
       instanceProperties.filterNot { it.value.type.isMarkedNullable }
-          .count { it.value.isResolved() } == 0
+          .count { !it.value.isResolved() } == 0
 
   override fun toGraphQl(pretty: Boolean, extractFragments: Boolean): String =
       GraphQlFormatter.printGraphQl(pretty, extractFragments, context)
