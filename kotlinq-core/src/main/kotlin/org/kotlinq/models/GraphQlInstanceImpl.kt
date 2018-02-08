@@ -1,18 +1,16 @@
 package org.kotlinq.models
 
+import com.github.salomonbrys.kodein.instance
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Configuration
+import org.kotlinq.api.Context
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
-import org.kotlinq.api.Context
 
 
 internal
-class GraphQlInstanceImpl private constructor(
-    override val graphQlTypeName: String,
-    val context: Context
-) : GraphQlInstance {
+class GraphQlInstanceImpl(override val graphQlTypeName: String, val context: Context) : GraphQlInstance {
 
   private
   val instanceProperties: MutableMap<String, Adapter> =
@@ -34,5 +32,5 @@ class GraphQlInstanceImpl private constructor(
   }
 
 
-  companion object : GraphQlInstanceProvider by Configuration.graphQlInstanceProvider
+  companion object : GraphQlInstanceProvider by Configuration.kodein.instance()
 }

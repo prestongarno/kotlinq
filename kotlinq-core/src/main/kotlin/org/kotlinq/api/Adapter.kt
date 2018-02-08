@@ -6,7 +6,7 @@ interface Adapter {
 
   val name: String
   val type: KType
-  val arguments: Map<String, String>
+  val arguments: Map<String, Any>
 
   fun getValue(): Any?
 

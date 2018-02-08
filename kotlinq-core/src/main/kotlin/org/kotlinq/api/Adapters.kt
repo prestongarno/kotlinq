@@ -2,11 +2,11 @@ package org.kotlinq.api
 
 
 interface ModelAdapter: Adapter, Fragment {
-  fun setValue(result: Map<String, Any?>): Boolean
+  fun setValue(result: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
 }
 
 interface FragmentAdapter : Adapter {
-  fun setValue(typeName: String, values: Map<String, String>): Boolean
+  fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
   val fragments: Map<String, Fragment>
 }
 

@@ -10,7 +10,7 @@ class DeserializingProperty(
     override val name: String,
     override val type: KType,
     override val initializer: (java.io.InputStream) -> Any?,
-    override val arguments: Map<String, String>
+    override val arguments: Map<String, Any>
 ) : DeserializingAdapter {
   private var value: Any? = null
 

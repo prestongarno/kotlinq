@@ -10,7 +10,7 @@ class ParsedProperty(
     override val name: String,
     override val type: KType,
     override val initializer: (String) -> Any?,
-    override val arguments: Map<String, String>
+    override val arguments: Map<String, Any>
 ) : ParsingAdapter {
 
   lateinit var textResult: String

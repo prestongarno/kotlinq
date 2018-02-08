@@ -11,15 +11,16 @@ class FragmentProperty(
     override val fragments: Map<String, Fragment>,
     override val name: String,
     override val type: KType,
-    override val arguments: Map<String, String>
+    override val arguments: Map<String, Any>
 ) : FragmentAdapter {
+
   private var value: Context? = null
 
   override fun getValue(): Context? = value
 
-  override fun setValue(typeName: String, values: Map<String, String>): Boolean {
+  override fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver): Boolean {
     this.value = fragments[typeName]?.initializer?.invoke()?.apply {
-      Resolver.resolve(values, this)
+      resolver.resolve(values, this)
     }
     return isResolved()
   }

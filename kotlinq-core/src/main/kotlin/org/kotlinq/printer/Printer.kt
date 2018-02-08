@@ -1,21 +1,23 @@
 package org.kotlinq.printer
 
-import org.kotlinq.api.FragmentAdapter
-import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.Adapter
+import org.kotlinq.api.Context
 import org.kotlinq.api.Fragment
+import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.Printer
-import org.kotlinq.api.Context
+import org.kotlinq.common.stringify
 import java.util.*
 
+internal
 class PrinterImpl(
     override val prettyPrinter: Printer = defaultOptimizedPrettyPrinter,
     override val prettyOptimizedPrinter: Printer = defaultOptimizedPrettyPrinter,
     override val printer: Printer = defaultOptimizedPrinter,
     override val optimizedPrinter: Printer = defaultOptimizedPrinter
-): GraphQlFormatter
+) : GraphQlFormatter
 
 val defaultOptimizedPrinter: Printer get() = ::print
 val defaultOptimizedPrettyPrinter: Printer get() = ::pretty
@@ -137,7 +139,7 @@ fun print(root: Context, frags: Map<Fragment, String>? = null, builder: StringBu
         append(ENTER_SCOPE)
         val numOfFields = fragment.prototype.graphQlInstance.properties.size - 1
 
-        fragment.prototype.graphQlInstance.properties.entries.toList().forEachIndexed { i, (typeName, value) ->
+        fragment.prototype.graphQlInstance.properties.entries.toList().forEachIndexed { i, (_, value) ->
           append(value.name)
           append(value.arguments.stringify())
           when (value) {
@@ -186,9 +188,6 @@ fun getFragments(root: Context, collector: Set<Context>): Set<Fragment> {
 
 }
 
-private fun Map<String, String>.stringify(): String = TODO()
-
-
 internal
 fun pretty(context: Context): String {
   val fragments = context.getFragments().mapIndexed { index, fragment ->
@@ -222,7 +221,7 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
     is FragmentAdapter -> this@printEdge.fragments.asIterable().joinToString(
         prefix = " {" + whitespace + "__typename" + whitespace,
         postfix = "\n${INDENT.repeat(indentLevel - 1)}}",
-        separator = whitespace) { (typeName, fragment) ->
+        separator = whitespace) { (_, fragment) ->
       "...${fragments[fragment]}"// + it.model.printNode(fragments, indentLevel + 1)
     }
 

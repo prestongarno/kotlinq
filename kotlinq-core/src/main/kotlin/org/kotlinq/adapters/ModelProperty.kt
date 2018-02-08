@@ -9,7 +9,7 @@ internal
 class ModelPropertyImpl(
     override val name: String,
     override val type: KType,
-    override val arguments: Map<String, String>,
+    override val arguments: Map<String, Any>,
     override val initializer: () -> Context
 ) : ModelAdapter {
 
@@ -21,9 +21,9 @@ class ModelPropertyImpl(
     return instance?.graphQlInstance?.isResolved() == true
   }
 
-  override fun setValue(result: Map<String, Any?>): Boolean {
+  override fun setValue(result: Map<String, Any?>, resolver: Resolver): Boolean {
     this.instance = initializer().apply {
-      Resolver.resolve(result, this)
+      resolver.resolve(result, this)
     }
     return isResolved()
   }
