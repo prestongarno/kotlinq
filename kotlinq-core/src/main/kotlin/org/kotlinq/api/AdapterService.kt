@@ -10,8 +10,6 @@ interface AdapterService {
 
   fun parser(name: String, type: KType, init: (String) -> Any?): Adapter
 
-  fun initializer(name: String, type: KType, init: () -> Any?): Adapter
-
   fun enumDeserializer(name: String, type: KType): Adapter
 
   fun instanceProperty(name: String, type: KType, init: () -> Context): Adapter

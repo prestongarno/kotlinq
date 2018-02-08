@@ -13,23 +13,20 @@ class ParsedProperty(
     override val arguments: Map<String, Any>
 ) : ParsingAdapter {
 
-  lateinit var textResult: String
-
-  private val result: Any? by lazy {
-    if (!this::textResult.isInitialized) initializer("") else initializer(textResult)
-  }
+  private var result: Any? = null
 
   override fun getValue(): Any? = result
 
   override fun setValue(value: String?): Boolean {
-    this.textResult = value ?: ""
-    return result != null || type.isMarkedNullable
+    result = this.initializer(value ?: "")
+    return isResolved()
   }
 
   override fun accept(resolver: Resolver) {
     resolver.visitScalar(name, this)
   }
 
-  override fun isResolved() = this::textResult.isInitialized || type.isMarkedNullable
+  override fun isResolved() =
+      result != null || type.isMarkedNullable
 
 }

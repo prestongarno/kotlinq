@@ -5,9 +5,9 @@ import com.github.salomonbrys.kodein.instance
 
 interface JsonParser {
 
-  fun parseToObject(string: String): Map<String, Any?>
+  fun parseToObject(string: String, rootObjectName: String = "data"): Map<String, Any?>
 
-  fun parseToArray(string: String): Map<String, Any?>
+  fun parseToArray(string: String): Iterable<Any>
 
   companion object : JsonParser by Configuration.kodein.instance()
 }

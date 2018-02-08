@@ -1,17 +1,20 @@
 buildscript {
   repositories {
     mavenLocal()
+    jcenter()
+    mavenCentral()
   }
 }
 
 repositories {
+  jcenter()
   mavenLocal()
   mavenCentral()
-  jcenter()
 }
 apply plugin: 'maven'
 
 dependencies {
+  compile 'com.beust:klaxon:2.1.4'
   compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
   compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
   testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"

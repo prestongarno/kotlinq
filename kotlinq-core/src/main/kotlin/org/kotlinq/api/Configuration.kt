@@ -2,9 +2,7 @@ package org.kotlinq.api
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.singleton
-import kotlin.reflect.KProperty
 
 
 internal
@@ -12,6 +10,7 @@ interface Configuration {
 
   val kodein: Kodein
 
+  fun configure(configuration: Builder)
 
   companion object : Configuration {
 
@@ -23,21 +22,21 @@ interface Configuration {
         return container
       }
 
-    fun configure(configuration: Builder) {
+    override fun configure(configuration: Builder) {
       this.container = configuration.kodein
     }
 
     private fun assertConfigured() {
-      if (!this::container.isInitialized) throw IllegalStateException("Not Configured")
+      if (!this::container.isInitialized) DefaultConfiguration.useDefaults(this)
     }
 
     internal
     class Builder(
-        adapterService: AdapterService,
-        printer: GraphQlFormatter,
-        resolver: Resolver,
-        jsonParser: JsonParser,
-        instanceProvider: GraphQlInstanceProvider
+        adapterService: AdapterService = DefaultConfiguration.adapterService,
+        printer: GraphQlFormatter = DefaultConfiguration.printerService,
+        resolver: Resolver = DefaultConfiguration.resolver,
+        jsonParser: JsonParser = DefaultConfiguration.jsonParser,
+        instanceProvider: GraphQlInstanceProvider = DefaultConfiguration.graphQlInstanceProvider
     ) {
 
       val kodein by lazy {
