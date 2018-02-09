@@ -45,7 +45,7 @@ The last code block will print "Hello, \<your name here\>"
 
 
 
-## More in-depth advanced example
+## More in-depth example
 
 For this github query in the schema, here is how to query repositories with parameters:
 
