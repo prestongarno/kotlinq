@@ -45,18 +45,20 @@ class ResolverImpl : Resolver {
     override fun visitModel(name: String, target: ModelAdapter) {
       @Suppress("UNCHECKED_CAST")
       (stack.peek()[name] as? Map<String, Any?>)?.let {
-        stack.push(it)
+        push(it)
         target.setValue(it, this)
+        pop()
       }
     }
 
     override fun visitFragment(name: String, target: FragmentAdapter) {
       @Suppress("UNCHECKED_CAST")
       (stack.peek()[name] as? Map<String, Any?>)?.let { values ->
-        stack.push(values)
+        push(values)
         values["__typename"]?.toString()?.let { type ->
           target.setValue(type, values, this)
         }
+        pop()
       }
     }
 

@@ -29,7 +29,7 @@ class ModelPropertyImpl(
   }
 
   override fun accept(resolver: Resolver) {
-    resolver.visitModel(name, this)
+    resolver.visitModel(this)
   }
 
   override fun getValue(): Context? = instance

@@ -6,6 +6,7 @@ import java.io.InputStream
 import kotlin.reflect.KType
 
 
+internal
 class DeserializingProperty(
     override val name: String,
     override val type: KType,
@@ -24,7 +25,7 @@ class DeserializingProperty(
   }
 
   override fun accept(resolver: Resolver) {
-    resolver.visitDeserializer(name, this)
+    resolver.visitDeserializer(this)
   }
 
 }

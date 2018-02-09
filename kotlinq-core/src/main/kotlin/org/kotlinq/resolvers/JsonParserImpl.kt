@@ -13,7 +13,7 @@ class JsonParserImpl : JsonParser {
   }
 
   override fun parseToArray(string: String): Iterable<Any> {
-    return Klaxon().parseArray<String>(string) ?: emptyList()
+    return Klaxon().parseArray(string) ?: emptyList()
   }
 
 }

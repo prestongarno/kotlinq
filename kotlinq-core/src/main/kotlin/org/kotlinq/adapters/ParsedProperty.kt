@@ -23,7 +23,7 @@ class ParsedProperty(
   }
 
   override fun accept(resolver: Resolver) {
-    resolver.visitScalar(name, this)
+    resolver.visitScalar(this)
   }
 
   override fun isResolved() =

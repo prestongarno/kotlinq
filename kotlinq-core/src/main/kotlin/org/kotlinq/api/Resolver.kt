@@ -7,13 +7,13 @@ interface Resolver {
 
   fun resolve(value: Map<String, Any?>, target: Context): Boolean
 
-  fun visitModel(name: String, target: ModelAdapter)
+  fun visitModel(target: ModelAdapter)
 
-  fun visitFragment(name: String, target: FragmentAdapter)
+  fun visitFragment(target: FragmentAdapter)
 
-  fun visitScalar(name: String, target: ParsingAdapter)
+  fun visitScalar(target: ParsingAdapter)
 
-  fun visitDeserializer(name: String, target: DeserializingAdapter)
+  fun visitDeserializer(target: DeserializingAdapter)
 
   companion object : Resolver by Configuration.kodein.instance()
 }

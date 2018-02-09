@@ -7,6 +7,7 @@ import org.kotlinq.api.Context
 import kotlin.reflect.KType
 
 
+internal
 class FragmentProperty(
     override val name: String,
     override val type: KType,
@@ -26,7 +27,7 @@ class FragmentProperty(
   }
 
   override fun accept(resolver: Resolver) {
-    resolver.visitFragment(name, this)
+    resolver.visitFragment(this)
   }
 
   override fun isResolved() =
