@@ -100,7 +100,7 @@ class SearchResultConnectionImpl : Model<SearchResultItemConnection>(SearchResul
   // Unfortunately union type queries become erased,
   // but convenience methods are generated for type-safety in the DSL
   val nodes: List<Model<*>> by model.nodes {
-    fragment { onRepository(RepositoryImpl) }
+    fragment { onRepository(::RepositoryImpl) }
   }
 }
 ```
