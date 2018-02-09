@@ -6,6 +6,11 @@ import com.github.salomonbrys.kodein.instance
 typealias Printer = (Context) -> String
 
 
+/**
+ * Interface which supports printing GraphQL requests in the 4 different formats supported
+ *
+ * @author prestongarno
+ */
 internal
 interface GraphQlFormatter {
 

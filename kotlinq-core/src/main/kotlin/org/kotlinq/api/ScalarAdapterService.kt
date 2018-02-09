@@ -3,6 +3,11 @@ package org.kotlinq.api
 import kotlin.reflect.KType
 
 
+/**
+ * Factory methods for primitive platform delegate delegates.
+ *
+ * Added to prevent boxing every value on property access
+ */
 interface ScalarAdapterService {
 
   val mappers: TypeMappers

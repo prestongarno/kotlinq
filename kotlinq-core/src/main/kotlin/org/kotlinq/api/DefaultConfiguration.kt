@@ -7,11 +7,12 @@ import org.kotlinq.resolvers.JsonParserImpl
 import org.kotlinq.resolvers.ResolverImpl
 
 
+/** Default library back-end dependency configuration */
 internal
 object DefaultConfiguration {
 
   val adapterService: AdapterService
-      by lazy(::AdapterServiceImpl)
+      by lazy { AdapterServiceImpl() }
 
   val graphQlInstanceProvider: GraphQlInstanceProvider
       by lazy(::GraphQlInstanceProviderImpl)

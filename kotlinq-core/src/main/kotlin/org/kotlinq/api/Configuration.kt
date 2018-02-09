@@ -5,6 +5,16 @@ import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.singleton
 
 
+/**
+ * Simple module/dependency container.
+ * NOTE: Companion objects of interface definitions use this
+ * at class initialization to implicitly implement interfaces.
+ * If no custom dependency configuration is specified at start-up,
+ * it's impossible to re-configure the dependencies after first use,
+ * due to the way that Kotlin's class-level delegation works
+ *
+ * @author prestongarno
+ */
 internal
 interface Configuration {
 
@@ -12,10 +22,13 @@ interface Configuration {
 
   fun configure(configuration: Builder)
 
+
+
   companion object : Configuration {
 
     private lateinit var container: Kodein
 
+    /** kodein dependency container */
     override val kodein: Kodein
       get() {
         assertConfigured()

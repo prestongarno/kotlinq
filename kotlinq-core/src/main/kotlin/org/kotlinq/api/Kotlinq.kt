@@ -3,6 +3,10 @@ package org.kotlinq.api
 import com.github.salomonbrys.kodein.instance
 
 
+/**
+ * God-object exposed to kotlinq-schema module
+ * for creating kotlin platform delegate properties
+ */
 interface Kotlinq {
 
   val adapterService: AdapterService

@@ -6,11 +6,11 @@ import kotlin.reflect.full.isSubtypeOf
 
 internal
 fun KType.isCollection(): Boolean {
-  return isSubtypeOf(PrototypeContainer.apexListType)
+  return isSubtypeOf(Prototypes.apexListType)
 }
 
-private object PrototypeContainer {
+private object Prototypes {
   val listProperty: Collection<*>? = emptyList<Any?>()
-  val apexListType = PrototypeContainer::listProperty.returnType
+  val apexListType = Prototypes::listProperty.returnType
 }
 
