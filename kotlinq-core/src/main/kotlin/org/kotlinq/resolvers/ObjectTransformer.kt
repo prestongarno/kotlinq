@@ -7,7 +7,7 @@ import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.Resolver
 import java.io.InputStream
-import java.util.*
+import java.util.LinkedList
 
 internal
 class ResolverImpl : Resolver {
