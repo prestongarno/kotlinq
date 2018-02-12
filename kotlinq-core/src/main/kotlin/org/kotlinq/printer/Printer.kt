@@ -168,7 +168,7 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
   return builder.toString().trim()
 }
 
-internal
+private
 fun GraphQlInstance.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
 
 private

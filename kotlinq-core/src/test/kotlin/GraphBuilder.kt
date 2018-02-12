@@ -73,6 +73,10 @@ class GraphBuilder(override val graphQlTypeName: String, private val definition:
 
 }
 
+infix fun String.ofType(name: String): GraphBuilder.TypeBuilder.TypeFieldBuilder {
+  return GraphBuilder.TypeBuilder.TypeFieldBuilder(this, name)
+}
+
 private
 class MockFragmentField(
     override val name: String,

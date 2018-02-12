@@ -4,8 +4,8 @@ import org.junit.Test
 import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.Printer
+import org.kotlinq.fragments.getFragments
 import org.kotlinq.printer.VisitingPrinter
-
 
 
 class MockGraphPrinterTests {

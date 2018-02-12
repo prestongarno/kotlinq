@@ -23,7 +23,6 @@ interface GraphQlInstance {
 
   fun isResolved(): Boolean
 
-  /** TODO probably should not expose this */
   fun bindProperty(adapter: Adapter)
 
   /**
