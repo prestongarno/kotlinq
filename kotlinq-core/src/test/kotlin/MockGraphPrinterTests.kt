@@ -74,4 +74,32 @@ class MockGraphPrinterTests {
     "{query(first: 100){... on Type1{hello}... on Type2{world}}}" eq graph.toGraphQl()
   }
 
+  @Test fun fragmentPropertyDefinitionTestWithNestedTypes() {
+
+    val graph = createGraph {
+      "query" ofType "Query" spread {
+
+        "Type1" fragmentDef {
+          scalar("hello")
+
+          "nestedType1" ofType "Def" definedAs {
+            scalar("name")
+            scalar("id")
+          }
+        }
+
+        "Type2" fragmentDef {
+          scalar("world")
+
+          "nestedType2" ofType "Def" definedAs {
+            scalar("name")
+            scalar("loginId")
+            scalar("id")
+          }
+        }
+      }
+    }.graphQlInstance
+
+    "{query{... on Type1{hello,nestedType1{name,id}}... on Type2{world,nestedType2{name,loginId,id}}}}" eq graph.toGraphQl()
+  }
 }
