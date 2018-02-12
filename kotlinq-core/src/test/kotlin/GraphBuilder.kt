@@ -36,7 +36,8 @@ class GraphBuilder(override val graphQlTypeName: String, private val definition:
     }
 
     infix fun TypeFieldBuilder.definedAs(block: TypeBuilder.() -> Unit) {
-      graph.bindProperty(MockTypeField(fieldName, typeName, { GraphBuilder(typeName, block) }))
+      val def = TypeBuilder(GraphBuilder(typeName, block)).apply(block)
+      graph.bindProperty(MockTypeField(fieldName, typeName, { GraphBuilder(typeName, block).build() }, def.isNullable, def.arguments))
     }
 
 
@@ -49,10 +50,9 @@ private
 class MockTypeField(
     override val name: String,
     typeName: String,
-    val instanceInitializer: () -> GraphBuilder,
+    override val initializer: () -> Context,
     isNullable: Boolean = true,
-    override val arguments: Map<String, Any> = emptyMap(),
-    override val initializer: () -> Context = { instanceInitializer().build() }
+    override val arguments: Map<String, Any> = emptyMap()
 ) : ModelAdapter {
 
   override val prototype: Context by lazy(initializer)

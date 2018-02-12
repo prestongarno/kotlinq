@@ -14,61 +14,67 @@ private const val ENTER_SCOPE: String = "{"
 private const val EXIT_SCOPE: String = "}"
 
 
-class VisitingPrinter(private val instance: GraphQlInstance) : GraphVisitor {
+class VisitingPrinter(private val instance: GraphQlInstance) {
 
-
-  private var stringBuilder: StringBuilder = StringBuilder()
 
   override fun toString(): String {
-    return printInstance(instance)
+    return StringBuildingPrinter(instance).print()
   }
-
 
   private
-  fun printInstance(instance: GraphQlInstance): String {
-    val properties = instance.properties.values.toList()
+  class StringBuildingPrinter(instance: GraphQlInstance) : GraphVisitor {
 
-    stringBuilder.apply {
-      append(ENTER_SCOPE)
-      properties.take(properties.size - 1).forEach {
-        it.accept(this@VisitingPrinter)
-        append(",")
+    private val stringBuilder: StringBuilder = StringBuilder()
+
+    private
+    val toString by lazy { printInstance(instance) }
+
+    fun print(): String = toString
+
+    private
+    fun printInstance(instance: GraphQlInstance): String {
+      val properties = instance.properties.values.toList()
+
+      stringBuilder.apply {
+        append(ENTER_SCOPE)
+        properties.take(properties.size - 1).forEach {
+          it.accept(this@StringBuildingPrinter)
+          append(",")
+        }
+        properties.last().accept(this@StringBuildingPrinter)
+        append(EXIT_SCOPE)
       }
-      properties.last().accept(this@VisitingPrinter)
-      append(EXIT_SCOPE)
+      return stringBuilder.toString()
     }
-    val result = stringBuilder.toString()
-    stringBuilder = StringBuilder()
-    return result
-  }
 
-  private fun printAdapter(adapter: Adapter) {
-    stringBuilder.append(adapter.name)
-    stringBuilder.append(adapter.arguments.stringify())
-  }
+    private fun printAdapter(adapter: Adapter) {
+      stringBuilder.append(adapter.name)
+      stringBuilder.append(adapter.arguments.stringify())
+    }
 
-  override fun visitModel(target: ModelAdapter) {
-    printAdapter(target)
-    printInstance(target.prototype.graphQlInstance)
-  }
+    override fun visitModel(target: ModelAdapter) {
+      printAdapter(target)
+      printInstance(target.prototype.graphQlInstance)
+    }
 
-  override fun visitFragment(target: FragmentAdapter) {
-    printAdapter(target)
-    stringBuilder.apply {
-      append(ENTER_SCOPE)
-      target.fragments.forEach { (type, fragment) ->
-        append(SPREAD)
-        append(" on ")
-        append(type)
-        printInstance(fragment.prototype.graphQlInstance)
+    override fun visitFragment(target: FragmentAdapter) {
+      printAdapter(target)
+      stringBuilder.apply {
+        append(ENTER_SCOPE)
+        target.fragments.forEach { (type, fragment) ->
+          append(SPREAD)
+          append(" on ")
+          append(type)
+          printInstance(fragment.prototype.graphQlInstance)
+        }
+        append(EXIT_SCOPE)
       }
-      append(EXIT_SCOPE)
     }
+
+    override fun visitScalar(target: ParsingAdapter) =
+        printAdapter(target)
+
+    override fun visitDeserializer(target: DeserializingAdapter) =
+        printAdapter(target)
   }
-
-  override fun visitScalar(target: ParsingAdapter) =
-      printAdapter(target)
-
-  override fun visitDeserializer(target: DeserializingAdapter) =
-      printAdapter(target)
 }

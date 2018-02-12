@@ -1,5 +1,6 @@
 import org.junit.Before
 import org.junit.Test
+import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.Printer
 import org.kotlinq.printer.VisitingPrinter
@@ -7,7 +8,7 @@ import org.kotlinq.printer.VisitingPrinter
 class MockGraphPrinterTests {
 
   @Before fun injectPrinter() {
-    //Configuration.configure(Configuration.Companion.Builder(printer = VisitingPrinterFormatter))
+    Configuration.configure(Configuration.Companion.Builder(printer = VisitingPrinterFormatter))
   }
 
   @Test fun simpleScalarQueryTest() {
@@ -23,24 +24,22 @@ class MockGraphPrinterTests {
   @Test fun nestedContextTest() {
 
     val graph = createGraph {
+
       "query" ofType "Query" definedAs {
         scalar("hello")
 
         "nested" ofType "Def" definedAs {
           arguments = mapOf(
               "limitTo" to 100,
-              "first" to 10
-          )
-          scalar("hello")
+              "first" to 10)
           scalar("world")
         }
+
       }
     }
 
-    println(graph.graphQlInstance.toGraphQl(pretty = true, extractFragments = false))
+    "{query{hello,nested(limitTo: 100,first: 10){world}}}" eq graph.graphQlInstance.toGraphQl()
   }
-
-
 }
 
 object VisitingPrinterFormatter : GraphQlFormatter {
