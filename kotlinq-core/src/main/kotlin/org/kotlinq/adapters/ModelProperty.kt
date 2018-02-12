@@ -32,6 +32,7 @@ class ModelPropertyImpl(
 
   override fun accept(resolver: GraphVisitor) {
     resolver.visitModel(this)
+    resolver.visitFragment(this)
   }
 
   override fun getValue(): Context? = instance

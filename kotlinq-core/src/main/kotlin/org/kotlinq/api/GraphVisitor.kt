@@ -3,12 +3,14 @@ package org.kotlinq.api
 
 interface GraphVisitor {
 
-  fun visitModel(target: ModelAdapter)
+  fun visitDeserializer(target: DeserializingAdapter) = Unit
 
-  fun visitFragment(target: FragmentAdapter)
+  fun visitFragment(target: Fragment) = Unit
 
-  fun visitScalar(target: ParsingAdapter)
+  fun visitFragmentContext(target: FragmentAdapter) = Unit
 
-  fun visitDeserializer(target: DeserializingAdapter)
+  fun visitModel(target: ModelAdapter) = Unit
+
+  fun visitScalar(target: ParsingAdapter) = Unit
 
 }

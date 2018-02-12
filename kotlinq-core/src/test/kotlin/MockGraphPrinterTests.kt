@@ -1,15 +1,29 @@
 import org.junit.Before
+
 import org.junit.Test
 import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.Printer
 import org.kotlinq.printer.VisitingPrinter
 
+
+
 class MockGraphPrinterTests {
 
   @Before fun injectPrinter() {
     Configuration.configure(Configuration.Companion.Builder(printer = VisitingPrinterFormatter))
   }
+
+  object VisitingPrinterFormatter : GraphQlFormatter {
+
+    private val standardPrinter: Printer = { VisitingPrinter(it).toString() }
+
+    override val prettyOptimizedPrinter: Printer get() = standardPrinter
+    override val printer: Printer get() = standardPrinter
+    override val optimizedPrinter: Printer get() = standardPrinter
+    override val prettyPrinter: Printer get() = standardPrinter
+  }
+
 
   @Test fun simpleScalarQueryTest() {
 
@@ -40,8 +54,6 @@ class MockGraphPrinterTests {
 
     "{query{hello,nested(limitTo: 100,first: 10){world}}}" eq graph.toGraphQl()
   }
-
-
   @Test fun fragmentPropertyDefinitionTest() {
 
     val graph = createGraph {
@@ -61,14 +73,5 @@ class MockGraphPrinterTests {
 
     "{query(first: 100){... on Type1{hello}... on Type2{world}}}" eq graph.toGraphQl()
   }
-}
 
-object VisitingPrinterFormatter : GraphQlFormatter {
-
-  private val standardPrinter: Printer = { VisitingPrinter(it).toString() }
-
-  override val prettyOptimizedPrinter: Printer get() = standardPrinter
-  override val printer: Printer get() = standardPrinter
-  override val optimizedPrinter: Printer get() = standardPrinter
-  override val prettyPrinter: Printer get() = standardPrinter
 }

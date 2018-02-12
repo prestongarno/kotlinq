@@ -57,7 +57,7 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
       printInstance(target.prototype.graphQlInstance)
     }
 
-    override fun visitFragment(target: FragmentAdapter) {
+    override fun visitFragmentContext(target: FragmentAdapter) {
       printAdapter(target)
       stringBuilder.apply {
         append(ENTER_SCOPE)

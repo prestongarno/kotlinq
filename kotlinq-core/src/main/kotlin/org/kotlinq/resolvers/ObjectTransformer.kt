@@ -17,7 +17,7 @@ class ResolverImpl : Resolver {
 
   override fun visitModel(target: ModelAdapter) = Unit
 
-  override fun visitFragment(target: FragmentAdapter) = Unit
+  override fun visitFragmentContext(target: FragmentAdapter) = Unit
 
   override fun visitScalar(target: ParsingAdapter) = Unit
 
@@ -54,7 +54,7 @@ class ResolverImpl : Resolver {
       }
     }
 
-    override fun visitFragment(target: FragmentAdapter) {
+    override fun visitFragmentContext(target: FragmentAdapter) {
       @Suppress("UNCHECKED_CAST")
       (stack.peek()[target.name] as? Map<String, Any?>)?.let { values ->
         push(values)

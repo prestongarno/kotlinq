@@ -1,12 +1,11 @@
 package org.kotlinq.adapters
 
+import org.kotlinq.api.Context
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
-import org.kotlinq.api.Resolver
-import org.kotlinq.api.Context
 import org.kotlinq.api.GraphQlType
 import org.kotlinq.api.GraphVisitor
-import kotlin.reflect.KType
+import org.kotlinq.api.Resolver
 
 
 internal
@@ -33,7 +32,10 @@ class FragmentProperty(
   }
 
   override fun accept(resolver: GraphVisitor) {
-    resolver.visitFragment(this)
+    resolver.visitFragmentContext(this)
+    fragments.forEach { _, fragment ->
+      resolver.visitFragment(fragment)
+    }
   }
 
   override fun isResolved() =
