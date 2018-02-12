@@ -1,13 +1,18 @@
+import org.kotlinq.adapters.FragmentImpl
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.Context
+import org.kotlinq.api.Fragment
+import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.GraphQlType
 import org.kotlinq.api.GraphVisitor
+import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.Resolver
-import kotlin.reflect.KType
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 fun createGraph(definition: GraphBuilder.TypeBuilder.() -> Unit) =
     GraphBuilder("Query", definition).build()
@@ -40,11 +45,58 @@ class GraphBuilder(override val graphQlTypeName: String, private val definition:
       graph.bindProperty(MockTypeField(fieldName, typeName, { GraphBuilder(typeName, block).build() }, def.isNullable, def.arguments))
     }
 
+    infix fun TypeFieldBuilder.spread(block: FragmentBuilder.() -> Unit) {
+      val builder = FragmentBuilder().apply(block)
+      MockFragmentField(
+          fieldName,
+          builder.fragments.map { it.value }.toSet(),
+          typeName,
+          builder.isNullable,
+          arguments = builder.arguments)
+          .also(this@TypeBuilder.graph::bindProperty)
+    }
 
     class TypeFieldBuilder(val fieldName: String, val typeName: String)
   }
 
+  class FragmentBuilder {
+
+    val fragments = mutableMapOf<String, () -> Context>()
+
+    var arguments: Map<String, Any> = emptyMap()
+    var isNullable: Boolean = true
+
+    infix fun String.fragmentDef(block: TypeBuilder.() -> Unit) {
+      fragments[this] = { GraphBuilder(this, block).build() }
+    }
+  }
+
 }
+
+private
+class MockFragmentField(
+    override val name: String,
+    fragments: Set<() -> Context>,
+    typeName: String = "Any",
+    isNullable: Boolean = false,
+    override val type: GraphQlType = MockScalarType(name = typeName, isNullable = isNullable),
+    override val arguments: Map<String, Any> = emptyMap()
+) : FragmentAdapter, Adapter by Kotlinq.adapterService.fragmentProperty(name, type.ktype, fragments, arguments) {
+
+  private var value: Context? = null
+
+  override val fragments: Map<String, Fragment> = fragments
+      .map { FragmentImpl(it) }
+      .map { it.typeName to it }.toMap()
+
+  override fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver): Boolean {
+    this.value = fragments[typeName]?.initializer?.invoke()?.apply {
+      resolver.resolve(values, this)
+    }
+    return value?.graphQlInstance?.isResolved() ?: type.isNullable
+  }
+}
+
 
 private
 class MockTypeField(

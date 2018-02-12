@@ -15,9 +15,9 @@ class MockGraphPrinterTests {
 
     val context = createGraph {
       scalar("version")
-    }
+    }.graphQlInstance
 
-    "{version}" eq context.graphQlInstance.toGraphQl()
+    "{version}" eq context.toGraphQl()
   }
 
 
@@ -36,9 +36,30 @@ class MockGraphPrinterTests {
         }
 
       }
-    }
+    }.graphQlInstance
 
-    "{query{hello,nested(limitTo: 100,first: 10){world}}}" eq graph.graphQlInstance.toGraphQl()
+    "{query{hello,nested(limitTo: 100,first: 10){world}}}" eq graph.toGraphQl()
+  }
+
+
+  @Test fun fragmentPropertyDefinitionTest() {
+
+    val graph = createGraph {
+      "query" ofType "Query" spread {
+
+        arguments = mapOf("first" to 100)
+        isNullable = false
+
+        "Type1" fragmentDef {
+          scalar("hello")
+        }
+        "Type2" fragmentDef {
+          scalar("world")
+        }
+      }
+    }.graphQlInstance
+
+    "{query(first: 100){... on Type1{hello}... on Type2{world}}}" eq graph.toGraphQl()
   }
 }
 

@@ -15,9 +15,8 @@ interface ModelAdapter: Adapter, Fragment {
  * Adapter for a property which returns a nested [Context] instance,
  * but can be mapped to any combination of types (i.e. a workaround for the JavaScript spread operator)
  */
-interface FragmentAdapter : Adapter {
+interface FragmentAdapter : Adapter, FragmentContext {
   fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
-  val fragments: Map<String, Fragment>
 }
 
 /**
