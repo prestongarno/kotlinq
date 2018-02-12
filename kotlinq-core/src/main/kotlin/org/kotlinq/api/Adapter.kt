@@ -16,7 +16,7 @@ interface Adapter {
   val name: String
 
   /** Resulting return type of this property */
-  val type: KType
+  val type: GraphQlType
 
   /** Arguments passed to this delegated property for the GraphQL query */
   val arguments: Map<String, Any>
@@ -28,7 +28,7 @@ interface Adapter {
    * Visitor pattern for setting values of the query on response
    * @param resolver the algorithm for resolving the native object graph from a GraphQL query
    */
-  fun accept(resolver: Resolver)
+  fun accept(resolver: GraphVisitor)
 
 
   /** @return true if this property is resolved */

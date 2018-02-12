@@ -23,7 +23,7 @@ class ConfigurationTest {
   val context = object : Context {
 
     override val graphQlInstance: GraphQlInstance =
-        GraphQlInstanceProvider.createNewInstance("Test", this).apply {
+        GraphQlInstanceProvider.createNewInstance("Test").apply {
           bindProperty(Kotlinq.adapterService.parser("Hello", ::stringTypeProperty.returnType, { it }))
         }
   }
@@ -33,8 +33,8 @@ class ConfigurationTest {
     Configuration.configure(Configuration.Companion.Builder(
         jsonParser = parser,
         instanceProvider = object : GraphQlInstanceProvider {
-          override fun createNewInstance(typeName: String, context: Context): GraphQlInstance {
-            return GraphQlInstanceImpl(typeName, context)
+          override fun createNewInstance(typeName: String): GraphQlInstance {
+            return GraphQlInstanceImpl(typeName)
           }
         }))
 

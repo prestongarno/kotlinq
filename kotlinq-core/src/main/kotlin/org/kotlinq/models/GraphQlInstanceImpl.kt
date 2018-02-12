@@ -10,7 +10,7 @@ import org.kotlinq.api.GraphQlInstanceProvider
 
 
 internal
-class GraphQlInstanceImpl(override val graphQlTypeName: String, val context: Context) : GraphQlInstance {
+class GraphQlInstanceImpl(override val graphQlTypeName: String) : GraphQlInstance {
 
   private
   val instanceProperties: MutableMap<String, Adapter> =
@@ -21,11 +21,11 @@ class GraphQlInstanceImpl(override val graphQlTypeName: String, val context: Con
 
 
   override fun isResolved(): Boolean =
-      instanceProperties.filterNot { it.value.type.isMarkedNullable }
+      instanceProperties.filterNot { it.value.type.isNullable }
           .count { !it.value.isResolved() } == 0
 
   override fun toGraphQl(pretty: Boolean, extractFragments: Boolean): String =
-      GraphQlFormatter.printGraphQl(pretty, extractFragments, context)
+      GraphQlFormatter.printGraphQl(pretty, extractFragments, this)
 
   override fun bindProperty(adapter: Adapter) {
     instanceProperties[adapter.name] = adapter

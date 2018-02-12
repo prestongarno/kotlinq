@@ -24,7 +24,7 @@ interface Kotlinq {
       get() = Configuration.kodein.instance()
 
     override fun createGraphQlInstance(typeName: String, context: Context): GraphQlInstance =
-        GraphQlInstanceProvider.createNewInstance(typeName, context)
+        GraphQlInstanceProvider.createNewInstance(typeName)
   }
 }
 

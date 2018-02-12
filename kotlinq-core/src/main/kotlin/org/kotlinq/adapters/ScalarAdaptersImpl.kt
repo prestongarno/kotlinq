@@ -2,15 +2,15 @@ package org.kotlinq.adapters
 
 import org.kotlinq.api.BooleanAdapter
 import org.kotlinq.api.FloatAdapter
+import org.kotlinq.api.GraphQlType
+import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.IntAdapter
-import org.kotlinq.api.Resolver
 import org.kotlinq.api.StringAdapter
-import kotlin.reflect.KType
 
 
 class IntAdapterImpl(
     override val name: String,
-    override val type: KType,
+    override val type: GraphQlType,
     override val initializer: (String) -> Int,
     override val arguments: Map<String, Any> = emptyMap()
 ) : IntAdapter {
@@ -24,7 +24,7 @@ class IntAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: Resolver) {
+  override fun accept(resolver: GraphVisitor) {
     resolver.visitScalar(this)
   }
 
@@ -33,7 +33,7 @@ class IntAdapterImpl(
 
 class StringAdapterImpl(
     override val name: String,
-    override val type: KType,
+    override val type: GraphQlType,
     override val initializer: (String) -> String,
     override val arguments: Map<String, Any> = emptyMap()
 ) : StringAdapter {
@@ -47,7 +47,7 @@ class StringAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: Resolver) {
+  override fun accept(resolver: GraphVisitor) {
     resolver.visitScalar(this)
   }
 
@@ -56,7 +56,7 @@ class StringAdapterImpl(
 
 class FloatAdapterImpl(
     override val name: String,
-    override val type: KType,
+    override val type: GraphQlType,
     override val initializer: (String) -> Float,
     override val arguments: Map<String, Any> = emptyMap()
 ) : FloatAdapter {
@@ -70,7 +70,7 @@ class FloatAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: Resolver) {
+  override fun accept(resolver: GraphVisitor) {
     resolver.visitScalar(this)
   }
 
@@ -79,7 +79,7 @@ class FloatAdapterImpl(
 
 class BooleanAdapterImpl(
     override val name: String,
-    override val type: KType,
+    override val type: GraphQlType,
     override val initializer: (String) -> Boolean,
     override val arguments: Map<String, Any> = emptyMap()
 ) : BooleanAdapter {
@@ -93,7 +93,7 @@ class BooleanAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: Resolver) {
+  override fun accept(resolver: GraphVisitor) {
     resolver.visitScalar(this)
   }
 

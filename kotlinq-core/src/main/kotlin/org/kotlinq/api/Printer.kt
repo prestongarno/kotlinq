@@ -3,7 +3,7 @@ package org.kotlinq.api
 import com.github.salomonbrys.kodein.instance
 
 
-typealias Printer = (Context) -> String
+typealias Printer = (GraphQlInstance) -> String
 
 
 /**
@@ -25,7 +25,7 @@ interface GraphQlFormatter {
 
   companion object : GraphQlFormatter by Configuration.kodein.instance() {
 
-    fun printGraphQl(pretty: Boolean, extractFragments: Boolean, instance: Context): String {
+    fun printGraphQl(pretty: Boolean, extractFragments: Boolean, instance: GraphQlInstance): String {
       return when {
         pretty && extractFragments -> prettyOptimizedPrinter
         pretty && !extractFragments -> prettyPrinter

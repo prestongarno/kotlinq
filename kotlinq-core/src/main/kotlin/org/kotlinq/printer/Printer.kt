@@ -1,7 +1,6 @@
 package org.kotlinq.printer
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Context
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlFormatter
@@ -57,10 +56,10 @@ private const val EXIT_SCOPE: String = "}"
  * **WARNING** this reverses the order of printing, need to fix tests before using this by default
  */
 internal
-fun print(root: Context): String = print(root, null)
+fun print(root: GraphQlInstance): String = print(root, null)
 
 private
-fun print(root: Context, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
+fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: StringBuilder = StringBuilder()): String {
 
   val stack = LinkedList<Any>()
   val fragments: Map<Fragment, String> = frags
@@ -144,7 +143,7 @@ fun print(root: Context, frags: Map<Fragment, String>? = null, builder: StringBu
           append(value.arguments.stringify())
           when (value) {
           // recursive call, but only on one level deep since we pass the fragment set
-            is ModelAdapter -> print(value.prototype, frags, builder)
+            is ModelAdapter -> print(value.prototype.graphQlInstance, frags, builder)
             is FragmentAdapter -> {
               value.fragments.values.joinTo(
                   builder,
@@ -170,26 +169,26 @@ fun print(root: Context, frags: Map<Fragment, String>? = null, builder: StringBu
 }
 
 internal
-fun Context.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
+fun GraphQlInstance.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
 
 private
-fun getFragments(root: Context, collector: Set<Context>): Set<Fragment> {
-  val fragmentEdges = root.graphQlInstance.properties
+fun getFragments(root: GraphQlInstance, collector: Set<GraphQlInstance>): Set<Fragment> {
+  val fragmentEdges = root.properties
       .asSequence()
       .map { it.value }
       .filterIsInstance<FragmentAdapter>()
       .flatMap { it.fragments.asSequence() }
-      .filterNot { collector.contains(it.value.prototype) }
+      .filterNot { collector.contains(it.value.prototype.graphQlInstance) }
       .toSet()
 
-  return fragmentEdges.map { it.value.prototype }.map {
+  return fragmentEdges.map { it.value.prototype.graphQlInstance }.map {
     getFragments(it, collector + it)
   }.flatten().toSet()
 
 }
 
 internal
-fun pretty(context: Context): String {
+fun pretty(context: GraphQlInstance): String {
   val fragments = context.getFragments().mapIndexed { index, fragment ->
     fragment to "frag${fragment.prototype.graphQlInstance.graphQlTypeName}$index"
   }.toMap()
@@ -197,15 +196,15 @@ fun pretty(context: Context): String {
   return context.printNode(fragments).let {
     if (fragments.isEmpty()) it else it + fragments.entries.sortedBy(Map.Entry<Fragment, String>::value)
         .joinToString(prefix = "\n", separator = "\n", postfix = "") { (frag, name) ->
-          "fragment $name on ${frag.prototype.graphQlInstance.graphQlTypeName} " + frag.prototype.printNode(fragments)
+          "fragment $name on ${frag.prototype.graphQlInstance.graphQlTypeName} " + frag.prototype.graphQlInstance.printNode(fragments)
         }
   }
 }
 
 private
-fun Context.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
+fun GraphQlInstance.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
   val indent = "\n${INDENT.repeat(indentLevel)}"
-  return this.graphQlInstance.properties.entries.map { it.value }
+  return this.properties.entries.map { it.value }
       .joinToString(prefix = "{" + indent, separator = indent, postfix = "\n${INDENT.repeat(indentLevel - 1)}}") {
         it.name + it.arguments.stringify() + it.printEdge(fragments, indentLevel + 1)
       }
@@ -216,7 +215,7 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
   val whitespace = "\n${INDENT.repeat(indentLevel)}"
   return when (this) {
 
-    is ModelAdapter -> " " + prototype.printNode(fragments, indentLevel) // only fragments get indented + 1
+    is ModelAdapter -> " " + prototype.graphQlInstance.printNode(fragments, indentLevel) // only fragments get indented + 1
 
     is FragmentAdapter -> this@printEdge.fragments.asIterable().joinToString(
         prefix = " {" + whitespace + "__typename" + whitespace,

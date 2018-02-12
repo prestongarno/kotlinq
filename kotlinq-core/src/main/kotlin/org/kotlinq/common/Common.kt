@@ -32,7 +32,7 @@ fun formatAs(value: Any): String {
         .map { formatAs(it ?: "") }
         .filter { it.isNotBlank() }
         .joinToString(",", "[ ", " ]")
-    else -> throw UnsupportedOperationException("Unsupported format for type: ${value::class}")
+    else -> value.toString().parenthesize()
   }
 }
 

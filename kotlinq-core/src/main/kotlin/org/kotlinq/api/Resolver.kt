@@ -8,17 +8,9 @@ import com.github.salomonbrys.kodein.instance
  *
  * Currently no limit on nesting depth or size of response
  */
-interface Resolver {
+interface Resolver : GraphVisitor {
 
   fun resolve(value: Map<String, Any?>, target: Context): Boolean
-
-  fun visitModel(target: ModelAdapter)
-
-  fun visitFragment(target: FragmentAdapter)
-
-  fun visitScalar(target: ParsingAdapter)
-
-  fun visitDeserializer(target: DeserializingAdapter)
 
   companion object : Resolver by Configuration.kodein.instance()
 }
