@@ -41,4 +41,24 @@ class FragmentProperty(
   override fun isResolved() =
       value?.graphQlInstance?.isResolved() == true
           || type.isNullable
+
+  override fun equals(other: Any?): Boolean {
+    other as? FragmentAdapter ?: return false
+
+    if (type != other.type) return false
+    if (other.arguments != arguments) return false
+    if (other.fragments.size != fragments.size) return false
+
+    return other.fragments
+        .count { (name, fragment) -> fragments[name] != fragment } == 0
+  }
+
+  override fun hashCode(): Int {
+    return sequenceOf(name, type, arguments).fold(0) { acc, curr ->
+      acc.times(31) + curr.hashCode()
+    } * 31 +
+        fragments.asSequence().fold(0) { acc, curr ->
+          acc.times(31) + curr.value.prototype.graphQlInstance.hashCode()
+        }
+  }
 }

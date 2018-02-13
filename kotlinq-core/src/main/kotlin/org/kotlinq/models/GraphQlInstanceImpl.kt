@@ -46,7 +46,7 @@ class GraphQlInstanceImpl(override val graphQlTypeName: String) : GraphQlInstanc
 
   override fun hashCode(): Int {
     return graphQlTypeName.hashCode() + properties.entries.fold(0) {acc, (name, adapter) ->
-      acc + (name.hashCode() + adapter.hashCode()).times(31)
+      acc.times(31) + (name.hashCode() + adapter.hashCode())
     }
   }
 

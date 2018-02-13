@@ -14,10 +14,8 @@ class FragmentImpl(override val initializer: () -> Context) : Fragment {
 
   override fun equals(other: Any?): Boolean {
     other as? Fragment ?: return false
-
     if (typeName != other.typeName)
       return false
-
     return prototype.graphQlInstance.properties.all {
       other.prototype.graphQlInstance.properties[it.key] == it.value
     }

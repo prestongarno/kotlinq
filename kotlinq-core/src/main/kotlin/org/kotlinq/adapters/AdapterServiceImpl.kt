@@ -3,7 +3,9 @@ package org.kotlinq.adapters
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.AdapterService
 import org.kotlinq.api.Context
+import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlType
+import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ScalarAdapterService
 import java.io.InputStream
 import kotlin.reflect.KType
@@ -42,13 +44,13 @@ class AdapterServiceImpl(
       type: KType,
       init: () -> Context,
       arguments: Map<String, Any>
-  ): Adapter = ModelPropertyImpl(name, GraphQlType.fromKtype(type), arguments, init)
+  ): ModelAdapter = ModelPropertyImpl(name, GraphQlType.fromKtype(type), arguments, init)
 
   override fun fragmentProperty(
       name: String,
       type: KType,
       fragments: Set<() -> Context>,
       arguments: Map<String, Any>
-  ): Adapter = FragmentProperty(name, GraphQlType.fromKtype(type), fragments, arguments)
+  ): FragmentAdapter = FragmentProperty(name, GraphQlType.fromKtype(type), fragments, arguments)
 
 }

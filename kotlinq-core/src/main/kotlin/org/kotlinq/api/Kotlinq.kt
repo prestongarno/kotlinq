@@ -12,8 +12,7 @@ interface Kotlinq {
   val adapterService: AdapterService
 
   fun createGraphQlInstance(
-      typeName: String,
-      context: Context
+      typeName: String
   ): GraphQlInstance
 
 
@@ -23,7 +22,7 @@ interface Kotlinq {
     val adapterService: AdapterService
       get() = Configuration.kodein.instance()
 
-    override fun createGraphQlInstance(typeName: String, context: Context): GraphQlInstance =
+    override fun createGraphQlInstance(typeName: String): GraphQlInstance =
         GraphQlInstanceProvider.createNewInstance(typeName)
   }
 }

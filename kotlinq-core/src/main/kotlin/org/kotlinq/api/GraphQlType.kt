@@ -11,8 +11,20 @@ interface GraphQlType {
 
   companion object {
     fun fromKtype(ktype: KType) =
+
         object : GraphQlType {
+
           override val ktype: KType get() = ktype
+
+          override fun equals(other: Any?): Boolean {
+            other as? GraphQlType ?: return false
+            return other.name == name
+          }
+
+          override fun hashCode() =
+              name.hashCode().times(31) + isNullable.hashCode().times(31)
+
         }
+
   }
 }

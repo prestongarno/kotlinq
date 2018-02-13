@@ -37,14 +37,14 @@ interface AdapterService {
       type: KType,
       init: () -> Context,
       arguments: Map<String, Any> = emptyMap()
-  ): Adapter
+  ): ModelAdapter
 
   fun fragmentProperty(
       name: String,
       type: KType,
       fragments: Set<() -> Context>,
       arguments: Map<String, Any> = emptyMap()
-  ): Adapter
+  ): FragmentAdapter
 
 }
 

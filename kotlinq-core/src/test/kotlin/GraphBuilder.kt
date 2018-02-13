@@ -1,7 +1,4 @@
-import org.kotlinq.adapters.FragmentImpl
-import org.kotlinq.api.Adapter
 import org.kotlinq.api.Context
-import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
@@ -10,7 +7,6 @@ import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ParsingAdapter
-import org.kotlinq.api.Resolver
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -34,7 +30,7 @@ class GraphBuilder(override val graphQlTypeName: String, private val definition:
         name: String,
         type: GraphQlType = MockScalarType(String::class),
         arguments: Map<String, Any> = emptyMap()
-    ) = graph.bindProperty(MockScalarAdapter(name, type, arguments))
+    ) = graph.bindProperty(Kotlinq.adapterService.parser(name, type.ktype, {it}, arguments))
 
     infix fun String.ofType(name: String): TypeFieldBuilder {
       return TypeFieldBuilder(this, name)
@@ -84,21 +80,13 @@ class MockFragmentField(
     typeName: String = "Any",
     isNullable: Boolean = false,
     override val type: GraphQlType = MockScalarType(name = typeName, isNullable = isNullable),
-    override val arguments: Map<String, Any> = emptyMap()
-) : FragmentAdapter, Adapter by Kotlinq.adapterService.fragmentProperty(name, type.ktype, fragments, arguments) {
+    override val arguments: Map<String, Any> = emptyMap(),
+    val delegate: FragmentAdapter = Kotlinq.adapterService.fragmentProperty(name, type.ktype, fragments, arguments)
+) : FragmentAdapter by delegate {
 
-  private var value: Context? = null
+  override fun equals(other: Any?) = delegate == other
 
-  override val fragments: Map<String, Fragment> = fragments
-      .map { FragmentImpl(it) }
-      .map { it.typeName to it }.toMap()
-
-  override fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver): Boolean {
-    this.value = fragments[typeName]?.initializer?.invoke()?.apply {
-      resolver.resolve(values, this)
-    }
-    return value?.graphQlInstance?.isResolved() ?: type.isNullable
-  }
+  override fun hashCode() = delegate.hashCode()
 }
 
 
@@ -108,31 +96,17 @@ class MockTypeField(
     typeName: String,
     override val initializer: () -> Context,
     isNullable: Boolean = true,
-    override val arguments: Map<String, Any> = emptyMap()
-) : ModelAdapter {
+    override val arguments: Map<String, Any> = emptyMap(),
+    override val type: GraphQlType = MockScalarType(name = typeName, isNullable = isNullable),
+    val delegate: ModelAdapter = Kotlinq.adapterService.instanceProperty(name, type.ktype, initializer, arguments)
+) : ModelAdapter by delegate {
 
-  override val prototype: Context by lazy(initializer)
+  override fun equals(other: Any?) = delegate == other
 
-  override val type = MockScalarType(name = typeName, isNullable = isNullable)
-
-  private var value: Context? = null
-
-  override fun setValue(result: Map<String, Any?>, resolver: Resolver): Boolean {
-    value = initializer().apply { resolver.resolve(result, this) }
-    return value?.graphQlInstance?.isResolved() == true || type.isNullable
-  }
-
-  override fun getValue() = value
-
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visitModel(this)
-  }
-
-  override fun isResolved() = true
+  override fun hashCode() = delegate.hashCode()
 }
 
 
-private
 class MockContext(override val graphQlInstance: GraphQlInstance) : Context
 
 
