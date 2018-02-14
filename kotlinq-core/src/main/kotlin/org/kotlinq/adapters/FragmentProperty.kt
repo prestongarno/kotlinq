@@ -1,5 +1,6 @@
 package org.kotlinq.adapters
 
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.Context
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
@@ -42,23 +43,13 @@ class FragmentProperty(
       value?.graphQlInstance?.isResolved() == true
           || type.isNullable
 
-  override fun equals(other: Any?): Boolean {
-    other as? FragmentAdapter ?: return false
 
-    if (type != other.type) return false
-    if (other.arguments != arguments) return false
-    if (other.fragments.size != fragments.size) return false
+  override fun equals(other: Any?) = (other as? FragmentAdapter)
+      ?.let { Adapter.adapterEquals(this, it) } == true
+      && other.fragments.count { fragments[it.key] != it.value } == 0
 
-    return other.fragments
-        .count { (name, fragment) -> fragments[name] != fragment } == 0
-  }
-
-  override fun hashCode(): Int {
-    return sequenceOf(name, type, arguments).fold(0) { acc, curr ->
-      acc.times(31) + curr.hashCode()
-    } * 31 +
-        fragments.asSequence().fold(0) { acc, curr ->
-          acc.times(31) + curr.value.prototype.graphQlInstance.hashCode()
-        }
-  }
+  override fun hashCode(): Int =
+      Adapter.adapterHashcode(this) * 31 + fragments.asSequence().fold(0) { acc, curr ->
+        acc.times(31) + curr.value.prototype.graphQlInstance.hashCode()
+      }
 }

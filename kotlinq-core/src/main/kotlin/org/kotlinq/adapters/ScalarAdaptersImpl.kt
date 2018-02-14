@@ -1,11 +1,23 @@
 package org.kotlinq.adapters
 
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.BooleanAdapter
 import org.kotlinq.api.FloatAdapter
 import org.kotlinq.api.GraphQlType
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.IntAdapter
+import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.StringAdapter
+
+
+sealed class PrimitiveAdapter : ParsingAdapter {
+
+  override fun equals(other: Any?) =
+      Adapter.adapterEquals(this, other as? Adapter)
+
+  override fun hashCode() =
+      Adapter.adapterHashcode(this)
+}
 
 
 class IntAdapterImpl(
@@ -13,7 +25,7 @@ class IntAdapterImpl(
     override val type: GraphQlType,
     override val initializer: (String) -> Int,
     override val arguments: Map<String, Any> = emptyMap()
-) : IntAdapter {
+) : PrimitiveAdapter(), IntAdapter {
 
   private var value = 0
 
@@ -36,7 +48,7 @@ class StringAdapterImpl(
     override val type: GraphQlType,
     override val initializer: (String) -> String,
     override val arguments: Map<String, Any> = emptyMap()
-) : StringAdapter {
+) : PrimitiveAdapter(), StringAdapter {
 
   private var value: String? = null
 
@@ -59,7 +71,7 @@ class FloatAdapterImpl(
     override val type: GraphQlType,
     override val initializer: (String) -> Float,
     override val arguments: Map<String, Any> = emptyMap()
-) : FloatAdapter {
+) : PrimitiveAdapter(), FloatAdapter {
 
   private var value = 0f
 
@@ -82,7 +94,7 @@ class BooleanAdapterImpl(
     override val type: GraphQlType,
     override val initializer: (String) -> Boolean,
     override val arguments: Map<String, Any> = emptyMap()
-) : BooleanAdapter {
+) : PrimitiveAdapter(), BooleanAdapter {
 
   private var value = false
 

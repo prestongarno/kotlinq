@@ -85,7 +85,7 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
       if (curr.arguments.isNotEmpty()) builder.append(curr.arguments.stringify())
 
       if (curr is ModelAdapter) {
-        pushField(curr.prototype.graphQlInstance)
+        pushField(curr.fragment.prototype.graphQlInstance)
         continue
       } else if (curr is FragmentAdapter) {
         pushField(curr)
@@ -143,7 +143,7 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
           append(value.arguments.stringify())
           when (value) {
           // recursive call, but only on one level deep since we pass the fragment set
-            is ModelAdapter -> print(value.prototype.graphQlInstance, frags, builder)
+            is ModelAdapter -> print(value.fragment.prototype.graphQlInstance, frags, builder)
             is FragmentAdapter -> {
               value.fragments.values.joinTo(
                   builder,
@@ -215,7 +215,7 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
   val whitespace = "\n${INDENT.repeat(indentLevel)}"
   return when (this) {
 
-    is ModelAdapter -> " " + prototype.graphQlInstance.printNode(fragments, indentLevel) // only fragments get indented + 1
+    is ModelAdapter -> " " + fragment.prototype.graphQlInstance.printNode(fragments, indentLevel) // only fragments get indented + 1
 
     is FragmentAdapter -> this@printEdge.fragments.asIterable().joinToString(
         prefix = " {" + whitespace + "__typename" + whitespace,

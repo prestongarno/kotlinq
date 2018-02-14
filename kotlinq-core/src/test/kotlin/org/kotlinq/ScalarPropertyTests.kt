@@ -1,3 +1,5 @@
+package org.kotlinq
+
 import org.junit.Test
 import org.kotlinq.api.Kotlinq
 

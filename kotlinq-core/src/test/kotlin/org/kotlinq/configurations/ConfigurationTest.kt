@@ -1,3 +1,5 @@
+package org.kotlinq.configurations
+
 import org.junit.Test
 import org.kotlinq.api.Configuration
 import org.kotlinq.api.Context

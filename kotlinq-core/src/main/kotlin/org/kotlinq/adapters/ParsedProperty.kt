@@ -32,23 +32,9 @@ class ParsedProperty(
   override fun isResolved() =
       result != null || type.isNullable
 
-  override fun equals(other: Any?): Boolean {
-    other as? Adapter ?: return false
+  override fun equals(other: Any?) =
+      Adapter.adapterEquals(this, other as? Adapter)
 
-    if (name != other.name) return false
-    if (type != other.type) return false
-    if (arguments != other.arguments) return false
-
-    return true
-  }
-
-  override fun hashCode(): Int {
-    var result1 = name.hashCode()
-    result1 = 31 * result1 + type.hashCode()
-    result1 = 31 * result1 + arguments.hashCode()
-    result1 *= 31
-    return result1
-  }
-
-
+  override fun hashCode() =
+      Adapter.adapterHashcode(this)
 }

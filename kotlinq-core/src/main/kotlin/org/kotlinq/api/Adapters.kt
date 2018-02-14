@@ -2,13 +2,21 @@ package org.kotlinq.api
 
 
 /** Adapter for a property which returns a nested [Context] instance */
-interface ModelAdapter: Adapter, Fragment {
+interface ModelAdapter: Adapter {
+
+  /**
+   * Instead of implementing [Fragment], contains a fragment so that
+   * equals and hashcode contracts can easily optimize printing/resolving GraphQL request
+   */
+  val fragment: Fragment
 
   /**
    * Sets the value of this property.
    * Initializes a new context and calls [Resolver.resolve] on the new context
    */
   fun setValue(result: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
+
+  override fun getValue(): Context?
 }
 
 /**

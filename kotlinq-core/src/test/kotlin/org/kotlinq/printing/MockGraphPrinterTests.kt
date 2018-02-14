@@ -1,10 +1,13 @@
+package org.kotlinq.printing
+
 import org.junit.Before
 
 import org.junit.Test
 import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.Printer
-import org.kotlinq.fragments.getFragments
+import org.kotlinq.createGraph
+import org.kotlinq.eq
 import org.kotlinq.printer.VisitingPrinter
 
 

@@ -1,12 +1,12 @@
+package org.kotlinq
+
 import org.kotlinq.api.Context
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.GraphQlType
-import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.ModelAdapter
-import org.kotlinq.api.ParsingAdapter
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -94,7 +94,7 @@ private
 class MockTypeField(
     override val name: String,
     typeName: String,
-    override val initializer: () -> Context,
+    initializer: () -> Context,
     isNullable: Boolean = true,
     override val arguments: Map<String, Any> = emptyMap(),
     override val type: GraphQlType = MockScalarType(name = typeName, isNullable = isNullable),
@@ -110,34 +110,16 @@ class MockTypeField(
 class MockContext(override val graphQlInstance: GraphQlInstance) : Context
 
 
-private class MockScalarAdapter(
-    override val name: String,
-    override val type: GraphQlType = MockScalarType(String::class),
-    override val arguments: Map<String, Any> = emptyMap()
-) : ParsingAdapter {
-
-  override val initializer: (String) -> Any? = { it }
-
-  private var value = ""
-
-  override fun setValue(value: String?): Boolean {
-    this.value = "${initializer("$value")}"
-    return true
-  }
-
-  override fun getValue(): Any? = value
-
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visitScalar(this)
-  }
-
-  override fun isResolved(): Boolean = true
-}
-
-
 class MockScalarType(
     val clazz: KClass<*> = Any::class,
     override val name: String = clazz.simpleName!!,
     override val isNullable: Boolean = true,
-    override val ktype: KType = mockType(clazz, isMarkedNullable = isNullable)
-) : GraphQlType
+    override val ktype: KType = mockType(clazz, isMarkedNullable = isNullable),
+    val delegate: GraphQlType = GraphQlType.fromKtype(ktype)
+) : GraphQlType by delegate {
+
+  override fun equals(other: Any?): Boolean =
+      other as? GraphQlType == delegate
+
+  override fun hashCode() = delegate.hashCode()
+}

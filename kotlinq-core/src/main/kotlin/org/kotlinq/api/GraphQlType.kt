@@ -1,5 +1,6 @@
 package org.kotlinq.api
 
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
@@ -16,10 +17,14 @@ interface GraphQlType {
 
           override val ktype: KType get() = ktype
 
-          override fun equals(other: Any?): Boolean {
-            other as? GraphQlType ?: return false
-            return other.name == name
-          }
+          /**
+           * todo should nullability be taken into account?
+           */
+          override fun equals(other: Any?): Boolean =
+              other is GraphQlType
+                  && other.name == name
+                  && (other.ktype.classifier as? KClass<*>)?.qualifiedName ==
+                     (ktype.classifier as? KClass<*>)?.qualifiedName
 
           override fun hashCode() =
               name.hashCode().times(31) + isNullable.hashCode().times(31)

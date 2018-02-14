@@ -1,5 +1,6 @@
 package org.kotlinq.adapters
 
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.DeserializingAdapter
 import org.kotlinq.api.GraphQlType
 import org.kotlinq.api.GraphVisitor
@@ -15,6 +16,7 @@ class DeserializingProperty(
     override val initializer: (java.io.InputStream) -> Any?,
     override val arguments: Map<String, Any>
 ) : DeserializingAdapter {
+
   private var value: Any? = null
 
   override fun getValue() = value
@@ -29,5 +31,11 @@ class DeserializingProperty(
   override fun accept(resolver: GraphVisitor) {
     resolver.visitDeserializer(this)
   }
+
+  override fun equals(other: Any?) =
+      Adapter.adapterEquals(this, other as? Adapter)
+
+  override fun hashCode() =
+      Adapter.adapterHashcode(this)
 
 }
