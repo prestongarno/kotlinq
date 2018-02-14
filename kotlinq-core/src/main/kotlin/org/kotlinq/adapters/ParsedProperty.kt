@@ -4,8 +4,6 @@ import org.kotlinq.api.Adapter
 import org.kotlinq.api.GraphQlType
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.ParsingAdapter
-import org.kotlinq.api.Resolver
-import kotlin.reflect.KType
 
 
 internal
