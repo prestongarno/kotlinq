@@ -17,6 +17,9 @@ class AdapterServiceImpl(
     override val scalarAdapters: ScalarAdapterService = ScalarAdapterServiceImpl()
 ) : AdapterService {
 
+  override fun createFragment(initializer: () -> Context) =
+      FragmentImpl(initializer)
+
   override fun deserializer(
       name: String,
       type: KType,

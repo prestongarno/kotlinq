@@ -11,10 +11,18 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 fun createGraph(definition: GraphBuilder.TypeBuilder.() -> Unit) =
-    GraphBuilder("Query", definition).build()
+    GraphBuilder("Query", definition = definition).build()
 
-class GraphBuilder(override val graphQlTypeName: String, private val definition: TypeBuilder.() -> Unit)
-  : GraphQlInstance by GraphQlInstanceProvider.createNewInstance(graphQlTypeName) {
+class GraphBuilder(
+    override val graphQlTypeName: String,
+    private val delegate: GraphQlInstance = GraphQlInstanceProvider.createNewInstance(graphQlTypeName),
+    private val definition: TypeBuilder.() -> Unit
+) : GraphQlInstance by delegate {
+
+  override fun equals(other: Any?): Boolean =
+      delegate.equals(other)
+  override fun hashCode(): Int =
+      delegate.hashCode()
 
   fun build(): Context {
     TypeBuilder(this).apply(definition)
@@ -37,8 +45,8 @@ class GraphBuilder(override val graphQlTypeName: String, private val definition:
     }
 
     infix fun TypeFieldBuilder.definedAs(block: TypeBuilder.() -> Unit) {
-      val def = TypeBuilder(GraphBuilder(typeName, block)).apply(block)
-      graph.bindProperty(MockTypeField(fieldName, typeName, { GraphBuilder(typeName, block).build() }, def.isNullable, def.arguments))
+      val def = TypeBuilder(GraphBuilder(typeName, definition = block)).apply(block)
+      graph.bindProperty(MockTypeField(fieldName, typeName, { GraphBuilder(typeName, definition = block).build() }, def.isNullable, def.arguments))
     }
 
     infix fun TypeFieldBuilder.spread(block: FragmentBuilder.() -> Unit) {
@@ -63,7 +71,7 @@ class GraphBuilder(override val graphQlTypeName: String, private val definition:
     var isNullable: Boolean = true
 
     infix fun String.fragmentDef(block: TypeBuilder.() -> Unit) {
-      fragments[this] = { GraphBuilder(this, block).build() }
+      fragments[this] = { GraphBuilder(this, definition = block).build() }
     }
   }
 

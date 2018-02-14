@@ -51,9 +51,7 @@ interface Adapter {
       if (other.type != thisAdapter.type) return false
       if (other.arguments.size != thisAdapter.arguments.size) return false
 
-      return other.arguments.count {
-        thisAdapter.arguments[it.key] != it.value
-      } == 0
+      return other.arguments.all { thisAdapter.arguments[it.key] == it.value }
     }
   }
 }

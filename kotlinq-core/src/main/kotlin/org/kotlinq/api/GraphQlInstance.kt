@@ -17,6 +17,9 @@ interface Context {
  */
 interface GraphQlInstance {
 
+  /**
+   * Equivalent to the reflective field '__typename' in the GraphQL Specification
+   */
   val graphQlTypeName: String
 
   val properties: Map<String, Adapter>
@@ -33,4 +36,7 @@ interface GraphQlInstance {
    * Fragment definition naming scheme is frag<TypeName\><index\>, where the index is ordered by order encountered in a BFS from this root context
    */
   fun toGraphQl(pretty: Boolean = false, extractFragments: Boolean = false): String
+
+  fun accept(visitor: GraphVisitor) =
+      properties.forEach { it.value.accept(visitor) }
 }

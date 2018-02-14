@@ -46,6 +46,8 @@ interface AdapterService {
       arguments: Map<String, Any> = emptyMap()
   ): FragmentAdapter
 
+  fun createFragment(initializer: () -> Context): Fragment
+
 }
 
 

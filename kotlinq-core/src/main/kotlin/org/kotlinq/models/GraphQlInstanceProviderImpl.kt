@@ -5,7 +5,8 @@ import org.kotlinq.api.GraphQlInstanceProvider
 
 internal
 class GraphQlInstanceProviderImpl : GraphQlInstanceProvider {
-  override fun createNewInstance(typeName: String): GraphQlInstance {
-    return GraphQlInstanceImpl(typeName)
-  }
+
+  override fun createNewInstance(typeName: String): GraphQlInstance =
+      GraphQlInstanceImpl(typeName)
+
 }

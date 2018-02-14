@@ -34,9 +34,6 @@ class FragmentProperty(
 
   override fun accept(resolver: GraphVisitor) {
     resolver.visitFragmentContext(this)
-    fragments.forEach { _, fragment ->
-      resolver.visitFragment(fragment)
-    }
   }
 
   override fun isResolved() =
