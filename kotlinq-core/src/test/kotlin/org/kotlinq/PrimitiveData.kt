@@ -10,13 +10,13 @@ enum class PrimitiveData(val generator: () -> Any) {
   INT({ randomInt(Int.MIN_VALUE, Int.MAX_VALUE) }),
   FLOAT({ ThreadLocalRandom.current().nextDouble().toFloat() }),
   BOOLEAN({ (randomInt(0, 2) == 1) }),
-  ENUM({ randomArgumentType() }),
+  ENUM({ randomArgumentType() }), // so meta...
   LIST({
     val type = randomArgumentType()
     buildSequence {
       for (i in 1..randomInt(1, 10)) yield(type.generator())
     }.toList()
-  }); // so meta...
+  });
 
   companion object Generator {
 

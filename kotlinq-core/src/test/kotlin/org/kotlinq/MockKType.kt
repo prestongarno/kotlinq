@@ -37,6 +37,10 @@ class MockedKTypeImpl(
       (classifier?.hashCode() ?: 0 * 31+
       isMarkedNullable.hashCode() * 31) * 31 +
           arguments.fold(0) { acc, curr -> acc * 31 + curr.hashCode() }
+
+  override fun toString(): String {
+    return classifier.toString().let { if (isMarkedNullable) it else "$it!" }
+  }
 }
 
 

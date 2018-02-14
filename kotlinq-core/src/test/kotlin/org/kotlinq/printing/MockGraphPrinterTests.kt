@@ -1,8 +1,8 @@
 package org.kotlinq.printing
 
 import org.junit.Before
-
 import org.junit.Test
+import org.kotlinq.SpreadOperator.`,,,`
 import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.Printer
@@ -57,6 +57,7 @@ class MockGraphPrinterTests {
 
     "{query{hello,nested(limitTo: 100,first: 10){world}}}" eq graph.toGraphQl()
   }
+
   @Test fun fragmentPropertyDefinitionTest() {
 
     val graph = createGraph {
@@ -65,33 +66,39 @@ class MockGraphPrinterTests {
         arguments = mapOf("first" to 100)
         isNullable = false
 
-        "Type1" fragmentDef {
+        `,,,` on "Type1" def {
           scalar("hello")
         }
-        "Type2" fragmentDef {
+
+        `,,,` on "Type2" def {
           scalar("world")
         }
+
       }
     }.graphQlInstance
 
     "{query(first: 100){... on Type1{hello}... on Type2{world}}}" eq graph.toGraphQl()
   }
 
+
   @Test fun fragmentPropertyDefinitionTestWithNestedTypes() {
 
     val graph = createGraph {
       "query" ofType "Query" spread {
 
-        "Type1" fragmentDef {
+        `,,,` on "Type1" def {
+
           scalar("hello")
 
           "nestedType1" ofType "Def" definedAs {
             scalar("name")
             scalar("id")
           }
+
         }
 
-        "Type2" fragmentDef {
+        `,,,` on "Type2" def {
+
           scalar("world")
 
           "nestedType2" ofType "Def" definedAs {
@@ -103,6 +110,8 @@ class MockGraphPrinterTests {
       }
     }.graphQlInstance
 
-    "{query{... on Type1{hello,nestedType1{name,id}}... on Type2{world,nestedType2{name,loginId,id}}}}" eq graph.toGraphQl()
+    graph.toGraphQl() eq
+        "{query{... on Type1{hello,nestedType1{name,id}}... on Type2{world,nestedType2{name,loginId,id}}}}"
   }
 }
+

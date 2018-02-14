@@ -125,7 +125,7 @@ class GraphQLsLexer(val schema: Schema) {
 
 enum class GraphQLType {
   TYPE {
-    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): SchemaType =
+    override fun createType(tokens: GraphQLsLexer.TypeTokenSet): TypeDef =
         TypeDef(tokens.name, tokens.superInterfaces, fieldDefinitionsFromBody(tokens.body))
   },
   ENUM {

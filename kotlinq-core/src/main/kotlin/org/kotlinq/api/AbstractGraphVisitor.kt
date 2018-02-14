@@ -29,7 +29,7 @@ class AbstractGraphVisitor(
   private val implementationAwareVisitor = object : GraphVisitor {
 
     override fun visitDeserializer(target: DeserializingAdapter) = visitNodeDef(target)
-    override fun visitFragment(target: Fragment) = visitFragmentDef(target)
+    override fun visitFragment(target: Fragment) = controller(target)
     override fun visitScalar(target: ParsingAdapter) = visitNodeDef(target)
 
     override fun visitModel(target: ModelAdapter) {
@@ -49,9 +49,6 @@ class AbstractGraphVisitor(
       exitNodeListener(adapter)
     }
 
-    private fun visitFragmentDef(fragment: Fragment) {
-      this.controller(fragment)
-    }
   }
 
   /**
@@ -83,7 +80,9 @@ class AbstractGraphVisitor(
 
     var fragmentListener: GraphVisitor.(Fragment) -> Unit =
         { it.prototype.graphQlInstance.accept(this) }
+
     var exitNodeListener: (Adapter) -> Unit = empty()
   }
 
 }
+

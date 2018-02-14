@@ -16,4 +16,11 @@ class FragmentImpl(override val initializer: () -> Context) : Fragment {
       other is Fragment
           && other.typeName == typeName
           && other.prototype.graphQlInstance == prototype.graphQlInstance
+
+  override fun toString(): String {
+    return "... on " + prototype.graphQlInstance.graphQlTypeName +
+        prototype.graphQlInstance.properties
+            .map { "'${it.key}': ${it.value.type}" }
+            .joinToString(separator = ", ", prefix = " { ", postfix = " }")
+  }
 }

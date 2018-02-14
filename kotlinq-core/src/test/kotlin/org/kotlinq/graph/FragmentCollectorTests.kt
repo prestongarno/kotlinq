@@ -6,16 +6,19 @@ import org.kotlinq.api.AbstractGraphVisitor
 import org.kotlinq.api.Fragment
 import org.kotlinq.createGraph
 import org.kotlinq.eq
+import org.kotlinq.SpreadOperator.*
 
 class FragmentCollectorTests {
 
   @Test fun twoIdenticalFragmentsOnGraph() {
 
     val fragment: GraphBuilder.FragmentBuilder.() -> Unit = {
-      "Type1" fragmentDef {
+
+      `,,,` on "Type1" def {
         scalar("name")
         scalar("id")
       }
+
     }
 
 
@@ -43,5 +46,6 @@ class FragmentCollectorTests {
 
     frags.size eq 2
   }
+
 }
 

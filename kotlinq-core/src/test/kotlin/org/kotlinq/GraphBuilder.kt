@@ -1,6 +1,7 @@
 package org.kotlinq
 
 import org.kotlinq.api.Context
+import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
@@ -8,7 +9,6 @@ import org.kotlinq.api.GraphQlType
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.ModelAdapter
 import kotlin.reflect.KClass
-import kotlin.reflect.KType
 
 fun createGraph(definition: GraphBuilder.TypeBuilder.() -> Unit) =
     GraphBuilder("Query", definition = definition).build()
@@ -21,6 +21,7 @@ class GraphBuilder(
 
   override fun equals(other: Any?): Boolean =
       delegate.equals(other)
+
   override fun hashCode(): Int =
       delegate.hashCode()
 
@@ -36,9 +37,9 @@ class GraphBuilder(
 
     fun scalar(
         name: String,
-        type: GraphQlType = MockScalarType(String::class),
+        type: GraphQlType = GraphQlType.fromKtype(mockType(String::class)),
         arguments: Map<String, Any> = emptyMap()
-    ) = graph.bindProperty(Kotlinq.adapterService.parser(name, type.ktype, {it}, arguments))
+    ) = graph.bindProperty(Kotlinq.adapterService.parser(name, type.ktype, { it }, arguments))
 
     infix fun String.ofType(name: String): TypeFieldBuilder {
       return TypeFieldBuilder(this, name)
@@ -73,8 +74,15 @@ class GraphBuilder(
     infix fun String.fragmentDef(block: TypeBuilder.() -> Unit) {
       fragments[this] = { GraphBuilder(this, definition = block).build() }
     }
-  }
 
+
+    infix fun String.def(block: TypeBuilder.() -> Unit) {
+      fragments[this] = { GraphBuilder(this, definition = block).build() }
+    }
+
+    infix fun SpreadOperator.on(typeName: String): String = typeName
+
+  }
 }
 
 infix fun String.ofType(name: String): GraphBuilder.TypeBuilder.TypeFieldBuilder {
@@ -87,14 +95,16 @@ class MockFragmentField(
     fragments: Set<() -> Context>,
     typeName: String = "Any",
     isNullable: Boolean = false,
-    override val type: GraphQlType = MockScalarType(name = typeName, isNullable = isNullable),
+    override val type: GraphQlType =
+    GraphQlType.fromKtype(mockType(
+        getClassOrNull(typeName) ?: Fragment::class,
+        isMarkedNullable = isNullable)),
     override val arguments: Map<String, Any> = emptyMap(),
     val delegate: FragmentAdapter = Kotlinq.adapterService.fragmentProperty(name, type.ktype, fragments, arguments)
 ) : FragmentAdapter by delegate {
-
   override fun equals(other: Any?) = delegate == other
-
   override fun hashCode() = delegate.hashCode()
+  override fun toString(): String = delegate.toString()
 }
 
 
@@ -105,29 +115,26 @@ class MockTypeField(
     initializer: () -> Context,
     isNullable: Boolean = true,
     override val arguments: Map<String, Any> = emptyMap(),
-    override val type: GraphQlType = MockScalarType(name = typeName, isNullable = isNullable),
+    override val type: GraphQlType = GraphQlType.fromKtype(mockType(Context::class, isMarkedNullable = isNullable)),
     val delegate: ModelAdapter = Kotlinq.adapterService.instanceProperty(name, type.ktype, initializer, arguments)
 ) : ModelAdapter by delegate {
-
   override fun equals(other: Any?) = delegate == other
-
   override fun hashCode() = delegate.hashCode()
+  override fun toString(): String = delegate.toString()
 }
 
 
 class MockContext(override val graphQlInstance: GraphQlInstance) : Context
 
+interface SpreadOperator {
+  companion object `,,,` : SpreadOperator
 
-class MockScalarType(
-    val clazz: KClass<*> = Any::class,
-    override val name: String = clazz.simpleName!!,
-    override val isNullable: Boolean = true,
-    override val ktype: KType = mockType(clazz, isMarkedNullable = isNullable),
-    val delegate: GraphQlType = GraphQlType.fromKtype(ktype)
-) : GraphQlType by delegate {
+  class FragmentPrefix(val typeName: String)
+}
 
-  override fun equals(other: Any?): Boolean =
-      other as? GraphQlType == delegate
-
-  override fun hashCode() = delegate.hashCode()
+private
+fun getClassOrNull(name: String): KClass<out Any>? = try {
+  MockContext::class.java.classLoader.loadClass(name).kotlin
+} catch (ex: Exception) {
+  null
 }

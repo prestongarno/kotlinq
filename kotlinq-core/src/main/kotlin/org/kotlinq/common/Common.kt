@@ -7,7 +7,6 @@ private object Block {
   fun <T : Any?> emptyBlock(): T.() -> Unit = empty
 }
 
-internal
 fun <T : Any?> empty(): T.() -> Unit = Block.emptyBlock()
 
 internal

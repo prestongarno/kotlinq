@@ -5,31 +5,29 @@ import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
 
-interface GraphQlType {
+class GraphQlType(val ktype: KType) {
+
   val name: String get() = ktype.jvmErasure.simpleName!!
   val isNullable: Boolean get() = ktype.isMarkedNullable
-  val ktype: KType
+
+  /**
+   * todo should nullability be taken into account?
+   */
+  override fun equals(other: Any?): Boolean =
+      other is GraphQlType
+          && other.name == name
+          && (other.ktype.classifier as? KClass<*>)?.qualifiedName ==
+          (ktype.classifier as? KClass<*>)?.qualifiedName
+
+  override fun hashCode() =
+      name.hashCode().times(31) + isNullable.hashCode().times(31)
+
+
+  override fun toString(): String =
+      ktype.toString().let { if (isNullable) it else "!$it" }
 
   companion object {
-    fun fromKtype(ktype: KType) =
 
-        object : GraphQlType {
-
-          override val ktype: KType get() = ktype
-
-          /**
-           * todo should nullability be taken into account?
-           */
-          override fun equals(other: Any?): Boolean =
-              other is GraphQlType
-                  && other.name == name
-                  && (other.ktype.classifier as? KClass<*>)?.qualifiedName ==
-                     (ktype.classifier as? KClass<*>)?.qualifiedName
-
-          override fun hashCode() =
-              name.hashCode().times(31) + isNullable.hashCode().times(31)
-
-        }
-
+    fun fromKtype(ktype: KType) = GraphQlType(ktype)
   }
 }
