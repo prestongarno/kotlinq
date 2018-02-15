@@ -3,7 +3,7 @@ package org.kotlinq.adapters
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.BooleanAdapter
 import org.kotlinq.api.FloatAdapter
-import org.kotlinq.api.GraphQlType
+import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.IntAdapter
 import org.kotlinq.api.ParsingAdapter
@@ -21,10 +21,8 @@ sealed class PrimitiveAdapter : ParsingAdapter {
 
 
 class IntAdapterImpl(
-    override val name: String,
-    override val type: GraphQlType,
-    override val initializer: (String) -> Int,
-    override val arguments: Map<String, Any> = emptyMap()
+    override val propertyInfo: GraphQlPropertyInfo,
+    override val initializer: (String) -> Int
 ) : PrimitiveAdapter(), IntAdapter {
 
   private var value = 0
@@ -44,10 +42,8 @@ class IntAdapterImpl(
 }
 
 class StringAdapterImpl(
-    override val name: String,
-    override val type: GraphQlType,
-    override val initializer: (String) -> String,
-    override val arguments: Map<String, Any> = emptyMap()
+    override val propertyInfo: GraphQlPropertyInfo,
+    override val initializer: (String) -> String
 ) : PrimitiveAdapter(), StringAdapter {
 
   private var value: String? = null
@@ -67,10 +63,8 @@ class StringAdapterImpl(
 }
 
 class FloatAdapterImpl(
-    override val name: String,
-    override val type: GraphQlType,
-    override val initializer: (String) -> Float,
-    override val arguments: Map<String, Any> = emptyMap()
+    override val propertyInfo: GraphQlPropertyInfo,
+    override val initializer: (String) -> Float
 ) : PrimitiveAdapter(), FloatAdapter {
 
   private var value = 0f
@@ -90,10 +84,8 @@ class FloatAdapterImpl(
 }
 
 class BooleanAdapterImpl(
-    override val name: String,
-    override val type: GraphQlType,
-    override val initializer: (String) -> Boolean,
-    override val arguments: Map<String, Any> = emptyMap()
+    override val propertyInfo: GraphQlPropertyInfo,
+    override val initializer: (String) -> Boolean
 ) : PrimitiveAdapter(), BooleanAdapter {
 
   private var value = false

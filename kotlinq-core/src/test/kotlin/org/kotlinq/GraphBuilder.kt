@@ -1,13 +1,10 @@
 package org.kotlinq
 
 import org.kotlinq.api.Context
-import org.kotlinq.api.Fragment
-import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
-import org.kotlinq.api.GraphQlType
+import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.Kotlinq
-import org.kotlinq.api.ModelAdapter
 import kotlin.reflect.KClass
 
 fun createGraph(definition: GraphBuilder.TypeBuilder.() -> Unit) =
@@ -37,9 +34,10 @@ class GraphBuilder(
 
     fun scalar(
         name: String,
-        type: GraphQlType = GraphQlType.fromKtype(mockType(String::class)),
+        type: String = "String",
+        clazz: KClass<*> = String::class,
         arguments: Map<String, Any> = emptyMap()
-    ) = graph.bindProperty(Kotlinq.adapterService.parser(name, type.ktype, { it }, arguments))
+    ) = graph.bindProperty(Kotlinq.adapterService.parser(info(name, type, arguments, clazz), { it }))
 
     infix fun String.ofType(name: String): TypeFieldBuilder {
       return TypeFieldBuilder(this, name)
@@ -47,18 +45,21 @@ class GraphBuilder(
 
     infix fun TypeFieldBuilder.definedAs(block: TypeBuilder.() -> Unit) {
       val def = TypeBuilder(GraphBuilder(typeName, definition = block)).apply(block)
-      graph.bindProperty(MockTypeField(fieldName, typeName, { GraphBuilder(typeName, definition = block).build() }, def.isNullable, def.arguments))
+      Kotlinq.adapterService.instanceProperty(
+          info(fieldName, typeName, def.arguments, Any::class),
+          { GraphBuilder(typeName, definition = block).build() })
+
+          .also(graph::bindProperty)
     }
 
     infix fun TypeFieldBuilder.spread(block: FragmentBuilder.() -> Unit) {
       val builder = FragmentBuilder().apply(block)
-      MockFragmentField(
-          fieldName,
-          builder.fragments.map { it.value }.toSet(),
-          typeName,
-          builder.isNullable,
-          arguments = builder.arguments)
-          .also(this@TypeBuilder.graph::bindProperty)
+
+      Kotlinq.adapterService.fragmentProperty(
+          info(fieldName, typeName, builder.arguments, Any::class),
+          builder.fragments.values.toSet())
+
+          .also(graph::bindProperty)
     }
 
     class TypeFieldBuilder(val fieldName: String, val typeName: String)
@@ -70,11 +71,6 @@ class GraphBuilder(
 
     var arguments: Map<String, Any> = emptyMap()
     var isNullable: Boolean = true
-
-    infix fun String.fragmentDef(block: TypeBuilder.() -> Unit) {
-      fragments[this] = { GraphBuilder(this, definition = block).build() }
-    }
-
 
     infix fun String.def(block: TypeBuilder.() -> Unit) {
       fragments[this] = { GraphBuilder(this, definition = block).build() }
@@ -88,41 +84,6 @@ class GraphBuilder(
 infix fun String.ofType(name: String): GraphBuilder.TypeBuilder.TypeFieldBuilder {
   return GraphBuilder.TypeBuilder.TypeFieldBuilder(this, name)
 }
-
-private
-class MockFragmentField(
-    override val name: String,
-    fragments: Set<() -> Context>,
-    typeName: String = "Any",
-    isNullable: Boolean = false,
-    override val type: GraphQlType =
-    GraphQlType.fromKtype(mockType(
-        getClassOrNull(typeName) ?: Fragment::class,
-        isMarkedNullable = isNullable)),
-    override val arguments: Map<String, Any> = emptyMap(),
-    val delegate: FragmentAdapter = Kotlinq.adapterService.fragmentProperty(name, type.ktype, fragments, arguments)
-) : FragmentAdapter by delegate {
-  override fun equals(other: Any?) = delegate == other
-  override fun hashCode() = delegate.hashCode()
-  override fun toString(): String = delegate.toString()
-}
-
-
-private
-class MockTypeField(
-    override val name: String,
-    typeName: String,
-    initializer: () -> Context,
-    isNullable: Boolean = true,
-    override val arguments: Map<String, Any> = emptyMap(),
-    override val type: GraphQlType = GraphQlType.fromKtype(mockType(Context::class, isMarkedNullable = isNullable)),
-    val delegate: ModelAdapter = Kotlinq.adapterService.instanceProperty(name, type.ktype, initializer, arguments)
-) : ModelAdapter by delegate {
-  override fun equals(other: Any?) = delegate == other
-  override fun hashCode() = delegate.hashCode()
-  override fun toString(): String = delegate.toString()
-}
-
 
 class MockContext(override val graphQlInstance: GraphQlInstance) : Context
 
@@ -138,3 +99,11 @@ fun getClassOrNull(name: String): KClass<out Any>? = try {
 } catch (ex: Exception) {
   null
 }
+
+fun info(
+    graphQlName: String,
+    graphQlTypeName: String = GraphQlPropertyInfo.STRING,
+    arguments: Map<String, Any> = emptyMap(),
+    clazz: KClass<*> = String::class
+) =
+    GraphQlPropertyInfo(graphQlName, graphQlTypeName, mockType(clazz), arguments)

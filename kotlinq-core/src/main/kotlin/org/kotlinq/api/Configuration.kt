@@ -2,6 +2,7 @@ package org.kotlinq.api
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.singleton
 
 
@@ -18,18 +19,17 @@ import com.github.salomonbrys.kodein.singleton
 internal
 interface Configuration {
 
-  val kodein: Kodein
-
   fun configure(configuration: Builder)
-
 
 
   companion object : Configuration {
 
     private lateinit var container: Kodein
 
+    inline fun <reified T : Any> instance() = kodein.instance<T>()
+
     /** kodein dependency container */
-    override val kodein: Kodein
+    private val kodein: Kodein
       get() {
         assertConfigured()
         return container
@@ -52,14 +52,12 @@ interface Configuration {
         instanceProvider: GraphQlInstanceProvider = DefaultConfiguration.graphQlInstanceProvider
     ) {
 
-      val kodein by lazy {
-        Kodein {
-          bind<AdapterService>() with singleton { adapterService }
-          bind<GraphQlFormatter>() with singleton { printer }
-          bind<Resolver>() with singleton { resolver }
-          bind<JsonParser>() with singleton { jsonParser }
-          bind<GraphQlInstanceProvider>() with singleton { instanceProvider }
-        }
+      val kodein = Kodein {
+        bind<AdapterService>() with singleton { adapterService }
+        bind<GraphQlFormatter>() with singleton { printer }
+        bind<Resolver>() with singleton { resolver }
+        bind<JsonParser>() with singleton { jsonParser }
+        bind<GraphQlInstanceProvider>() with singleton { instanceProvider }
       }
     }
 

@@ -10,5 +10,5 @@ interface GraphQlInstanceProvider {
 
   fun createNewInstance(typeName: String): GraphQlInstance
 
-  companion object : GraphQlInstanceProvider by Configuration.kodein.instance()
+  companion object : GraphQlInstanceProvider by Configuration.instance()
 }

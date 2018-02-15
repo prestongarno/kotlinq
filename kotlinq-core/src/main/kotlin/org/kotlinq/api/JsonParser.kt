@@ -14,5 +14,5 @@ interface JsonParser {
 
   fun parseToArray(string: String): Iterable<Any>
 
-  companion object : JsonParser by Configuration.kodein.instance()
+  companion object : JsonParser by Configuration.instance()
 }

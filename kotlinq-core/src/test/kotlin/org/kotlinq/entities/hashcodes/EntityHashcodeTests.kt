@@ -6,7 +6,7 @@ import org.kotlinq.PrimitiveData
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.eq
-import org.kotlinq.mockType
+import org.kotlinq.info
 import kotlin.coroutines.experimental.buildSequence
 
 class EntityHashcodeTests {
@@ -20,10 +20,8 @@ class EntityHashcodeTests {
     val generator: () -> FragmentAdapter = {
 
       Kotlinq.adapterService.fragmentProperty(
-          name,
-          mockType(Any::class),
-          setOf({ MockContext(Kotlinq.createGraphQlInstance(instanceTypeName)) }),
-          arguments)
+          info(name, "GraphQlAny", arguments, Any::class),
+          setOf({ MockContext(Kotlinq.createGraphQlInstance(instanceTypeName)) }))
 
     }
 

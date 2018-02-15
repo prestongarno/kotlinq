@@ -1,5 +1,6 @@
 package org.kotlinq.resolvers
 
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.Context
 import org.kotlinq.api.DeserializingAdapter
 import org.kotlinq.api.FragmentAdapter
@@ -7,7 +8,7 @@ import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.Resolver
 import java.io.InputStream
-import java.util.LinkedList
+import java.util.*
 
 internal
 class ResolverImpl : Resolver {
@@ -40,41 +41,45 @@ class ResolverImpl : Resolver {
 
     override fun resolve(value: Map<String, Any?>, target: Context): Boolean {
       push(value)
-      target.graphQlInstance.properties.forEach { _, adapter -> adapter.accept(this) }
+      target.graphQlInstance.accept(this)
       pop()
       return target.graphQlInstance.isResolved()
     }
 
     override fun visitModel(target: ModelAdapter) {
-      @Suppress("UNCHECKED_CAST")
-      (stack.peek()[target.name] as? Map<String, Any?>)?.let {
+      stack.peek().jsonObjectNamed(target)?.let {
         push(it)
+        // TODO add Transformer<T> interface for not only list properties, but also so that
+        // visitors can have control over setting values & verifying result
         target.setValue(it, this)
         pop()
       }
     }
 
     override fun visitFragmentContext(target: FragmentAdapter) {
-      @Suppress("UNCHECKED_CAST")
-      (stack.peek()[target.name] as? Map<String, Any?>)?.let { values ->
+
+      stack.peek().jsonObjectNamed(target)?.let { values ->
         push(values)
-        values["__typename"]?.toString()?.let { type ->
-          target.setValue(type, values, this)
-        }
+        values["__typename"]?.toString()?.let { target.setValue(it, values, this) }
         pop()
       }
     }
 
     override fun visitScalar(target: ParsingAdapter) {
-      target.setValue(stack.peek()[target.name]?.toString())
+      target.setValue(stack.peek()[target.propertyInfo.graphQlName]?.toString())
     }
 
     override fun visitDeserializer(target: DeserializingAdapter) {
-      (stack.peek()[target.name]?.let {
+      (stack.peek()[target.propertyInfo.graphQlName]?.let {
         it as? InputStream ?: it.toString().byteInputStream()
       } ?: "".byteInputStream()).let(target::setValue)
     }
   }
 
+}
+
+@Suppress("UNCHECKED_CAST")
+fun Map<String, Any?>.jsonObjectNamed(adapter: Adapter): Map<String, Any>? {
+  return this[adapter.propertyInfo.graphQlName] as? Map<String, Any>
 }
 

@@ -12,41 +12,15 @@ interface AdapterService {
 
   val scalarAdapters: ScalarAdapterService
 
-  fun deserializer(
-      name: String,
-      type: KType,
-      init: (java.io.InputStream) -> Any?,
-      arguments: Map<String, Any> = emptyMap()
-  ): Adapter
+  fun deserializer(info: GraphQlPropertyInfo, init: (java.io.InputStream) -> Any?): Adapter
 
-  fun parser(
-      name: String,
-      type: KType,
-      init: (String) -> Any?,
-      arguments: Map<String, Any> = emptyMap()
-  ): Adapter
+  fun parser(info: GraphQlPropertyInfo, init: (String) -> Any?): Adapter
 
-  fun enumDeserializer(
-      name: String,
-      type: KType,
-      arguments: Map<String, Any> = emptyMap()
-  ): Adapter
+  fun enumDeserializer(info: GraphQlPropertyInfo): Adapter
 
-  fun instanceProperty(
-      name: String,
-      type: KType,
-      init: () -> Context,
-      arguments: Map<String, Any> = emptyMap()
-  ): ModelAdapter
+  fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Context): ModelAdapter
 
-  fun fragmentProperty(
-      name: String,
-      type: KType,
-      fragments: Set<() -> Context>,
-      arguments: Map<String, Any> = emptyMap()
-  ): FragmentAdapter
-
-  fun createFragment(initializer: () -> Context): Fragment
+  fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Context>): FragmentAdapter
 
 }
 

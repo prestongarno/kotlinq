@@ -4,11 +4,10 @@ import org.kotlinq.api.Adapter
 import org.kotlinq.api.AdapterService
 import org.kotlinq.api.Context
 import org.kotlinq.api.FragmentAdapter
-import org.kotlinq.api.GraphQlType
+import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ScalarAdapterService
 import java.io.InputStream
-import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
 
@@ -17,43 +16,19 @@ class AdapterServiceImpl(
     override val scalarAdapters: ScalarAdapterService = ScalarAdapterServiceImpl()
 ) : AdapterService {
 
-  override fun createFragment(initializer: () -> Context) =
-      FragmentImpl(initializer)
+  override fun deserializer(info: GraphQlPropertyInfo, init: (InputStream) -> Any?): Adapter =
+      DeserializingProperty(info, init)
 
-  override fun deserializer(
-      name: String,
-      type: KType,
-      init: (InputStream) -> Any?,
-      arguments: Map<String, Any>
-  ): Adapter = DeserializingProperty(name, GraphQlType.fromKtype(type), init, arguments)
+  override fun parser(info: GraphQlPropertyInfo, init: (String) -> Any?): Adapter =
+      ParsedProperty(info, init)
 
-  override fun parser(
-      name: String,
-      type: KType,
-      init: (String) -> Any?,
-      arguments: Map<String, Any>
-  ): Adapter = ParsedProperty(name, GraphQlType.fromKtype(type), init, arguments)
+  override fun enumDeserializer(info: GraphQlPropertyInfo): Adapter = ParsedProperty(info, { value ->
+    info.platformType.jvmErasure.java.enumConstants.find { value == it?.toString() }
+  })
 
-  override fun enumDeserializer(
-      name: String,
-      type: KType,
-      arguments: Map<String, Any>
-  ): Adapter = ParsedProperty(name, GraphQlType.fromKtype(type), { value ->
-    type.jvmErasure.java.enumConstants.find { value == it?.toString() }
-  }, arguments)
+  override fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Context): ModelAdapter =
+      InstanceProperty(info, init)
 
-  override fun instanceProperty(
-      name: String,
-      type: KType,
-      init: () -> Context,
-      arguments: Map<String, Any>
-  ): ModelAdapter = ModelPropertyImpl(name, GraphQlType.fromKtype(type), arguments, init)
-
-  override fun fragmentProperty(
-      name: String,
-      type: KType,
-      fragments: Set<() -> Context>,
-      arguments: Map<String, Any>
-  ): FragmentAdapter = FragmentProperty(name, GraphQlType.fromKtype(type), fragments, arguments)
-
+  override fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Context>): FragmentAdapter =
+      FragmentProperty(info, fragments)
 }

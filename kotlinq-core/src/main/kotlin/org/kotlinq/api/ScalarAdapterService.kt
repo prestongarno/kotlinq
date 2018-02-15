@@ -13,31 +13,23 @@ interface ScalarAdapterService {
   val mappers: TypeMappers
 
   fun intAdapter(
-      name: String,
-      type: KType,
-      mapper: (String) -> Int = mappers.intMapper,
-      arguments: Map<String, Any> = emptyMap()
+      info: GraphQlPropertyInfo,
+      mapper: (String) -> Int = mappers.intMapper
   ): IntAdapter
 
   fun stringAdapter(
-      name: String,
-      type: KType,
-      mapper: (String) -> String = mappers.stringMapper,
-      arguments: Map<String, Any> = emptyMap()
+      info: GraphQlPropertyInfo,
+      mapper: (String) -> String = mappers.stringMapper
   ): StringAdapter
 
   fun floatAdapter(
-      name: String,
-      type: KType,
-      mapper: (String) -> Float = mappers.floatMapper,
-      arguments: Map<String, Any> = emptyMap()
+      info: GraphQlPropertyInfo,
+      mapper: (String) -> Float = mappers.floatMapper
   ): FloatAdapter
 
   fun booleanAdapter(
-      name: String,
-      type: KType,
-      mapper: (String) -> Boolean = mappers.booleanMapper,
-      arguments: Map<String, Any> = emptyMap()
+      info: GraphQlPropertyInfo,
+      mapper: (String) -> Boolean = mappers.booleanMapper
   ): BooleanAdapter
 
 

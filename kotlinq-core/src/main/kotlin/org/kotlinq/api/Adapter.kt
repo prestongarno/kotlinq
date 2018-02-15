@@ -10,14 +10,8 @@ package org.kotlinq.api
  */
 interface Adapter {
 
-  /** Name of this GraphQL property in the schema */
-  val name: String
-
   /** Resulting return type of this property */
-  val type: GraphQlType
-
-  /** Arguments passed to this delegated property for the GraphQL query */
-  val arguments: Map<String, Any>
+  val propertyInfo: GraphQlPropertyInfo
 
   /** Returns the result of the query, or null if unresolved */
   fun getValue(): Any?
@@ -35,24 +29,11 @@ interface Adapter {
 
   companion object {
 
-    fun adapterHashcode(adapter: Adapter): Int = adapter.run {
-      var hashcode = name.hashCode() * 31
-      hashcode += type.hashCode()
-      hashcode *= 31
-      hashcode += arguments.hashCode()
-      hashcode *= 31
-      return@run hashcode
-    }
+    fun adapterHashcode(adapter: Adapter): Int =
+        adapter.propertyInfo.hashCode()
 
-    @Suppress("USELESS_CAST") // SMART cast, acshually
-    fun adapterEquals(thisAdapter: Adapter, other: Adapter?): Boolean {
-      other as? Adapter ?: return false
-      if (other.name != thisAdapter.name) return false
-      if (other.type != thisAdapter.type) return false
-      if (other.arguments.size != thisAdapter.arguments.size) return false
-
-      return other.arguments.all { thisAdapter.arguments[it.key] == it.value }
-    }
+    fun adapterEquals(thisAdapter: Adapter, other: Adapter?): Boolean =
+        other is Adapter && other.propertyInfo == thisAdapter.propertyInfo
   }
 }
 

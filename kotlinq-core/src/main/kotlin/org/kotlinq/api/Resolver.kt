@@ -12,5 +12,5 @@ interface Resolver : GraphVisitor {
 
   fun resolve(value: Map<String, Any?>, target: Context): Boolean
 
-  companion object : Resolver by Configuration.kodein.instance()
+  companion object : Resolver by Configuration.instance()
 }

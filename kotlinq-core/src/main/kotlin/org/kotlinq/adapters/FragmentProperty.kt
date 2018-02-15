@@ -4,17 +4,16 @@ import org.kotlinq.api.Adapter
 import org.kotlinq.api.Context
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
-import org.kotlinq.api.GraphQlType
+import org.kotlinq.api.FragmentImpl
+import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.Resolver
 
 
 internal
 class FragmentProperty(
-    override val name: String,
-    override val type: GraphQlType,
-    fragments: Set<() -> Context>,
-    override val arguments: Map<String, Any>
+    override val propertyInfo: GraphQlPropertyInfo,
+    fragments: Set<() -> Context>
 ) : FragmentAdapter {
 
   private var value: Context? = null
@@ -38,7 +37,7 @@ class FragmentProperty(
 
   override fun isResolved() =
       value?.graphQlInstance?.isResolved() == true
-          || type.isNullable
+          || propertyInfo.isNullable
 
 
   override fun equals(other: Any?) = (other as? FragmentAdapter)

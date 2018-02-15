@@ -20,14 +20,14 @@ class GraphQlInstanceImpl(override val graphQlTypeName: String) : GraphQlInstanc
 
 
   override fun isResolved(): Boolean =
-      instanceProperties.filterNot { it.value.type.isNullable }
+      instanceProperties.filterNot { it.value.propertyInfo.isNullable }
           .count { !it.value.isResolved() } == 0
 
   override fun toGraphQl(pretty: Boolean, extractFragments: Boolean): String =
       GraphQlFormatter.printGraphQl(pretty, extractFragments, this)
 
   override fun bindProperty(adapter: Adapter) {
-    instanceProperties[adapter.name] = adapter
+    instanceProperties[adapter.propertyInfo.graphQlName] = adapter
   }
 
   override fun equals(other: Any?): Boolean {
@@ -50,5 +50,5 @@ class GraphQlInstanceImpl(override val graphQlTypeName: String) : GraphQlInstanc
       }
 
 
-  companion object : GraphQlInstanceProvider by Configuration.kodein.instance()
+  companion object : GraphQlInstanceProvider by Configuration.instance()
 }

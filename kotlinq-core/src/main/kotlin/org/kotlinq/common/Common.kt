@@ -35,3 +35,10 @@ fun formatAs(value: Any): String {
   }
 }
 
+internal
+fun <T: Any> T.unit(block: T.() -> Any?) {
+  block()
+}
+
+internal
+fun Any?.ignore() = Unit

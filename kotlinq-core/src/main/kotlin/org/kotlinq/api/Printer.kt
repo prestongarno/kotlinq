@@ -23,7 +23,7 @@ interface GraphQlFormatter {
   val optimizedPrinter: Printer
 
 
-  companion object : GraphQlFormatter by Configuration.kodein.instance() {
+  companion object : GraphQlFormatter by Configuration.instance() {
 
     fun printGraphQl(pretty: Boolean, extractFragments: Boolean, instance: GraphQlInstance): String {
       return when {

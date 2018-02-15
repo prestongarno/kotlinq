@@ -1,17 +1,15 @@
 package org.kotlinq.adapters
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.GraphQlType
+import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.ParsingAdapter
 
 
 internal
 class ParsedProperty(
-    override val name: String,
-    override val type: GraphQlType,
-    override val initializer: (String) -> Any?,
-    override val arguments: Map<String, Any>
+    override val propertyInfo: GraphQlPropertyInfo,
+    override val initializer: (String) -> Any?
 ) : ParsingAdapter {
 
   private var result: Any? = null
@@ -28,7 +26,7 @@ class ParsedProperty(
   }
 
   override fun isResolved() =
-      result != null || type.isNullable
+      result != null || propertyInfo.isNullable
 
   override fun equals(other: Any?) =
       Adapter.adapterEquals(this, other as? Adapter)

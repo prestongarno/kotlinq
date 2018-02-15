@@ -5,11 +5,10 @@ import org.kotlinq.api.JsonParser
 import java.io.StringReader
 
 
-internal
 class JsonParserImpl : JsonParser {
 
   override fun parseToObject(string: String, rootObjectName: String): Map<String, Any?> {
-    return Klaxon().parseJsonObject(reader = StringReader(string)).obj(rootObjectName) ?: emptyMap()
+    return Klaxon().parseJsonObject(reader = StringReader(string)).obj(rootObjectName)?.map ?: emptyMap()
   }
 
   override fun parseToArray(string: String): Iterable<Any> {

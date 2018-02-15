@@ -29,10 +29,6 @@ class MockedKTypeImpl(
           && other.isMarkedNullable == isMarkedNullable
           && other.arguments.containsAll(arguments)
 
-  /**
-   * [org.kotlinq.api.GraphQlType] impl hashcode doesn't take
-   * platform [KType.hashCode] into account, so not very important
-   */
   override fun hashCode(): Int =
       (classifier?.hashCode() ?: 0 * 31+
       isMarkedNullable.hashCode() * 31) * 31 +

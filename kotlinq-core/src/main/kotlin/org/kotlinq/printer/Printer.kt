@@ -31,7 +31,7 @@ private const val EXIT_SCOPE: String = "}"
  * Stack-based algorithm to print GraphQL requests
  *
  * Rules:
- *   * Stack is type Any, but only [Adapter] & [QModel] ever added/removed
+ *   * Stack is type Any, but only [Adapter] & [Context] ever added/removed
  *   * [QModel] & [FragmentContext] are critical points
  *
  *   * Algorithm:
@@ -81,8 +81,9 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
 
     if (curr is Adapter) {
 
-      builder.append(curr.name)
-      if (curr.arguments.isNotEmpty()) builder.append(curr.arguments.stringify())
+      builder.append(curr.propertyInfo.graphQlName)
+      if (curr.propertyInfo.arguments.isNotEmpty())
+        builder.append(curr.propertyInfo.arguments.stringify())
 
       if (curr is ModelAdapter) {
         pushField(curr.fragment.prototype.graphQlInstance)
@@ -139,8 +140,8 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
         val numOfFields = fragment.prototype.graphQlInstance.properties.size - 1
 
         fragment.prototype.graphQlInstance.properties.entries.toList().forEachIndexed { i, (_, value) ->
-          append(value.name)
-          append(value.arguments.stringify())
+          append(value.propertyInfo.graphQlName)
+          append(value.propertyInfo.arguments.stringify())
           when (value) {
           // recursive call, but only on one level deep since we pass the fragment set
             is ModelAdapter -> print(value.fragment.prototype.graphQlInstance, frags, builder)
@@ -206,7 +207,7 @@ fun GraphQlInstance.printNode(fragments: Map<Fragment, String>, indentLevel: Int
   val indent = "\n${INDENT.repeat(indentLevel)}"
   return this.properties.entries.map { it.value }
       .joinToString(prefix = "{" + indent, separator = indent, postfix = "\n${INDENT.repeat(indentLevel - 1)}}") {
-        it.name + it.arguments.stringify() + it.printEdge(fragments, indentLevel + 1)
+        it.propertyInfo.graphQlName + it.propertyInfo.arguments.stringify() + it.printEdge(fragments, indentLevel + 1)
       }
 }
 

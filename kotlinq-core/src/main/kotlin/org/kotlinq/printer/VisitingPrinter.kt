@@ -8,6 +8,7 @@ import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.common.stringify
+import org.kotlinq.common.unit
 
 private const val SPREAD: String = "..."
 private const val ENTER_SCOPE: String = "{"
@@ -47,10 +48,11 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
       return stringBuilder.toString()
     }
 
-    private fun printAdapter(adapter: Adapter) {
-      stringBuilder.append(adapter.name)
-      stringBuilder.append(adapter.arguments.stringify())
-    }
+    private fun printAdapter(adapter: Adapter) =
+        adapter.propertyInfo.unit {
+          stringBuilder.append(graphQlName)
+          stringBuilder.append(arguments.stringify())
+        }
 
     override fun visitModel(target: ModelAdapter) {
       printAdapter(target)
