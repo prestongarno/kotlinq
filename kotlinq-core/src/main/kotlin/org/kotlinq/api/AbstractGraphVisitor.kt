@@ -10,14 +10,9 @@ import org.kotlinq.common.empty
  * [GraphVisitor] is still needed in order to resolve the
  * graph with proper values from deserialization, so this might be called 'backwards abstraction'
  *
- * TODO     When traversing the graph, the [GraphVisitor] should be passed as a parameter to the listeners,
- * TODO     so that listeners can control the paths that the underlying implementation aware visitor takes
- * TODO     (i.e. when coming across undiscovered fragments,
- * TODO     implementations might be able to call [Fragment.prototype].graphQlInstance.accept(\<resolver passed as parameter\>)
- * TODO     to continue to all adjacent nodes)
- *
- * TODO [Context] is making this overcomplicated, should maybe add "visitSelectionSet(instance: GraphQlInstance)" method?
- * TODO (cont.) otherwise both Visitor interfaces are relying on [ModelAdapter] and [Fragment] implementations to call visitor on edge nodes
+ * @param controller implementations can call
+ *   [Fragment.prototype].graphQlInstance.accept(this) withing the block to continue to all adjacent nodes.
+ *   This allows for path control when traversing
  */
 class AbstractGraphVisitor(
     val nodeListener: (Adapter) -> Unit,
@@ -34,13 +29,13 @@ class AbstractGraphVisitor(
 
     override fun visitModel(target: ModelAdapter) {
       nodeListener(target)
-      this.controller(target.fragment) // instead of visiting fragment def, pass control to callback
+      controller(target.fragment) // instead of visiting fragment def, pass control to callback
       exitNodeListener(target)
     }
 
     override fun visitFragmentContext(target: FragmentAdapter) {
       nodeListener(target)
-      target.fragments.values.forEach(this::visitFragment)
+      target.fragments.values.forEach(::visitFragment)
       exitNodeListener(target)
     }
 
@@ -63,14 +58,14 @@ class AbstractGraphVisitor(
 
     fun createGeneralizedGraphVisitor(block: Builder.() -> Unit)
         : AbstractGraphVisitor = Builder().apply(block).let {
-          AbstractGraphVisitor(it.nodeListener, it.fragmentListener, it.exitNodeListener)
-        }
+      AbstractGraphVisitor(it.nodeListener, it.fragmentListener, it.exitNodeListener)
+    }
 
     fun generalizedGraphVisitor(
         nodeListener: (Adapter) -> Unit = empty(),
-        fragmentListener: GraphVisitor.(Fragment) -> Unit
-    ): AbstractGraphVisitor =
-        AbstractGraphVisitor(nodeListener, fragmentListener)
+        controller: GraphVisitor.(Fragment) -> Unit = { it.prototype.graphQlInstance.accept(this) },
+        exitNodeListener: (Adapter) -> Unit = empty()
+    ) = AbstractGraphVisitor(nodeListener, controller, exitNodeListener)
   }
 
 

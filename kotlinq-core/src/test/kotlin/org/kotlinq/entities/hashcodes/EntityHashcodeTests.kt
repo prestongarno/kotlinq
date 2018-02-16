@@ -3,7 +3,7 @@ package org.kotlinq.entities.hashcodes
 import org.junit.Test
 import org.kotlinq.MockContext
 import org.kotlinq.PrimitiveData
-import org.kotlinq.api.FragmentAdapter
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.eq
 import org.kotlinq.info
@@ -17,7 +17,7 @@ class EntityHashcodeTests {
     val arguments = PrimitiveData.randomGraphQlArgumentMap()
     val instanceTypeName = PrimitiveData.STRING.generator().toString()
 
-    val generator: () -> FragmentAdapter = {
+    val generator: () -> Adapter = {
 
       Kotlinq.adapterService.fragmentProperty(
           info(name, "GraphQlAny", arguments, Any::class),

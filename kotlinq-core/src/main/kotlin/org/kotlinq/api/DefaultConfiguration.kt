@@ -1,6 +1,6 @@
 package org.kotlinq.api
 
-import org.kotlinq.adapters.AdapterServiceImpl
+import org.kotlinq.properties.AdapterServiceImpl
 import org.kotlinq.models.GraphQlInstanceProviderImpl
 import org.kotlinq.printer.PrinterImpl
 import org.kotlinq.resolvers.JsonParserImpl

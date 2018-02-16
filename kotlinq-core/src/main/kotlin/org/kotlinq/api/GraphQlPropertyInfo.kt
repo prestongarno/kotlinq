@@ -3,7 +3,8 @@ package org.kotlinq.api
 import kotlin.reflect.KType
 
 
-data class GraphQlPropertyInfo(
+data
+class GraphQlPropertyInfo(
     val graphQlName: String,
     val graphQlType: String,
     val platformType: KType,

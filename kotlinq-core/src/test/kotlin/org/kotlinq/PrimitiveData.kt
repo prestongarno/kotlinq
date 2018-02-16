@@ -14,7 +14,8 @@ enum class PrimitiveData(val generator: () -> Any) {
   LIST({
     val type = randomArgumentType()
     buildSequence {
-      for (i in 1..randomInt(1, 10)) yield(type.generator())
+      for (i in 1..randomInt(5, 7))
+        yield(type.generator())
     }.toList()
   });
 

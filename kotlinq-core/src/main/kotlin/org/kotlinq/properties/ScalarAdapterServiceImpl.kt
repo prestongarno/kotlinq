@@ -1,4 +1,4 @@
-package org.kotlinq.adapters
+package org.kotlinq.properties
 
 import org.kotlinq.api.BooleanAdapter
 import org.kotlinq.api.FloatAdapter

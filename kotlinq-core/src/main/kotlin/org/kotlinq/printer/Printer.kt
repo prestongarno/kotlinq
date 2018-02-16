@@ -14,12 +14,16 @@ internal
 class PrinterImpl(
     override val prettyPrinter: Printer = defaultOptimizedPrettyPrinter,
     override val prettyOptimizedPrinter: Printer = defaultOptimizedPrettyPrinter,
-    override val printer: Printer = defaultOptimizedPrinter,
-    override val optimizedPrinter: Printer = defaultOptimizedPrinter
+    override val printer: Printer = { VisitingPrinter(it).toString() },
+    override val optimizedPrinter: Printer = { VisitingPrinter(it).toString() }
 ) : GraphQlFormatter
 
-val defaultOptimizedPrinter: Printer get() = ::print
-val defaultOptimizedPrettyPrinter: Printer get() = ::pretty
+private
+val defaultOptimizedPrinter: Printer
+  get() = ::print
+private
+val defaultOptimizedPrettyPrinter: Printer
+  get() = ::pretty
 
 private const val INDENT: String = "  "
 private const val SPREAD: String = "..."

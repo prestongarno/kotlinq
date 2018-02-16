@@ -1,4 +1,4 @@
-package org.kotlinq.adapters.validation
+package org.kotlinq.properties.validation
 
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
