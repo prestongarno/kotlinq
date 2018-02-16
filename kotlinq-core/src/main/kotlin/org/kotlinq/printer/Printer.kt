@@ -10,20 +10,20 @@ import org.kotlinq.api.Printer
 import org.kotlinq.common.stringify
 import java.util.*
 
+// TODO extract fragments when applicable
 internal
-class PrinterImpl(
-    override val prettyPrinter: Printer = defaultOptimizedPrettyPrinter,
-    override val prettyOptimizedPrinter: Printer = defaultOptimizedPrettyPrinter,
-    override val printer: Printer = { VisitingPrinter(it).toString() },
-    override val optimizedPrinter: Printer = { VisitingPrinter(it).toString() }
-) : GraphQlFormatter
+class PrinterImpl : GraphQlFormatter {
 
-private
-val defaultOptimizedPrinter: Printer
-  get() = ::print
-private
-val defaultOptimizedPrettyPrinter: Printer
-  get() = ::pretty
+  override fun printGraphQl(
+      instance: GraphQlInstance,
+      pretty: Boolean,
+      inlineFragments: Boolean): String =
+
+      when {
+        pretty -> pretty(instance)
+        else -> VisitingPrinter(instance).toString()
+      }
+}
 
 private const val INDENT: String = "  "
 private const val SPREAD: String = "..."

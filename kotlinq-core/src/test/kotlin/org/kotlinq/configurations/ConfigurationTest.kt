@@ -1,18 +1,23 @@
 package org.kotlinq.configurations
 
-import com.beust.klaxon.JsonObject
 import org.junit.Test
-import org.kotlinq.api.Configuration
 import org.kotlinq.api.Context
-import org.kotlinq.api.DefaultConfiguration
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.JsonParser
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.Resolver
+import org.kotlinq.assertThrows
+import org.kotlinq.services.Configuration
+import org.kotlinq.services.ServiceContainer
+import org.kotlinq.eq
+import org.kotlinq.messageMatchingExactly
 import org.kotlinq.mockType
 import org.kotlinq.models.GraphQlInstanceImpl
+import org.kotlinq.println
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
 class ConfigurationTest {
 
@@ -36,13 +41,14 @@ class ConfigurationTest {
 
   @Test fun assertDependencyIsInitialized() {
 
-    Configuration.configure(Configuration.Companion.Builder(
-        jsonParser = parser,
-        instanceProvider = object : GraphQlInstanceProvider {
-          override fun createNewInstance(typeName: String): GraphQlInstance {
-            return GraphQlInstanceImpl(typeName)
-          }
-        }))
+    Configuration.configure {
+      jsonParser = parser
+      instanceProvider = object : GraphQlInstanceProvider {
+        override fun createNewInstance(typeName: String): GraphQlInstance {
+          return GraphQlInstanceImpl(typeName)
+        }
+      }
+    }
 
 
     val parseToObject = JsonParser.parseToObject("Hello:World")
@@ -57,7 +63,7 @@ class ConfigurationTest {
 
     require(context.graphQlInstance.properties["Hello"]?.getValue() == "World")
 
-    context.graphQlInstance.toGraphQl(pretty = true, extractFragments = false).let {
+    context.graphQlInstance.toGraphQl(pretty = true).let {
       require(it == """
         |{
         |  Hello
@@ -70,7 +76,7 @@ class ConfigurationTest {
   @Test
   fun usingDefaults() {
 
-    DefaultConfiguration.useDefaults(Configuration)
+    ServiceContainer.useDefaults()
 
     val value = JsonParser.parseToObject("""
       {
@@ -86,7 +92,50 @@ class ConfigurationTest {
     require(Resolver.resolve(value, context))
 
     // This fails because the configuration can't change after JVM startup unfortunately
-    //require(context.graphQlInstance.properties["Hello"]?.getValue() == "Universe!")
+    require(context.graphQlInstance.properties["Hello"]?.getValue() == "Universe!")
+  }
+
+  @Test fun serviceConfigurationDoesNotTriggerStackOverflowByCircularConfiguration() {
+    // make sure classes are all initialized
+    ServiceContainer::class
+        .memberProperties
+        .filter { it.isAccessible }
+        .forEach { it.get(ServiceContainer) }
+
+    Kotlinq.createGraphQlInstance("GraphQlTypeMeta").graphQlTypeName eq "GraphQlTypeMeta"
+
+    Configuration.use(object : GraphQlInstanceProvider {
+      override fun createNewInstance(typeName: String): GraphQlInstance = throw NullPointerException("TEST")
+    })
+
+    assertThrows<NullPointerException> {
+      Kotlinq.createGraphQlInstance("SomeType").println()
+    } messageMatchingExactly "TEST"
+
+    // Pass self-reference to wrapper class to delegate to self
+    Configuration.use(ServiceContainer.graphQlInstanceProvider)
+
+    // If didn't prevent the circular reference, this will stackoverflow
+    Kotlinq.createGraphQlInstance("Foo")
+  }
+
+  @Test fun resetDependenciesWorksCorrectly() {
+    ServiceContainer::class
+        .memberProperties
+        .filter { it.isAccessible }
+        .forEach { it.get(ServiceContainer) }
+
+    Configuration.use(object : GraphQlInstanceProvider {
+      override fun createNewInstance(typeName: String): GraphQlInstance = throw NullPointerException()
+    })
+
+    assertThrows<NullPointerException> {
+      Kotlinq.createGraphQlInstance("foo")
+    }
+
+    ServiceContainer.useDefaults()
+
+    Kotlinq.createGraphQlInstance("Hello").graphQlTypeName eq "Hello"
   }
 }
 

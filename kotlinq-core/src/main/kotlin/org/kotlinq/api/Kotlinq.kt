@@ -1,10 +1,10 @@
 package org.kotlinq.api
 
-import com.github.salomonbrys.kodein.instance
+import org.kotlinq.services.Configuration
 
 
 /**
- * God-object exposed to kotlinq-schema module
+ * God-object exposed to consumers and specifically kotlinq-schema
  * for creating kotlin platform delegate properties
  */
 interface Kotlinq {
@@ -23,8 +23,9 @@ interface Kotlinq {
     val adapterService: AdapterService
       get() = Configuration.instance()
 
-    override fun createGraphQlInstance(typeName: String): GraphQlInstance =
-        GraphQlInstanceProvider.createNewInstance(typeName)
+    override fun createGraphQlInstance(typeName: String): GraphQlInstance {
+      return GraphQlInstanceProvider.createNewInstance(typeName)
+    }
 
     override fun createFragment(initializer: () -> Context): Fragment =
         FragmentImpl(initializer)

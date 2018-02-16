@@ -1,11 +1,10 @@
 package org.kotlinq.models
 
-import com.github.salomonbrys.kodein.instance
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
+import org.kotlinq.services.Configuration
 
 
 internal
@@ -23,8 +22,8 @@ class GraphQlInstanceImpl(override val graphQlTypeName: String) : GraphQlInstanc
       instanceProperties.filterNot { it.value.propertyInfo.isNullable }
           .count { !it.value.isResolved() } == 0
 
-  override fun toGraphQl(pretty: Boolean, extractFragments: Boolean): String =
-      GraphQlFormatter.printGraphQl(pretty, extractFragments, this)
+  override fun toGraphQl(pretty: Boolean, inlineFragments: Boolean): String =
+      GraphQlFormatter.printGraphQl(this, pretty, inlineFragments)
 
   override fun bindProperty(adapter: Adapter) {
     instanceProperties[adapter.propertyInfo.graphQlName] = adapter

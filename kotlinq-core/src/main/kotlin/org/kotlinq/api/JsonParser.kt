@@ -1,6 +1,6 @@
 package org.kotlinq.api
 
-import com.github.salomonbrys.kodein.instance
+import org.kotlinq.services.Configuration
 
 
 /**

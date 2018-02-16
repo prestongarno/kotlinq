@@ -3,9 +3,9 @@ package org.kotlinq.printing
 import org.junit.Before
 import org.junit.Test
 import org.kotlinq.SpreadOperator.`,,,`
-import org.kotlinq.api.Configuration
 import org.kotlinq.api.GraphQlFormatter
-import org.kotlinq.api.Printer
+import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.services.Configuration
 import org.kotlinq.createGraph
 import org.kotlinq.eq
 import org.kotlinq.printer.VisitingPrinter
@@ -14,17 +14,18 @@ import org.kotlinq.printer.VisitingPrinter
 class MockGraphPrinterTests {
 
   @Before fun injectPrinter() {
-    Configuration.configure(Configuration.Companion.Builder(printer = VisitingPrinterFormatter))
+    Configuration.configure {
+      printer = VisitingPrinterFormatter
+    }
   }
 
   object VisitingPrinterFormatter : GraphQlFormatter {
 
-    private val standardPrinter: Printer = { VisitingPrinter(it).toString() }
-
-    override val prettyOptimizedPrinter: Printer get() = standardPrinter
-    override val printer: Printer get() = standardPrinter
-    override val optimizedPrinter: Printer get() = standardPrinter
-    override val prettyPrinter: Printer get() = standardPrinter
+    override fun printGraphQl(
+        instance: GraphQlInstance,
+        pretty: Boolean,
+        inlineFragments: Boolean): String =
+        VisitingPrinter(instance).toString()
   }
 
 

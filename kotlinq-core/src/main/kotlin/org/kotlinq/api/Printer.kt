@@ -1,6 +1,6 @@
 package org.kotlinq.api
 
-import com.github.salomonbrys.kodein.instance
+import org.kotlinq.services.Configuration
 
 
 typealias Printer = (GraphQlInstance) -> String
@@ -14,26 +14,14 @@ typealias Printer = (GraphQlInstance) -> String
 internal
 interface GraphQlFormatter {
 
-  val prettyPrinter: Printer
-
-  val prettyOptimizedPrinter: Printer
-
-  val printer: Printer
-
-  val optimizedPrinter: Printer
-
+  fun printGraphQl(
+      instance: GraphQlInstance,
+      pretty: Boolean = false,
+      inlineFragments: Boolean = true
+  ): String
 
   companion object : GraphQlFormatter by Configuration.instance() {
 
-    fun printGraphQl(pretty: Boolean, extractFragments: Boolean, instance: GraphQlInstance): String {
-      return when {
-        pretty && extractFragments -> prettyOptimizedPrinter
-        pretty && !extractFragments -> prettyPrinter
-        !pretty && !extractFragments -> printer
-        !pretty && extractFragments -> optimizedPrinter
-        else -> throw IllegalArgumentException()
-      }.invoke(instance)
-    }
   }
 }
 
