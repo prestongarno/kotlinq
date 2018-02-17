@@ -5,4 +5,4 @@ include 'kotlinq-core'
 //TODO finish core, untyped DSL, and DSL before compiler refactor
 //include 'kotlinq-gradle'
 include 'kotlinq-schema'
-
+include 'query-dsl'
