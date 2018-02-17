@@ -63,14 +63,6 @@ class ConfigurationTest {
 
     require(context.graphQlInstance.properties["Hello"]?.getValue() == "World")
 
-    context.graphQlInstance.toGraphQl(pretty = true).let {
-      require(it == """
-        |{
-        |  Hello
-        |}
-      """.trimMargin("|"))
-    }
-
   }
 
   @Test
