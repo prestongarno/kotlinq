@@ -8,16 +8,18 @@ import kotlin.reflect.KType
 import org.kotlinq.dsl.Scalar.*
 import kotlin.reflect.full.createType
 
-sealed class Scalar(
-    internal val clazz: KClass<*>,
-    internal val type: KType = clazz.createType()) {
+sealed class Scalar(internal val clazz: KClass<*>, internal val type: KType = clazz.createType()) {
 
   internal fun bindToName(name: String): Adapter =
       name.fromScalar(this)
 
+  internal
   object StringScalar : Scalar(String::class)
+  internal
   object IntScalar : Scalar(Int::class)
+  internal
   object BooleanScalar : Scalar(Boolean::class)
+  internal
   object FloatScalar : Scalar(Float::class)
 }
 

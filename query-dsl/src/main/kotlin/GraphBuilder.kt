@@ -3,18 +3,7 @@ package org.kotlinq.dsl
 import org.kotlinq.api.Context
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
-import org.kotlinq.api.GraphQlPropertyInfo
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty2
 
-fun query(name: String = "Query", definition: TypeBuilder.() -> Unit): Context =
-    GraphBuilder(name, definition).build()
-
-// Maybe do it like JS where listOf(varargs) and comma-separate so it works with references?
-// [[unaryMinus] [(String) -> ScalarProperty]]
-fun queryGraph(vararg properties: KProperty2<PrimitiveScope, String, Unit>): Context {
-  TODO()
-}
 
 internal
 class GraphBuilder(
@@ -38,17 +27,4 @@ class GraphBuilder(
     override fun hashCode(): Int = graphQlInstance.hashCode()
   }
 }
-
-infix fun String.ofType(name: String): TypeBuilder.TypeFieldBuilder {
-  return TypeBuilder.TypeFieldBuilder(this, name)
-}
-
-internal
-fun info(
-    graphQlName: String,
-    graphQlTypeName: String = GraphQlPropertyInfo.STRING,
-    arguments: Map<String, Any> = emptyMap(),
-    clazz: KClass<*> = String::class
-) = GraphQlPropertyInfo(graphQlName, graphQlTypeName, mockType(clazz), arguments)
-
 

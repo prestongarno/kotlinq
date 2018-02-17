@@ -14,7 +14,7 @@ interface Kotlinq {
   fun createFragment(initializer: () -> Context): Fragment
 
   fun createGraphQlInstance(
-      typeName: String
+      typeName: String = "Object"
   ): GraphQlInstance
 
   companion object : Kotlinq {
