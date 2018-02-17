@@ -1,6 +1,6 @@
-@file:Suppress("unused")
-
+package org.kotlinq.dsl
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class GraphQlObject
+@DslMarker
+annotation class GraphQlDslObject
