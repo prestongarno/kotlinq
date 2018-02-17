@@ -1,8 +1,11 @@
 package org.kotlinq.dsl
 
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.Kotlinq
+import org.kotlinq.dsl.Scalar.FloatScalar
+import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KProperty2
 
@@ -36,33 +39,32 @@ import kotlin.reflect.KProperty2
  * To do so, need to:
  *
  *   1. Locally-scoped String extension **properties** "string", "int", "float", and "boolean"
- *   2. ...
+ *   2. String.unaryMinus() extension *operator* function
+ *        - In the implementation, set a private variable String on call
+ *
  */
 interface PrimitiveScope : GraphQlInstance {
 
   private val service get() = Kotlinq.adapterService.scalarAdapters
 
-  val String.string: Unit
-    get() = this@PrimitiveScope.bindProperty(service.stringAdapter(
-        info(this, GraphQlPropertyInfo.STRING)))
+  val float get() = PrimitiveScope::floatOp
 
-  val String.integer: Unit
-    get() = this@PrimitiveScope.bindProperty(service.stringAdapter(
-        info(this, GraphQlPropertyInfo.INT)))
+  val string get() = PrimitiveScope::stringOp
 
-  val String.boolean: Unit
-    get() = this@PrimitiveScope.bindProperty(service.stringAdapter(
-        info(this, GraphQlPropertyInfo.BOOL)))
+  val integer get() = PrimitiveScope::intOp
 
-  val String.float: Unit
-    get() = this@PrimitiveScope.bindProperty(service.stringAdapter(
-        info(this, GraphQlPropertyInfo.FLOAT)))
+  val boolean get() = PrimitiveScope::boolOp
 
-  operator fun KProperty2<PrimitiveScope, String, Scalar>.unaryMinus() {
-    this.invoke(this@PrimitiveScope)
+  operator fun String.invoke(typeKind: KProperty1<PrimitiveScope, Scalar>) {
   }
-
-  infix operator fun String.invoke(call: KProperty1<String, Scalar>)
 
 }
 
+private
+val PrimitiveScope.stringOp get() = Scalar.StringScalar
+private
+val PrimitiveScope.intOp get() = Scalar.IntScalar
+private
+val PrimitiveScope.boolOp get() = Scalar.BooleanScalar
+private
+val PrimitiveScope.floatOp get() = Scalar.FloatScalar
