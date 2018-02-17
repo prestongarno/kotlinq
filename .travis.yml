@@ -4,10 +4,11 @@ jdk:
 - oraclejdk8
 
 script: 
-  - ./gradlew evaluateTestApi build test
+  - ./gradlew test build
 
 branches:
-  - null
+  except:
+    - gh-pages
 
 sudo: false
 
@@ -36,4 +37,4 @@ before_install:
   #- ./kotlinq-core/src/test/resources/test-server/install.sh
 
 after_success:
-  #- ./.buildscript/snapshot.sh
+  - ./.buildscript/snapshot.sh

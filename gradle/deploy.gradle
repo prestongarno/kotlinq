@@ -1,0 +1,109 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.bintray"
+apply plugin: "com.jfrog.artifactory"
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId "$projects.project.group"
+      artifactId projects.project.clientId
+      version projects.project.version.toString()
+      from components.java
+      artifact jarDoc
+      artifact jarSource
+
+      pom.withXml {
+        asNode().children().last() + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name clientId
+          description projectDescription
+          url gitBaseUrl
+          organization {
+            name DEV_COMPANY
+            url DEV_COMPANY_URL
+          }
+          issueManagement {
+            system 'git'
+            url "$gitBaseUrl/issues"
+          }
+          scm {
+            url "${gitBaseUrl}.git"
+          }
+          licenses {
+            license {
+              name "Apache 2.0"
+              url "$projLicenseUrl"
+              comments "See $projLicenseUrl for more details."
+              distribution "$projLicenseUrl"
+            }
+          }
+          developers {
+            developer {
+              id DEV_URL
+              name DEV_NAME
+              organization DEV_COMPANY
+              organizationUrl DEV_COMPANY_URL
+            }
+          }
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      url 'https://bintray.com/com/prestongarno/'
+    }
+  }
+}
+
+artifactory {
+  contextUrl = 'http://oss.jfrog.org/artifactory'
+  publish {
+    repository {
+      repoKey = 'oss-snapshot-local'
+      username = BINTRAY_USER
+      password = JFROG_KEY
+    }
+    defaults {
+      publications('mavenJava')
+      publishPom = true
+    }
+  }
+}
+
+
+bintray {
+  user BINTRAY_USER
+  key BINTRAY_KEY
+  publications = ['mavenJava']
+  dryRun = version.endsWith("SNAPSHOT")
+  publish = true
+  override = true
+
+  pkg {
+    repo = 'kotlinq'
+    name = clientId
+    desc = projectDescription
+    licenses = ['Apache 2.0']
+    vcsUrl = "${gitBaseUrl}.git"
+    githubRepo = "$gitBaseUrl"
+    githubReleaseNotesFile = 'README.md'
+
+    version {
+      name = "$project.version"
+      gpg {
+        sign = true
+        passphrase = GMAIL_GPG
+      }
+      mavenCentralSync {
+        sync = false
+        user = MAVEN2_USERNAME
+        password = MAVEN2_PASSWORD
+        close = '0'
+      }
+    }
+  }
+}
+

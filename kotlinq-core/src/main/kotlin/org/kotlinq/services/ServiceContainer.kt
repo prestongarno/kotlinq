@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package org.kotlinq.services
 
 import com.github.salomonbrys.kodein.Kodein

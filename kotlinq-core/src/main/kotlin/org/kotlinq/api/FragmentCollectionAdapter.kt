@@ -49,9 +49,11 @@ class FragmentCollectionAdapter(
   @Suppress("UNCHECKED_CAST")
   private
   fun KType.listDepth(): Int = buildSequence {
+
     arguments.firstOrNull()?.type?.let {
       it.classifier as? KClass<List<*>>
     }?.also { yield(it) }
+
   }.count()
 
   override fun equals(other: Any?): Boolean {

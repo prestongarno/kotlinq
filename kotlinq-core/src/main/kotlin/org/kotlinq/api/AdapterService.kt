@@ -1,7 +1,5 @@
 package org.kotlinq.api
 
-import kotlin.reflect.KType
-
 
 /**
  * Provides adapters (entities) for properties with different return types (use cases)

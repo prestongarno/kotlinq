@@ -19,7 +19,6 @@
 
 package com.prestongarno.kotlinq.http
 
-import com.prestongarno.kotlinq.core.Model
 import com.prestongarno.kotlinq.http.internal.Http4k
 import com.prestongarno.kotlinq.http.internal.RequestType
 

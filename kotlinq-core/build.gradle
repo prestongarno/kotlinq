@@ -1,86 +1,14 @@
-buildscript {
-  repositories {
-    mavenLocal()
-    jcenter()
-    mavenCentral()
-  }
-}
+
+apply plugin: 'java'
 
 repositories {
   jcenter()
-  mavenLocal()
-  mavenCentral()
 }
-apply plugin: 'maven'
 
 dependencies {
-  compile 'com.beust:klaxon:2.1.4'
-  compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
-  compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
-  testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-  testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-compiler-embeddable',
-          version: "$kotlin_version"
-  testCompile "com.prestongarno.kotlinq:kotlinq-test-api:$version"
-}
-
-uploadArchives {
-  repositories {
-    mavenLocal()
-  }
-}
-
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      groupId "$rootProject.group"
-      artifactId clientId
-      version projects.project.version.toString()
-      from components.java
-      artifact jarDoc
-      artifact jarSource
-
-      pom.withXml {
-        asNode().children().last() + {
-          resolveStrategy = Closure.DELEGATE_FIRST
-          name clientId
-          description projectDescription
-          url gitBaseUrl
-          organization {
-            name DEV_COMPANY
-            url DEV_COMPANY_URL
-          }
-          issueManagement {
-            system 'git'
-            url "$gitBaseUrl/issues"
-          }
-          scm {
-            url "${gitBaseUrl}.git"
-          }
-          licenses {
-            license {
-              name "Apache 2.0"
-              url "$projLicenseUrl"
-              comments "See $projLicenseUrl for more details."
-              distribution "$projLicenseUrl"
-            }
-          }
-          developers {
-            developer {
-              id DEV_URL
-              name DEV_NAME
-              organization DEV_COMPANY
-              organizationUrl DEV_COMPANY_URL
-            }
-          }
-        }
-      }
-    }
-  }
-  repositories {
-    maven {
-      url 'https://bintray.com/com/prestongarno/'
-    }
-  }
+  compile dep.klaxon
+  compile dep.kodein
+  compile dep.kotlinxCoroutines
 }
 
 sourceSets {
@@ -104,13 +32,4 @@ sourceSets {
   }
 }
 
-rootProject.tasks.findAll {
-  t -> t.name == "evaluateTestApi"
-}.each { Task t ->
-  if (t.didWork) {
-    compileJava.shouldRunAfter(t)
-  }
-}
-
-compileTestJava.mustRunAfter(":evaluateTestApi")
 

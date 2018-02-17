@@ -1,0 +1,31 @@
+def versions = [
+        antlr            : '4.7',
+        bintray          : "1.8.0",
+        klaxon           : "2.1.4",
+        kodein           : "4.1.0",
+        kotlinPoet       : "0.7.0",
+        kotlinVersion    : "1.2.20",
+        kotlinxCoroutines: "0.22.2"
+]
+
+ext.dep = [
+        antlr4                  : "org.antlr:antlr4-runtime:$versions.antlr",
+        jfrogLatestRelease      : "org.jfrog.buildinfo:build-info-extractor-gradle:4.6.2",
+        junit                   : 'junit:junit:4.12',
+        klaxon                  : "com.beust:klaxon:$versions.klaxon",
+        kodein                  : "com.github.salomonbrys.kodein:kodein:$versions.kodein",
+        kotlinpoet              : "com.squareup:kotlinpoet:$versions.kotlinPoet",
+        kotlinTest              : "org.jetbrains.kotlin:kotlin-test:$versions.kotlinVersion",
+        kotlinCompilerEmbeddable: "org.jetbrains.kotlin:kotlin-compiler-embeddable:$versions.kotlinVersion",
+        kotlinStdLib            : "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlinVersion",
+        kotlinGradlePlugin      : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlinVersion",
+        kotlinReflect           : "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlinVersion",
+        kotlinxCoroutines       : "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlinxCoroutines",
+        bintrayGradlePlugin     : "com.jfrog.bintray.gradle:gradle-bintray-plugin:$versions.bintray",
+        truth                   : 'com.google.truth:truth:0.36',
+]
+
+ext.getProjectVersion = {
+  return
+}
+

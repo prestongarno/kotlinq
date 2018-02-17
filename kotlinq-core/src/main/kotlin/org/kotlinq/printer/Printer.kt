@@ -6,11 +6,12 @@ import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.ModelAdapter
-import org.kotlinq.api.Printer
 import org.kotlinq.common.stringify
 import java.util.*
 
-// TODO extract fragments when applicable
+
+// TODO Use the AbstractGraphVisitor
+
 internal
 class PrinterImpl : GraphQlFormatter {
 

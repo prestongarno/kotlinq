@@ -16,91 +16,37 @@
  */
 
 buildscript {
-  ext.kotlin_version = '1.2.20'
+
+  apply from: rootProject.file("gradle/dependencies.gradle")
+
   ext.clientId = projects.project.name
   ext.sourceCompatibility = 1.8
   ext.projectDescription = "kotlinq: a kotlin client for graphql"
   ext.gitBaseUrl = GIT_BASE_URL + '/kotlinq'
   ext.projLicenseUrl = "$gitBaseUrl/LICENSE.txt"
+  ext.clientId = project.name
+  ext.groupId = ext.clientId
 
   repositories {
     jcenter()
     mavenCentral()
-    mavenLocal()
   }
 
-  //noinspection GroovyAssignabilityCheck <-- why does this even happen...
   dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-    classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-  }
-}
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'kotlin'
-
-def getVersion = {
-  if (rootProject.hasProperty("release") && rootProject.property("release") == "true") {
-    return "0.3.1"
-  } else {
-    return "0.3.1-SNAPSHOT"
-  }
-}
-
-group = 'com.prestongarno.kotlinq'
-version = getVersion()
-
-
-subprojects.each {
-  configurations.all {
-    resolutionStrategy {
-      eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'org.jetbrains.kotlin') {
-          details.useVersion(kotlin_version)
-        }
-      }
-    }
+    classpath dep.kotlinGradlePlugin
+    classpath dep.bintrayGradlePlugin
+    classpath dep.jfrogLatestRelease
   }
 }
 
 subprojects {
 
+  group = 'com.prestongarno.kotlinq'
+  version = (rootProject.hasProperty("release") && rootProject.property("release") == "true") ? "0.4" : "0.4-SNAPSHOT"
+
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'kotlin'
-  apply plugin: 'maven-publish'
-  apply plugin: "com.jfrog.bintray"
-  apply plugin: "com.jfrog.artifactory"
-
-  idea.module.downloadJavadoc = true
-
-  ext.clientId = project.name
-  group 'com.prestongarno.kotlinq'
-  ext.groupId = clientId
-
-  version = getVersion(rootProject)
-
-  repositories {
-    jcenter()
-    mavenCentral()
-    mavenLocal()
-  }
-  
-  dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testCompile "io.mockk:mockk:1.7.2"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testCompile group: 'com.google.truth', name: 'truth', version: '0.36'
-  }
-
-  kotlin {
-    experimental {
-      coroutines "enable"
-    }
-  }
 
   task jarDoc(type: Jar) {
     from(javadoc.destinationDir)
@@ -115,89 +61,32 @@ subprojects {
     archiveName = "$clientId-$version-sources.jar"
   }
 
-
-
   artifacts {
     archives jar, jarSource, jarDoc
   }
 
-  bintrayUpload {
-    doFirst { println("Uploading module $projects.project.name $version") }
+
+
+  repositories {
+    jcenter()
   }
 
+  dependencies {
+    compile dep.kotlinStdLib
+    compile dep.kotlinReflect
+    testCompile dep.kotlinTest
+    testCompile dep.junit
+    testCompile dep.truth
+  }
 
-  artifactory {
-    contextUrl = 'http://oss.jfrog.org/artifactory'
-    publish {
-      repository {
-        repoKey = 'oss-snapshot-local'
-        username = BINTRAY_USER
-        password = JFROG_KEY
-      }
-      defaults {
-        publications('mavenJava')
-        publishPom = true
-      }
+  kotlin {
+    experimental {
+      coroutines "enable"
     }
   }
 
-  bintray {
-    user BINTRAY_USER
-    key BINTRAY_KEY
-    publications = ['mavenJava']
-    dryRun = rootProject.version.endsWith("SNAPSHOT")
-    publish = true
-    override = true
+  idea.module.downloadJavadoc = true
 
-    pkg {
-      repo = 'kotlinq'
-      name = clientId
-      desc = projectDescription
-      licenses = ['Apache 2.0']
-      vcsUrl = "${gitBaseUrl}.git"
-      githubRepo = "$gitBaseUrl"
-      githubReleaseNotesFile = 'README.md'
+  apply from: rootProject.file("gradle/deploy.gradle")
 
-      version {
-        name = "$projects.project.version"
-        gpg {
-          sign = true
-          passphrase = GMAIL_GPG
-        }
-        mavenCentralSync {
-          sync = false
-          user = MAVEN2_USERNAME
-          password = MAVEN2_PASSWORD
-          close = '0'
-        }
-      }
-    }
-  }
-}
-
-/* This is so ugly */
-task evaluateTestApi(type: GradleBuild) { GradleBuild g ->
-  // using old maven plugin for local plugin resolution
-  dependsOn(":kotlinq-gradle:install")
-  dependsOn(":kotlinq-core:install")
-
-  g.inputs.files("kotlinq-test-api/src/main/resources")
-  g.outputs.dirs("kotlinq-test-api/build")
-  g.buildFile = 'kotlinq-test-api/build.gradle'
-  //noinspection GroovyAssignabilityCheck
-  g.startParameter.projectProperties.put("version", getVersion())
-
-  //noinspection GroovyAssignabilityCheck
-  g.tasks = ['compileGraphQL', 'install']
-}
-
-
-subprojects {
-  compileTestJava.dependsOn(evaluateTestApi)
-  test.dependsOn(evaluateTestApi)
-}
-
-clean.doFirst {
-  delete 'kotlinq-test-api/src/main/kotlin'
-  delete 'kotlinq-test-api/build'
 }

@@ -1,7 +1,5 @@
 package org.kotlinq.api
 
-import kotlin.reflect.KType
-
 
 /**
  * Factory methods for primitive platform delegate delegates.

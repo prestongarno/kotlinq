@@ -16,6 +16,5 @@ class ParsingGraphQlPropertyProvider<Z>(
 
   override fun config(block: ArgBuilder.() -> Unit) = args.block()
 
-  override fun provideDelegate(inst: Model<*>, property: KProperty<*>) =
-      Kotlinq.adapterService.parser(name, property.returnType, init).bind<Z>(inst)
+  override fun provideDelegate(inst: Model<*>, property: KProperty<*>) = TODO()
 }
