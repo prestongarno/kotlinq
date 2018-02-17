@@ -21,7 +21,7 @@ buildscript {
 
   ext.clientId = projects.project.name
   ext.sourceCompatibility = 1.8
-  ext.projectDescription = "kotlinq: a kotlin client for graphql"
+  ext.projectDescription = "a kotlin client for graphql"
   ext.gitBaseUrl = GIT_BASE_URL + '/kotlinq'
   ext.projLicenseUrl = "$gitBaseUrl/LICENSE.txt"
   ext.clientId = project.name
@@ -39,32 +39,16 @@ buildscript {
   }
 }
 
+
 subprojects {
 
+  ext.clientId = projects.project.name
   group = 'com.prestongarno.kotlinq'
-  version = (rootProject.hasProperty("release") && rootProject.property("release") == "true") ? "0.4" : "0.4-SNAPSHOT"
+  version = rootProject.findProperty("release") == "true" ? "0.4" : "0.4-SNAPSHOT"
 
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'kotlin'
-
-  task jarDoc(type: Jar) {
-    from(javadoc.destinationDir)
-    classifier 'javadoc'
-    archiveName "$clientId-$version-${classifier}.jar"
-  }
-
-  task jarSource(type: Jar) {
-    from(sourceSets.main.allSource)
-    from(sourceSets.test.allSource)
-    classifier 'sources'
-    archiveName = "$clientId-$version-sources.jar"
-  }
-
-  artifacts {
-    archives jar, jarSource, jarDoc
-  }
-
 
 
   repositories {
@@ -79,6 +63,49 @@ subprojects {
     testCompile dep.truth
   }
 
+  sourceSets {
+    main {
+      java {
+        srcDirs = ['src/main/kotlin',
+                   'src/main/java']
+      }
+      resources {
+        srcDirs = ['src/main/resources']
+      }
+    }
+    test {
+      java {
+        srcDirs = ['src/test/kotlin',
+                   'src/main/java']
+      }
+      resources {
+        srcDirs = ['src/test/resources']
+      }
+    }
+  }
+
+  jar {
+    from(compileJava.outputs)
+    from(sourceSets.main.resources)
+  }
+
+  task jarDoc(type: Jar) {
+    from(javadoc.destinationDir)
+    classifier 'javadoc'
+    archiveName = "$project.name-$version-$classifier" + ".jar"
+  }
+
+  task jarSource(type: Jar) {
+    from(sourceSets.main.allSource)
+    from(sourceSets.test.allSource)
+    classifier 'sources'
+    archiveName = "$project.name-$version-$classifier" + ".jar"
+  }
+
+  artifacts {
+    archives jar, jarSource, jarDoc
+  }
+
   kotlin {
     experimental {
       coroutines "enable"
@@ -90,3 +117,6 @@ subprojects {
   apply from: rootProject.file("gradle/deploy.gradle")
 
 }
+
+// snapshot full project jar
+apply from: rootProject.file("gradle/projectsnapshot.gradle")

@@ -16,29 +16,3 @@ dependencies {
   testCompile gradleTestKit()
 }
 
-jar {
-  from(compileJava.outputs)
-  from(sourceSets.main.resources)
-}
-
-sourceSets {
-  main {
-    java {
-      srcDirs = ['src/main/kotlin',
-                 'src/main/java']
-    }
-    resources {
-      srcDirs = ['src/main/resources']
-    }
-  }
-  test {
-    java {
-      srcDirs = ['src/test/kotlin',
-                 'src/main/java']
-    }
-    resources {
-      srcDirs = ['src/test/resources']
-    }
-  }
-}
-

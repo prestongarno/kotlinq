@@ -10,13 +10,12 @@ publishing {
       groupId "$projects.project.group"
       artifactId projects.project.clientId
       version projects.project.version.toString()
-      from components.java
-      artifact jarDoc
-      artifact jarSource
+      //from components.java
+      projects.project.tasks.withType(Jar).each { artifact it }
 
       pom.withXml {
         asNode().children().last() + {
-          resolveStrategy = Closure.DELEGATE_FIRST
+          resolveStrategy = DELEGATE_FIRST
           name clientId
           description projectDescription
           url gitBaseUrl
@@ -78,8 +77,8 @@ bintray {
   user BINTRAY_USER
   key BINTRAY_KEY
   publications = ['mavenJava']
-  dryRun = version.endsWith("SNAPSHOT")
-  publish = true
+  dryRun = version.endsWith("SNAPSHOT") || projects.project.name == rootProject.name
+  publish = false
   override = true
 
   pkg {
