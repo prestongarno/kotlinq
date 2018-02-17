@@ -4,14 +4,9 @@ import org.kotlinq.api.Adapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Kotlinq
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
 
-class TypeBuilder(private val graph: GraphQlInstance): PrimitiveScope {
+class TypeBuilder(private val graph: GraphQlInstance): PrimitiveScope, GraphQlInstance by graph {
 
-  override fun String.invoke(call: KProperty1<PrimitiveScope, Scalar>) {
-    call(this@TypeBuilder)
-    TODO("not implemented")
-  }
 
   var arguments: Map<String, Any> = emptyMap()
   var isNullable: Boolean = true
