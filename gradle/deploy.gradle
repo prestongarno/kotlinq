@@ -7,16 +7,16 @@ apply plugin: "com.jfrog.artifactory"
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      groupId "$projects.project.group"
-      artifactId projects.project.clientId
-      version projects.project.version.toString()
+      groupId project.group
+      artifactId project.name
+      version project.version.toString()
       //from components.java
-      projects.project.tasks.withType(Jar).each { artifact it }
+      project.tasks.withType(Jar).each { artifact it }
 
       pom.withXml {
         asNode().children().last() + {
           resolveStrategy = DELEGATE_FIRST
-          name clientId
+          name project.name
           description projectDescription
           url gitBaseUrl
           organization {
@@ -83,7 +83,7 @@ bintray {
 
   pkg {
     repo = 'kotlinq'
-    name = clientId
+    name = project.name
     desc = projectDescription
     licenses = ['Apache 2.0']
     vcsUrl = "${gitBaseUrl}.git"

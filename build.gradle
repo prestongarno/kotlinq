@@ -19,13 +19,10 @@ buildscript {
 
   apply from: rootProject.file("gradle/dependencies.gradle")
 
-  ext.clientId = projects.project.name
   ext.sourceCompatibility = 1.8
   ext.projectDescription = "a kotlin client for graphql"
   ext.gitBaseUrl = GIT_BASE_URL + '/kotlinq'
   ext.projLicenseUrl = "$gitBaseUrl/LICENSE.txt"
-  ext.clientId = project.name
-  ext.groupId = ext.clientId
 
   repositories {
     jcenter()
