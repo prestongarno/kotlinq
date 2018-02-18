@@ -31,7 +31,8 @@ class Node internal constructor(
     private val context: GraphQlInstance)
   : GraphComponent(name, arguments, nullable, Any::class, typeName) {
 
-  operator fun invoke(typeName: String? = null, block: TypeBuilder.() -> Unit) {
+  operator fun invoke(block: TypeBuilder.() -> Unit) {
+
   }
 
   internal fun withFragmentScope(fragments: Set<() -> Context>): Adapter =

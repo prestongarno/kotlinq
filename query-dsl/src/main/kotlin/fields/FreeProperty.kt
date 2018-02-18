@@ -11,6 +11,8 @@ typealias LeafBinding = (GraphQlInstance, Boolean) -> Unit
  * A [FreeProperty] is a DSL concept which can be compared to
  * an "unbound" callable (kotlin) or a java lambda before it is
  * "bound" or "linked" to a callsite before executing.
+ *
+ * TODO add typename property here
  */
 data class FreeProperty(val name: String, val arguments: Map<String, Any> = emptyMap()) {
 

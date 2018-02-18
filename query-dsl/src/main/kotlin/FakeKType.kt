@@ -36,10 +36,6 @@ class FakeKType(
   private
   fun List<KTypeProjection>.pretty() =
       joinToString(prefix = "<", separator = ", ", postfix = ">") { it.toString() }
-
-  companion object {
-
-  }
 }
 
 fun KType.isScalar() =
