@@ -1,8 +1,9 @@
 package org.kotlinq.dsl
 
-import extensions.FreePropertyExtensionScope
-import extensions.NullabilityOperatorScope
+import TypeDefinition
 import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.dsl.extensions.FreePropertyExtensionScope
+import org.kotlinq.dsl.extensions.NullabilityOperatorScope
 import org.kotlinq.dsl.fields.FreeProperty
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
@@ -60,11 +61,11 @@ interface DslExtensionScope : NullabilityOperatorScope, FreePropertyExtensionSco
 
   operator fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty
 
-  operator fun String.invoke(arguments: Map<String, Any>): FreeProperty
+  infix fun FreeProperty.def(block: TypeBuilder.() -> Unit)
 
-  infix fun Node.spread(block: FragmentScopeBuilder.() -> Unit) {
-    //bindProperty(withFragmentScope(FragmentScopeBuilder().apply(block).fragments)) // TODO named contexts
-  }
+  infix fun FreeProperty.on(context: TypeDefinition)
+
+  infix fun Node.spread(block: FragmentScopeBuilder.() -> Unit)
 
 }
 

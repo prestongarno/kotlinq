@@ -1,5 +1,7 @@
 package org.kotlinq.dsl
 
+import TypeDefinition
+import org.kotlinq.api.Context
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.dsl.fields.FreeProperty
@@ -12,16 +14,31 @@ class TypeBuilder(
     val defaultTypeName: String = "Object"
 ) : DslExtensionScope, GraphQlInstance by graph {
 
+  override fun FreeProperty.def(block: TypeBuilder.() -> Unit) = invoke(block)
+
+  override fun FreeProperty.on(context: TypeDefinition) {
+    bindProperty(this.bindToNode(this@TypeBuilder)
+        .withDefinition(context))
+  }
+
+  override fun Node.spread(block: FragmentScopeBuilder.() -> Unit) {
+    FragmentScopeBuilder.fragmentsFromBlock(block)?.also { fragments ->
+      graph.bindProperty(withFragmentScope(fragments))
+    }
+  }
+
+  override fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty =
+      FreeProperty(this, arguments.toMap())
+
   override fun FreeProperty.invoke(block: TypeBuilder.() -> Unit) {
-    TODO("not implemented")
+    bindProperty(this.bindToNode(this@TypeBuilder)
+        .withDefinition(blockToInitializer(typeName ?: "Any", block)))
   }
 
-  override fun FreeProperty.spread(block: FragmentScopeBuilder.() -> Unit) {
-    TODO("not implemented")
-  }
-
-  override fun String.invoke(arguments: Map<String, Any>): FreeProperty {
-    return FreeProperty(this, arguments)
+  override fun FreeProperty.rangeTo(block: FragmentScopeBuilder.() -> Unit) {
+    FragmentScopeBuilder.fragmentsFromBlock(block)?.also { fragments ->
+      bindProperty(bindToNode(graph).withFragmentScope(fragments))
+    }
   }
 
   override fun KFunction0<LeafBinding>.not() {
@@ -44,9 +61,12 @@ class TypeBuilder(
     return FreeProperty(this, arguments)
   }
 
-  override fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty {
-    return FreeProperty(this, arguments.toMap())
-  }
-
   private val adapterService get() = Kotlinq.adapterService
+
+  companion object {
+
+    internal
+    fun blockToInitializer(typeName: String, block: TypeBuilder.() -> Unit): () -> Context =
+        GraphBuilder(typeName, block)::build
+  }
 }

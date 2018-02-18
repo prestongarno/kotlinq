@@ -48,19 +48,19 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
       return stringBuilder.toString()
     }
 
-    private fun printAdapter(adapter: Adapter) =
+    private fun printField(adapter: Adapter) =
         adapter.propertyInfo.unit {
           stringBuilder.append(graphQlName)
           stringBuilder.append(arguments.stringify())
         }
 
     override fun visit(target: ModelAdapter) {
-      printAdapter(target)
+      printField(target)
       printInstance(target.fragment.prototype.graphQlInstance)
     }
 
     override fun visit(target: FragmentAdapter) {
-      printAdapter(target)
+      printField(target)
       stringBuilder.apply {
         append(ENTER_SCOPE)
         target.fragments.forEach { (type, fragment) ->
@@ -74,9 +74,9 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
     }
 
     override fun visit(target: ParsingAdapter) =
-        printAdapter(target)
+        printField(target)
 
     override fun visit(target: DeserializingAdapter) =
-        printAdapter(target)
+        printField(target)
   }
 }

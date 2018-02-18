@@ -17,6 +17,8 @@ interface ModelAdapter: Adapter {
   fun setValue(result: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
 
   override fun getValue(): Context?
+
+  override fun accept(resolver: GraphVisitor) = resolver.visit(this)
 }
 
 /**
@@ -25,6 +27,7 @@ interface ModelAdapter: Adapter {
  */
 interface FragmentAdapter : Adapter, FragmentContext {
   fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
+  override fun accept(resolver: GraphVisitor) = resolver.visit(this)
 }
 
 /**
@@ -34,6 +37,7 @@ interface FragmentAdapter : Adapter, FragmentContext {
 interface DeserializingAdapter : Adapter {
   fun setValue(value: java.io.InputStream?): Boolean
   val initializer: (java.io.InputStream) -> Any?
+  override fun accept(resolver: GraphVisitor) = resolver.visit(this)
 }
 
 /**
@@ -43,5 +47,6 @@ interface DeserializingAdapter : Adapter {
 interface ParsingAdapter : Adapter {
   fun setValue(value: String?): Boolean
   val initializer: (String) -> Any?
+  override fun accept(resolver: GraphVisitor) = resolver.visit(this)
 }
 
