@@ -1,4 +1,4 @@
-package fields
+package org.kotlinq.dsl.fields
 
 /**
  * A [FreeProperty] is a DSL concept which can be compared to
