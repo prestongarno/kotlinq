@@ -22,8 +22,8 @@ Basically everything. This was neat idea at first but requires a complete overha
 
 ## Un-typed GraphQL query DSL (version 0.4.0) (new)
 
-If you would like to run a query in GraphQL without the complexity of the build plugin and defining classes, 
-version 0.4.0 will fully support **ad-hoc, untyped** but natively expressed queries and mutations!
+If you would like to quickly run a query in GraphQL without the complexity of the build plugin and defining classes, 
+version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/DslExtensionScope.kt) but natively expressed queries and mutations!
 
 Current working example:
 
@@ -57,7 +57,7 @@ fun cityDefinition() = typeDefinition("City") {
 ```
 
 
-The DSL design has not been finalized, but an ideal solution will:
+The [details](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/DslExtensionScope.kt) have not been finalized, but an ideal solution will:
 
 1. Provide ***readable*** GraphQL queries with minimal change to a standard text query
 2. Provide JSON response ***verification*** based on the query structure, including *null safety* for kotlin compatibility
@@ -65,7 +65,7 @@ The DSL design has not been finalized, but an ideal solution will:
 4. Sacrifice conventional native syntax for more explicit queries (e.g. the operator overloading "Not" symbol in the example for query nullability expression)
 
 
-## Github query example (build/code generation DSL)
+## Github query example (original DSL from build code generation)
 
 ```
 class ViewerQuery : Model<Query>(Query) {
