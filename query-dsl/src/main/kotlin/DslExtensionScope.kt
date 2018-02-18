@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KFunction0
 import org.kotlinq.dsl.fields.FreeProperty
 
-typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, Scalar>>
+typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>
 
 /**
  * Ideally it would be nice to able to query like:
@@ -22,17 +22,6 @@ typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, Scalar>>
  *       }
  *     }
  *
- * ```
- *
- * *unfortunately* is not possible, but something like this is:
- *
- * ```
- *   query {
- *     "name"(::string)
- *     "friends"(first to 100) {
- *       "age"(::int)
- *     }
- *   }
  * ```
  *
  * ***acshually*** it's possible to write
@@ -64,20 +53,20 @@ typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, Scalar>>
  */
 interface DslExtensionScope : GraphQlInstance {
 
-  val float: KProperty1<DslExtensionScope, Scalar>
+  val float: KProperty1<DslExtensionScope, ScalarSymbol>
     get() = DslExtensionScope::floatOp
 
-  val string: KProperty1<DslExtensionScope, Scalar>
+  val string: KProperty1<DslExtensionScope, ScalarSymbol>
     get() = DslExtensionScope::stringOp
 
-  val boolean: KProperty1<DslExtensionScope, Scalar>
+  val boolean: KProperty1<DslExtensionScope, ScalarSymbol>
     get() = DslExtensionScope::boolOp
 
-  val integer: KProperty1<DslExtensionScope, Scalar>
+  val integer: KProperty1<DslExtensionScope, ScalarSymbol>
     get() = DslExtensionScope::intOp
 
-  operator fun String.invoke(typeKind: KProperty0<KProperty1<DslExtensionScope, Scalar>>) =
-      bindProperty(typeKind.get().invoke(this@DslExtensionScope).bindToName(this))
+  operator fun String.invoke(typeKind: KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>): Nothing = TODO()
+      //bindProperty(typeKind.get().invoke(this@DslExtensionScope).bindToName(this))
 
   operator fun String.invoke(
       arguments: Map<String, Any> = emptyMap(),
@@ -99,10 +88,10 @@ interface DslExtensionScope : GraphQlInstance {
 }
 
 private
-val DslExtensionScope.stringOp get() = Scalar.StringScalar
+val DslExtensionScope.stringOp get() = ScalarSymbol.StringSymbol
 private
-val DslExtensionScope.intOp get() = Scalar.IntScalar
+val DslExtensionScope.intOp get() = ScalarSymbol.IntSymbol
 private
-val DslExtensionScope.boolOp get() = Scalar.BooleanScalar
+val DslExtensionScope.boolOp get() = ScalarSymbol.BooleanSymbol
 private
-val DslExtensionScope.floatOp get() = Scalar.FloatScalar
+val DslExtensionScope.floatOp get() = ScalarSymbol.FloatSymbol

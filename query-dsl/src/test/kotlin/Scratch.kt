@@ -29,9 +29,10 @@ fun greet(worldName: String = "Earth", message: String = "Hello") =
       }
     }
 
-fun coordinateArguments(unitAccuracy: Int, unitType: Measurement): Map<String, Any> =
-    mapOf("unitAccuracy" to unitAccuracy,
-        "unitType" to unitType.name)
+fun coordinateArguments(unitAccuracy: Int, unitType: Measurement): Map<String, Any> {
+  return mapOf("unitAccuracy" to unitAccuracy,
+      "unitType" to unitType.name)
+}
 
 fun coordinateDefinition(): TypeDefinition =
     typeDefinition("Coordinate") {
