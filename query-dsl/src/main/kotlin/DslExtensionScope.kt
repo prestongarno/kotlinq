@@ -33,13 +33,25 @@ typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, Scalar>>
  *   }
  * ```
  *
+ * ***acshually*** it's possible to write
  *
- * To do so, need to:
+ * ```
+ *   query {
+ *     !"name"::string
+ *     !"friends"first to 100 {
+ *       "age"::int
+ *     }
+ *   }
+ * ```
  *
- *   1. Locally-scoped String extension **properties** "string", "int", "float", and "boolean"
- *   2. String extension *operator* function invoke
- *        - In the implementation, set a private variable String on call
+ * by overloading operators on higher-order types.
  *
+ *
+ * Details:
+ *
+ *   1. KCallable0<Scalar> properties "string", "int", "float", and "boolean"
+ *   2. Local scoped extension *operator* function "String.invoke(KCallable0<Scalar>): (GraphQlInstance) -> FreeProperty"
+ *   3. Some other complex higher-order stuff which is currently working in the [Fooo] class
  */
 interface DslExtensionScope : GraphQlInstance {
 
