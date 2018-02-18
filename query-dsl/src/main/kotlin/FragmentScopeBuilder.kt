@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER")
+
 package org.kotlinq.dsl
 
 import org.kotlinq.api.Context
