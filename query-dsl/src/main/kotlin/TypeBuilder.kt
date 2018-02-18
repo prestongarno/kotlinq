@@ -1,9 +1,10 @@
 package org.kotlinq.dsl
 
-import TypeDefinition
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.dsl.fields.FreeProperty
+import org.kotlinq.dsl.fields.LeafBinding
+import kotlin.reflect.KFunction0
 
 @GraphQlDslObject
 class TypeBuilder(
@@ -11,47 +12,33 @@ class TypeBuilder(
     val defaultTypeName: String = "Object"
 ) : DslExtensionScope, GraphQlInstance by graph {
 
-  override fun String.invoke(arguments: Map<String, Any>, typeName: String?): FreeProperty {
-    return
+  override fun String.invoke(arguments: Map<String, Any>): FreeProperty {
+    return FreeProperty(this, arguments)
   }
 
-  override fun String.invoke(vararg arguments: Pair<String, Any>, typeName: String?): FreeProperty {
-    TODO("not implemented")
+  override fun KFunction0<LeafBinding>.not() {
+    this.invoke().invoke(this@TypeBuilder, false)
+  }
+
+  override fun KFunction0<LeafBinding>.unaryMinus() {
+    this.invoke().invoke(this@TypeBuilder, false)
+  }
+
+  override fun FreeProperty.not(): Node {
+    return Node(name, arguments, nullable = false, context = this@TypeBuilder)
+  }
+
+  override fun FreeProperty.unaryMinus(): Node {
+    return Node(name, arguments, nullable = true, context = this@TypeBuilder)
+  }
+
+  override fun String.invoke(arguments: Map<String, Any>, typeName: String?): FreeProperty {
+    return FreeProperty(this, arguments)
+  }
+
+  override fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty {
+    return FreeProperty(this, arguments.toMap())
   }
 
   private val adapterService get() = Kotlinq.adapterService
-
-  override fun String.invoke(arguments: Map<String, Any>, typeName: String?, block: TypeBuilder.() -> Unit) {
-    adapterService.instanceProperty(
-        info(this, typeName ?: defaultTypeName, arguments, Any::class),
-        { GraphBuilder(typeName ?: defaultTypeName, block).build() })
-        .also(graph::bindProperty)
-  }
-
-  override fun String.invoke(arguments: Map<String, Any>, typeName: String?, definition: TypeDefinition) {
-    adapterService.instanceProperty(
-        info(this,
-            typeName ?: defaultTypeName,
-            arguments,
-            Any::class),
-        definition::invoke)
-        .also(graph::bindProperty)
-  }
-
-  override fun String.spread(block: FragmentScopeBuilder.() -> Unit) {
-    val builder = FragmentScopeBuilder().apply(block)
-    adapterService.fragmentProperty(
-        info(this,
-            defaultTypeName,
-            builder.arguments,
-            Any::class),
-        builder.fragments.values.toSet())
-        .also(graph::bindProperty)
-  }
-
-  var arguments: Map<String, Any> = emptyMap()
-  var isNullable: Boolean = true
-
-
-  class TypeFieldBuilder(val fieldName: String, val typeName: String)
 }

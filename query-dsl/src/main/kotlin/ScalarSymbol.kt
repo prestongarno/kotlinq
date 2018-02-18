@@ -25,14 +25,4 @@ sealed class ScalarSymbol(
   object FloatSymbol : ScalarSymbol(Float::class)
 }
 
-@Deprecated("Use GraphComponent for instances instead")
-private
-fun String.fromScalar(scalarSymbol: ScalarSymbol) = Kotlinq.adapterService.scalarAdapters.run {
-  val info = GraphQlPropertyInfo(this@fromScalar, scalarSymbol.clazz.simpleName!!, scalarSymbol.type)
-  when (scalarSymbol) {
-    ScalarSymbol.StringSymbol -> stringAdapter(info)
-    ScalarSymbol.IntSymbol -> intAdapter(info)
-    ScalarSymbol.BooleanSymbol -> booleanAdapter(info)
-    ScalarSymbol.FloatSymbol -> floatAdapter(info)
-  }
-}
+
