@@ -34,10 +34,6 @@ class IntAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
-  }
-
   override fun isResolved() = true
 }
 
@@ -53,10 +49,6 @@ class StringAdapterImpl(
   override fun setValue(value: String?): Boolean {
     this.value = initializer(value ?: "")
     return isResolved()
-  }
-
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
   }
 
   override fun isResolved() = true
@@ -76,10 +68,6 @@ class FloatAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
-  }
-
   override fun isResolved() = true
 }
 
@@ -95,10 +83,6 @@ class BooleanAdapterImpl(
   override fun setValue(value: String?): Boolean {
     this.value = initializer(value ?: "")
     return isResolved()
-  }
-
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
   }
 
   override fun isResolved() = true

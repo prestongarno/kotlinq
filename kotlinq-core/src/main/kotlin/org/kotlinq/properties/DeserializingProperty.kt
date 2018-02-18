@@ -24,10 +24,6 @@ class DeserializingProperty(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
-  }
-
   override fun equals(other: Any?) =
       Adapter.adapterEquals(this, other as? Adapter)
 
