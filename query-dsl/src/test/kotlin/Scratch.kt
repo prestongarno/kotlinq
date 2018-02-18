@@ -7,12 +7,12 @@ import org.kotlinq.dsl.extensions.string
 import org.kotlinq.dsl.toGraphQl
 
 
-fun greet(worldName: String = "Earth", message: String = "Hello") =
+fun greet(worldName: String = "Earth", message: Any = "Hello") =
 
     query {
-      (!"greet"(mapOf("name" to worldName, "message" to message))) {
+      !"greet"("name" to worldName, "message" to message) {
         !"population"::integer
-        (!"countries"(mapOf("first" to 100))) {
+        (!"countries"("first" to 100)) {
           -"name"::string
           (!"coordinates"()).invoke { coordinateDefinition() }
           !"subEntities"() spread {

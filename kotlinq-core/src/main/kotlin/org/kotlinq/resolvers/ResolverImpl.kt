@@ -16,13 +16,13 @@ class ResolverImpl : Resolver {
   override fun resolve(value: Map<String, Any?>, target: Context): Boolean =
       InstanceResolver(target, value).resolveFromRoot()
 
-  override fun visitModel(target: ModelAdapter) = Unit
+  override fun visit(target: ModelAdapter) = Unit
 
-  override fun visitFragmentContext(target: FragmentAdapter) = Unit
+  override fun visit(target: FragmentAdapter) = Unit
 
-  override fun visitScalar(target: ParsingAdapter) = Unit
+  override fun visit(target: ParsingAdapter) = Unit
 
-  override fun visitDeserializer(target: DeserializingAdapter) = Unit
+  override fun visit(target: DeserializingAdapter) = Unit
 
   /**
    * Stack-based resolver algorithm
@@ -46,7 +46,7 @@ class ResolverImpl : Resolver {
       return target.graphQlInstance.isResolved()
     }
 
-    override fun visitModel(target: ModelAdapter) {
+    override fun visit(target: ModelAdapter) {
       stack.peek().jsonObjectNamed(target)?.let {
         push(it)
         // TODO add Transformer<T> interface for not only list properties, but also so that
@@ -56,7 +56,7 @@ class ResolverImpl : Resolver {
       }
     }
 
-    override fun visitFragmentContext(target: FragmentAdapter) {
+    override fun visit(target: FragmentAdapter) {
 
       stack.peek().jsonObjectNamed(target)?.let { values ->
         push(values)
@@ -65,11 +65,11 @@ class ResolverImpl : Resolver {
       }
     }
 
-    override fun visitScalar(target: ParsingAdapter) {
+    override fun visit(target: ParsingAdapter) {
       target.setValue(stack.peek()[target.propertyInfo.graphQlName]?.toString())
     }
 
-    override fun visitDeserializer(target: DeserializingAdapter) {
+    override fun visit(target: DeserializingAdapter) {
       (stack.peek()[target.propertyInfo.graphQlName]?.let {
         it as? InputStream ?: it.toString().byteInputStream()
       } ?: "".byteInputStream()).let(target::setValue)

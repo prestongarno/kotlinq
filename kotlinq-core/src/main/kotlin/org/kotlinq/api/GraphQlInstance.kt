@@ -37,6 +37,7 @@ interface GraphQlInstance {
    */
   fun toGraphQl(pretty: Boolean = false, inlineFragments: Boolean = true): String
 
-  fun accept(visitor: GraphVisitor) =
-      properties.forEach { it.value.accept(visitor) }
+  fun accept(visitor: GraphVisitor) = properties.forEach { (name, prop) ->
+    prop.accept(visitor)
+  }
 }

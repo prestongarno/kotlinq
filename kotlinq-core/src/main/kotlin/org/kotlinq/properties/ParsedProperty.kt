@@ -22,7 +22,7 @@ class ParsedProperty(
   }
 
   override fun accept(resolver: GraphVisitor) {
-    resolver.visitScalar(this)
+    resolver.visit(this)
   }
 
   override fun isResolved() =

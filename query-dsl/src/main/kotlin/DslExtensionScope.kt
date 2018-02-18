@@ -1,6 +1,6 @@
 package org.kotlinq.dsl
 
-import TypeDefinition
+import extensions.FreePropertyExtensionScope
 import extensions.NullabilityOperatorScope
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.dsl.fields.FreeProperty
@@ -52,10 +52,7 @@ typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>
  *   5. ***unaryMinus*** operator overload represents field *nullability*
  *   6. Both operators are required because provide an instance-bound frame of reference to create the resulting [org.kotlinq.api.Adapter] property from property meta information
  */
-interface DslExtensionScope : GraphQlInstance, NullabilityOperatorScope {
-
-  operator fun String.invoke(typeKind: KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>): Nothing = TODO()
-  //bindProperty(typeKind.get().invoke(this@DslExtensionScope).bindToName(this))
+interface DslExtensionScope : NullabilityOperatorScope, FreePropertyExtensionScope {
 
   operator fun String.invoke(
       arguments: Map<String, Any> = emptyMap(),
@@ -64,8 +61,6 @@ interface DslExtensionScope : GraphQlInstance, NullabilityOperatorScope {
   operator fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty
 
   operator fun String.invoke(arguments: Map<String, Any>): FreeProperty
-
-  //infix fun String.spread(block: FragmentScopeBuilder.() -> Unit)
 
   infix fun Node.spread(block: FragmentScopeBuilder.() -> Unit) {
     //bindProperty(withFragmentScope(FragmentScopeBuilder().apply(block).fragments)) // TODO named contexts
