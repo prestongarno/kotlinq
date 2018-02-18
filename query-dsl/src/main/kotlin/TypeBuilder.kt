@@ -3,6 +3,7 @@ package org.kotlinq.dsl
 import TypeDefinition
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Kotlinq
+import org.kotlinq.dsl.fields.FreeProperty
 
 @GraphQlDslObject
 class TypeBuilder(
@@ -10,6 +11,13 @@ class TypeBuilder(
     val defaultTypeName: String = "Object"
 ) : DslExtensionScope, GraphQlInstance by graph {
 
+  override fun String.invoke(arguments: Map<String, Any>, typeName: String?): FreeProperty {
+    return
+  }
+
+  override fun String.invoke(vararg arguments: Pair<String, Any>, typeName: String?): FreeProperty {
+    TODO("not implemented")
+  }
 
   private val adapterService get() = Kotlinq.adapterService
 

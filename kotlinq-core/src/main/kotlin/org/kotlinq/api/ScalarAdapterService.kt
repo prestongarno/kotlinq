@@ -10,26 +10,13 @@ interface ScalarAdapterService {
 
   val mappers: TypeMappers
 
-  fun intAdapter(
+  /**
+   * TODO eventually add specific types for primitives
+   */
+  fun adapterFor(
       info: GraphQlPropertyInfo,
       mapper: (String) -> Int = mappers.intMapper
-  ): IntAdapter
-
-  fun stringAdapter(
-      info: GraphQlPropertyInfo,
-      mapper: (String) -> String = mappers.stringMapper
-  ): StringAdapter
-
-  fun floatAdapter(
-      info: GraphQlPropertyInfo,
-      mapper: (String) -> Float = mappers.floatMapper
-  ): FloatAdapter
-
-  fun booleanAdapter(
-      info: GraphQlPropertyInfo,
-      mapper: (String) -> Boolean = mappers.booleanMapper
-  ): BooleanAdapter
-
+  ): ParsingAdapter
 
   interface TypeMappers {
     val booleanMapper: (String) -> Boolean

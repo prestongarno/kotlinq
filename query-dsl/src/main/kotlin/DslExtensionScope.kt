@@ -2,10 +2,10 @@ package org.kotlinq.dsl
 
 import TypeDefinition
 import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.dsl.fields.FreeProperty
+import kotlin.reflect.KFunction0
 import kotlin.reflect.KProperty0
 import kotlin.reflect.KProperty1
-import kotlin.reflect.KFunction0
-import org.kotlinq.dsl.fields.FreeProperty
 
 typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>
 
@@ -53,45 +53,23 @@ typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>
  */
 interface DslExtensionScope : GraphQlInstance {
 
-  val float: KProperty1<DslExtensionScope, ScalarSymbol>
-    get() = DslExtensionScope::floatOp
-
-  val string: KProperty1<DslExtensionScope, ScalarSymbol>
-    get() = DslExtensionScope::stringOp
-
-  val boolean: KProperty1<DslExtensionScope, ScalarSymbol>
-    get() = DslExtensionScope::boolOp
-
-  val integer: KProperty1<DslExtensionScope, ScalarSymbol>
-    get() = DslExtensionScope::intOp
-
   operator fun String.invoke(typeKind: KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>): Nothing = TODO()
-      //bindProperty(typeKind.get().invoke(this@DslExtensionScope).bindToName(this))
+  //bindProperty(typeKind.get().invoke(this@DslExtensionScope).bindToName(this))
 
   operator fun String.invoke(
       arguments: Map<String, Any> = emptyMap(),
-      typeName: String? = null,
-      block: TypeBuilder.() -> Unit)
+      typeName: String? = null): FreeProperty
 
-  operator fun String.invoke(
-      vararg arguments: Pair<String, Any>,
-      typeName: String? = null,
-      block: TypeBuilder.() -> Unit
-  ) = invoke(arguments.toMap(), typeName, block)
+  operator fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty
 
-  operator fun String.invoke(
-      arguments: Map<String, Any> = emptyMap(),
-      typeName: String? = null,
-      definition: TypeDefinition)
+  operator fun String.invoke(arguments: Map<String, Any> = emptyMap(), definition: TypeDefinition): FreeProperty
 
   infix fun String.spread(block: FragmentScopeBuilder.() -> Unit)
+
+
+  infix fun Node.spread(block: FragmentScopeBuilder.() -> Unit) {
+    bindProperty(withFragmentScope(FragmentScopeBuilder().apply(block).fragments)) // TODO named contexts
+  }
+
 }
 
-private
-val DslExtensionScope.stringOp get() = ScalarSymbol.StringSymbol
-private
-val DslExtensionScope.intOp get() = ScalarSymbol.IntSymbol
-private
-val DslExtensionScope.boolOp get() = ScalarSymbol.BooleanSymbol
-private
-val DslExtensionScope.floatOp get() = ScalarSymbol.FloatSymbol
