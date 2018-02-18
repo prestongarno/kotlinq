@@ -1,6 +1,6 @@
 @file:Suppress("MemberVisibilityCanBePrivate")
 
-package org.kotlinq.services
+package org.kotlinq.api.services
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
@@ -20,7 +20,7 @@ import org.kotlinq.api.ModelAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.Resolver
 import org.kotlinq.api.ScalarAdapterService
-import org.kotlinq.services.ConfigurableDependency.Companion.configurableDependencyWithDefault
+import org.kotlinq.api.services.ConfigurableDependency.Companion.configurableDependencyWithDefault
 import org.kotlinq.models.GraphQlInstanceProviderImpl
 import org.kotlinq.printer.PrinterImpl
 import org.kotlinq.properties.AdapterServiceImpl

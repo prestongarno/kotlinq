@@ -1,6 +1,6 @@
 package org.kotlinq.api
 
-import org.kotlinq.services.Configuration
+import org.kotlinq.api.services.Configuration
 
 
 /**

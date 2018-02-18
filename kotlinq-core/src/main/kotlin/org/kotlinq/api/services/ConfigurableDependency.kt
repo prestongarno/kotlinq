@@ -1,4 +1,4 @@
-package org.kotlinq.services
+package org.kotlinq.api.services
 
 /**
  * Internal interface for re-configuring services (these dependencies are stateless,
