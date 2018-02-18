@@ -25,66 +25,54 @@ Basically everything. This was neat idea at first but requires a complete overha
 If you would like to quickly run a query in GraphQL without the complexity of the build plugin and defining classes, 
 version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/DslExtensionScope.kt) but natively expressed queries and mutations!
 
-Current working example:
+Example:
 
 ```
-fun greet(worldName: String = "Earth", message: String = "Hello") =
-
-    query {
-      -"greet"("name" to worldName, "message" to message) {
-        !"population"::integer
-        "countries"("first" to 100) listOf {
+    val starWarsQuery = query {
+      "search"("text" to "r2d2") .. {
+        on("Human") {
           !"name"::string
-          "subRegions" spread {
-            on("State") { 
-              "capitol"(cityDefinition())
+          !"id"::string
+          "friendsConnection"("first" to 10) def {
+            !"totalCount"::integer
+            "friends"() .. {
+              on("Human") {
+                !"name"::string
+                !"id"::string
+              }
             }
-            on(cityDefinition())
           }
         }
       }
     }
 
-
-fun cityDefinition() = typeDefinition("City") {
-  !"name"::string
-  -"mayor" { 
-    /* "Person" type selection-set here etc... */ 
-  } 
-  !"population"::int
-}
+    println(starWarsQuery.toGraphQl(
+        pretty = true,
+        inlineFragments = false))
 
 ```
 
+will print:
 
-The [details](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/DslExtensionScope.kt) have not been finalized, but an ideal solution will:
-
-1. Provide ***readable*** GraphQL queries with minimal change to a standard text query
-2. Provide JSON response ***verification*** based on the query structure, including *null safety* for kotlin compatibility
-3. Support some form of mapping between JSON and native objects
-4. Sacrifice conventional native syntax for more explicit queries (e.g. the operator overloading "Not" symbol in the example for query nullability expression)
-
-
-## Github query example (original DSL from build code generation)
 
 ```
-class ViewerQuery : Model<Query>(Query) {
-
-  val me by model.viewer.querying(::UserModel)
-
+{
+  search(text: "r2d2") {
+    __typename
+    ... on Human{
+      name
+      id
+      friendsConnection(first: 10) {
+        totalCount
+        friends {
+          __typename
+          ... on Human{
+            name
+            id
+          }
+        }
+      }
+    }
+  }
 }
-
-class UserModel : Model<User>(User) {
-  val name by model.name
-}
-
-val myFirstQuery = GraphQL.initialize("https://api.github.com/graphql").apply {
-  authorization = TokenAuth(System.getenv("GITHUB_OAUTH_TOKEN"))
-}.query(::ViewerQuery)
-    .send()
-
-println("Hello ${myFirstQuery.me.name}")
 ```
-
-The last code block will print "Hello, \<your name here\>"
-
