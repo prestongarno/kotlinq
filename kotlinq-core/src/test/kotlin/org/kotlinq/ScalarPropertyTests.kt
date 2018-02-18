@@ -9,7 +9,7 @@ class ScalarPropertyTests {
   @Test fun simpleStringAdapterIOTest() {
     val expect = "Hello, World!"
     Kotlinq.adapterService.scalarAdapters
-        .stringAdapter(info("any"))
+        .adapterFor(info("any"))
         .apply {
           setValue(expect)
           require(getValue() == expect)
@@ -20,7 +20,7 @@ class ScalarPropertyTests {
   @Test fun simpleIntAdapterIOTest() {
     val expect = 1000
     Kotlinq.adapterService.scalarAdapters
-        .intAdapter(info("intProperty"))
+        .adapterFor(info("intProperty", clazz = Int::class))
         .apply {
           setValue("$expect")
           require(getValue() == expect)
@@ -30,7 +30,7 @@ class ScalarPropertyTests {
   @Test fun simpleFloatAdapterIOTest() {
     val expect = 1000.1f
     Kotlinq.adapterService.scalarAdapters
-        .floatAdapter(info("floatProperty"))
+        .adapterFor(info("floatProperty", clazz = Float::class))
         .apply {
           setValue("$expect")
           require(getValue() == expect)
@@ -40,7 +40,7 @@ class ScalarPropertyTests {
   @Test fun simpleBooleanAdapterIOTest() {
     val expect = false
     Kotlinq.adapterService.scalarAdapters
-        .booleanAdapter(info("boolProperty"))
+        .adapterFor(info("boolProperty", clazz = Boolean::class))
         .apply {
           setValue("$expect")
           require(getValue() == expect)
