@@ -1,4 +1,4 @@
-package org.kotlinq.services
+package org.kotlinq.api.services
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance

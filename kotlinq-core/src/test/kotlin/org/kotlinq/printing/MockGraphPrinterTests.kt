@@ -5,7 +5,7 @@ import org.junit.Test
 import org.kotlinq.SpreadOperator.`,,,`
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
-import org.kotlinq.services.Configuration
+import org.kotlinq.api.services.Configuration
 import org.kotlinq.createGraph
 import org.kotlinq.eq
 import org.kotlinq.printer.VisitingPrinter

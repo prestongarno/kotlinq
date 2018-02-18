@@ -9,8 +9,8 @@ import org.kotlinq.api.JsonParser
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.Resolver
 import org.kotlinq.assertThrows
-import org.kotlinq.services.Configuration
-import org.kotlinq.services.ServiceContainer
+import org.kotlinq.api.services.Configuration
+import org.kotlinq.api.services.ServiceContainer
 import org.kotlinq.eq
 import org.kotlinq.messageMatchingExactly
 import org.kotlinq.mockType

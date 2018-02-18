@@ -4,7 +4,7 @@ import org.kotlinq.api.Adapter
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
-import org.kotlinq.services.Configuration
+import org.kotlinq.api.services.Configuration
 
 
 internal
