@@ -16,9 +16,53 @@
 The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
 lets you auto-complete your way to safe, reliable queries and mutations
 
-## Known Issues
+### Known Issues
 
-0. Basically everything. This was neat idea at first but requires a complete overhaul to be even remotely maintainable going forward. Do not use
+Basically everything. This was neat idea at first but requires a complete overhaul to be even remotely maintainable going forward. Do not use
+
+## Un-typed GraphQL query DSL (version 0.4.0) (new)
+
+If you would like to run a query in GraphQL without the complexity of the build plugin and defining classes, 
+version 0.4.0 will fully support **ad-hoc, untyped** but natively expressed queries and mutations!
+
+Current working example:
+
+```
+fun greet(worldName: String = "Earth", message: String = "Hello") =
+
+    query {
+      -"greet"("name" to worldName, "message" to message) {
+        !"population"::integer
+        "countries"("first" to 100) listOf {
+          !"name"::string
+          "subRegions" spread {
+            on("State") { 
+              "capitol"(cityDefinition())
+            }
+            on(cityDefinition())
+          }
+        }
+      }
+    }
+
+
+fun cityDefinition() = typeDefinition("City") {
+  !"name"::string
+  -"mayor" { 
+    /* "Person" type selection-set here etc... */ 
+  } 
+  !"population"::int
+}
+
+```
+
+
+The DSL design has not been finalized, but an ideal solution will:
+
+1. Provide ***readable*** GraphQL queries with minimal change to a standard text query
+2. Provide JSON response ***verification*** based on the query structure, including *null safety* for kotlin compatibility
+3. Support some form of mapping between JSON and native objects
+4. Sacrifice conventional native syntax for more explicit queries (e.g. the operator overloading "Not" symbol in the example for query nullability expression)
 
 ## Github query example
 
@@ -42,85 +86,4 @@ println("Hello ${myFirstQuery.me.name}")
 ```
 
 The last code block will print "Hello, \<your name here\>"
-
-
-
-## More in-depth example
-
-For this github query in the schema, here is how to query repositories with parameters:
-
-```
-type Query {
-  search(first: Int, after: String, last: Int, before: String, query: String!, type: SearchType!): SearchResultItemConnection!
-}
-```
-
-Here is the relevant part of the search result definition in the schema:
-
-```
-union SearchResultItem = Issue | PullRequest | Repository | User | Organization
-
-type SearchResultItemConnection {
-  nodes: [SearchResultItem]
-  repositoryCount: Int!
-}
-
-scalar URL
-
-type Repository {
-  name: String
-  description: String
-  homepageUrl: URL
-}
-```
-
-First define a `SearchResultItem` definition,
-and since we're only searching for repositories we only need to include the relevant properties:
-
-```
-class RepositoryImpl : Model<Repository>(model = Repository) {
-
-  val name: String by model.name
-
-  val description: String by model.description
-
-  // map the custom scalar "URL" to native/platform URL
-  val homepageUrl: java.net.URL by model.homepageUrl
-      .fromString { url -> java.net.URI(url).toURL() }
-}
-```
-
-Next, define a `SearchResultConnection` which includes the fragment definition from the above `SearchResultItem` implementation:
-
-```
-class SearchResultConnectionImpl : Model<SearchResultItemConnection>(SearchResultItemConnection) {
-
-  val userCount: Int by model.repositoryCount
-
-  // Unfortunately union type queries become erased,
-  // but convenience methods are generated for type-safety in the DSL
-  val nodes: List<Model<*>> by model.nodes {
-    fragment { onRepository(::RepositoryImpl) }
-  }
-}
-```
-
-
-Query definition:
-
-```
-class ViewerQuery(queryString: String) : Model<Query>(Query) {
-
-  val searchResults: List<SearchResultConnectionImpl> by model.search
-      .withArguments(SearchArgs(type = SearchType.REPO, query = queryString))
-      .querying(::SearchResultConnectionImpl) {
-        config {
-          // max amount of search results github allows, so set this value here
-          first = 100 
-        }
-      }
-
-}
-```
-
 
