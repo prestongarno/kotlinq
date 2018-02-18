@@ -64,7 +64,8 @@ The DSL design has not been finalized, but an ideal solution will:
 3. Support some form of mapping between JSON and native objects
 4. Sacrifice conventional native syntax for more explicit queries (e.g. the operator overloading "Not" symbol in the example for query nullability expression)
 
-## Github query example
+
+## Github query example (build/code generation DSL)
 
 ```
 class ViewerQuery : Model<Query>(Query) {
