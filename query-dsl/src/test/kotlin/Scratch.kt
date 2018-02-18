@@ -79,11 +79,46 @@ class Scratch {
    *
    */
   @Test fun simpleStarWars() {
+
+    val expect = """
+      |{
+      |  search {
+      |    ... on Human {
+      |      name
+      |      mass
+      |      friendsConnection {
+      |        totalCount
+      |        friends {
+      |          ... on Human {
+      |            name
+      |            id
+      |          }
+      |        }
+      |      }
+      |    }
+      |  }
+      |}
+      """.trimMargin("|")
+
     val starWarsQuery = query {
-      "person"("ID" to "1234") .. {
-        
+      "search"("text" to "r2d2") .. {
+        on("Human") {
+          !"name"::string
+          !"id"::string
+          "friendsConnection"("first" to 10) def {
+            !"totalCount"::integer
+            "friends"() .. {
+              on("Human") {
+                !"name"::string
+                !"id"::string
+              }
+            }
+          }
+        }
       }
     }
+
+    println(starWarsQuery.toGraphQl(pretty = true, inlineFragments = false))
   }
 
 }
