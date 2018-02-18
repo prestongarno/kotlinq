@@ -2,7 +2,9 @@ package org.kotlinq.dsl.fields
 
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.dsl.Leaf
+import org.kotlinq.dsl.Node
 import org.kotlinq.dsl.ScalarSymbol
+import org.kotlinq.dsl.TypeBuilder
 
 typealias LeafBinding = (GraphQlInstance, Boolean) -> Unit
 
@@ -17,14 +19,14 @@ data class FreeProperty internal constructor(
     val name: String,
     val arguments: Map<String, Any> = emptyMap(),
     val typeName: String? = null,
-    private var hasNullability: Boolean = false) {
+    private var isNullable: Boolean = false) {
 
   internal fun flagNullable() {
-    this.hasNullability = true
+    this.isNullable = true
   }
 
   internal fun flagNotNull() {
-    this.hasNullability = false
+    this.isNullable = false
   }
 
   fun string(): LeafBinding = { inst, nullable ->
@@ -46,6 +48,10 @@ data class FreeProperty internal constructor(
     bindAsLeafNode(nullable, ScalarSymbol.BooleanSymbol)
         .withContext(inst)
   }
+
+  internal
+  fun bindToNode(context: GraphQlInstance): Node =
+      Node(name, arguments, isNullable, typeName, context)
 
   companion object {
 

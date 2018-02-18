@@ -7,6 +7,7 @@ import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.ModelAdapter
 import org.kotlinq.common.stringify
+import org.kotlinq.fragments.getFragments
 import java.util.*
 
 
@@ -174,37 +175,18 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
   return builder.toString().trim()
 }
 
-private
-fun GraphQlInstance.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
-
-private
-fun getFragments(root: GraphQlInstance, collector: Set<GraphQlInstance>): Set<Fragment> {
-  val fragmentEdges = root.properties
-      .asSequence()
-      .map { it.value }
-      .filterIsInstance<FragmentAdapter>()
-      .flatMap { it.fragments.asSequence() }
-      .filterNot { collector.contains(it.value.prototype.graphQlInstance) }
-      .toSet()
-
-  return fragmentEdges.map { it.value.prototype.graphQlInstance }.map {
-    getFragments(it, collector + it)
-  }.flatten().toSet()
-
-}
-
 internal
 fun pretty(context: GraphQlInstance): String {
   val fragments = context.getFragments().mapIndexed { index, fragment ->
     fragment to "frag${fragment.prototype.graphQlInstance.graphQlTypeName}$index"
   }.toMap()
 
-  return context.printNode(fragments).let {
+  return context.printNode(fragments)/*.let {
     if (fragments.isEmpty()) it else it + fragments.entries.sortedBy(Map.Entry<Fragment, String>::value)
         .joinToString(prefix = "\n", separator = "\n", postfix = "") { (frag, name) ->
           "fragment $name on ${frag.prototype.graphQlInstance.graphQlTypeName} " + frag.prototype.graphQlInstance.printNode(fragments)
         }
-  }
+  }*/
 }
 
 private
@@ -223,11 +205,13 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
 
     is ModelAdapter -> " " + fragment.prototype.graphQlInstance.printNode(fragments, indentLevel) // only fragments get indented + 1
 
-    is FragmentAdapter -> this@printEdge.fragments.asIterable().joinToString(
-        prefix = " {" + whitespace + "__typename" + whitespace,
-        postfix = "\n${INDENT.repeat(indentLevel - 1)}}",
-        separator = whitespace) { (_, fragment) ->
-      "...${fragments[fragment]}"// + it.model.printNode(fragments, indentLevel + 1)
+    is FragmentAdapter -> {
+      this@printEdge.fragments.asIterable().joinToString(
+          prefix = " {" + whitespace + "__typename" + whitespace,
+          postfix = "\n${INDENT.repeat(indentLevel - 1)}}", separator = whitespace) {
+        val proto = it.value.prototype.graphQlInstance
+        "... on ${proto.graphQlTypeName}" + proto.printNode(fragments, indentLevel + 1)
+      }
     }
 
     else -> ""

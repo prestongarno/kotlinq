@@ -1,4 +1,4 @@
-package extensions
+package org.kotlinq.dsl.extensions
 
 import org.kotlinq.dsl.Node
 import org.kotlinq.dsl.fields.FreeProperty

@@ -27,13 +27,9 @@ class Node internal constructor(
     name: String,
     arguments: Map<String, Any>,
     nullable: Boolean,
-    typeName: String = "Any",
+    typeName: String? = null,
     private val context: GraphQlInstance)
-  : GraphComponent(name, arguments, nullable, Any::class, typeName) {
-
-  operator fun invoke(block: TypeBuilder.() -> Unit) {
-
-  }
+  : GraphComponent(name, arguments, nullable, Any::class, typeName ?: "Any") {
 
   internal fun withFragmentScope(fragments: Set<() -> Context>): Adapter =
       Kotlinq.adapterService.fragmentProperty(info, fragments)

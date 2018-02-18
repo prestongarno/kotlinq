@@ -3,8 +3,6 @@ package org.kotlinq.api
 
 interface GraphVisitor {
 
-  fun visit(adapter: Adapter): Unit = adapter.accept(this)
-
   fun visit(target: DeserializingAdapter) = Unit
 
   fun visit(target: Fragment) = Unit
