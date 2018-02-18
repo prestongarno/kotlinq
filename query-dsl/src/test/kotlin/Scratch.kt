@@ -9,7 +9,7 @@ fun greet(worldName: String = "Earth", message: String = "Hello") =
     query {
 
       "greet"("name" to worldName, "message" to message) {
-        "population"(::integer)
+        "population"::integer
 
         "countries"("first" to 100) {
           "name"(::string)

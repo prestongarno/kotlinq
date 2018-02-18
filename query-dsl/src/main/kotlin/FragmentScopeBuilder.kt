@@ -6,9 +6,7 @@ import org.kotlinq.api.Context
 
 
 @GraphQlDslObject
-class FragmentScopeBuilder(
-    var arguments: Map<String, Any> = emptyMap(),
-    var isNullable: Boolean = true) {
+class FragmentScopeBuilder internal constructor() {
 
   internal val fragments = mutableMapOf<String, () -> Context>()
 
