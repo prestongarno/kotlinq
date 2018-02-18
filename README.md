@@ -16,111 +16,59 @@
 The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
 lets you auto-complete your way to safe, reliable queries and mutations
 
-## Known Issues
+## Un-typed GraphQL query DSL (version 0.4.0) (new)
 
-0. Basically everything. This was neat idea at first but requires a complete overhaul to be even remotely maintainable going forward. Do not use
+If you would like to quickly fetch from a GraphQL server without the build plugin and defining classes, 
+version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/DslExtensionScope.kt) but natively expressed queries and mutations!
 
-## Github query example
-
-```
-class ViewerQuery : Model<Query>(Query) {
-
-  val me by model.viewer.querying(::UserModel)
-
-}
-
-class UserModel : Model<User>(User) {
-  val name by model.name
-}
-
-val myFirstQuery = GraphQL.initialize("https://api.github.com/graphql").apply {
-  authorization = TokenAuth(System.getenv("GITHUB_OAUTH_TOKEN"))
-}.query(::ViewerQuery)
-    .send()
-
-println("Hello ${myFirstQuery.me.name}")
-```
-
-The last code block will print "Hello, \<your name here\>"
-
-
-
-## More in-depth example
-
-For this github query in the schema, here is how to query repositories with parameters:
+Example:
 
 ```
-type Query {
-  search(first: Int, after: String, last: Int, before: String, query: String!, type: SearchType!): SearchResultItemConnection!
-}
-```
+    val starWarsQuery = query {
+      "search"("text" to "han solo") .. {
+        on("Human") {
+          !"name"::string
+          !"id"::string
+          "friendsConnection"("first" to 10) def {
+            !"totalCount"::integer
+            "friends"() .. {
+              on("Human") {
+                !"name"::string
+                !"id"::string
+              }
+            }
+          }
+        }
+      }
+    }
 
-Here is the relevant part of the search result definition in the schema:
-
-```
-union SearchResultItem = Issue | PullRequest | Repository | User | Organization
-
-type SearchResultItemConnection {
-  nodes: [SearchResultItem]
-  repositoryCount: Int!
-}
-
-scalar URL
-
-type Repository {
-  name: String
-  description: String
-  homepageUrl: URL
-}
-```
-
-First define a `SearchResultItem` definition,
-and since we're only searching for repositories we only need to include the relevant properties:
+    println(starWarsQuery.toGraphQl(
+        pretty = true,
+        inlineFragments = false))
 
 ```
-class RepositoryImpl : Model<Repository>(model = Repository) {
 
-  val name: String by model.name
+will print:
 
-  val description: String by model.description
-
-  // map the custom scalar "URL" to native/platform URL
-  val homepageUrl: java.net.URL by model.homepageUrl
-      .fromString { url -> java.net.URI(url).toURL() }
-}
-```
-
-Next, define a `SearchResultConnection` which includes the fragment definition from the above `SearchResultItem` implementation:
 
 ```
-class SearchResultConnectionImpl : Model<SearchResultItemConnection>(SearchResultItemConnection) {
-
-  val userCount: Int by model.repositoryCount
-
-  // Unfortunately union type queries become erased,
-  // but convenience methods are generated for type-safety in the DSL
-  val nodes: List<Model<*>> by model.nodes {
-    fragment { onRepository(::RepositoryImpl) }
+{
+  search(text: "han solo") {
+    __typename
+    ... on Human{
+      name
+      id
+      friendsConnection(first: 10) {
+        totalCount
+        friends {
+          __typename
+          ... on Human{
+            name
+            id
+          }
+        }
+      }
+    }
   }
 }
 ```
-
-
-Query definition:
-
-```
-class ViewerQuery(queryString: String) : Model<Query>(Query) {
-
-  val searchResults: List<SearchResultConnectionImpl> by model.search
-      .withArguments(SearchArgs(type = SearchType.REPO, query = queryString))
-      .querying(::SearchResultConnectionImpl) {
-        config {
-          // max amount of search results github allows, so set this value here
-          first = 100 
-        }
-      }
-
-}
-```
-
-
