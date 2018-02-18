@@ -23,19 +23,19 @@ class AbstractGraphVisitor(
 
   private val implementationAwareVisitor = object : GraphVisitor {
 
-    override fun visitDeserializer(target: DeserializingAdapter) = visitNodeDef(target)
-    override fun visitFragment(target: Fragment) = controller(target)
-    override fun visitScalar(target: ParsingAdapter) = visitNodeDef(target)
+    override fun visit(target: DeserializingAdapter) = visitNodeDef(target)
+    override fun visit(target: Fragment) = controller(target)
+    override fun visit(target: ParsingAdapter) = visitNodeDef(target)
 
-    override fun visitModel(target: ModelAdapter) {
+    override fun visit(target: ModelAdapter) {
       nodeListener(target)
       controller(target.fragment) // instead of visiting fragment def, pass control to callback
       exitNodeListener(target)
     }
 
-    override fun visitFragmentContext(target: FragmentAdapter) {
+    override fun visit(target: FragmentAdapter) {
       nodeListener(target)
-      target.fragments.values.forEach(::visitFragment)
+      target.fragments.values.forEach(::visit)
       exitNodeListener(target)
     }
 

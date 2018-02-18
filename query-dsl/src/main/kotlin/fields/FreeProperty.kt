@@ -3,7 +3,6 @@ package org.kotlinq.dsl.fields
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.dsl.Leaf
 import org.kotlinq.dsl.ScalarSymbol
-import org.kotlinq.dsl.TypeBuilder
 
 typealias LeafBinding = (GraphQlInstance, Boolean) -> Unit
 
@@ -14,29 +13,37 @@ typealias LeafBinding = (GraphQlInstance, Boolean) -> Unit
  *
  * TODO add typename property here
  */
-data class FreeProperty(val name: String, val arguments: Map<String, Any> = emptyMap()) {
+data class FreeProperty internal constructor(
+    val name: String,
+    val arguments: Map<String, Any> = emptyMap(),
+    val typeName: String? = null,
+    private var hasNullability: Boolean = false) {
 
-  private
-  fun bindAsLeafNode(symbol: ScalarSymbol, nullable: Boolean = true): Leaf =
-      Leaf(name, arguments, nullable, symbol)
+  internal fun flagNullable() {
+    this.hasNullability = true
+  }
+
+  internal fun flagNotNull() {
+    this.hasNullability = false
+  }
 
   fun string(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(ScalarSymbol.StringSymbol, nullable)
+    bindAsLeafNode(nullable, ScalarSymbol.StringSymbol)
         .withContext(inst)
   }
 
   fun integer(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(ScalarSymbol.IntSymbol, nullable)
+    bindAsLeafNode(nullable, ScalarSymbol.IntSymbol)
         .withContext(inst)
   }
 
   fun boolean(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(ScalarSymbol.BooleanSymbol, nullable)
+    bindAsLeafNode(nullable, ScalarSymbol.BooleanSymbol)
         .withContext(inst)
   }
 
   fun float(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(ScalarSymbol.BooleanSymbol, nullable)
+    bindAsLeafNode(nullable, ScalarSymbol.BooleanSymbol)
         .withContext(inst)
   }
 
@@ -45,6 +52,11 @@ data class FreeProperty(val name: String, val arguments: Map<String, Any> = empt
     fun Leaf.withContext(instance: GraphQlInstance) {
       instance.bindProperty(this.toAdapter())
     }
+
+    private
+    fun FreeProperty.bindAsLeafNode(nullable: Boolean = true, symbol: ScalarSymbol): Leaf =
+        Leaf(name, arguments, nullable, symbol)
+
   }
 
 }

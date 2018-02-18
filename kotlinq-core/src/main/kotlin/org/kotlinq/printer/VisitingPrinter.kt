@@ -54,12 +54,12 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
           stringBuilder.append(arguments.stringify())
         }
 
-    override fun visitModel(target: ModelAdapter) {
+    override fun visit(target: ModelAdapter) {
       printAdapter(target)
       printInstance(target.fragment.prototype.graphQlInstance)
     }
 
-    override fun visitFragmentContext(target: FragmentAdapter) {
+    override fun visit(target: FragmentAdapter) {
       printAdapter(target)
       stringBuilder.apply {
         append(ENTER_SCOPE)
@@ -73,10 +73,10 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
       }
     }
 
-    override fun visitScalar(target: ParsingAdapter) =
+    override fun visit(target: ParsingAdapter) =
         printAdapter(target)
 
-    override fun visitDeserializer(target: DeserializingAdapter) =
+    override fun visit(target: DeserializingAdapter) =
         printAdapter(target)
   }
 }

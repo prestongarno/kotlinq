@@ -11,8 +11,8 @@ interface NullabilityOperatorScope {
   operator fun KFunction0<LeafBinding>.not()
   operator fun KFunction0<LeafBinding>.unaryMinus()
   // nodes TODO should it only be on freeprops?
-  //operator fun String.not(): Node
-  //operator fun String.unaryMinus(): Node
+  operator fun String.not(): FreeProperty = FreeProperty(this)
+  operator fun String.unaryMinus(): FreeProperty = FreeProperty(this)
   //free property invokations
   operator fun FreeProperty.not(): Node
   operator fun FreeProperty.unaryMinus(): Node

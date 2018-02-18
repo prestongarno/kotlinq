@@ -12,6 +12,14 @@ class TypeBuilder(
     val defaultTypeName: String = "Object"
 ) : DslExtensionScope, GraphQlInstance by graph {
 
+  override fun FreeProperty.invoke(block: TypeBuilder.() -> Unit) {
+    TODO("not implemented")
+  }
+
+  override fun FreeProperty.spread(block: FragmentScopeBuilder.() -> Unit) {
+    TODO("not implemented")
+  }
+
   override fun String.invoke(arguments: Map<String, Any>): FreeProperty {
     return FreeProperty(this, arguments)
   }

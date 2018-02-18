@@ -15,11 +15,11 @@ class ResolverWrapper(default: Resolver)
     Resolver {
 
   override fun resolve(value: Map<String, Any?>, target: Context): Boolean = instance().resolve(value, target)
-  override fun visitDeserializer(target: DeserializingAdapter) = instance().visitDeserializer(target)
-  override fun visitFragment(target: Fragment) = instance().visitFragment(target)
-  override fun visitFragmentContext(target: FragmentAdapter) = instance().visitFragmentContext(target)
-  override fun visitModel(target: ModelAdapter) = instance().visitModel(target)
-  override fun visitScalar(target: ParsingAdapter) = instance().visitScalar(target)
+  override fun visit(target: DeserializingAdapter) = instance().visit(target)
+  override fun visit(target: Fragment) = instance().visit(target)
+  override fun visit(target: FragmentAdapter) = instance().visit(target)
+  override fun visit(target: ModelAdapter) = instance().visit(target)
+  override fun visit(target: ParsingAdapter) = instance().visit(target)
   override fun equals(other: Any?) = instance() == other
   override fun hashCode() = instance().hashCode()
   override fun toString() = instance().toString()

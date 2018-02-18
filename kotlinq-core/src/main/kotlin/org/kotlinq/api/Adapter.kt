@@ -20,7 +20,7 @@ interface Adapter {
    * Visitor pattern for setting values of the query on response
    * @param resolver the algorithm for resolving the native object graph from a GraphQL query
    */
-  fun accept(resolver: GraphVisitor)
+  fun accept(resolver: GraphVisitor) = resolver.visit(this)
 
 
   /** @return true if this property is resolved */

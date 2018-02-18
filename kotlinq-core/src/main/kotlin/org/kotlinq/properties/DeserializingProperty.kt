@@ -25,7 +25,7 @@ class DeserializingProperty(
   }
 
   override fun accept(resolver: GraphVisitor) {
-    resolver.visitDeserializer(this)
+    resolver.visit(this)
   }
 
   override fun equals(other: Any?) =

@@ -32,7 +32,7 @@ class FragmentProperty(
   }
 
   override fun accept(resolver: GraphVisitor) {
-    resolver.visitFragmentContext(this)
+    resolver.visit(this)
   }
 
   override fun isResolved() =
