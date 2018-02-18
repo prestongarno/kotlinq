@@ -16,20 +16,16 @@
 The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
 lets you auto-complete your way to safe, reliable queries and mutations
 
-### Known Issues
-
-Basically everything. This was neat idea at first but requires a complete overhaul to be even remotely maintainable going forward. Do not use
-
 ## Un-typed GraphQL query DSL (version 0.4.0) (new)
 
-If you would like to quickly run a query in GraphQL without the complexity of the build plugin and defining classes, 
+If you would like to quickly fetch from a GraphQL server without the build plugin and defining classes, 
 version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/DslExtensionScope.kt) but natively expressed queries and mutations!
 
 Example:
 
 ```
     val starWarsQuery = query {
-      "search"("text" to "r2d2") .. {
+      "search"("text" to "han solo") .. {
         on("Human") {
           !"name"::string
           !"id"::string
@@ -57,7 +53,7 @@ will print:
 
 ```
 {
-  search(text: "r2d2") {
+  search(text: "han solo") {
     __typename
     ... on Human{
       name
