@@ -82,14 +82,16 @@ class Scratch {
 
     val expect = """
       |{
-      |  search {
-      |    ... on Human {
+      |  search(text: "r2d2") {
+      |    __typename
+      |    ... on Human{
       |      name
-      |      mass
-      |      friendsConnection {
+      |      id
+      |      friendsConnection(first: 10) {
       |        totalCount
       |        friends {
-      |          ... on Human {
+      |          __typename
+      |          ... on Human{
       |            name
       |            id
       |          }
@@ -116,9 +118,11 @@ class Scratch {
           }
         }
       }
-    }
+    }.toGraphQl(pretty = true,
+        inlineFragments = false)
 
-    println(starWarsQuery.toGraphQl(pretty = true, inlineFragments = false))
+    assertThat(starWarsQuery)
+        .isEqualTo(expect)
   }
 
 }
