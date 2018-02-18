@@ -2,7 +2,6 @@ package org.kotlinq.properties
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.GraphQlPropertyInfo
-import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.ParsingAdapter
 
 
@@ -19,10 +18,6 @@ class ParsedProperty(
   override fun setValue(value: String?): Boolean {
     result = this.initializer(value ?: "")
     return isResolved()
-  }
-
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
   }
 
   override fun isResolved() =

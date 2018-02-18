@@ -31,10 +31,6 @@ class FragmentProperty(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
-  }
-
   override fun isResolved() =
       value?.graphQlInstance?.isResolved() == true
           || propertyInfo.isNullable

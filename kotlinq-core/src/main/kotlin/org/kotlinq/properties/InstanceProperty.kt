@@ -30,9 +30,5 @@ class InstanceProperty(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visit(this)
-  }
-
   override fun getValue(): Context? = instance
 }
