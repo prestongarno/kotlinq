@@ -61,23 +61,6 @@ class Scratch {
     println(coordinates().invoke().toGraphQl(pretty = true, inlineFragments = false))
   }
 
-  /**
-   * Test taken from query at https://edgecoders.com/restful-apis-vs-graphql-apis-by-example-51cb3d64809a
-   * ```
-   *     {
-   *       person(ID: ...) {
-   *         name
-   *         birthYear,
-   *         planet {
-   *           name
-   *         }
-   *         films {
-   *           title
-   *         }
-   *     }
-   * ```
-   *
-   */
   @Test fun simpleStarWars() {
 
     val expect = """
