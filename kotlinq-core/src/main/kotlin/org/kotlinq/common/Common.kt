@@ -1,5 +1,8 @@
 package org.kotlinq.common
 
+import kotlin.reflect.KClass
+import kotlin.reflect.KClassifier
+
 @Suppress("UNCHECKED_CAST")
 private object Block {
   private val empty: Any?.() -> Unit = { /* nothing */ }
@@ -42,3 +45,6 @@ fun <T: Any> T.unit(block: T.() -> Any?) {
 
 internal
 fun Any?.ignore() = Unit
+
+internal
+fun KClassifier?.kClass(): KClass<*>? = this as? KClass<*>

@@ -24,7 +24,7 @@ interface Kotlinq {
       get() = Configuration.instance()
 
     override fun createGraphQlInstance(typeName: String): GraphQlInstance {
-      return GraphQlInstanceProvider.createNewInstance(typeName)
+      return GraphQlInstanceProvider.Companion.createNewInstance(typeName)
     }
 
     override fun createFragment(initializer: () -> Context): Fragment =

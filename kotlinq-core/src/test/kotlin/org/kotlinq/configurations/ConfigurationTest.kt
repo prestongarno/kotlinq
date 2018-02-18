@@ -34,8 +34,8 @@ class ConfigurationTest {
 
     override val graphQlInstance: GraphQlInstance =
         GraphQlInstanceProvider.createNewInstance(typeName).apply {
-          bindProperty(Kotlinq.adapterService.scalarAdapters.stringAdapter(
-              GraphQlPropertyInfo("Hello", GraphQlPropertyInfo.STRING, mockType(String::class)), { it }))
+          bindProperty(Kotlinq.adapterService.scalarAdapters.adapterFor(
+              GraphQlPropertyInfo("Hello", GraphQlPropertyInfo.STRING, mockType(String::class))))
         }
   }
 
@@ -44,9 +44,7 @@ class ConfigurationTest {
     Configuration.configure {
       jsonParser = parser
       instanceProvider = object : GraphQlInstanceProvider {
-        override fun createNewInstance(typeName: String): GraphQlInstance {
-          return GraphQlInstanceImpl(typeName)
-        }
+        override fun createNewInstance(typeName: String) = GraphQlInstanceImpl(typeName)
       }
     }
 
@@ -105,7 +103,7 @@ class ConfigurationTest {
     } messageMatchingExactly "TEST"
 
     // Pass self-reference to wrapper class to delegate to self
-    Configuration.use(ServiceContainer.graphQlInstanceProvider)
+    Configuration.use(GraphQlInstanceProvider.Companion)
 
     // If didn't prevent the circular reference, this will stackoverflow
     Kotlinq.createGraphQlInstance("Foo")
