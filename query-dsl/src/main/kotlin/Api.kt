@@ -1,8 +1,7 @@
 import org.kotlinq.api.Context
 import org.kotlinq.dsl.GraphBuilder
 import org.kotlinq.dsl.TypeBuilder
-
-typealias TypeDefinition = () -> Context
+import org.kotlinq.dsl.TypeDefinition
 
 /**
  * Top-level query.
@@ -26,6 +25,6 @@ fun query(name: String = "Query", definition: TypeBuilder.() -> Unit): Context =
  * @author prestongarno
  * @since 0.4.0
  */
-fun typeDefinition(name: String, block: TypeBuilder.() -> Unit): TypeDefinition = {
-  query(name = name, definition = block)
-}
+fun defineType(typeName: String, block: TypeBuilder.() -> Unit) =
+    TypeDefinition(typeName, block.asInitializer(typeName))
+

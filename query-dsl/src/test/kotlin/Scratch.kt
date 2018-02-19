@@ -3,6 +3,7 @@
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Context
+import org.kotlinq.dsl.TypeDefinition
 import org.kotlinq.dsl.extensions.float
 import org.kotlinq.dsl.extensions.integer
 import org.kotlinq.dsl.extensions.string
@@ -12,14 +13,14 @@ import org.kotlinq.dsl.toGraphQl
 fun greet(worldName: String = "Earth", message: Any = "Hello"): Context =
 
     query {
-      "greet"("name" to worldName, "message" to message) def {
+      !"greet"("name" to worldName, "message" to message) on "Response" {
         !"population"::integer
-        "countries"("first" to 100) def {
-          -"name"::string
+        "countries"("first" to 100) on "Country" {
+          !"name"::string
           !"coordinates" on coordinates()
           !"subEntities"..{
             on("State") {
-              "mayor"() def {
+              "mayor"() on "Persion" {
                 !"name"::string
               }
             }
@@ -34,7 +35,7 @@ fun greet(worldName: String = "Earth", message: Any = "Hello"): Context =
 
 
 fun coordinates(): TypeDefinition =
-    typeDefinition("Coordinate") {
+    defineType("Coordinate") {
       !"xValue"::float
       !"yValue"::float
     }
@@ -47,7 +48,7 @@ enum class Measurement {
 class Scratch {
 
   @Test fun `simple primitive field dsl coordinate type prints correctly`() {
-    assertThat(coordinates().invoke().toGraphQl(pretty = true, inlineFragments = false))
+    assertThat(coordinates().contextDefinition().toGraphQl(pretty = true, inlineFragments = false))
         .isEqualTo("""
           {
             xValue
@@ -58,7 +59,7 @@ class Scratch {
 
   @Test fun queryGraph() {
     println(greet().toGraphQl(pretty = true, inlineFragments = false))
-    println(coordinates().invoke().toGraphQl(pretty = true, inlineFragments = false))
+    println(coordinates().contextDefinition().toGraphQl(pretty = true, inlineFragments = false))
   }
 
   @Test fun simpleStarWars() {
@@ -90,7 +91,7 @@ class Scratch {
         on("Human") {
           !"name"::string
           !"id"::string
-          "friendsConnection"("first" to 10) def {
+          "friendsConnection"("first" to 10) on "FriendConnection" {
             !"totalCount"::integer
             "friends"() .. {
               on("Human") {

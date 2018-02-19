@@ -1,6 +1,6 @@
 package org.kotlinq.dsl
 
-import TypeDefinition
+import TypeBuilderBlock
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.dsl.extensions.FreePropertyExtensionScope
 import org.kotlinq.dsl.extensions.NullabilityOperatorScope
@@ -61,11 +61,10 @@ interface DslExtensionScope : NullabilityOperatorScope, FreePropertyExtensionSco
 
   operator fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty
 
-  infix fun FreeProperty.def(block: TypeBuilder.() -> Unit)
-
-  infix fun FreeProperty.on(context: TypeDefinition)
-
-  infix fun Node.spread(block: FragmentScopeBuilder.() -> Unit)
-
+  /**
+   * TODO rigorously define string extension functions to
+   * keep from "overload resolution ambiguity" from arity on HOF, etc.
+   */
+  operator fun String.invoke(block: TypeBuilderBlock): TypeDefinition
 }
 

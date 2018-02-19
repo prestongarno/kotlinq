@@ -9,44 +9,45 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.createType
 
 sealed class GraphComponent(
-    name: String,
-    arguments: Map<String, Any>,
-    nullable: Boolean,
-    clazz: KClass<*>,
-    typeName: String = clazz.simpleName!!) {
+    val name: String,
+    val arguments: Map<String, Any>,
+    val nullable: Boolean)
 
-  internal
-  val info = info(name, typeName, arguments, clazz, clazz.createType(nullable = nullable))
-}
 
-/**
- * Currently, the class name and typeName do not
- * have strict relationship. This may change in the future.
- */
 class Node internal constructor(
     name: String,
     arguments: Map<String, Any>,
-    nullable: Boolean,
-    typeName: String? = null,
-    private val context: GraphQlInstance)
-  : GraphComponent(name, arguments, nullable, Any::class, typeName ?: "Any") {
+    nullable: Boolean)
+  : GraphComponent(name, arguments, nullable) {
 
+  /**
+   * Isolating all [kotlin.reflect] usages in DSL for eventually targeting Javascript
+   */
+  private
+  fun createAdapterInfo(typeName: String) = info(name, typeName, arguments, nullable)
+
+  /**
+   * Fragment scope has an empty name for now,
+   * interface enforcement is tricky when using strings only
+   */
   internal fun withFragmentScope(fragments: Set<() -> Context>): Adapter =
-      Kotlinq.adapterService.fragmentProperty(info, fragments)
+      Kotlinq.adapterService.fragmentProperty(createAdapterInfo(""), fragments)
 
-  internal fun withDefinition(contextInit: () -> Context): Adapter =
-      Kotlinq.adapterService.instanceProperty(info, contextInit)
+  internal fun withDefinition(definition: TypeDefinition): Adapter =
+      Kotlinq.adapterService.instanceProperty(
+          createAdapterInfo(definition.typeName),
+          definition.contextDefinition)
 }
 
-@Suppress("CanBeParameter")
 class Leaf(
     name: String,
     arguments: Map<String, Any>,
     nullable: Boolean,
     val symbol: ScalarSymbol)
-  : GraphComponent(name, arguments, nullable, symbol.clazz, symbol.typeName) {
+  : GraphComponent(name, arguments, nullable) {
 
   internal fun toAdapter(): ParsingAdapter =
-      Kotlinq.adapterService.scalarAdapters.adapterFor(info)
+      Kotlinq.adapterService.scalarAdapters.adapterFor(
+          info(name, symbol.typeName, arguments, nullable, symbol.clazz, symbol.type)) // whoa
 }
 

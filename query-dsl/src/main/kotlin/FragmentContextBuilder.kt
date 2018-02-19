@@ -6,7 +6,7 @@ import org.kotlinq.api.Context
 
 
 @GraphQlDslObject
-class FragmentScopeBuilder internal constructor() {
+class FragmentContextBuilder internal constructor() {
 
   internal val fragments = mutableMapOf<String, () -> Context>()
 
@@ -17,11 +17,11 @@ class FragmentScopeBuilder internal constructor() {
   companion object {
 
     internal
-    fun fragmentsFromBlock(block: FragmentScopeBuilder.() -> Unit)
-        : Set<() -> Context>? =
-        FragmentScopeBuilder().apply(block)
-            .fragments.let { if (it.isEmpty()) null else it }
-            ?.map { it.value }?.toSet()
+    fun fragmentsFromBlock(block: FragmentContextBuilder.() -> Unit)
+        : Set<TypeDefinition>? = FragmentContextBuilder()
+        .apply(block)
+        .fragments.let { if (it.isEmpty()) null else it }
+        ?.map { TypeDefinition(it.key, it.value) }?.toSet()
   }
 
 }

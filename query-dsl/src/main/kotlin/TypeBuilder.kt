@@ -1,12 +1,12 @@
 package org.kotlinq.dsl
 
-import TypeDefinition
 import org.kotlinq.api.Context
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.dsl.fields.FreeProperty
-import org.kotlinq.dsl.fields.LeafBinding
-import kotlin.reflect.KFunction0
+import LeafGetter
+import TypeBuilderBlock
+import org.kotlinq.dsl.TypeDefinition.Companion.fromBuilder
 
 @GraphQlDslObject
 class TypeBuilder(
@@ -14,54 +14,43 @@ class TypeBuilder(
     val defaultTypeName: String = "Object"
 ) : DslExtensionScope, GraphQlInstance by graph {
 
-  override fun FreeProperty.def(block: TypeBuilder.() -> Unit) = invoke(block)
-
-  override fun FreeProperty.on(context: TypeDefinition) {
-    bindProperty(this.bindToNode(this@TypeBuilder)
-        .withDefinition(context))
+  // todo nominal type definitions needs to be modeled as a domain principle
+  override fun FreeProperty.define(typeName: String, block: TypeBuilderBlock) {
+    copy(typeName = typeName).asNode()
+        .withDefinition(fromBuilder(typeName, block))
+        .also(graph::bindProperty)
   }
 
-  override fun Node.spread(block: FragmentScopeBuilder.() -> Unit) {
-    FragmentScopeBuilder.fragmentsFromBlock(block)?.also { fragments ->
-      graph.bindProperty(withFragmentScope(fragments))
-    }
+  override fun String.invoke(block: TypeBuilderBlock): TypeDefinition =
+      fromBuilder(this, block)
+
+  override fun FreeProperty.on(context: TypeDefinition) {
+    bindProperty(asNode().withDefinition(context))
   }
 
   override fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty =
       FreeProperty(this, arguments.toMap())
 
-  override fun FreeProperty.invoke(block: TypeBuilder.() -> Unit) {
-    bindProperty(this.bindToNode(this@TypeBuilder)
-        .withDefinition(blockToInitializer(typeName ?: "Any", block)))
-  }
-
-  override fun FreeProperty.rangeTo(block: FragmentScopeBuilder.() -> Unit) {
-    FragmentScopeBuilder.fragmentsFromBlock(block)?.also { fragments ->
-      bindProperty(bindToNode(graph).withFragmentScope(fragments))
+  /**
+   * TODO rethink the relationship between Names and [GraphQlInstance],
+   * because right now there it a circular dependency a la [Kotlinq.createGraphQlInstance]
+   */
+  override fun FreeProperty.rangeTo(block: FragmentContextBuilder.() -> Unit) {
+    FragmentContextBuilder.fragmentsFromBlock(block)?.also { fragments ->
+      graph.bindProperty(asNode().withFragmentScope(fragments.map { it.contextDefinition }.toSet()))
     }
   }
 
-  override fun KFunction0<LeafBinding>.not() {
-    this.invoke().invoke(this@TypeBuilder, false)
+  override fun LeafGetter.not() {
+    this().invoke(this@TypeBuilder)
   }
 
-  override fun KFunction0<LeafBinding>.unaryMinus() {
-    this.invoke().invoke(this@TypeBuilder, false)
-  }
-
-  override fun FreeProperty.not(): Node {
-    return Node(name, arguments, nullable = false, context = this@TypeBuilder)
-  }
-
-  override fun FreeProperty.unaryMinus(): Node {
-    return Node(name, arguments, nullable = true, context = this@TypeBuilder)
-  }
+  override fun FreeProperty.not() =
+      apply { flagNullable() }
 
   override fun String.invoke(arguments: Map<String, Any>, typeName: String?): FreeProperty {
     return FreeProperty(this, arguments)
   }
-
-  private val adapterService get() = Kotlinq.adapterService
 
   companion object {
 

@@ -1,12 +1,10 @@
 package org.kotlinq.dsl.fields
 
+import LeafBinding
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.dsl.Leaf
 import org.kotlinq.dsl.Node
 import org.kotlinq.dsl.ScalarSymbol
-import org.kotlinq.dsl.TypeBuilder
-
-typealias LeafBinding = (GraphQlInstance, Boolean) -> Unit
 
 /**
  * A [FreeProperty] is a DSL concept which can be compared to
@@ -29,39 +27,35 @@ data class FreeProperty internal constructor(
     this.isNullable = false
   }
 
-  fun string(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(nullable, ScalarSymbol.StringSymbol)
-        .withContext(inst)
+  fun string(): LeafBinding = { inst ->
+    asLeafNode(ScalarSymbol.StringSymbol).withContext(inst)
   }
 
-  fun integer(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(nullable, ScalarSymbol.IntSymbol)
-        .withContext(inst)
+  fun integer(): LeafBinding = {
+    asLeafNode(ScalarSymbol.IntSymbol).withContext(it)
   }
 
-  fun boolean(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(nullable, ScalarSymbol.BooleanSymbol)
-        .withContext(inst)
+  fun boolean(): LeafBinding = {
+    asLeafNode(ScalarSymbol.BooleanSymbol).withContext(it)
   }
 
-  fun float(): LeafBinding = { inst, nullable ->
-    bindAsLeafNode(nullable, ScalarSymbol.BooleanSymbol)
-        .withContext(inst)
+  fun float(): LeafBinding = {
+    asLeafNode(ScalarSymbol.BooleanSymbol).withContext(it)
   }
+
+  private
+  fun asLeafNode(symbol: ScalarSymbol): Leaf =
+      Leaf(name, arguments, isNullable, symbol)
+
 
   internal
-  fun bindToNode(context: GraphQlInstance): Node =
-      Node(name, arguments, isNullable, typeName, context)
+  fun asNode(): Node = Node(name, arguments, isNullable)
 
   companion object {
 
     fun Leaf.withContext(instance: GraphQlInstance) {
       instance.bindProperty(this.toAdapter())
     }
-
-    private
-    fun FreeProperty.bindAsLeafNode(nullable: Boolean = true, symbol: ScalarSymbol): Leaf =
-        Leaf(name, arguments, nullable, symbol)
 
   }
 

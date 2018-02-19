@@ -3,6 +3,7 @@ package org.kotlinq.dsl
 import org.kotlinq.api.GraphQlPropertyInfo
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 
 
 fun org.kotlinq.api.Context.toGraphQl(pretty: Boolean = true, inlineFragments: Boolean = false) =
@@ -13,6 +14,7 @@ fun info(
     graphQlName: String,
     graphQlTypeName: String = GraphQlPropertyInfo.STRING,
     arguments: Map<String, Any> = emptyMap(),
-    clazz: KClass<*> = String::class,
-    type: KType = mockType(clazz, false)
+    isNullable: Boolean = false,
+    clazz: KClass<*> = Any::class,
+    type: KType = clazz.createType(nullable = isNullable)
 ) = GraphQlPropertyInfo(graphQlName, graphQlTypeName, type, arguments)
