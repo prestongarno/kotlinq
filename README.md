@@ -25,7 +25,7 @@ Example:
 
 ```
     val starWarsQuery = query {
-      "search"("text" to "r2d2") .. {
+      "search"("text" to "han solo") .. {
         on("Human") {
           !"name"::string
           !"id"::string
@@ -40,10 +40,11 @@ Example:
           }
         }
       }
+    }
 
     println(starWarsQuery.toGraphQl(
         pretty = true,
-        inlineFragments = false))
+        inlineFragments = true))
 
 ```
 
