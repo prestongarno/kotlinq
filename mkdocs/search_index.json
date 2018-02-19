@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/",
-            "text": "Kotlinq :  \na kotlin library for easy, type-safe GraphQL DSLs\n\u00b6\n\n\nCheck out the source code: \nhttps://github.com/prestongarno/kotlinq\n\u00b6\n\n\nAbout\n\u00b6\n\n\nThis project is a kotlin type-generating \ncompiler\n and \nruntime\n \nfor type-safe Kotlin DSLs mirroring your \nGraphQL\n API/schema.\n\n\nProject goals\n\u00b6\n\n\nKotlinq has the goal of making GraphQL easy to setup and use in a scalable manner \nwhile taking advantage of the both pragmatic and type-safe nature of Kotlin. \n\n\nCheck out obligatory \nHello, world!\n page to see how kotlinq accomplishes this!\n\n\nWhat is GraphQL?\n\u00b6\n\n\nGraphQL is a thoroughly defined \nspecification\n which defines\nits architecture as structured data conforming to a simple, declarative type system.\n\n\nGraphQL is a natural way to describe \ndata types\n and their \nrelationships to other types\n\n(also known as a graph, where nodes and edges describe a confined set of data). You can learn more\nabout it \nhere\n\n\nWhat does the name \nkotlinq\n even mean?\n\u00b6\n\n\n\n\n[Kot]lin [L]anguage [I]ntegrated [Q]ueries\n\n\nGetting started\n\u00b6\n\n\nCheck out the next section for a simple 'Hello, world!' query",
+            "text": "Kotlinq :  \na kotlin library for easy, type-safe GraphQL DSLs\n\u00b6\n\n\nAbout\n\u00b6\n\n\nThis project is a type-safe Kotlin DSL for GraphQL.\n\n\nProject goals\n\u00b6\n\n\nKotlinq has the goal of making GraphQL easy to integrate in an existing project in a scalable manner \nwhile taking advantage of the both pragmatic and null/type-safe nature of Kotlin. \n\n\nCheck out obligatory \nHello, world!\n page to see how kotlinq accomplishes this!\n\n\nWhat is GraphQL?\n\u00b6\n\n\nGraphQL is a thoroughly defined \nspecification\n which defines\nits architecture as structured data conforming to a simple, declarative type system.\n\n\nGraphQL is a natural way to describe \ndata types\n and their \nrelationships to other types\n\n(also known as a graph, where nodes and edges describe a confined set of data). You can learn more\nabout it \nhere\n\n\nThe GraphQL type system provides null-safety which is quite convenient.\n\n\nWhat does the name \nkotlinq\n even mean?\n\u00b6\n\n\n[Kot]lin [L]anguage [I]ntegrated [Q]ueries\n\n\nDevelopment & issue tracker\n\u00b6\n\n\nGetting started\n\u00b6\n\n\nCheck out the next section for a simple 'Hello, world!' query",
             "title": "Intro"
         },
         {
@@ -11,23 +11,18 @@
             "title": "Kotlinq :  a kotlin library for easy, type-safe GraphQL DSLs"
         },
         {
-            "location": "/#check-out-the-source-code-httpsgithubcomprestongarnokotlinq",
-            "text": "",
-            "title": "Check out the source code: https://github.com/prestongarno/kotlinq"
-        },
-        {
             "location": "/#about",
-            "text": "This project is a kotlin type-generating  compiler  and  runtime  \nfor type-safe Kotlin DSLs mirroring your  GraphQL  API/schema.",
+            "text": "This project is a type-safe Kotlin DSL for GraphQL.",
             "title": "About"
         },
         {
             "location": "/#project-goals",
-            "text": "Kotlinq has the goal of making GraphQL easy to setup and use in a scalable manner \nwhile taking advantage of the both pragmatic and type-safe nature of Kotlin.   Check out obligatory  Hello, world!  page to see how kotlinq accomplishes this!",
+            "text": "Kotlinq has the goal of making GraphQL easy to integrate in an existing project in a scalable manner \nwhile taking advantage of the both pragmatic and null/type-safe nature of Kotlin.   Check out obligatory  Hello, world!  page to see how kotlinq accomplishes this!",
             "title": "Project goals"
         },
         {
             "location": "/#what-is-graphql",
-            "text": "GraphQL is a thoroughly defined  specification  which defines\nits architecture as structured data conforming to a simple, declarative type system.  GraphQL is a natural way to describe  data types  and their  relationships to other types \n(also known as a graph, where nodes and edges describe a confined set of data). You can learn more\nabout it  here",
+            "text": "GraphQL is a thoroughly defined  specification  which defines\nits architecture as structured data conforming to a simple, declarative type system.  GraphQL is a natural way to describe  data types  and their  relationships to other types \n(also known as a graph, where nodes and edges describe a confined set of data). You can learn more\nabout it  here  The GraphQL type system provides null-safety which is quite convenient.",
             "title": "What is GraphQL?"
         },
         {
@@ -39,156 +34,6 @@
             "location": "/#getting-started",
             "text": "Check out the next section for a simple 'Hello, world!' query",
             "title": "Getting started"
-        },
-        {
-            "location": "/hello_world/",
-            "text": "'Hello, world!' example\n\u00b6\n\n\nThe following code conforms to the following graphql schema\n\n\ntype Query {\n  hello: String\n}\n\n\n\n\nAfter using the \ngradle plugin\n to create the kotlin types, you can write a query in kotlin:\n\n\nval helloQuery = object : QModel(Query) {\n  val hello by model.hello\n}\n\n\n\n\nYou now have a GraphQL Query ready to go!\n\n\nhelloQuery.toGraphQL(pretty = true)\n\n\n\n\nPrints:\n\n  {\n    hello\n  }\n\n\n\n[Resolve the model][2], by fetching from your endpoint, and then get the results:\n\n\nprintln(helloQuery.hello)\n\n\n\n\nSimple, right? It gets even better!",
-            "title": "Hello, world!"
-        },
-        {
-            "location": "/hello_world/#hello-world-example",
-            "text": "The following code conforms to the following graphql schema  type Query {\n  hello: String\n}  After using the  gradle plugin  to create the kotlin types, you can write a query in kotlin:  val helloQuery = object : QModel(Query) {\n  val hello by model.hello\n}  You now have a GraphQL Query ready to go!  helloQuery.toGraphQL(pretty = true)  Prints:   {\n    hello\n  }  [Resolve the model][2], by fetching from your endpoint, and then get the results:  println(helloQuery.hello)  Simple, right? It gets even better!",
-            "title": "'Hello, world!' example"
-        },
-        {
-            "location": "/getting-started/",
-            "text": "How to get started\n\u00b6\n\n\nTo use in a project, add the dependency to a gradle buildscript:\n\n\n  compile 'com.prestongarno.kotlinq:kotlinq-client:0.3.0'\n\n\n\n\n\nMake sure to include the \n gradle plugin \n and read\nthe gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. \n Add this to project buildscript dependencies block:\n\n\n  \nclasspath\n \n'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0'\n\n\n\n\n\n\nAnd apply the plugin:\n\n\n  plugins {\n    id 'com.prestongarno.kotlinq' version 0.3.0\n  }\n\n\n\n\n\nPatterns used by kotlinq\n\u00b6\n\n\nThe three key concepts which must be kept in mind when using kotlinq are:\n\n\n\n\n****Static Schema***: The Schema is represented as static objects.\n These are all \ndelegate providers\n,\n which hold information about the schema field it represents for the next point\n\n\nComposition of Models through delegates\n: When you want to model a type from the schema, it does not matter what you name your properties.\n \nAll you need to do is delegate to a property of a schema singleton/object*\n.\n\n\nNullability of fields\n: Fields are not-null for convenience, but you should never access an object without first checking if the property \nQModel.isResolved\n returns true.\n Otherwise, accessing a property most likely \nwill\n throw an exception (primitive/scalar ones, at least)\n\n\n\n\nExample nested query\n\u00b6\n\n\nFor an example of how to build models, see the example below created for the Yelp Graphql API. \n\n\nclass\n \nBusinessQuery\n(\nsearchTerm\n: \nString\n)\n \n:\n \nQModel\n(\nQuery\n)\n \n{\n\n\n  \nval\n \nresult\n: \nList\n<\nBusinessModel\n>\n \nby\n \nmodel\n.\nsearch\n.\nquerying\n(\n::\nBusinessesModel\n)\n \n{\n\n      \nconfig\n \n{\n\n        \nterm\n \n=\n \nsearchTerm\n\n        \nlimit\n \n=\n \n10\n\n      \n}\n\n  \n}\n\n\n}\n\n\n\nclass\n \nBusinessModel\n : \nQModel\n(\nBusiness\n)\n \n{\n\n  \nval\n \nname\n: \nString\n \nby\n \nmodel\n.\nname\n\n  \nval\n \nphoneNumber\n: \nInt\n \nby\n \nmodel\n.\ndisplay_phone\n\n  \nval\n \ndirectUrl\n: \nString\n \nby\n \nmodel\n.\nurl\n\n\n}\n\n\n\n\n\n\nNote that while field types are specified, they are not necessary and can be inferred by the properties\nin the \nmodel\n instance which a concrete query/mutation class delegates its properties to.\n\n\nWhen initializing a \nBusinessQuery(\"foobar\").toGraphql(pretty = true)\n results in a valid graphql query as a String:\n\n\n{\n search(limit: 10, term: \"foobar\"){\n   business {\n     name,\n     display_phone,\n     url \n    }\n  }\n}\n\n\n\n\n\n\n\nWarning\n\n\nDelegated properties should be considered \nuninitialized\n until resolved!\nCall \nmodel.resolved\n (\nBoolean\n property) to figure this out. \nOtherwise, all primitive/scalar types will be set to their default value, and all nullable fields will be null.",
-            "title": "Getting started"
-        },
-        {
-            "location": "/getting-started/#how-to-get-started",
-            "text": "To use in a project, add the dependency to a gradle buildscript:    compile 'com.prestongarno.kotlinq:kotlinq-client:0.3.0'  Make sure to include the   gradle plugin   and read\nthe gradle syntax for configuring compilation of graphql schema SDL as kotlin classes. \n Add this to project buildscript dependencies block:     classpath   'com.prestongarno.kotlinq:kotlinq-gradle:0.3.0'   And apply the plugin:    plugins {\n    id 'com.prestongarno.kotlinq' version 0.3.0\n  }",
-            "title": "How to get started"
-        },
-        {
-            "location": "/getting-started/#patterns-used-by-kotlinq",
-            "text": "The three key concepts which must be kept in mind when using kotlinq are:   ****Static Schema***: The Schema is represented as static objects.\n These are all  delegate providers ,\n which hold information about the schema field it represents for the next point  Composition of Models through delegates : When you want to model a type from the schema, it does not matter what you name your properties.\n  All you need to do is delegate to a property of a schema singleton/object* .  Nullability of fields : Fields are not-null for convenience, but you should never access an object without first checking if the property  QModel.isResolved  returns true.\n Otherwise, accessing a property most likely  will  throw an exception (primitive/scalar ones, at least)",
-            "title": "Patterns used by kotlinq"
-        },
-        {
-            "location": "/getting-started/#example-nested-query",
-            "text": "For an example of how to build models, see the example below created for the Yelp Graphql API.   class   BusinessQuery ( searchTerm :  String )   :   QModel ( Query )   { \n\n   val   result :  List < BusinessModel >   by   model . search . querying ( :: BusinessesModel )   { \n       config   { \n         term   =   searchTerm \n         limit   =   10 \n       } \n   }  }  class   BusinessModel  :  QModel ( Business )   { \n   val   name :  String   by   model . name \n   val   phoneNumber :  Int   by   model . display_phone \n   val   directUrl :  String   by   model . url  }   Note that while field types are specified, they are not necessary and can be inferred by the properties\nin the  model  instance which a concrete query/mutation class delegates its properties to.  When initializing a  BusinessQuery(\"foobar\").toGraphql(pretty = true)  results in a valid graphql query as a String:  {\n search(limit: 10, term: \"foobar\"){\n   business {\n     name,\n     display_phone,\n     url \n    }\n  }\n}   Warning  Delegated properties should be considered  uninitialized  until resolved!\nCall  model.resolved  ( Boolean  property) to figure this out. \nOtherwise, all primitive/scalar types will be set to their default value, and all nullable fields will be null.",
-            "title": "Example nested query"
-        },
-        {
-            "location": "/types/paradigms/",
-            "text": "Creating a GraphQL Object\n\u00b6\n\n\nThe compiler creates the structure of the GraphQL schema with an object for each type. \nEach field on a type is created as a variable which, depending on the type of GraphQL field, \nis able to provide a \ndelegated property\n \nto any GraphQL model which chooses to include that field in their query.\n\n\nTo create a GraphQL object, subclass the \nQModel\n class, and add as the type argument for the class the \nGraphQL type which you want to use for your model. For example, consider the following schema:\n\n\n    type Person {\n      name: String\n    }\n\n\n\n\nTo make a GraphQL query on this type, here is how you would do it:\n\n\n    object : QModel<Person>(Person)\n\n\n\n\nThats it!\n\n\nAdding fields to your GraphQL models\n\u00b6\n\n\nTo add a field, you will need to add a property to your \nQModel\n object \nwhich delegates to the generated GraphQL object. Here is an example. GraphQL schema:\n\n\n    type Person {\n      name: String\n    }\n\n\n\n\nKotlin code:\n\n\n    object : QModel<Person>(Person) {\n\n      val personName by model.name\n\n    }\n\n\n\n\nNote that this is the same as declaring an actual class like so:\n\n\n    \nclass\n \nPersonModel\n : \nQModel\n<Person>\n(\nPerson\n) {\n\n      \nval\n \npersonName\n \nby\n \nmodel\n.\nname\n\n\n    }\n\n\n\n\nThe property \npersonName\n gets its type information from the \nPerson\n object property delegate provider.\nIn this case, it is of type \nkotlin.String\n. You can also explicitly declare its type like so:\n\n\nval personName: String by model.name\n\n\n\n\n\nDefault values on scalar fields\n\u00b6\n\n\nIf you try to access the \npersonName\n field in the previous section you will throw a \nNullPointerException\n\nsince the query has not been executed! In order to make this avoidable, the library allows you to invoke \nall scalar GraphQL properties and declare default values for the field.\n\n\nTo do this in your model declaration, declare your GraphQL model for \nPerson\n like in the previous sections,\nbut this time adding a code block on the field and assigning a default value to the property:\n\n\n    \nclass\n \nPersonModel\n : \nQModel\n<Person>\n(\nPerson\n) {\n\n      \nval\n \npersonName\n \nby\n \nmodel\n.\nname\n {\n        \ndefault\n = \n\"Me\"\n\n      }\n\n    }\n\n\n\n\nNow, calling \nPersonModel().personName\n returns \n\"Me\"\n!",
-            "title": "Introduction"
-        },
-        {
-            "location": "/types/paradigms/#creating-a-graphql-object",
-            "text": "The compiler creates the structure of the GraphQL schema with an object for each type. \nEach field on a type is created as a variable which, depending on the type of GraphQL field, \nis able to provide a  delegated property  \nto any GraphQL model which chooses to include that field in their query.  To create a GraphQL object, subclass the  QModel  class, and add as the type argument for the class the \nGraphQL type which you want to use for your model. For example, consider the following schema:      type Person {\n      name: String\n    }  To make a GraphQL query on this type, here is how you would do it:      object : QModel<Person>(Person)  Thats it!",
-            "title": "Creating a GraphQL Object"
-        },
-        {
-            "location": "/types/paradigms/#adding-fields-to-your-graphql-models",
-            "text": "To add a field, you will need to add a property to your  QModel  object \nwhich delegates to the generated GraphQL object. Here is an example. GraphQL schema:      type Person {\n      name: String\n    }  Kotlin code:      object : QModel<Person>(Person) {\n\n      val personName by model.name\n\n    }  Note that this is the same as declaring an actual class like so:       class   PersonModel  :  QModel <Person> ( Person ) {\n\n       val   personName   by   model . name \n\n    }  The property  personName  gets its type information from the  Person  object property delegate provider.\nIn this case, it is of type  kotlin.String . You can also explicitly declare its type like so:  val personName: String by model.name",
-            "title": "Adding fields to your GraphQL models"
-        },
-        {
-            "location": "/types/paradigms/#default-values-on-scalar-fields",
-            "text": "If you try to access the  personName  field in the previous section you will throw a  NullPointerException \nsince the query has not been executed! In order to make this avoidable, the library allows you to invoke \nall scalar GraphQL properties and declare default values for the field.  To do this in your model declaration, declare your GraphQL model for  Person  like in the previous sections,\nbut this time adding a code block on the field and assigning a default value to the property:       class   PersonModel  :  QModel <Person> ( Person ) {\n\n       val   personName   by   model . name  {\n         default  =  \"Me\" \n      }\n\n    }  Now, calling  PersonModel().personName  returns  \"Me\" !",
-            "title": "Default values on scalar fields"
-        },
-        {
-            "location": "/types/primitives/",
-            "text": "//TODO\n\u00b6",
-            "title": "Primitives/Scalars"
-        },
-        {
-            "location": "/types/primitives/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/types/custom_scalars/",
-            "text": "//TODO\n\u00b6",
-            "title": "Custom Scalars"
-        },
-        {
-            "location": "/types/custom_scalars/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/types/objects/",
-            "text": "//TODO\n\u00b6",
-            "title": "Objects"
-        },
-        {
-            "location": "/types/objects/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/types/nullables/",
-            "text": "//TODO\n\u00b6",
-            "title": "Nullables"
-        },
-        {
-            "location": "/types/nullables/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/api/query/",
-            "text": "//TODO\n\u00b6",
-            "title": "Query"
-        },
-        {
-            "location": "/api/query/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/api/mutation/",
-            "text": "//TODO\n\u00b6",
-            "title": "Mutation"
-        },
-        {
-            "location": "/api/mutation/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/subscription/",
-            "text": "//TODO\n\u00b6",
-            "title": "Subscription"
-        },
-        {
-            "location": "/subscription/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/http/",
-            "text": "//TODO\n\u00b6",
-            "title": "HTTP"
-        },
-        {
-            "location": "/http/#todo",
-            "text": "",
-            "title": "//TODO"
-        },
-        {
-            "location": "/faq/",
-            "text": "Can I use this in production?\n\u00b6\n\n\nPlease don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while",
-            "title": "FAQ"
-        },
-        {
-            "location": "/faq/#can-i-use-this-in-production",
-            "text": "Please don't. The API is still quite rough (as of 0.2.1) and isn't guaranteed to be backwards compatible for a while",
-            "title": "Can I use this in production?"
-        },
-        {
-            "location": "/release_notes/",
-            "text": "//TODO\n\u00b6",
-            "title": "Release notes"
-        },
-        {
-            "location": "/release_notes/#todo",
-            "text": "",
-            "title": "//TODO"
         },
         {
             "location": "/contributing/",
