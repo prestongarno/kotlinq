@@ -1,13 +1,12 @@
 package org.kotlinq.dsl
 
-import TypeBuilderBlock
 import asInitializer
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 
 
 data class TypeDefinition internal constructor(
     val typeName: String,
-    internal val contextDefinition: () -> Context) {
+    internal val definition: () -> Definition) {
 
   companion object {
     internal fun fromBuilder(typeName: String, block: TypeBuilderBlock): TypeDefinition =

@@ -1,9 +1,8 @@
-import org.kotlinq.api.GraphQlInstance
-import org.kotlinq.dsl.TypeBuilder
+package org.kotlinq.dsl
 
 
 typealias LeafGetter = (() -> LeafBinding)
 
-typealias LeafBinding = (GraphQlInstance) -> Unit
+typealias LeafBinding = (BindableContext) -> Unit
 
 typealias TypeBuilderBlock = TypeBuilder.() -> Unit

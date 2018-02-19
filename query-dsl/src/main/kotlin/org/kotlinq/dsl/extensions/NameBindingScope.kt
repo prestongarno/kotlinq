@@ -1,7 +1,7 @@
 package org.kotlinq.dsl.extensions
 
+import org.kotlinq.dsl.LeafBinding
 import org.kotlinq.dsl.fields.FreeProperty
-import LeafBinding
 
 /**
  * Unfortunately, extenstion functions as a member reference are not allowed

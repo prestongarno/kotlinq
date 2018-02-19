@@ -1,28 +1,27 @@
 package org.kotlinq.properties
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.FragmentImpl
 import org.kotlinq.api.GraphQlPropertyInfo
-import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.Resolver
 
 
 internal
 class FragmentProperty(
     override val propertyInfo: GraphQlPropertyInfo,
-    fragments: Set<() -> Context>
+    fragments: Set<() -> Definition>
 ) : FragmentAdapter {
 
-  private var value: Context? = null
+  private var value: Definition? = null
 
   override val fragments: Map<String, Fragment> by lazy {
     fragments.map { FragmentImpl(it) }.map { it.typeName to it }.toMap()
   }
 
-  override fun getValue(): Context? = value
+  override fun getValue(): Definition? = value
 
   override fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver): Boolean {
     this.value = fragments[typeName]?.initializer?.invoke()?.apply {

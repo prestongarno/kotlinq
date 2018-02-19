@@ -1,12 +1,9 @@
 package org.kotlinq.dsl
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Context
-import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.api.Definition
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.ParsingAdapter
-import kotlin.reflect.KClass
-import kotlin.reflect.full.createType
 
 sealed class GraphComponent(
     val name: String,
@@ -30,13 +27,13 @@ class Node internal constructor(
    * Fragment scope has an empty name for now,
    * interface enforcement is tricky when using strings only
    */
-  internal fun withFragmentScope(fragments: Set<() -> Context>): Adapter =
+  internal fun withFragmentScope(fragments: Set<() -> Definition>): Adapter =
       Kotlinq.adapterService.fragmentProperty(createAdapterInfo(""), fragments)
 
   internal fun withDefinition(definition: TypeDefinition): Adapter =
       Kotlinq.adapterService.instanceProperty(
           createAdapterInfo(definition.typeName),
-          definition.contextDefinition)
+          definition.definition)
 }
 
 class Leaf(

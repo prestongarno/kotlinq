@@ -2,7 +2,7 @@
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.dsl.TypeDefinition
 import org.kotlinq.dsl.extensions.float
 import org.kotlinq.dsl.extensions.integer
@@ -10,7 +10,7 @@ import org.kotlinq.dsl.extensions.string
 import org.kotlinq.dsl.toGraphQl
 
 
-fun greet(worldName: String = "Earth", message: Any = "Hello"): Context =
+fun greet(worldName: String = "Earth", message: Any = "Hello"): Definition =
 
     query {
       !"greet"("name" to worldName, "message" to message) on "Response" {
@@ -48,7 +48,7 @@ enum class Measurement {
 class Scratch {
 
   @Test fun `simple primitive field dsl coordinate type prints correctly`() {
-    assertThat(coordinates().contextDefinition().toGraphQl(pretty = true, inlineFragments = false))
+    assertThat(coordinates().definition().toGraphQl(pretty = true, inlineFragments = false))
         .isEqualTo("""
           {
             xValue
@@ -59,7 +59,7 @@ class Scratch {
 
   @Test fun queryGraph() {
     println(greet().toGraphQl(pretty = true, inlineFragments = false))
-    println(coordinates().contextDefinition().toGraphQl(pretty = true, inlineFragments = false))
+    println(coordinates().definition().toGraphQl(pretty = true, inlineFragments = false))
   }
 
   @Test fun simpleStarWars() {
@@ -107,6 +107,7 @@ class Scratch {
 
     assertThat(starWarsQuery)
         .isEqualTo(expect)
+    println(starWarsQuery)
   }
 
 }

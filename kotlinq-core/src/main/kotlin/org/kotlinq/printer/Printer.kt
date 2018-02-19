@@ -70,7 +70,7 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
   val stack = LinkedList<Any>()
   val fragments: Map<Fragment, String> = frags
       ?: root.getFragments().mapIndexed { index, fragment ->
-        fragment to "frag${fragment.prototype.graphQlInstance.graphQlTypeName}$index"
+        fragment to "frag${fragment.prototype.graphQlTypeName}$index"
       }.toMap()
 
 
@@ -141,7 +141,7 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
         append("fragment ")
         append(name)
         append(" on ")
-        append(fragment.prototype.graphQlInstance.graphQlTypeName)
+        append(fragment.prototype.graphQlTypeName)
         append(ENTER_SCOPE)
         val numOfFields = fragment.prototype.graphQlInstance.properties.size - 1
 
@@ -178,7 +178,7 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
 internal
 fun pretty(context: GraphQlInstance): String {
   val fragments = context.getFragments().mapIndexed { index, fragment ->
-    fragment to "frag${fragment.prototype.graphQlInstance.graphQlTypeName}$index"
+    fragment to "frag${fragment.prototype.graphQlTypeName}$index"
   }.toMap()
 
   return context.printNode(fragments)/*.let {
@@ -209,8 +209,8 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
       this@printEdge.fragments.asIterable().joinToString(
           prefix = " {" + whitespace + "__typename" + whitespace,
           postfix = "\n${INDENT.repeat(indentLevel - 1)}}", separator = whitespace) {
-        val proto = it.value.prototype.graphQlInstance
-        "... on ${proto.graphQlTypeName}" + proto.printNode(fragments, indentLevel + 1)
+        val proto = it.value.prototype
+        "... on ${proto.graphQlTypeName}" + proto.graphQlInstance.printNode(fragments, indentLevel + 1)
       }
     }
 

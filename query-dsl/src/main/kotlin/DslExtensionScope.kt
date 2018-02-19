@@ -1,6 +1,5 @@
 package org.kotlinq.dsl
 
-import TypeBuilderBlock
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.dsl.extensions.FreePropertyExtensionScope
 import org.kotlinq.dsl.extensions.NullabilityOperatorScope

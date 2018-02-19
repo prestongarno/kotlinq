@@ -16,9 +16,9 @@ interface AdapterService {
 
   fun enumDeserializer(info: GraphQlPropertyInfo): Adapter
 
-  fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Context): Adapter
+  fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Definition): Adapter
 
-  fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Context>): Adapter
+  fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Definition>): Adapter
 
 }
 

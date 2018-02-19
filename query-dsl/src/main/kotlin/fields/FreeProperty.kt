@@ -1,8 +1,8 @@
 package org.kotlinq.dsl.fields
 
-import LeafBinding
-import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.dsl.BindableContext
 import org.kotlinq.dsl.Leaf
+import org.kotlinq.dsl.LeafBinding
 import org.kotlinq.dsl.Node
 import org.kotlinq.dsl.ScalarSymbol
 
@@ -53,8 +53,8 @@ data class FreeProperty internal constructor(
 
   companion object {
 
-    fun Leaf.withContext(instance: GraphQlInstance) {
-      instance.bindProperty(this.toAdapter())
+    fun Leaf.withContext(it: BindableContext) {
+      it.register(this.toAdapter())
     }
 
   }

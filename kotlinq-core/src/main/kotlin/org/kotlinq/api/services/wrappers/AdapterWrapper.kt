@@ -2,7 +2,7 @@ package org.kotlinq.api.services.wrappers
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.AdapterService
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.ScalarAdapterService
 import org.kotlinq.api.services.Wrapper
@@ -25,9 +25,9 @@ class AdapterWrapper(instance: AdapterService)
   override fun enumDeserializer(info: GraphQlPropertyInfo): Adapter =
       instance().enumDeserializer(info)
 
-  override fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Context): Adapter =
+  override fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Definition): Adapter =
       instance().instanceProperty(info, init)
 
-  override fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Context>): Adapter =
+  override fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Definition>): Adapter =
       instance().fragmentProperty(info, fragments)
 }

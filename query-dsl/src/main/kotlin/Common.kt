@@ -6,7 +6,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
 
-fun org.kotlinq.api.Context.toGraphQl(pretty: Boolean = true, inlineFragments: Boolean = false) =
+fun org.kotlinq.api.Definition.toGraphQl(pretty: Boolean = true, inlineFragments: Boolean = false) =
     this.graphQlInstance.toGraphQl(pretty, inlineFragments)
 
 internal

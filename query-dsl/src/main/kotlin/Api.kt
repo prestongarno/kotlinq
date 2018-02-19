@@ -1,4 +1,4 @@
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.dsl.GraphBuilder
 import org.kotlinq.dsl.TypeBuilder
 import org.kotlinq.dsl.TypeDefinition
@@ -12,7 +12,7 @@ import org.kotlinq.dsl.TypeDefinition
  * @author prestongarno
  * @since 0.4.0
  */
-fun query(name: String = "Query", definition: TypeBuilder.() -> Unit): Context =
+fun query(name: String = "Query", definition: TypeBuilder.() -> Unit): Definition =
     GraphBuilder(name, definition).build()
 
 

@@ -1,8 +1,7 @@
 package org.kotlinq.dsl.extensions
 
-import org.kotlinq.dsl.Node
 import org.kotlinq.dsl.fields.FreeProperty
-import LeafGetter
+import org.kotlinq.dsl.LeafGetter
 
 
 interface NullabilityOperatorScope {
@@ -11,5 +10,6 @@ interface NullabilityOperatorScope {
   // nodes TODO should it only be on freeprops?
   operator fun String.not(): FreeProperty = FreeProperty(this)
   //free property invokations
-  operator fun FreeProperty.not(): FreeProperty
+  operator fun FreeProperty.not(): FreeProperty =
+      apply { flagNullable() }
 }

@@ -5,7 +5,12 @@ package org.kotlinq.api
  * Context object. non-scalar user GraphQL type/query definitions
  * will subclass a base class implementing this interface
  */
-interface Context {
+interface Definition {
+  /**
+   * Equivalent to the reflective field '__typename' in the GraphQL Specification
+   */
+  val graphQlTypeName: String
+
   val graphQlInstance: GraphQlInstance
 }
 
@@ -17,12 +22,11 @@ interface Context {
  */
 interface GraphQlInstance {
 
-  /**
-   * Equivalent to the reflective field '__typename' in the GraphQL Specification
-   */
-  val graphQlTypeName: String
-
   val properties: Map<String, Adapter>
+
+  val edges: Sequence<Fragment>
+
+  val nodes: Sequence<Adapter>
 
   fun isResolved(): Boolean
 

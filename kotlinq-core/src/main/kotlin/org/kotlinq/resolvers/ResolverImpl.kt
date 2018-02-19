@@ -1,7 +1,7 @@
 package org.kotlinq.resolvers
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.api.DeserializingAdapter
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.ModelAdapter
@@ -13,7 +13,7 @@ import java.util.LinkedList
 internal
 class ResolverImpl : Resolver {
 
-  override fun resolve(value: Map<String, Any?>, target: Context): Boolean =
+  override fun resolve(value: Map<String, Any?>, target: Definition): Boolean =
       InstanceResolver(target, value).resolveFromRoot()
 
   override fun visit(target: ModelAdapter) = Unit
@@ -28,7 +28,7 @@ class ResolverImpl : Resolver {
    * Stack-based resolver algorithm
    */
   private
-  class InstanceResolver(private val context: Context, private val values: Map<String, Any?>) : Resolver {
+  class InstanceResolver(private val definition: Definition, private val values: Map<String, Any?>) : Resolver {
 
     val stack = LinkedList<Map<String, Any?>>()
 
@@ -37,9 +37,9 @@ class ResolverImpl : Resolver {
       stack.removeFirst()
     }
 
-    fun resolveFromRoot(): Boolean = resolve(values, context)
+    fun resolveFromRoot(): Boolean = resolve(values, definition)
 
-    override fun resolve(value: Map<String, Any?>, target: Context): Boolean {
+    override fun resolve(value: Map<String, Any?>, target: Definition): Boolean {
       push(value)
       target.graphQlInstance.accept(this)
       pop()

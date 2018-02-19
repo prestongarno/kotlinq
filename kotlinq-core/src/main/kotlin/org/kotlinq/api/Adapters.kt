@@ -1,7 +1,7 @@
 package org.kotlinq.api
 
 
-/** Adapter for a property which returns a nested [Context] instance */
+/** Adapter for a property which returns a nested [Definition] instance */
 interface ModelAdapter: Adapter {
 
   /**
@@ -16,13 +16,13 @@ interface ModelAdapter: Adapter {
    */
   fun setValue(result: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
 
-  override fun getValue(): Context?
+  override fun getValue(): Definition?
 
   override fun accept(resolver: GraphVisitor) = resolver.visit(this)
 }
 
 /**
- * Adapter for a property which returns a nested [Context] instance,
+ * Adapter for a property which returns a nested [Definition] instance,
  * but can be mapped to any combination of types (i.e. a workaround for the JavaScript spread operator)
  */
 interface FragmentAdapter : Adapter, FragmentContext {

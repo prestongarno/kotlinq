@@ -1,7 +1,7 @@
 package org.kotlinq.properties
 
 import org.kotlinq.api.ModelAdapter
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.GraphVisitor
@@ -11,13 +11,13 @@ import org.kotlinq.api.Resolver
 internal
 class InstanceProperty(
     override val propertyInfo: GraphQlPropertyInfo,
-    initializer: () -> Context
+    initializer: () -> Definition
 ) : ModelAdapter {
 
   override val fragment: Fragment =
       Kotlinq.createFragment(initializer)
 
-  private var instance: Context? = null
+  private var instance: Definition? = null
 
   override fun isResolved(): Boolean {
     return instance?.graphQlInstance?.isResolved() == true || propertyInfo.isNullable
@@ -34,5 +34,5 @@ class InstanceProperty(
     resolver.visit(this)
   }
 
-  override fun getValue(): Context? = instance
+  override fun getValue(): Definition? = instance
 }

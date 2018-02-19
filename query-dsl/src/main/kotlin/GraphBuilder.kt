@@ -1,30 +1,28 @@
 package org.kotlinq.dsl
 
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.api.GraphQlInstance
-import org.kotlinq.api.GraphQlInstanceProvider
+import org.kotlinq.api.Kotlinq
 
 
 internal
 class GraphBuilder(
-    graphQlTypeName: String,
-    private val definition: TypeBuilder.() -> Unit,
-    private val delegate: GraphQlInstance = GraphQlInstanceProvider.createNewInstance(graphQlTypeName)
-) : GraphQlInstance by delegate {
+    val graphQlTypeName: String,
+    private val definition: TypeBuilder.() -> Unit) {
 
-  fun build(): Context {
-    TypeBuilder(this).apply(definition)
-    return MockContext(this)
+  fun build(): Definition {
+    val context = Kotlinq.createGraphQlInstance(graphQlTypeName)
+    TypeBuilder(BindableContext.from(context::bindProperty))
+        .apply(definition)
+    return DefinitionImpl(graphQlTypeName, context)
   }
-
-  override fun equals(other: Any?) = delegate == other
-  override fun hashCode() = delegate.hashCode()
 
   private
-  class MockContext(override val graphQlInstance: GraphQlInstance) : Context {
-    override fun equals(other: Any?): Boolean =
-        other is Context && other.graphQlInstance == graphQlInstance
-    override fun hashCode(): Int = graphQlInstance.hashCode()
-  }
+  data class DefinitionImpl(
+      override val graphQlTypeName: String,
+      override val graphQlInstance: GraphQlInstance) : Definition
+
+
+
 }
 

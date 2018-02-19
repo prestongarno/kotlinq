@@ -18,7 +18,7 @@ class FragmentCollectionAdapter(
   override fun getValue(): Any? = this._value
 
   override fun accept(resolver: GraphVisitor) {
-    _value?.filterIsInstance<Context>()?.forEach {
+    _value?.filterIsInstance<Definition>()?.forEach {
       it.graphQlInstance.accept(resolver)
     }
   }

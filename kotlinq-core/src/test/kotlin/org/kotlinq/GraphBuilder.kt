@@ -1,6 +1,6 @@
 package org.kotlinq
 
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.GraphQlPropertyInfo
@@ -11,7 +11,7 @@ fun createGraph(definition: GraphBuilder.TypeBuilder.() -> Unit) =
     GraphBuilder("Query", definition = definition).build()
 
 class GraphBuilder(
-    override val graphQlTypeName: String,
+    val graphQlTypeName: String,
     private val delegate: GraphQlInstance = GraphQlInstanceProvider.createNewInstance(graphQlTypeName),
     private val definition: TypeBuilder.() -> Unit
 ) : GraphQlInstance by delegate {
@@ -22,9 +22,9 @@ class GraphBuilder(
   override fun hashCode(): Int =
       delegate.hashCode()
 
-  fun build(): Context {
+  fun build(): Definition {
     TypeBuilder(this).apply(definition)
-    return MockContext(this)
+    return MockDefinition(this, graphQlTypeName)
   }
 
   class TypeBuilder(private val graph: GraphBuilder) {
@@ -67,7 +67,7 @@ class GraphBuilder(
 
   class FragmentBuilder {
 
-    val fragments = mutableMapOf<String, () -> Context>()
+    val fragments = mutableMapOf<String, () -> Definition>()
 
     var arguments: Map<String, Any> = emptyMap()
     var isNullable: Boolean = true
@@ -85,7 +85,7 @@ infix fun String.ofType(name: String): GraphBuilder.TypeBuilder.TypeFieldBuilder
   return GraphBuilder.TypeBuilder.TypeFieldBuilder(this, name)
 }
 
-class MockContext(override val graphQlInstance: GraphQlInstance) : Context
+class MockDefinition(override val graphQlInstance: GraphQlInstance, override val graphQlTypeName: String) : Definition
 
 interface SpreadOperator {
   companion object `,,,` : SpreadOperator
@@ -95,7 +95,7 @@ interface SpreadOperator {
 
 private
 fun getClassOrNull(name: String): KClass<out Any>? = try {
-  MockContext::class.java.classLoader.loadClass(name).kotlin
+  MockDefinition::class.java.classLoader.loadClass(name).kotlin
 } catch (ex: Exception) {
   null
 }

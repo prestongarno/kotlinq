@@ -1,6 +1,6 @@
 package org.kotlinq.api.services.wrappers
 
-import org.kotlinq.api.Context
+import org.kotlinq.api.Definition
 import org.kotlinq.api.DeserializingAdapter
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
@@ -14,7 +14,7 @@ class ResolverWrapper(default: Resolver)
   : Wrapper<Resolver>(default, Resolver::class),
     Resolver {
 
-  override fun resolve(value: Map<String, Any?>, target: Context): Boolean = instance().resolve(value, target)
+  override fun resolve(value: Map<String, Any?>, target: Definition): Boolean = instance().resolve(value, target)
   override fun visit(target: DeserializingAdapter) = instance().visit(target)
   override fun visit(target: Fragment) = instance().visit(target)
   override fun visit(target: FragmentAdapter) = instance().visit(target)
