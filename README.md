@@ -25,11 +25,11 @@ Example:
 
 ```
     val starWarsQuery = query {
-      "search"("text" to "han solo") .. {
+      "search"("text" to "r2d2") .. {
         on("Human") {
           !"name"::string
           !"id"::string
-          "friendsConnection"("first" to 10) def {
+          "friendsConnection"("first" to 10) on "FriendConnection" {
             !"totalCount"::integer
             "friends"() .. {
               on("Human") {
@@ -40,7 +40,6 @@ Example:
           }
         }
       }
-    }
 
     println(starWarsQuery.toGraphQl(
         pretty = true,
