@@ -4,28 +4,27 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Definition
 import org.kotlinq.dsl.TypeDefinition
-import org.kotlinq.dsl.extensions.float
-import org.kotlinq.dsl.extensions.integer
-import org.kotlinq.dsl.extensions.string
+import org.kotlinq.dsl.defineType
+import org.kotlinq.dsl.query
 import org.kotlinq.dsl.toGraphQl
 
 
 fun greet(worldName: String = "Earth", message: Any = "Hello"): Definition =
 
     query {
-      !"greet"("name" to worldName, "message" to message) on "Response" {
-        !"population"::integer
-        "countries"("first" to 100) on "Country" {
-          !"name"::string
+      !"greet"("name" to worldName, "message" to message) on def("Response") {
+        "population"(integer)
+        "countries"("first" to 100) on def("Country") {
+          "name"(string)
           !"coordinates" on coordinates()
           !"subEntities"..{
             on("State") {
-              "mayor"() on "Persion" {
-                !"name"::string
+              "mayor"() on def("Persion") {
+                "name"(string)
               }
             }
             on("City") {
-              !"name"::string
+              "name"(string)
             }
 
           }
@@ -33,11 +32,14 @@ fun greet(worldName: String = "Earth", message: Any = "Hello"): Definition =
       }
     }
 
+private object foo {
+  var count = 0
+}
 
 fun coordinates(): TypeDefinition =
     defineType("Coordinate") {
-      !"xValue"::float
-      !"yValue"::float
+      "xValue"(float)
+      "yValue"(float)
     }
 
 enum class Measurement {
@@ -87,16 +89,16 @@ class Scratch {
       """.trimMargin("|")
 
     val starWarsQuery = query {
-      "search"("text" to "r2d2") .. {
+      "search"("text" to "r2d2")..{
         on("Human") {
-          !"name"::string
-          !"id"::string
-          "friendsConnection"("first" to 10) on "FriendConnection" {
-            !"totalCount"::integer
-            "friends"() .. {
+          "name"(string)
+          "id"(string)
+          "friendsConnection"("first" to 10) on def("FriendConnection") {
+            "totalCount"(integer)
+            "friends"()..{
               on("Human") {
-                !"name"::string
-                !"id"::string
+                "name"(string)
+                "id"(string)
               }
             }
           }

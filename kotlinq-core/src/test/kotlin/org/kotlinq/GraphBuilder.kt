@@ -12,7 +12,7 @@ fun createGraph(definition: GraphBuilder.TypeBuilder.() -> Unit) =
 
 class GraphBuilder(
     val graphQlTypeName: String,
-    private val delegate: GraphQlInstance = GraphQlInstanceProvider.createNewInstance(graphQlTypeName),
+    private val delegate: GraphQlInstance = GraphQlInstanceProvider.createNewInstance(),
     private val definition: TypeBuilder.() -> Unit
 ) : GraphQlInstance by delegate {
 

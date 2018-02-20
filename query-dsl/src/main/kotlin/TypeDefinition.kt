@@ -1,6 +1,5 @@
 package org.kotlinq.dsl
 
-import asInitializer
 import org.kotlinq.api.Definition
 
 
@@ -9,7 +8,7 @@ data class TypeDefinition internal constructor(
     internal val definition: () -> Definition) {
 
   companion object {
-    internal fun fromBuilder(typeName: String, block: TypeBuilderBlock): TypeDefinition =
+    internal fun fromBuilder(typeName: String, block: SelectionSet): TypeDefinition =
         TypeDefinition(typeName, block.asInitializer(typeName))
   }
 }

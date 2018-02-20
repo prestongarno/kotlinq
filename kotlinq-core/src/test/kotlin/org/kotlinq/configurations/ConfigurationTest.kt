@@ -11,6 +11,7 @@ import org.kotlinq.api.Resolver
 import org.kotlinq.assertThrows
 import org.kotlinq.api.services.Configuration
 import org.kotlinq.api.services.ServiceContainer
+import org.kotlinq.eq
 import org.kotlinq.messageMatchingExactly
 import org.kotlinq.mockType
 import org.kotlinq.models.GraphQlInstanceImpl
@@ -31,8 +32,10 @@ class ConfigurationTest {
 
   fun testContext(typeName: String) = object : Definition {
 
+    override val graphQlTypeName = typeName
+
     override val graphQlInstance: GraphQlInstance =
-        GraphQlInstanceProvider.createNewInstance(typeName).apply {
+        GraphQlInstanceProvider.createNewInstance().apply {
           bindProperty(Kotlinq.adapterService.scalarAdapters.adapterFor(
               GraphQlPropertyInfo("Hello", GraphQlPropertyInfo.STRING, mockType(String::class))))
         }
@@ -43,7 +46,7 @@ class ConfigurationTest {
     Configuration.configure {
       jsonParser = parser
       instanceProvider = object : GraphQlInstanceProvider {
-        override fun createNewInstance(typeName: String) = GraphQlInstanceImpl(typeName)
+        override fun createNewInstance() = GraphQlInstanceImpl()
       }
     }
 
@@ -91,21 +94,21 @@ class ConfigurationTest {
         .filter { it.isAccessible }
         .forEach { it.get(ServiceContainer) }
 
-    Kotlinq.createGraphQlInstance("GraphQlTypeMeta").graphQlTypeName eq "GraphQlTypeMeta"
+    Kotlinq.createGraphQlInstance().properties.size eq 0
 
     Configuration.use(object : GraphQlInstanceProvider {
-      override fun createNewInstance(typeName: String): GraphQlInstance = throw NullPointerException("TEST")
+      override fun createNewInstance(): GraphQlInstance = throw NullPointerException("TEST")
     })
 
     assertThrows<NullPointerException> {
-      Kotlinq.createGraphQlInstance("SomeType").println()
+      Kotlinq.createGraphQlInstance().println()
     } messageMatchingExactly "TEST"
 
     // Pass self-reference to wrapper class to delegate to self
     Configuration.use(GraphQlInstanceProvider.Companion)
 
     // If didn't prevent the circular reference, this will stackoverflow
-    Kotlinq.createGraphQlInstance("Foo")
+    Kotlinq.createGraphQlInstance()
   }
 
   @Test fun resetDependenciesWorksCorrectly() {
@@ -115,16 +118,16 @@ class ConfigurationTest {
         .forEach { it.get(ServiceContainer) }
 
     Configuration.use(object : GraphQlInstanceProvider {
-      override fun createNewInstance(typeName: String): GraphQlInstance = throw NullPointerException()
+      override fun createNewInstance(): GraphQlInstance = throw NullPointerException()
     })
 
     assertThrows<NullPointerException> {
-      Kotlinq.createGraphQlInstance("foo")
+      Kotlinq.createGraphQlInstance()
     }
 
     ServiceContainer.useDefaults()
 
-    Kotlinq.createGraphQlInstance("Hello").graphQlTypeName eq "Hello"
+    Kotlinq.createGraphQlInstance().properties.size eq 0
   }
 }
 

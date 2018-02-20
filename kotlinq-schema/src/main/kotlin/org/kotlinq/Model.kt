@@ -5,15 +5,12 @@ import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.Kotlinq
 
 
-open class Model<out T : Any>(val model: T) : Definition {
+open class Model<out T : Any>(override val graphQlTypeName: String, val model: T) : Definition {
 
 
-  override val graphQlInstance: GraphQlInstance by lazy {
-    Kotlinq.createGraphQlInstance(model::class.simpleName!!)
-  }
+  override val graphQlInstance: GraphQlInstance by lazy(Kotlinq.Companion::createGraphQlInstance)
 
-
-  fun toGraphQl(pretty: Boolean = false, inlineFragments: Boolean = false): String =
+  fun toGraphQl(pretty: Boolean = false, inlineFragments: Boolean = true): String =
       graphQlInstance.toGraphQl(pretty = pretty, inlineFragments = inlineFragments)
 
 }

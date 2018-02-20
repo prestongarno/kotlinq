@@ -21,7 +21,7 @@ class EntityHashcodeTests {
 
       Kotlinq.adapterService.fragmentProperty(
           info(name, "GraphQlAny", arguments, Any::class),
-          setOf({ MockDefinition(Kotlinq.createGraphQlInstance(instanceTypeName)) }))
+          setOf({ MockDefinition(Kotlinq.createGraphQlInstance(), "GraphQlAny") }))
 
     }
 

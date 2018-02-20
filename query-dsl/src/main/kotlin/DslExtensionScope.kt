@@ -3,12 +3,8 @@ package org.kotlinq.dsl
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.dsl.extensions.FreePropertyExtensionScope
 import org.kotlinq.dsl.extensions.NullabilityOperatorScope
+import org.kotlinq.dsl.extensions.StringExtensionScope
 import org.kotlinq.dsl.fields.FreeProperty
-import kotlin.reflect.KFunction0
-import kotlin.reflect.KProperty0
-import kotlin.reflect.KProperty1
-
-typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>
 
 /**
  * Ideally it would be nice to able to query like:
@@ -52,18 +48,7 @@ typealias ScalarOp = KProperty0<KProperty1<DslExtensionScope, ScalarSymbol>>
  *   5. ***unaryMinus*** operator overload represents field *nullability*
  *   6. Both operators are required because provide an instance-bound frame of reference to create the resulting [org.kotlinq.api.Adapter] property from property meta information
  */
-interface DslExtensionScope : NullabilityOperatorScope, FreePropertyExtensionScope {
-
-  operator fun String.invoke(
-      arguments: Map<String, Any> = emptyMap(),
-      typeName: String? = null): FreeProperty = FreeProperty(this, arguments)
-
-  operator fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty
-
-  /**
-   * TODO rigorously define string extension functions to
-   * keep from "overload resolution ambiguity" from arity on HOF, etc.
-   */
-  operator fun String.invoke(block: TypeBuilderBlock): TypeDefinition
+interface DslExtensionScope : NullabilityOperatorScope, FreePropertyExtensionScope, StringExtensionScope {
+  operator fun ScalarSymbol.not() = this to true
 }
 

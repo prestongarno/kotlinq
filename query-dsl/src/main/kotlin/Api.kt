@@ -1,7 +1,6 @@
+package org.kotlinq.dsl
+
 import org.kotlinq.api.Definition
-import org.kotlinq.dsl.GraphBuilder
-import org.kotlinq.dsl.TypeBuilder
-import org.kotlinq.dsl.TypeDefinition
 
 /**
  * Top-level query.
@@ -19,12 +18,9 @@ fun query(name: String = "Query", definition: TypeBuilder.() -> Unit): Definitio
 /**
  * Creates a named type definition
  *
- * TODO naming types shouldn't really be allowed because they aren't checked ATM,
- * probably should optionally allow for this later
- *
  * @author prestongarno
  * @since 0.4.0
  */
-fun defineType(typeName: String, block: TypeBuilder.() -> Unit) =
-    TypeDefinition(typeName, block.asInitializer(typeName))
+fun defineType(typeName: String, block: SelectionSet) =
+    TypeDefinition.fromBuilder(typeName, block)
 

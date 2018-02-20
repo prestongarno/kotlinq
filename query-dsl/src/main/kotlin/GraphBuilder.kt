@@ -11,7 +11,7 @@ class GraphBuilder(
     private val definition: TypeBuilder.() -> Unit) {
 
   fun build(): Definition {
-    val context = Kotlinq.createGraphQlInstance(graphQlTypeName)
+    val context = Kotlinq.createGraphQlInstance()
     TypeBuilder(BindableContext.from(context::bindProperty))
         .apply(definition)
     return DefinitionImpl(graphQlTypeName, context)

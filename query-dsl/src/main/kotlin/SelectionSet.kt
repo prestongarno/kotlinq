@@ -1,5 +1,4 @@
-import org.kotlinq.dsl.GraphBuilder
-import org.kotlinq.dsl.TypeBuilder
+package org.kotlinq.dsl
 
 
 typealias SelectionSet = TypeBuilder.() -> Unit

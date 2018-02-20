@@ -13,9 +13,7 @@ interface Kotlinq {
 
   fun createFragment(initializer: () -> Definition): Fragment
 
-  fun createGraphQlInstance(
-      typeName: String = "Object"
-  ): GraphQlInstance
+  fun createGraphQlInstance(): GraphQlInstance
 
   companion object : Kotlinq {
 
@@ -23,8 +21,8 @@ interface Kotlinq {
     val adapterService: AdapterService
       get() = Configuration.instance()
 
-    override fun createGraphQlInstance(typeName: String): GraphQlInstance {
-      return GraphQlInstanceProvider.createNewInstance(typeName)
+    override fun createGraphQlInstance(): GraphQlInstance {
+      return GraphQlInstanceProvider.createNewInstance()
     }
 
     override fun createFragment(initializer: () -> Definition): Fragment =
