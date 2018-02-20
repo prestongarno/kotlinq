@@ -16,22 +16,17 @@ fun greet(worldName: String = "Earth", message: Any = "Hello") =
           !"coordinates" on coordinates()
           !"subEntities"..{
             on("State") {
-              "mayor"() on def("Persion") {
+              "mayor"() on def("Person") {
                 "name"(string)
               }
             }
             on("City") {
               "name"(string)
             }
-
           }
         }
       }
     }
-
-private object foo {
-  var count = 0
-}
 
 fun coordinates() = fragment("Coordinate") {
   "xValue"(float)
@@ -85,13 +80,13 @@ class Scratch {
       """.trimMargin("|")
 
     val starWarsQuery = query {
-      "search"("text" to "r2d2").. {
+      "search"("text" to "r2d2")..{
         on("Human") {
           "name"(string)
           "id"(string)
           "friendsConnection"("first" to 10) on def("FriendConnection") {
             "totalCount"(integer)
-            "friends"()..{
+            "friends"..{
               on("Human") {
                 "name"(!string)
                 "id"(string)

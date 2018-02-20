@@ -54,6 +54,9 @@ interface FreePropertyExtensionScope {
    */
   operator fun FreeProperty.rangeTo(block: FragmentContextBuilder.() -> Unit)
 
+  operator fun String.rangeTo(block: FragmentContextBuilder.() -> Unit) =
+      FreeProperty(this).rangeTo(block)
+
   /**
    * Example:
    *
