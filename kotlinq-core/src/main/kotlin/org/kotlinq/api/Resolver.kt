@@ -10,7 +10,7 @@ import org.kotlinq.api.services.Configuration
  */
 interface Resolver : GraphVisitor {
 
-  fun resolve(value: Map<String, Any?>, target: Definition): Boolean
+  fun resolve(value: Map<String, Any?>, target: Fragment): Boolean
 
   companion object : Resolver by Configuration.instance()
 }

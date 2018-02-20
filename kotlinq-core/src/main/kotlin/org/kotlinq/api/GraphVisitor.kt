@@ -9,7 +9,7 @@ interface GraphVisitor {
 
   fun visit(target: FragmentAdapter) = Unit
 
-  fun visit(target: ModelAdapter) = Unit
+  fun visit(target: InstanceAdapter) = Unit
 
   fun visit(target: ParsingAdapter) = Unit
 

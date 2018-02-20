@@ -1,18 +1,18 @@
 package org.kotlinq.dsl
 
-import org.kotlinq.api.Definition
+import org.kotlinq.api.Fragment
 
 /**
  * Top-level query.
  *
  * @param name the name of the operation. This does nothing
- * @param definition the query definition
+ * @param selectionSet the query selectionSet
  *
  * @author prestongarno
  * @since 0.4.0
  */
-fun query(name: String = "Query", definition: TypeBuilder.() -> Unit): Definition =
-    GraphBuilder(name, definition).build()
+fun query(name: String = "Query", selectionSet: SelectionSet): Fragment =
+    GraphBuilder(name, selectionSet).build()
 
 
 /**
@@ -21,6 +21,5 @@ fun query(name: String = "Query", definition: TypeBuilder.() -> Unit): Definitio
  * @author prestongarno
  * @since 0.4.0
  */
-fun defineType(typeName: String, block: SelectionSet) =
-    TypeDefinition.fromBuilder(typeName, block)
+fun fragment(typeName: String, block: SelectionSet) = query(typeName, block)
 

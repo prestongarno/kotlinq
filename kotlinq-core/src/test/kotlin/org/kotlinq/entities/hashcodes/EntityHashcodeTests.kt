@@ -1,7 +1,6 @@
 package org.kotlinq.entities.hashcodes
 
 import org.junit.Test
-import org.kotlinq.MockDefinition
 import org.kotlinq.PrimitiveData
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Kotlinq
@@ -21,7 +20,7 @@ class EntityHashcodeTests {
 
       Kotlinq.adapterService.fragmentProperty(
           info(name, "GraphQlAny", arguments, Any::class),
-          setOf({ MockDefinition(Kotlinq.createGraphQlInstance(), "GraphQlAny") }))
+          setOf(Kotlinq.newContextBuilder().build(instanceTypeName)))
 
     }
 

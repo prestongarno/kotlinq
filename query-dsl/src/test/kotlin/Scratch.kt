@@ -2,15 +2,12 @@
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.kotlinq.api.Definition
-import org.kotlinq.dsl.TypeDefinition
-import org.kotlinq.dsl.defineType
+import org.kotlinq.dsl.fragment
 import org.kotlinq.dsl.query
 import org.kotlinq.dsl.toGraphQl
 
 
-fun greet(worldName: String = "Earth", message: Any = "Hello"): Definition =
-
+fun greet(worldName: String = "Earth", message: Any = "Hello") =
     query {
       !"greet"("name" to worldName, "message" to message) on def("Response") {
         "population"(integer)
@@ -36,11 +33,10 @@ private object foo {
   var count = 0
 }
 
-fun coordinates(): TypeDefinition =
-    defineType("Coordinate") {
-      "xValue"(float)
-      "yValue"(float)
-    }
+fun coordinates() = fragment("Coordinate") {
+  "xValue"(float)
+  "yValue"(float)
+}
 
 enum class Measurement {
   MILES,
@@ -50,7 +46,7 @@ enum class Measurement {
 class Scratch {
 
   @Test fun `simple primitive field dsl coordinate type prints correctly`() {
-    assertThat(coordinates().definition().toGraphQl(pretty = true, inlineFragments = false))
+    assertThat(coordinates().toGraphQl(pretty = true, inlineFragments = false))
         .isEqualTo("""
           {
             xValue
@@ -61,7 +57,7 @@ class Scratch {
 
   @Test fun queryGraph() {
     println(greet().toGraphQl(pretty = true, inlineFragments = false))
-    println(coordinates().definition().toGraphQl(pretty = true, inlineFragments = false))
+    println(coordinates().toGraphQl(pretty = true, inlineFragments = false))
   }
 
   @Test fun simpleStarWars() {
@@ -70,14 +66,14 @@ class Scratch {
       |{
       |  search(text: "r2d2") {
       |    __typename
-      |    ... on Human{
+      |    ... on Human {
       |      name
       |      id
       |      friendsConnection(first: 10) {
       |        totalCount
       |        friends {
       |          __typename
-      |          ... on Human{
+      |          ... on Human {
       |            name
       |            id
       |          }
@@ -89,7 +85,7 @@ class Scratch {
       """.trimMargin("|")
 
     val starWarsQuery = query {
-      "search"("text" to "r2d2")..{
+      "search"("text" to "r2d2").. {
         on("Human") {
           "name"(string)
           "id"(string)
@@ -97,7 +93,7 @@ class Scratch {
             "totalCount"(integer)
             "friends"()..{
               on("Human") {
-                "name"(string)
+                "name"(!string)
                 "id"(string)
               }
             }
@@ -107,9 +103,9 @@ class Scratch {
     }.toGraphQl(pretty = true,
         inlineFragments = false)
 
+    println(starWarsQuery)
     assertThat(starWarsQuery)
         .isEqualTo(expect)
-    println(starWarsQuery)
   }
 
 }

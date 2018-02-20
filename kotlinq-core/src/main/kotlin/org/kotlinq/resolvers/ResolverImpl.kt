@@ -1,10 +1,10 @@
 package org.kotlinq.resolvers
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Definition
 import org.kotlinq.api.DeserializingAdapter
+import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
-import org.kotlinq.api.ModelAdapter
+import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.Resolver
 import java.io.InputStream
@@ -13,10 +13,10 @@ import java.util.LinkedList
 internal
 class ResolverImpl : Resolver {
 
-  override fun resolve(value: Map<String, Any?>, target: Definition): Boolean =
+  override fun resolve(value: Map<String, Any?>, target: Fragment): Boolean =
       InstanceResolver(target, value).resolveFromRoot()
 
-  override fun visit(target: ModelAdapter) = Unit
+  override fun visit(target: InstanceAdapter) = Unit
 
   override fun visit(target: FragmentAdapter) = Unit
 
@@ -28,7 +28,7 @@ class ResolverImpl : Resolver {
    * Stack-based resolver algorithm
    */
   private
-  class InstanceResolver(private val definition: Definition, private val values: Map<String, Any?>) : Resolver {
+  class InstanceResolver(private val definition: Fragment, private val values: Map<String, Any?>) : Resolver {
 
     val stack = LinkedList<Map<String, Any?>>()
 
@@ -39,14 +39,14 @@ class ResolverImpl : Resolver {
 
     fun resolveFromRoot(): Boolean = resolve(values, definition)
 
-    override fun resolve(value: Map<String, Any?>, target: Definition): Boolean {
+    override fun resolve(value: Map<String, Any?>, target: Fragment): Boolean {
       push(value)
       target.graphQlInstance.accept(this)
       pop()
       return target.graphQlInstance.isResolved()
     }
 
-    override fun visit(target: ModelAdapter) {
+    override fun visit(target: InstanceAdapter) {
       stack.peek().jsonObjectNamed(target)?.let {
         push(it)
         // TODO add Transformer<T> interface for not only list properties, but also so that

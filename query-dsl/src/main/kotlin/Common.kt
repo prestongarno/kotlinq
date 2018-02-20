@@ -6,7 +6,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
 
-fun org.kotlinq.api.Definition.toGraphQl(pretty: Boolean = true, inlineFragments: Boolean = false) =
+fun org.kotlinq.api.Fragment.toGraphQl(pretty: Boolean = true, inlineFragments: Boolean = false) =
     this.graphQlInstance.toGraphQl(pretty, inlineFragments)
 
 internal
@@ -18,3 +18,6 @@ fun info(
     clazz: KClass<*> = Any::class,
     type: KType = clazz.createType(nullable = isNullable)
 ) = GraphQlPropertyInfo(graphQlName, graphQlTypeName, type, arguments)
+
+internal
+fun Any?.ignore() = Unit

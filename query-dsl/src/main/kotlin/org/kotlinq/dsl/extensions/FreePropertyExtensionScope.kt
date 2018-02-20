@@ -1,8 +1,8 @@
 package org.kotlinq.dsl.extensions
 
+import org.kotlinq.api.Fragment
 import org.kotlinq.dsl.FragmentContextBuilder
 import org.kotlinq.dsl.TypeBuilder
-import org.kotlinq.dsl.TypeDefinition
 import org.kotlinq.dsl.fields.FreeProperty
 
 
@@ -76,5 +76,5 @@ interface FreePropertyExtensionScope {
    * ```
    *
    */
-  infix fun FreeProperty.on(context: TypeDefinition)
+  infix fun FreeProperty.on(context: Fragment)
 }

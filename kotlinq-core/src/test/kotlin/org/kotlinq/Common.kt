@@ -1,5 +1,7 @@
 package org.kotlinq
 
+import org.kotlinq.api.GraphQlPropertyInfo
+import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
 infix fun Throwable.withMessageContaining(value: String) =
@@ -48,3 +50,11 @@ inline fun <reified T> assertThrows(noinline block: () -> Unit): T {
 
 private fun errNotMatching(expect: Any?, actual: Any?) =
 "Expected <'$expect'> was not equal to <'$actual'>"
+
+fun info(
+    graphQlName: String,
+    graphQlTypeName: String = GraphQlPropertyInfo.STRING,
+    arguments: Map<String, Any> = emptyMap(),
+    clazz: KClass<*> = String::class
+) =
+    GraphQlPropertyInfo(graphQlName, graphQlTypeName, mockType(clazz), arguments)

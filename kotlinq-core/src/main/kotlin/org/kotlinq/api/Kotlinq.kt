@@ -11,9 +11,7 @@ interface Kotlinq {
 
   val adapterService: AdapterService
 
-  fun createFragment(initializer: () -> Definition): Fragment
-
-  fun createGraphQlInstance(): GraphQlInstance
+  fun newContextBuilder(): BindableContext
 
   companion object : Kotlinq {
 
@@ -21,12 +19,8 @@ interface Kotlinq {
     val adapterService: AdapterService
       get() = Configuration.instance()
 
-    override fun createGraphQlInstance(): GraphQlInstance {
-      return GraphQlInstanceProvider.createNewInstance()
-    }
-
-    override fun createFragment(initializer: () -> Definition): Fragment =
-        FragmentImpl(initializer)
+    override fun newContextBuilder() =
+        GraphQlInstanceProvider.newContextBuilder()
 
   }
 }

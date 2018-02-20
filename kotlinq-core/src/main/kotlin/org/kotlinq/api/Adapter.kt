@@ -4,7 +4,7 @@ package org.kotlinq.api
 /**
  * Root interface for all delegated properties.
  * Contains reflective type information about the GraphQL field
- * that this instance property represents and arguments for the query
+ * that this graphQlInstance property represents and arguments for the query
  *
  * @author preston
  */

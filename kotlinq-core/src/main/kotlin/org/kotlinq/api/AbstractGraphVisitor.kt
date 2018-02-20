@@ -11,12 +11,12 @@ import org.kotlinq.common.empty
  * graph with proper values from deserialization, so this might be called 'backwards abstraction'
  *
  * @param controller implementations can call
- *   [Fragment.prototype].graphQlInstance.accept(this) withing the block to continue to all adjacent nodes.
+ *   [Fragment.graphQlInstance].graphQlInstance.accept(this) withing the block to continue to all adjacent nodes.
  *   This allows for path control when traversing
  */
 class AbstractGraphVisitor(
     val nodeListener: (Adapter) -> Unit,
-    val controller: GraphVisitor.(Fragment) -> Unit = { it.prototype.graphQlInstance.accept(this) }, // default behaviour is to traverse entire graph
+    val controller: GraphVisitor.(Fragment) -> Unit = { it.graphQlInstance.accept(this) }, // default behaviour is to traverse entire graph
     val exitNodeListener: (Adapter) -> Unit = empty()
 ) {
 
@@ -27,7 +27,7 @@ class AbstractGraphVisitor(
     override fun visit(target: Fragment) = controller(target)
     override fun visit(target: ParsingAdapter) = visitNodeDef(target)
 
-    override fun visit(target: ModelAdapter) {
+    override fun visit(target: InstanceAdapter) {
       nodeListener(target)
       controller(target.fragment) // instead of visiting fragment def, pass control to callback
       exitNodeListener(target)
@@ -48,7 +48,7 @@ class AbstractGraphVisitor(
 
   /**
    * Traverse the GraphQL document
-   * @param graph the instance to analyze
+   * @param graph the graphQlInstance to analyze
    */
   fun traverse(graph: GraphQlInstance) =
       graph.accept(implementationAwareVisitor)
@@ -63,7 +63,7 @@ class AbstractGraphVisitor(
 
     fun generalizedGraphVisitor(
         nodeListener: (Adapter) -> Unit = empty(),
-        controller: GraphVisitor.(Fragment) -> Unit = { it.prototype.graphQlInstance.accept(this) },
+        controller: GraphVisitor.(Fragment) -> Unit = { it.graphQlInstance.accept(this) },
         exitNodeListener: (Adapter) -> Unit = empty()
     ) = AbstractGraphVisitor(nodeListener, controller, exitNodeListener)
   }
@@ -74,7 +74,7 @@ class AbstractGraphVisitor(
     var nodeListener: (Adapter) -> Unit = empty()
 
     var fragmentListener: GraphVisitor.(Fragment) -> Unit =
-        { it.prototype.graphQlInstance.accept(this) }
+        { it.graphQlInstance.accept(this) }
 
     var exitNodeListener: (Adapter) -> Unit = empty()
   }

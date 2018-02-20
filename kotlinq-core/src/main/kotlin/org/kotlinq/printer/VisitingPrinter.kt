@@ -5,7 +5,7 @@ import org.kotlinq.api.DeserializingAdapter
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphVisitor
-import org.kotlinq.api.ModelAdapter
+import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.common.stringify
 import org.kotlinq.common.unit
@@ -54,9 +54,9 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
           stringBuilder.append(arguments.stringify())
         }
 
-    override fun visit(target: ModelAdapter) {
+    override fun visit(target: InstanceAdapter) {
       printField(target)
-      printInstance(target.fragment.prototype.graphQlInstance)
+      printInstance(target.fragment.graphQlInstance)
     }
 
     override fun visit(target: FragmentAdapter) {
@@ -67,7 +67,7 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
           append(SPREAD)
           append(" on ")
           append(type)
-          printInstance(fragment.prototype.graphQlInstance)
+          printInstance(fragment.graphQlInstance)
         }
         append(EXIT_SCOPE)
       }

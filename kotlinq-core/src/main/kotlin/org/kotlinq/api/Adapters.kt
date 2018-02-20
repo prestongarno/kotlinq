@@ -1,14 +1,14 @@
 package org.kotlinq.api
 
 
-/** Adapter for a property which returns a nested [Definition] instance */
-interface ModelAdapter: Adapter {
+/** Adapter for a property which returns a nested [Fragment] graphQlInstance */
+interface InstanceAdapter : Adapter, ReifiedFragmentContext {
 
   /**
    * Instead of implementing [Fragment], contains a fragment so that
    * equals and hashcode contracts can easily optimize printing/resolving GraphQL request
    */
-  val fragment: Fragment
+  override val fragment: Fragment
 
   /**
    * Sets the value of this property.
@@ -16,13 +16,13 @@ interface ModelAdapter: Adapter {
    */
   fun setValue(result: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
 
-  override fun getValue(): Definition?
+  override fun getValue(): Fragment?
 
   override fun accept(resolver: GraphVisitor) = resolver.visit(this)
 }
 
 /**
- * Adapter for a property which returns a nested [Definition] instance,
+ * Adapter for a property which returns a nested [Definition] graphQlInstance,
  * but can be mapped to any combination of types (i.e. a workaround for the JavaScript spread operator)
  */
 interface FragmentAdapter : Adapter, FragmentContext {

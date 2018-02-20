@@ -1,56 +1,50 @@
 package org.kotlinq.dsl
 
-import org.kotlinq.api.Definition
-import org.kotlinq.dsl.TypeDefinition.Companion.fromBuilder
+import org.kotlinq.api.Adapter
+import org.kotlinq.api.Fragment
 import org.kotlinq.dsl.fields.FreeProperty
 
 @GraphQlDslObject
 class TypeBuilder internal constructor(
-    private val bindableContext: BindableContext
+    private val bindableContext: (Adapter) -> Unit
 ) : DslExtensionScope {
+
   override fun String.invoke(
       typeSymbol: Pair<ScalarSymbol, Boolean>,
       arguments: Map<String, Any>
   ) = FreeProperty(this, arguments, typeSymbol.second)
       .asLeaf(typeSymbol.first)
       .toAdapter()
-      .let(bindableContext::register)
+      .let(bindableContext::invoke)
 
   // todo nominal type definitions needs to be modeled as a domain principle
   override fun FreeProperty.define(typeName: String, block: SelectionSet) {
     copy().asNode()
-        .withDefinition(fromBuilder(typeName, block))
-        .also(bindableContext::register)
+        .withDefinition(GraphBuilder(typeName, block).build())
+        .also(bindableContext::invoke)
   }
 
 
-  override fun FreeProperty.on(context: TypeDefinition) {
-    bindableContext.register(asNode().withDefinition(context))
+  override fun FreeProperty.on(context: Fragment) {
+    bindableContext(asNode().withDefinition(context))
   }
 
 
-  fun def(typeName: String, block: SelectionSet) = defineType(typeName, block)
+  fun def(typeName: String, block: SelectionSet) = fragment(typeName, block)
 
   override fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty =
       FreeProperty(this, arguments.toMap())
 
   override fun FreeProperty.rangeTo(block: FragmentContextBuilder.() -> Unit) {
     FragmentContextBuilder.fragmentsFromBlock(block)?.also { fragments ->
-      bindableContext.register(asNode().withFragmentScope(
-          fragments.map(TypeDefinition::definition).toSet()))
+      bindableContext(asNode().withFragmentScope(fragments))
     }
   }
 
-  override fun String.on(definition: TypeDefinition) =
+  override fun String.on(definition: Fragment) =
       FreeProperty(this)
           .asNode()
           .withDefinition(definition)
-          .let(bindableContext::register)
+          .let(bindableContext::invoke)
 
-  companion object {
-
-    internal
-    fun blockToInitializer(typeName: String, block: TypeBuilder.() -> Unit): () -> Definition =
-        GraphBuilder(typeName, block)::build
-  }
 }

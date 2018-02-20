@@ -48,3 +48,11 @@ fun Any?.ignore() = Unit
 
 internal
 fun KClassifier?.kClass(): KClass<*>? = this as? KClass<*>
+
+internal
+fun <E> MutableList<E>.addFirst(element: E) =
+    add(0, element).ignore()
+
+internal
+fun <E> MutableList<E>.addLast(element: E) =
+    add(element).ignore()

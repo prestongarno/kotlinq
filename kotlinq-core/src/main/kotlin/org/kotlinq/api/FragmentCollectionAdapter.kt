@@ -6,11 +6,14 @@ import kotlin.reflect.KType
 
 class FragmentCollectionAdapter(
     override val propertyInfo: GraphQlPropertyInfo,
-    override val fragments: Map<String, Fragment>
+    fragments: Set<Fragment>
 ) : Adapter, FragmentContext {
 
   private val dimensionality =
       propertyInfo.platformType.listDepth()
+
+  override val fragments: Map<String, Fragment> =
+      fragments.map { it.typeName to it }.toMap()
 
   private var _value: List<Any>? =
       if (propertyInfo.isNullable) null else emptyList()
@@ -18,7 +21,7 @@ class FragmentCollectionAdapter(
   override fun getValue(): Any? = this._value
 
   override fun accept(resolver: GraphVisitor) {
-    _value?.filterIsInstance<Definition>()?.forEach {
+    _value?.filterIsInstance<Fragment>()?.forEach {
       it.graphQlInstance.accept(resolver)
     }
   }
@@ -27,20 +30,18 @@ class FragmentCollectionAdapter(
       _value != null || propertyInfo.isNullable
 
   // TODO arbitrary nesting resolution
+  @Suppress("UNCHECKED_CAST", "USELESS_IS_CHECK")
   fun setValue(values: List<Any>) {
 
-    _value = values.mapNotNull { it as? Map<String, *> }
+    _value = values.mapNotNull {
+      it as? Map<String, *>
+    }
         .filter {
           it["__typename"] is String && it.entries.count { it.key !is String } == 0
         }
-        .mapNotNull { values ->
-
-          fragments[values["__typename"]]?.initializer?.invoke()?.also {
-            Resolver.resolve(values, it)
-          }
-
-        }
-        .filter { it.graphQlInstance.isResolved() }
+        .mapNotNull { valueMap ->
+          fragments[valueMap["__typename"]]?.also { Resolver.resolve(valueMap, it) }
+        }.filter { it.graphQlInstance.isResolved() }
         .toList()
   }
 

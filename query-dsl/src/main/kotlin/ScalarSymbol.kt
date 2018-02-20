@@ -1,7 +1,5 @@
 package org.kotlinq.dsl
 
-import org.kotlinq.api.GraphQlPropertyInfo
-import org.kotlinq.api.Kotlinq
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType

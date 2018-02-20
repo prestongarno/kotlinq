@@ -4,7 +4,6 @@ import org.kotlinq.api.Adapter
 import org.kotlinq.api.BooleanAdapter
 import org.kotlinq.api.FloatAdapter
 import org.kotlinq.api.GraphQlPropertyInfo
-import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.IntAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.StringAdapter

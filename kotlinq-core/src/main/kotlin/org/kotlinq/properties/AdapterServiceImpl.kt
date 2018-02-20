@@ -2,9 +2,8 @@ package org.kotlinq.properties
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.AdapterService
-import org.kotlinq.api.Definition
 import org.kotlinq.api.FragmentCollectionAdapter
-import org.kotlinq.api.FragmentImpl
+import org.kotlinq.api.Fragment
 import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.ScalarAdapterService
 import java.io.InputStream
@@ -26,15 +25,12 @@ class AdapterServiceImpl(
     info.platformType.jvmErasure.java.enumConstants.find { value == it?.toString() }
   })
 
-  override fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Definition): Adapter =
-      InstanceProperty(info, init)
+  override fun instanceProperty(info: GraphQlPropertyInfo, fragment: Fragment): Adapter =
+      InstanceProperty(info, fragment)
 
-  override fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Definition>): Adapter {
+  override fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<Fragment>): Adapter {
     return if (info.platformType.classifier == List::class)
-      FragmentCollectionAdapter(info,
-          fragments.map {
-            FragmentImpl(it).let { it.typeName to it }
-          }.toMap())
+       FragmentCollectionAdapter(info, fragments)
     else
       FragmentProperty(info, fragments)
   }

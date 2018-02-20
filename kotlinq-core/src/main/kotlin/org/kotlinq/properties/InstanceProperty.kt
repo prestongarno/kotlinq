@@ -1,32 +1,23 @@
 package org.kotlinq.properties
 
-import org.kotlinq.api.ModelAdapter
-import org.kotlinq.api.Definition
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.GraphVisitor
-import org.kotlinq.api.Kotlinq
+import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.api.Resolver
 
 internal
 class InstanceProperty(
     override val propertyInfo: GraphQlPropertyInfo,
-    initializer: () -> Definition
-) : ModelAdapter {
-
-  override val fragment: Fragment =
-      Kotlinq.createFragment(initializer)
-
-  private var instance: Definition? = null
+    override val fragment: Fragment
+) : InstanceAdapter {
 
   override fun isResolved(): Boolean {
-    return instance?.graphQlInstance?.isResolved() == true || propertyInfo.isNullable
+    return fragment?.graphQlInstance?.isResolved() || propertyInfo.isNullable
   }
 
   override fun setValue(result: Map<String, Any?>, resolver: Resolver): Boolean {
-    this.instance = fragment.initializer().apply {
-      resolver.resolve(result, this)
-    }
+    resolver.resolve(result, fragment)
     return isResolved()
   }
 
@@ -34,5 +25,5 @@ class InstanceProperty(
     resolver.visit(this)
   }
 
-  override fun getValue(): Definition? = instance
+  override fun getValue(): Fragment = fragment
 }

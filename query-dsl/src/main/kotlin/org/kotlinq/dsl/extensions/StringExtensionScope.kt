@@ -1,8 +1,7 @@
 package org.kotlinq.dsl.extensions
 
+import org.kotlinq.api.Fragment
 import org.kotlinq.dsl.ScalarSymbol
-import org.kotlinq.dsl.SelectionSet
-import org.kotlinq.dsl.TypeDefinition
 import org.kotlinq.dsl.fields.FreeProperty
 
 
@@ -39,5 +38,5 @@ interface StringExtensionScope {
   operator fun String.invoke(vararg arguments: Pair<String, Any>): FreeProperty =
       FreeProperty(this, arguments.toMap())
 
-  infix fun String.on(definition: TypeDefinition)
+  infix fun String.on(definition: Fragment)
 }

@@ -14,7 +14,7 @@ fun GraphQlInstance.getFragments(uniqueOnly: Boolean = true): Set<Fragment> {
     fragmentListener = {
       if (uniqueOnly && !frags.contains(it)) {
         frags += it
-        it.prototype.graphQlInstance.accept(this)
+        it.graphQlInstance.accept(this)
       } else {
         frags += it
       }

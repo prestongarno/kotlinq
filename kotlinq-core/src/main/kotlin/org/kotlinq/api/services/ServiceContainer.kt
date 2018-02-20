@@ -55,9 +55,7 @@ object ServiceContainer {
 
   @Suppress("UNCHECKED_CAST")
   private fun <T : Any> getWrapper(instance: T): List<ConfigurableDependency<T>> {
-    val superIfaces = instance::class.supertypes
-    return wrappers
-        .filter { wrapper -> wrapper.clazz.isInstance(instance) }
+    return wrappers.filter { wrapper -> wrapper.clazz.isInstance(instance) }
         .mapNotNull { it as? ConfigurableDependency<T> }
   }
 
