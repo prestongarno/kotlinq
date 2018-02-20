@@ -25,16 +25,17 @@ Example:
 
 ```
     val starWarsQuery = query {
-      "search"("text" to "han solo") .. {
+      "search"("text" to "r2d2")..{
         on("Human") {
-          !"name"::string
-          !"id"::string
-          "friendsConnection"("first" to 10) on "FriendConnection" {
-            !"totalCount"::integer
-            "friends"() .. {
+          "name"(string)
+          "id"(string)
+          "height"(!float, "unit" to LengthUnit.METER)
+          "friendsConnection"("first" to 10) on def("FriendConnection") {
+            "totalCount"(integer)
+            "friends"..{
               on("Human") {
-                !"name"::string
-                !"id"::string
+                "name"(string)
+                "id"(string)
               }
             }
           }
@@ -58,6 +59,7 @@ will print:
     ... on Human{
       name
       id
+      height(unit: "METER")
       friendsConnection(first: 10) {
         totalCount
         friends {
