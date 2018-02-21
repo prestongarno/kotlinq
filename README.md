@@ -19,7 +19,7 @@ lets you auto-complete your way to safe, reliable queries and mutations
 ## Un-typed GraphQL query DSL (version 0.4.0) (new)
 
 If you would like to quickly fetch from a GraphQL server without the build plugin and defining classes, 
-version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/org/kotlinq/dsl/extensions/FreePropertyExtensionScope.kt) but natively expressed queries and mutati+version 0.4.0 will fully support **ad-hoc, untyped** but natively expressed queries and mutations!
+version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/org/kotlinq/dsl/extensions/FreePropertyExtensionScope.kt) but natively expressed queries and mutations!
 
 Example:
 
