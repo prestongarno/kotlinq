@@ -19,22 +19,23 @@ lets you auto-complete your way to safe, reliable queries and mutations
 ## Un-typed GraphQL query DSL (version 0.4.0) (new)
 
 If you would like to quickly fetch from a GraphQL server without the build plugin and defining classes, 
-version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/DslExtensionScope.kt) but natively expressed queries and mutations!
+version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/org/kotlinq/dsl/extensions/FreePropertyExtensionScope.kt) but natively expressed queries and mutati+version 0.4.0 will fully support **ad-hoc, untyped** but natively expressed queries and mutations!
 
 Example:
 
 ```
     val starWarsQuery = query {
-      "search"("text" to "han solo") .. {
+      "search"("text" to "r2d2")..{
         on("Human") {
-          !"name"::string
-          !"id"::string
-          "friendsConnection"("first" to 10) def {
-            !"totalCount"::integer
-            "friends"() .. {
+          "name"(string)
+          "id"(string)
+          "height"(!float, "unit" to LengthUnit.METER)
+          "friendsConnection"("first" to 10) on def("FriendConnection") {
+            "totalCount"(integer)
+            "friends"..{
               on("Human") {
-                !"name"::string
-                !"id"::string
+                "name"(string)
+                "id"(string)
               }
             }
           }
@@ -44,7 +45,7 @@ Example:
 
     println(starWarsQuery.toGraphQl(
         pretty = true,
-        inlineFragments = false))
+        inlineFragments = true))
 
 ```
 
@@ -58,6 +59,7 @@ will print:
     ... on Human{
       name
       id
+      height(unit: "METER")
       friendsConnection(first: 10) {
         totalCount
         friends {

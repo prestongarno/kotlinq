@@ -57,21 +57,6 @@ markdown_extensions:
 # Page tree
 pages:
   - Intro: index.md
-  - Hello, world!: hello_world.md
-  - Getting started: getting-started.md
-  - Types:
-    - Introduction: types/paradigms.md
-    - Primitives/Scalars: types/primitives.md
-    - Custom Scalars: types/custom_scalars.md
-    - Objects: types/objects.md
-    - Nullables: types/nullables.md
-  - API:
-    - Query: api/query.md
-    - Mutation: api/mutation.md
-    - Subscription: subscription.md
-  - HTTP: http.md
-  - FAQ: faq.md
-  - Release notes: release_notes.md
   - Contributing: contributing.md
   - License: license.md
 
