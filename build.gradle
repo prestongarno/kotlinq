@@ -41,7 +41,7 @@ subprojects {
 
   ext.clientId = projects.project.name
   group = 'com.prestongarno.kotlinq'
-  version = rootProject.findProperty("release") == "true" ? "0.4" : "0.4-SNAPSHOT"
+  version = rootProject.findProperty("release") == "true" ? "0.4.1" : "0.4.1-SNAPSHOT"
 
   apply plugin: 'java'
   apply plugin: 'idea'

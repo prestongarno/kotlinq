@@ -1,7 +1,7 @@
 ***a Kotlin GraphQL client for composable, reusable GraphQL queries***
 -----------------------------
 
-[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-core/images/download.svg) ](https://bintray.com/com/prestongarno/kotlinq/kotlinq-core/_latestVersion)
+[![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-core/images/download.svg)](https://bintray.com/com/prestongarno/kotlinq/kotlinq-core/_latestVersion)
 [![Build Status](https://travis-ci.org/prestongarno/kotlinq.svg?branch=master)](https://travis-ci.org/prestongarno/kotlinq)
 
 
