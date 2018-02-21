@@ -10,7 +10,7 @@ publishing {
       groupId project.group
       artifactId project.name
       version project.version.toString()
-      //from components.java
+      from components.java
       project.tasks.withType(Jar).each { artifact it }
 
       pom.withXml {

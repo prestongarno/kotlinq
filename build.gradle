@@ -54,7 +54,6 @@ subprojects {
 
   dependencies {
     compile dep.kotlinStdLib
-    compile dep.kotlinReflect
     testCompile dep.kotlinTest
     testCompile dep.junit
     testCompile dep.truth

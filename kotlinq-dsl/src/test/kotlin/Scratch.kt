@@ -59,7 +59,7 @@ class Scratch {
 
     val expect = """
       |{
-      |  search(text: "r2d2") {
+      |  search(text: "han solo") {
       |    __typename
       |    ... on Human {
       |      name
@@ -81,7 +81,7 @@ class Scratch {
       """.trimMargin("|")
 
     val starWarsQuery = query {
-      "search"("text" to "r2d2")..{
+      "search"("text" to "han solo")..{
         on("Human") {
           "name"(string)
           "id"(string)
