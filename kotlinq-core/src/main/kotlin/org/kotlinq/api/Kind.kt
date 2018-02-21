@@ -53,7 +53,7 @@ class Kind(internal val name: kotlin.String) {
   override fun hashCode(): Int =
       name.hashCode()
 
-  override fun toString(): String = "TypeKind($name)"
+  override fun toString(): String = name
 
   sealed class Scalar(name: String) : Kind(name) {
 
@@ -93,6 +93,8 @@ class Kind(internal val name: kotlin.String) {
         (instance as? ListKind)
             ?.let { wrapped.isTypeCompatible(it.wrapped) }
             ?: false
+
+    override fun toString() = "List<$wrapped>"
   }
 
 
@@ -105,6 +107,7 @@ class Kind(internal val name: kotlin.String) {
         (instance as? NullableKind)
             ?.let { wrapped.isTypeCompatible(it.wrapped) }
             ?: false
+    override fun toString() = "!$wrapped"
   }
 
 
@@ -123,16 +126,11 @@ class Kind(internal val name: kotlin.String) {
     /**
      * Convenience access to primitive symbols
      */
-    val string = Scalar._String
-    val integer = Scalar._Int
-    val bool = Scalar._Boolean
-    val float = Scalar._Float
+    val string get() = Scalar._String
+    val integer get() = Scalar._Int
+    val bool get() = Scalar._Boolean
+    val float get() = Scalar._Float
 
-    val scalars = listOf(
-        Scalar._Int,
-        Scalar._Boolean,
-        Scalar._String,
-        Scalar._Float)
 
     fun named(name: String): Kind {
       scalars.firstOrNull {
@@ -145,3 +143,9 @@ class Kind(internal val name: kotlin.String) {
 }
 
 
+private val scalars: List<Kind.Scalar>
+  get() = listOf(
+      Kind.Scalar._Int,
+      Kind.Scalar._Boolean,
+      Kind.Scalar._String,
+      Kind.Scalar._Float)

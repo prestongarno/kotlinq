@@ -11,13 +11,8 @@ data class FreeProperty internal constructor(
     val arguments: Map<String, Any> = emptyMap(),
     private var isNullable: Boolean = false) {
 
-  internal fun flagNullable() {
-    this.isNullable = true
-  }
-
-  internal fun flagNotNull() {
-    this.isNullable = false
-  }
+  internal fun nullability(isNullable: Boolean = false) =
+      apply { this.isNullable = isNullable }
 
   internal
   fun asLeaf(symbol: ScalarSymbol): Leaf =

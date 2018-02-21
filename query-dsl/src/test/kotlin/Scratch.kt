@@ -2,6 +2,9 @@
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.kotlinq.api.Fragment
+import org.kotlinq.api.Kind
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.dsl.fragment
 import org.kotlinq.dsl.query
 import org.kotlinq.dsl.toGraphQl
@@ -106,20 +109,72 @@ class Scratch {
 
   @Test fun listStarWarsScratch() {
 
-    val humanDef = fragment("Human") {
+    fun humanDef() = fragment("Human") {
       "name"(string)
-      "nicknames" listOf string
+      "nicknames" listOf !string
     }
 
-    val robotDef = fragment("Robot") {
+    fun robotDef() = fragment("Robot") {
       "modelNumber"(string)
-      "maker" on humanDef
+      "maker" on humanDef()
     }
 
-    val query = query {
+    fun charactersQuery(fragments: List<Fragment>) = query {
       "characters"("first" to 100)..listOf {
-        on..humanDef
-        on..robotDef
+        on..fragments
+      }
+    }
+
+    humanDef().graphQlInstance.properties.let { props ->
+      assertThat(props["nicknames"]?.propertyInfo)
+          .isEqualTo(
+              PropertyInfo.named("nicknames")
+                  .arguments(emptyMap())
+                  .typeKind(Kind.string.asNullable().asList())
+                  .build())
+      assertThat(props["name"]?.propertyInfo)
+          .isEqualTo(PropertyInfo.named("name")
+              .typeKind(Kind.string)
+              .build())
+    }
+
+
+    assertThat(charactersQuery(listOf(humanDef())).toGraphQl())
+        .isEqualTo("""
+          |{
+          |  characters(first: 100) {
+          |    __typename
+          |    ... on Human {
+          |      name
+          |      nicknames
+          |    }
+          |  }
+          |}
+          """.trimMargin("|"))
+    assertThat(charactersQuery(listOf(humanDef(), robotDef())).toGraphQl())
+        .isEqualTo("""
+          |{
+          |  characters(first: 100) {
+          |    __typename
+          |    ... on Human {
+          |      name
+          |      nicknames
+          |    }
+          |    ... on Robot {
+          |      modelNumber
+          |      maker {
+          |        name
+          |        nicknames
+          |      }
+          |    }
+          |  }
+          |}
+          """.trimMargin("|"))
+
+    val charactersQuery = query {
+      "characters"("first" to 100)..listOf {
+        on..humanDef()
+        on..robotDef()
       }
     }
 
@@ -142,7 +197,7 @@ class Scratch {
       |}
       """.trimMargin("|")
 
-    assertThat(query.toGraphQl())
+    assertThat(charactersQuery.toGraphQl())
         .isEqualTo(expect)
   }
 }

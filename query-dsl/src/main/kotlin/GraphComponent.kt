@@ -55,5 +55,8 @@ class Leaf(
               .arguments(arguments)
               .build())
 
+  fun asList(): Leaf = Leaf(name, arguments, kind.asList())
+  fun asNullable(): Leaf = Leaf(name, arguments, kind.asNullable())
+
 }
 

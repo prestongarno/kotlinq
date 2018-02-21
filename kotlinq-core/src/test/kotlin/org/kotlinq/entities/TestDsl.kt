@@ -40,6 +40,10 @@ class TestFragmentBuilder private constructor(
         fragment(second.rootKind().name, block)))
   }
 
+  fun bindFragment(propertyName: String, fragment: Fragment) {
+    this.callback.invoke(Kotlinq.adapterService.instanceProperty(PropertyInfo.named(propertyName).build(), fragment))
+  }
+
   companion object {
 
     fun fragment(type: String = "Fragment0", block: TestFragmentBuilder.() -> Unit): Fragment {

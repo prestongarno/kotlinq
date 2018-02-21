@@ -9,16 +9,16 @@ sealed class ScalarSymbol(internal val kind: Kind) {
   val typeName = kind.isScalar
 
   internal
-  object StringSymbol : ScalarSymbol(Kind._String)
+  object StringSymbol : ScalarSymbol(Kind.Scalar._String)
 
   internal
-  object IntSymbol : ScalarSymbol(Kind._Int)
+  object IntSymbol : ScalarSymbol(Kind.Scalar._Int)
 
   internal
-  object BooleanSymbol : ScalarSymbol(Kind._Boolean)
+  object BooleanSymbol : ScalarSymbol(Kind.Scalar._Boolean)
 
   internal
-  object FloatSymbol : ScalarSymbol(Kind._Float)
+  object FloatSymbol : ScalarSymbol(Kind.Scalar._Float)
 }
 
 

@@ -10,9 +10,11 @@ class TypeBuilder internal constructor(
     private val bindableContext: (Adapter) -> Unit
 ) : DslExtensionScope {
 
-  override fun String.listOf(typeSymbol: ScalarSymbol) =
+  override fun String.listOf(nullTypeSymbol: Pair<ScalarSymbol, Boolean>) =
       FreeProperty(this)
-          .asLeaf(typeSymbol)
+          .nullability(nullTypeSymbol.second)
+          .asLeaf(nullTypeSymbol.first)
+          .asList()
           .toAdapter()
           .let(bindableContext)
 

@@ -7,5 +7,5 @@ interface NullabilityOperatorScope {
   operator fun String.not(): FreeProperty = FreeProperty(this, isNullable = true)
   //free property invokations
   operator fun FreeProperty.not(): FreeProperty =
-      apply { flagNullable() }
+      apply { nullability() }
 }

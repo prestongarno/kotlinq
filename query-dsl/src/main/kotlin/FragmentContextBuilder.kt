@@ -51,6 +51,13 @@ class FragmentContextBuilder internal constructor(
     operator fun rangeTo(fragment: Fragment) {
       this@FragmentContextBuilder.fragments += fragment
     }
+    operator fun rangeTo(fragments: Iterable<Fragment>) {
+      fragments.forEach {
+        this@FragmentContextBuilder.fragments += it
+      }
+    }
+    operator fun rangeTo(fragments: Array<Fragment>) =
+        rangeTo(fragments.toList())
   }
 
 
