@@ -100,7 +100,6 @@ class Scratch {
     }.toGraphQl(pretty = true,
         inlineFragments = false)
 
-    println(starWarsQuery)
     assertThat(starWarsQuery)
         .isEqualTo(expect)
   }
@@ -145,7 +144,6 @@ class Scratch {
 
     assertThat(query.toGraphQl())
         .isEqualTo(expect)
-    println(query.toGraphQl())
   }
 }
 
