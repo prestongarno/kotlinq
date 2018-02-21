@@ -3,14 +3,16 @@ package org.kotlinq.api
 
 interface GraphVisitor {
 
-  fun visitDeserializer(target: DeserializingAdapter) = Unit
+  fun visit(target: DeserializingAdapter) = Unit
 
-  fun visitFragment(target: Fragment) = Unit
+  fun visit(target: Fragment) = Unit
 
-  fun visitFragmentContext(target: FragmentAdapter) = Unit
+  fun visit(target: FragmentAdapter) = Unit
 
-  fun visitModel(target: ModelAdapter) = Unit
+  fun visit(target: InstanceAdapter) = Unit
 
-  fun visitScalar(target: ParsingAdapter) = Unit
+  fun visit(target: ParsingAdapter) = Unit
+
+  fun traverse(graph: GraphQlInstance): Unit = graph.accept(this)
 
 }

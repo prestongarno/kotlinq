@@ -5,7 +5,7 @@ import org.kotlinq.api.DeserializingAdapter
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphVisitor
-import org.kotlinq.api.ModelAdapter
+import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.common.stringify
 import org.kotlinq.common.unit
@@ -38,6 +38,7 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
 
       stringBuilder.apply {
         append(ENTER_SCOPE)
+        append("__typename,") // TODO config printer with builder pattern & strategy
         properties.take(properties.size - 1).forEach {
           it.accept(this@StringBuildingPrinter)
           append(",")
@@ -48,35 +49,35 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
       return stringBuilder.toString()
     }
 
-    private fun printAdapter(adapter: Adapter) =
+    private fun printField(adapter: Adapter) =
         adapter.propertyInfo.unit {
           stringBuilder.append(graphQlName)
           stringBuilder.append(arguments.stringify())
         }
 
-    override fun visitModel(target: ModelAdapter) {
-      printAdapter(target)
-      printInstance(target.fragment.prototype.graphQlInstance)
+    override fun visit(target: InstanceAdapter) {
+      printField(target)
+      printInstance(target.fragment.graphQlInstance)
     }
 
-    override fun visitFragmentContext(target: FragmentAdapter) {
-      printAdapter(target)
+    override fun visit(target: FragmentAdapter) {
+      printField(target)
       stringBuilder.apply {
         append(ENTER_SCOPE)
         target.fragments.forEach { (type, fragment) ->
           append(SPREAD)
           append(" on ")
           append(type)
-          printInstance(fragment.prototype.graphQlInstance)
+          printInstance(fragment.graphQlInstance)
         }
         append(EXIT_SCOPE)
       }
     }
 
-    override fun visitScalar(target: ParsingAdapter) =
-        printAdapter(target)
+    override fun visit(target: ParsingAdapter) =
+        printField(target)
 
-    override fun visitDeserializer(target: DeserializingAdapter) =
-        printAdapter(target)
+    override fun visit(target: DeserializingAdapter) =
+        printField(target)
   }
 }

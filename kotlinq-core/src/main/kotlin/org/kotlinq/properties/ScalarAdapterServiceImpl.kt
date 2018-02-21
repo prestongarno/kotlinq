@@ -1,26 +1,25 @@
 package org.kotlinq.properties
 
-import org.kotlinq.api.BooleanAdapter
-import org.kotlinq.api.FloatAdapter
-import org.kotlinq.api.GraphQlPropertyInfo
-import org.kotlinq.api.IntAdapter
+import org.kotlinq.api.ParsingAdapter
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.ScalarAdapterService
-import org.kotlinq.api.StringAdapter
+import org.kotlinq.api.Kind
 
 
 class ScalarAdapterServiceImpl(
     override val mappers: ScalarAdapterService.TypeMappers = BuiltInTypeMapper()
 ) : ScalarAdapterService {
 
-  override fun intAdapter(info: GraphQlPropertyInfo, mapper: (String) -> Int): IntAdapter =
-      IntAdapterImpl(info, mapper)
-
-  override fun stringAdapter(info: GraphQlPropertyInfo, mapper: (String) -> String): StringAdapter =
-      StringAdapterImpl(info, mapper)
-
-  override fun floatAdapter(info: GraphQlPropertyInfo, mapper: (String) -> Float): FloatAdapter =
-      FloatAdapterImpl(info, mapper)
-
-  override fun booleanAdapter(info: GraphQlPropertyInfo, mapper: (String) -> Boolean): BooleanAdapter =
-      BooleanAdapterImpl(info, mapper)
+  override fun newAdapter(info: PropertyInfo): ParsingAdapter {
+    require(info.kind.isScalar) { "Type $info is not a scalar type" }
+    return when (info.kind.rootKind()) {
+      Kind.Scalar._Int -> IntAdapterImpl(info, mappers.intMapper)
+      Kind.Scalar._String -> StringAdapterImpl(info, mappers.stringMapper)
+      Kind.Scalar._Float -> FloatAdapterImpl(info, mappers.floatMapper)
+      Kind.Scalar._Boolean -> BooleanAdapterImpl(info, mappers.booleanMapper)
+      else -> {
+        throw IllegalArgumentException("Illegal info '$info'")
+      }
+    }
+  }
 }

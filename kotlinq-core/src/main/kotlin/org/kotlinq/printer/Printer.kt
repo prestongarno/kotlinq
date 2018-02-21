@@ -5,8 +5,9 @@ import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
 import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
-import org.kotlinq.api.ModelAdapter
+import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.common.stringify
+import org.kotlinq.fragments.getFragments
 import java.util.*
 
 
@@ -54,7 +55,7 @@ private const val EXIT_SCOPE: String = "}"
  *              - print fragment definition
  *              - for all model fields
  *                  - print fields like usual
- *                  - if contains another model or another context, recurse on model, but pass the fragments and the [StringBuilder] instance
+ *                  - if contains another model or another context, recurse on model, but pass the fragments and the [StringBuilder] graphQlInstance
  *                      - this way, we do not do any redundant work and always have [fragments] reference from the base scope
  *
  *
@@ -69,7 +70,7 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
   val stack = LinkedList<Any>()
   val fragments: Map<Fragment, String> = frags
       ?: root.getFragments().mapIndexed { index, fragment ->
-        fragment to "frag${fragment.prototype.graphQlInstance.graphQlTypeName}$index"
+        fragment to "frag${fragment.graphQlInstance}$index"
       }.toMap()
 
 
@@ -90,12 +91,12 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
       if (curr.propertyInfo.arguments.isNotEmpty())
         builder.append(curr.propertyInfo.arguments.stringify())
 
-      if (curr is ModelAdapter) {
-        pushField(curr.fragment.prototype.graphQlInstance)
+      if (curr is InstanceAdapter) {
+        pushField(curr.fragment.graphQlInstance)
         continue
       } else if (curr is FragmentAdapter) {
         pushField(curr)
-        curr.fragments.asSequence().map { it.value.prototype.graphQlInstance }.forEach(pushField)
+        curr.fragments.asSequence().map { it.value.graphQlInstance }.forEach(pushField)
         builder.append(ENTER_SCOPE)
         builder.append("__typename,")
         continue
@@ -140,16 +141,16 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
         append("fragment ")
         append(name)
         append(" on ")
-        append(fragment.prototype.graphQlInstance.graphQlTypeName)
+        append(fragment.graphQlInstance)
         append(ENTER_SCOPE)
-        val numOfFields = fragment.prototype.graphQlInstance.properties.size - 1
+        val numOfFields = fragment.graphQlInstance.properties.size - 1
 
-        fragment.prototype.graphQlInstance.properties.entries.toList().forEachIndexed { i, (_, value) ->
+        fragment.graphQlInstance.properties.entries.toList().forEachIndexed { i, (_, value) ->
           append(value.propertyInfo.graphQlName)
           append(value.propertyInfo.arguments.stringify())
           when (value) {
           // recursive call, but only on one level deep since we pass the fragment set
-            is ModelAdapter -> print(value.fragment.prototype.graphQlInstance, frags, builder)
+            is InstanceAdapter -> print(value.fragment.graphQlInstance, frags, builder)
             is FragmentAdapter -> {
               value.fragments.values.joinTo(
                   builder,
@@ -174,44 +175,24 @@ fun print(root: GraphQlInstance, frags: Map<Fragment, String>? = null, builder: 
   return builder.toString().trim()
 }
 
-private
-fun GraphQlInstance.getFragments(): Set<Fragment> = getFragments(this, hashSetOf(this))
-
-private
-fun getFragments(root: GraphQlInstance, collector: Set<GraphQlInstance>): Set<Fragment> {
-  val fragmentEdges = root.properties
-      .asSequence()
-      .map { it.value }
-      .filterIsInstance<FragmentAdapter>()
-      .flatMap { it.fragments.asSequence() }
-      .filterNot { collector.contains(it.value.prototype.graphQlInstance) }
-      .toSet()
-
-  return fragmentEdges.map { it.value.prototype.graphQlInstance }.map {
-    getFragments(it, collector + it)
-  }.flatten().toSet()
-
-}
-
 internal
 fun pretty(context: GraphQlInstance): String {
   val fragments = context.getFragments().mapIndexed { index, fragment ->
-    fragment to "frag${fragment.prototype.graphQlInstance.graphQlTypeName}$index"
+    fragment to "frag${fragment.graphQlInstance}$index"
   }.toMap()
 
-  return context.printNode(fragments).let {
+  return context.printNode(fragments)/*.let {
     if (fragments.isEmpty()) it else it + fragments.entries.sortedBy(Map.Entry<Fragment, String>::value)
         .joinToString(prefix = "\n", separator = "\n", postfix = "") { (frag, name) ->
           "fragment $name on ${frag.prototype.graphQlInstance.graphQlTypeName} " + frag.prototype.graphQlInstance.printNode(fragments)
         }
-  }
+  }*/
 }
 
 private
 fun GraphQlInstance.printNode(fragments: Map<Fragment, String>, indentLevel: Int = 1): String {
   val indent = "\n${INDENT.repeat(indentLevel)}"
-  return this.properties.entries.map { it.value }
-      .joinToString(prefix = "{" + indent, separator = indent, postfix = "\n${INDENT.repeat(indentLevel - 1)}}") {
+  return nodes.joinToString(prefix = "{" + indent, separator = indent, postfix = "\n${INDENT.repeat(indentLevel - 1)}}") {
         it.propertyInfo.graphQlName + it.propertyInfo.arguments.stringify() + it.printEdge(fragments, indentLevel + 1)
       }
 }
@@ -221,13 +202,15 @@ fun Adapter.printEdge(fragments: Map<Fragment, String>, indentLevel: Int = 1): S
   val whitespace = "\n${INDENT.repeat(indentLevel)}"
   return when (this) {
 
-    is ModelAdapter -> " " + fragment.prototype.graphQlInstance.printNode(fragments, indentLevel) // only fragments get indented + 1
+    is InstanceAdapter -> " " + fragment.graphQlInstance.printNode(fragments, indentLevel) // only fragments get indented + 1
 
-    is FragmentAdapter -> this@printEdge.fragments.asIterable().joinToString(
-        prefix = " {" + whitespace + "__typename" + whitespace,
-        postfix = "\n${INDENT.repeat(indentLevel - 1)}}",
-        separator = whitespace) { (_, fragment) ->
-      "...${fragments[fragment]}"// + it.model.printNode(fragments, indentLevel + 1)
+    is FragmentAdapter -> {
+      this@printEdge.fragments.asIterable().joinToString(
+          prefix = " {" + whitespace + "__typename" + whitespace,
+          postfix = "\n${INDENT.repeat(indentLevel - 1)}}", separator = whitespace) {
+        val proto = it.value.graphQlInstance
+        """... on ${it.value.typeName} ${proto.printNode(fragments, indentLevel + 1)}"""
+      }
     }
 
     else -> ""

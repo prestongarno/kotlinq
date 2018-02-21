@@ -1,38 +1,29 @@
 package org.kotlinq.properties
 
-import org.kotlinq.api.ModelAdapter
-import org.kotlinq.api.Context
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.GraphQlPropertyInfo
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.GraphVisitor
-import org.kotlinq.api.Kotlinq
+import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.api.Resolver
 
 internal
 class InstanceProperty(
-    override val propertyInfo: GraphQlPropertyInfo,
-    initializer: () -> Context
-) : ModelAdapter {
-
-  override val fragment: Fragment =
-      Kotlinq.createFragment(initializer)
-
-  private var instance: Context? = null
+    override val propertyInfo: PropertyInfo,
+    override val fragment: Fragment
+) : InstanceAdapter {
 
   override fun isResolved(): Boolean {
-    return instance?.graphQlInstance?.isResolved() == true || propertyInfo.isNullable
+    return fragment?.graphQlInstance?.isResolved() || propertyInfo.isNullable
   }
 
   override fun setValue(result: Map<String, Any?>, resolver: Resolver): Boolean {
-    this.instance = fragment.initializer().apply {
-      resolver.resolve(result, this)
-    }
+    resolver.resolve(result, fragment)
     return isResolved()
   }
 
   override fun accept(resolver: GraphVisitor) {
-    resolver.visitModel(this)
+    resolver.visit(this)
   }
 
-  override fun getValue(): Context? = instance
+  override fun getValue(): Fragment = fragment
 }

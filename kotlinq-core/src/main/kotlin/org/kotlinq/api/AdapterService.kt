@@ -10,15 +10,13 @@ interface AdapterService {
 
   val scalarAdapters: ScalarAdapterService
 
-  fun deserializer(info: GraphQlPropertyInfo, init: (java.io.InputStream) -> Any?): Adapter
+  fun deserializer(info: PropertyInfo, init: (java.io.InputStream) -> Any?): Adapter
 
-  fun parser(info: GraphQlPropertyInfo, init: (String) -> Any?): Adapter
+  fun parser(info: PropertyInfo, init: (String) -> Any?): Adapter
 
-  fun enumDeserializer(info: GraphQlPropertyInfo): Adapter
+  fun instanceProperty(info: PropertyInfo, fragment: Fragment): Adapter
 
-  fun instanceProperty(info: GraphQlPropertyInfo, init: () -> Context): Adapter
-
-  fun fragmentProperty(info: GraphQlPropertyInfo, fragments: Set<() -> Context>): Adapter
+  fun fragmentProperty(info: PropertyInfo, fragments: Set<Fragment>): Adapter
 
 }
 

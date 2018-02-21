@@ -5,20 +5,20 @@ import org.kotlinq.api.Fragment
 import org.kotlinq.api.GraphQlInstance
 
 
-fun GraphQlInstance.getFragments(): Set<Fragment> {
+fun GraphQlInstance.getFragments(uniqueOnly: Boolean = true): Set<Fragment> {
 
   val frags = mutableSetOf<Fragment>()
 
   // ~10 LOC easy doing something this difficult, all it takes is eq & hashcode correctly
   AbstractGraphVisitor.createGeneralizedGraphVisitor {
-
     fragmentListener = {
-      if (!frags.contains(it)) {
+      if (uniqueOnly && !frags.contains(it)) {
         frags += it
-        it.prototype.graphQlInstance.accept(this)
+        it.graphQlInstance.accept(this)
+      } else {
+        frags += it
       }
     }
-
   }.traverse(this)
 
   return frags

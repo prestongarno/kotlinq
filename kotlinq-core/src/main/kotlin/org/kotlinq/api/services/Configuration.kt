@@ -1,4 +1,4 @@
-package org.kotlinq.services
+package org.kotlinq.api.services
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
@@ -36,16 +36,10 @@ interface Configuration {
     inline fun <reified T : Any> use(instance: T) =
         ServiceContainer.reconfigure(instance)
 
-    override fun configure(configuration: Builder.() -> Unit) {
-      val builder = Builder().apply(configuration)
-      ServiceContainer.apply {
-        reconfigure(builder.adapterService)
-        reconfigure(builder.instanceProvider)
-        reconfigure(builder.jsonParser)
-        reconfigure(builder.printer)
-        reconfigure(builder.resolver)
-      }
-    }
+    override fun configure(configuration: Builder.() -> Unit) = Builder()
+        .apply(configuration)
+        .notNullValues
+        .forEach(ServiceContainer::reconfigure)
 
     internal
     class Builder(
@@ -53,8 +47,18 @@ interface Configuration {
         var printer: GraphQlFormatter? = null,
         var resolver: Resolver? = null,
         var jsonParser: JsonParser? = null,
-        var instanceProvider: GraphQlInstanceProvider? = null
-    )
+        var instanceProvider: GraphQlInstanceProvider? = null) {
+
+      internal
+      val notNullValues: List<Any>
+        get() =
+          listOfNotNull(
+              adapterService,
+              printer,
+              resolver,
+              jsonParser,
+              instanceProvider)
+    }
 
   }
 }

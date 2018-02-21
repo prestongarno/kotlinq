@@ -1,6 +1,6 @@
 package org.kotlinq.api
 
-import org.kotlinq.services.Configuration
+import org.kotlinq.api.services.Configuration
 
 
 /**
@@ -10,7 +10,21 @@ import org.kotlinq.services.Configuration
  */
 interface Resolver : GraphVisitor {
 
-  fun resolve(value: Map<String, Any?>, target: Context): Boolean
+  fun resolve(value: Map<String, Any?>, target: Fragment): Boolean
+
+  /**
+   * Equivalent of:
+   *
+   * ```
+   *     val parser: JsonParser = ...
+   *     val map = parser.parseToObject("...")
+   *     require(resolver.resolve(map, fragment))
+   * ```
+   */
+  fun resolve(
+      value: String,
+      target: Fragment,
+      parser: JsonParser = JsonParser.Companion): Boolean = resolve(parser.parseToObject(value), target)
 
   companion object : Resolver by Configuration.instance()
 }

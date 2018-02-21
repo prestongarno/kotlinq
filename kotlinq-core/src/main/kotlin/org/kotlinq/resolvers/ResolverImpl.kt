@@ -1,10 +1,10 @@
 package org.kotlinq.resolvers
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Context
 import org.kotlinq.api.DeserializingAdapter
+import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
-import org.kotlinq.api.ModelAdapter
+import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.Resolver
 import java.io.InputStream
@@ -13,22 +13,22 @@ import java.util.LinkedList
 internal
 class ResolverImpl : Resolver {
 
-  override fun resolve(value: Map<String, Any?>, target: Context): Boolean =
+  override fun resolve(value: Map<String, Any?>, target: Fragment): Boolean =
       InstanceResolver(target, value).resolveFromRoot()
 
-  override fun visitModel(target: ModelAdapter) = Unit
+  override fun visit(target: InstanceAdapter) = Unit
 
-  override fun visitFragmentContext(target: FragmentAdapter) = Unit
+  override fun visit(target: FragmentAdapter) = Unit
 
-  override fun visitScalar(target: ParsingAdapter) = Unit
+  override fun visit(target: ParsingAdapter) = Unit
 
-  override fun visitDeserializer(target: DeserializingAdapter) = Unit
+  override fun visit(target: DeserializingAdapter) = Unit
 
   /**
    * Stack-based resolver algorithm
    */
   private
-  class InstanceResolver(private val context: Context, private val values: Map<String, Any?>) : Resolver {
+  class InstanceResolver(private val definition: Fragment, private val values: Map<String, Any?>) : Resolver {
 
     val stack = LinkedList<Map<String, Any?>>()
 
@@ -37,16 +37,16 @@ class ResolverImpl : Resolver {
       stack.removeFirst()
     }
 
-    fun resolveFromRoot(): Boolean = resolve(values, context)
+    fun resolveFromRoot(): Boolean = resolve(values, definition)
 
-    override fun resolve(value: Map<String, Any?>, target: Context): Boolean {
+    override fun resolve(value: Map<String, Any?>, target: Fragment): Boolean {
       push(value)
       target.graphQlInstance.accept(this)
       pop()
       return target.graphQlInstance.isResolved()
     }
 
-    override fun visitModel(target: ModelAdapter) {
+    override fun visit(target: InstanceAdapter) {
       stack.peek().jsonObjectNamed(target)?.let {
         push(it)
         // TODO add Transformer<T> interface for not only list properties, but also so that
@@ -56,7 +56,7 @@ class ResolverImpl : Resolver {
       }
     }
 
-    override fun visitFragmentContext(target: FragmentAdapter) {
+    override fun visit(target: FragmentAdapter) {
 
       stack.peek().jsonObjectNamed(target)?.let { values ->
         push(values)
@@ -65,11 +65,11 @@ class ResolverImpl : Resolver {
       }
     }
 
-    override fun visitScalar(target: ParsingAdapter) {
+    override fun visit(target: ParsingAdapter) {
       target.setValue(stack.peek()[target.propertyInfo.graphQlName]?.toString())
     }
 
-    override fun visitDeserializer(target: DeserializingAdapter) {
+    override fun visit(target: DeserializingAdapter) {
       (stack.peek()[target.propertyInfo.graphQlName]?.let {
         it as? InputStream ?: it.toString().byteInputStream()
       } ?: "".byteInputStream()).let(target::setValue)

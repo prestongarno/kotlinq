@@ -1,20 +1,17 @@
 package org.kotlinq.configurations
 
+import org.junit.Ignore
 import org.junit.Test
-import org.kotlinq.api.Context
-import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.GraphQlInstanceProvider
-import org.kotlinq.api.GraphQlPropertyInfo
 import org.kotlinq.api.JsonParser
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.Resolver
+import org.kotlinq.api.services.Configuration
+import org.kotlinq.api.services.ServiceContainer
 import org.kotlinq.assertThrows
-import org.kotlinq.services.Configuration
-import org.kotlinq.services.ServiceContainer
 import org.kotlinq.eq
+import org.kotlinq.info
 import org.kotlinq.messageMatchingExactly
-import org.kotlinq.mockType
-import org.kotlinq.models.GraphQlInstanceImpl
 import org.kotlinq.println
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -30,24 +27,11 @@ class ConfigurationTest {
 
   }
 
-  fun testContext(typeName: String) = object : Context {
-
-    override val graphQlInstance: GraphQlInstance =
-        GraphQlInstanceProvider.createNewInstance(typeName).apply {
-          bindProperty(Kotlinq.adapterService.scalarAdapters.stringAdapter(
-              GraphQlPropertyInfo("Hello", GraphQlPropertyInfo.STRING, mockType(String::class)), { it }))
-        }
-  }
-
+  @Ignore("Test individual node behaviour post-refactor")
   @Test fun assertDependencyIsInitialized() {
 
     Configuration.configure {
       jsonParser = parser
-      instanceProvider = object : GraphQlInstanceProvider {
-        override fun createNewInstance(typeName: String): GraphQlInstance {
-          return GraphQlInstanceImpl(typeName)
-        }
-      }
     }
 
 
@@ -57,7 +41,7 @@ class ConfigurationTest {
       require(name == "Hello" && value == "World")
     }
 
-    val context = testContext("Test")
+    val context = Kotlinq.newContextBuilder().build("Hello")
 
     require(Resolver.resolve(parseToObject, context))
 
@@ -65,6 +49,7 @@ class ConfigurationTest {
 
   }
 
+  @Ignore("Test individual node behaviour post-refactor")
   @Test
   fun usingDefaults() {
 
@@ -78,7 +63,7 @@ class ConfigurationTest {
       }
     """.trimIndent())
 
-    val context = testContext("Test")
+    val context = Kotlinq.newContextBuilder().build("Hello")
 
 
     require(Resolver.resolve(value, context))
@@ -94,21 +79,21 @@ class ConfigurationTest {
         .filter { it.isAccessible }
         .forEach { it.get(ServiceContainer) }
 
-    Kotlinq.createGraphQlInstance("GraphQlTypeMeta").graphQlTypeName eq "GraphQlTypeMeta"
+    Kotlinq.newContextBuilder().build("Hello").graphQlInstance.properties.size eq 0
 
     Configuration.use(object : GraphQlInstanceProvider {
-      override fun createNewInstance(typeName: String): GraphQlInstance = throw NullPointerException("TEST")
+      override fun newContextBuilder()= throw NullPointerException("TEST")
     })
 
     assertThrows<NullPointerException> {
-      Kotlinq.createGraphQlInstance("SomeType").println()
+      Kotlinq.newContextBuilder().println()
     } messageMatchingExactly "TEST"
 
     // Pass self-reference to wrapper class to delegate to self
-    Configuration.use(ServiceContainer.graphQlInstanceProvider)
+    Configuration.use(GraphQlInstanceProvider.Companion)
 
     // If didn't prevent the circular reference, this will stackoverflow
-    Kotlinq.createGraphQlInstance("Foo")
+    Kotlinq.newContextBuilder()
   }
 
   @Test fun resetDependenciesWorksCorrectly() {
@@ -118,16 +103,20 @@ class ConfigurationTest {
         .forEach { it.get(ServiceContainer) }
 
     Configuration.use(object : GraphQlInstanceProvider {
-      override fun createNewInstance(typeName: String): GraphQlInstance = throw NullPointerException()
+      override fun newContextBuilder()= throw NullPointerException("TEST")
     })
 
     assertThrows<NullPointerException> {
-      Kotlinq.createGraphQlInstance("foo")
+      Kotlinq.newContextBuilder()
     }
 
     ServiceContainer.useDefaults()
 
-    Kotlinq.createGraphQlInstance("Hello").graphQlTypeName eq "Hello"
+    "prop" eq Kotlinq.newContextBuilder()
+        .register(Kotlinq.adapterService.parser(info("prop"), { it }))
+        .build("Hello")
+        .graphQlInstance.properties["prop"]
+        ?.propertyInfo?.graphQlName
   }
 }
 

@@ -1,6 +1,6 @@
 package org.kotlinq.api
 
-import org.kotlinq.services.Configuration
+import org.kotlinq.api.services.Configuration
 
 
 /**
@@ -8,7 +8,7 @@ import org.kotlinq.services.Configuration
  */
 interface GraphQlInstanceProvider {
 
-  fun createNewInstance(typeName: String): GraphQlInstance
+  fun newContextBuilder(): BindableContext
 
   companion object : GraphQlInstanceProvider by Configuration.instance()
 }

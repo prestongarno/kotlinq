@@ -3,8 +3,7 @@ package org.kotlinq.properties
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.BooleanAdapter
 import org.kotlinq.api.FloatAdapter
-import org.kotlinq.api.GraphQlPropertyInfo
-import org.kotlinq.api.GraphVisitor
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.IntAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.StringAdapter
@@ -21,7 +20,7 @@ sealed class PrimitiveAdapter : ParsingAdapter {
 
 
 class IntAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> Int
 ) : PrimitiveAdapter(), IntAdapter {
 
@@ -34,15 +33,11 @@ class IntAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visitScalar(this)
-  }
-
   override fun isResolved() = true
 }
 
 class StringAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> String
 ) : PrimitiveAdapter(), StringAdapter {
 
@@ -55,15 +50,11 @@ class StringAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visitScalar(this)
-  }
-
   override fun isResolved() = true
 }
 
 class FloatAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> Float
 ) : PrimitiveAdapter(), FloatAdapter {
 
@@ -76,15 +67,11 @@ class FloatAdapterImpl(
     return isResolved()
   }
 
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visitScalar(this)
-  }
-
   override fun isResolved() = true
 }
 
 class BooleanAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> Boolean
 ) : PrimitiveAdapter(), BooleanAdapter {
 
@@ -95,10 +82,6 @@ class BooleanAdapterImpl(
   override fun setValue(value: String?): Boolean {
     this.value = initializer(value ?: "")
     return isResolved()
-  }
-
-  override fun accept(resolver: GraphVisitor) {
-    resolver.visitScalar(this)
   }
 
   override fun isResolved() = true

@@ -2,6 +2,7 @@ package org.kotlinq
 
 import org.junit.Test
 import org.kotlinq.api.Kotlinq
+import org.kotlinq.api.Kind
 
 
 class ScalarPropertyTests {
@@ -9,7 +10,7 @@ class ScalarPropertyTests {
   @Test fun simpleStringAdapterIOTest() {
     val expect = "Hello, World!"
     Kotlinq.adapterService.scalarAdapters
-        .stringAdapter(info("any"))
+        .newAdapter(info("any"))
         .apply {
           setValue(expect)
           require(getValue() == expect)
@@ -20,7 +21,7 @@ class ScalarPropertyTests {
   @Test fun simpleIntAdapterIOTest() {
     val expect = 1000
     Kotlinq.adapterService.scalarAdapters
-        .intAdapter(info("intProperty"))
+        .newAdapter(info("intProperty", Kind.Scalar._Int))
         .apply {
           setValue("$expect")
           require(getValue() == expect)
@@ -30,7 +31,7 @@ class ScalarPropertyTests {
   @Test fun simpleFloatAdapterIOTest() {
     val expect = 1000.1f
     Kotlinq.adapterService.scalarAdapters
-        .floatAdapter(info("floatProperty"))
+        .newAdapter(info("floatProperty", Kind.Scalar._Float))
         .apply {
           setValue("$expect")
           require(getValue() == expect)
@@ -40,7 +41,7 @@ class ScalarPropertyTests {
   @Test fun simpleBooleanAdapterIOTest() {
     val expect = false
     Kotlinq.adapterService.scalarAdapters
-        .booleanAdapter(info("boolProperty"))
+        .newAdapter(info("boolProperty", Kind.Scalar._Boolean))
         .apply {
           setValue("$expect")
           require(getValue() == expect)

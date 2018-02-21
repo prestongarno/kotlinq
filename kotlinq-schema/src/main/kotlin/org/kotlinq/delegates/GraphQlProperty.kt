@@ -14,8 +14,7 @@ class GraphQlPropertyImpl<out T>(
 ) : GraphQlProperty<T?> {
 
   override fun getValue(thisRef: Model<*>, property: KProperty<*>): T? {
-    return thisRef.graphQlInstance.properties[name]?.let {
-      require(it.propertyInfo.platformType == property.returnType)
+    return thisRef.fragment.graphQlInstance.properties[name]?.let {
       @Suppress("UNCHECKED_CAST")
       it.getValue() as? T
     }
@@ -26,6 +25,6 @@ class GraphQlPropertyImpl<out T>(
 @Suppress("UNCHECKED_CAST")
 internal
 fun <T> Adapter.bind(inst: Model<*>): ReadOnlyProperty<Model<*>, T> {
-  inst.graphQlInstance.bindProperty(this)
+  inst.instanceBuilder?.register(this)
   TODO()
 }
