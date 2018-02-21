@@ -1,4 +1,4 @@
-***a Kotlin GraphQL client: type-safe DSL generation & runtime library***
+***a Kotlin GraphQL client for composable, reusable GraphQL queries***
 -----------------------------
 
 [ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-core/images/download.svg?version=0.4.0) ](https://bintray.com/prestongarno/kotlinq/kotlinq-core/0.4.0/link)
