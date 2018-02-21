@@ -38,6 +38,7 @@ class VisitingPrinter(private val instance: GraphQlInstance) {
 
       stringBuilder.apply {
         append(ENTER_SCOPE)
+        append("__typename,") // TODO config printer with builder pattern & strategy
         properties.take(properties.size - 1).forEach {
           it.accept(this@StringBuildingPrinter)
           append(",")

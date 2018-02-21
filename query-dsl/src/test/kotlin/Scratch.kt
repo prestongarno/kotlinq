@@ -44,18 +44,15 @@ enum class Measurement {
 class Scratch {
 
   @Test fun `simple primitive field dsl coordinate type prints correctly`() {
-    assertThat(coordinates().toGraphQl(pretty = true, inlineFragments = false))
+    assertThat(coordinates().toGraphQl(pretty = true))
         .isEqualTo("""
           {
             xValue
             yValue
           }
         """.trimIndent())
-  }
-
-  @Test fun queryGraph() {
-    println(greet().toGraphQl(pretty = true, inlineFragments = false))
-    println(coordinates().toGraphQl(pretty = true, inlineFragments = false))
+    assertThat(coordinates().toGraphQl(pretty = false))
+        .isEqualTo("{__typename,xValue,yValue}")
   }
 
   @Test fun simpleStarWars() {
@@ -100,8 +97,7 @@ class Scratch {
           }
         }
       }
-    }.toGraphQl(pretty = true,
-        inlineFragments = false)
+    }.toGraphQl(pretty = true)
 
     assertThat(starWarsQuery)
         .isEqualTo(expect)
@@ -130,7 +126,9 @@ class Scratch {
           .isEqualTo(
               PropertyInfo.named("nicknames")
                   .arguments(emptyMap())
-                  .typeKind(Kind.string.asNullable().asList())
+                  .typeKind(Kind.string
+                      .asNullable()
+                      .asList())
                   .build())
       assertThat(props["name"]?.propertyInfo)
           .isEqualTo(PropertyInfo.named("name")
@@ -151,6 +149,11 @@ class Scratch {
           |  }
           |}
           """.trimMargin("|"))
+
+    assertThat(charactersQuery(listOf(humanDef())).toGraphQl(pretty = false))
+        .isEqualTo(
+            "{__typename,characters(first: 100){... on Human{__typename,name,nicknames}}}")
+
     assertThat(charactersQuery(listOf(humanDef(), robotDef())).toGraphQl())
         .isEqualTo("""
           |{
