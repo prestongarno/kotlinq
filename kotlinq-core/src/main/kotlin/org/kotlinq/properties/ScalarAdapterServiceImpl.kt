@@ -10,7 +10,7 @@ class ScalarAdapterServiceImpl(
     override val mappers: ScalarAdapterService.TypeMappers = BuiltInTypeMapper()
 ) : ScalarAdapterService {
 
-  override fun adapterFor(info: PropertyInfo): ParsingAdapter {
+  override fun newAdapter(info: PropertyInfo): ParsingAdapter {
     require(info.kind.isScalar) { "Type $info is not a scalar type" }
     return when (info.kind.rootKind()) {
       Kind._Int -> IntAdapterImpl(info, mappers.intMapper)

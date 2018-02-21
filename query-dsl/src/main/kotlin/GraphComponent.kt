@@ -50,7 +50,7 @@ class Leaf(
   : GraphComponent(name, arguments, kind) {
 
   internal fun toAdapter(): ParsingAdapter = Kotlinq.adapterService.scalarAdapters
-      .adapterFor(PropertyInfo.named(name)
+      .newAdapter(PropertyInfo.named(name)
               .typeKind(kind)
               .arguments(arguments)
               .build())

@@ -13,7 +13,7 @@ interface ScalarAdapterService {
   /**
    * TODO eventually add specific types for primitives
    */
-  fun adapterFor(info: PropertyInfo): ParsingAdapter
+  fun newAdapter(info: PropertyInfo): ParsingAdapter
 
   interface TypeMappers {
     val booleanMapper: (String) -> Boolean
