@@ -30,6 +30,6 @@ interface FragmentContext {
  *   }
  * ```
  */
-interface ReifiedFragmentContext {
+interface ReifiedFragmentContext : Adapter {
   val fragment: Fragment
 }

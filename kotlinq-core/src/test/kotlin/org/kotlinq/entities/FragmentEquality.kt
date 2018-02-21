@@ -6,7 +6,6 @@ import org.kotlinq.api.Kind
 import org.kotlinq.entities.TestFragmentBuilder.Companion.fragment
 import org.kotlinq.eq
 import org.kotlinq.notEq
-import kotlin.coroutines.experimental.buildSequence
 
 
 class FragmentEquality {
