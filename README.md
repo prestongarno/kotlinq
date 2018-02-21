@@ -16,7 +16,9 @@ Version 0.4.0 supports [**ad-hoc, type-hinted**](https://github.com/prestongarno
 
 A powerful feature is the ability to **compose** and **reuse** graphql queries easily.
 
-### GraphQL Star Wars example
+
+
+## GraphQL Star Wars example
 
 Define a "Human" type fragment:
 
