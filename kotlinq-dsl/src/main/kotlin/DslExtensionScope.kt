@@ -12,6 +12,15 @@ interface DslExtensionScope :
     StringExtensionScope,
     ListDeclarationExtensionScope {
 
+  /**
+   * Mark a scalar type hint as being nullable:
+   *
+   * ```
+   *   fragment("Person") {
+   *     "name"(!string)
+   *   }
+   * ```
+   */
   operator fun ScalarSymbol.not() = this to true
 }
 

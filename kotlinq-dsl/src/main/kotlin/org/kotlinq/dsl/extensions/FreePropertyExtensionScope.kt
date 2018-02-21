@@ -1,7 +1,6 @@
 package org.kotlinq.dsl.extensions
 
 import org.kotlinq.api.Fragment
-import org.kotlinq.dsl.FragmentContextBuilder
 import org.kotlinq.dsl.FragmentSelection
 import org.kotlinq.dsl.SelectionSet
 import org.kotlinq.dsl.fields.FreeProperty
@@ -27,9 +26,6 @@ interface FreePropertyExtensionScope {
 
 
   /**
-   * 'Terminal' operation for a collection of objects declared in the
-   * [FragmentContextBuilder] block.
-   *
    * Call on a [FreeProperty] declaration to define
    * with fragment spread operations on named types
    *
@@ -37,14 +33,12 @@ interface FreePropertyExtensionScope {
    *
    * ```
    *   query {
-   *     "search"("text" to "hello").define("SearchResultConnection") {
-   *       nodes .. {
-   *         on("Human") {
-   *           "name"(string)
-   *         }
-   *         on("Robot") {
-   *           "modelNumber"(integer)
-   *         }
+   *     nodes("first" to 10) .. {
+   *       on("Human") {
+   *         "name"(string)
+   *       }
+   *       on("Robot") {
+   *         "modelNumber"(integer)
    *       }
    *     }
    *   }
@@ -54,14 +48,24 @@ interface FreePropertyExtensionScope {
   operator fun FreeProperty.rangeTo(block: FragmentSelection)
 
   /**
-   * Use this for union or interface types. Specify the fragments within the [block].
+   * Call on a [FreeProperty] declaration to define
+   * with fragment spread operations on named types
+   *
+   * Example:
    *
    * ```
    *   query {
-   *     "character"("id" to "0")..{
-   *
+   *     "nodes" .. {
+   *       on("Human") {
+   *         "name"(string)
+   *       }
+   *       on("Robot") {
+   *         "modelNumber"(integer)
+   *       }
    *     }
    *   }
+   * ```
+   *
    */
   operator fun String.rangeTo(block: FragmentSelection) =
       FreeProperty(this).rangeTo(block)
@@ -75,11 +79,8 @@ interface FreePropertyExtensionScope {
    *   query {
    *     "search"("text" to "hello") on searchResult()
    *   }
-   *```
    *
    *
-   *
-   * ```
    * fun searchResult() =
    *   fragment("SearchResultConnection") {
    *     "totalCount"(integer)

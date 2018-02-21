@@ -1,0 +1,10 @@
+
+dependencies {
+  compile project(':kotlinq-core')
+}
+
+apply plugin: 'java'
+
+jar {
+  baseName = 'kotlinq-dsl'
+}
