@@ -1,74 +1,95 @@
 ***a Kotlin GraphQL client: type-safe DSL generation & runtime library***
 -----------------------------
 
-[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-gradle/images/download.svg?version=0.3.0) ](https://bintray.com/prestongarno/kotlinq/kotlinq-gradle/0.3.0/link)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.prestongarno.ktq/ktq-client)
+[ ![Download](https://api.bintray.com/packages/prestongarno/kotlinq/kotlinq-core/images/download.svg?version=0.4.0) ](https://bintray.com/prestongarno/kotlinq/kotlinq-core/0.4.0/link)
 [![Build Status](https://travis-ci.org/prestongarno/kotlinq.svg?branch=master)](https://travis-ci.org/prestongarno/kotlinq)
 
 
 ## About
 
-* **type-safe DSLs** for querying and mutating your data
-* **dynamic queries/mutations** evaluated at runtime
-* **custom scalar deserialization** to any native type
-* **100% native** code - zero config files, zero old-school DSLs
-
-The [ gradle plugin ](kotlinq-gradle/README.md) generates an equivalent kotlin type hierarchy which 
-lets you auto-complete your way to safe, reliable queries and mutations
+* Quickly fetch from a GraphQl server using **dynamic queries/mutations** evaluated at runtime
 
 ## Un-typed GraphQL query DSL (version 0.4.0) (new)
 
-If you would like to quickly fetch from a GraphQL server without the build plugin and defining classes, 
-version 0.4.0 will fully support [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/org/kotlinq/dsl/extensions/FreePropertyExtensionScope.kt) but natively expressed queries and mutations!
+Version 0.4.0 supports [**ad-hoc, untyped**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/org/kotlinq/dsl/extensions/FreePropertyExtensionScope.kt) but natively expressed queries and mutations!
 
-Example:
+
+A powerful feature is the ability to **compose** and **reuse** graphql queries easily.
+
+### GraphQL Star Wars example
+
+Define a "Human" type fragment:
 
 ```
-    val starWarsQuery = query {
-      "search"("text" to "r2d2")..{
-        on("Human") {
-          "name"(string)
-          "id"(string)
-          "height"(!float, "unit" to LengthUnit.METER)
-          "friendsConnection"("first" to 10) on def("FriendConnection") {
-            "totalCount"(integer)
-            "friends"..{
-              on("Human") {
-                "name"(string)
-                "id"(string)
-              }
-            }
-          }
-        }
+    fun humanDef() = fragment("Human") {
+      "name"(string)
+      "nicknames" listOf !string
+    }
+```
+
+Define a "Droid" type fragment:
+
+```
+    fun droidDef() = fragment("Droid") {
+      "modelNumber"(string)
+      "owner" on humanDef()
+    }
+```
+
+Now, define a query for Star Wars characters:
+
+```
+    fun charactersQuery(fragments: List<Fragment>) = query {
+      "characters"("first" to 10)..listOf {
+        on..fragments
       }
     }
-
-    println(starWarsQuery.toGraphQl(
-        pretty = true,
-        inlineFragments = true))
-
 ```
 
-will print:
+Query characters from Star Wars that are humans:
 
+```
+    val query = charactersQuery(listOf(humanDef())
+    println(query.toGraphQl(pretty = true))
+```
+
+prints: 
 
 ```
 {
-  search(text: "han solo") {
+  characters(first: 100) {
     __typename
-    ... on Human{
+    ... on Human {
       name
-      id
-      height(unit: "METER")
-      friendsConnection(first: 10) {
-        totalCount
-        friends {
-          __typename
-          ... on Human{
-            name
-            id
-          }
-        }
+      nicknames
+    }
+  }
+}
+```
+
+But if you want to query both humans and droids, to do so it's as simple as:
+
+```
+    val query = charactersQuery(listOf(humanDef(), droidDef()))
+    println(query.toGraphQl(pretty = true))
+```
+
+
+which results in:
+
+```
+{
+  characters(first: 100) {
+    __typename
+    ... on Human {
+      name
+      nicknames
+    }
+    ... on Droid {
+      modelNumber
+      maker {
+        name
+        nicknames
       }
     }
   }

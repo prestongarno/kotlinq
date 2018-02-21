@@ -77,7 +77,7 @@ bintray {
   user BINTRAY_USER
   key BINTRAY_KEY
   publications = ['mavenJava']
-  dryRun = version.endsWith("SNAPSHOT") || projects.project.name == rootProject.name
+  dryRun = version.endsWith("SNAPSHOT") || project.name == rootProject.name
   publish = false
   override = true
 
