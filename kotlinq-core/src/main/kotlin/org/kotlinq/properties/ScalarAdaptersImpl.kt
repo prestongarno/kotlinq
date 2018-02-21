@@ -3,7 +3,7 @@ package org.kotlinq.properties
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.BooleanAdapter
 import org.kotlinq.api.FloatAdapter
-import org.kotlinq.api.GraphQlPropertyInfo
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.IntAdapter
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.StringAdapter
@@ -20,7 +20,7 @@ sealed class PrimitiveAdapter : ParsingAdapter {
 
 
 class IntAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> Int
 ) : PrimitiveAdapter(), IntAdapter {
 
@@ -37,7 +37,7 @@ class IntAdapterImpl(
 }
 
 class StringAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> String
 ) : PrimitiveAdapter(), StringAdapter {
 
@@ -54,7 +54,7 @@ class StringAdapterImpl(
 }
 
 class FloatAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> Float
 ) : PrimitiveAdapter(), FloatAdapter {
 
@@ -71,7 +71,7 @@ class FloatAdapterImpl(
 }
 
 class BooleanAdapterImpl(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> Boolean
 ) : PrimitiveAdapter(), BooleanAdapter {
 

@@ -2,29 +2,28 @@ package org.kotlinq.dsl.extensions
 
 import org.kotlinq.api.Fragment
 import org.kotlinq.dsl.FragmentContextBuilder
-import org.kotlinq.dsl.TypeBuilder
+import org.kotlinq.dsl.FragmentSelection
+import org.kotlinq.dsl.SelectionSet
 import org.kotlinq.dsl.fields.FreeProperty
 
 
 interface FreePropertyExtensionScope {
 
   /**
-   * 'Terminal' operation (i.e. binds property after this).
-   * Call on a receiver property declaration to define
-   * a single inline type selection set
+   * Convenience method for inline type definitions
    *
    * Example:
    *
    * ```
    *   query {
-   *     "search"("text" to "hello").define("SearchResultConnection") {
+   *     "search"("text" to "hello") on def("SearchResultConnection") {
    *       "resultCount"(integer)
    *     }
    *   }
    * ```
    *
    */
-  fun FreeProperty.define(typeName: String, block: TypeBuilder.() -> Unit)
+  fun def(typeName: String, block: SelectionSet): Fragment
 
 
   /**
@@ -52,29 +51,38 @@ interface FreePropertyExtensionScope {
    * ```
    *
    */
-  operator fun FreeProperty.rangeTo(block: FragmentContextBuilder.() -> Unit)
+  operator fun FreeProperty.rangeTo(block: FragmentSelection)
 
-  operator fun String.rangeTo(block: FragmentContextBuilder.() -> Unit) =
+  /**
+   * Use this for union or interface types. Specify the fragments within the [block].
+   *
+   * ```
+   *   query {
+   *     "character"("id" to "0")..{
+   *
+   *     }
+   *   }
+   */
+  operator fun String.rangeTo(block: FragmentSelection) =
       FreeProperty(this).rangeTo(block)
 
   /**
+   * Use this when the GraphQl field is a *concrete* type
+   *
    * Example:
    *
    * ```
    *   query {
-   *     "search"("text" to "hello") on searchResultConnection(...)
+   *     "search"("text" to "hello") on searchResult()
    *   }
    *```
-   * Where:
+   *
+   *
    *
    * ```
-   * fun searchResultConnection(humanDef: TypeDefinition, robodDef: TypeDefinition): TypeDefinition =
-   *   define("SearchResultConnection") {
-   *       "nodes" ..{
-   *         on(humanDef)
-   *         on(robotDef)
-   *       }
-   *     }
+   * fun searchResult() =
+   *   fragment("SearchResultConnection") {
+   *     "totalCount"(integer)
    *   }
    * ```
    *

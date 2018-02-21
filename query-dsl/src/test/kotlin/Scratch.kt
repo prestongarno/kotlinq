@@ -64,6 +64,7 @@ class Scratch {
       |    ... on Human {
       |      name
       |      id
+      |      height(unit: "METER")
       |      friendsConnection(first: 10) {
       |        totalCount
       |        friends {
@@ -84,6 +85,7 @@ class Scratch {
         on("Human") {
           "name"(string)
           "id"(string)
+          "height"(!float, "unit" to "METER")
           "friendsConnection"("first" to 10) on def("FriendConnection") {
             "totalCount"(integer)
             "friends"..{
@@ -103,5 +105,47 @@ class Scratch {
         .isEqualTo(expect)
   }
 
+  @Test fun listStarWarsScratch() {
+
+    val humanDef = fragment("Human") {
+      "name"(string)
+      "nicknames" listOf string
+    }
+
+    val robotDef = fragment("Robot") {
+      "modelNumber"(string)
+      "maker" on humanDef
+    }
+
+    val query = query {
+      "characters"("first" to 100)..listOf {
+        on..humanDef
+        on..robotDef
+      }
+    }
+
+    val expect = """
+      |{
+      |  characters(first: 100) {
+      |    __typename
+      |    ... on Human {
+      |      name
+      |      nicknames
+      |    }
+      |    ... on Robot {
+      |      modelNumber
+      |      maker {
+      |        name
+      |        nicknames
+      |      }
+      |    }
+      |  }
+      |}
+      """.trimMargin("|")
+
+    assertThat(query.toGraphQl())
+        .isEqualTo(expect)
+    println(query.toGraphQl())
+  }
 }
 

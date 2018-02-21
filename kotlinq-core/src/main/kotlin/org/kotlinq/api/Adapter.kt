@@ -11,7 +11,7 @@ package org.kotlinq.api
 interface Adapter {
 
   /** Resulting return type of this property */
-  val propertyInfo: GraphQlPropertyInfo
+  val propertyInfo: PropertyInfo
 
   /** Returns the result of the query, or null if unresolved */
   fun getValue(): Any?

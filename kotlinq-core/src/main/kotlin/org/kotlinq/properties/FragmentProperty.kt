@@ -3,13 +3,13 @@ package org.kotlinq.properties
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentAdapter
-import org.kotlinq.api.GraphQlPropertyInfo
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.Resolver
 
 
 internal
 class FragmentProperty(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     fragments: Set<Fragment>
 ) : FragmentAdapter {
 

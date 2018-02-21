@@ -1,26 +1,24 @@
 package org.kotlinq.dsl
 
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.full.createType
+import org.kotlinq.api.Kind
 
-sealed class ScalarSymbol(
-    internal val clazz: KClass<*>,
-    internal val type: KType = clazz.createType()) {
+sealed class ScalarSymbol(internal val kind: Kind) {
 
-  val typeName = clazz.simpleName!!
+  init { require(kind.isScalar) }
+
+  val typeName = kind.isScalar
 
   internal
-  object StringSymbol : ScalarSymbol(String::class)
+  object StringSymbol : ScalarSymbol(Kind._String)
 
   internal
-  object IntSymbol : ScalarSymbol(Int::class)
+  object IntSymbol : ScalarSymbol(Kind._Int)
 
   internal
-  object BooleanSymbol : ScalarSymbol(Boolean::class)
+  object BooleanSymbol : ScalarSymbol(Kind._Boolean)
 
   internal
-  object FloatSymbol : ScalarSymbol(Float::class)
+  object FloatSymbol : ScalarSymbol(Kind._Float)
 }
 
 

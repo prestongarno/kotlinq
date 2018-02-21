@@ -2,14 +2,13 @@ package org.kotlinq.properties
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.DeserializingAdapter
-import org.kotlinq.api.GraphQlPropertyInfo
-import org.kotlinq.api.GraphVisitor
+import org.kotlinq.api.PropertyInfo
 import java.io.InputStream
 
 
 internal
 class DeserializingProperty(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (java.io.InputStream) -> Any?
 ) : DeserializingAdapter {
 

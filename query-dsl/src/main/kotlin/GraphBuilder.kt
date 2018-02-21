@@ -5,14 +5,12 @@ import org.kotlinq.api.Kotlinq
 
 
 internal
-class GraphBuilder(
-    val graphQlTypeName: String,
-    private val definition: TypeBuilder.() -> Unit) {
+class GraphBuilder(private val definition: SelectionSet) {
 
-  fun build(): Fragment {
+  fun build(typeName: String): Fragment {
     val context = Kotlinq.newContextBuilder()
-    TypeBuilder({context.register(it).ignore()}).apply(definition)
-    return context.build(graphQlTypeName)
+    TypeBuilder({ context.register(it).ignore() }).apply(definition)
+    return context.build(typeName)
   }
 
 

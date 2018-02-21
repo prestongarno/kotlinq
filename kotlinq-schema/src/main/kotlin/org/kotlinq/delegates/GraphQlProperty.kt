@@ -15,7 +15,6 @@ class GraphQlPropertyImpl<out T>(
 
   override fun getValue(thisRef: Model<*>, property: KProperty<*>): T? {
     return thisRef.fragment.graphQlInstance.properties[name]?.let {
-      require(it.propertyInfo.platformType == property.returnType)
       @Suppress("UNCHECKED_CAST")
       it.getValue() as? T
     }

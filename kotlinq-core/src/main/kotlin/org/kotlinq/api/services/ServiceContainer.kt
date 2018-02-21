@@ -15,14 +15,11 @@ import org.kotlinq.api.services.wrappers.GraphQlInstanceProviderWrapper
 import org.kotlinq.api.services.wrappers.JsonParsingWrapper
 import org.kotlinq.api.services.wrappers.PrinterWrapper
 import org.kotlinq.api.services.wrappers.ResolverWrapper
-import org.kotlinq.common.kClass
 import org.kotlinq.models.GraphQlInstanceProviderImpl
 import org.kotlinq.printer.PrinterImpl
 import org.kotlinq.properties.AdapterServiceImpl
 import org.kotlinq.resolvers.JsonParserImpl
 import org.kotlinq.resolvers.ResolverImpl
-import kotlin.reflect.KProperty0
-import kotlin.reflect.full.isSubtypeOf
 
 
 /**
@@ -58,9 +55,6 @@ object ServiceContainer {
     return wrappers.filter { wrapper -> wrapper.clazz.isInstance(instance) }
         .mapNotNull { it as? ConfigurableDependency<T> }
   }
-
-  @Suppress("UNCHECKED_CAST")
-  private fun <T : Any> KProperty0<T>.container() = get() as ConfigurableDependency<T>
 
   private val adapterService = AdapterWrapper(AdapterServiceImpl())
   private val graphQlInstanceProvider = GraphQlInstanceProviderWrapper(GraphQlInstanceProviderImpl())

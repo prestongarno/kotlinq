@@ -113,7 +113,7 @@ class ConfigurationTest {
     ServiceContainer.useDefaults()
 
     "prop" eq Kotlinq.newContextBuilder()
-        .register(Kotlinq.adapterService.parser(info("prop", ""), { it }))
+        .register(Kotlinq.adapterService.parser(info("prop"), { it }))
         .build("Hello")
         .graphQlInstance.properties["prop"]
         ?.propertyInfo?.graphQlName

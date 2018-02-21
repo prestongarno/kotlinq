@@ -3,25 +3,62 @@
 package org.kotlinq.dsl
 
 import org.kotlinq.api.Fragment
+import org.kotlinq.api.Kind
 
 
 @GraphQlDslObject
-class FragmentContextBuilder internal constructor() {
+class FragmentContextBuilder internal constructor(
+    var fieldTypeName: String = "") {
 
-  internal val fragments = mutableListOf<Fragment>()
 
-  fun on(typeName: String, block: TypeBuilder.() -> Unit) {
-    fragments += GraphBuilder(typeName, definition = block).build()
+
+  private var isCollection = false
+
+  private val fragments = mutableSetOf<Fragment>()
+
+  fun on(typeName: String, block: SelectionSet) {
+    fragments += GraphBuilder(block).build(typeName)
   }
+
+  val on = FragmentPrefix()
+
+
+  internal
+  fun flagField(isCollection: Boolean = true) {
+    this.isCollection = isCollection
+  }
+
+  private
+  fun toFragmentInfo(): FragmentInfo = FragmentInfo(
+      fieldTypeName,
+      isCollection,
+      fragments.toSet())
+
+  /**
+   * This exists because of syntax limitations
+   */
+  internal class FragmentInfo(
+      typeName: String,
+      isCollection: Boolean,
+      val fragments: Set<Fragment>) {
+
+    val typeKind = Kind.named(typeName).let {
+      if (isCollection) it.asList() else it
+    }
+  }
+
+  inner class FragmentPrefix internal constructor(){
+    operator fun rangeTo(fragment: Fragment) {
+      this@FragmentContextBuilder.fragments += fragment
+    }
+  }
+
 
   companion object {
 
-    internal
-    fun fragmentsFromBlock(block: FragmentContextBuilder.() -> Unit)
-        : Set<Fragment>? =
-        FragmentContextBuilder().apply(block).fragments.let {
-          if (it.isEmpty()) null else it.toSet()
-        }
-  }
 
+    internal fun fromBlock(block: FragmentSelection) =
+        FragmentContextBuilder().apply(block)
+            .let { if (it.fragments.isEmpty()) null else it.toFragmentInfo() }
+  }
 }

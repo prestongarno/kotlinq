@@ -1,13 +1,13 @@
 package org.kotlinq.properties
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.GraphQlPropertyInfo
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.ParsingAdapter
 
 
 internal
 class ParsedProperty(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val initializer: (String) -> Any?
 ) : ParsingAdapter {
 

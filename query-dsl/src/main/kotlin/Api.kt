@@ -12,7 +12,7 @@ import org.kotlinq.api.Fragment
  * @since 0.4.0
  */
 fun query(name: String = "Query", selectionSet: SelectionSet): Fragment =
-    GraphBuilder(name, selectionSet).build()
+    GraphBuilder(selectionSet).build(name)
 
 
 /**

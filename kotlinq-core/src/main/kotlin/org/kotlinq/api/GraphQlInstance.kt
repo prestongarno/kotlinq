@@ -21,7 +21,7 @@ interface GraphQlInstance {
    * Prints the GraphQL request
    *
    * @param pretty if true, the returned string will be formatted with line breaks and nested indents by 2 spaces
-   * @param inlineFragments if true, the returned string will be formatted with all fragments extracted to the end of the request.
+   * @param inlineFragments if false, the returned string will be formatted with all fragments extracted to the end of the request.
    * Fragment definition naming scheme is frag<TypeName\><index\>, where the index is ordered by order encountered in a BFS from this root context
    */
   fun toGraphQl(pretty: Boolean = false, inlineFragments: Boolean = true): String

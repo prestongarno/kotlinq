@@ -1,7 +1,7 @@
 package org.kotlinq
 
-import org.kotlinq.api.GraphQlPropertyInfo
-import kotlin.reflect.KClass
+import org.kotlinq.api.PropertyInfo
+import org.kotlinq.api.Kind
 import kotlin.reflect.full.isSubclassOf
 
 infix fun Throwable.withMessageContaining(value: String) =
@@ -42,19 +42,17 @@ inline fun <reified T> assertThrows(noinline block: () -> Unit): T {
   } catch (ex: Throwable) {
     if (!ex::class.isSubclassOf(T::class)) {
       throw java.lang.AssertionError("Expected exception '${T::class.qualifiedName}' " +
-              "but was '${ex::class.qualifiedName}'", ex)
+          "but was '${ex::class.qualifiedName}'", ex)
     } else return ex as T
   }
   throw AssertionError("No exception was thrown (Expected: '${T::class.qualifiedName}'")
 }
 
 private fun errNotMatching(expect: Any?, actual: Any?) =
-"Expected <'$expect'> was not equal to <'$actual'>"
+    "Expected <'$expect'> was not equal to <'$actual'>"
 
 fun info(
     graphQlName: String,
-    graphQlTypeName: String = GraphQlPropertyInfo.STRING,
-    arguments: Map<String, Any> = emptyMap(),
-    clazz: KClass<*> = String::class
-) =
-    GraphQlPropertyInfo(graphQlName, graphQlTypeName, mockType(clazz), arguments)
+    kind: Kind = Kind._String,
+    arguments: Map<String, Any> = emptyMap()
+) = PropertyInfo(graphQlName, kind, arguments)

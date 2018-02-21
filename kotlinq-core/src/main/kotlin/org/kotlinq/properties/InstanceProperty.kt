@@ -1,14 +1,14 @@
 package org.kotlinq.properties
 
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.GraphQlPropertyInfo
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.InstanceAdapter
 import org.kotlinq.api.Resolver
 
 internal
 class InstanceProperty(
-    override val propertyInfo: GraphQlPropertyInfo,
+    override val propertyInfo: PropertyInfo,
     override val fragment: Fragment
 ) : InstanceAdapter {
 
