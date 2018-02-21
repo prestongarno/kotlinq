@@ -13,10 +13,10 @@ class ScalarAdapterServiceImpl(
   override fun newAdapter(info: PropertyInfo): ParsingAdapter {
     require(info.kind.isScalar) { "Type $info is not a scalar type" }
     return when (info.kind.rootKind()) {
-      Kind._Int -> IntAdapterImpl(info, mappers.intMapper)
-      Kind._String -> StringAdapterImpl(info, mappers.stringMapper)
-      Kind._Float -> FloatAdapterImpl(info, mappers.floatMapper)
-      Kind._Boolean -> BooleanAdapterImpl(info, mappers.booleanMapper)
+      Kind.Scalar._Int -> IntAdapterImpl(info, mappers.intMapper)
+      Kind.Scalar._String -> StringAdapterImpl(info, mappers.stringMapper)
+      Kind.Scalar._Float -> FloatAdapterImpl(info, mappers.floatMapper)
+      Kind.Scalar._Boolean -> BooleanAdapterImpl(info, mappers.booleanMapper)
       else -> {
         throw IllegalArgumentException("Illegal info '$info'")
       }

@@ -55,28 +55,31 @@ class Kind(internal val name: kotlin.String) {
 
   override fun toString(): String = "TypeKind($name)"
 
+  sealed class Scalar(name: String) : Kind(name) {
 
-  object _String : Kind("String") {
-    override val isScalar get() = true
-    override fun isTypeCompatible(instance: Kind) = instance === this
-  }
-
-
-  object _Int : Kind("Int") {
-    override val isScalar get() = true
-    override fun isTypeCompatible(instance: Kind) = instance === this
-  }
+    object _String : Scalar("String") {
+      override val isScalar get() = true
+      override fun isTypeCompatible(instance: Kind) = instance === this
+    }
 
 
-  object _Boolean : Kind("Boolean") {
-    override val isScalar get() = true
-    override fun isTypeCompatible(instance: Kind) = instance === this
-  }
+    object _Int : Scalar("Int") {
+      override val isScalar get() = true
+      override fun isTypeCompatible(instance: Kind) = instance === this
+    }
 
 
-  object _Float : Kind("Float") {
-    override val isScalar get() = true
-    override fun isTypeCompatible(instance: Kind) = instance === this
+    object _Boolean : Scalar("Boolean") {
+      override val isScalar get() = true
+      override fun isTypeCompatible(instance: Kind) = instance === this
+    }
+
+
+    object _Float : Scalar("Float") {
+      override val isScalar get() = true
+      override fun isTypeCompatible(instance: Kind) = instance === this
+    }
+
   }
 
 
@@ -117,23 +120,28 @@ class Kind(internal val name: kotlin.String) {
 
   companion object {
 
+    /**
+     * Convenience access to primitive symbols
+     */
+    val string = Scalar._String
+    val integer = Scalar._Int
+    val bool = Scalar._Boolean
+    val float = Scalar._Float
+
+    val scalars = listOf(
+        Scalar._Int,
+        Scalar._Boolean,
+        Scalar._String,
+        Scalar._Float)
+
     fun named(name: String): Kind {
-      for (scalar in ScalarHolder.scalars) {
-        println("$scalar")
-        if (scalar.name == name)
-          throw IllegalArgumentException("Illegal name $name")
-      }
+      scalars.firstOrNull {
+        it.name == name
+      }?.let { throw IllegalArgumentException("Illegal name $name") }
+
       return Definition(name)
     }
   }
 }
 
-
-private object ScalarHolder {
-  val scalars = listOf(
-      org.kotlinq.api.Kind._Int,
-      org.kotlinq.api.Kind._Boolean,
-      org.kotlinq.api.Kind._String,
-      org.kotlinq.api.Kind._Float)
-}
 

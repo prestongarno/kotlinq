@@ -3,6 +3,8 @@ package org.kotlinq.entities
 import com.google.common.truth.Subject
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.kotlinq.api.Adapter
+import org.kotlinq.api.BindableContext
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.Kind
 import org.kotlinq.api.Kotlinq
@@ -31,17 +33,44 @@ class SimpleFragmentEquality {
         assertThat(first.graphQlInstance).assert(second.graphQlInstance)
       }
 
+  fun createPairOfFragments(
+      fragmentTypeName: String = "frag0",
+      propertyName: String = "adapter_property",
+      type: Kind): Pair<Fragment, Fragment> {
+
+    val info = PropertyInfo.named(propertyName)
+        .typeKind(Kind.Scalar._String)
+        .build()
+
+    val property = scalarService
+        .newAdapter(info)
+
+    val first = newContext()
+        .register(property)
+        .build(fragmentTypeName)
+
+    val second = newContext()
+        .register(scalarService.newAdapter(info.copy()))
+        .build(fragmentTypeName)
+
+    return first to second
+  }
+
+  fun BindableContext.bindAll(vararg adapters: Adapter) {
+    adapters.forEach { register(it) }
+  }
+
   @Test fun `fragment with single string property is equal`() {
     testFragmentEqualityAndHashCode(
         shouldBeEqual = true,
-        fragments = createPairOfFragments(type = Kind._String))
+        fragments = createPairOfFragments(type = Kind.Scalar._String))
   }
 
   @Test fun `single integer property fragment is equal`() {
 
     val rootName = "frag0"
     val info = PropertyInfo.named("property_first")
-        .typeKind(Kind._Int)
+        .typeKind(Kind.Scalar._Int)
         .build()
 
     val firstProperty = newScalar(info)
@@ -63,7 +92,7 @@ class SimpleFragmentEquality {
 
     val rootName = "frag0"
     val info = PropertyInfo.named("property_first")
-        .typeKind(Kind._Boolean)
+        .typeKind(Kind.Scalar._Boolean)
         .build()
 
     val firstProperty = newScalar(info)
@@ -81,12 +110,13 @@ class SimpleFragmentEquality {
         fragments = first to second)
 
   }
+
 
   @Test fun `single float property fragment is equal`() {
 
     val rootName = "frag0"
     val info = PropertyInfo.named("property_first")
-        .typeKind(Kind._Float)
+        .typeKind(Kind.Scalar._Float)
         .build()
 
     val firstProperty = newScalar(info)
@@ -102,30 +132,6 @@ class SimpleFragmentEquality {
     testFragmentEqualityAndHashCode(
         shouldBeEqual = true,
         fragments = first to second)
-  }
-
-
-  fun createPairOfFragments(
-      fragmentTypeName: String = "frag0",
-      propertyName: String = "adapter_property",
-      type: Kind): Pair<Fragment, Fragment> {
-
-    val info = PropertyInfo.named(propertyName)
-        .typeKind(Kind._String)
-        .build()
-
-    val property = scalarService
-        .newAdapter(info)
-
-    val first = newContext()
-        .register(property)
-        .build(fragmentTypeName)
-
-    val second = newContext()
-        .register(scalarService.newAdapter(info.copy()))
-        .build(fragmentTypeName)
-
-    return first to second
   }
 
 }

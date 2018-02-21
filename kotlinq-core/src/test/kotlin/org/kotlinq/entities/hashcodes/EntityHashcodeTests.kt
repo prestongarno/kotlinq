@@ -35,7 +35,7 @@ class EntityHashcodeTests {
     val expected = generator().hashCode()
 
     buildSequence {
-      for (i in 1..100) yield(generator())
+      for (i in 1..10) yield(generator())
     }.forEach {
       it.hashCode() eq expected
     }

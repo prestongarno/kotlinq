@@ -16,7 +16,7 @@ class PropertyInfo(
 
   class Builder internal constructor(private var name: String) {
     private var arguments: Map<String, Any> = emptyMap()
-    private var kind: Kind = Kind._String
+    private var kind: Kind = Kind.Scalar._String
 
     fun named(it: String) = apply { this.name = it }
     fun arguments(it: Map<String, Any>) = apply { arguments = it }

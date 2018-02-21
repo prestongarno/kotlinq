@@ -2,9 +2,6 @@ package org.kotlinq.api
 
 
 /**
- * This is used for a query class for property delegates
- * to bind themselves to during object construction
- *
  * @author prestongarno
  */
 interface GraphQlInstance {
@@ -26,7 +23,7 @@ interface GraphQlInstance {
    */
   fun toGraphQl(pretty: Boolean = false, inlineFragments: Boolean = true): String
 
-  fun accept(visitor: GraphVisitor) = properties.forEach { (name, prop) ->
+  fun accept(visitor: GraphVisitor) = properties.forEach { (_, prop) ->
     prop.accept(visitor)
   }
 }
