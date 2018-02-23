@@ -1,9 +1,7 @@
 package org.kotlinq.models
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.Fragment
 import org.kotlinq.api.FragmentContext
-import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.ReifiedFragmentContext
 import kotlin.coroutines.experimental.buildSequence
@@ -34,9 +32,6 @@ class GraphQlInstanceImpl(
   override fun isResolved(): Boolean =
       properties.filterNot { it.value.propertyInfo.isNullable }
           .count { !it.value.isResolved() } == 0
-
-  override fun toGraphQl(pretty: Boolean, inlineFragments: Boolean): String =
-      GraphQlFormatter.printGraphQl(this, pretty, inlineFragments)
 
   override fun equals(other: Any?): Boolean {
 

@@ -6,20 +6,14 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.singleton
 import org.kotlinq.api.AdapterService
-import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.JsonParser
-import org.kotlinq.api.Resolver
 import org.kotlinq.api.services.wrappers.AdapterWrapper
 import org.kotlinq.api.services.wrappers.GraphQlInstanceProviderWrapper
 import org.kotlinq.api.services.wrappers.JsonParsingWrapper
-import org.kotlinq.api.services.wrappers.PrinterWrapper
-import org.kotlinq.api.services.wrappers.ResolverWrapper
 import org.kotlinq.models.GraphQlInstanceProviderImpl
-import org.kotlinq.printer.PrinterImpl
 import org.kotlinq.properties.AdapterServiceImpl
 import org.kotlinq.resolvers.JsonParserImpl
-import org.kotlinq.resolvers.ResolverImpl
 
 
 /**
@@ -39,8 +33,6 @@ object ServiceContainer {
 
   val kodein = Kodein {
     bind<AdapterService>() with singleton { adapterService }
-    bind<GraphQlFormatter>() with singleton { printerService }
-    bind<Resolver>() with singleton { defaultResolver }
     bind<JsonParser>() with singleton { jsonParser }
     bind<GraphQlInstanceProvider>() with singleton { graphQlInstanceProvider }
   }
@@ -59,15 +51,11 @@ object ServiceContainer {
   private val adapterService = AdapterWrapper(AdapterServiceImpl())
   private val graphQlInstanceProvider = GraphQlInstanceProviderWrapper(GraphQlInstanceProviderImpl())
   private val jsonParser = JsonParsingWrapper(JsonParserImpl())
-  private val printerService = PrinterWrapper(PrinterImpl())
-  private val defaultResolver = ResolverWrapper(ResolverImpl())
 
   private val wrappers = listOf(
       adapterService,
       graphQlInstanceProvider,
-      jsonParser,
-      printerService,
-      defaultResolver)
+      jsonParser)
 
   fun useDefaults() {
     wrappers.forEach(Wrapper<*>::useDefault)

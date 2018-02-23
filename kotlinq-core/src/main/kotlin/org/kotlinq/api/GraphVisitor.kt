@@ -17,12 +17,13 @@ interface GraphVisitor {
   fun notifyExit(fragment: Fragment)
 
   // this is annoying, must be a way to get rid of this
-  fun visitFragmentContext(context: FragmentContext) =
-      context.fragments.forEach { _, fragment ->
-        if (notifyEnter(fragment))
-          visitContext(fragment)
-        notifyExit(fragment)
-      }
+  fun visitFragmentContext(context: FragmentContext) {
+    context.fragments.forEach { _, fragment ->
+      if (notifyEnter(fragment))
+        visitContext(fragment)
+      notifyExit(fragment)
+    }
+  }
 
   fun enterField(adapter: Adapter): Boolean
 }

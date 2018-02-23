@@ -4,6 +4,8 @@ package org.kotlinq.api
 
 /**
  *
+ * Part of the migration away from kotlin.reflect to JS build.
+ *
  * Named "Kind" and not "TypeKind" because it clashes with [javax.lang.model.type.TypeKind]
  * and makes intellij buggy and kotlin compiler fail
  *

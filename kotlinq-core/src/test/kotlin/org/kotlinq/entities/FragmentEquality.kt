@@ -72,10 +72,8 @@ class FragmentEquality {
     }
 
 
-    frag1.graphQlInstance.toGraphQl(pretty = true) eq
-        frag2.graphQlInstance.toGraphQl(pretty = true)
-    frag1.graphQlInstance.toGraphQl(pretty = false) eq
-        frag2.graphQlInstance.toGraphQl(pretty = false)
+    frag1.toGraphQl(pretty = true) eq frag2.toGraphQl(pretty = true)
+    frag1.toGraphQl(pretty = false) eq frag2.toGraphQl(pretty = false)
     // failing
     //frag1 eq frag2
   }

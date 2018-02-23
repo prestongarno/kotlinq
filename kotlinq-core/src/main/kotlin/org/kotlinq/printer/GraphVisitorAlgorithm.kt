@@ -3,6 +3,7 @@ package org.kotlinq.printer
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.GraphVisitor
+import org.kotlinq.api.Printer
 
 internal
 fun Printer.visit(fragment: Fragment) =
@@ -19,7 +20,7 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
   private fun String.emit() = stringer.append(this)
 
   init {
-    notifyEnter(fragment, inline = false)
+    fragment.traverse(this)
   }
 
   private val string by lazy(stringer::toString)
@@ -38,10 +39,11 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
   override fun visitContext(fragment: Fragment) {
     for ((propertyName, predicate) in metaPropertyStrategy.extraProperties) {
       if (predicate(fragment)) {
-        propertyName.emit()
+        printer.fieldNameEval(propertyName).emit()
         ",".emit() //TODO make sure that empty fragments aren't possible
       }
     }
+    fragment.graphQlInstance.accept(this)
   }
 
   override fun notifyExit(fragment: Fragment) {
@@ -49,7 +51,9 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
   }
 
   override fun enterField(adapter: Adapter): Boolean {
-    adapter.propertyInfo.graphQlName.emit()
+    printer.fieldNameEval(
+        adapter.propertyInfo.graphQlName).emit()
+
     for ((name, argument) in adapter.propertyInfo.arguments) {
       printer.argumentNameEval(name).emit()
       ": ".emit()

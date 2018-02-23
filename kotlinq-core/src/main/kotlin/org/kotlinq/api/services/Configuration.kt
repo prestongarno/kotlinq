@@ -3,7 +3,6 @@ package org.kotlinq.api.services
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import org.kotlinq.api.AdapterService
-import org.kotlinq.api.GraphQlFormatter
 import org.kotlinq.api.GraphQlInstanceProvider
 import org.kotlinq.api.JsonParser
 import org.kotlinq.api.Resolver
@@ -14,7 +13,6 @@ import org.kotlinq.api.Resolver
  *
  * Modules are:
  *   * [AdapterService]: Creates nodes/edges
- *   * [GraphQlFormatter]: Prints the graph to a GraphQL query
  *   * [GraphQlInstanceProvider]: Creates instances (i.e. the idea of mapping GraphQl selection sets -> pojos)
  *   * [JsonParser]: Lower-level, used by next one. TODO should probably isolate this
  *   * [Resolver]: Resolves the graph with the result
@@ -44,7 +42,6 @@ interface Configuration {
     internal
     class Builder(
         var adapterService: AdapterService? = null,
-        var printer: GraphQlFormatter? = null,
         var resolver: Resolver? = null,
         var jsonParser: JsonParser? = null,
         var instanceProvider: GraphQlInstanceProvider? = null) {
@@ -54,7 +51,6 @@ interface Configuration {
         get() =
           listOfNotNull(
               adapterService,
-              printer,
               resolver,
               jsonParser,
               instanceProvider)

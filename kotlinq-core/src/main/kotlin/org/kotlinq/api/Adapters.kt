@@ -25,10 +25,6 @@ interface InstanceAdapter : Adapter, ReifiedFragmentContext {
   }
 }
 
-/**
- * Adapter for a property which returns a nested [Definition] graphQlInstance,
- * but can be mapped to any combination of types (i.e. a workaround for the JavaScript spread operator)
- */
 interface FragmentAdapter : FragmentContext {
   fun setValue(typeName: String, values: Map<String, Any?>, resolver: Resolver = Resolver): Boolean
   override fun accept(resolver: GraphVisitor) {

@@ -76,6 +76,9 @@ class PrintingConfiguration private constructor(
 
     fun builder() = PrintingConfiguration.Builder()
 
+    /**
+     * Double quotations (escaped), includes __typename and ID on all objects
+     */
     val DEFAULT: PrintingConfiguration = builder()
         .metaPropertyStrategy(MetaPropertyStrategy.STANDARD)
         .pretty(false)

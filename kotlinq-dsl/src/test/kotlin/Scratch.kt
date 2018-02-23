@@ -7,7 +7,6 @@ import org.kotlinq.api.Kind
 import org.kotlinq.api.PropertyInfo
 import org.kotlinq.dsl.fragment
 import org.kotlinq.dsl.query
-import org.kotlinq.dsl.toGraphQl
 
 
 fun greet(worldName: String = "Earth", message: Any = "Hello") =
