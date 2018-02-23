@@ -1,7 +1,7 @@
 package org.kotlinq.api
 
 
-interface FragmentContext {
+interface FragmentContext : Adapter {
   val fragments: Map<String, Fragment>
 }
 

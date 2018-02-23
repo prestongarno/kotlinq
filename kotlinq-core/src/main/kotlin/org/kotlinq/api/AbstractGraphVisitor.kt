@@ -15,9 +15,9 @@ import org.kotlinq.common.empty
  *   This allows for path control when traversing
  */
 class AbstractGraphVisitor(
-    val nodeListener: (Adapter) -> Unit,
-    val controller: GraphVisitor.(Fragment) -> Unit = { it.graphQlInstance.accept(this) }, // default behaviour is to traverse entire graph
-    val exitNodeListener: (Adapter) -> Unit = empty()
+    private val nodeListener: (Adapter) -> Unit,
+    private val controller: GraphVisitor.(Fragment) -> Unit = { it.graphQlInstance.accept(this) }, // default behaviour is to traverse entire graph
+    private val exitNodeListener: (Adapter) -> Unit = empty()
 ) {
 
 

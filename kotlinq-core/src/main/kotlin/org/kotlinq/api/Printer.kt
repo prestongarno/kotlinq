@@ -12,9 +12,8 @@ internal
 interface GraphQlFormatter {
 
   fun printGraphQl(
-      instance: GraphQlInstance,
-      pretty: Boolean = false,
-      inlineFragments: Boolean = true
+      fragment: Fragment,
+      configuration: PrintingConfiguration = PrintingConfiguration.DEFAULT
   ): String
 
   companion object : GraphQlFormatter by Configuration.instance()

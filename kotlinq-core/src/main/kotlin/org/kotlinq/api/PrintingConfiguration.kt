@@ -13,10 +13,13 @@ package org.kotlinq.api
 class PrintingConfiguration private constructor(
     val quotationCharacter: String = "\"",
     val metaPropertyStrategy: MetaPropertyStrategy = MetaPropertyStrategy.NONE,
-    val pretty: Boolean = false) {
+    val pretty: Boolean) {
 
+  /**
+   * Adds properties to fragments based on predicates
+   */
   class MetaPropertyStrategy private constructor(
-      private val shouldInclude: Map<String, (Fragment) -> Boolean>) {
+      internal val extraProperties: Map<String, (Fragment) -> Boolean>) {
 
 
     class Builder {

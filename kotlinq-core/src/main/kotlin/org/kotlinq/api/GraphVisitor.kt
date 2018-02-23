@@ -3,16 +3,27 @@ package org.kotlinq.api
 
 interface GraphVisitor {
 
-  fun visit(target: DeserializingAdapter) = Unit
+  /**
+   * Acts as a predicate for entering a fragment,
+   * allowing short-circuit traversal (Hierarchical visitor pattern)
+   */
+  fun notifyEnter(fragment: Fragment, inline: Boolean = false): Boolean = true
 
-  fun visit(target: Fragment) = Unit
+  fun visitContext(fragment: Fragment) {
+    fragment.graphQlInstance.accept(this)
+    notifyExit(fragment)
+  }
 
-  fun visit(target: FragmentAdapter) = Unit
+  fun notifyExit(fragment: Fragment)
 
-  fun visit(target: InstanceAdapter) = Unit
+  // this is annoying, must be a way to get rid of this
+  fun visitFragmentContext(context: FragmentContext) =
+      context.fragments.forEach { _, fragment ->
+        if (notifyEnter(fragment))
+          visitContext(fragment)
+        notifyExit(fragment)
+      }
 
-  fun visit(target: ParsingAdapter) = Unit
-
-  fun traverse(graph: GraphQlInstance): Unit = graph.accept(this)
-
+  fun enterField(adapter: Adapter): Boolean
 }
+
