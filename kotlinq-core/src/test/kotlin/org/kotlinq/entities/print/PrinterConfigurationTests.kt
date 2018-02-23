@@ -24,24 +24,30 @@ class PrinterConfigurationTests {
             .build()
 
     assertThat(query.toGraphQl(pretty = false))
-        .isEqualTo("{hello}")
+        .isEqualTo("{id,__typename,hello}")
   }
 
   @Test fun bar() {
 
-    PrintingConfiguration.builder()
-        .metaPropertyStrategy(PrintingConfiguration.MetaPropertyStrategy.STANDARD)
-        .pretty(true)
-        .build()
+
+    Printer.fromConfiguration(PrintingConfiguration.PRETTY)
+        .toBuilder()
+        .metaStrategy(
+            Printer.MetaStrategy.builder()
+                .include("TODO")
+                .includeId()
+                .includeTypename()
+                .build()
+        ).build()
+        .printFragmentToString(query)
+
         .let {
-          Printer.fromConfiguration(it)
-              .printFragmentToString(query)
-        }.let {
 
           val expect = """
                 |{
-                |  id,
-                |  __typename,
+                |  TODO
+                |  id
+                |  __typename
                 |  hello
                 |}
                 """.trimMargin("|")
@@ -52,12 +58,12 @@ class PrinterConfigurationTests {
   }
 
   @Test fun baz() {
-    val printer = Printer.transformationBuilder(PrintingConfiguration
-        .builder()
-        .pretty(true)
-        .metaPropertyStrategy(PrintingConfiguration.MetaPropertyStrategy.STANDARD)
+
+    val standard = Printer.transformationBuilder()
         .build()
-    ).evalFieldName { "$it!!!" }
+
+    val printer = standard.toBuilder()
+        .evalFieldName { standard.fieldNameEval(it) + "!!!" }
         .build()
 
     val query = fragment("Query") {
@@ -68,7 +74,21 @@ class PrinterConfigurationTests {
 
     // interrestingg
     assertThat(printer.printFragmentToString(query))
-        .isEqualTo("{id!!!,__typename!!!,foo!!!bar!!!baz!!!}")
+        .isEqualTo("{id!!!,__typename!!!,foo!!!,bar!!!,baz!!!}")
+  }
+
+  @Test fun nestedFragmentTest() {
+
+    val query = fragment {
+      scalar("foo")
+      scalar("bar")
+      "baz" on {
+        scalar("bazbar")
+      }
+    }
+
+    println(query.toGraphQl(pretty = true))
+
   }
 
 }

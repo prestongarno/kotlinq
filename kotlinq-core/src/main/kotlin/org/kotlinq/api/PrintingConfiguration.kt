@@ -11,68 +11,42 @@ package org.kotlinq.api
  *   * Indent
  */
 class PrintingConfiguration private constructor(
+    val pretty: Boolean = false,
     val quotationCharacter: String = "\"",
-    val metaPropertyStrategy: MetaPropertyStrategy = MetaPropertyStrategy.NONE,
-    val pretty: Boolean) {
+    val argumentSeparator: String = ": ",
+    val commaSeparator: String = ",",
+    val spreadOnFragmentOperator: String = "... on ") {
 
   /**
-   * Adds properties to fragments based on predicates
+   * Builder for a [PrintingConfiguration].
    */
-  class MetaPropertyStrategy private constructor(
-      internal val extraProperties: Map<String, (Fragment) -> Boolean>) {
-
-
-    class Builder {
-
-      private
-      val shouldInclude = mutableMapOf<String, (Fragment) -> Boolean>()
-
-      fun include(propertyName: String, predicate: (Fragment) -> Boolean) =
-          apply { shouldInclude[propertyName] = predicate }
-
-      fun includeId(predicate: (Fragment) -> Boolean = { true }) = include("id", predicate)
-      fun includeTypename(predicate: (Fragment) -> Boolean = { true }) = include("__typename", predicate)
-
-      fun build() = MetaPropertyStrategy(shouldInclude)
-    }
-
-    companion object {
-
-      fun builder() = Builder()
-
-      val NONE = MetaPropertyStrategy(emptyMap())
-
-      /** Adds "__typename" and "id" fields to every fragment */
-      val STANDARD = MetaPropertyStrategy.Builder()
-          .includeId()
-          .includeTypename()
-          .build()
-    }
-  }
-
-
   class Builder {
+
+
+    // TODO dedup
     private var quotationCharacter: String = "\""
-    private var metaPropertyStrategy: MetaPropertyStrategy = MetaPropertyStrategy.NONE
     private var pretty: Boolean = false
+    private var argumentSeparator: String = ": "
+    private var spreadOnFragmentOperator: String = "... on "
+    private var commaSeparator: String = ","
 
-    fun quotationCharacter(it: String) =
-        apply { quotationCharacter = it }
 
-    fun metaPropertyStrategy(it: MetaPropertyStrategy) =
-        apply { metaPropertyStrategy = it }
+    fun quotationCharacter(it: String) = apply { quotationCharacter = it }
+    fun pretty(it: Boolean = false) = apply { pretty = it }
+    fun argumentSeparator(it: String) = apply { argumentSeparator = it }
+    fun spreadOnFragmentOperator(it: String) = apply { spreadOnFragmentOperator = it }
+    fun commaSeparator(it: String) = apply { commaSeparator = it }
 
-    fun pretty(it: Boolean = false) =
-        apply { pretty = it }
 
     fun build() = PrintingConfiguration(
-        quotationCharacter,
-        metaPropertyStrategy,
-        pretty)
+        pretty, quotationCharacter,
+        argumentSeparator, commaSeparator,
+        spreadOnFragmentOperator)
+
   }
 
-
   companion object {
+
 
     fun builder() = PrintingConfiguration.Builder()
 
@@ -80,9 +54,19 @@ class PrintingConfiguration private constructor(
      * Double quotations (escaped), includes __typename and ID on all objects
      */
     val DEFAULT: PrintingConfiguration = builder()
-        .metaPropertyStrategy(MetaPropertyStrategy.STANDARD)
         .pretty(false)
         .quotationCharacter("\\\"")
+        .argumentSeparator(": ")
+        .commaSeparator(",")
+        .spreadOnFragmentOperator("...on ")
+        .build()
+
+    val PRETTY = builder()
+        .pretty(true)
+        .quotationCharacter("\\\"")
+        .argumentSeparator(": ")
+        .commaSeparator("")
+        .spreadOnFragmentOperator("... on ")
         .build()
   }
 }
