@@ -2,6 +2,7 @@ package org.kotlinq.printer
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
+import org.kotlinq.api.FragmentContext
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.Printer
 
@@ -67,5 +68,11 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
     ")".emit()
 
     return true
+  }
+
+  override fun visitFragmentContext(context: FragmentContext) {
+    printer.enterContextEval().emit()
+    super.visitFragmentContext(context)
+    printer.exitContextEval().emit()
   }
 }

@@ -98,6 +98,8 @@ class Scratch {
       }
     }.toGraphQl(pretty = true)
 
+    println(starWarsQuery)
+
     assertThat(starWarsQuery)
         .isEqualTo(expect)
   }

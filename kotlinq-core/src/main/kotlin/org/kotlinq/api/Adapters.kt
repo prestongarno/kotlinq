@@ -19,9 +19,10 @@ interface InstanceAdapter : Adapter, ReifiedFragmentContext {
   override fun getValue(): Fragment?
 
   override fun accept(resolver: GraphVisitor) {
-    resolver.enterField(this)
-    if (resolver.notifyEnter(fragment, inline = false))
+    if (resolver.enterField(this) && resolver.notifyEnter(fragment, inline = false)) {
       resolver.visitContext(fragment)
+      resolver.notifyExit(fragment)
+    }
   }
 }
 
