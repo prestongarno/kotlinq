@@ -33,6 +33,7 @@ class FragmentProperty(
 
   override fun equals(other: Any?) = (other as? FragmentAdapter)
       ?.let { Adapter.adapterEquals(this, it) } == true
+      && other.fragments.size == this.fragments.size
       && other.fragments.count { fragments[it.key] != it.value } == 0
 
   override fun hashCode(): Int =

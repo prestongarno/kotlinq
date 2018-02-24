@@ -39,8 +39,6 @@ class FragmentEquality {
         scalar("foo", Kind.integer)
         scalar("bar", Kind.bool)
       }
-    }.apply {
-      graphQlInstance.edges.firstOrNull()!!.typeName eq "Two"
     }
   }
 
@@ -72,12 +70,9 @@ class FragmentEquality {
     }
 
 
-    frag1.graphQlInstance.toGraphQl(pretty = true) eq
-        frag2.graphQlInstance.toGraphQl(pretty = true)
-    frag1.graphQlInstance.toGraphQl(pretty = false) eq
-        frag2.graphQlInstance.toGraphQl(pretty = false)
-    // failing
-    //frag1 eq frag2
+    frag1.toGraphQl(pretty = true) eq frag2.toGraphQl(pretty = true)
+    frag1.toGraphQl(pretty = false) eq frag2.toGraphQl(pretty = false)
+    frag1 eq frag2
   }
 
 }

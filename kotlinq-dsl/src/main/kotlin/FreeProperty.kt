@@ -30,3 +30,4 @@ data class FreeProperty internal constructor(
   fun isNullable() = isNullable
 
 }
+

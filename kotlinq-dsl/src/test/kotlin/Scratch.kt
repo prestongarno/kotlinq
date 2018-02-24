@@ -4,10 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.Kind
+import org.kotlinq.api.Printer
+import org.kotlinq.api.PrintingConfiguration
 import org.kotlinq.api.PropertyInfo
 import org.kotlinq.dsl.fragment
 import org.kotlinq.dsl.query
-import org.kotlinq.dsl.toGraphQl
 
 
 fun greet(worldName: String = "Earth", message: Any = "Hello") =
@@ -44,15 +45,20 @@ enum class Measurement {
 class Scratch {
 
   @Test fun `simple primitive field dsl coordinate type prints correctly`() {
-    assertThat(coordinates().toGraphQl(pretty = true))
-        .isEqualTo("""
+    assertThat(Printer
+        .fromConfiguration(PrintingConfiguration.PRETTY)
+        .toBuilder()
+        .metaStrategy(Printer.MetaStrategy.NONE)
+        .build()
+        .printFragmentToString(coordinates())
+    ).isEqualTo("""
           {
             xValue
             yValue
           }
         """.trimIndent())
     assertThat(coordinates().toGraphQl(pretty = false))
-        .isEqualTo("{__typename,xValue,yValue}")
+        .isEqualTo("{id,__typename,xValue,yValue}")
   }
 
   @Test fun simpleStarWars() {
@@ -60,7 +66,6 @@ class Scratch {
     val expect = """
       |{
       |  search(text: "han solo") {
-      |    __typename
       |    ... on Human {
       |      name
       |      id
@@ -68,7 +73,6 @@ class Scratch {
       |      friendsConnection(first: 10) {
       |        totalCount
       |        friends {
-      |          __typename
       |          ... on Human {
       |            name
       |            id
@@ -79,6 +83,11 @@ class Scratch {
       |  }
       |}
       """.trimMargin("|")
+
+    val printer = Printer.fromConfiguration(PrintingConfiguration.PRETTY)
+        .toBuilder()
+        .metaStrategy(Printer.MetaStrategy.NONE)
+        .build()
 
     val starWarsQuery = query {
       "search"("text" to "han solo")..{
@@ -97,7 +106,7 @@ class Scratch {
           }
         }
       }
-    }.toGraphQl(pretty = true)
+    }.toGraphQl(printer)
 
     assertThat(starWarsQuery)
         .isEqualTo(expect)
@@ -137,12 +146,15 @@ class Scratch {
     }
 
 
-    assertThat(charactersQuery(listOf(humanDef())).toGraphQl())
+    assertThat(charactersQuery(listOf(humanDef())).toGraphQl(pretty = true))
         .isEqualTo("""
           |{
+          |  id
+          |  __typename
           |  characters(first: 100) {
-          |    __typename
           |    ... on Human {
+          |      id
+          |      __typename
           |      name
           |      nicknames
           |    }
@@ -152,20 +164,27 @@ class Scratch {
 
     assertThat(charactersQuery(listOf(humanDef())).toGraphQl(pretty = false))
         .isEqualTo(
-            "{__typename,characters(first: 100){... on Human{__typename,name,nicknames}}}")
+            "{id,__typename,characters(first: 100){...on Human{id,__typename,name,nicknames}}}")
 
-    assertThat(charactersQuery(listOf(humanDef(), robotDef())).toGraphQl())
+    assertThat(charactersQuery(listOf(humanDef(), robotDef())).toGraphQl(pretty = true))
         .isEqualTo("""
           |{
+          |  id
+          |  __typename
           |  characters(first: 100) {
-          |    __typename
           |    ... on Human {
+          |      id
+          |      __typename
           |      name
           |      nicknames
           |    }
           |    ... on Robot {
+          |      id
+          |      __typename
           |      modelNumber
           |      maker {
+          |        id
+          |        __typename
           |        name
           |        nicknames
           |      }
@@ -183,15 +202,22 @@ class Scratch {
 
     val expect = """
       |{
+      |  id
+      |  __typename
       |  characters(first: 100) {
-      |    __typename
       |    ... on Human {
+      |      id
+      |      __typename
       |      name
       |      nicknames
       |    }
       |    ... on Robot {
+      |      id
+      |      __typename
       |      modelNumber
       |      maker {
+      |        id
+      |        __typename
       |        name
       |        nicknames
       |      }
@@ -200,7 +226,7 @@ class Scratch {
       |}
       """.trimMargin("|")
 
-    assertThat(charactersQuery.toGraphQl())
+    assertThat(charactersQuery.toGraphQl(pretty = true))
         .isEqualTo(expect)
   }
 }

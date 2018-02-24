@@ -1,25 +1,24 @@
 package org.kotlinq.fragments
 
-import org.kotlinq.api.AbstractGraphVisitor
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.GraphQlInstance
+import org.kotlinq.api.GraphVisitor
 
 
-fun GraphQlInstance.getFragments(uniqueOnly: Boolean = true): Set<Fragment> {
+fun Fragment.getFragments(uniqueOnly: Boolean = true): Set<Fragment> {
+  val fragments = mutableSetOf<Fragment>()
 
-  val frags = mutableSetOf<Fragment>()
+  GraphVisitor.builder()
+      .onNotifyEnter { current ->
 
-  // ~10 LOC easy doing something this difficult, all it takes is eq & hashcode correctly
-  AbstractGraphVisitor.createGeneralizedGraphVisitor {
-    fragmentListener = {
-      if (uniqueOnly && !frags.contains(it)) {
-        frags += it
-        it.graphQlInstance.accept(this)
-      } else {
-        frags += it
-      }
-    }
-  }.traverse(this)
+        if (uniqueOnly && current in fragments)
+          false
+        else let {
+          fragments += current
+          true
+        }
 
-  return frags
+      }.build()
+      .also(::traverse)
+
+  return fragments
 }
