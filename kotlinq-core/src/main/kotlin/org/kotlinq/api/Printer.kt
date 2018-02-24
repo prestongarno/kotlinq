@@ -31,8 +31,8 @@ class Printer private constructor(
     private var argumentValueEval: (Any) -> String = {
       configuration.quotationCharacter + it.toString() + configuration.quotationCharacter
     }
-    private var enterContextEval: () -> String = ::ENTER_SCOPE
-    private var exitContextEval: () -> String = ::EXIT_SCOPE
+    private var enterContextEval: () -> String = { "${configuration.lcurlyChar}" }
+    private var exitContextEval: () -> String = { "${configuration.rcurlyChar}" }
     private var fieldNameEval: (String) -> String = { it }
     private var typeNameEval: (String) -> String = { it }
     private var metaStrategy: Printer.MetaStrategy = MetaStrategy.STANDARD
@@ -84,7 +84,10 @@ class Printer private constructor(
             var currentDepth = 0
             val indent = "  "
             evalEnterContext {
-              indent.repeat(currentDepth++) + ENTER_SCOPE
+              if (configuration.pretty && currentDepth++ > 0)
+                " " + printingConfiguration.lcurlyChar
+              else
+                printingConfiguration.lcurlyChar.toString()
             }
             evalExitContext {
               "\n" + indent.repeat(--currentDepth) + EXIT_SCOPE

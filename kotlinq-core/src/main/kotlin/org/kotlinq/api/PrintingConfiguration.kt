@@ -15,7 +15,9 @@ class PrintingConfiguration private constructor(
     val quotationCharacter: String = "\"",
     val argumentSeparator: String = ": ",
     val commaSeparator: String = ",",
-    val spreadOnFragmentOperator: String = "... on ") {
+    val spreadOnFragmentOperator: String = "... on ",
+    val lcurlyChar: Char = '{',
+    val rcurlyChar: Char = '}') {
 
   /**
    * Builder for a [PrintingConfiguration].
@@ -29,6 +31,9 @@ class PrintingConfiguration private constructor(
     private var argumentSeparator: String = ": "
     private var spreadOnFragmentOperator: String = "... on "
     private var commaSeparator: String = ","
+    private var indent: String = "  "
+    private var lcurlyChar: Char = '{'
+    private var rcurlyChar: Char = '}'
 
 
     fun quotationCharacter(it: String) = apply { quotationCharacter = it }
@@ -36,6 +41,9 @@ class PrintingConfiguration private constructor(
     fun argumentSeparator(it: String) = apply { argumentSeparator = it }
     fun spreadOnFragmentOperator(it: String) = apply { spreadOnFragmentOperator = it }
     fun commaSeparator(it: String) = apply { commaSeparator = it }
+    fun indent(it: String) = apply { indent = it }
+    fun lcurlyChar(it: Char) = apply { lcurlyChar = it }
+    fun rcurlyChar(it: Char) = apply { rcurlyChar = it }
 
 
     fun build() = PrintingConfiguration(

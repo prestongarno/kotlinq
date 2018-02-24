@@ -4,6 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.Kind
+import org.kotlinq.api.Printer
+import org.kotlinq.api.PrintingConfiguration
 import org.kotlinq.api.PropertyInfo
 import org.kotlinq.dsl.fragment
 import org.kotlinq.dsl.query
@@ -43,15 +45,20 @@ enum class Measurement {
 class Scratch {
 
   @Test fun `simple primitive field dsl coordinate type prints correctly`() {
-    assertThat(coordinates().toGraphQl(pretty = true))
-        .isEqualTo("""
+    assertThat(Printer
+        .fromConfiguration(PrintingConfiguration.PRETTY)
+        .toBuilder()
+        .metaStrategy(Printer.MetaStrategy.NONE)
+        .build()
+        .printFragmentToString(coordinates())
+    ).isEqualTo("""
           {
             xValue
             yValue
           }
         """.trimIndent())
     assertThat(coordinates().toGraphQl(pretty = false))
-        .isEqualTo("{__typename,xValue,yValue}")
+        .isEqualTo("{id,__typename,xValue,yValue}")
   }
 
   @Test fun simpleStarWars() {

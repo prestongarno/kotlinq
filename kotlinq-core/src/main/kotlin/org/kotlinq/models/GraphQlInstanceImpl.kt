@@ -1,33 +1,12 @@
 package org.kotlinq.models
 
 import org.kotlinq.api.Adapter
-import org.kotlinq.api.FragmentContext
 import org.kotlinq.api.GraphQlInstance
-import org.kotlinq.api.ReifiedFragmentContext
-import kotlin.coroutines.experimental.buildSequence
 
 
 internal
 class GraphQlInstanceImpl(
     override val properties: Map<String, Adapter>) : GraphQlInstance {
-
-  override val edges = buildSequence {
-    for ((_, adapter) in properties) {
-      when (adapter) {
-        is ReifiedFragmentContext -> yield(adapter.fragment)
-        is FragmentContext -> {
-          val context: FragmentContext = adapter
-          for ((_, fragment) in context.fragments) {
-            yield(fragment)
-          }
-        }
-      }
-    }
-  }
-
-  override val nodes: Sequence<Adapter> =
-      properties.values.asSequence()
-
 
   override fun isResolved(): Boolean =
       properties.filterNot { it.value.propertyInfo.isNullable }

@@ -1,8 +1,9 @@
 package org.kotlinq.properties
 
+import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.InstanceAdapter
+import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.Resolver
 
 internal
@@ -21,4 +22,10 @@ class InstanceProperty(
   }
 
   override fun getValue(): Fragment = fragment
+
+  override fun equals(other: Any?): Boolean = (other as? InstanceAdapter)?.let {
+    Adapter.adapterEquals(this, it) && it.fragment == fragment
+  } ?: false
+
+  override fun hashCode() = Adapter.adapterHashcode(this) * 31 + fragment.hashCode()
 }
