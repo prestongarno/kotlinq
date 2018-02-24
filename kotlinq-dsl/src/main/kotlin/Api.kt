@@ -5,7 +5,7 @@ import org.kotlinq.api.Fragment
 /**
  * Top-level query.
  *
- * @param name the name of the operation. This does nothing
+ * @param name the name of the operation
  * @param selectionSet the query selectionSet
  *
  * @author prestongarno

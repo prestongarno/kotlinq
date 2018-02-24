@@ -66,7 +66,6 @@ class Scratch {
     val expect = """
       |{
       |  search(text: "han solo") {
-      |    __typename
       |    ... on Human {
       |      name
       |      id
@@ -74,7 +73,6 @@ class Scratch {
       |      friendsConnection(first: 10) {
       |        totalCount
       |        friends {
-      |          __typename
       |          ... on Human {
       |            name
       |            id
@@ -85,6 +83,11 @@ class Scratch {
       |  }
       |}
       """.trimMargin("|")
+
+    val printer = Printer.fromConfiguration(PrintingConfiguration.PRETTY)
+        .toBuilder()
+        .metaStrategy(Printer.MetaStrategy.NONE)
+        .build()
 
     val starWarsQuery = query {
       "search"("text" to "han solo")..{
@@ -103,7 +106,7 @@ class Scratch {
           }
         }
       }
-    }.toGraphQl(pretty = true)
+    }.toGraphQl(printer)
 
     assertThat(starWarsQuery)
         .isEqualTo(expect)
@@ -143,12 +146,15 @@ class Scratch {
     }
 
 
-    assertThat(charactersQuery(listOf(humanDef())).toGraphQl())
+    assertThat(charactersQuery(listOf(humanDef())).toGraphQl(pretty = true))
         .isEqualTo("""
           |{
+          |  id
+          |  __typename
           |  characters(first: 100) {
-          |    __typename
           |    ... on Human {
+          |      id
+          |      __typename
           |      name
           |      nicknames
           |    }
@@ -158,20 +164,27 @@ class Scratch {
 
     assertThat(charactersQuery(listOf(humanDef())).toGraphQl(pretty = false))
         .isEqualTo(
-            "{__typename,characters(first: 100){... on Human{__typename,name,nicknames}}}")
+            "{id,__typename,characters(first: 100){...on Human{id,__typename,name,nicknames}}}")
 
-    assertThat(charactersQuery(listOf(humanDef(), robotDef())).toGraphQl())
+    assertThat(charactersQuery(listOf(humanDef(), robotDef())).toGraphQl(pretty = true))
         .isEqualTo("""
           |{
+          |  id
+          |  __typename
           |  characters(first: 100) {
-          |    __typename
           |    ... on Human {
+          |      id
+          |      __typename
           |      name
           |      nicknames
           |    }
           |    ... on Robot {
+          |      id
+          |      __typename
           |      modelNumber
           |      maker {
+          |        id
+          |        __typename
           |        name
           |        nicknames
           |      }
@@ -189,15 +202,22 @@ class Scratch {
 
     val expect = """
       |{
+      |  id
+      |  __typename
       |  characters(first: 100) {
-      |    __typename
       |    ... on Human {
+      |      id
+      |      __typename
       |      name
       |      nicknames
       |    }
       |    ... on Robot {
+      |      id
+      |      __typename
       |      modelNumber
       |      maker {
+      |        id
+      |        __typename
       |        name
       |        nicknames
       |      }
@@ -206,7 +226,7 @@ class Scratch {
       |}
       """.trimMargin("|")
 
-    assertThat(charactersQuery.toGraphQl())
+    assertThat(charactersQuery.toGraphQl(pretty = true))
         .isEqualTo(expect)
   }
 }

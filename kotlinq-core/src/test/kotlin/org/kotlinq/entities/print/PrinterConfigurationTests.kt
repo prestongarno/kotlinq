@@ -8,6 +8,7 @@ import org.kotlinq.api.PrintingConfiguration
 import org.kotlinq.api.PropertyInfo
 import org.kotlinq.entities.TestFragmentBuilder.Companion.fragment
 import org.kotlinq.eq
+import org.kotlinq.println
 
 class PrinterConfigurationTests {
 
@@ -78,7 +79,6 @@ class PrinterConfigurationTests {
   }
 
   @Test fun nestedFragmentTest() {
-
     val query = fragment {
       scalar("foo")
       scalar("bar")
@@ -87,8 +87,35 @@ class PrinterConfigurationTests {
       }
     }
 
-    println(query.toGraphQl(pretty = true))
+    val configuration = PrintingConfiguration.builder()
+        .pretty(true)
+        .indent("++++")
+        .lcurlyChar('<')
+        .rcurlyChar('>')
+        .metaStrategy(Printer.MetaStrategy.NONE)
+        .build()
+    val prettyPrinter = configuration.let(Printer.Companion::fromConfiguration)
 
+    val unPrettyPrinter = configuration.toBuilder()
+        .pretty(false)
+        .build()
+        .let(Printer.Companion::fromConfiguration)
+
+    val expect = """
+      <
+      ++++foo
+      ++++bar
+      ++++baz <
+      ++++++++bazbar
+      ++++>
+      >
+      """.trimIndent()
+
+    assertThat(prettyPrinter.printFragmentToString(query))
+        .isEqualTo(expect)
+
+    assertThat(unPrettyPrinter.printFragmentToString(query))
+        .isEqualTo("<foo,bar,baz<bazbar>>")
   }
 
 }

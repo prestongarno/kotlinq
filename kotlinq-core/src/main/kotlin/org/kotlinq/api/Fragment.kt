@@ -9,12 +9,15 @@ data class Fragment(
     val graphQlInstance: GraphQlInstance) {
 
 
-  fun toGraphQl(pretty: Boolean = false): String = toGraphQl(
-      if (pretty) PrintingConfiguration.PRETTY else PrintingConfiguration.DEFAULT
-  ).printFragmentToString(this)
+  fun toGraphQl(pretty: Boolean = false, idAndTypeName: Boolean = true): String =
+      (if (pretty) PrintingConfiguration.PRETTY else PrintingConfiguration.DEFAULT).let {
+        if (idAndTypeName) it else it.toBuilder().metaStrategy(Printer.MetaStrategy.NONE).build()
+      }.let(::toGraphQl)
 
   fun toGraphQl(configuration: PrintingConfiguration) =
-      Printer.fromConfiguration(configuration)
+      toGraphQl(Printer.fromConfiguration(configuration))
+
+  fun toGraphQl(printer: Printer) = printer.printFragmentToString(this)
 
   fun traverse(visitor: GraphVisitor) {
     if (visitor.notifyEnter(this, inline = false)) {

@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.entities.TestFragmentBuilder.Companion.fragment
+import org.kotlinq.println
 import kotlin.coroutines.experimental.buildSequence
 
 class Traversal {

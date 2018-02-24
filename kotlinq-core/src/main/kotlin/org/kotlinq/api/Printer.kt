@@ -3,19 +3,21 @@ package org.kotlinq.api
 import org.kotlinq.printer.visit
 
 
-class Printer private constructor(
-    val printingConfiguration: PrintingConfiguration,
-    internal val metaStrategy: MetaStrategy,
-    internal val argumentNameEval: (String) -> String,
-    internal val argumentValueEval: (Any) -> String,
-    internal val enterContextEval: () -> String,
-    internal val exitContextEval: () -> String,
-    internal val fieldNameEval: (String) -> String,
-    internal val typeNameEval: (String) -> String) {
+class Printer private constructor(builder: Builder) {
+
+  val configuration = builder.configuration
+  internal val metaStrategy = builder.metaStrategy
+  internal val argumentNameEval = builder.argumentNameEval
+  internal val argumentValueEval = builder.argumentValueEval
+  internal val enterContextEval = builder.enterContextEval
+  internal val exitContextEval = builder.exitContextEval
+  internal val fieldNameEval = builder.fieldNameEval
+  internal val typeNameEval = builder.typeNameEval
+  internal val inlineFragmentEval = builder.inlineFragmentEval
 
   fun printFragmentToString(fragment: Fragment) = visit(fragment)
 
-  fun toBuilder() = Builder(printingConfiguration)
+  fun toBuilder() = Builder(configuration)
       .metaStrategy(metaStrategy)
       .evalArgumentName(argumentNameEval)
       .evalArgumentValue(argumentValueEval)
@@ -23,19 +25,19 @@ class Printer private constructor(
       .evalExitContext(exitContextEval)
       .evalFieldName(fieldNameEval)
       .evalTypeName(typeNameEval)
+      .evalInlineFragment(inlineFragmentEval)
 
 
   class Builder internal constructor(val configuration: PrintingConfiguration) {
 
-    private var argumentNameEval: (String) -> String = { it }
-    private var argumentValueEval: (Any) -> String = {
-      configuration.quotationCharacter + it.toString() + configuration.quotationCharacter
-    }
-    private var enterContextEval: () -> String = { "${configuration.lcurlyChar}" }
-    private var exitContextEval: () -> String = { "${configuration.rcurlyChar}" }
-    private var fieldNameEval: (String) -> String = { it }
-    private var typeNameEval: (String) -> String = { it }
-    private var metaStrategy: Printer.MetaStrategy = MetaStrategy.STANDARD
+    internal var argumentNameEval: (String) -> String = { it }
+    internal var argumentValueEval: (Any) -> String = { formatArg(it, configuration.quotationCharacter) }
+    internal var enterContextEval: () -> String = { "${configuration.lcurlyChar}" }
+    internal var exitContextEval: () -> String = { "${configuration.rcurlyChar}" }
+    internal var fieldNameEval: (String) -> String = { it }
+    internal var typeNameEval: (String) -> String = { it }
+    internal var inlineFragmentEval: (String) -> String = { configuration.spreadOnFragmentOperator + it }
+    internal var metaStrategy: Printer.MetaStrategy = configuration.metaStrategy
 
     fun evalArgumentName(function: (String) -> String) =
         apply { this.argumentNameEval = function }
@@ -55,54 +57,49 @@ class Printer private constructor(
     fun evalTypeName(function: (String) -> String) =
         apply { this.typeNameEval = function }
 
+    fun evalInlineFragment(function: (String) -> String) =
+        apply { this.inlineFragmentEval = function }
+
     fun metaStrategy(it: Printer.MetaStrategy) =
         apply { metaStrategy = it }
 
-    fun build() = Printer(
-        printingConfiguration = configuration,
-        metaStrategy = metaStrategy,
-        argumentNameEval = argumentNameEval,
-        argumentValueEval = argumentValueEval,
-        enterContextEval = enterContextEval,
-        exitContextEval = exitContextEval,
-        fieldNameEval = fieldNameEval,
-        typeNameEval = typeNameEval)
+    fun build() = Printer(this)
   }
 
 
   companion object {
 
-    private const val ENTER_SCOPE: String = "{"
-    private const val EXIT_SCOPE: String = "}"
 
+    fun fromConfiguration(conf: PrintingConfiguration): Printer =
 
-    fun fromConfiguration(printingConfiguration: PrintingConfiguration): Printer =
+        if (conf.pretty)
 
-        if (printingConfiguration.pretty)
-
-          Builder(printingConfiguration).apply {
+          Builder(conf).apply {
             var currentDepth = 0
-            val indent = "  "
+            val indent = conf.indent
             evalEnterContext {
               if (configuration.pretty && currentDepth++ > 0)
-                " " + printingConfiguration.lcurlyChar
+                " " + conf.lcurlyChar
               else
-                printingConfiguration.lcurlyChar.toString()
+                conf.lcurlyChar.toString()
             }
             evalExitContext {
-              "\n" + indent.repeat(--currentDepth) + EXIT_SCOPE
+              "\n" + indent.repeat(--currentDepth) + conf.rcurlyChar
             }
             evalFieldName { "\n" + indent.repeat(currentDepth) + it }
-          }.build()
 
+            evalInlineFragment {
+              "\n" + indent.repeat(currentDepth) + conf.spreadOnFragmentOperator + it
+            }
+          }.build()
         else
-          Builder(printingConfiguration).apply {
+          Builder(conf).apply {
 
             var firstProperty = false
 
             evalEnterContext {
               firstProperty = true
-              ENTER_SCOPE
+              conf.lcurlyChar.toString()
             }
 
             evalFieldName {
@@ -160,3 +157,20 @@ class Printer private constructor(
     }
   }
 }
+
+
+private
+fun formatArg(value: Any, quotationMark: String): String =
+    when (value) {
+      is Int, is Boolean -> "$value"
+      is Float -> "${value}f"
+      is String -> value.wrap(quotationMark)
+      is Enum<*> -> value.name.wrap(quotationMark)
+      is Iterable<*> -> value
+          .map { formatArg(it ?: "", quotationMark) }
+          .filter { it.isNotBlank() }
+          .joinToString(",", "[ ", " ]")
+      else -> value.toString().wrap(quotationMark)
+    }
+
+private fun String.wrap(value: String): String = value + this + value

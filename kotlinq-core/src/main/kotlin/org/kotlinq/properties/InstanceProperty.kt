@@ -12,9 +12,8 @@ class InstanceProperty(
     override val fragment: Fragment
 ) : InstanceAdapter {
 
-  override fun isResolved(): Boolean {
-    return fragment.graphQlInstance.isResolved() || propertyInfo.isNullable
-  }
+  override fun isResolved(): Boolean =
+      fragment.graphQlInstance.isResolved() || propertyInfo.isNullable
 
   override fun setValue(result: Map<String, Any?>, resolver: Resolver): Boolean {
     resolver.resolve(result, fragment)

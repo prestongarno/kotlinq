@@ -48,6 +48,8 @@ class Kind(internal val name: kotlin.String) {
     else -> this
   }
 
+  abstract fun copy(): Kind
+
   override fun equals(other: Any?) =
       ((other as? Kind)?.isTypeCompatible(this) == true
           && name == other.name)
@@ -58,6 +60,9 @@ class Kind(internal val name: kotlin.String) {
   override fun toString(): String = name
 
   sealed class Scalar(name: String) : Kind(name) {
+
+    // Scalars are objects
+    override fun copy(): Kind = this
 
     object _String : Scalar("String") {
       override val isScalar get() = true
@@ -97,6 +102,8 @@ class Kind(internal val name: kotlin.String) {
             ?: false
 
     override fun toString() = "List<$wrapped>"
+
+    override fun copy(): Kind = wrapped.copy().asList()
   }
 
 
@@ -110,6 +117,8 @@ class Kind(internal val name: kotlin.String) {
             ?.let { wrapped.isTypeCompatible(it.wrapped) }
             ?: false
     override fun toString() = "!$wrapped"
+
+    override fun copy() = wrapped.copy().asNullable()
   }
 
 
@@ -121,6 +130,8 @@ class Kind(internal val name: kotlin.String) {
         instance is Definition
 
     override fun toString(): kotlin.String = name
+
+    override fun copy() = Kind.named(name)
   }
 
   companion object {

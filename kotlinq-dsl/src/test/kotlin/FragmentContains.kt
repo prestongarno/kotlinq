@@ -2,7 +2,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.dsl.fragment
 import org.kotlinq.dsl.query
-import org.kotlinq.fragments.getFragments
 
 class FragmentContains {
 
@@ -19,7 +18,6 @@ class FragmentContains {
   }
 
   @Test fun `nested deep contains`() {
-    query.toGraphQl(pretty = true).let(::println)
 
     val inner = fragment("Fourth") {
       "Hello"(!string)
@@ -66,16 +64,6 @@ class FragmentContains {
     val bottomFragment = fragment("Fourth") {
       "Hello"(!string)
     }
-
-    listOf(query, subFragment, subSubFragment, bottomFragment)
-        .map {
-          it.toGraphQl(pretty = true) + "\n" + "=".repeat(30)
-        }.forEach(::println)
-
-    query.getFragments()
-        .forEach {
-          println(it.typeName)
-        }
 
     assertThat(bottomFragment in subSubFragment).isTrue()
     assertThat(subSubFragment in query).isTrue()

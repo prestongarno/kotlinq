@@ -10,32 +10,48 @@ package org.kotlinq.api
  * Pretty Print options:
  *   * Indent
  */
-class PrintingConfiguration private constructor(
-    val pretty: Boolean = false,
-    val quotationCharacter: String = "\"",
-    val argumentSeparator: String = ": ",
-    val commaSeparator: String = ",",
-    val spreadOnFragmentOperator: String = "... on ",
-    val lcurlyChar: Char = '{',
-    val rcurlyChar: Char = '}') {
+class PrintingConfiguration private constructor(builder: Builder) {
+
+  val pretty: Boolean = builder.pretty
+  val indent: String = builder.indent
+  val quotationCharacter = builder.quotationCharacter
+  val argumentSeparator = builder.argumentSeparator
+  val commaSeparator = builder.commaSeparator
+  val spreadOnFragmentOperator = builder.spreadOnFragmentOperator
+  val lcurlyChar = builder.lcurlyChar
+  val rcurlyChar = builder.rcurlyChar
+  val metaStrategy = builder.metaStrategy
+
+  fun toBuilder() = Builder()
+      .pretty(pretty)
+      .indent(indent)
+      .quotationCharacter(quotationCharacter)
+      .argumentSeparator(argumentSeparator)
+      .commaSeparator(commaSeparator)
+      .spreadOnFragmentOperator(spreadOnFragmentOperator)
+      .lcurlyChar(lcurlyChar)
+      .rcurlyChar(rcurlyChar)
+      .metaStrategy(metaStrategy)
 
   /**
    * Builder for a [PrintingConfiguration].
    */
-  class Builder {
+  class Builder internal constructor() {
 
 
     // TODO dedup
-    private var quotationCharacter: String = "\""
-    private var pretty: Boolean = false
-    private var argumentSeparator: String = ": "
-    private var spreadOnFragmentOperator: String = "... on "
-    private var commaSeparator: String = ","
-    private var indent: String = "  "
-    private var lcurlyChar: Char = '{'
-    private var rcurlyChar: Char = '}'
+    internal var metaStrategy: Printer.MetaStrategy = Printer.MetaStrategy.STANDARD
+    internal var pretty: Boolean = false
+    internal var indent: String = "  "
+    internal var quotationCharacter: String = "\""
+    internal var argumentSeparator: String = ": "
+    internal var spreadOnFragmentOperator: String = "... on "
+    internal var commaSeparator: String = ","
+    internal var lcurlyChar: Char = '{'
+    internal var rcurlyChar: Char = '}'
 
 
+    fun metaStrategy(it: Printer.MetaStrategy) = apply { metaStrategy = it }
     fun quotationCharacter(it: String) = apply { quotationCharacter = it }
     fun pretty(it: Boolean = false) = apply { pretty = it }
     fun argumentSeparator(it: String) = apply { argumentSeparator = it }
@@ -46,10 +62,7 @@ class PrintingConfiguration private constructor(
     fun rcurlyChar(it: Char) = apply { rcurlyChar = it }
 
 
-    fun build() = PrintingConfiguration(
-        pretty, quotationCharacter,
-        argumentSeparator, commaSeparator,
-        spreadOnFragmentOperator)
+    fun build() = PrintingConfiguration(this)
 
   }
 
@@ -63,16 +76,12 @@ class PrintingConfiguration private constructor(
      */
     val DEFAULT: PrintingConfiguration = builder()
         .pretty(false)
-        .quotationCharacter("\\\"")
-        .argumentSeparator(": ")
         .commaSeparator(",")
         .spreadOnFragmentOperator("...on ")
         .build()
 
     val PRETTY = builder()
         .pretty(true)
-        .quotationCharacter("\\\"")
-        .argumentSeparator(": ")
         .commaSeparator("")
         .spreadOnFragmentOperator("... on ")
         .build()

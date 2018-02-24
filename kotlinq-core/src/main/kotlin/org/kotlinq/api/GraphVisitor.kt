@@ -19,7 +19,7 @@ interface GraphVisitor {
   // this is annoying, must be a way to get rid of this
   fun visitFragmentContext(context: FragmentContext) {
     context.fragments.forEach { _, fragment ->
-      if (notifyEnter(fragment)) {
+      if (notifyEnter(fragment, inline = true)) {
         visitContext(fragment)
         notifyExit(fragment)
       }

@@ -14,7 +14,7 @@ fun Printer.visit(fragment: Fragment) =
 internal
 class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor {
 
-  val config = printer.printingConfiguration
+  val config = printer.configuration
   val metaPropertyStrategy = printer.metaStrategy
 
   val stringer = StringBuilder()
@@ -28,19 +28,14 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
   override fun toString(): String = string
 
   override fun notifyEnter(fragment: Fragment, inline: Boolean): Boolean {
-    if (inline) {
-      config.spreadOnFragmentOperator.emit()
-      printer.typeNameEval(fragment.typeName).emit()
-    }
+    if (inline) printer.inlineFragmentEval(fragment.typeName).emit()
     printer.enterContextEval().emit()
     return true // fragment extraction not supported yet
   }
 
   override fun visitContext(fragment: Fragment) {
     for ((propertyName, predicate) in metaPropertyStrategy.extraProperties) {
-      if (predicate(fragment)) {
-        printer.fieldNameEval(propertyName).emit()
-      }
+      if (predicate(fragment)) printer.fieldNameEval(propertyName).emit()
     }
     fragment.graphQlInstance.accept(this)
   }
@@ -62,7 +57,7 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
       printer.argumentNameEval(name).emit()
       config.argumentSeparator.emit()
       printer.argumentValueEval(argument).emit()
-      if (index++ < size) config.commaSeparator.emit()
+      if (++index < size) config.commaSeparator.emit()
     }
 
     ")".emit()
@@ -71,8 +66,11 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
   }
 
   override fun visitFragmentContext(context: FragmentContext) {
-    printer.enterContextEval().emit()
-    super.visitFragmentContext(context)
-    printer.exitContextEval().emit()
+    if (enterField(context)) {
+      printer.enterContextEval().emit()
+      super.visitFragmentContext(context)
+      printer.exitContextEval().emit()
+    }
   }
 }
+
