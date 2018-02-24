@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.GraphVisitor
 import org.kotlinq.entities.TestFragmentBuilder.Companion.fragment
-import kotlin.coroutines.experimental.buildIterator
 import kotlin.coroutines.experimental.buildSequence
 
 class Traversal {
@@ -50,7 +49,7 @@ class Traversal {
       }
     }.withIndex().toList()
 
-    val frag = fragment {
+    val topLevelFragment = fragment {
       fragments.forEach { (i, fragment) ->
         bindFragment("fragment$i", fragment)
       }
@@ -66,7 +65,7 @@ class Traversal {
         .onVisitContext { visitContextCounter++ }
         .onNotifyEnter { notifyFragmentCounter++ >= 0 }
         .build()
-        .let(frag::traverse)
+        .let(topLevelFragment::traverse)
 
     assertThat(visitFieldCounter)
         .isEqualTo(expectedTotalScalarCount)
@@ -75,7 +74,12 @@ class Traversal {
     assertThat(notifyFragmentCounter)
         .isEqualTo(fragments.size + 1)
 
+    for ((_, fragment) in fragments) {
+      assertThat(fragment in topLevelFragment).isTrue()
+    }
   }
+
+
 }
 
 fun <T> MutableList<T>.and(element: T) =

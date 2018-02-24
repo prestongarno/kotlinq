@@ -22,4 +22,19 @@ data class Fragment(
       visitor.notifyExit(this)
     }
   }
+
+  operator fun contains(other: Fragment): Boolean {
+    var result = false
+
+    GraphVisitor.builder()
+        .onNotifyEnter {
+          other != it || let {
+            result = true
+            false // stop visiting
+          }
+        }.build()
+        .let(::traverse)
+
+    return result
+  }
 }
