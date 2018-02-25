@@ -6,3 +6,5 @@ include 'kotlinq-core'
 //include 'kotlinq-gradle'
 //include 'kotlinq-schema'
 include 'kotlinq-dsl'
+include 'kotlinq-jvm-adapters'
+
