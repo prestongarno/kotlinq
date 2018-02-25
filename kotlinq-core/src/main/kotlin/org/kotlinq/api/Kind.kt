@@ -144,6 +144,12 @@ class Kind(internal val name: kotlin.String) {
     val bool get() = Scalar._Boolean
     val float get() = Scalar._Float
 
+    val scalars: List<Kind.Scalar>
+      get() = listOf(
+          Kind.Scalar._Int,
+          Kind.Scalar._Boolean,
+          Kind.Scalar._String,
+          Kind.Scalar._Float)
 
     fun typeNamed(name: String): Kind {
       scalars.firstOrNull {
@@ -156,9 +162,3 @@ class Kind(internal val name: kotlin.String) {
 }
 
 
-private val scalars: List<Kind.Scalar>
-  get() = listOf(
-      Kind.Scalar._Int,
-      Kind.Scalar._Boolean,
-      Kind.Scalar._String,
-      Kind.Scalar._Float)
