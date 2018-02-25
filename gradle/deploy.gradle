@@ -11,6 +11,10 @@ publishing {
       artifactId project.name
       version project.version.toString()
       from components.java
+      if (project != rootProject) {
+        artifact project.tasks.getByName('jarDoc')
+        artifact project.tasks.getByName('jarSource')
+      }
 
       pom.withXml {
         asNode().children().last() + {

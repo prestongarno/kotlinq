@@ -10,7 +10,6 @@ interface GraphQlInstance {
 
   fun isResolved(): Boolean
 
-  fun accept(visitor: GraphVisitor) {
-    properties.forEach { it.value.accept(visitor) }
-  }
+  fun accept(visitor: GraphVisitor) =
+      properties.forEach { it.value.accept(visitor) }
 }
