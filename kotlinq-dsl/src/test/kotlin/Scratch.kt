@@ -133,14 +133,14 @@ class Scratch {
     humanDef().graphQlInstance.properties.let { props ->
       assertThat(props["nicknames"]?.propertyInfo)
           .isEqualTo(
-              PropertyInfo.named("nicknames")
+              PropertyInfo.propertyNamed("nicknames")
                   .arguments(emptyMap())
                   .typeKind(Kind.string
                       .asNullable()
                       .asList())
                   .build())
       assertThat(props["name"]?.propertyInfo)
-          .isEqualTo(PropertyInfo.named("name")
+          .isEqualTo(PropertyInfo.propertyNamed("name")
               .typeKind(Kind.string)
               .build())
     }

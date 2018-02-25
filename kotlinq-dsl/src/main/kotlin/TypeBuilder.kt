@@ -19,7 +19,7 @@ class TypeBuilder internal constructor(
           .let(bindableContext)
 
   override fun FreeProperty.listOf(definition: Fragment) =
-      asNode(Kind.named(definition.typeName).asList())
+      asNode(Kind.typeNamed(definition.typeName).asList())
           .withDefinition(definition)
           .let(bindableContext)
 
@@ -32,7 +32,7 @@ class TypeBuilder internal constructor(
       .let(bindableContext)
 
   override fun FreeProperty.on(context: Fragment) {
-    bindableContext(asNode(Kind.named(context.typeName))
+    bindableContext(asNode(Kind.typeNamed(context.typeName))
         .withDefinition(context))
   }
 
@@ -52,7 +52,7 @@ class TypeBuilder internal constructor(
 
   override fun String.on(definition: Fragment) =
       FreeProperty(this)
-          .asNode(Kind.named(definition.typeName))
+          .asNode(Kind.typeNamed(definition.typeName))
           .withDefinition(definition)
           .let(bindableContext)
 }

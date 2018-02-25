@@ -24,7 +24,7 @@ class Node internal constructor(
    */
   private
   fun propertyInfo(kind: Kind) =
-      PropertyInfo.named(name)
+      PropertyInfo.propertyNamed(name)
           .arguments(arguments)
           .typeKind(kind)
           .build()
@@ -50,7 +50,7 @@ class Leaf(
   : GraphComponent(name, arguments, kind) {
 
   internal fun toAdapter(): ParsingAdapter = Kotlinq.adapterService.scalarAdapters
-      .newAdapter(PropertyInfo.named(name)
+      .newAdapter(PropertyInfo.propertyNamed(name)
               .typeKind(kind)
               .arguments(arguments)
               .build())

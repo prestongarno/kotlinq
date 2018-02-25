@@ -9,7 +9,7 @@ class PropertyInfoTests {
 
   @Test fun simplePropertyEquals() {
     val arguments = mapOf("hello" to "World", "first" to 10)
-    val info0 = PropertyInfo.named("value")
+    val info0 = PropertyInfo.propertyNamed("value")
         .arguments(arguments)
         .typeKind(Kind.string)
         .build()
@@ -24,7 +24,7 @@ class PropertyInfoTests {
 
   @Test fun complexKindEquals() {
 
-    Kind.named("Foo")
+    Kind.typeNamed("Foo")
         .asList()
         .asList()
         .asNullable()
@@ -54,7 +54,7 @@ class PropertyInfoTests {
           assertThat(two.rootKind())
               .isEqualTo(one.rootKind())
         }.let { (one, two) ->
-          PropertyInfo.named("foobar").typeKind(one).build() to PropertyInfo.named("foobar").typeKind(two).build()
+          PropertyInfo.propertyNamed("foobar").typeKind(one).build() to PropertyInfo.propertyNamed("foobar").typeKind(two).build()
         }.also { (prop1, prop2) ->
           assertThat(prop1.copy(arguments = mapOf("number" to 1000)))
               .isNotEqualTo(prop1)

@@ -14,7 +14,7 @@ class EntityHashcodeTests {
 
   @Test fun `fragments with identities matching return same hashcode`() {
 
-    Kind.named("Hello").println()
+    Kind.typeNamed("Hello").println()
 
     val name = PrimitiveData.STRING.generator().toString()
     val arguments = PrimitiveData.randomGraphQlArgumentMap()
@@ -24,8 +24,8 @@ class EntityHashcodeTests {
 
       Kotlinq.adapterService.fragmentProperty(
           PropertyInfo
-              .named(name)
-              .typeKind(Kind.named(instanceTypeName))
+              .propertyNamed(name)
+              .typeKind(Kind.typeNamed(instanceTypeName))
               .arguments(arguments)
               .build(),
               setOf (Kotlinq.newContextBuilder().build(instanceTypeName)))

@@ -16,7 +16,7 @@ fun query(name: String = "Query", selectionSet: SelectionSet): Fragment =
 
 
 /**
- * Creates a named type definition
+ * Creates a propertyNamed type definition
  *
  * @author prestongarno
  * @since 0.4.0
