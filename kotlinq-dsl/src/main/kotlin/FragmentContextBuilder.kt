@@ -42,7 +42,7 @@ class FragmentContextBuilder internal constructor(
       isCollection: Boolean,
       val fragments: Set<Fragment>) {
 
-    val typeKind = Kind.named(typeName).let {
+    val typeKind = Kind.typeNamed(typeName).let {
       if (isCollection) it.asList() else it
     }
   }

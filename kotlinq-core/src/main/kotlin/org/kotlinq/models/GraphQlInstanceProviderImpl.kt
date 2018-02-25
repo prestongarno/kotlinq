@@ -13,7 +13,7 @@ class GraphQlInstanceProviderImpl : GraphQlInstanceProvider {
     val properties = mutableListOf<Adapter>()
     return BindableContext.newBindableContext(properties::addLast) {
       val propertyMap = properties.map { it.propertyInfo.graphQlName to it }.toMap()
-      Fragment(it, GraphQlInstanceImpl(propertyMap))
+      Fragment.createFragment(it, GraphQlInstanceImpl(propertyMap))
     }
   }
 

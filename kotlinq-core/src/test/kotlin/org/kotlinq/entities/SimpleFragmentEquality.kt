@@ -38,7 +38,7 @@ class SimpleFragmentEquality {
       propertyName: String = "adapter_property",
       type: Kind): Pair<Fragment, Fragment> {
 
-    val info = PropertyInfo.named(propertyName)
+    val info = PropertyInfo.propertyNamed(propertyName)
         .typeKind(Kind.Scalar._String)
         .build()
 
@@ -69,7 +69,7 @@ class SimpleFragmentEquality {
   @Test fun `single integer property fragment is equal`() {
 
     val rootName = "frag0"
-    val info = PropertyInfo.named("property_first")
+    val info = PropertyInfo.propertyNamed("property_first")
         .typeKind(Kind.Scalar._Int)
         .build()
 
@@ -91,7 +91,7 @@ class SimpleFragmentEquality {
   @Test fun `single boolean property fragment is equal`() {
 
     val rootName = "frag0"
-    val info = PropertyInfo.named("property_first")
+    val info = PropertyInfo.propertyNamed("property_first")
         .typeKind(Kind.Scalar._Boolean)
         .build()
 
@@ -115,7 +115,7 @@ class SimpleFragmentEquality {
   @Test fun `single float property fragment is equal`() {
 
     val rootName = "frag0"
-    val info = PropertyInfo.named("property_first")
+    val info = PropertyInfo.propertyNamed("property_first")
         .typeKind(Kind.Scalar._Float)
         .build()
 

@@ -30,12 +30,12 @@ class FragmentEquality {
 
   @Test fun `fragment fragment are not equal`() {
     fragment {
-      "frag1"(Kind.named("One")) on {
+      "frag1"(Kind.typeNamed("One")) on {
         scalar("foo", Kind.integer)
         scalar("bar", Kind.bool)
       }
     } notEq fragment {
-      "frag1"(Kind.named("Two")) on {
+      "frag1"(Kind.typeNamed("Two")) on {
         scalar("foo", Kind.integer)
         scalar("bar", Kind.bool)
       }

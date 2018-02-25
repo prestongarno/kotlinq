@@ -28,7 +28,7 @@ class PropertyInfo(
 
   companion object {
 
-    fun named(it: String) = Builder(it)
+    fun propertyNamed(it: String) = Builder(it)
   }
 }
 

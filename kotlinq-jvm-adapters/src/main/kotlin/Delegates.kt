@@ -21,6 +21,3 @@ fun <T> Map<String, Any?>.notNull(): ReadOnlyProperty<Any?, T> = NotNullDelegate
 
 fun <T> Map<String, Any?>.nullable(): ReadOnlyProperty<Any?, T> = NotNullDelegate(this)
 
-class Foo(map: Map<String, Any>) {
-  val foo: String by map.notNull()
-}

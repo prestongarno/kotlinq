@@ -27,7 +27,7 @@ interface FreePropertyExtensionScope {
 
   /**
    * Call on a [FreeProperty] declaration to define
-   * with fragment spread operations on named types
+   * with fragment spread operations on propertyNamed types
    *
    * Example:
    *
@@ -49,7 +49,7 @@ interface FreePropertyExtensionScope {
 
   /**
    * Call on a [FreeProperty] declaration to define
-   * with fragment spread operations on named types
+   * with fragment spread operations on propertyNamed types
    *
    * Example:
    *

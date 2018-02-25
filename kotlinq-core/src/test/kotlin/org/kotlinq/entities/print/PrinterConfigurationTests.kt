@@ -8,7 +8,6 @@ import org.kotlinq.api.PrintingConfiguration
 import org.kotlinq.api.PropertyInfo
 import org.kotlinq.entities.TestFragmentBuilder.Companion.fragment
 import org.kotlinq.eq
-import org.kotlinq.println
 
 class PrinterConfigurationTests {
 
@@ -20,7 +19,7 @@ class PrinterConfigurationTests {
 
     query.typeName eq "Query"
     query.graphQlInstance.properties["hello"]!!.propertyInfo eq
-        PropertyInfo.named("hello")
+        PropertyInfo.propertyNamed("hello")
             .typeKind(Kind.string)
             .build()
 

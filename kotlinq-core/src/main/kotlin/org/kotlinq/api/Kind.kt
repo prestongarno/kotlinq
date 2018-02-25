@@ -131,7 +131,7 @@ class Kind(internal val name: kotlin.String) {
 
     override fun toString(): kotlin.String = name
 
-    override fun copy() = Kind.named(name)
+    override fun copy() = Kind.typeNamed(name)
   }
 
   companion object {
@@ -145,7 +145,7 @@ class Kind(internal val name: kotlin.String) {
     val float get() = Scalar._Float
 
 
-    fun named(name: String): Kind {
+    fun typeNamed(name: String): Kind {
       scalars.firstOrNull {
         it.name == name
       }?.let { throw IllegalArgumentException("Illegal name $name") }
