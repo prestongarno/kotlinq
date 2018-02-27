@@ -26,7 +26,7 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
   }
 
   inline operator fun <reified X : Data?> KProperty1<T, X>.rangeTo(
-      noinline block: InterfaceFragmentSpread<X>.() -> Unit) =
+      noinline block: InterfaceFragmentSpreadScope<X>.() -> Unit) =
       buildFromFragmentScope(this, block)
 
 
@@ -45,15 +45,14 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
   @PublishedApi internal
   fun <X : Data?> buildFromFragmentScope(
       property: KProperty1<T, X>,
-      block: InterfaceFragmentSpread<X>.() -> Unit) {
-
+      block: InterfaceFragmentSpreadScope<X>.() -> Unit
+  ) {
     val kind = property.returnType.dataKind() ?: return
     PropertyInfo.propertyNamed(property.name)
         .typeKind(kind)
-        .build().let {
-          Kotlinq.adapterService.fragmentProperty(
-              it, InterfaceFragmentSpread(property).build(block))
-        }.let(bindableContext::register)
+        .build()
+        .let { InterfaceFragmentSpreadScope<X>(it).build(block) }
+        .let(bindableContext::register)
   }
 
   @PublishedApi
