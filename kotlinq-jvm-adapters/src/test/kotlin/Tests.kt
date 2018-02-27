@@ -29,7 +29,50 @@ class Tests {
 
     assertThat(jvmReflectFragment.toGraphQl(pretty = true, idAndTypeName = false))
         .isEqualTo(expect)
+  }
 
+
+  @Test fun fragmentSpreadSomehowWorks() {
+    abstract class Super : Data
+
+    class Inner1(map: Map<String, Any>): Super(), Data by map() {
+      val innerProp1: String by map
+    }
+    class Inner2(map: Map<String, Any>): Super(), Data by map() {
+      val innerProp1: String by map
+      val innerobject: Inner1 by map
+    }
+
+    class Root(map: Map<String, Any>): Data by map() {
+      val abstractSelect: Super by map
+    }
+
+
+    val fragment = typedFragment<Root> {
+      Root::abstractSelect..{
+        on<Inner1>()
+        on<Inner2>()
+      }
+    }
+
+    val expect = """
+      |{
+      |  abstractSelect {
+      |    ... on Inner1 {
+      |      innerProp1
+      |    }
+      |    ... on Inner2 {
+      |      innerProp1
+      |      innerobject {
+      |        innerProp1
+      |      }
+      |    }
+      |  }
+      |}
+      """.trimMargin("|")
+
+    assertThat(fragment.toGraphQl(pretty = true, idAndTypeName = false).also(::println))
+        .isEqualTo(expect)
   }
 }
 
