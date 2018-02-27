@@ -3,51 +3,50 @@ package org.kotlinq.jvm
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.PropertyInfo
-import org.kotlinq.jvm.TypedFragment.Companion.thisClass
+import org.kotlinq.jvm.TypedFragment.Companion.reflectionFragment
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 
 
 class TypedFragment<T : Data> @PublishedApi internal constructor(
-    val clazz: KClass<T>
-) : Fragment by clazz() {
+    val clazz: KClass<T>,
+    block: TypedFragmentScope<T>.() -> Unit = { }
+) : Fragment by clazz(block) {
 
 
   companion object {
 
-    inline fun <reified T : Data> typedFragment() = TypedFragment(T::class)
+    inline fun <reified T : Data> typedFragment(
+        noinline block: TypedFragmentScope<T>.() -> Unit = { /* nothing */ }
+    ) = TypedFragment(T::class, block)
 
 
     @PublishedApi
-    internal fun thisClass(clazz: KClass<*>): Fragment =
+    internal fun <T : Data> reflectionFragment(clazz: KClass<T>, block: TypedFragmentScope<T>.() -> Unit = { /* nothing */ }): Fragment =
         clazz.declaredMemberProperties.mapNotNull {
           it with (it.returnType.scalarKind() ?: it.returnType.dataKind())
-        }.map { (prop, kind) ->
+        }.mapNotNull { (prop, kind) ->
           PropertyInfo.propertyNamed(prop.name)
               .typeKind(kind)
               .build().let {
                 @Suppress("UNCHECKED_CAST")
                 if (kind.isScalar)
                   Kotlinq.adapterService.scalarAdapters.newAdapter(it)
-                else Kotlinq.adapterService.instanceProperty(
-                    PropertyInfo.propertyNamed(prop.name).typeKind(kind).build(),
-                    (prop.returnType.rootType.clazz as KClass<Data>).invoke())
+                else (prop.returnType.rootType.clazz as? KClass<T>)?.let {
+                  Kotlinq.adapterService.instanceProperty(
+                      PropertyInfo.propertyNamed(prop.name).typeKind(kind).build(),
+                      (it).invoke(block))
+                }
               }
-        }.let {
-
-          use(Kotlinq.newContextBuilder()) {
-            it.forEach { register(it) }
-          }
-
-        }.build(clazz.simpleName!!)
+        }.useWith(Kotlinq.newContextBuilder()) { builder ->
+          this.forEach { builder.register(it) }
+          TypedFragmentScope<T>(builder).apply(block)
+          builder.build(clazz.simpleName!!)
+        }
   }
 }
 
 internal
-operator fun KClass<*>.invoke(): Fragment = thisClass(this)
+operator fun <T : Data> KClass<T>.invoke(block: TypedFragmentScope<T>.() -> Unit): Fragment = reflectionFragment(this, block)
 
 
-infix fun <T : Any, U : Any> T.with(other: U?): Pair<T, U>? =
-    other?.let { this to it }
-
-fun <T> use(value: T, block: T.() -> Unit) = value.apply(block)

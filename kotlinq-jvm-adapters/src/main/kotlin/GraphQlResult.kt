@@ -8,8 +8,9 @@ class GraphQlResult internal constructor(
 ) : Map<String, Any?> by map {
 
 
-  inline operator fun <reified T> invoke(init: (GraphQlResult) -> T)
-      : ReadOnlyProperty<Any?, T> = TODO()
+  inline operator fun <reified T> invoke(init: (GraphQlResult) -> T) : ReadOnlyProperty<Any?, T> {
+    TODO()
+  }
 
   fun canResolveTo(fragment: TypedFragment<*>): Boolean = false
 

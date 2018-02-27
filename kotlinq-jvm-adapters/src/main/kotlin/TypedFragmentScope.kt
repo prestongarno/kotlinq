@@ -2,12 +2,13 @@ package org.kotlinq.jvm
 
 import org.kotlinq.api.BindableContext
 import org.kotlinq.api.Kotlinq
+import org.kotlinq.api.PropertyInfo
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty0
+import kotlin.reflect.KProperty1
 
 
 @Suppress("UNCHECKED_CAST")
-class TypedFragmentScope internal constructor(private val bindableContext: BindableContext) {
+class TypedFragmentScope<T : Data?> internal constructor(private val bindableContext: BindableContext) {
 
   /**
    * For:
@@ -20,15 +21,46 @@ class TypedFragmentScope internal constructor(private val bindableContext: Binda
    * Enables arguments on fields while using generic DSL
    */
   @Suppress("UNCHECKED_CAST")
-  inline operator fun <reified T : Data?> KProperty0<T>.invoke(arguments: Map<String, Any>) {
-    registerWithArguments(this, T::class as KClass<Data>, arguments)
+  operator fun KProperty1<T, *>.invoke(arguments: Map<String, Any>) {
+    bindScalarPropertyIfApplicable(this, arguments)
+  }
+
+  inline operator fun <reified X : Data?> KProperty1<T, X>.rangeTo(
+      noinline block: InterfaceFragmentSpread<X>.() -> Unit) =
+      buildFromFragmentScope(this, block)
+
+
+
+  @PublishedApi internal
+  fun bindScalarPropertyIfApplicable(prop: KProperty1<T, *>, arguments: Map<String, Any>) {
+    val kind = prop.returnType.scalarKind() ?: return
+    PropertyInfo.propertyNamed(prop.name)
+        .typeKind(kind)
+        .arguments(arguments)
+        .build()
+        .let(Kotlinq.adapterService.scalarAdapters::newAdapter)
+        .let(bindableContext::register)
+  }
+
+  @PublishedApi internal
+  fun <X : Data?> buildFromFragmentScope(
+      property: KProperty1<T, X>,
+      block: InterfaceFragmentSpread<X>.() -> Unit) {
+
+    val kind = property.returnType.dataKind() ?: return
+    PropertyInfo.propertyNamed(property.name)
+        .typeKind(kind)
+        .build().let {
+          Kotlinq.adapterService.fragmentProperty(
+              it, InterfaceFragmentSpread(property).build(block))
+        }.let(bindableContext::register)
   }
 
   @PublishedApi
-  internal fun registerWithArguments(property: KProperty0<Data?>, clazz: KClass<Data>, arguments: Map<String, Any>) {
+  internal fun registerWithArguments(property: KProperty1<*, Data?>, clazz: KClass<Data>, arguments: Map<String, Any>) {
     Kotlinq.adapterService.instanceProperty(
         property.toPropertyInfo(clazz.simpleName!!, arguments),
-        TypedFragment.thisClass(clazz))
+        TypedFragment.reflectionFragment(clazz))
         .let(bindableContext::register)
 
   }
