@@ -3,19 +3,44 @@ import org.junit.Test
 import org.kotlinq.jvm.Data
 import org.kotlinq.jvm.GraphQlResult
 import org.kotlinq.jvm.TypedFragment.Companion.typedFragment
-import org.kotlinq.jvm.invoke
+import org.kotlinq.jvm.not
+import org.kotlinq.jvm.toData
+
 
 class Tests {
 
-  @Test fun bar() {
+  abstract class Super : Data
 
-    class Bar(map: Map<String, Any>) : Data by map() {
-      val baz: Int by map
-    }
-    class Foo(map: Map<String, Any>) : Data by map() {
-      val floatProp = 0.1f // can't do anything about this
-      val fooProp: Bar by result
-    }
+  class Bar(graphQlResult: GraphQlResult) : Data by graphQlResult.toData() {
+    val baz by result.integer()
+  }
+
+  class Foo(result: GraphQlResult) : Data by result.toData() {
+    val floatProp by result.bool()
+    val fooProp by result<Bar>()
+  }
+
+  class Inner1(result: GraphQlResult) : Super(), Data by result.toData() {
+    val innerProp1: String by !result
+  }
+
+  class Inner2(result: GraphQlResult) : Super(), Data by result.toData() {
+    val innerProp1 by result.string()
+    val innerobject by result<Inner1>()
+  }
+
+  class Root(result: GraphQlResult) : Data by result.toData() {
+    val abstractSelect by result<Super>()
+  }
+
+  class UnionRoot(result: GraphQlResult) : Data by result.toData() {
+    val whatever by result<Data?>()
+  }
+
+
+
+
+  @Test fun bar() {
 
     val jvmReflectFragment = typedFragment<Foo>()
 
@@ -34,25 +59,11 @@ class Tests {
 
 
   @Test fun fragmentSpreadSomehowWorks() {
-    abstract class Super : Data
-
-    class Inner1(map: GraphQlResult): Super(), Data by map() {
-      val innerProp1: String by map
-    }
-    class Inner2(map: GraphQlResult): Super(), Data by map() {
-      val innerProp1: String by map
-      val innerobject: Inner1 by map
-    }
-
-    class Root(map: Map<String, Any>): Data by map() {
-      val abstractSelect: Super by map
-    }
-
 
     val fragment = typedFragment<Root> {
       Root::abstractSelect..{
-        on<Inner1>()
-        on<Inner2>()
+        on(::Inner1)
+        on(::Inner2)
       }
     }
 
@@ -74,6 +85,17 @@ class Tests {
 
     assertThat(fragment.toGraphQl(pretty = true, idAndTypeName = false).also(::println))
         .isEqualTo(expect)
+  }
+
+  @Test fun fragmentSpreadUnionWorks() {
+    val query = typedFragment<UnionRoot> {
+      UnionRoot::whatever union {
+        on(::Root)
+        on(::Inner1)
+        on(::Inner2)
+      }
+    }.toGraphQl(pretty = true, idAndTypeName = false)
+        .let(::println)
   }
 }
 

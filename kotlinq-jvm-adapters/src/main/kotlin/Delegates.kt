@@ -8,9 +8,6 @@ fun <T> GraphQlResult.nullable(): ReadOnlyProperty<Any?, T> = NotNullDelegate(th
 
 operator fun <T> GraphQlResult.not(): ReadOnlyProperty<Any?, T> = NotNullDelegate(this)
 
-fun <T : Any> GraphQlResult.provideDelegate(): ReadOnlyProperty<*, T> = NotNullDelegate(this)
-
-
 @PublishedApi internal
 class NotNullDelegate<out T>(val result: GraphQlResult) : ReadOnlyProperty<Any?, T> {
   @Suppress("UNCHECKED_CAST")
@@ -19,17 +16,21 @@ class NotNullDelegate<out T>(val result: GraphQlResult) : ReadOnlyProperty<Any?,
 }
 
 @PublishedApi internal
-class NullableDelegate<out T>(val result: GraphQlResult): ReadOnlyProperty<Any?, T?> {
+class NullableDelegate<out T>(val result: GraphQlResult): ReadOnlyProperty<Any?, T> {
+
   private var mapValueReflectionCheck: Boolean = false
 
   @Suppress("UNCHECKED_CAST")
-  override operator fun getValue(thisRef: Any?, property: KProperty<*>): T? {
+  override operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+
     if (!mapValueReflectionCheck) {
        result.map[property.name]?.let {
          checkCast<T>(property, it)
+         mapValueReflectionCheck = true
        } ?: if (!property.returnType.isMarkedNullable) throw NullPointerException(property.toString())
     }
-    return result.map[property.name] as? T
+
+    return result.map[property.name] as? T ?: throw NullPointerException(property.toString())
   }
 
   internal companion object {
