@@ -1,10 +1,9 @@
 package org.kotlinq.jvm
 
 import org.kotlinq.api.Kind
-import org.kotlinq.api.Kind.Companion.typeNamed
 import org.kotlinq.api.PropertyInfo
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty0
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
@@ -12,7 +11,7 @@ import kotlin.reflect.full.isSubtypeOf
 
 
 @PublishedApi internal
-fun KProperty0<Data?>.toPropertyInfo(
+fun KProperty1<*, Data?>.toPropertyInfo(
     typeName: String,
     args: Map<String, Any> = emptyMap()
 ) = PropertyInfo.propertyNamed("")
