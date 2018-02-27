@@ -1,6 +1,7 @@
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.jvm.Data
+import org.kotlinq.jvm.GraphQlResult
 import org.kotlinq.jvm.TypedFragment.Companion.typedFragment
 import org.kotlinq.jvm.invoke
 
@@ -35,10 +36,10 @@ class Tests {
   @Test fun fragmentSpreadSomehowWorks() {
     abstract class Super : Data
 
-    class Inner1(map: Map<String, Any>): Super(), Data by map() {
+    class Inner1(map: GraphQlResult): Super(), Data by map() {
       val innerProp1: String by map
     }
-    class Inner2(map: Map<String, Any>): Super(), Data by map() {
+    class Inner2(map: GraphQlResult): Super(), Data by map() {
       val innerProp1: String by map
       val innerobject: Inner1 by map
     }

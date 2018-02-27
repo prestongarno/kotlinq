@@ -13,7 +13,6 @@ class TypedFragment<T : Data> @PublishedApi internal constructor(
     block: TypedFragmentScope<T>.() -> Unit = { }
 ) : Fragment by clazz(block) {
 
-
   companion object {
 
     inline fun <reified T : Data> typedFragment(
@@ -32,11 +31,14 @@ class TypedFragment<T : Data> @PublishedApi internal constructor(
                 @Suppress("UNCHECKED_CAST")
                 if (kind.isScalar)
                   Kotlinq.adapterService.scalarAdapters.newAdapter(it)
-                else (prop.returnType.rootType.clazz as? KClass<T>)?.let {
-                  Kotlinq.adapterService.instanceProperty(
-                      PropertyInfo.propertyNamed(prop.name).typeKind(kind).build(),
-                      (it).invoke(block))
-                }
+                else
+                  (prop.returnType.rootType.clazz as? KClass<T>)?.let {
+                    Kotlinq.adapterService.instanceProperty(PropertyInfo
+                        .propertyNamed(prop.name)
+                        .typeKind(kind)
+                        .build(),
+                        it(block))
+                  }
               }
         }.useWith(Kotlinq.newContextBuilder()) { builder ->
           this.forEach { builder.register(it) }
