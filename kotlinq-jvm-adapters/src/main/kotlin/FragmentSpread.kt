@@ -6,20 +6,22 @@ import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.PropertyInfo
 
 class FragmentSpread<out T : Data?> internal constructor(
-    internal val fragmentLookupTable: Map<Fragment, (GraphQlResult) -> T>,
+    fragments: Set<ClassFragment<*>>,
     override val propertyInfo: PropertyInfo
 ) : FragmentContext {
 
   override val fragments: Map<String, Fragment> =
-      fragmentLookupTable.keys
-          .map { it.typeName to it }
-          .toMap()
+      fragments.map { it.typeName to it }.toMap()
 
-  override fun getValue(): Any? { TODO("not implemented") }
+  override fun getValue(): Any? {
+    TODO("not implemented")
+  }
 
   override fun accept(resolver: GraphVisitor) =
       resolver.visitFragmentContext(this)
 
-  override fun isResolved(): Boolean { TODO("not implemented") }
+  override fun isResolved(): Boolean {
+    TODO("not implemented")
+  }
 
 }
