@@ -1,8 +1,9 @@
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.kotlinq.fragments.getFragments
 import org.kotlinq.jvm.Data
 import org.kotlinq.jvm.GraphQlResult
-import org.kotlinq.jvm.TypedFragment.Companion.typedFragment
+import org.kotlinq.jvm.ClassFragment.Companion.fragment
 import org.kotlinq.jvm.not
 import org.kotlinq.jvm.toData
 
@@ -42,7 +43,7 @@ class Tests {
 
   @Test fun bar() {
 
-    val jvmReflectFragment = typedFragment<Foo>()
+    val jvmReflectFragment = fragment(::Foo)
 
     val expect = """
       |{
@@ -60,7 +61,7 @@ class Tests {
 
   @Test fun fragmentSpreadSomehowWorks() {
 
-    val fragment = typedFragment<Root> {
+    val fragment = fragment(::Root) {
       Root::abstractSelect..{
         on(::Inner1)
         on(::Inner2)
@@ -88,14 +89,55 @@ class Tests {
   }
 
   @Test fun fragmentSpreadUnionWorks() {
-    val query = typedFragment<UnionRoot> {
+
+    val inner1Frag = fragment(::Inner1)
+
+    val query = fragment(::UnionRoot) {
       UnionRoot::whatever union {
-        on(::Root)
+        on(::Root) {
+          Root::abstractSelect..{
+            on(::Inner2)
+          }
+        }
         on(::Inner1)
         on(::Inner2)
+        on(inner1Frag)
       }
-    }.toGraphQl(pretty = true, idAndTypeName = false)
-        .let(::println)
+    }
+
+    val queryString = query.toGraphQl(
+        pretty = true,
+        idAndTypeName = false)
+
+
+    val expect = """
+      |{
+      |  whatever {
+      |    ... on Root {
+      |      abstractSelect {
+      |        ... on Inner2 {
+      |          innerProp1
+      |          innerobject {
+      |            innerProp1
+      |          }
+      |        }
+      |      }
+      |    }
+      |    ... on Inner1 {
+      |      innerProp1
+      |    }
+      |    ... on Inner2 {
+      |      innerProp1
+      |      innerobject {
+      |        innerProp1
+      |      }
+      |    }
+      |  }
+      |}
+      """.trimMargin("|")
+
+
+    assertThat(queryString).isEqualTo(expect)
   }
 }
 

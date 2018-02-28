@@ -7,13 +7,20 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 
 
+@GraphQlDsl
 @Suppress("UNCHECKED_CAST")
 class TypedFragmentScope<T : Data?> internal constructor(private val bindableContext: BindableContext) {
+
+
+  fun args(block: ArgumentScope.() -> Unit) {
+    ArgumentScope(block).toMap()
+    TODO()
+  }
 
   /**
    * For:
    *
-   * typedFragment<FooType>() {
+   * fragment<FooType>() {
    *   ::someProperty("first" to 10)
    * }
    *
@@ -64,11 +71,11 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
         .let(bindableContext::register)
   }
 
-  @PublishedApi
-  internal fun registerWithArguments(property: KProperty1<*, Data?>, clazz: KClass<Data>, arguments: Map<String, Any>) {
+  @PublishedApi internal
+  fun registerWithArguments(property: KProperty1<*, Data?>, clazz: KClass<Data>, arguments: Map<String, Any>) {
     Kotlinq.adapterService.instanceProperty(
         property.toPropertyInfo(clazz.simpleName!!, arguments),
-        TypedFragment.reflectionFragment(clazz))
+        reflectionFragment<Data?>(clazz))
         .let(bindableContext::register)
 
   }

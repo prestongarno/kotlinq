@@ -1,15 +1,14 @@
 package org.kotlinq.jvm
 
-import org.kotlinq.api.Fragment
 import org.kotlinq.api.PropertyInfo
+import org.kotlinq.jvm.ClassFragment.Companion.fragment
 import kotlin.reflect.KClass
 
 
-class InterfaceFragmentSpreadScope<T : Data> internal constructor(
-    internal val info: PropertyInfo
-) {
+@GraphQlDsl
+class InterfaceFragmentSpreadScope<T : Data?> internal constructor(internal val info: PropertyInfo) {
 
-  private val lookupTable = mutableMapOf<Fragment, (GraphQlResult) -> T>()
+  private val fragments = mutableSetOf<ClassFragment<*>>()
 
   inline fun <reified X : T> on(
       noinline init: (GraphQlResult) -> X,
@@ -18,25 +17,24 @@ class InterfaceFragmentSpreadScope<T : Data> internal constructor(
     registerReifiedTypeAsFragmentOption(init, X::class as KClass<Data>, block)
   }
 
-  @PublishedApi internal
-  fun <X : T> registerReifiedTypeAsFragmentOption(
-      init: (GraphQlResult) -> X,
-      clazz: KClass<Data>,
-      fragmentBlock: (TypedFragmentScope<X>.() -> Unit)? = null
-  ) = (fragmentBlock?.toFragment()
-      ?: TypedFragment.reflectionFragment(clazz))
-      .let { lookupTable[it] = init }
-      .ignore()
-
-  private fun <X : Data> (TypedFragmentScope<X>.() -> Unit).toFragment(clazz: KClass<Data>): TypedFragment<Data> {
-    TypedFragment<X>()
+  fun <X : T> on(fragment: ClassFragment<X>) {
+    fragments += fragment
   }
 
+  @PublishedApi internal
+  fun <X : T> registerReifiedTypeAsFragmentOption(
+      init: (GraphQlResult) -> X, clazz: KClass<Data>,
+      fragmentBlock: (TypedFragmentScope<X>.() -> Unit)? = null) {
+
+    fragments += fragment(clazz, init, fragmentBlock ?: empty())
+  }
 
   internal
   fun build(block: InterfaceFragmentSpreadScope<T>.() -> Unit): FragmentSpread<T> =
-      this.apply(block).let {
-        FragmentSpread(lookupTable, info)
+      apply(block).let {
+        FragmentSpread<T>(fragments, info)
       }
 }
+
+internal fun <T : Data?> empty(): TypedFragmentScope<T>.() -> Unit = { }
 

@@ -12,7 +12,7 @@ class GraphQlResult internal constructor(internal val map: Map<String, Any?>) {
   fun bool(): ReadOnlyProperty<Any?, Boolean> = NullableDelegate(this)
   fun floatingPoint(): ReadOnlyProperty<Any?, Float> = NullableDelegate(this)
 
-  fun canResolveTo(fragment: TypedFragment<*>): Boolean = false
+  fun canResolveTo(fragment: ClassFragment<*>): Boolean = false
 
 }
 
