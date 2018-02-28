@@ -5,10 +5,6 @@
 [![Build Status](https://travis-ci.org/prestongarno/kotlinq.svg?branch=master)](https://travis-ci.org/prestongarno/kotlinq)
 
 
-## About
-
-* Quickly fetch from a GraphQl server using **dynamic queries/mutations** evaluated at runtime
-
 ## Query DSL (new with version 0.4.0)
 
 Version 0.4.0 supports [**ad-hoc, type-hinted**](https://github.com/prestongarno/kotlinq/blob/query-dsl/query-dsl/src/main/kotlin/org/kotlinq/dsl/extensions/FreePropertyExtensionScope.kt) but natively expressed queries and mutations!
