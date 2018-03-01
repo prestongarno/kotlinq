@@ -9,6 +9,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 
 
@@ -61,11 +62,16 @@ fun KType.dataKind(): Kind? =
 
 internal
 object ProtoTypes {
-    val dataType = Data::class.createType(nullable = true)
+  val dataType = Data::class.createType(nullable = true)
+
+  val anyProperties: Set<KProperty1<*, *>> =
+      Any::class.memberProperties.toSet()
 }
 
 
-val KType.clazz: KClass<*>? get() = this.classifier as? KClass<*>
+internal
+val KType.clazz: KClass<*>?
+  get() = this.classifier as? KClass<*>
 
 val KType.rootType: KType
   get() {

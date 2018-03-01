@@ -5,8 +5,6 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 
-operator fun <T> GraphQlResult.not(): ReadOnlyProperty<Any?, T?> = TODO()//GraphQlFieldDelegate(this)
-
 @PublishedApi
 internal
 class GraphQlFieldDelegate<out T>(
