@@ -3,16 +3,24 @@ package org.kotlinq.jvm
 import kotlin.properties.ReadOnlyProperty
 
 
-class GraphQlResult internal constructor(internal val map: Map<String, Any?>) {
+class GraphQlResult internal constructor(map: Map<String, Any?>) {
 
-  operator fun <T : Data?> invoke(): ReadOnlyProperty<Any?, T> = NullableDelegate(this)
+  // copy in case of bad input (mutable map as Map)
+  private val delegate: GraphQlFieldDelegate<Any?> = GraphQlFieldDelegate(map.toMap())
 
-  fun string(): ReadOnlyProperty<Any?, String> = NullableDelegate(this)
-  fun integer(): ReadOnlyProperty<Any?, Int> = NullableDelegate(this)
-  fun bool(): ReadOnlyProperty<Any?, Boolean> = NullableDelegate(this)
-  fun floatingPoint(): ReadOnlyProperty<Any?, Float> = NullableDelegate(this)
+  operator fun <T : Data?> invoke(): ReadOnlyProperty<Any?, T?> =
+      delegate.withReturnType()
 
-  fun canResolveTo(fragment: ClassFragment<*>): Boolean = false
+  fun string(): ReadOnlyProperty<Any?, String> =
+      delegate.withReturnType()
+  fun integer(): ReadOnlyProperty<Any?, Int> =
+      delegate.withReturnType()
+  fun bool(): ReadOnlyProperty<Any?, Boolean> =
+      delegate.withReturnType()
+  fun floatingPoint(): ReadOnlyProperty<Any?, Float> =
+      delegate.withReturnType()
+
+  //fun canResolveTo(fragment: ClassFragment<*>): Boolean = false
 
 }
 

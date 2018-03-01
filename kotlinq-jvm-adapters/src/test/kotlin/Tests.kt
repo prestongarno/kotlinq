@@ -1,10 +1,8 @@
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.kotlinq.fragments.getFragments
+import org.kotlinq.jvm.ClassFragment.Companion.fragment
 import org.kotlinq.jvm.Data
 import org.kotlinq.jvm.GraphQlResult
-import org.kotlinq.jvm.ClassFragment.Companion.fragment
-import org.kotlinq.jvm.not
 import org.kotlinq.jvm.toData
 
 
@@ -22,7 +20,7 @@ class Tests {
   }
 
   class Inner1(result: GraphQlResult) : Super(), Data by result.toData() {
-    val innerProp1: String by !result
+    val innerProp1: String? by result.string()
   }
 
   class Inner2(result: GraphQlResult) : Super(), Data by result.toData() {
@@ -37,7 +35,6 @@ class Tests {
   class UnionRoot(result: GraphQlResult) : Data by result.toData() {
     val whatever by result<Data?>()
   }
-
 
 
 

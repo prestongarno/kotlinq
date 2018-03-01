@@ -1,47 +1,62 @@
 package org.kotlinq.jvm
 
+import java.util.*
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 
-fun <T> GraphQlResult.nullable(): ReadOnlyProperty<Any?, T> = NotNullDelegate(this)
+operator fun <T> GraphQlResult.not(): ReadOnlyProperty<Any?, T?> = TODO()//GraphQlFieldDelegate(this)
 
-operator fun <T> GraphQlResult.not(): ReadOnlyProperty<Any?, T> = NotNullDelegate(this)
+@PublishedApi
+internal
+class GraphQlFieldDelegate<out T>(
+    private val values: Map<String, Any?>
+) : ReadOnlyProperty<Any?, T> {
 
-@PublishedApi internal
-class NotNullDelegate<out T>(val result: GraphQlResult) : ReadOnlyProperty<Any?, T> {
+  private val accessRecord: MutableSet<String> =
+      Collections.synchronizedSet(mutableSetOf())
+
+  /**
+   * For single instance per GraphQlResult,
+   * just as type safe as individual ones per-property
+   */
   @Suppress("UNCHECKED_CAST")
-  override operator fun getValue(thisRef: Any?, property: KProperty<*>): T =
-      result.map[property.name] as? T ?: throw NullPointerException()
-}
+  internal fun <X> withReturnType() = this as ReadOnlyProperty<Any?, X>
 
-@PublishedApi internal
-class NullableDelegate<out T>(val result: GraphQlResult): ReadOnlyProperty<Any?, T> {
-
-  private var mapValueReflectionCheck: Boolean = false
-
-  @Suppress("UNCHECKED_CAST")
   override operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
 
-    if (!mapValueReflectionCheck) {
-       result.map[property.name]?.let {
-         checkCast<T>(property, it)
-         mapValueReflectionCheck = true
-       } ?: if (!property.returnType.isMarkedNullable) throw NullPointerException(property.toString())
+    if (!wasAccessed(property.name)) {
+      checkCast(property, values[property.name])
     }
 
-    return result.map[property.name] as? T ?: throw NullPointerException(property.toString())
+    @Suppress("UNCHECKED_CAST")
+    return values[property.name] as? T ?: removeAndThrowNullPointer(property)
+  }
+
+
+  private
+  fun wasAccessed(propertyName: String): Boolean {
+    if (accessRecord.contains(propertyName))
+      return false.also { accessRecord.add(propertyName) }
+    return true
+  }
+
+  private
+  fun <T> removeAndThrowNullPointer(property: KProperty<*>): T {
+    accessRecord.remove(property.name)
+    throw NullPointerException(property.toString())
   }
 
   internal companion object {
 
     /**
-     * @throws IllegalStateException if type is incorrect
+     * TODO should check for stdlib collections types, etc.
+     * @throws NullPointerException if type is incorrect
      */
-    fun <T> checkCast(property: KProperty<*>, value: Any) {
-      if (property.returnType.clazz?.isInstance(value) == false)
-        throw IllegalStateException(
-            "Expected $property, got wrong type ${value::class} ($value)")
+    fun checkCast(property: KProperty<*>, value: Any?) {
+      if (!property.returnType.isCompatibleWith(value))
+        throw NullPointerException("On $property, got wrong type ${value?.let { it::class }
+            ?: Nothing::class} ($value)")
     }
   }
 }
