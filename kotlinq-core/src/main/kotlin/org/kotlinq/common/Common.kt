@@ -50,3 +50,8 @@ internal
 fun <E> MutableList<E>.addLast(element: E) =
     add(element).ignore()
 
+
+internal inline
+fun <reified T> Any?.cast(): T? {
+  return this as? T
+}

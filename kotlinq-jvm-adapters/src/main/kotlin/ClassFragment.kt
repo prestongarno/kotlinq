@@ -4,7 +4,8 @@ import org.kotlinq.api.Fragment
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.PropertyInfo
 import kotlin.reflect.KClass
-import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.memberProperties
 
 
 class ClassFragment<out T : Data?> @PublishedApi internal constructor(
@@ -39,21 +40,26 @@ class ClassFragment<out T : Data?> @PublishedApi internal constructor(
 }
 
 
+@Suppress("UNCHECKED_CAST")
 internal
-fun <T : Data?> reflectionFragment(clazz: KClass<*>, block: TypedFragmentScope<T>.() -> Unit = { /* nothing */ }): Fragment =
-    clazz.declaredMemberProperties.mapNotNull {
+fun <T : Data?> reflectionFragment(clazz: KClass<*>,
+    block: TypedFragmentScope<T>.() -> Unit = { /* nothing */ }): Fragment =
+
+    clazz.memberProperties.filter {
+      it !in ProtoTypes.anyProperties
+    }.mapNotNull {
       it with (it.returnType.scalarKind() ?: it.returnType.dataKind())
     }.mapNotNull { (prop, kind) ->
       PropertyInfo.propertyNamed(prop.name)
           .typeKind(kind)
           .build().let { info ->
-            @Suppress("UNCHECKED_CAST")
             if (kind.isScalar)
               Kotlinq.adapterService.scalarAdapters.newAdapter(info)
-            else
-              (prop.returnType.rootType.clazz as? KClass<Data>)?.let {
-                Kotlinq.adapterService.instanceProperty(info, reflectionFragment<Data?>(it))
-              }
+            else prop.returnType.rootType.clazz?.let {
+              if (it.isSubclassOf(Data::class)) Kotlinq.adapterService
+                  .instanceProperty(info, reflectionFragment<Data?>(it))
+              else null
+            }
           }
     }.useWith(Kotlinq.newContextBuilder()) { builder ->
       this.forEach { builder.register(it) }

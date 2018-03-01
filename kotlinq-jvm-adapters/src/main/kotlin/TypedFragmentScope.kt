@@ -11,12 +11,6 @@ import kotlin.reflect.KProperty1
 @Suppress("UNCHECKED_CAST")
 class TypedFragmentScope<T : Data?> internal constructor(private val bindableContext: BindableContext) {
 
-
-  fun args(block: ArgumentScope.() -> Unit) {
-    ArgumentScope(block).toMap()
-    TODO()
-  }
-
   /**
    * For:
    *
