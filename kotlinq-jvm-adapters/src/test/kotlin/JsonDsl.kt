@@ -17,6 +17,10 @@ class JsonScope(block: JsonScope.() -> Unit) {
   operator fun String.invoke(value: Int) = putValue(this, value)
   operator fun String.invoke(value: Boolean) = putValue(this, value)
   operator fun String.invoke(value: Double) = putValue(this, value)
+  operator fun String.invoke(list: List<*>) = putValue(this, list)
+
+  operator fun String.invoke(vararg values: Any) =
+      putValue(this, values.toList())
 
   infix fun String.list(block: ArrayScope.() -> Unit) =
       putValue(this, ArrayScope(block).toList())
