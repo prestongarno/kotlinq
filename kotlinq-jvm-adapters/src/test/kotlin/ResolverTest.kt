@@ -5,6 +5,7 @@ import org.junit.Test
 import org.kotlinq.api.Kind
 import org.kotlinq.jvm.ClassFragment.Companion.fragment
 import org.kotlinq.jvm.Validator.isValidValue
+import org.kotlinq.jvm.annotations.Ignore
 
 
 class ResolverTest {
@@ -47,7 +48,6 @@ class ResolverTest {
     assertThat(isValidValue(Kind.bool.asNullable(), null)).isTrue()
     assertThat(isValidValue(Kind.bool.asList().asList().asList(), emptyList<Any?>())).isTrue()
 
-    // failing
     assertThat(
         isValidValue(tripleKind2.asList(), tripleNull)
     ).isFalse()
@@ -56,7 +56,14 @@ class ResolverTest {
 
   @Test fun singleNestedFragmentResolves() {
 
-    val frag = fragment(::Root)
+    class RootSub(value: GraphQlResult) : Root(value) {
+      @Ignore
+      override val nest = null
+    }
+
+    val frag = fragment(::RootSub)
+
+
     assertThat(frag.toGraphQl())
         .isEqualTo("{id,__typename,bar,foo}")
 
@@ -74,9 +81,38 @@ class ResolverTest {
         .isEqualTo(1000)
   }
 
+  @Test fun resolveSubFragment() {
+
+    val frag = fragment(::Root) {
+      Root::nest on ::Nest
+    }
+
+    val result = mapOf(
+        "foo" to 100,
+        "bar" to "Hello",
+        "nest" to mapOf(
+            "baz" to "World",
+            "__typename" to "Nest"))
+
+    assertThat(Validator.canResolve(result, frag)).isTrue()
+
+    val reified = frag.resolveFrom(result)
+
+    assertThat(reified).isNotNull()
+
+    assertThat(reified!!.nest).isNotNull()
+
+    assertThat(reified.nest!!.baz).isEqualTo("World")
+  }
+
 }
 
-class Root(value: GraphQlResult) : GraphQlData(value) {
+open class Root(value: GraphQlResult) : GraphQlData(value) {
   val foo by value.integer()
   val bar by value.string()
+  open val nest by value<Nest>()
+}
+
+open class Nest(value: GraphQlResult) : GraphQlData(value) {
+  val baz by value.string()
 }

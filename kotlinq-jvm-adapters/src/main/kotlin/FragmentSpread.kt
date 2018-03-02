@@ -6,12 +6,12 @@ import org.kotlinq.api.GraphVisitor
 import org.kotlinq.api.PropertyInfo
 
 class FragmentSpread<out T : Data?> internal constructor(
-    fragments: Set<ClassFragment<*>>,
+    internal val classFragments: Set<ClassFragment<*>>,
     override val propertyInfo: PropertyInfo
 ) : FragmentContext {
 
   override val fragments: Map<String, Fragment> =
-      fragments.map { it.typeName to it }.toMap()
+      classFragments.map { it.typeName to it }.toMap()
 
   override fun getValue(): Any? {
     TODO("not implemented")
