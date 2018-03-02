@@ -211,6 +211,7 @@ class ResolverTest {
           "field0"("hello")
           "field1"(-77)
           "child" {
+            "__typename"(SubNested0::class.name)
             "field0"("childField0")
             "field1"(35)
             "baz"("")
@@ -230,6 +231,9 @@ class ResolverTest {
     val multiResult = frag.resolveFrom(multiResponse)!!
 
     assertThat(multiResult.listOfChildNodes).hasSize(2)
+
+    val first = (multiResult.listOfChildNodes[0] as SubNested1)
+    println(first.child)
   }
 
 

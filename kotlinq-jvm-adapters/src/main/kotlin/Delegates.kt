@@ -10,9 +10,14 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
 
 
-@PublishedApi
-internal
-class GraphQlFieldDelegate<out T>(
+/**
+ * Delegate for a [Data] instance properties.
+ *
+ * TODO decouple the type checking and the
+ * mapping/initialization from the platform type
+ */
+@PublishedApi internal
+class GraphQlFieldDelegate<out T> internal constructor(
     values: Map<String, Any?>,
     inst: GraphQlInstance
 ) : ReadOnlyProperty<Any?, T> {
@@ -23,7 +28,7 @@ class GraphQlFieldDelegate<out T>(
   /**
    * Maps names of properties to the types/fragments that it can resolve to
    */
-  private val instanceResolvers: Map<String, Set<ClassFragment<*>>> =
+  private var instanceResolvers: Map<String, Set<ClassFragment<*>>> =
       inst.properties.entries.mapNotNull { (key, value) ->
         key with when (value) {
           is FragmentSpread<*> -> value.classFragments
@@ -43,10 +48,10 @@ class GraphQlFieldDelegate<out T>(
   @Suppress("UNCHECKED_CAST")
   internal fun <X> withReturnType() = this as ReadOnlyProperty<Any?, X>
 
+  @Suppress("UNCHECKED_CAST")
   override operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
 
-    if (!wasAccessed(property.name)) {
-
+    if (!wasAccessed(property.name)) synchronized(this) {
       val value = run {
         val raw = mutableRawValues[property.name]
         if (property.returnType.rootType.isSubtypeOf(dataType)) {
@@ -59,9 +64,11 @@ class GraphQlFieldDelegate<out T>(
       checkCast(property, value)
       values[property.name] = value
       mutableRawValues[property.name] = null
+      // release all fragments after resolving all, since those can be large objects
+      if (mutableRawValues.isEmpty())
+        instanceResolvers = emptyMap()
     }
 
-    @Suppress("UNCHECKED_CAST")
     return values[property.name] as? T
         ?: if (property.returnType.isMarkedNullable) null as T else removeAndThrowNullPointer(property)
   }
@@ -107,7 +114,8 @@ class GraphQlFieldDelegate<out T>(
         if (fragments.size == 1)
           fragments.first().resolveFrom(map)
         else
-          fragments.find { it.typeName == map["__typename"] }?.resolveFrom(map)
+          fragments.find { it.typeName == map["__typename"] }
+              ?.resolveFrom(map)
       }
     }
 
