@@ -28,11 +28,6 @@ class ClassFragment<out T : Data?> @PublishedApi internal constructor(
 
   companion object {
 
-    inline fun <reified T : Data?> fragment(
-        noinline init: (GraphQlResult) -> T,
-        noinline block: TypedFragmentScope<T>.() -> Unit = { /* nothing */ }
-    ) = ClassFragment(T::class, init, block)
-
     internal
     fun <T : Data?> fragment(
         clazz: KClass<*>,
