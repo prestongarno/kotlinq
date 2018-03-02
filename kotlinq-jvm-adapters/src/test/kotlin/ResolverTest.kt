@@ -5,9 +5,6 @@ import org.junit.Test
 import org.kotlinq.api.Kind
 import org.kotlinq.jvm.annotations.Ignore
 import kotlin.reflect.KClass
-import kotlin.reflect.KTypeProjection
-import kotlin.reflect.KVariance
-import kotlin.reflect.full.createType
 
 
 class ResolverTest {
@@ -83,7 +80,7 @@ class ResolverTest {
       }
     }
 
-    assertThat(Validator.canResolve(result, frag)).isTrue()
+    assertThat(Validation.canResolve(result, frag)).isTrue()
     val reified = frag.resolveFrom(result)
     assertThat(reified).isNotNull()
     assertThat(reified!!.nest).isNotNull()
@@ -186,7 +183,7 @@ class ResolverTest {
       }
     }
 
-    assertThat(Validator.canResolve(response, frag)).isTrue()
+    assertThat(Validation.canResolve(response, frag)).isTrue()
     assertThat(frag.resolveFrom(response)).isNotNull()
 
     val result = frag.resolveFrom(response)!!
@@ -228,7 +225,7 @@ class ResolverTest {
       }
     }
 
-    assertThat(Validator.canResolve(multiResponse, frag)).isTrue()
+    assertThat(Validation.canResolve(multiResponse, frag)).isTrue()
 
     val multiResult = frag.resolveFrom(multiResponse)!!
 

@@ -12,7 +12,7 @@ class ClassFragmentResolver<out T : Data?>(
     private val fragment: ClassFragment<T>
 ) {
 
-  val isValid: Boolean by lazy { Validator.canResolve(map, fragment) }
+  val isValid: Boolean by lazy { Validation.canResolve(map, fragment) }
 
   fun resolve(): T? =
       if (!isValid) null else fragment.init(map.toResult(fragment))
@@ -22,7 +22,7 @@ class ClassFragmentResolver<out T : Data?>(
  * Most readable code you'll ever see below
  */
 internal
-object Validator {
+object Validation {
 
   fun canResolve(map: Map<String, Any?>, fragment: ClassFragment<*>): Boolean =
       fragment.graphQlInstance.properties.entries.all {

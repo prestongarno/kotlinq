@@ -3,7 +3,7 @@ package org.kotlinq.jvm
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Kind
-import org.kotlinq.jvm.Validator.isValidValue
+import org.kotlinq.jvm.Validation.isValidValue
 
 class Types {
 
