@@ -175,6 +175,7 @@ class ResolverTest {
 
     val response = json {
       "__typename"(RootWithNodeList::class.name)
+
       "listOfChildNodes" list {
         add {
           "__typename"(SubNested0::class.name)
@@ -186,9 +187,26 @@ class ResolverTest {
     }
 
     assertThat(Validator.canResolve(response, frag)).isTrue()
+    assertThat(frag.resolveFrom(response)).isNotNull()
 
+    val result = frag.resolveFrom(response)!!
 
+    assertThat(result.listOfChildNodes).hasSize(1)
+
+    val firstElement = result.listOfChildNodes.first().let {
+      assertThat(it::class).isEqualTo(SubNested0::class)
+      it as SubNested0
+    }
+
+    assertThat(firstElement.baz)
+        .isEqualTo("world")
+    assertThat(firstElement.field0)
+        .isEqualTo("hello")
+    assertThat(firstElement.field1)
+        .isEqualTo(-77)
   }
+
+
 }
 
 
