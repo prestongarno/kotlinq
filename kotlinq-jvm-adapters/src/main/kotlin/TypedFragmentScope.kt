@@ -80,6 +80,7 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
   @PublishedApi internal
   fun <X : Data?> buildFromFragmentScope(property: KProperty1<T, *>, block: InterfaceFragmentSpreadScope<X>.() -> Unit) {
     val kind = property.returnType.dataKind() ?: return
+
     PropertyInfo.propertyNamed(property.name)
         .typeKind(kind)
         .build()

@@ -204,6 +204,35 @@ class ResolverTest {
         .isEqualTo("hello")
     assertThat(firstElement.field1)
         .isEqualTo(-77)
+
+    val multiResponse = json {
+      "__typename"(RootWithNodeList::class.name)
+
+      "listOfChildNodes" list {
+        add {
+          "__typename"(SubNested1::class.name)
+          "field0"("hello")
+          "field1"(-77)
+          "child" {
+            "field0"("childField0")
+            "field1"(35)
+            "baz"("")
+          }
+        }
+        add {
+          "__typename"(SubNested0::class.name)
+          "field0"("hello")
+          "field1"(-77)
+          "baz"("world")
+        }
+      }
+    }
+
+    assertThat(Validator.canResolve(multiResponse, frag)).isTrue()
+
+    val multiResult = frag.resolveFrom(multiResponse)!!
+
+    assertThat(multiResult.listOfChildNodes).hasSize(2)
   }
 
 
