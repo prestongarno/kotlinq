@@ -55,6 +55,7 @@ class ResolverTest {
   }
 
   @Test fun singleNestedFragmentResolves() {
+
     val frag = fragment(::Root)
     assertThat(frag.toGraphQl())
         .isEqualTo("{id,__typename,bar,foo}")
@@ -65,6 +66,12 @@ class ResolverTest {
 
     assertThat(frag.resolveFrom(data))
         .isNotNull()
+
+    assertThat(frag.resolveFrom(data)!!.bar)
+        .isEqualTo("is this thing on")
+
+    assertThat(frag.resolveFrom(data)!!.foo)
+        .isEqualTo(1000)
   }
 
 }
