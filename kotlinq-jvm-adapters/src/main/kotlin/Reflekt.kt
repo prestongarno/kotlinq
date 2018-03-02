@@ -2,16 +2,30 @@ package org.kotlinq.jvm
 
 import org.kotlinq.api.Kind
 import org.kotlinq.api.PropertyInfo
+import org.kotlinq.jvm.annotations.Ignore
 import kotlin.coroutines.experimental.buildSequence
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 
+internal
+object Reflekt {
+
+  val dataKtype = Data::class.createType(nullable = true)
+
+  val anyProperties: Set<KProperty1<*, *>> =
+      Any::class.memberProperties.toSet()
+
+  fun shouldBeIgnored(property: KProperty1<*, *>): Boolean {
+    return property.findAnnotation<Ignore>() != null || property in anyProperties
+  }
+}
 
 internal
 fun KType.isCompatibleWith(value: Any?): Boolean {
@@ -54,20 +68,11 @@ fun wrap(kind: Kind, type: KType): Kind = buildSequence {
 
 internal
 fun KType.dataKind(): Kind? =
-    if (!rootType.isSubtypeOf(ProtoTypes.dataType))
+    if (!rootType.isSubtypeOf(Reflekt.dataKtype))
       null
     else rootType.clazz?.simpleName
         ?.let(Kind.Companion::typeNamed)
         ?.let { wrap(it, this) }
-
-internal
-object ProtoTypes {
-  val dataType = Data::class.createType(nullable = true)
-
-  val anyProperties: Set<KProperty1<*, *>> =
-      Any::class.memberProperties.toSet()
-}
-
 
 internal
 val KType.clazz: KClass<*>?

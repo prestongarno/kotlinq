@@ -19,9 +19,6 @@ class GraphQlResult internal constructor(map: Map<String, Any?>) {
       delegate.withReturnType()
   fun floatingPoint(): ReadOnlyProperty<Any?, Float> =
       delegate.withReturnType()
-
-  //fun canResolveTo(fragment: ClassFragment<*>): Boolean = false
-
 }
 
 

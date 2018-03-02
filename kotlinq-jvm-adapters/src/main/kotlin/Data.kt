@@ -12,6 +12,13 @@ interface Data {
       (this as? GraphQlFieldDelegate<T>)?.withReturnType() ?: this as ReadOnlyProperty<Any?, List<T>>
 }
 
+/**
+ * Convenience class to subclass [Data] easily
+ */
+abstract class GraphQlData(override val result: GraphQlResult): Data {
+  constructor(map: Map<String, Any?>) : this(map.toResult())
+}
+
 
 
 fun GraphQlResult.toData(): Data = object : Data {

@@ -22,7 +22,7 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
    * Enables arguments on fields while using generic DSL
    */
   @Suppress("UNCHECKED_CAST")
-  operator fun <R> KProperty1<T, R>.invoke(arguments: Map<String, Any>)
+  operator fun <R> KProperty1<T, R>.invoke(arguments: Map<String, *>)
       : FragmentField<T, R> =
       bindScalarPropertyIfApplicable(this, arguments) ?: FragmentField(this)
 
@@ -48,11 +48,13 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
 
 
   @PublishedApi internal
-  fun <R> bindScalarPropertyIfApplicable(prop: KProperty1<T, *>, arguments: Map<String, Any>): FragmentField<T, R>? {
+  fun <R> bindScalarPropertyIfApplicable(prop: KProperty1<T, *>, arguments: Map<String, *>): FragmentField<T, R>? {
     val kind = prop.returnType.scalarKind() ?: return null
     PropertyInfo.propertyNamed(prop.name)
         .typeKind(kind)
-        .arguments(arguments)
+        .arguments(arguments
+            .mapNotNull { it.key with it.value }
+            .toMap())
         .build()
         .let(Kotlinq.adapterService.scalarAdapters::newAdapter)
         .let(bindableContext::register)
