@@ -2,8 +2,12 @@ package org.kotlinq.jvm
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.kotlinq.api.Kind
 import org.kotlinq.jvm.annotations.Ignore
 import kotlin.reflect.KClass
+import kotlin.reflect.KTypeProjection
+import kotlin.reflect.KVariance
+import kotlin.reflect.full.createType
 
 
 class ResolverTest {
@@ -161,6 +165,14 @@ class ResolverTest {
       }
     }
 
+    val info = frag.graphQlInstance.properties["listOfChildNodes"]!!
+        .propertyInfo
+
+    assertThat(info.graphQlType).isEqualTo("Nested")
+    assertThat(info.kind).isEqualTo(Kind
+        .typeNamed("Nested")
+        .asList())
+
     val response = json {
       "__typename"(RootWithNodeList::class.name)
       "listOfChildNodes" list {
@@ -173,7 +185,7 @@ class ResolverTest {
       }
     }
 
-    println(Validator.canResolve(response, frag))
+    assertThat(Validator.canResolve(response, frag)).isTrue()
 
 
   }

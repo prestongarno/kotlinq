@@ -38,8 +38,10 @@ fun KProperty1<*, Data?>.toPropertyInfo(
     typeName: String,
     args: Map<String, Any> = emptyMap()
 ) = PropertyInfo.propertyNamed(name)
-    .typeKind(wrap(Kind.typeNamed(typeName), returnType))
-    .arguments(args)
+    .typeKind(wrap(
+        Kind.typeNamed(typeName),
+        returnType)
+    ).arguments(args)
     .build()
 
 
@@ -64,7 +66,7 @@ fun wrap(kind: Kind, type: KType): Kind = buildSequence {
   }
 }.toList()
     .reversed()
-    .fold(kind.rootKind()) { acc, curr -> curr(acc) }
+    .fold(kind) { acc, curr -> curr(acc) }
 
 internal
 fun KType.dataKind(): Kind? =
@@ -88,6 +90,6 @@ val KType.rootType: KType
     } else this
   }
 
-val KType.isList get() = this.clazz?.isList == true
+val KType.isList get() = this.clazz?.isList ?: false
 
 val KClass<*>.isList get() = isSubclassOf(List::class)
