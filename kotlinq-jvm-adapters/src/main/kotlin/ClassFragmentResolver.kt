@@ -23,11 +23,8 @@ class ClassFragmentResolver<out T : Data?>(
 internal
 object Validator {
 
-  fun validate(map: Map<String, Any?>, fragment: ClassFragment<*>): Boolean {
-    return map.entries
-        .filter { (it.value as? String)?.startsWith("__") == false && it.value != "id" }
-        .count { (key, value) -> fragment[key]?.let { !isValidValue(it.propertyInfo.kind, value) } == false } == 0
-  }
+  fun validate(map: Map<String, Any?>, fragment: ClassFragment<*>): Boolean = fragment.graphQlInstance.properties.entries
+      .firstOrNull { !isValidValue(it.value.propertyInfo.kind, map[it.key]) } == null
 
   private operator fun Fragment.get(property: String): Adapter? =
       graphQlInstance.properties[property]
@@ -39,19 +36,12 @@ object Validator {
 
     // can't call Kind#isScalar since that counts "List<Int>" as a scalar
     if (value.isScalar()) return kind is Kind.Scalar
+        && value.scalarKind()?.isTypeCompatible(kind) == true
 
     if (kind is Kind.ListKind) return (value as? List<*>)
-        ?.let {
-          if (it.isEmpty())
-            true
-          else
-            it.firstOrNull { isValidValue(kind.wrapped, it) == false } == null
-        } == true
-
-    return (kind as? Kind.NullableKind)?.wrapped?.let {
-      isValidValue(it, value)
-    } // best we can do here, without reflection on the back end
-        ?: (kind is Kind.Definition) && value.asMapWithStringKey() != null
+        ?.let { it.all { isValidValue(kind.wrapped, it) } } == true
+// best we can do here, without reflection on the back end
+    return (kind as? Kind.NullableKind)?.wrapped?.let { isValidValue(it, value) } ?: value.asMapWithStringKey() != null
   }
 
 
@@ -63,13 +53,18 @@ object Validator {
         || it is Float
   }
 
+  private fun Any?.scalarKind() = when (this) {
+    is Boolean -> Kind.bool
+    is Int -> Kind.integer
+    is String -> Kind.string
+    is Float -> Kind.float
+    else -> null
+  }
+
   @Suppress("UNCHECKED_CAST")
   internal
-  fun Any?.asMapWithStringKey(): Map<String, Any?>? {
-    return if ((this as? Map<*, *>)?.entries?.firstOrNull { it.key !is String } != null)
-      null
-    else this as? Map<String, Any?>
-  }
+  fun Any?.asMapWithStringKey(): Map<String, Any?>? =
+      if ((this as? Map<*, *>)?.entries?.all { it.key is String } == true) this as? Map<String, Any?> else null
 
   private fun String.getFrom(map: Map<String, Any?>): Any? = map[this]
 
