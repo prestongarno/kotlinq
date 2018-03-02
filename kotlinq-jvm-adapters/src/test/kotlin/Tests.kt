@@ -1,9 +1,8 @@
+package org.kotlinq.jvm
+
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.jvm.ClassFragment.Companion.fragment
-import org.kotlinq.jvm.Data
-import org.kotlinq.jvm.GraphQlResult
-import org.kotlinq.jvm.toData
 
 
 class Tests {
@@ -11,12 +10,12 @@ class Tests {
   abstract class Super : Data
 
   class Bar(graphQlResult: GraphQlResult) : Data by graphQlResult.toData() {
-    val baz by result.integer()
+    val baz by result.integer().asList()
   }
 
   class Foo(result: GraphQlResult) : Data by result.toData() {
     val floatProp by result.bool()
-    val fooProp by result<Bar>()
+    val fooProp by result<Bar>().asList()
   }
 
   class Inner1(result: GraphQlResult) : Super(), Data by result.toData() {
@@ -29,13 +28,12 @@ class Tests {
   }
 
   class Root(result: GraphQlResult) : Data by result.toData() {
-    val abstractSelect by result<Super>()
+    val abstractSelect by result<Super>().asList()
   }
 
   class UnionRoot(result: GraphQlResult) : Data by result.toData() {
-    val whatever by result<Data?>()
+    val whatever by result<Data?>().asList()
   }
-
 
 
   @Test fun bar() {
@@ -81,7 +79,7 @@ class Tests {
       |}
       """.trimMargin("|")
 
-    assertThat(fragment.toGraphQl(pretty = true, idAndTypeName = false).also(::println))
+    assertThat(fragment.toGraphQl(pretty = true, idAndTypeName = false))
         .isEqualTo(expect)
   }
 
@@ -94,9 +92,9 @@ class Tests {
         on(::Root) {
           Root::abstractSelect..{
             on(::Inner2)
+            on(::Inner1)
           }
         }
-        on(::Inner1)
         on(::Inner2)
         on(inner1Frag)
       }
@@ -118,16 +116,19 @@ class Tests {
       |            innerProp1
       |          }
       |        }
+      |        ... on Inner1 {
+      |          innerProp1
+      |        }
       |      }
-      |    }
-      |    ... on Inner1 {
-      |      innerProp1
       |    }
       |    ... on Inner2 {
       |      innerProp1
       |      innerobject {
       |        innerProp1
       |      }
+      |    }
+      |    ... on Inner1 {
+      |      innerProp1
       |    }
       |  }
       |}

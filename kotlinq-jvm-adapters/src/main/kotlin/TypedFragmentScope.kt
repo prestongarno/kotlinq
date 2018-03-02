@@ -26,20 +26,24 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
       : FragmentField<T, R> =
       bindScalarPropertyIfApplicable(this, arguments) ?: FragmentField(this)
 
-  infix fun KProperty1<T, Data?>.union(block: InterfaceFragmentSpreadScope<Data?>.() -> Unit) {
-    buildFromFragmentScope(this, block)
-  }
-
   operator fun <R : Data?> FragmentField<T, R>.rangeTo(block: InterfaceFragmentSpreadScope<R>.() -> Unit) {
     buildFromFragmentScope(property, block)
   }
 
-  infix fun FragmentField<T, Data?>.union(block: InterfaceFragmentSpreadScope<Data?>.() -> Unit) {
+  infix fun FragmentField<T, Any?>.union(block: InterfaceFragmentSpreadScope<Data?>.() -> Unit) {
     buildFromFragmentScope(property, block)
   }
 
-  inline operator fun <reified X : Data?> KProperty1<T, X>.rangeTo(
-      noinline block: InterfaceFragmentSpreadScope<X>.() -> Unit) =
+  infix fun KProperty1<T, Any?>.union(block: InterfaceFragmentSpreadScope<Data?>.() -> Unit) {
+    buildFromFragmentScope(this, block)
+  }
+
+  operator fun <X : Data?> KProperty1<T, X>.invoke(
+      block: InterfaceFragmentSpreadScope<X>.() -> Unit) =
+      buildFromFragmentScope(this, block)
+
+  operator fun <X : Data?> KProperty1<T, List<X>>.rangeTo(
+      block: InterfaceFragmentSpreadScope<X>.() -> Unit) =
       buildFromFragmentScope(this, block)
 
 
@@ -56,8 +60,8 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
   }
 
   @PublishedApi internal
-  fun <X : Data?> buildFromFragmentScope(property: KProperty1<T, X>, block: InterfaceFragmentSpreadScope<X>.() -> Unit) {
-    val kind = property.returnType.dataKind() ?: return
+  fun <X : Data?> buildFromFragmentScope(property: KProperty1<T, *>, block: InterfaceFragmentSpreadScope<X>.() -> Unit) {
+    val kind = property.returnType.rootType.dataKind() ?: return
     PropertyInfo.propertyNamed(property.name)
         .typeKind(kind)
         .build()

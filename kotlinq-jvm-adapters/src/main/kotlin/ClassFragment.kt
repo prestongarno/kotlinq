@@ -41,8 +41,7 @@ class ClassFragment<out T : Data?> @PublishedApi internal constructor(
 
 
 @Suppress("UNCHECKED_CAST")
-internal
-fun <T : Data?> reflectionFragment(clazz: KClass<*>,
+internal fun <T : Data?> reflectionFragment(clazz: KClass<*>,
     block: TypedFragmentScope<T>.() -> Unit = { /* nothing */ }): Fragment =
 
     clazz.memberProperties.filter {
