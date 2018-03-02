@@ -38,10 +38,19 @@ interface GraphVisitor {
     private var onNotifyEnter: (Fragment) -> Boolean = { true }
     private var onVisitContext: (Fragment) -> Unit = { }
     private var onVisitField: (Adapter) -> Unit = { }
+    private var onExitContext: (Fragment) -> Unit = { }
 
     /**
      * Predicate for visiting a fragment.
      * If the predicate evaluates to false, the fragment will not be called with [onVisitContext]
+     *
+     *
+     *
+     * TODO change signature to:
+     *
+     *     onNotifyEnter(function: Adapter.(Fragment) -> Boolean)
+     *
+     * This makes it easy to know which property is a selection set
      */
     fun onNotifyEnter(function: (Fragment) -> Boolean) =
         apply { onNotifyEnter = function }
@@ -52,6 +61,9 @@ interface GraphVisitor {
     fun onVisitField(function: (Adapter) -> Unit) =
         apply { onVisitField = function }
 
+    fun onExitContext(function: (Fragment) -> Unit) =
+        apply { onExitContext = function }
+
     fun build(): GraphVisitor = DelegatingVisitor(this)
 
 
@@ -61,6 +73,7 @@ interface GraphVisitor {
       private val onNotify = builder.onNotifyEnter
       private val onContext = builder.onVisitContext
       private val onField = builder.onVisitField
+      private val onExit = builder.onExitContext
 
       override fun visitContext(fragment: Fragment) {
         if (onNotify(fragment)) {
@@ -73,6 +86,8 @@ interface GraphVisitor {
         onField(adapter)
         return true
       }
+
+      override fun notifyExit(fragment: Fragment) { onExit(fragment) }
     }
   }
 }
