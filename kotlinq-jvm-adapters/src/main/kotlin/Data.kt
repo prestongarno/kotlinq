@@ -15,7 +15,7 @@ interface Data {
 /**
  * Convenience class to subclass [Data] easily
  */
-abstract class GraphQlData(override val result: GraphQlResult): Data {
+abstract class GraphQlData(final override val result: GraphQlResult): Data {
   constructor(map: Map<String, Any?>) : this(map.toResult())
 }
 
