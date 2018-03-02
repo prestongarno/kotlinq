@@ -5,6 +5,7 @@ import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.PropertyInfo
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
+import kotlin.reflect.jvm.reflect
 
 
 @GraphQlDsl
@@ -45,6 +46,21 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
   operator fun <X : Data?> KProperty1<T, List<X>>.rangeTo(
       block: InterfaceFragmentSpreadScope<X>.() -> Unit) =
       buildFromFragmentScope(this, block)
+
+  infix fun <X : Data?> KProperty1<T, X>.on(fragment: ClassFragment<X>) = Kotlinq.adapterService
+      .instanceProperty(toPropertyInfo(fragment.typeName), fragment)
+      .let(bindableContext::register)
+      .ignore()
+
+
+  infix fun <X : Data?> KProperty1<T, X>.on(init: (GraphQlResult) -> X) {
+    init.reflect()?.returnType?.clazz?.let { clazz ->
+      val fragment = ClassFragment.fragment(clazz, init)
+      Kotlinq.adapterService
+          .instanceProperty(toPropertyInfo(fragment.typeName), fragment)
+          .let(bindableContext::register)
+    }
+  }
 
 
   @PublishedApi internal

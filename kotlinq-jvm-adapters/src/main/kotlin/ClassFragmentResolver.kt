@@ -3,6 +3,7 @@ package org.kotlinq.jvm
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
 import org.kotlinq.api.Kind
+import kotlin.reflect.KClass
 
 
 internal
@@ -11,10 +12,10 @@ class ClassFragmentResolver<out T : Data?>(
     private val fragment: ClassFragment<T>
 ) {
 
-  val isValid: Boolean by lazy { Validator.validate(map, fragment) }
+  val isValid: Boolean by lazy { Validator.canResolve(map, fragment) }
 
   fun resolve(): T? =
-      if (!isValid) null else fragment.init(map.toResult())
+      if (!isValid) null else fragment.init(map.toResult(fragment))
 }
 
 /**
@@ -23,7 +24,7 @@ class ClassFragmentResolver<out T : Data?>(
 internal
 object Validator {
 
-  fun validate(map: Map<String, Any?>, fragment: ClassFragment<*>): Boolean = fragment.graphQlInstance.properties.entries
+  fun canResolve(map: Map<String, Any?>, fragment: ClassFragment<*>): Boolean = fragment.graphQlInstance.properties.entries
       .firstOrNull { !isValidValue(it.value.propertyInfo.kind, map[it.key]) } == null
 
   private operator fun Fragment.get(property: String): Adapter? =
@@ -40,8 +41,12 @@ object Validator {
 
     if (kind is Kind.ListKind) return (value as? List<*>)
         ?.let { it.all { isValidValue(kind.wrapped, it) } } == true
-// best we can do here, without reflection on the back end
-    return (kind as? Kind.NullableKind)?.wrapped?.let { isValidValue(it, value) } ?: value.asMapWithStringKey() != null
+
+    // best we can do here, without reflection on the back end
+    return (kind as? Kind.NullableKind)
+        ?.wrapped
+        ?.let { isValidValue(it, value) }
+        ?: value.asStringMap() != null
   }
 
 
@@ -61,11 +66,21 @@ object Validator {
     else -> null
   }
 
-  @Suppress("UNCHECKED_CAST")
-  internal
-  fun Any?.asMapWithStringKey(): Map<String, Any?>? =
-      if ((this as? Map<*, *>)?.entries?.all { it.key is String } == true) this as? Map<String, Any?> else null
 
   private fun String.getFrom(map: Map<String, Any?>): Any? = map[this]
 
+}
+
+@Suppress("UNCHECKED_CAST")
+internal
+fun Any?.asStringMap(): Map<String, Any?>? =
+    if ((this as? Map<*, *>)?.entries?.all { it.key is String } == true) this as? Map<String, Any?> else null
+
+@Suppress("UNCHECKED_CAST")
+internal inline fun <reified T : Any> Any?.asList(): List<T>? =
+    if ((this as? List<*>)?.none { !T::class.isInstance(it) } == true) this as List<T> else null
+
+@Suppress("UNCHECKED_CAST")
+internal fun <T> Any?.asList(clazz: KClass<*>): List<T>? {
+  return if ((this as? List<*>)?.none { !clazz.isInstance(it) } == true) this as List<T> else null
 }

@@ -37,8 +37,8 @@ fun KType.isCompatibleWith(value: Any?): Boolean {
 fun KProperty1<*, Data?>.toPropertyInfo(
     typeName: String,
     args: Map<String, Any> = emptyMap()
-) = PropertyInfo.propertyNamed("")
-    .typeKind(Kind.typeNamed(typeName))
+) = PropertyInfo.propertyNamed(name)
+    .typeKind(wrap(Kind.typeNamed(typeName), returnType))
     .arguments(args)
     .build()
 
@@ -54,7 +54,7 @@ fun KType.scalarKind(): Kind? {
 internal
 fun wrap(kind: Kind, type: KType): Kind = buildSequence {
   var current = type
-  while (current.isIterable) {
+  while (current.isList) {
     if (current.isMarkedNullable)
       yield(Kind::asNullable)
     yield(Kind::asList)
@@ -80,16 +80,14 @@ val KType.clazz: KClass<*>?
 
 val KType.rootType: KType
   get() {
-    return if (isIterable) {
+    return if (isList) {
       var current: KType = this
-      while (current.isIterable)
+      while (current.isList)
         current.arguments.firstOrNull()?.type?.let { current = it }
       current
-    } else {
-      this
-    }
+    } else this
   }
 
-val KType.isIterable get() = this.clazz?.isIterable == true
+val KType.isList get() = this.clazz?.isList == true
 
-val KClass<*>.isIterable get() = isSubclassOf(Iterable::class)
+val KClass<*>.isList get() = isSubclassOf(List::class)
