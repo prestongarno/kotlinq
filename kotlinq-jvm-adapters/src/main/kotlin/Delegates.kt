@@ -6,7 +6,8 @@ import java.util.*
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
 
 
 @PublishedApi
@@ -45,12 +46,15 @@ class GraphQlFieldDelegate<out T>(
   override operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
 
     if (!wasAccessed(property.name)) {
-      val value = mutableRawValues[property.name]?.let {
-        if (property.returnType.rootType.clazz?.isSubclassOf(Data::class) == true) {
+
+      val value = run {
+        val raw = mutableRawValues[property.name]
+        if (property.returnType.rootType.isSubtypeOf(dataType)) {
           createInstanceFromClassFragment(
               instanceResolvers[property.name] ?: emptySet(),
-              property.returnType, it)
-        } else it
+              property.returnType,
+              raw)
+        } else raw
       }
       checkCast(property, value)
       values[property.name] = value
@@ -75,10 +79,7 @@ class GraphQlFieldDelegate<out T>(
 
   internal companion object {
 
-    /**
-     * TODO should check for stdlib collections types, etc.
-     * @throws NullPointerException if type is incorrect
-     */
+    /** @throws NullPointerException if type is incorrect */
     fun checkCast(property: KProperty<*>, value: Any?) {
       if (!property.returnType.isCompatibleWith(value))
         throw NullPointerException("On $property, got wrong type ${value?.let { it::class }
@@ -86,13 +87,19 @@ class GraphQlFieldDelegate<out T>(
     }
 
 
+    // TODO remove recursion
     fun createInstanceFromClassFragment(fragments: Set<ClassFragment<*>>, returnType: KType, value: Any?): Any? {
 
       if (returnType.isMarkedNullable && value == null) return null
 
-      if (returnType.isList) return value.asList<Any?>(returnType.clazz ?: Any::class)?.map {
-        createInstanceFromClassFragment(fragments, returnType.arguments.first().type!!, it)
-      }?.let {
+      if (returnType.isList) return run {
+        (value as? Iterable<*>)?.map {
+          createInstanceFromClassFragment(
+              fragments,
+              returnType.arguments.first().type!!,
+              it)
+        } ?: emptyList()
+      }.let {
         if (!returnType.arguments.first().type!!.isMarkedNullable) it.filterNotNull() else it
       }
 
@@ -103,6 +110,8 @@ class GraphQlFieldDelegate<out T>(
           fragments.find { it.typeName == map["__typename"] }?.resolveFrom(map)
       }
     }
+
+    private val dataType = Data::class.createType(nullable = true)
   }
 }
 

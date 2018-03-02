@@ -29,8 +29,21 @@ object Reflekt {
 
 internal
 fun KType.isCompatibleWith(value: Any?): Boolean {
+
   value ?: return isMarkedNullable
-  return value::class.starProjectedType.isSubtypeOf(this)
+
+  if (this.isList) {
+    val valueAsList = value as? List<*> ?: return false
+    return listIsCompatible(valueAsList,
+        arguments.first().type ?: Any::class.createType())
+  } else {
+    return value::class.starProjectedType.isSubtypeOf(this)
+  }
+}
+
+private fun listIsCompatible(value: List<*>, type: KType): Boolean {
+  if (value.isEmpty()) return true
+  return value.all(type::isCompatibleWith)
 }
 
 @PublishedApi internal
