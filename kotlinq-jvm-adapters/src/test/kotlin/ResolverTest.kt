@@ -3,6 +3,7 @@ package org.kotlinq.jvm
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.jvm.annotations.Ignore
+import kotlin.reflect.KClass
 
 
 class ResolverTest {
@@ -150,6 +151,33 @@ class ResolverTest {
   }
 
   @Test fun subclassFragmentSubstitutionResolvesCorrectType() {
+
+    val frag = fragment(::RootWithNodeList) {
+      RootWithNodeList::listOfChildNodes..{
+        on(::SubNested0)
+        on(::SubNested1) {
+          SubNested1::child on ::SubSubNestedDef
+        }
+      }
+    }
+
+    val response = json {
+      "__typename"(RootWithNodeList::class.name)
+      "listOfChildNodes" list {
+        add {
+          "__typename"(SubNested0::class.name)
+          "field0"("hello")
+          "field1"(-77)
+          "baz"("world")
+        }
+      }
+    }
+
+    println(Validator.canResolve(response, frag))
+
+
   }
 }
 
+
+val KClass<*>.name get() = simpleName!!
