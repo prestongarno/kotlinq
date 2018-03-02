@@ -4,7 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Kind
 import org.kotlinq.jvm.annotations.Ignore
-import kotlin.reflect.KClass
+import org.kotlinq.test.isInstanceOf
+import org.kotlinq.test.name
 
 
 class ResolverTest {
@@ -211,7 +212,7 @@ class ResolverTest {
           "field0"("hello")
           "field1"(-77)
           "child" {
-            "__typename"(SubNested0::class.name)
+            "field2"(-9)
             "field0"("childField0")
             "field1"(35)
             "baz"("")
@@ -233,11 +234,14 @@ class ResolverTest {
     assertThat(multiResult.listOfChildNodes).hasSize(2)
 
     val first = (multiResult.listOfChildNodes[0] as SubNested1)
-    println(first.child)
+
+    val subsubNested = first.child!!.let {
+      assertThat(it).isInstanceOf<SubSubNestedDef>()
+      it as SubSubNestedDef
+    }
   }
 
 
 }
 
 
-val KClass<*>.name get() = simpleName!!
