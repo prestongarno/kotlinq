@@ -2,7 +2,7 @@ package org.kotlinq.jvm
 
 import org.kotlinq.api.GraphQlInstance
 import org.kotlinq.api.InstanceAdapter
-import java.util.*
+import java.util.Collections
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
