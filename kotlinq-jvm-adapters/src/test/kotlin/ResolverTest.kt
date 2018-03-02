@@ -3,7 +3,6 @@ package org.kotlinq.jvm
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Kind
-import org.kotlinq.jvm.ClassFragment.Companion.fragment
 import org.kotlinq.jvm.Validator.isValidValue
 import org.kotlinq.jvm.annotations.Ignore
 
@@ -54,7 +53,7 @@ class ResolverTest {
 
   }
 
-  @Test fun singleNestedFragmentResolves() {
+  @Test fun singleNestededFragmentResolves() {
 
     class RootSub(value: GraphQlResult) : Root(value) {
       @Ignore
@@ -84,15 +83,17 @@ class ResolverTest {
   @Test fun resolveSubFragment() {
 
     val frag = fragment(::Root) {
-      Root::nest on ::Nest
+      Root::nest on ::Nested
     }
 
-    val result = mapOf(
-        "foo" to 100,
-        "bar" to "Hello",
-        "nest" to mapOf(
-            "baz" to "World",
-            "__typename" to "Nest"))
+    val result = json {
+      "foo"(100)
+      "bar"("Hello")
+      "nest" {
+        "baz"("World")
+        "__typename"("Nested")
+      }
+    }
 
     assertThat(Validator.canResolve(result, frag)).isTrue()
 
@@ -110,9 +111,9 @@ class ResolverTest {
 open class Root(value: GraphQlResult) : GraphQlData(value) {
   val foo by value.integer()
   val bar by value.string()
-  open val nest by value<Nest>()
+  open val nest by value<Nested>()
 }
 
-open class Nest(value: GraphQlResult) : GraphQlData(value) {
+open class Nested(value: GraphQlResult) : GraphQlData(value) {
   val baz by value.string()
 }
