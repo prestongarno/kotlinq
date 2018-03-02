@@ -9,6 +9,16 @@ import org.kotlinq.jvm.annotations.Ignore
 
 class ResolverTest {
 
+  open class Root(value: GraphQlResult) : GraphQlData(value) {
+    val foo by value.integer()
+    val bar by value.string()
+    open val nest by value<Nested>()
+  }
+
+  open class Nested(value: GraphQlResult) : GraphQlData(value) {
+    val baz by value.string()
+  }
+
   @Test fun validatorValuesTest() {
     assertThat(isValidValue(Kind.string, "")).isTrue()
     assertThat(isValidValue(Kind.integer, 1)).isTrue()
@@ -108,12 +118,3 @@ class ResolverTest {
 
 }
 
-open class Root(value: GraphQlResult) : GraphQlData(value) {
-  val foo by value.integer()
-  val bar by value.string()
-  open val nest by value<Nested>()
-}
-
-open class Nested(value: GraphQlResult) : GraphQlData(value) {
-  val baz by value.string()
-}
