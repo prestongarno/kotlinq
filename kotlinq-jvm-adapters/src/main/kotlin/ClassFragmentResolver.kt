@@ -18,9 +18,7 @@ class ClassFragmentResolver<out T : Data?>(
       if (!isValid) null else fragment.init(map.toResult(fragment))
 }
 
-/**
- * Most readable code you'll ever see below
- */
+
 internal
 object Validation {
 
