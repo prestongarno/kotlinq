@@ -24,8 +24,10 @@ class ClassFragmentResolver<out T : Data?>(
 internal
 object Validator {
 
-  fun canResolve(map: Map<String, Any?>, fragment: ClassFragment<*>): Boolean = fragment.graphQlInstance.properties.entries
-      .firstOrNull { !isValidValue(it.value.propertyInfo.kind, map[it.key]) } == null
+  fun canResolve(map: Map<String, Any?>, fragment: ClassFragment<*>): Boolean =
+      fragment.graphQlInstance.properties.entries.all {
+        isValidValue(it.value.propertyInfo.kind, map[it.key])
+      }
 
   private operator fun Fragment.get(property: String): Adapter? =
       graphQlInstance.properties[property]
@@ -39,8 +41,8 @@ object Validator {
     if (value.isScalar()) return kind is Kind.Scalar
         && value.scalarKind()?.isTypeCompatible(kind) == true
 
-    if (kind is Kind.ListKind) return (value as? List<*>)
-        ?.let { it.all { isValidValue(kind.wrapped, it) } } == true
+    if (kind is Kind.ListKind)
+      return (value as? List<*>)?.all { isValidValue(kind.wrapped, it) } ?: false
 
     // best we can do here, without reflection on the back end
     return (kind as? Kind.NullableKind)
@@ -51,12 +53,7 @@ object Validator {
 
 
   private
-  fun Any.isScalar(): Boolean = this.let {
-    it is String
-        || it is Int
-        || it is Boolean
-        || it is Float
-  }
+  fun Any.isScalar() = scalarKind() != null
 
   private fun Any?.scalarKind() = when (this) {
     is Boolean -> Kind.bool
