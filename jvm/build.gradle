@@ -1,6 +1,6 @@
 
 dependencies {
-  compile project(':core')
+  compile project(':kotlinq-core')
   compile dep.kotlinReflect
-  testCompile project(':dsl')
+  testCompile project(':kotlinq-dsl')
 }
