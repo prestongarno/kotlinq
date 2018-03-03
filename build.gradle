@@ -39,7 +39,6 @@ buildscript {
 
 subprojects {
 
-  ext.clientId = projects.project.name
   group = 'com.prestongarno.kotlinq'
   version = rootProject.findProperty("release") == "true" ? "0.4.1" : "0.4.1-SNAPSHOT"
 
@@ -90,20 +89,17 @@ subprojects {
   jar {
     from(compileJava.outputs)
     from(sourceSets.main.resources)
-    archiveName = "kotlinq-$project.name-$version" + ".jar"
   }
 
   task jarDoc(type: Jar) {
     from(javadoc.destinationDir)
     classifier 'javadoc'
-    archiveName = "kotlinq-$project.name-$version-$classifier" + ".jar"
   }
 
   task jarSource(type: Jar) {
     from(sourceSets.main.allSource)
     from(sourceSets.test.allSource)
     classifier 'sources'
-    archiveName = "kotlinq-$project.name-$version-$classifier" + ".jar"
   }
 
   artifacts {

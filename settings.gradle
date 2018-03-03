@@ -1,10 +1,13 @@
 
 rootProject.name = 'kotlinq'
 include 'core'
+include 'dsl'
+include 'jvm'
 //include 'kotlinq-http'
 //TODO finish core, untyped DSL, and DSL before compiler refactor
 //include 'kotlinq-gradle'
 //include 'kotlinq-schema'
-include 'dsl'
-include 'jvm'
 
+project(':core').name = rootProject.name + '-core'
+project(':dsl').name = rootProject.name + '-dsl'
+project(':jvm').name = rootProject.name + '-jvm'
