@@ -86,4 +86,45 @@ class JsonArrayResolve {
       }
     }
   }
+
+  @Test fun listOfJsonObjectsResolvesToInstanceField() {
+
+    class SimpleData(input: GraphQlResult) : Data by input.toData() {
+      val field0: String by result.string()
+    }
+
+
+    class Clazz(input: GraphQlResult) : Data by input.toData() {
+
+      val listOfSimpleData: List<SimpleData>
+          by result<SimpleData>().asList()
+    }
+
+
+    // JSON object, nested list of 100 objects with a "field0" field
+    val input1 = json {
+      Clazz::listOfSimpleData.name list {
+        for (i in 0..100)
+          add { "field0"("$i") }
+      }
+    }
+
+    val frag = fragment(::Clazz) {
+      Clazz::listOfSimpleData..{
+        on(::SimpleData) // TODO simple frag spread op on list properties
+      }
+    }
+
+    assertThat(Validation.canResolve(input1, frag)).isTrue()
+    val clazzInstance = frag.resolveFrom(input1)!!
+    assertThat(clazzInstance.listOfSimpleData.size).isEqualTo(101)
+
+    // String.toInt() returns index
+    clazzInstance.listOfSimpleData.withIndex().all { (index, simple) ->
+      index - simple.field0.toInt() == 0
+    }.let { shouldBeTrue ->
+
+      assertThat(shouldBeTrue).isTrue()
+    }
+  }
 }
