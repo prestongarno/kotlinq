@@ -13,6 +13,8 @@ import kotlin.reflect.full.isSubtypeOf
 /**
  * Delegate for a [Data] instance properties.
  *
+ * TODO make this code even less readable
+ *
  * TODO decouple the type checking and the
  * mapping/initialization from the platform type
  */
@@ -26,6 +28,7 @@ class GraphQlFieldDelegate<out T> internal constructor(
       Collections.synchronizedSet(mutableSetOf())
 
   /**
+   * TODO break encapsulation even more here
    * Maps names of properties to the types/fragments that it can resolve to
    */
   private var instanceResolvers: Map<String, Set<ClassFragment<*>>> =
@@ -94,22 +97,22 @@ class GraphQlFieldDelegate<out T> internal constructor(
     }
 
 
-    // TODO remove recursion
+    private
     fun createInstanceFromClassFragment(fragments: Set<ClassFragment<*>>, returnType: KType, value: Any?): Any? {
 
       if (returnType.isMarkedNullable && value == null) return null
 
+      // list prop, recurse on all values :(
       if (returnType.isList) return run {
         (value as? Iterable<*>)?.map {
-          createInstanceFromClassFragment(
-              fragments,
-              returnType.arguments.first().type!!,
-              it)
+          createInstanceFromClassFragment(fragments, returnType.arguments.first().type!!, it)
         } ?: emptyList()
+
       }.let {
         if (!returnType.arguments.first().type!!.isMarkedNullable) it.filterNotNull() else it
       }
 
+      // instance property
       return value.asStringMap()?.let { map ->
         if (fragments.size == 1)
           fragments.first().resolveFrom(map)
