@@ -2,9 +2,30 @@ package org.kotlinq.jvm
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import java.util.*
+import kotlin.coroutines.experimental.buildSequence
 
 
 class JsonArrayResolve {
+
+  @Test fun emptyListOfDifferentParamTypeIsStillValid() {
+    val notIntList = listOf<Nothing?>()
+
+    class Clazz(result: GraphQlResult) : GraphQlData(result) {
+      val intList by result.integer().asList().asList()
+    }
+
+    assertThat(Validation.canResolve(
+        mapOf("intList" to notIntList),
+        fragment(::Clazz))
+    ).isTrue()
+
+    assertThat(
+        fragment(::Clazz)
+            .resolveFrom(mapOf("intList" to notIntList))!!
+            .intList
+    ).isEmpty()
+  }
 
   @Test fun simpleScalarArrayResolves() {
 
@@ -22,5 +43,37 @@ class JsonArrayResolve {
 
     assertThat(shouldBeTrue)
         .isTrue()
+  }
+
+  @Test fun twoDimensionalStringArrayResolves() {
+
+    class Clazz(values: GraphQlResult) : GraphQlData(values) {
+
+      val stringMatrix: List<List<String>> by result
+          .string()
+          .asList()
+          .asList()
+    }
+
+    fun randomListOfStrings(length: Int): Sequence<String> = buildSequence {
+      for (i in 0..length) yield(UUID.randomUUID().toString())
+    }
+
+    val listOfListOfStrings = buildSequence {
+      for (i in 0..9) yield(randomListOfStrings(i).toList())
+    }.toList()
+
+    val input = mapOf("stringMatrix" to listOfListOfStrings)
+    val frag = fragment(::Clazz)
+    assertThat(Validation.canResolve(input, frag)).isTrue()
+
+    frag.resolveFrom(input)!!.let {
+
+      assertThat(it.stringMatrix.size).isEqualTo(10)
+      // 2 dimensional arrays with differing lengths
+      it.stringMatrix.withIndex().forEach { (index, uuidList) ->
+        assertThat(uuidList.size - 1).isEqualTo(index)
+      }
+    }
   }
 }
