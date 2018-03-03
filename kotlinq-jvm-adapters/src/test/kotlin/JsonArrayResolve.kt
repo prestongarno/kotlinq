@@ -67,12 +67,22 @@ class JsonArrayResolve {
     val frag = fragment(::Clazz)
     assertThat(Validation.canResolve(input, frag)).isTrue()
 
-    frag.resolveFrom(input)!!.let {
+    frag.resolveFrom(input)!!.let { result ->
 
-      assertThat(it.stringMatrix.size).isEqualTo(10)
+      assertThat(result.stringMatrix.size).isEqualTo(listOfListOfStrings.size)
       // 2 dimensional arrays with differing lengths
-      it.stringMatrix.withIndex().forEach { (index, uuidList) ->
+      result.stringMatrix.withIndex().forEach { (index, uuidList) ->
         assertThat(uuidList.size - 1).isEqualTo(index)
+      }
+
+      // Make sure that the order & values of the input has not changed when resolving
+      listOfListOfStrings.withIndex().forEach { (index, inputList) ->
+
+        val instanceList = result.stringMatrix[index]
+
+        assertThat(instanceList)
+            .containsAllIn(inputList)
+            .inOrder()
       }
     }
   }
