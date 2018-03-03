@@ -19,6 +19,7 @@ class ClassFragmentResolver<out T : Data?>(
 }
 
 
+// TODO extract to interface here for configuration
 internal
 object Validation {
 

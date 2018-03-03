@@ -14,6 +14,8 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 
+// Internal extension functions for kotlin core reflection & kotlinq api
+
 internal
 object Reflekt {
 
@@ -93,6 +95,7 @@ internal
 val KType.clazz: KClass<*>?
   get() = this.classifier as? KClass<*>
 
+internal
 val KType.rootType: KType
   get() {
     return if (isList) {
@@ -103,6 +106,8 @@ val KType.rootType: KType
     } else this
   }
 
+internal
 val KType.isList get() = this.clazz?.isList ?: false
 
+internal
 val KClass<*>.isList get() = isSubclassOf(List::class)
