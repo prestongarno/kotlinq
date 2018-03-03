@@ -90,19 +90,20 @@ subprojects {
   jar {
     from(compileJava.outputs)
     from(sourceSets.main.resources)
+    archiveName = "kotlinq-$project.name-$version" + ".jar"
   }
 
   task jarDoc(type: Jar) {
     from(javadoc.destinationDir)
     classifier 'javadoc'
-    archiveName = "$project.name-$version-$classifier" + ".jar"
+    archiveName = "kotlinq-$project.name-$version-$classifier" + ".jar"
   }
 
   task jarSource(type: Jar) {
     from(sourceSets.main.allSource)
     from(sourceSets.test.allSource)
     classifier 'sources'
-    archiveName = "$project.name-$version-$classifier" + ".jar"
+    archiveName = "kotlinq-$project.name-$version-$classifier" + ".jar"
   }
 
   artifacts {
