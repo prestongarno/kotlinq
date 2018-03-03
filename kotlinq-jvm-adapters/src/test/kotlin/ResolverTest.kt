@@ -239,6 +239,11 @@ class ResolverTest {
       assertThat(it).isInstanceOf<SubSubNestedDef>()
       it as SubSubNestedDef
     }
+
+    assertThat(subsubNested.field2).isEqualTo(-9)
+    assertThat(subsubNested.field0).isEqualTo("childField0")
+    assertThat(subsubNested.field1).isEqualTo(35)
+    assertThat(subsubNested.baz).isEmpty()
   }
 
 
