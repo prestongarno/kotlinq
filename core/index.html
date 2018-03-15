@@ -10,28 +10,28 @@
         <meta name="description" content="GraphQL DSLs for Kotlin">
       
       
-        <link rel="canonical" href="http://prestongarno.github.io/kotlinq/">
+        <link rel="canonical" href="http://prestongarno.github.io/kotlinq/core/">
       
       
         <meta name="author" content="Preston Garno">
       
       
-        <link rel="shortcut icon" href="./assets/images/favicon.png">
+        <link rel="shortcut icon" href="../assets/images/favicon.png">
       
       <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.10.2">
     
     
       
-        <title>Kotlinq</title>
+        <title>Overview - Kotlinq</title>
       
     
     
-      <script src="./assets/javascripts/modernizr-e826f8942a.js"></script>
+      <script src="../assets/javascripts/modernizr-e826f8942a.js"></script>
     
     
-      <link rel="stylesheet" href="./assets/stylesheets/application-408828a02a.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application-408828a02a.css">
       
-        <link rel="stylesheet" href="./assets/stylesheets/application-23f75ab9c7.palette.css">
+        <link rel="stylesheet" href="../assets/stylesheets/application-23f75ab9c7.palette.css">
       
     
     
@@ -84,7 +84,7 @@
             
               
             
-            Intro
+            Overview
           
         </span>
       </div>
@@ -191,6 +191,18 @@
       
       
 
+
+  <li class="md-nav__item">
+    <a href=".." title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+    
+      
+      
+      
+
   
 
 
@@ -202,11 +214,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="toc">
-        Intro
+        Overview
       </label>
     
-    <a href="." title="Intro" class="md-nav__link md-nav__link--active">
-      Intro
+    <a href="./" title="Overview" class="md-nav__link md-nav__link--active">
+      Overview
     </a>
     
       
@@ -227,29 +239,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-goals" title="Project goals" class="md-nav__link">
-    Project goals
+  <a href="#fragment" title="Fragment" class="md-nav__link">
+    Fragment
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-is-graphql" title="What is GraphQL?" class="md-nav__link">
-    What is GraphQL?
+  <a href="#printer" title="Printer" class="md-nav__link">
+    Printer
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-does-the-name-kotlinq-even-mean" title="What does the name kotlinq even mean?" class="md-nav__link">
-    What does the name kotlinq even mean?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" title="Getting started" class="md-nav__link">
-    Getting started
+  <a href="#graph-visitor" title="Graph Visitor" class="md-nav__link">
+    Graph Visitor
   </a>
   
 </li>
@@ -269,19 +274,7 @@
 
 
   <li class="md-nav__item">
-    <a href="core/" title="Overview" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="contributing/" title="Contributing" class="md-nav__link">
+    <a href="../contributing/" title="Contributing" class="md-nav__link">
       Contributing
     </a>
   </li>
@@ -293,7 +286,7 @@
 
 
   <li class="md-nav__item">
-    <a href="license/" title="License" class="md-nav__link">
+    <a href="../license/" title="License" class="md-nav__link">
       License
     </a>
   </li>
@@ -327,29 +320,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-goals" title="Project goals" class="md-nav__link">
-    Project goals
+  <a href="#fragment" title="Fragment" class="md-nav__link">
+    Fragment
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-is-graphql" title="What is GraphQL?" class="md-nav__link">
-    What is GraphQL?
+  <a href="#printer" title="Printer" class="md-nav__link">
+    Printer
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-does-the-name-kotlinq-even-mean" title="What does the name kotlinq even mean?" class="md-nav__link">
-    What does the name kotlinq even mean?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" title="Getting started" class="md-nav__link">
-    Getting started
+  <a href="#graph-visitor" title="Graph Visitor" class="md-nav__link">
+    Graph Visitor
   </a>
   
 </li>
@@ -369,25 +355,72 @@
               
                 
                 
-                <h1 id="kotlinq-a-kotlin-library-for-easy-type-safe-graphql-dsls"><b><span style="color:#f442c2">Kotlinq :  <small>a kotlin library for easy, type-safe GraphQL DSLs</small></span></b><a class="headerlink" href="#kotlinq-a-kotlin-library-for-easy-type-safe-graphql-dsls" title="Permanent link">&para;</a></h1>
+                <h1 id="core-kotlinq-core"><b><span style="color:#f442c2">Core (kotlinq-core)</span></b><a class="headerlink" href="#core-kotlinq-core" title="Permanent link">&para;</a></h1>
 <h2 id="about"><span style="color:#f442c2">About</span><a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p>This project is a type-safe Kotlin DSL for GraphQL.</p>
-<h2 id="project-goals"><span style="color:#f442c2">Project goals</span><a class="headerlink" href="#project-goals" title="Permanent link">&para;</a></h2>
-<p>Kotlinq has the goal of making GraphQL easy to integrate in an existing project in a scalable manner 
-while taking advantage of the both pragmatic and null/type-safe nature of Kotlin. </p>
-<p>Check out obligatory <a href="hello_world.md">Hello, world!</a> page to see how kotlinq accomplishes this!</p>
-<h2 id="what-is-graphql"><span style="color:#f442c2">What is GraphQL?</span><a class="headerlink" href="#what-is-graphql" title="Permanent link">&para;</a></h2>
-<p>GraphQL is a thoroughly defined <a href="http://facebook.github.io/graphql">specification</a> which defines
-its architecture as structured data conforming to a simple, declarative type system.</p>
-<p>GraphQL is a natural way to describe <strong><em>data types</em></strong> and their <strong><em>relationships to other types</em></strong>
-(also known as a graph, where nodes and edges describe a confined set of data). You can learn more
-about it <a href="http://graphql.org/learn/">here</a></p>
-<p>The GraphQL type system provides null-safety which is quite convenient.</p>
-<h2 id="what-does-the-name-kotlinq-even-mean"><span style="color:#f442c2">What does the name <em>kotlinq</em> even mean?</span><a class="headerlink" href="#what-does-the-name-kotlinq-even-mean" title="Permanent link">&para;</a></h2>
-<p>[Kot]lin [L]anguage [I]ntegrated [Q]ueries</p>
-<h2 id="development-issue-tracker"><span style="color:#f442c2"><a href="https://github.com/prestongarno/kotlinq"/>Development &amp; issue tracker</a></span><a class="headerlink" href="#development-issue-tracker" title="Permanent link">&para;</a></h2>
-<h2 id="getting-started"><span style="color:#f442c2">Getting started</span><a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>Check out the next section for a simple 'Hello, world!' query</p>
+<p>This is the core module which provides a set of classes to compose &amp; extend in functionality (i.e. for creating a DSL). Below is a quick overview so that you can connect the concepts when working with any of the DSL modules. Main concepts:</p>
+<ol>
+<li><strong>Fragment</strong>: Main interface for composing a GraphQL request</li>
+<li><strong>Printer</strong>: Highly configurable class for controlling the actual GraphQL request format. Don't like curly braces? Want to decorate GraphQL types in your request with custom properties? The Printer provides an easy-to-use interface via Builders for easily and safely doing things like this.</li>
+<li><strong>Graph Visitor</strong>: An interface for traversing a GraphQL request structure</li>
+</ol>
+<h2 id="fragment"><span style="color:#f442c2">Fragment</span><a class="headerlink" href="#fragment" title="Permanent link">&para;</a></h2>
+<p>A Fragment, just like in the GraphQL spec, is essentially a </p>
+<ul>
+<li>Type name</li>
+<li><em>Selection Set</em></li>
+</ul>
+<p>The <em>Selection Set</em> is a declaration specifying fields from that type. They can be either:</p>
+<ol>
+<li>Scalars (i.e. primitives, or your own custom ones)</li>
+<li>Other fragments</li>
+</ol>
+<p>A Fragment is a recursively defined data structure. In kotlinq-core, fragments and their properties do not rely on JVM reflection, but rather uses its own, simplified reflection system to enforce type safety.</p>
+<h2 id="printer"><span style="color:#f442c2">Printer</span><a class="headerlink" href="#printer" title="Permanent link">&para;</a></h2>
+<p>A GraphQL request printer is composed of a</p>
+<ol>
+<li>PrintingConfiguration: Specification for the format of the request. Provided configurations are <em>pretty print</em> and <em>non-pretty</em> (single line, optimized for space)</li>
+<li>MetaStrategy: Specification for intercepting &amp; transforming the printing of the actual structure of a request</li>
+</ol>
+<p>Example usage:</p>
+<div class="codehilite"><pre><span></span> val printer = Printer.fromConfiguration(PrintingConfiguration.PRETTY)
+      .toBuilder()
+      .metaStrategy(MetaStrategy.builder()
+          .includeId()
+          .includeTypename()
+          .include(&quot;TODO&quot;) { fragment -&gt;
+             fragment.typeName == &quot;User&quot;
+          }
+          .build())
+      .indent(&quot;\t&quot;)
+      .build()
+</pre></div>
+
+<p>The above <code class="codehilite">printer</code> shows how to format your requests as pretty-printed with tab indents, and also adds a property called "TODO" to a fragment selection set when the fragment is of type <code class="codehilite">User</code>.</p>
+<p>Note that fragments themselves can be easily formatted for standard day-to-day usage:</p>
+<div class="codehilite"><pre><span></span>  val fragment = ...
+  val stringQuery = fragment.toGraphQl(
+      pretty = true,
+      idAndTypeName = true)
+</pre></div>
+
+<h2 id="graph-visitor"><span style="color:#f442c2">Graph Visitor</span><a class="headerlink" href="#graph-visitor" title="Permanent link">&para;</a></h2>
+<p>This is an interface for analyzing fragment structure. Internally, the Printer and many other features use this interface under the hood. For example, here is the implementation of the Fragment's overload of the <code class="codehilite">in</code> operator (for checking if a fragment is defined within another one, e.g. <code class="codehilite">if (fragment in otherFragment) doSmth();</code>):</p>
+<div class="codehilite"><pre><span></span>  operator fun Fragment.contains(other: Fragment): Boolean {
+    var result = false
+
+    GraphVisitor.builder()
+        .onNotifyEnter {
+          other != it || let {
+            result = true
+            false // stop traversing, found match
+          }
+        }
+        .build()
+        .let(::traverse)
+
+    return result
+  }
+</pre></div>
                 
                   
                 
@@ -406,14 +439,28 @@ about it <a href="http://graphql.org/learn/">here</a></p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
+          <a href=".." title="Intro" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Intro
+              </span>
+            </div>
+          </a>
         
-          <a href="core/" title="Overview" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+        
+          <a href="../contributing/" title="Contributing" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Overview
+                Contributing
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -461,10 +508,10 @@ about it <a href="http://graphql.org/learn/">here</a></p>
       
     </div>
     
-      <script src="./assets/javascripts/application-f3ab9e5ff8.js"></script>
+      <script src="../assets/javascripts/application-f3ab9e5ff8.js"></script>
       
       
-      <script>app.initialize({url:{base:"."}})</script>
+      <script>app.initialize({url:{base:".."}})</script>
       
     
     

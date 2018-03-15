@@ -4,7 +4,15 @@
     
     <url>
      <loc>http://prestongarno.github.io/kotlinq/</loc>
-     <lastmod>2018-02-19</lastmod>
+     <lastmod>2018-03-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>http://prestongarno.github.io/kotlinq/core/</loc>
+     <lastmod>2018-03-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +20,7 @@
     
     <url>
      <loc>http://prestongarno.github.io/kotlinq/contributing/</loc>
-     <lastmod>2018-02-19</lastmod>
+     <lastmod>2018-03-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,7 +28,7 @@
     
     <url>
      <loc>http://prestongarno.github.io/kotlinq/license/</loc>
-     <lastmod>2018-02-19</lastmod>
+     <lastmod>2018-03-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
