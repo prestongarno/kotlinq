@@ -19,6 +19,14 @@
 
     
     <url>
+     <loc>http://prestongarno.github.io/kotlinq/dsl/</loc>
+     <lastmod>2018-03-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
      <loc>http://prestongarno.github.io/kotlinq/contributing/</loc>
      <lastmod>2018-03-15</lastmod>
      <changefreq>daily</changefreq>
