@@ -32,7 +32,7 @@ The GraphQL type system provides null-safety which is quite convenient.
 There are currently 2 DSLs:
 
 1. `kotlinq-dsl`: Un-typed DSL for simply fetching data. Does not support converting to JVM types.
-2. `kotlinq-jvm`: Somewhat type-safe DSL, experimental. Supports defining fragments based on kotlin classes, validating a GraphQL response, and also resolving the response to native JVM class instances. It is unfortunately restrictive and requires tight coupling, so use with caution.
+2. `kotlinq-jvm`: Somewhat type-safe DSL, experimental. Supports defining fragments based on kotlin classes, validating a GraphQL response, and also resolving the response to native JVM class instances. It is unfortunately restrictive and requires tight coupling to the library, so use with caution.
 
 The next section contains a run-down of shared concepts between the DSL modules.
 
