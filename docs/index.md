@@ -9,8 +9,6 @@ This project is a type-safe Kotlin DSL for GraphQL.
 Kotlinq has the goal of making GraphQL easy to integrate in an existing project in a scalable manner 
 while taking advantage of the both pragmatic and null/type-safe nature of Kotlin. 
 
-Check out obligatory [Hello, world!](hello_world.md) page to see how kotlinq accomplishes this!
-
 ## <span style="color:#f442c2">What is GraphQL?</span>
 
 GraphQL is a thoroughly defined [specification][2] which defines
@@ -31,7 +29,12 @@ The GraphQL type system provides null-safety which is quite convenient.
 
 ## <span style="color:#f442c2">Getting started</span>
 
-Check out the next section for a simple 'Hello, world!' query
+There are currently 2 DSLs:
+
+1. `kotlinq-dsl`: Un-typed DSL for simply fetching data. Does not support converting to JVM types.
+2. `kotlinq-jvm`: Somewhat type-safe DSL, experimental. Supports defining fragments based on kotlin classes, validating a GraphQL response, and also resolving the response to native JVM class instances. It is unfortunately restrictive and requires tight coupling, so use with caution.
+
+The next section contains a run-down of shared concepts between the DSL modules.
 
 
   [1]: http://graphql.org
