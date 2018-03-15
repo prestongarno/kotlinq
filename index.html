@@ -375,7 +375,6 @@
 <h2 id="project-goals"><span style="color:#f442c2">Project goals</span><a class="headerlink" href="#project-goals" title="Permanent link">&para;</a></h2>
 <p>Kotlinq has the goal of making GraphQL easy to integrate in an existing project in a scalable manner 
 while taking advantage of the both pragmatic and null/type-safe nature of Kotlin. </p>
-<p>Check out obligatory <a href="hello_world.md">Hello, world!</a> page to see how kotlinq accomplishes this!</p>
 <h2 id="what-is-graphql"><span style="color:#f442c2">What is GraphQL?</span><a class="headerlink" href="#what-is-graphql" title="Permanent link">&para;</a></h2>
 <p>GraphQL is a thoroughly defined <a href="http://facebook.github.io/graphql">specification</a> which defines
 its architecture as structured data conforming to a simple, declarative type system.</p>
@@ -387,7 +386,12 @@ about it <a href="http://graphql.org/learn/">here</a></p>
 <p>[Kot]lin [L]anguage [I]ntegrated [Q]ueries</p>
 <h2 id="development-issue-tracker"><span style="color:#f442c2"><a href="https://github.com/prestongarno/kotlinq"/>Development &amp; issue tracker</a></span><a class="headerlink" href="#development-issue-tracker" title="Permanent link">&para;</a></h2>
 <h2 id="getting-started"><span style="color:#f442c2">Getting started</span><a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>Check out the next section for a simple 'Hello, world!' query</p>
+<p>There are currently 2 DSLs:</p>
+<ol>
+<li><code class="codehilite">kotlinq-dsl</code>: Un-typed DSL for simply fetching data. Does not support converting to JVM types.</li>
+<li><code class="codehilite">kotlinq-jvm</code>: Somewhat type-safe DSL, experimental. Supports defining fragments based on kotlin classes, validating a GraphQL response, and also resolving the response to native JVM class instances. It is unfortunately restrictive and requires tight coupling, so use with caution.</li>
+</ol>
+<p>The next section contains a run-down of shared concepts between the DSL modules.</p>
                 
                   
                 
