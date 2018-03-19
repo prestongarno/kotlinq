@@ -49,15 +49,22 @@ private fun listIsCompatible(value: List<*>, type: KType): Boolean {
 }
 
 @PublishedApi internal
-fun KProperty1<*, Data?>.toPropertyInfo(
-    typeName: String,
+fun KProperty1<*, *>.toPropertyInfo(
+    typeName: String = this.returnType.rootType.clazz?.simpleName!!,
     args: Map<String, Any> = emptyMap()
-) = PropertyInfo.propertyNamed(name)
-    .typeKind(wrap(
-        Kind.typeNamed(typeName),
-        returnType)
-    ).arguments(args)
-    .build()
+): PropertyInfo {
+
+  if (returnType.rootType.scalarKind() != null)
+    throw IllegalArgumentException(this.toString())
+
+  return PropertyInfo
+      .propertyNamed(name)
+      .typeKind(wrap(
+          Kind.typeNamed(typeName),
+          returnType))
+      .arguments(args)
+      .build()
+}
 
 
 internal

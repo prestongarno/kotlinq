@@ -2,7 +2,9 @@ package org.kotlinq.jvm
 
 import org.kotlinq.api.BindableContext
 import org.kotlinq.api.Kotlinq
+import org.kotlinq.api.Kotlinq.Companion.adapterService
 import org.kotlinq.api.PropertyInfo
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.jvm.reflect
@@ -47,11 +49,26 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
       block: InterfaceFragmentSpreadScope<X>.() -> Unit) =
       buildFromFragmentScope(this, block)
 
-  infix fun <X : Data?> KProperty1<T, X>.on(fragment: ClassFragment<X>) = Kotlinq.adapterService
-      .instanceProperty(toPropertyInfo(fragment.typeName), fragment)
+  operator fun <X : Data?> KProperty1<T, List<X>>
+      .rangeTo(fragment: ClassFragment<X>) {
+    adapterService.instanceProperty(
+        toPropertyInfo(fragment.typeName),
+        fragment)
+        .let(bindableContext::register)
+  }
+
+  infix fun <X : Data?> KProperty1<T, X>.on(fragment: ClassFragment<X>) =
+      adapterService.instanceProperty(toPropertyInfo(fragment.typeName), fragment)
       .let(bindableContext::register)
       .ignore()
 
+  infix fun <X : Data?> KProperty1<T, List<X>>.spread(fragment: ClassFragment<X>) =
+      adapterService.instanceProperty(toPropertyInfo(fragment.typeName), fragment)
+          .let(bindableContext::register)
+          .ignore()
+
+  inline infix fun <reified X : Data> KProperty1<T, List<X>>.spread(noinline init: (GraphQlResult) -> X) =
+      bindFromInit(this, init, X::class)
 
   infix fun <X : Data?> KProperty1<T, X>.on(init: (GraphQlResult) -> X) {
     init.reflect()?.returnType?.clazz?.let { clazz ->
@@ -62,6 +79,23 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
     }
   }
 
+  @PublishedApi internal
+  fun <X: Data> bindFromInit(
+      property: KProperty1<*, *>,
+      init: (GraphQlResult) -> Data,
+      clazz: KClass<X>
+  ) {
+
+    val kind = property.returnType.dataKind() ?: return
+
+    PropertyInfo.propertyNamed(property.name)
+        .typeKind(kind)
+        .build()
+        .let { info ->
+          adapterService.instanceProperty(info, ClassFragment(clazz, init))
+        }
+        .let(bindableContext::register)
+  }
 
   @PublishedApi internal
   fun <R> bindScalarPropertyIfApplicable(prop: KProperty1<T, *>, arguments: Map<String, *>): FragmentField<T, R>? {
@@ -97,3 +131,4 @@ class TypedFragmentScope<T : Data?> internal constructor(private val bindableCon
 
   }
 }
+
