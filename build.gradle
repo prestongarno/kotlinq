@@ -40,7 +40,7 @@ buildscript {
 subprojects {
 
   group = 'com.prestongarno.kotlinq'
-  version = rootProject.findProperty("release") == "true" ? "0.4.1" : "0.4.1-SNAPSHOT"
+  version = rootProject.findProperty("release") == "true" ? "0.4.2" : "0.4.2-SNAPSHOT"
 
   apply plugin: 'java'
   apply plugin: 'idea'
