@@ -51,7 +51,7 @@ private fun listIsCompatible(value: List<*>, type: KType): Boolean {
 @PublishedApi internal
 fun KProperty1<*, *>.toPropertyInfo(
     typeName: String = this.returnType.rootType.clazz?.simpleName!!,
-    args: Map<String, Any> = emptyMap()
+    args: Map<String, Any?> = emptyMap()
 ): PropertyInfo {
 
   if (returnType.rootType.scalarKind() != null)

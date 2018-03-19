@@ -56,7 +56,9 @@ class PluginPrinter(val printer: Printer, val fragment: Fragment) : GraphVisitor
     for ((name, argument) in adapter.propertyInfo.arguments) {
       printer.argumentNameEval(name).emit()
       config.argumentSeparator.emit()
-      printer.argumentValueEval(argument).emit()
+      (argument ?: "null").let {
+        printer.argumentValueEval(it).emit()
+      }
       if (++index < size) config.commaSeparator.emit()
     }
 
