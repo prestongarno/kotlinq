@@ -7,4 +7,9 @@ package org.kotlinq.jvm
 inline fun <reified T : Data?> fragment(
     noinline init: (GraphQlResult) -> T,
     noinline block: TypedFragmentScope<T>.() -> Unit = { /* nothing */ }
-) = ClassFragment(T::class, init, block)
+): ClassFragment<T> = ClassFragment(T::class, init, block)
+
+
+inline operator fun <reified T : Data?> ((GraphQlResult) -> T).invoke(
+    noinline block: TypedFragmentScope<T>.() -> Unit
+): ClassFragment<T> = ClassFragment(T::class, this, block)

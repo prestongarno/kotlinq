@@ -58,6 +58,7 @@ markdown_extensions:
 pages:
   - Intro: index.md
   - Overview: core.md
+  - DSL Tutorial: dsl.md
   - Contributing: contributing.md
   - License: license.md
 
