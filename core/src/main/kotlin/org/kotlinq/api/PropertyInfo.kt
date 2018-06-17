@@ -20,7 +20,7 @@ class PropertyInfo(
     private var kind: Kind = Kind.Scalar._String
 
     fun named(it: String) = apply { this.name = it }
-    fun arguments(it: Map<String, *>) = apply { arguments = it }
+    fun arguments(it: Map<String, Any?>) = apply { arguments = it }
     fun typeKind(it: Kind) = apply { kind = it }
 
     fun build() = PropertyInfo(name, kind, arguments)
