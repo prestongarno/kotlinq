@@ -5,8 +5,8 @@ def versions = [
         klaxon           : "2.1.4",
         kodein           : "4.1.0",
         kotlinPoet       : "0.7.0",
-        kotlinVersion    : "1.2.20",
-        kotlinxCoroutines: "0.22.2"
+        kotlinVersion    : "1.2.50",
+        kotlinxCoroutines: "0.23.3"
 ]
 
 ext.dep = [
