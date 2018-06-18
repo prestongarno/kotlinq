@@ -1,9 +1,9 @@
 package org.kotlinq.dsl.fields
 
-import org.kotlinq.api.Kind
 import org.kotlinq.dsl.Leaf
 import org.kotlinq.dsl.Node
 import org.kotlinq.dsl.ScalarSymbol
+import org.kotlinq.introspection.Kind
 
 
 data class FreeProperty internal constructor(

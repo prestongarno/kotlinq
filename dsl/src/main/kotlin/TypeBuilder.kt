@@ -2,8 +2,8 @@ package org.kotlinq.dsl
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.Kind
 import org.kotlinq.dsl.fields.FreeProperty
+import org.kotlinq.introspection.Kind
 
 @GraphQlDslObject
 class TypeBuilder internal constructor(

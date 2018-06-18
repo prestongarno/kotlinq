@@ -3,7 +3,7 @@ package org.kotlinq.properties
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.PropertyInfo
 import org.kotlinq.api.ScalarAdapterService
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 
 
 class ScalarAdapterServiceImpl(

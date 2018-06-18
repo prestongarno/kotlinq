@@ -1,6 +1,6 @@
 package org.kotlinq.dsl
 
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 
 sealed class ScalarSymbol(internal val kind: Kind) {
 

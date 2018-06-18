@@ -2,7 +2,7 @@ package org.kotlinq
 
 import org.junit.Test
 import org.kotlinq.api.Kotlinq
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 
 
 class ScalarPropertyTests {

@@ -4,10 +4,11 @@ include 'core'
 include 'dsl'
 include 'jvm'
 include 'schema'
-//include 'kotlinq-http'
-//TODO finish core, untyped DSL, and DSL before compiler refactor
-//include 'kotlinq-gradle'
 
-project(':core').name = rootProject.name + '-core'
-project(':dsl').name = rootProject.name + '-dsl'
-project(':jvm').name = rootProject.name + '-jvm'
+[':core',
+ ':dsl',
+ ':jvm',
+ ':schema'].stream()
+    .map({ project(it) })
+    .map({ [it, "kotlinq-${it.name}"] })
+    .forEach({ it[0].name = it[1] })

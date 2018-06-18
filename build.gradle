@@ -1,3 +1,6 @@
+import java.lang.reflect.Array
+import java.util.stream.Collectors
+
 /*
  * Copyright (C) 2018 Preston Garno
  *
@@ -36,58 +39,62 @@ buildscript {
   }
 }
 
+//allprojects {
 
-subprojects {
+group = 'com.prestongarno.kotlinq'
+version = rootProject.findProperty("release") == "true" ? "0.4.2" : "0.4.2-SNAPSHOT"
 
-  group = 'com.prestongarno.kotlinq'
-  version = rootProject.findProperty("release") == "true" ? "0.4.2" : "0.4.2-SNAPSHOT"
 
+allprojects {
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'kotlin'
-
-
   repositories {
     jcenter()
   }
-
   dependencies {
     compile dep.kotlinStdLib
     testCompile dep.kotlinTest
     testCompile dep.junit
     testCompile dep.truth
   }
+}
 
-  compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-  }
-  compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-  }
+compileKotlin {
+  kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+  kotlinOptions.jvmTarget = "1.8"
+}
 
+allprojects {
   sourceSets {
     main {
       java {
-        srcDirs = ['src/main/kotlin',
-                   'src/main/java']
+        srcDirs = [
+            "$projectDir/src/main/kotlin",
+            "$projectDir/src/main/java"]
       }
       resources {
-        srcDirs = ['src/main/resources']
+        srcDirs = [
+            "$projectDir/src/main/resources"]
       }
     }
     test {
       java {
-        srcDirs = ['src/test/kotlin',
-                   'src/main/java']
+        srcDirs = [
+            "$projectDir/src/test/kotlin",
+            "$projectDir/src/main/java"]
       }
       resources {
-        srcDirs = ['src/test/resources']
+        srcDirs = [
+            "$projectDir/src/test/resources"]
       }
     }
   }
 
   jar {
-    from(compileJava.outputs)
+    from(sourceSets.main.output)
     from(sourceSets.main.resources)
   }
 
@@ -106,6 +113,8 @@ subprojects {
     archives jar, jarSource, jarDoc
   }
 
+  apply from: rootProject.file("gradle/deploy.gradle")
+
   kotlin {
     experimental {
       coroutines "enable"
@@ -113,10 +122,4 @@ subprojects {
   }
 
   idea.module.downloadJavadoc = true
-
-  apply from: rootProject.file("gradle/deploy.gradle")
-
 }
-
-// snapshot full project jar
-apply from: rootProject.file("gradle/projectsnapshot.gradle")

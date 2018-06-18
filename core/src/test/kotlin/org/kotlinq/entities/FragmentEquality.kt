@@ -1,7 +1,7 @@
 package org.kotlinq.entities
 
 import org.junit.Test
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 import org.kotlinq.entities.TestFragmentBuilder.Companion.fragment
 import org.kotlinq.eq
 import org.kotlinq.notEq

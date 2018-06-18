@@ -2,7 +2,7 @@ package org.kotlinq.jvm
 
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 import kotlin.reflect.KClass
 
 

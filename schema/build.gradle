@@ -2,7 +2,7 @@
 apply plugin: 'java'
 
 dependencies {
-  compile project(':kotlinq-core')
+  compile rootProject
 }
 
 sourceSets {

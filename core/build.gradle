@@ -6,6 +6,7 @@ repositories {
 }
 
 dependencies {
+  compile rootProject
   compile dep.kotlinReflect
   compile dep.klaxon
   compile dep.kodein

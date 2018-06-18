@@ -3,7 +3,7 @@
 package org.kotlinq.dsl
 
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 
 
 @GraphQlDslObject

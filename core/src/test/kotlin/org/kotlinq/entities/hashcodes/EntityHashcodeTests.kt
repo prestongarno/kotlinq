@@ -5,7 +5,7 @@ import org.kotlinq.PrimitiveData
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.PropertyInfo
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 import org.kotlinq.eq
 import org.kotlinq.println
 import kotlin.coroutines.experimental.buildSequence

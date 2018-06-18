@@ -6,7 +6,7 @@ import org.junit.Test
 import org.kotlinq.api.Adapter
 import org.kotlinq.api.BindableContext
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.PropertyInfo
 

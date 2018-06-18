@@ -1,5 +1,7 @@
 package org.kotlinq.api
 
+import org.kotlinq.introspection.Kind
+
 data
 class PropertyInfo(
     val graphQlName: String,

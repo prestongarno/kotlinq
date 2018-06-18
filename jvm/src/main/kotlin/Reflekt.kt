@@ -1,7 +1,7 @@
 package org.kotlinq.jvm
 
-import org.kotlinq.api.Kind
 import org.kotlinq.api.PropertyInfo
+import org.kotlinq.introspection.Kind
 import org.kotlinq.jvm.annotations.Ignore
 import kotlin.coroutines.experimental.buildSequence
 import kotlin.reflect.KClass

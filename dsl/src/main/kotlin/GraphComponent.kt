@@ -5,7 +5,7 @@ import org.kotlinq.api.Fragment
 import org.kotlinq.api.Kotlinq
 import org.kotlinq.api.ParsingAdapter
 import org.kotlinq.api.PropertyInfo
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 
 sealed class GraphComponent(
     val name: String,

@@ -3,12 +3,12 @@
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.kotlinq.api.Fragment
-import org.kotlinq.api.Kind
 import org.kotlinq.api.Printer
 import org.kotlinq.api.PrintingConfiguration
 import org.kotlinq.api.PropertyInfo
 import org.kotlinq.dsl.fragment
 import org.kotlinq.dsl.query
+import org.kotlinq.introspection.Kind
 
 
 fun greet(worldName: String = "Earth", message: Any = "Hello") =

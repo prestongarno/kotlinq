@@ -1,6 +1,6 @@
 @file:Suppress("ClassName")
 
-package org.kotlinq.api
+package org.kotlinq.introspection
 
 /**
  *
@@ -30,13 +30,13 @@ package org.kotlinq.api
  */
 
 sealed
-class Kind(internal val name: kotlin.String) {
+class Kind(val name: kotlin.String) {
 
   open val classifier: String get() = name
 
   abstract fun isTypeCompatible(instance: Kind): kotlin.Boolean
 
-  /** Workaround for strance exception in initializer errors with this */
+  /** Workaround for strange exception in initializer errors with this */
   open val isScalar: Boolean get() = false
 
   fun asList() = ListKind(this)

@@ -2,7 +2,7 @@ package org.kotlinq
 
 import com.google.common.truth.Truth.assertThat
 import org.kotlinq.api.PropertyInfo
-import org.kotlinq.api.Kind
+import org.kotlinq.introspection.Kind
 import kotlin.reflect.full.isSubclassOf
 
 infix fun Throwable.withMessageContaining(value: String) =
